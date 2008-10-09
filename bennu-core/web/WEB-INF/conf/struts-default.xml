@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+      "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+      "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+    <!-- ========== Data Source Configuration =============================== -->
+    <data-sources />
+
+    <!-- ========== Form Bean Definitions ================================== -->
+    <form-beans type="org.apache.struts.action.ActionFormBean">
+    </form-beans>
+
+    <!-- ========== Global Exception Definitions ============================== -->
+	<global-exceptions>
+	</global-exceptions>
+
+    <!-- ========== Global Forward Definitions =============================== -->
+    <global-forwards type="org.apache.struts.action.ActionForward">
+    </global-forwards>
+
+    <!-- ========== Action Mapping Definitions =============================== -->
+    <action-mappings type="org.apache.struts.action.ActionMapping">
+		<action path="/isAlive" forward="/ok.jsp"/>
+    </action-mappings>
+
+    <!-- ========== Controller Configuration ================================ -->
+	<!-- <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/> -->
+	<controller processorClass="pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessor"/>
+
+    <!-- ===="web/WEB-INF/fenix-renderers-schemas.xml"====== Message Resources Definitions ============================ -->
+    <message-resources parameter="resources.MyorgResources" null="false"/>
+    <message-resources parameter="resources.RendererResources" key="RENDERER_RESOURCES" null="false"/>
+    <message-resources parameter="resources.MyorgResources" key="MYORG_RESOURCES" null="false"/>
+    <message-resources parameter="resources.EnumerationResources" key="ENUMERATION_RESOURCES" null="false"/>
+
+    <!-- ========== Plug Ins Configuration ================================= -->
+    <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+        <set-property property="pathnames" value="/WEB-INF/validator-rules.xml"/>
+    </plug-in>
+    <plug-in className="pt.ist.fenixWebFramework.struts.tiles.FenixTilesPlugin" >
+    	<set-property property="definitions-config" value="/WEB-INF/tiles/tiles-layout-definitions.xml" />
+        <set-property property="moduleAware" value="true" />
+        <set-property property="definitions-parser-validate" value="true" />
+        <set-property property="factoryClassname" value="pt.ist.fenixWebFramework.struts.tiles.FenixDefinitionsFactory" />
+        <set-property property="defaultTileDefinition" value="page.defaultLayout" />
+    </plug-in>
+	<plug-in className="pt.ist.fenixWebFramework.struts.plugin.StrutsAnnotationsPlugIn" />
+    <plug-in className="pt.ist.fenixWebFramework.renderers.plugin.RenderersPlugin">
+      <set-property property="config" value="/WEB-INF/fenix-renderers-config.xml"/>
+      <set-property property="schemas" value="/WEB-INF/schemas/fenix-renderers-schemas.xml"/>
+      <set-property property="metaObjectFactory" value="pt.ist.fenixWebFramework.rendererExtensions.factories.FenixMetaObjectFactory"/>
+      <set-property property="userIdentityFactory" value="pt.ist.fenixWebFramework.rendererExtensions.factories.FenixUserIdentityFactory"/>
+      <set-property property="schemaFactory" value="pt.ist.fenixWebFramework.rendererExtensions.factories.FenixSchemaFactory"/>
+    </plug-in>
+
+</struts-config>

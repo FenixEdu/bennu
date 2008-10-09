@@ -1,0 +1,167 @@
+package myorg.domain;
+
+
+enum myorg.domain.RoleType as RoleType;
+
+
+valueType org.joda.time.DateTime as DateTime;
+valueType org.joda.time.LocalDate as LocalDate;
+
+valueType pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString as MultiLanguageString;
+valueType pt.utl.ist.fenix.tools.util.Strings as Strings;
+
+
+class MyOrg {
+	MultiLanguageString applicationTitle;
+	MultiLanguageString applicationSubTitle;
+	MultiLanguageString applicationCopyright;
+}
+
+
+class content.Page {
+	MultiLanguageString title;
+	MultiLanguageString link;
+}
+
+class content.Node {
+	Integer order;
+}
+
+class organization.AccountabilityType {
+	MultiLanguageString type;
+}
+
+class organization.Accountability {
+	LocalDate beginDate;
+	LocalDate endDate;
+}
+
+class organization.Party {
+	String ojbConcreteClass;
+	MultiLanguageString name;
+}
+
+	class organization.Person extends organization.Party {
+	}
+
+	class organization.Unit extends organization.Party {
+	}
+
+class User {
+	String username;
+	String password;
+}
+
+class Role {
+	RoleType roleType;
+}
+
+
+relation MyOrgNode {
+	MyOrg playsRole myOrg;
+	content.Node playsRole nodes {
+		multiplicity *;
+	}
+}
+
+relation MyOrgTopLevelNode {
+	MyOrg playsRole myOrgFromTopLevelNode;
+	content.Node playsRole topLevelNodes {
+		multiplicity *;
+	}
+}
+
+relation MyOrgPage {
+	MyOrg playsRole myOrg;
+	content.Page playsRole pages {
+		multiplicity *;
+	}
+}
+
+relation PageParentNode {
+	content.Page playsRole childPage;
+	content.Node playsRole parentNodes {
+		multiplicity *;
+	}
+}
+
+relation PageChildNode {
+	content.Page playsRole parentPage;
+	content.Node playsRole childNodes {
+		multiplicity *;
+	}
+}
+
+relation MyOrgAccountabilityType {
+	MyOrg playsRole myOrg;
+	organization.AccountabilityType playsRole accountabilitiesType {
+		multiplicity *;
+	}
+}
+
+relation MyOrgAccountability {
+	MyOrg playsRole myOrg;
+	organization.Accountability playsRole accountabilities {
+		multiplicity *;
+	}
+}
+
+relation AccountabilityAccountabilityType {
+	organization.Accountability playsRole accountabilities {
+		multiplicity *;
+	}
+	organization.AccountabilityType playsRole accountabilityType;
+}
+
+relation MyOrgParty {
+	MyOrg playsRole myOrg;
+	organization.Party playsRole parties {
+		multiplicity *;
+	}
+}
+
+relation PartyChildAccountability {
+	organization.Party playsRole parentParties {
+		multiplicity *;
+	}
+	organization.Accountability playsRole childAccountabilities {
+		multiplicity *;
+	}
+}
+
+relation PartyParentAccountability {
+	organization.Party playsRole childParties {
+		multiplicity *;
+	}
+	organization.Accountability playsRole parentAccountabilities {
+		multiplicity *;
+	}
+}
+
+relation MyOrgUser {
+	MyOrg playsRole myOrg;
+	User playsRole user {
+		multiplicity *;
+	}
+}
+
+relation MyOrgRole {
+	MyOrg playsRole myOrg;
+	Role playsRole roles {
+		multiplicity *;
+	}
+}
+
+relation RoleUser {
+	Role playsRole roles {
+		multiplicity *;
+	}
+	User playsRole user {
+		multiplicity *;
+	}
+}
+
+relation UserPerson {
+	User playsRole user;
+	organization.Person playsRole person;
+}

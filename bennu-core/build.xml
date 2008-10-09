@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="compile" name="MyOrg">
+
+	<property environment="env"/>
+	<property name="encoding" value="UTF-8"/>
+
+	<property file="build.properties"/>
+
+	<!-- Source code directories -->
+	<property name="config" location="conf"/>
+	<property name="src" location="src"/>
+	<property name="src_gen" location="src_gen"/>
+	<property name="web" location="web"/>
+	<property name="reports" location="reports"/>	
+	<property name="reports.images" location="reports/images"/>
+
+	<!-- Web Directories -->
+	<property name="build.home.webinf" value="${web}/WEB-INF"/>
+	<property name="build.home.webinf.classes" value="${build.home.webinf}/classes"/>
+	<property name="build.home.webinf.libs" value="${build.home.webinf}/lib"/>
+	
+	<property name="build.home.reports" value="${build.home.webinf.classes}/reports"/>
+	<property name="build.home.reports.images" value="${build.home.webinf.classes}/images"/>
+
+	<!-- Directories for deploy -->
+	<property name="deploy.home" location="deploy"/>
+
+	<property name="lib" location="lib"/>
+
+	<property name="compile.debug"       value="on"/>
+	<property name="compile.deprecation" value="off"/>
+	<property name="compile.optimize"    value="on"/>
+
+	<property name="dml.fenix.sqltypes" value="${config}/dataTypesJDBCTypes.properties"/>
+	<property name="dml.fenix.typeconverters" value="${config}/dataTypeConversors.properties"/>
+	<property name="dml.definition.file.completed" value="${build.home.webinf.classes}/domain_model.dml"/>
+
+	<target name="clean-all"
+    		description="Removes any generated files">
+		<delete dir="${build.home.webinf.classes}"/>
+		<delete dir="${deploy.home}"/>
+		<delete dir="${src_gen}"/>
+		<delete file=".actionAnnotationLog"/>
+	</target>
+
+	<target name="prepare" description="Create necessary dirs">
+		<mkdir dir="${build.home.webinf.classes}"/>
+		<mkdir dir="${deploy.home}"/>
+		<mkdir dir="${src_gen}"/>
+
+		<tstamp>
+		   <format property="build.version" pattern="yyyy/MM/dd HH:mm:ss"/>
+		</tstamp>
+		<echo file="${build.home.webinf.classes}/.build.version">${build.version}</echo>
+		<copy file="build.properties" tofile="${build.home.webinf.classes}/configuration.properties"/>
+		<copy todir="${build.home.webinf.classes}/">
+			<fileset dir="${config}"/>
+		</copy>
+	</target>
+
+	<path id="class.path.ref">
+        <fileset dir="${lib}">
+   		    <include name="*.jar"/>
+   		</fileset>
+		<fileset dir="${build.home.webinf.libs}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<path id="run.class.path">
+		<pathelement path="${build.home.webinf.classes}"/>
+        <fileset dir="${lib}">
+   		    <include name="*.jar"/>
+   		</fileset>
+		<fileset dir="${build.home.webinf.libs}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="check-dml-file" description="Checks if the dml file is still up to date">
+		<uptodate property="dml.skip-compile" targetfile="${build.home.webinf.classes}/domain_model.dml" srcfile="${config}/domain_model.dml"/>
+	</target>
+
+	<target name="generate" 
+			depends="check-dml-file"
+			>
+		<echo>Creating src_gen</echo>
+		<delete dir="${src_gen}"/>
+		<mkdir dir="${src_gen}"/>
+		<java classname="dml.ConverterClassAwareDmlCompiler" fork="true">
+			<jvmarg value="-Ddml.fenix.sqltypes=${dml.fenix.sqltypes}"/>
+			<jvmarg value="-Ddml.fenix.typeconverters=${dml.fenix.typeconverters}"/>
+			<arg value="-f"/>
+			<arg value="-d"/>
+			<arg value="${src}"/>
+			<arg value="-db"/>
+			<arg value="${src_gen}"/>
+			<arg value="-generator"/>
+			<arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParam"/>
+			<arg value="${dml.definition.file.completed}"/>
+			<arg value="myorg.persistenceTier.SQL2JavaConverters"/>
+			<arg value="myorg.persistenceTier."/>
+			<classpath refid="class.path.ref"/>
+		</java>
+	</target>
+
+	<target name="compile" description="Compiles code" depends="prepare, generate">
+		<javac destdir="${build.home.webinf.classes}"
+				debug="${compile.debug}"
+				optimize="${compile.optimize}"
+				deprecation="${compile.deprecation}"
+				encoding="${encoding}"
+				nowarn="false"
+				failonerror="true">
+			<compilerarg line="-processor pt.ist.fenixWebFramework.services.ServiceAnnotationProcessor,pt.ist.fenixWebFramework.struts.annotations.ActionAnnotationProcessor"/>
+			<classpath refid="class.path.ref"/>
+			<src path="${src}"/>
+			<src path="${src_gen}"/>
+		</javac>
+		<copy file=".actionAnnotationLog" todir="${build.home.webinf.classes}" overwrite="true" failonerror="false"/>
+		<java classname="pt.ist.fenixWebFramework.services.ServiceAnnotationInjector" failonerror="true">
+			<classpath refid="class.path.ref"/>
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+			</classpath>
+			<arg value="${build.home.webinf.classes}"/>
+			<arg value="${build.home.webinf.libs}/jvstm.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-framework.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-web-framework.jar"/>
+			<arg value="${build.home.webinf.libs}/joda-time-1.5.2.jar"/>
+		</java>
+		<java classname="pt.ist.fenixframework.pstm.PostProcessDomainClasses" 
+				dir="${build.home.webinf.classes}"
+				fork="true">
+			<classpath refid="class.path.ref"/>
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+			</classpath>
+			<arg value="-d"/>
+			<arg value="${build.home.webinf.classes}/domain_model.dml"/>
+		</java>
+		<antcall target="compile-reports"/>		
+	</target>
+
+	<target name="war" depends="compile" description="Generates a web archive of the application.">
+		<war destfile="${deploy.home}/${war.name}.war" webxml="${build.home.webinf}/web.xml">
+			<fileset dir="${web}">
+				<exclude name="WEB-INF/web.xml"/>
+				<exclude name="WEB-INF/classes/**"/>
+				<exclude name="WEB-INF/lib/*"/>
+			</fileset>
+			<lib dir="${build.home.webinf.libs}">
+				<exclude name="servlet-api-2.3.jar"/>
+			</lib>
+			<classes dir="${build.home.webinf.classes}"/>
+		</war>
+	</target>
+
+	<target name="loadTestData" depends="compile">
+		<java classname="pt.ist.expenditureTrackingSystem.LoadTestData" fork="true" maxmemory="1024m">
+			<jvmarg value="-Dfile.encoding=utf-8"/>
+			<classpath refid="run.class.path"/>
+		</java>
+	</target>
+
+	<target name="loadSuppliers" depends="compile">
+		<java classname="pt.ist.expenditureTrackingSystem.LoadSuppliersData" fork="true">
+			<classpath refid="run.class.path"/>
+		</java>
+	</target>
+
+	<target name="compile-reports" >
+		<mkdir dir="${build.home.reports}"/>
+		<mkdir dir="${build.home.reports.images}"/>
+		<taskdef name="jrc" 
+		      classname="net.sf.jasperreports.ant.JRAntCompileTask">
+			<classpath refid="class.path.ref"/>
+		</taskdef>
+		<jrc destdir="${build.home.reports}" srcdir="${reports}">
+			<classpath refid="class.path.ref"/>
+			<classpath>
+				<pathelement path="${build.home.webinf.classes};"/>
+			</classpath>
+			<include name="**/*.jrxml"/>
+		</jrc>
+		<copy todir="${build.home.reports.images}/">
+			<fileset dir="${reports.images}"/>
+		</copy>
+	</target>
+
+    <target name="gen-sqls" depends="compile"
+    		description="Generates possible sql instructions to be run on next deploy.">
+		<java classname="pt.ist.fenixWebFramework.repository.SQLUpdateGenerator" fork="true">
+<!--				jvmargs="-Xdebug -Xnoagent -Djava.compiler=NONE  -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspend=y" -->
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+			    <fileset dir="${build.home.webinf.libs}">
+			        <include name="*.jar"/>
+                </fileset>
+			</classpath>
+			<arg value="${build.home.webinf.classes}/domain_model.dml"/>
+			<arg value="${db.alias}"/>
+			<arg value="${db.user}"/>
+			<arg value="${db.pass}"/>
+		</java>
+    </target>
+
+</project>
