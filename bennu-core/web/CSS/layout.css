@@ -140,6 +140,17 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 			border-bottom: 1px solid #DDDDDD;
 		}
 
+/* OTHER ELEMENTS */
+
+		#pageops {
+			float: right;
+		}
+		
+		#pageops p {
+			padding-bottom: 10px;
+			border-bottom: 1px solid #DDDDDD;
+		}
+
 /* FOOTER ELEMENTS */
 
 		#footer {

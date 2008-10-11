@@ -37,7 +37,10 @@ public abstract class BaseAction extends DispatchAction {
 
 	final List<Node> contentPath = getContentPathFromParameters(request);
 	request.setAttribute("contentPath", contentPath);
-	if (!contentPath.isEmpty()) {
+	if (contentPath.isEmpty()) {
+	    final Node node = Node.getFirstTopLevelNode();
+	    request.setAttribute("selectedNode", node);
+	} else {
 	    final Node selectedNode = contentPath.get(contentPath.size() - 1);
 	    request.setAttribute("selectedNode", selectedNode);
 	}

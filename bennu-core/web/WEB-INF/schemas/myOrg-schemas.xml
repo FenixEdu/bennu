@@ -3,3 +3,13 @@
 	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
 </schema>
+
+<schema name="myorg.domain.content.Page.PageBean" type="myorg.domain.content.Page$PageBean" bundle="MYORG_RESOURCES">
+	<slot name="title" key="label.content.page.title" bundle="MYORG_RESOURCES"/>		
+	<slot name="link" key="label.content.page.link" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="myorg.domain.content.Page" type="myorg.domain.content.Page" bundle="MYORG_RESOURCES">
+	<slot name="title" key="label.content.page.title" bundle="MYORG_RESOURCES"/>		
+	<slot name="link" key="label.content.page.link" bundle="MYORG_RESOURCES"/>
+</schema>

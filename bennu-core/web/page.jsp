@@ -5,6 +5,12 @@
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 
 <logic:present name="selectedNode">
+	<bean:define id="selectedPage" name="selectedNode" property="childPage"/>
+	<h2><bean:write name="selectedPage" property="title"/></h2>
+	<p>
+		This application has not yet been configured. To do so please log in with a user that has management priveledges, and start creating contents.
+		Remember that you cad define which users have management roles in your build.properties file.
+	</p>
 </logic:present>
 <logic:notPresent name="selectedNode">
 	<h2>Welcome</h2>

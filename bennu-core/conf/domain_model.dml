@@ -24,7 +24,7 @@ class content.Page {
 }
 
 class content.Node {
-	Integer order;
+	Integer nodeOrder;
 }
 
 class organization.AccountabilityType {

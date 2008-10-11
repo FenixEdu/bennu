@@ -10,7 +10,9 @@
 	<logic:notEmpty name="menuNodes">
 		<logic:iterate id="node" name="menuNodes">
 			<li>
-				<a href="#"><bean:write name="node" property="childPage.link"/></a>
+				<html:link page="/content.do?method=viewPage" paramId="nodeOid" paramName="node" paramProperty="OID">
+					<bean:write name="node" property="childPage.link"/>
+				</html:link>
 			</li>
 		</logic:iterate>
 	</logic:notEmpty>
