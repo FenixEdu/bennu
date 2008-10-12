@@ -27,7 +27,9 @@ public class ExceptionHandlerFilter implements Filter {
 	try {
 	    filterChain.doFilter(request, response);
 	} catch (ServletException servletException) {
-	    servletException.getRootCause().printStackTrace();
+	    if (servletException.getRootCause() != null) {
+		servletException.getRootCause().printStackTrace();
+	    }
 	    /*
 	     * StringWriter out = new StringWriter();
 	     * servletException.getRootCause().printStackTrace(new

@@ -1,5 +1,6 @@
 package myorg.presentationTier.actions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,12 +19,33 @@ import org.apache.struts.action.ActionMapping;
 import pt.ist.fenixWebFramework.struts.annotations.Forward;
 import pt.ist.fenixWebFramework.struts.annotations.Forwards;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
+import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 @Mapping( path="/content" )
 @Forwards( { @Forward(name="page", path="/page.jsp"),
     @Forward(name="new.page", path="/newPage.jsp"),
     @Forward(name="edit.page", path="/editPage.jsp")} )
 public class ContentAction extends BaseAction {
+
+    public static class LocaleBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private Language language;
+
+	public LocaleBean() {
+	    language = Language.getLanguage();
+	}
+
+	public Language getLanguage() {
+	    return language;
+	}
+
+	public void setLanguage(Language language) {
+	    this.language = language;
+	}
+
+    }
 
     public final ActionForward viewPage(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
@@ -32,6 +54,10 @@ public class ContentAction extends BaseAction {
 	    final Node node = Node.getFirstTopLevelNode();
 	    contentPath.add(node);
 	}
+
+	final LocaleBean localeBean = new LocaleBean();
+	request.setAttribute("localeBean", localeBean);
+
 	return mapping.findForward("page");
     }
 
