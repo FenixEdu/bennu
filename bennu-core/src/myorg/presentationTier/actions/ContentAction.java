@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import myorg.domain.content.Node;
 import myorg.domain.content.Page;
+import myorg.domain.content.Section;
 import myorg.domain.content.Page.PageBean;
+import myorg.domain.content.Section.SectionBean;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -24,7 +26,9 @@ import pt.utl.ist.fenix.tools.util.i18n.Language;
 @Mapping( path="/content" )
 @Forwards( { @Forward(name="page", path="/page.jsp"),
     @Forward(name="new.page", path="/newPage.jsp"),
-    @Forward(name="edit.page", path="/editPage.jsp")} )
+    @Forward(name="edit.page", path="/editPage.jsp"),
+    @Forward(name="new.section", path="/newSection.jsp"),
+    @Forward(name="edit.section", path="/editSection.jsp")} )
 public class ContentAction extends BaseAction {
 
     public static class LocaleBean implements Serializable {
@@ -105,6 +109,36 @@ public class ContentAction extends BaseAction {
 	final Node node = getDomainObject(request, "nodeOid");
 	request.setAttribute("selectedNode", node);
 	return mapping.findForward("edit.page");
+    }
+
+    public final ActionForward prepareAddSection(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final Page page = getCurrentPage(request);
+	final SectionBean sectionBean = new SectionBean(page);
+	request.setAttribute("sectionBean", sectionBean);
+	return mapping.findForward("new.section");
+    }
+
+    public final ActionForward addSection(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final SectionBean sectionBean = getRenderedObject();
+	Section.createNewSection(sectionBean);
+	return mapping.findForward("page");
+    }
+
+    public final ActionForward deleteSection(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final Section section = getDomainObject(request, "sectionOid");
+	final Page page = section.getPage();
+	section.delete();
+	return mapping.findForward("page");
+    }
+
+    public final ActionForward prepareEditSection(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final Section section = getDomainObject(request, "sectionOid");
+	request.setAttribute("section", section);
+	return mapping.findForward("edit.section");
     }
 
 }

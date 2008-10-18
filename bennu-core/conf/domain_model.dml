@@ -18,13 +18,19 @@ class MyOrg {
 }
 
 
+class content.Node {
+	Integer nodeOrder;
+}
+
 class content.Page {
 	MultiLanguageString title;
 	MultiLanguageString link;
 }
 
-class content.Node {
-	Integer nodeOrder;
+class content.Section {
+	MultiLanguageString title;
+	MultiLanguageString contents;
+	Integer sectionOrder;
 }
 
 class organization.AccountabilityType {
@@ -88,6 +94,20 @@ relation PageParentNode {
 relation PageChildNode {
 	content.Page playsRole parentPage;
 	content.Node playsRole childNodes {
+		multiplicity *;
+	}
+}
+
+relation MyOrgSection {
+	MyOrg playsRole myOrg;
+	content.Section playsRole sections {
+		multiplicity *;
+	}
+}
+
+relation PageSection {
+	content.Page playsRole page;
+	content.Section playsRole sections {
 		multiplicity *;
 	}
 }

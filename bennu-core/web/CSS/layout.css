@@ -30,8 +30,18 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 			font-size: 16px;
 			font-family: Arial, Helvetica, sans-serif;
 			background-color: #FFF;
+			padding-bottom: 10px;
+			border-bottom: 2px solid #DDDDDD;
 		}
-		
+
+		h3 a {
+			float: right;
+			color: #CC6714;
+			text-decoration: none;
+			font-family: Lucida Grande, Tahoma, Arial, Helvetica, sans-serif;
+			font-size: 11px;
+		}
+
 		a {
 			color:#CC6714;
 			text-decoration: none;
@@ -124,8 +134,11 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 		}
 		
 		#content p {
+		}
+
+		#contentStructuredP {
 			padding-bottom: 10px;
-			border-bottom: 1px solid #DDDDDD; /* A faint grey line below the text */
+			border-bottom: 1px solid #DDDDDD;
 		}
 
 /* SIDEBAR ELEMENTS */

@@ -6,16 +6,20 @@
 
 <div id="pageops">
 	<html:link page="/content.do?method=prepareCreateNewPage">
-		New
+		<bean:message bundle="MYORG_RESOURCES" key="label.content.page.new"/>
 	</html:link>
 	<logic:present name="selectedNode">
 		|
 		<html:link page="/content.do?method=prepareEditPage" paramId="nodeOid" paramName="selectedNode" paramProperty="OID">
-			Edit
+			<bean:message bundle="MYORG_RESOURCES" key="label.content.page.edit"/>
 		</html:link>
 		|
 		<html:link page="/content.do?method=deletePage" paramId="nodeOid" paramName="selectedNode" paramProperty="OID">
-			Delete
+			<bean:message bundle="MYORG_RESOURCES" key="label.content.page.delete"/>
+		</html:link>
+		|
+		<html:link page="/content.do?method=prepareAddSection" paramId="nodeOid" paramName="selectedNode" paramProperty="OID">
+			<bean:message bundle="MYORG_RESOURCES" key="label.content.section.add"/>
 		</html:link>
 	</logic:present>
 </div>

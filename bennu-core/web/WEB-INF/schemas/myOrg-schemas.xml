@@ -17,3 +17,23 @@
 	<slot name="title" key="label.content.page.title" bundle="MYORG_RESOURCES"/>
 	<slot name="link" key="label.content.page.link" bundle="MYORG_RESOURCES"/>
 </schema>
+
+<schema name="myorg.domain.content.Section.SectionBean" type="myorg.domain.content.Section$SectionBean" bundle="MYORG_RESOURCES">
+	<slot name="title" key="label.content.page.title" bundle="MYORG_RESOURCES"/>
+	<slot name="contents" key="label.content.page.contents" bundle="MYORG_RESOURCES" layout="rich-text">
+   		<property name="safe" value="true" />
+   		<property name="columns" value="65"/>
+   		<property name="rows" value="20"/>
+   		<property name="config" value="advanced" />
+   	</slot>
+</schema>
+
+<schema name="myorg.domain.content.Section" type="myorg.domain.content.Section" bundle="MYORG_RESOURCES">
+	<slot name="title" key="label.content.page.title" bundle="MYORG_RESOURCES"/>
+	<slot name="contents" key="label.content.page.contents" bundle="MYORG_RESOURCES" layout="rich-text">
+   		<property name="safe" value="true" />
+   		<property name="columns" value="65"/>
+   		<property name="rows" value="20"/>
+   		<property name="config" value="advanced" />
+   	</slot>
+</schema>

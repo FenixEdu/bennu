@@ -5,7 +5,7 @@
 
 <ul id="navlist">
 	<logic:empty name="menuNodes">
-		<li><!-- NO_CHECKSUM --><a href="home.do?method=firstPage">Home</a></li>
+		<li><!-- NO_CHECKSUM --><a href="home.do?method=firstPage"><bean:message bundle="MYORG_RESOURCES" key="label.application.home"/></a></li>
 	</logic:empty>
 	<logic:notEmpty name="menuNodes">
 		<logic:iterate id="node" name="menuNodes">

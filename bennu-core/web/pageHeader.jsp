@@ -51,34 +51,34 @@
 	<tr>
 		<td align="right" nowrap="nowrap" width="40%">
 			<div>
-				<logic:present name="selectedNode">
-					<bean:define id="languageUrl"><%= request.getContextPath() %>/content.do</bean:define>
-					<form action="<%= languageUrl %>" method="post">
-						<input type="hidden" name="method" value="viewPage" />
+				<bean:define id="languageUrl"><%= request.getContextPath() %>/content.do</bean:define>
+				<form action="<%= languageUrl %>" method="post">
+					<input type="hidden" name="method" value="viewPage" />
+					<logic:present name="selectedNode">
 						<bean:define id="arg" name="selectedNode" property="OID"/>
 						<input type="hidden" name="nodeOid" value="<%= arg %>"/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<select name="locale" onchange="this.form.submit();">
-							<% final String country = Language.getLocale().getCountry(); %>
-							<% for (Language language : Language.values()) {
-								if (language == Language.getLanguage()) {
-							    	%>
-								    	<option value="<%= language.name() %>_<%= country %>" selected="selected">
-							    			<%= language.name() %>
-							    		</option>
-							    	<%
-								} else {
-								    %>
-							    		<option value="<%= language.name() %>_<%= country %>">
-								    		<%= language.name() %>
-							    		</option>
-							    	<%							    
-								}
-							} %>
-						</select>
-						<input class=" button" type="submit" name="Submit" value="Ok" />
-					</form>
-				</logic:present>
+					</logic:present>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<select name="locale" onchange="this.form.submit();">
+						<% final String country = Language.getLocale().getCountry(); %>
+						<% for (Language language : Language.values()) {
+							if (language == Language.getLanguage()) {
+						    	%>
+							    	<option value="<%= language.name() %>_<%= country %>" selected="selected">
+						    			<%= language.name() %>
+						    		</option>
+						    	<%
+							} else {
+							    %>
+						    		<option value="<%= language.name() %>_<%= country %>">
+							    		<%= language.name() %>
+						    		</option>
+						    	<%							    
+							}
+						} %>
+					</select>
+					<input class=" button" type="submit" name="Submit" value="Ok" />
+				</form>
 
 				<!-- NO_CHECKSUM --><form method="get" action="http://www.google.com/search">
 					<input type="hidden" name="site" value="" />

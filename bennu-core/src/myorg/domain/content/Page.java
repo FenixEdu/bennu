@@ -1,6 +1,8 @@
 package myorg.domain.content;
 
 import java.io.Serializable;
+import java.util.Set;
+import java.util.TreeSet;
 
 import myorg.domain.MyOrg;
 import pt.ist.fenixWebFramework.services.Service;
@@ -67,6 +69,12 @@ public class Page extends Page_Base {
 	    removeMyOrg();
 	    Transaction.deleteObject(this);
 	}
+    }
+
+    public Set<Section> getOrderedSections() {
+	final Set<Section> sections = new TreeSet<Section>(Section.COMPARATOR_BY_ORDER);
+	sections.addAll(getSectionsSet());
+	return sections;
     }
 
 }

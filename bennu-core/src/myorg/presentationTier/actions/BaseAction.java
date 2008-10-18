@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import myorg.domain.MyOrg;
 import myorg.domain.content.Node;
+import myorg.domain.content.Page;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -158,4 +159,13 @@ public abstract class BaseAction extends DispatchAction {
     protected Collection<Node> getContentPath(final HttpServletRequest httpServletRequest) {
 	return (Collection<Node>) httpServletRequest.getAttribute("contentPath");
     }
+
+    protected Page getCurrentPage(final HttpServletRequest httpServletRequest) {
+	Node lastNode = null;
+	for (final Node node : getContentPath(httpServletRequest)) {
+	    lastNode = node;
+	}
+	return lastNode == null ? null : lastNode.getChildPage();
+    }
+
 }
