@@ -63,9 +63,12 @@ public class Page extends Page_Base {
 
     public void deleteIfDisconnected() {
 	if (!hasAnyParentNodes()) {
+	    for (final Section section : getSectionsSet()) {
+		section.delete();
+	    }
 	    for (final Node node : getChildNodesSet()) {
 		node.delete();
-	    }	    
+	    }
 	    removeMyOrg();
 	    Transaction.deleteObject(this);
 	}
