@@ -1,6 +1,7 @@
 package myorg.domain.content;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -78,6 +79,23 @@ public class Page extends Page_Base {
 	final Set<Section> sections = new TreeSet<Section>(Section.COMPARATOR_BY_ORDER);
 	sections.addAll(getSectionsSet());
 	return sections;
+    }
+
+    @Service
+    public void reorderSections(final ArrayList<Section> sections) {
+	for (final Section section : getSectionsSet()) {
+	    if (!sections.contains(section)) {
+		throw new Error("Sections changed!");
+	    }
+	}
+
+	int i = 0;
+	for (final Section section : sections) {
+	    if (!hasSections(section)) {
+		throw new Error("Sections changed!");
+	    }
+	    section.setSectionOrder(Integer.valueOf(i++));
+	}
     }
 
 }

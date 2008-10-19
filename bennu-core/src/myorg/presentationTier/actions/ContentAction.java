@@ -141,4 +141,34 @@ public class ContentAction extends BaseAction {
 	return mapping.findForward("edit.section");
     }
 
+    public final ActionForward saveSectionOrders(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final Node node = getDomainObject(request, "nodeOid");
+	final Page page = node.getChildPage();
+
+	final String[] sectionOrders = request.getParameter("sectionOrders").split(";");
+	final String[] originalSectionIds = request.getParameter("originalSectionIds").split(";");
+
+	if (sectionOrders.length == originalSectionIds.length) {
+	    final ArrayList<Section> originalSections = new ArrayList<Section>(sectionOrders.length);
+	    final ArrayList<Section> sections = new ArrayList<Section>(sectionOrders.length);
+	    int i = 0;
+	    for (final Section section : page.getOrderedSections() ) {
+		if (Long.toString(section.getOID()).equals(originalSectionIds[i])) {
+		    originalSections.add(section);
+		} else {
+		    return mapping.findForward("page");
+		}
+		i++;
+	    }
+	    for (final String sectionOrder : sectionOrders) {
+		final int so = Integer.parseInt(sectionOrder);
+		sections.add(originalSections.get(so));
+	    }
+	    page.reorderSections(sections);
+	}
+
+	return mapping.findForward("page");
+    }
+
 }
