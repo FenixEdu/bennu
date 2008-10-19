@@ -7,6 +7,7 @@
 <logic:present name="selectedNode">
 	<bean:define id="selectedPage" name="selectedNode" property="childPage"/>
 	<h2><bean:write name="selectedPage" property="title"/></h2>
+	<bean:define id="confirmDelete">return confirmDelete('<bean:message bundle="MYORG_RESOURCES" key="label.content.section.delete.confirm"/>');</bean:define>
 	<logic:iterate id="section" name="selectedPage" property="orderedSections">
 		<div id="contentStructuredP">
 			<logic:present name="section" property="title">
@@ -16,7 +17,8 @@
 							<bean:message bundle="MYORG_RESOURCES" key="label.content.section.edit"/>
 						</html:link>
 						|
-						<html:link page="/content.do?method=deleteSection" paramId="sectionOid" paramName="section" paramProperty="OID">
+						<html:link page="/content.do?method=deleteSection" paramId="sectionOid" paramName="section" paramProperty="OID"
+								onclick="<%= confirmDelete %>">
 							<bean:message bundle="MYORG_RESOURCES" key="label.content.section.delete"/>
 						</html:link>
 					</div>
