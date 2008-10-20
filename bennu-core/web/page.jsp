@@ -7,20 +7,33 @@
 <logic:present name="selectedNode">
 	<bean:define id="selectedPage" name="selectedNode" property="childPage"/>
 	<h2><bean:write name="selectedPage" property="title"/></h2>
-	<bean:define id="confirmDelete">return confirmDelete('<bean:message bundle="MYORG_RESOURCES" key="label.content.section.delete.confirm"/>');</bean:define>
-	<div id="mainContainer">
-		<div id="dragableElementsParentBox">
+	<%
+		final Object o = request.getAttribute("reorderSections");
+		final boolean reorder = o != null && ((Boolean) o).booleanValue();
+	%>
+	<% if (reorder) {%>
+		<div id="mainContainer">
+			<div id="dragableElementsParentBox">
+	<% } %>
 			<logic:iterate id="section" name="selectedPage" property="orderedSections" indexId="sindex">
 				<bean:define id="articleId">article<%= sindex %></bean:define>
-				<div dragableBox="true" id="<%= sindex %>">
-					<div id="contentStructuredP">
+				<div <% if (reorder) {%>dragableBox="true"<% } %> id="<%= articleId %>">
+					<div class="contentStructuredP">
 						<logic:present name="section" property="title">
 							<logic:notEmpty name="section" property="title">
+								<bean:define id="title" name="section" property="title"/>
 								<div style="float: right;">
 									<html:link page="/content.do?method=prepareEditSection" paramId="sectionOid" paramName="section" paramProperty="OID">
 										<bean:message bundle="MYORG_RESOURCES" key="label.content.section.edit"/>
 									</html:link>
 									|
+									<html:link page="/content.do?method=reorderSections" paramId="nodeOid" paramName="selectedNode" paramProperty="OID">
+										<bean:message bundle="MYORG_RESOURCES" key="label.content.section.order.change"/>
+									</html:link>
+									|
+									<bean:define id="confirmDelete">return confirmDelete('<bean:message
+											bundle="MYORG_RESOURCES" key="label.content.section.delete.confirm"
+											arg0="<%= title.toString() %>"/>');</bean:define>
 									<html:link page="/content.do?method=deleteSection" paramId="sectionOid" paramName="section" paramProperty="OID"
 											onclick="<%= confirmDelete %>">
 										<bean:message bundle="MYORG_RESOURCES" key="label.content.section.delete"/>
@@ -35,26 +48,28 @@
 					</div>
 				</div>
 			</logic:iterate>
+	<% if (reorder) {%>
 			<div class="clear" id="clear"></div>
 		</div>
 		<logic:notEmpty name="selectedPage" property="sections">
 			<form action="<%= request.getContextPath() %>/content.do" method="post">
-				<input type="hidden" name="method" value="saveSectionOrders">
-				<input type="hidden" id="sectionOrders" name="sectionOrders">
+				<input type="hidden" name="method" value="saveSectionOrders"/>
+				<input type="hidden" id="articleOrders" name="articleOrders"/>
 				<bean:define id="nodeOid" name="selectedNode" property="OID"/>
-				<input type="hidden" name="nodeOid" value="<%= nodeOid %>">
-				<bean:define id="originalSectionIds"><logic:iterate id="section" name="selectedPage" property="orderedSections" indexId="sindex"><% if (sindex > 0) {%>;<% } %><bean:write name="section" property="OID"/></logic:iterate></bean:define>
-				<input type="hidden" name="originalSectionIds" value="<%= originalSectionIds %>">
+				<input type="hidden" name="nodeOid" value="<%= nodeOid %>"/>
+				<bean:define id="originalArticleIds"><logic:iterate id="section" name="selectedPage" property="orderedSections" indexId="sindex"><% if (sindex > 0) {%>;<% } %><bean:write name="section" property="OID"/></logic:iterate></bean:define>
+				<input type="hidden" name="originalArticleIds" value="<%= originalArticleIds %>"/>
 				<bean:define id="buttonLabel"><bean:message bundle="MYORG_RESOURCES" key="label.content.section.order.save"/></bean:define>
-				<input type="submit" value="<%= buttonLabel %>" onclick="saveSectionOrders();">
+				<input type="submit" value="<%= buttonLabel %>" onclick="saveArticleOrders();"/>
 			</form>
 		</logic:notEmpty>
 	</div>
 	<div id="insertionMarker">
-		<img src="<%= request.getContextPath() %>/CSS/marker_top.gif">
-		<img src="<%= request.getContextPath() %>/CSS/marker_middle.gif" id="insertionMarkerLine">
-		<img src="<%= request.getContextPath() %>/CSS/marker_bottom.gif">
+		<img src="<%= request.getContextPath() %>/CSS/marker_top.gif" alt=""/>
+		<img src="<%= request.getContextPath() %>/CSS/marker_middle.gif" id="insertionMarkerLine" alt=""/>
+		<img src="<%= request.getContextPath() %>/CSS/marker_bottom.gif" alt=""/>
 	</div>
+	<% } %>
 </logic:present>
 <logic:notPresent name="selectedNode">
 	<h2>Welcome</h2>

@@ -29,7 +29,7 @@
 	
 	*/
 	
-	function saveSectionOrders()
+	function saveArticleOrders()
 	{
 		var saveString = "";
 		for(var no=0;no<dragableObjectArray.length;no++){
@@ -40,7 +40,7 @@
 		
 		//alert(saveString);	// For demo only
 
-		document.getElementById("sectionOrders").value = saveString;
+		document.getElementById("articleOrders").value = saveString;
 		document.forms[0].submit;
 		return true;
 

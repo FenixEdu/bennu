@@ -146,8 +146,8 @@ public class ContentAction extends BaseAction {
 	final Node node = getDomainObject(request, "nodeOid");
 	final Page page = node.getChildPage();
 
-	final String[] sectionOrders = request.getParameter("sectionOrders").split(";");
-	final String[] originalSectionIds = request.getParameter("originalSectionIds").split(";");
+	final String[] sectionOrders = request.getParameter("articleOrders").split(";");
+	final String[] originalSectionIds = request.getParameter("originalArticleIds").split(";");
 
 	if (sectionOrders.length == originalSectionIds.length) {
 	    final ArrayList<Section> originalSections = new ArrayList<Section>(sectionOrders.length);
@@ -162,12 +162,67 @@ public class ContentAction extends BaseAction {
 		i++;
 	    }
 	    for (final String sectionOrder : sectionOrders) {
-		final int so = Integer.parseInt(sectionOrder);
+		final int so = Integer.parseInt(sectionOrder.substring(7));
 		sections.add(originalSections.get(so));
 	    }
 	    page.reorderSections(sections);
 	}
 
+	return mapping.findForward("page");
+    }
+
+    private void print(String string, String[] strings) {
+	System.out.print(string);
+	System.out.print(":");
+	for (final String s : strings) {
+	    System.out.print(" ");
+	    System.out.print(s);
+	}
+	System.out.println();
+    }
+
+    public final ActionForward reorderSections(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	request.setAttribute("reorderSections", Boolean.TRUE);
+	return mapping.findForward("page");
+    }
+
+    public final ActionForward savePageOrders(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final Collection<Node> menuNodes = (Collection<Node>) request.getAttribute("menuNodes");
+
+	final String[] nodeOrders = request.getParameter("articleOrders").split(";");
+	final String[] originalNodeIds = request.getParameter("originalArticleIds").split(";");
+
+	if (nodeOrders.length == originalNodeIds.length) {
+	    final ArrayList<Node> originalNodes = new ArrayList<Node>(nodeOrders.length);
+	    final ArrayList<Node> nodes = new ArrayList<Node>(nodeOrders.length);
+	    int i = 0;
+	    for (final Node node : menuNodes) {
+		if (Long.toString(node.getOID()).equals(originalNodeIds[i])) {
+		    originalNodes.add(node);
+		} else {
+		    return mapping.findForward("page");
+		}
+		i++;
+	    }
+	    for (final String nodeOrder : nodeOrders) {
+		final int no = Integer.parseInt(nodeOrder.substring(11));
+		nodes.add(originalNodes.get(no));
+	    }
+	    Node.reorderSections(nodes);
+	}
+
+	final Collection<Node> contentPath = getContentPath(request);
+	final Collection<Node> newMenuNodes = getMenuNodes(request, contentPath);
+	request.setAttribute("menuNodes", newMenuNodes);
+
+	return mapping.findForward("page");
+    }
+
+    public final ActionForward reorderPages(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	request.setAttribute("reorderPages", Boolean.TRUE);
 	return mapping.findForward("page");
     }
 

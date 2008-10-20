@@ -5,15 +5,12 @@
 
 <title><bean:write name="myOrg" property="applicationTitle"/></title>
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <%
 	final String contextPath = request.getContextPath();
 %>
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/layout.css" media="screen">
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/dragContents.css" media="screen">
-
-<script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/custom.js">
-</script>
-
-<script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/dragContents.js">
-</script>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/layout.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/dragContents.css" media="screen"/>
+ 
+<script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/custom.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/dragContents.js"></script>

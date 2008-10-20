@@ -1,5 +1,6 @@
 package myorg.domain.content;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
@@ -79,6 +80,24 @@ public class Node extends Node_Base {
 	    if (currentNodeOrder >= threshold) {
 		node.setNodeOrder(Integer.valueOf(currentNodeOrder - 1));
 	    }
+	}
+    }
+
+    @Service
+    public static void reorderSections(final ArrayList<Node> nodes) {
+	final MyOrg myOrg = MyOrg.getInstance();
+	for (final Node node : myOrg.getTopLevelNodesSet()) {
+	    if (!nodes.contains(node)) {
+		throw new Error("Nodes changed!");
+	    }
+	}
+
+	int i = 0;
+	for (final Node node : nodes) {
+	    if (!myOrg.hasTopLevelNodes(node)) {
+		throw new Error("Nodes changed!");
+	    }
+	    node.setNodeOrder(Integer.valueOf(i++));
 	}
     }
 

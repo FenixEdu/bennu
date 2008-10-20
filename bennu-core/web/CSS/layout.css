@@ -116,6 +116,16 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 			color:#CC6714;
 		}
 
+		.navigationContentMove {
+			display: block;
+			padding: 5px;
+			width: 140px;
+			border-bottom: 1px solid #CCC;
+			color:#CC6714;
+			text-decoration: none;
+		}
+
+
 /* THE SMALL BOX BELOW NAV */
 
 		#navigation p {
@@ -136,7 +146,7 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 		#content p {
 		}
 
-		#contentStructuredP {
+		.contentStructuredP {
 			padding-bottom: 10px;
 			border-bottom: 1px solid #DDDDDD;
 		}

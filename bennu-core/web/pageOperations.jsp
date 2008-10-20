@@ -14,6 +14,10 @@
 			<bean:message bundle="MYORG_RESOURCES" key="label.content.page.edit"/>
 		</html:link>
 		|
+		<html:link page="/content.do?method=reorderPages" paramId="nodeOid" paramName="selectedNode" paramProperty="OID">
+			<bean:message bundle="MYORG_RESOURCES" key="label.content.page.order.change"/>
+		</html:link>
+		|
 		<bean:define id="confirmDelete">return confirmDelete('<bean:message bundle="MYORG_RESOURCES" key="label.content.page.delete.confirm"/>');</bean:define>
 		<html:link page="/content.do?method=deletePage" paramId="nodeOid" paramName="selectedNode" paramProperty="OID" onclick="<%= confirmDelete %>">
 			<bean:message bundle="MYORG_RESOURCES" key="label.content.page.delete"/>
