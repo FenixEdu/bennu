@@ -70,7 +70,7 @@
 	</filter>
    	<filter>
 	    <filter-name>RequestRewriteFilter</filter-name>
-	    <filter-class>pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter</filter-class>
+	    <filter-class>myorg.presentationTier.servlets.filters.RequestRewriterFilter</filter-class>
 	</filter>
 
 	<!-- Filter Mapping -->

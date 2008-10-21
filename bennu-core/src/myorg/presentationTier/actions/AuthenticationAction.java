@@ -18,7 +18,7 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
 @Mapping( path="/authenticationAction" )
 @Forwards( { @Forward(name="forward", path="/home.do?method=firstPage", redirect=true) } )
-public class AuthenticationAction extends BaseAction {
+public class AuthenticationAction extends ContextBaseAction {
 
     public static void login(final HttpServletRequest request, final String username, final String password) {
 	final UserView user = Authenticate.authenticate(username, password);

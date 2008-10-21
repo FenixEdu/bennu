@@ -4,17 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import myorg.domain.MyOrg;
-import myorg.domain.content.Node;
-import myorg.domain.content.Page;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -35,20 +29,6 @@ public abstract class BaseAction extends DispatchAction {
 	    final HttpServletResponse response) throws Exception {
 	final MyOrg myOrg = MyOrg.getInstance();
 	request.setAttribute("myOrg", myOrg);
-
-	final List<Node> contentPath = getContentPathFromParameters(request);
-	request.setAttribute("contentPath", contentPath);
-	if (contentPath.isEmpty()) {
-	    final Node node = Node.getFirstTopLevelNode();
-	    request.setAttribute("selectedNode", node);
-	} else {
-	    final Node selectedNode = contentPath.get(contentPath.size() - 1);
-	    request.setAttribute("selectedNode", selectedNode);
-	}
-
-	final Collection<Node> menuNodes = getMenuNodes(request, contentPath);
-	request.setAttribute("menuNodes", menuNodes);
-
 	return super.execute(mapping, form, request, response);
     }
 
@@ -125,47 +105,6 @@ public abstract class BaseAction extends DispatchAction {
 	outputStream.flush();
 	outputStream.close();
 	return null;
-    }
-
-    protected List<Node> getContentPathFromParameters(final HttpServletRequest httpServletRequest) {
-	final List<Node> contentPath = new ArrayList<Node>();
-
-	final String contentPathString = getAttribute(httpServletRequest, "contentPathString");
-	if (contentPathString != null) {
-	    final String[] contentPathParts = contentPathString.split(",");
-	    for (final String part : contentPathParts) {
-		final Node node = getDomainObject(part);
-		addNode(contentPath, node);
-	    }
-	}
-	final Node node = getDomainObject(httpServletRequest, "nodeOid");
-	addNode(contentPath, node);
-
-	return contentPath;
-    }
-
-    protected void addNode(final Collection<Node> contentPath, final Node node) {
-	if (node != null) {
-	    contentPath.add(node);
-	}
-    }
-
-    protected Collection<Node> getMenuNodes(final HttpServletRequest httpServletRequest, final Collection<Node> contentPath) {
-	final Collection<Node> menuNodes = new TreeSet<Node>(Node.COMPARATOR_BY_ORDER);
-	menuNodes.addAll(MyOrg.getInstance().getTopLevelNodesSet());
-	return menuNodes;
-    }
-
-    protected Collection<Node> getContentPath(final HttpServletRequest httpServletRequest) {
-	return (Collection<Node>) httpServletRequest.getAttribute("contentPath");
-    }
-
-    protected Page getCurrentPage(final HttpServletRequest httpServletRequest) {
-	Node lastNode = null;
-	for (final Node node : getContentPath(httpServletRequest)) {
-	    lastNode = node;
-	}
-	return lastNode == null ? null : lastNode.getChildPage();
     }
 
 }

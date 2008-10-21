@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import myorg.domain.MyOrg;
 import pt.ist.fenixWebFramework.services.Service;
@@ -99,6 +101,13 @@ public class Node extends Node_Base {
 	    }
 	    node.setNodeOrder(Integer.valueOf(i++));
 	}
+    }
+
+    public static SortedSet<Node> getOrderedTopLevelNodes() {
+	final SortedSet<Node> nodes = new TreeSet<Node>(Node.COMPARATOR_BY_ORDER);
+	final MyOrg myOrg = MyOrg.getInstance();
+	nodes.addAll(myOrg.getTopLevelNodesSet());
+	return nodes;
     }
 
 }

@@ -15,7 +15,7 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
 @Mapping( path="/configuration" )
 @Forwards( { @Forward(name="application.configuration", path="/applicationConfiguration.jsp", redirect=true) } )
-public class ConfigurationAction extends BaseAction {
+public class ConfigurationAction extends ContextBaseAction {
 
     public ActionForward applicationConfiguration(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {

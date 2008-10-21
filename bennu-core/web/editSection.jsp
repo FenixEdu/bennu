@@ -5,8 +5,7 @@
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 
 <h2><bean:message key="label.content.section.edit.title" bundle="MYORG_RESOURCES" /></h2>
-<bean:define id="editUrl">content.do?method=viewPage&nodeOid=<bean:write name="selectedNode" property="OID"/></bean:define>
-<fr:edit id="section" name="section" schema="myorg.domain.content.Section" action="<%= editUrl %>">
+<fr:edit id="section" name="section" schema="myorg.domain.content.Section" action="content.do?method=viewPage">
 	<fr:layout name="tabular">
 		<fr:property name="classes" value="form thwidth150px"/>
 		<fr:property name="columnClasses" value=",,tderror"/>

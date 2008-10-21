@@ -4,6 +4,9 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 
+<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
+<bean:define id="selectedNode" name="context" property="selectedNode"/>
+
 <logic:present name="selectedNode">
 	<bean:define id="selectedPage" name="selectedNode" property="childPage"/>
 	<h2><bean:write name="selectedPage" property="title"/></h2>
