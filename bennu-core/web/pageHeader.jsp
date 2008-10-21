@@ -36,7 +36,6 @@
 		</logic:notPresent>
 		<logic:present name="USER_SESSION_ATTRIBUTE">
 			<div class="login">
-				<html:link action="/configuration.do?method=applicationConfiguration"><bean:message key="label.configuration.link" bundle="MYORG_RESOURCES"/></html:link> |
 				<a href="https://193.136.132.88/Qualidade/Aquisicoes" target="_blank"><bean:message key="label.help.link" bundle="MYORG_RESOURCES"/></a> |  
 				<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES"/>: <bean:write name="USER_SESSION_ATTRIBUTE" property="username"/> |
 				<% if (isCasEnabled) {%>
