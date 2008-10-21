@@ -80,6 +80,7 @@
 					<input class=" button" type="submit" name="Submit" value="Ok" />
 				</form>
 
+				<!-- BLOCK_HAS_CONTEXT -->
 				<!-- NO_CHECKSUM --><form method="get" action="http://www.google.com/search">
 					<input type="hidden" name="site" value="" />
 					<input type="hidden" name="hl" value="en" />
@@ -90,10 +91,8 @@
 					<input type="text" id="q" name="q" value="Search..." />
 					<input class=" button" type="submit" name="Submit" value="Google" />
 				</form>
+				<!-- END_BLOCK_HAS_CONTEXT -->
 			</div>
-
-			
-
 		</td>
 	</tr>
 </table>
