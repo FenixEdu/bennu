@@ -86,7 +86,7 @@ public class Node extends Node_Base {
     }
 
     @Service
-    public static void reorderSections(final ArrayList<Node> nodes) {
+    public static void reorderNodes(final ArrayList<Node> nodes) {
 	final MyOrg myOrg = MyOrg.getInstance();
 	for (final Node node : myOrg.getTopLevelNodesSet()) {
 	    if (!nodes.contains(node)) {

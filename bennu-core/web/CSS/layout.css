@@ -89,8 +89,16 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 		}
 
 /* NAVIGATION ELEMENTS */
+
+		 #navigation {
+			margin-left: 0;
+			padding-left: 0;
+			list-style-type: none;			
+			float: left;
+			width: 140px;
+		}
 	
-		 #navigation ul {
+		 #navlist ul {
 			margin-left: 0;
 			padding-left: 0;
 			list-style-type: none;			
@@ -98,19 +106,22 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 			width: 140px;
 		}
 
-		#navigation a {
+		.navsublist {
+			margin-left: 15px;
+		}
+
+		#navlist a {
 			display: block;
 			padding: 5px;
-			width: 140px;
 			border-bottom: 1px solid #CCC;
 		}
 
-		#navigation a:link, #navlist a:visited {
+		#navlist a:link a:visited {
 			color:#CC6714;
 			text-decoration: none;
 		}
 		
-		#navigation a:hover {
+		#navlist a:hover {
 			background: #000000 url(arrow.gif) 96% 50% no-repeat;
 			background-color: #F5F5F5;
 			color:#CC6714;
@@ -128,13 +139,20 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 
 /* THE SMALL BOX BELOW NAV */
 
-		#navigation p {
+		#navlist p {
 			margin-top: 40px;
 			padding: 5px;
 			border-bottom: 1px dotted #CCC;
 			border-top: 1px dotted #CCC;
 		}
-		
+
+		#navops p {
+			margin-top: 40px;
+			padding: 5px;
+			border-bottom: 1px dotted #CCC;
+			border-top: 1px dotted #CCC;
+		}
+
 /* CONTENT ELEMENTS */
 
 		#content {
@@ -170,6 +188,15 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 		}
 		
 		#pageops p {
+			padding-bottom: 10px;
+			border-bottom: 1px solid #DDDDDD;
+		}
+
+		#beadCrumbs {
+			float: left;
+		}
+		
+		#beadCrumbs p {
 			padding-bottom: 10px;
 			border-bottom: 1px solid #DDDDDD;
 		}

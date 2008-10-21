@@ -83,3 +83,4 @@
 		Remember that you cad define which users have management roles in your build.properties file.
 	</p>
 </logic:notPresent>
+	

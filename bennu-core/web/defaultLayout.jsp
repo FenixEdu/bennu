@@ -28,6 +28,7 @@
 
 		<div id="content">
 			<tiles:insert attribute="pageOperations" ignore="true"/>
+			<tiles:insert attribute="breadCrumbs" ignore="true"/>
 		  	<tiles:insert attribute="body" ignore="true"/>
 		</div>
 	</div>

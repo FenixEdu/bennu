@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Stack;
 
 import myorg.domain.content.Node;
+import myorg.domain.content.Page;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class Context {
@@ -38,7 +39,13 @@ public class Context {
     }
 
     public Collection<Node> getMenuElements() {
-	return elements.size() > 1 ? null : Node.getOrderedTopLevelNodes();
+	if (elements.size() > 1) {
+	    final Node parentNode = elements.get(elements.size() - 2);
+	    final Page parentPage = parentNode.getChildPage();
+	    return parentPage.getOrderedChildNodes();
+	} else {
+	    return Node.getOrderedTopLevelNodes();
+	}
     }
 
     public String getPath() {
@@ -74,7 +81,9 @@ public class Context {
     }
 
     public void pop() {
-	elements.pop();
+	if (!elements.isEmpty()) {
+	    elements.pop();
+	}
     }
 
     public void pop(final Node node) {
@@ -88,6 +97,11 @@ public class Context {
 
     public Node getSelectedNode() {
 	return elements.isEmpty() ? null : elements.peek();
+    }
+
+    public Node getParentNode() {
+	final int s = elements.size();
+	return s > 1 ? elements.get(s - 2) : null;
     }
 
 }

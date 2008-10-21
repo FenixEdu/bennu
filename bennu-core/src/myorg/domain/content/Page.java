@@ -2,7 +2,10 @@ package myorg.domain.content;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import myorg.domain.MyOrg;
@@ -22,6 +25,11 @@ public class Page extends Page_Base {
 	DomainReference<Page> parentPage;
 
 	public PageBean() {
+	}
+
+	public PageBean(final Page parentPage) {
+	    this();
+	    setParentPage(parentPage);
 	}
 
 	public MultiLanguageString getTitle() {
@@ -95,6 +103,29 @@ public class Page extends Page_Base {
 		throw new Error("Sections changed!");
 	    }
 	    section.setSectionOrder(Integer.valueOf(i++));
+	}
+    }
+
+    public Collection<Node> getOrderedChildNodes() {
+	final SortedSet<Node> nodes = new TreeSet<Node>(Node.COMPARATOR_BY_ORDER);
+	nodes.addAll(getChildNodesSet());
+	return nodes;
+    }
+
+    @Service
+    public void reorderNodes(final List<Node> nodes) {
+	for (final Node node : getChildNodesSet()) {
+	    if (!nodes.contains(node)) {
+		throw new Error("Nodes changed!");
+	    }
+	}
+
+	int i = 0;
+	for (final Node node : nodes) {
+	    if (!hasChildNodes(node)) {
+		throw new Error("Nodes changed!");
+	    }
+	    node.setNodeOrder(Integer.valueOf(i++));
 	}
     }
 

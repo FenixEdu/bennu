@@ -33,5 +33,6 @@
 			</html:link>
 		</logic:present>
 	</div>
-</logic:present>
 <br/>
+<br/>
+</logic:present>

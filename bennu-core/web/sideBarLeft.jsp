@@ -7,6 +7,11 @@
 <bean:define id="menuElements" name="context" property="menuElements"/>
 <bean:define id="prefixPath" name="context" property="prefixPath"/>
 
+<div id="navops">
+	<!-- HAS_CONTEXT --><html:link page="/content.do?method=prepareCreateNewPage">
+		<bean:message bundle="MYORG_RESOURCES" key="label.content.page.new"/>
+	</html:link>
+</div>
 <div id="navlist">
 <%
 	final Object o = request.getAttribute("reorderPages");
@@ -21,9 +26,9 @@
 		<logic:iterate id="node" name="menuElements" indexId="nindex">
 			<bean:define id="articleId">articleNode<%= nindex %></bean:define>
 			<li>
+				<bean:define id="url">/content.do?method=viewPage&amp;_CONTEXT_PATH_=<bean:write name="prefixPath"/><bean:write name="node" property="OID"/></bean:define>
 				<div <% if (reorder) {%>dragableBox="true"<% } %> id="<%= articleId %>">
 					<% if (!reorder) { %>
-						<bean:define id="url">/content.do?method=viewPage&amp;_CONTEXT_PATH_=<bean:write name="prefixPath"/><bean:write name="node" property="OID"/></bean:define>
 						<!-- HAS_CONTEXT --><html:link page="<%= url %>">
 							<bean:write name="node" property="childPage.link"/>
 						</html:link>
@@ -34,6 +39,18 @@
 					<% } %>
 				</div>
 			</li>
+			<logic:notEmpty name="node" property="childPage.childNodes">
+				<% if (!reorder && context.getSelectedNode() == node) { %>
+					<logic:iterate id="childNode" name="node" property="childPage.orderedChildNodes">
+						<li class="navsublist">
+							<bean:define id="urlChild"><bean:write name="url" filter="false"/>,<bean:write name="childNode" property="OID"/></bean:define>
+							<!-- HAS_CONTEXT --><html:link page="<%= urlChild %>">
+								<bean:write name="childNode" property="childPage.link"/>
+							</html:link>
+						</li>
+					</logic:iterate>
+				<% } %>
+			</logic:notEmpty>
 		</logic:iterate>
 	</logic:notEmpty>
 	<% if (reorder) {%>

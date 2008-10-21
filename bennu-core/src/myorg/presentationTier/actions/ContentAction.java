@@ -63,7 +63,10 @@ public class ContentAction extends ContextBaseAction {
 
     public final ActionForward prepareCreateNewPage(final ActionMapping mapping, final ActionForm form,
 	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-	final PageBean pageBean = new PageBean();
+	final Context context = getContext(request);
+	final Node node = context.getSelectedNode();
+	final Page page = node == null ? null : node.getChildPage();
+	final PageBean pageBean = new PageBean(page);
 	request.setAttribute("pageBean", pageBean);
 	return mapping.findForward("new.page");
     }
@@ -73,7 +76,9 @@ public class ContentAction extends ContextBaseAction {
 	final PageBean pageBean = getRenderedObject();
 	final Node node = Page.createNewPage(pageBean);
 	final Context context = getContext(request);
-	context.pop();
+	if (node.getParentPage() == null) {
+	    context.pop();
+	}
 	context.push(node);
 	return viewPage(mapping, form, request, response);
     }
@@ -185,7 +190,12 @@ public class ContentAction extends ContextBaseAction {
 		final int no = Integer.parseInt(nodeOrder.substring(11));
 		nodes.add(originalNodes.get(no));
 	    }
-	    Node.reorderSections(nodes);
+	    final Node parentNode = context.getParentNode();
+	    if (parentNode == null) {
+		Node.reorderNodes(nodes);
+	    } else {
+		parentNode.getChildPage().reorderNodes(nodes);
+	    }
 	}
 
 	return viewPage(mapping, form, request, response);
