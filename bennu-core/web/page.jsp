@@ -25,23 +25,25 @@
 						<logic:present name="section" property="title">
 							<logic:notEmpty name="section" property="title">
 								<bean:define id="title" name="section" property="title"/>
-								<div style="float: right;">
-									<html:link page="/content.do?method=prepareEditSection" paramId="sectionOid" paramName="section" paramProperty="OID">
-										<bean:message bundle="MYORG_RESOURCES" key="label.content.section.edit"/>
-									</html:link>
-									|
-									<html:link page="/content.do?method=reorderSections" paramId="nodeOid" paramName="selectedNode" paramProperty="OID">
-										<bean:message bundle="MYORG_RESOURCES" key="label.content.section.order.change"/>
-									</html:link>
-									|
-									<bean:define id="confirmDelete">return confirmDelete('<bean:message
-											bundle="MYORG_RESOURCES" key="label.content.section.delete.confirm"
-											arg0="<%= title.toString() %>"/>');</bean:define>
-									<html:link page="/content.do?method=deleteSection" paramId="sectionOid" paramName="section" paramProperty="OID"
-											onclick="<%= confirmDelete %>">
-										<bean:message bundle="MYORG_RESOURCES" key="label.content.section.delete"/>
-									</html:link>
-								</div>
+								<logic:present name="USER_SESSION_ATTRIBUTE">
+									<div style="float: right;">
+										<html:link page="/content.do?method=prepareEditSection" paramId="sectionOid" paramName="section" paramProperty="OID">
+											<bean:message bundle="MYORG_RESOURCES" key="label.content.section.edit"/>
+										</html:link>
+										|
+										<html:link page="/content.do?method=reorderSections" paramId="nodeOid" paramName="selectedNode" paramProperty="OID">
+											<bean:message bundle="MYORG_RESOURCES" key="label.content.section.order.change"/>
+										</html:link>
+										|
+										<bean:define id="confirmDelete">return confirmDelete('<bean:message
+												bundle="MYORG_RESOURCES" key="label.content.section.delete.confirm"
+												arg0="<%= title.toString() %>"/>');</bean:define>
+										<html:link page="/content.do?method=deleteSection" paramId="sectionOid" paramName="section" paramProperty="OID"
+												onclick="<%= confirmDelete %>">
+											<bean:message bundle="MYORG_RESOURCES" key="label.content.section.delete"/>
+										</html:link>
+									</div>
+								</logic:present>
 								<h3>
 									<bean:write name="section" property="title" filter="false"/>
 								</h3>
