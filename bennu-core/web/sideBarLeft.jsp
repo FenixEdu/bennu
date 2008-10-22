@@ -78,12 +78,14 @@
 				</div>
 		</li>
 	<% } %>
+<!-- 
 	<li>
 		<p>
 			<strong>A tiny little service announcement.</strong>
 			<br/>Put all your little tidbits of information or pictures in this small yet useful little area.
 		</p>
 	</li>
+ -->
 </ul>
 <logic:present name="USER_SESSION_ATTRIBUTE">
 	<ul>
