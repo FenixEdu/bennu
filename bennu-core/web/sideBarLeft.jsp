@@ -83,10 +83,11 @@
 		</p>
 	</li>
 </ul>
-<ul>
-	<li>
-		<html:link action="/configuration.do?method=applicationConfiguration"><bean:message key="label.configuration.link" bundle="MYORG_RESOURCES"/></html:link>
-	</li>
-</ul>
-
+<logic:present name="USER_SESSION_ATTRIBUTE">
+	<ul>
+		<li>
+			<html:link action="/configuration.do?method=applicationConfiguration"><bean:message key="label.configuration.link" bundle="MYORG_RESOURCES"/></html:link>
+		</li>
+	</ul>
+</logic:present>
 </div>

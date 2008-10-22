@@ -5,9 +5,9 @@
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 
 <bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
-<bean:define id="selectedNode" name="context" property="selectedNode"/>
 
-<logic:present name="selectedNode">
+<logic:present name="context" property="selectedNode">
+	<bean:define id="selectedNode" name="context" property="selectedNode"/>
 	<bean:define id="selectedPage" name="selectedNode" property="childPage"/>
 	<h2><bean:write name="selectedPage" property="title"/></h2>
 	<%
@@ -76,7 +76,7 @@
 	</div>
 	<% } %>
 </logic:present>
-<logic:notPresent name="selectedNode">
+<logic:notPresent name="context" property="selectedNode">
 	<h2>Welcome</h2>
 	<p>
 		This application has not yet been configured. To do so please log in with a user that has management priveledges, and start creating contents.

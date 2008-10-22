@@ -51,10 +51,12 @@ public class Context {
     public String getPath() {
 	final StringBuilder stringBuilder = new StringBuilder();
 	for (final Node node : elements) {
-	    if (stringBuilder.length() > 0) {
-		stringBuilder.append(PATH_PART_SEPERATOR);
+	    if (node != null) {
+		if (stringBuilder.length() > 0) {
+		    stringBuilder.append(PATH_PART_SEPERATOR);
+		}
+		stringBuilder.append(node.getOID());
 	    }
-	    stringBuilder.append(node.getOID());
 	}
 	return stringBuilder.toString();
     }
