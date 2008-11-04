@@ -107,4 +107,7 @@ public abstract class BaseAction extends DispatchAction {
 	return null;
     }
 
+    public MyOrg getMyOrg() {
+	return MyOrg.getInstance();
+    }
 }
