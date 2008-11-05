@@ -128,6 +128,7 @@
 			<arg value="${build.home.webinf.libs}/fenix-framework.jar"/>
 			<arg value="${build.home.webinf.libs}/fenix-web-framework.jar"/>
 			<arg value="${build.home.webinf.libs}/joda-time-1.5.2.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-tools.jar"/>
 		</java>
 		<java classname="pt.ist.fenixframework.pstm.PostProcessDomainClasses" 
 				dir="${build.home.webinf.classes}"
