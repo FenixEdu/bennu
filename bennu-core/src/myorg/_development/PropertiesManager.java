@@ -33,9 +33,9 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
         properties.setProperty(key, value);
     }
 
-    public static Config getFenixFrameworkConfig(final String domainModel) {
+    public static Config getFenixFrameworkConfig(final String[] domainModels) {
         return new Config() {{
-            domainModelPath = domainModel;
+            domainModelPaths = domainModels;
             dbAlias = getProperty("db.alias");
             dbUsername = getProperty("db.user");
             dbPassword = getProperty("db.pass");

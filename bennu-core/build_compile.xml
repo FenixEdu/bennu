@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="compile" name="MyOrg">
+
+	<property environment="env"/>
+	<property name="encoding" value="UTF-8"/>
+
+	<property file="build.properties"/>
+
+	<!-- Source code directories -->
+	<property name="config" value="conf"/>
+	<property name="src" value="src"/>
+	<property name="src_gen" value="src_gen"/>
+	<property name="web" value="web"/>
+	<property name="reports" value="reports"/>	
+	<property name="reports.images" value="reports/images"/>
+
+	<!-- Web Directories -->
+	<property name="build.home" location="build"/>
+	<property name="build.home.webinf" value="${build.home}/WEB-INF"/>
+	<property name="build.home.webinf.classes" value="${build.home.webinf}/classes"/>
+	<property name="build.home.webinf.libs" value="${build.home.webinf}/lib"/>
+	
+	<property name="build.home.reports" value="${build.home.webinf.classes}/reports"/>
+	<property name="build.home.reports.images" value="${build.home.webinf.classes}/images"/>
+
+	<!-- Directories for deploy -->
+	<property name="deploy.home" location="deploy"/>
+
+	<property name="lib" location="lib"/>
+
+	<property name="compile.debug"       value="on"/>
+	<property name="compile.deprecation" value="off"/>
+	<property name="compile.optimize"    value="on"/>
+
+	<property name="dml.fenix.sqltypes" value="${config}/dataTypesJDBCTypes.properties"/>
+	<property name="dml.fenix.typeconverters" value="${config}/dataTypeConversors.properties"/>
+
+	<target name="clean-all" description="Removes any generated files">
+		<delete dir="${build.home}"/>
+		<delete dir="${deploy.home}"/>
+		<delete dir="${src_gen}"/>
+		<delete file=".actionAnnotationLog"/>
+	</target>
+
+	<target name="prepare" description="Create necessary dirs">
+		<mkdir dir="${build.home}"/>
+		<mkdir dir="${build.home.webinf.classes}"/>
+		<mkdir dir="${deploy.home}"/>
+		<mkdir dir="${src_gen}"/>
+		<tstamp>
+		   <format property="build.version" pattern="yyyy/MM/dd HH:mm:ss"/>
+		</tstamp>
+		<echo file="${build.home.webinf.classes}/.build.version">${build.version}</echo>
+		<copy file="build.properties" tofile="${build.home.webinf.classes}/configuration.properties"/>
+		<ant antfile="build_compile_aux.xml" target="prepare" inheritall="true" inheritrefs="true"/>
+	</target>
+
+	<path id="class.path.ref">
+        <fileset dir="${lib}">
+   		    <include name="*.jar"/>
+   		</fileset>
+		<fileset dir="${build.home.webinf.libs}">
+			<include name="*.jar"/>
+		</fileset>
+        <fileset dir="${build.home.webinf.classes}">
+   		    <include name=".dmlProjectPackageMapper"/>
+   		</fileset>
+	</path>
+
+	<path id="run.class.path">
+		<pathelement path="${build.home.webinf.classes}"/>
+        <fileset dir="${lib}">
+   		    <include name="*.jar"/>
+   		</fileset>
+		<fileset dir="${build.home.webinf.libs}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="generate">
+		<java classname="dml.ConverterClassAwareDmlCompiler" fork="true">
+			<jvmarg value="-Ddml.fenix.sqltypes=${dml.fenix.sqltypes}"/>
+			<jvmarg value="-Ddml.fenix.typeconverters=${dml.fenix.typeconverters}"/>
+			<arg value="-f"/>
+			<arg value="-d"/>
+			<arg value="${src}"/>
+			<arg value="-db"/>
+			<arg value="${src_gen}"/>
+			<arg value="-generator"/>
+			<arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParam"/>
+			<arg value="${build.home.webinf.classes}"/>
+			<arg value="myorg.persistenceTier.SQL2JavaConverters"/>
+			<arg value="myorg.persistenceTier."/>
+			<classpath refid="class.path.ref"/>
+		</java>
+	</target>
+
+	<target name="compile" description="Compiles code" depends="prepare, generate">
+		<ant antfile="build_compile_aux.xml" target="compile" inheritall="true" inheritrefs="true"/>
+		<copy file=".actionAnnotationLog" todir="${build.home.webinf.classes}" overwrite="true" failonerror="false"/>
+		<java classname="pt.ist.fenixWebFramework.services.ServiceAnnotationInjector" failonerror="true">
+			<classpath refid="class.path.ref"/>
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+			</classpath>
+			<arg value="${build.home.webinf.classes}"/>
+			<arg value="${build.home.webinf.libs}/jvstm.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-framework.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-web-framework.jar"/>
+			<arg value="${build.home.webinf.libs}/joda-time-1.5.2.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-tools.jar"/>
+		</java>
+		<java classname="pt.ist.fenixframework.pstm.PostProcessDomainClasses" 
+				dir="${build.home.webinf.classes}"
+				fork="true">
+			<classpath refid="class.path.ref"/>
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+			</classpath>
+			<arg value="-d"/>
+			<arg value="${build.home.webinf.classes}"/>
+		</java>
+		<antcall target="compile-reports"/>
+	</target>
+
+	<target name="war" depends="compile" description="Generates a web archive of the application.">
+		<war destfile="${deploy.home}/${war.name}.war" webxml="${build.home.webinf}/web.xml">
+			<fileset dir="${web}">
+				<exclude name="WEB-INF/web.xml"/>
+				<exclude name="WEB-INF/classes/**"/>
+				<exclude name="WEB-INF/lib/*"/>
+			</fileset>
+			<lib dir="${build.home.webinf.libs}">
+				<exclude name="servlet-api-2.3.jar"/>
+			</lib>
+			<classes dir="${build.home.webinf.classes}"/>
+		</war>
+	</target>
+
+	<target name="compile-reports" >
+		<mkdir dir="${build.home.reports}"/>
+		<mkdir dir="${build.home.reports.images}"/>
+		<taskdef name="jrc" 
+		      classname="net.sf.jasperreports.ant.JRAntCompileTask">
+			<classpath refid="class.path.ref"/>
+		</taskdef>
+		<jrc destdir="${build.home.reports}" srcdir="${reports}">
+			<classpath refid="class.path.ref"/>
+			<classpath>
+				<pathelement path="${build.home.webinf.classes};"/>
+			</classpath>
+			<include name="**/*.jrxml"/>
+		</jrc>
+		<copy todir="${build.home.reports.images}/">
+			<fileset dir="${reports.images}"/>
+		</copy>
+	</target>
+
+    <target name="gen-sqls" depends="compile"
+    		description="Generates possible sql instructions to be run on next deploy.">
+		<java classname="pt.ist.fenixWebFramework.repository.SQLUpdateGenerator" fork="true">
+<!--				jvmargs="-Xdebug -Xnoagent -Djava.compiler=NONE  -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspend=y" -->
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+			    <fileset dir="${build.home.webinf.libs}">
+			        <include name="*.jar"/>
+                </fileset>
+			</classpath>
+			<arg value="${build.home.webinf.classes}"/>
+			<arg value="${db.alias}"/>
+			<arg value="${db.user}"/>
+			<arg value="${db.pass}"/>
+		</java>
+    </target>
+
+    <target name="seed" description="Seed a module project.">
+    	<copy todir="${dir}">
+    		<fileset dir="seed"/>
+    	</copy>
+    	<replace file="${dir}/.project">
+			<replacefilter token="@module-name@" value="${module-name}"/>
+    	</replace>
+    </target>
+
+</project>

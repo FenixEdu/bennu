@@ -16,3 +16,5 @@ cas.logoutUrl=https://login.ist.utl.pt/logout
 manager.usernames=marvin
 war.name=myorg.ist.utl.pt
 webServices.external.urls=
+module.src.dirs=
+module.web.dirs=

@@ -4,7 +4,7 @@
 	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
 </schema>
 
-<schema name="myorg.presentationTier.actions.ContentAction.LocaleBean" type="myorg.presentationTier.actions.ContentAction$LocaleBean" bundle="MYORG_RESOURCES">
+<schema name="myorg.presentationTier.actions.ContextBaseAction.LocaleBean" type="myorg.presentationTier.actions.ContextBaseAction$LocaleBean" bundle="MYORG_RESOURCES">
 	<slot name="language" key="label.application.language" bundle="MYORG_RESOURCES" layout="postback"/>
 </schema>
 

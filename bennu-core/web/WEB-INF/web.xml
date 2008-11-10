@@ -132,8 +132,8 @@
         <servlet-name>StartupServlet</servlet-name>
         <servlet-class>myorg.presentationTier.servlets.StartupServlet</servlet-class>
         <init-param>
-            <param-name>domainmodel</param-name>
-            <param-value>/WEB-INF/classes/domain_model.dml</param-value>
+            <param-name>domainmodelPath</param-name>
+            <param-value>/WEB-INF/classes</param-value>
         </init-param>        
         <load-on-startup>1</load-on-startup>
     </servlet>
