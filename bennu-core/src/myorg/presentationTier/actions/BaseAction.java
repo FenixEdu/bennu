@@ -13,6 +13,8 @@ import myorg.domain.MyOrg;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
 
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
@@ -109,5 +111,15 @@ public abstract class BaseAction extends DispatchAction {
 
     public MyOrg getMyOrg() {
 	return MyOrg.getInstance();
+    }
+
+    protected void addMessage(final HttpServletRequest request, final String key, final String... args) {
+	addMessage(request, "message", key, args);
+    }
+
+    protected void addMessage(final HttpServletRequest request, final String property, final String key, final String... args) {
+	final ActionMessages messages = getMessages(request);
+	messages.add(property, new ActionMessage(key, args));
+	saveMessages(request, messages);
     }
 }
