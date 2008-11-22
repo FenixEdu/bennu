@@ -10,13 +10,15 @@ valueType org.joda.time.LocalDate as LocalDate;
 valueType pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString as MultiLanguageString;
 valueType pt.utl.ist.fenix.tools.util.Strings as Strings;
 
+enum myorg.domain.organization.person.IDDocumentType as IDDocumentType;
+enum myorg.domain.organization.person.Gender as Gender;
+enum myorg.domain.organization.person.MaritalStatus as MaritalStatus;
 
 class MyOrg {
 	MultiLanguageString applicationTitle;
 	MultiLanguageString applicationSubTitle;
 	MultiLanguageString applicationCopyright;
 }
-
 
 class content.Node {
 	Integer nodeOrder;
@@ -33,26 +35,6 @@ class content.Section {
 	Integer sectionOrder;
 }
 
-class organization.AccountabilityType {
-	MultiLanguageString type;
-}
-
-class organization.Accountability {
-	LocalDate beginDate;
-	LocalDate endDate;
-}
-
-class organization.Party {
-	String ojbConcreteClass;
-	MultiLanguageString name;
-}
-
-	class organization.Person extends organization.Party {
-	}
-
-	class organization.Unit extends organization.Party {
-	}
-
 class User {
 	String username;
 	String password;
@@ -62,6 +44,61 @@ class Role {
 	RoleType roleType;
 }
 
+class organization.AccountabilityType {
+	String ojbConcreteClass;
+	String type;
+	MultiLanguageString name;
+}
+
+	class organization.ConnectionRuleAccountabilityType extends organization.AccountabilityType {
+	}
+
+class organization.Accountability {
+	LocalDate beginDate;
+	LocalDate endDate;
+}
+
+class organization.PartyType {
+	String type;
+	MultiLanguageString name;
+}
+
+class organization.Party {
+	String ojbConcreteClass;
+	MultiLanguageString partyName;
+}
+
+	class organization.Person extends organization.Party {
+		String documentIdNumber;
+		IDDocumentType idDocumentType;
+		LocalDate emissionDateOfDocumentId;
+		LocalDate expirationDateOfDocumentId;
+		String emissionLocationOfDocumentId;
+
+		String fiscalCode;
+				
+		Gender gender;
+		MaritalStatus maritalStatus;
+
+		LocalDate birthDate;
+		String birthDistrict;
+		String birthDistrictSubdivision;
+		String birthParish;
+		
+		String fathersName;
+		String mothersName;
+		
+		// Add to relation
+    	//private DomainReference<Country> nationality;
+    	//private DomainReference<Country> countryOfBirth;
+	}
+
+	class organization.Unit extends organization.Party {
+		String acronym;
+	}
+
+class organization.ConnectionRule {
+}
 
 relation MyOrgNode {
 	MyOrg playsRole myOrg;
@@ -112,52 +149,6 @@ relation PageSection {
 	}
 }
 
-relation MyOrgAccountabilityType {
-	MyOrg playsRole myOrg;
-	organization.AccountabilityType playsRole accountabilitiesType {
-		multiplicity *;
-	}
-}
-
-relation MyOrgAccountability {
-	MyOrg playsRole myOrg;
-	organization.Accountability playsRole accountabilities {
-		multiplicity *;
-	}
-}
-
-relation AccountabilityAccountabilityType {
-	organization.Accountability playsRole accountabilities {
-		multiplicity *;
-	}
-	organization.AccountabilityType playsRole accountabilityType;
-}
-
-relation MyOrgParty {
-	MyOrg playsRole myOrg;
-	organization.Party playsRole parties {
-		multiplicity *;
-	}
-}
-
-relation PartyChildAccountability {
-	organization.Party playsRole parentParties {
-		multiplicity *;
-	}
-	organization.Accountability playsRole childAccountabilities {
-		multiplicity *;
-	}
-}
-
-relation PartyParentAccountability {
-	organization.Party playsRole childParties {
-		multiplicity *;
-	}
-	organization.Accountability playsRole parentAccountabilities {
-		multiplicity *;
-	}
-}
-
 relation MyOrgUser {
 	MyOrg playsRole myOrg;
 	User playsRole user {
@@ -184,4 +175,95 @@ relation RoleUser {
 relation UserPerson {
 	User playsRole user;
 	organization.Person playsRole person;
+}
+
+relation MyOrgAccountabilityType {
+	MyOrg playsRole myOrg;
+	organization.AccountabilityType playsRole accountabilityTypes {
+		multiplicity *;
+	}
+}
+
+relation MyOrgAccountability {
+	MyOrg playsRole myOrg;
+	organization.Accountability playsRole accountabilities {
+		multiplicity *;
+	}
+}
+
+relation MyOrgPartyType {
+	MyOrg playsRole myOrg;
+	organization.PartyType playsRole partyTypes {
+		multiplicity *;
+	}
+}
+
+relation AccountabilityAccountabilityType {
+	organization.Accountability playsRole accountabilities {
+		multiplicity *;
+	}
+	organization.AccountabilityType playsRole accountabilityType;
+}
+
+relation MyOrgParty {
+	MyOrg playsRole myOrg;
+	organization.Party playsRole parties {
+		multiplicity *;
+	}
+}
+
+relation MyOrgTopUnit {
+	MyOrg playsRole myOrgFromTopUnit;
+	organization.Unit playsRole topUnits {
+		multiplicity *;
+	}
+}
+
+relation PartyTypeParty {
+	organization.PartyType playsRole partyType;
+	organization.Party playsRole parties {
+		multiplicity *;
+	}
+}
+
+relation PartyParentAccountabilities {
+	organization.Party playsRole child;
+	organization.Accountability playsRole parentAccountabilities {
+		multiplicity *;
+	}
+}
+
+relation PartyChildAccountabilities {
+	organization.Party playsRole parent;
+	organization.Accountability playsRole childAccountabilities {
+		multiplicity *;
+	}
+}
+
+relation ConnectionRuleParentPartyType {
+	organization.PartyType playsRole allowedParent;
+	organization.ConnectionRule playsRole childConnectionRules {
+		multiplicity *;
+	}
+}
+
+relation ConnectionRuleChildPartyType {
+	organization.PartyType playsRole allowedChild;
+	organization.ConnectionRule playsRole parentConnectionRules {
+		multiplicity *;
+	}
+}
+
+relation ConnectionRuleConnectionRuleAccountabilityType {
+	organization.ConnectionRuleAccountabilityType playsRole accountabilityType;
+	organization.ConnectionRule playsRole connectionRules {
+		multiplicity *;
+	}
+}
+
+relation MyOrgConnectionRule {
+	MyOrg playsRole myOrg;
+	organization.ConnectionRule playsRole connectionRules {
+		multiplicity *;
+	}
 }
