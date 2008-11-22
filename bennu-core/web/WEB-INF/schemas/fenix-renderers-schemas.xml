@@ -5,8 +5,10 @@
 -->
 <!DOCTYPE schemas SYSTEM "fenix-renderers-schemas.dtd" [
 	<!ENTITY myOrg SYSTEM "myOrg-schemas.xml">
+	<!ENTITY organization SYSTEM "organization-schemas.xml">
 ]>
 
 <schemas>
 	&myOrg;
+	&organization;
 </schemas>

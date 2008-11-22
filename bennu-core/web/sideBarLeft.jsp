@@ -92,6 +92,9 @@
 		<li>
 			<html:link action="/configuration.do?method=applicationConfiguration"><bean:message key="label.configuration.link" bundle="MYORG_RESOURCES"/></html:link>
 		</li>
+		<li>
+			<html:link action="/organization.do?method=showOptions"><bean:message key="label.organization" bundle="ORGANIZATION_RESOURCES"/></html:link>
+		</li>
 	</ul>
 </logic:present>
 </div>
