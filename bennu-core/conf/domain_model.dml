@@ -20,21 +20,6 @@ class MyOrg {
 	MultiLanguageString applicationCopyright;
 }
 
-class content.Node {
-	Integer nodeOrder;
-}
-
-class content.Page {
-	MultiLanguageString title;
-	MultiLanguageString link;
-}
-
-class content.Section {
-	MultiLanguageString title;
-	MultiLanguageString contents;
-	Integer sectionOrder;
-}
-
 class User {
 	String username;
 	String password;
@@ -100,54 +85,6 @@ class organization.Party {
 class organization.ConnectionRule {
 }
 
-relation MyOrgNode {
-	MyOrg playsRole myOrg;
-	content.Node playsRole nodes {
-		multiplicity *;
-	}
-}
-
-relation MyOrgTopLevelNode {
-	MyOrg playsRole myOrgFromTopLevelNode;
-	content.Node playsRole topLevelNodes {
-		multiplicity *;
-	}
-}
-
-relation MyOrgPage {
-	MyOrg playsRole myOrg;
-	content.Page playsRole pages {
-		multiplicity *;
-	}
-}
-
-relation PageParentNode {
-	content.Page playsRole childPage;
-	content.Node playsRole parentNodes {
-		multiplicity *;
-	}
-}
-
-relation PageChildNode {
-	content.Page playsRole parentPage;
-	content.Node playsRole childNodes {
-		multiplicity *;
-	}
-}
-
-relation MyOrgSection {
-	MyOrg playsRole myOrg;
-	content.Section playsRole sections {
-		multiplicity *;
-	}
-}
-
-relation PageSection {
-	content.Page playsRole page;
-	content.Section playsRole sections {
-		multiplicity *;
-	}
-}
 
 relation MyOrgUser {
 	MyOrg playsRole myOrg;

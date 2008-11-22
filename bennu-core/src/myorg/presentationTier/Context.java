@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
-import myorg.domain.content.Node;
-import myorg.domain.content.Page;
+import module.contents.domain.Node;
+import module.contents.domain.Page;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class Context {

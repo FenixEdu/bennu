@@ -10,7 +10,7 @@
 <bean:size id="ne" name="context" property="elements"/>
 <logic:greaterThan name="ne" value="1">
 	<div id="beadCrumbs">
-		<logic:iterate id="node" type="myorg.domain.content.Node" name="context" property="elements" indexId="i">
+		<logic:iterate id="node" type="module.contents.domain.Node" name="context" property="elements" indexId="i">
 			<logic:greaterThan name="i" value="0">
 				<% path += ","; %>
 				>
