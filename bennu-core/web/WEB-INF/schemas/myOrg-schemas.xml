@@ -8,7 +8,7 @@
 	<slot name="language" key="label.application.language" bundle="MYORG_RESOURCES" layout="postback"/>
 </schema>
 
-<schema name="myorg.domain.content.Page.PageBean" type="myorg.domain.content.Page$PageBean" bundle="MYORG_RESOURCES">
+<schema name="module.contents.domain.Page.PageBean" type="myorg.domain.content.Page$PageBean" bundle="MYORG_RESOURCES">
 	<slot name="title" key="label.content.page.title" bundle="MYORG_RESOURCES"/>
 	<slot name="link" key="label.content.page.link" bundle="MYORG_RESOURCES"/>
 </schema>
