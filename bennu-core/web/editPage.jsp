@@ -8,7 +8,7 @@
 <bean:define id="selectedNode" name="context" property="selectedNode"/>
 
 <h2><bean:message key="label.content.page.edit.title" bundle="MYORG_RESOURCES" /></h2>
-<fr:edit id="page" name="selectedNode" property="childPage" schema="myorg.domain.content.Page" action="content.do?method=viewPage">
+<fr:edit id="page" name="selectedNode" property="childPage" schema="module.contents.domain.Page" action="content.do?method=viewPage">
 	<fr:layout name="tabular">
 		<fr:property name="classes" value="form thwidth150px"/>
 		<fr:property name="columnClasses" value=",,tderror"/>
