@@ -17,6 +17,7 @@ import pt.ist.fenixWebFramework.util.DomainReference;
 
 public class Authenticate implements Serializable {
 
+    private static final long serialVersionUID = -8446811315540707574L;
     private static final String randomValue;
 
     static {

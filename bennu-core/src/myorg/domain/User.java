@@ -1,5 +1,7 @@
 package myorg.domain;
 
+import myorg.domain.MyOrg;
+
 public class User extends User_Base {
 
     public User() {

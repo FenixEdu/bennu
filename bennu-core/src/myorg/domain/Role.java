@@ -1,5 +1,6 @@
 package myorg.domain;
 
+import myorg.domain.MyOrg;
 import pt.ist.fenixWebFramework.services.Service;
 
 public class Role extends Role_Base {

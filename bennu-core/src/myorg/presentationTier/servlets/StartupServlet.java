@@ -18,6 +18,8 @@ import pt.ist.fenixWebFramework.FenixWebFramework;
 
 public class StartupServlet extends HttpServlet {
 
+    private static final long serialVersionUID = -7035892286820898843L;
+
     public void init(ServletConfig config) throws ServletException {
 	super.init(config);
 	final String domainmodelPath = getServletContext().getRealPath(getInitParameter("domainmodelPath"));
