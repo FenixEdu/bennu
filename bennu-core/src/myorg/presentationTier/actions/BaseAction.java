@@ -109,7 +109,7 @@ public abstract class BaseAction extends DispatchAction {
 	return null;
     }
 
-    public MyOrg getMyOrg() {
+    protected MyOrg getMyOrg() {
 	return MyOrg.getInstance();
     }
 
