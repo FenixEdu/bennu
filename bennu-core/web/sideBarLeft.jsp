@@ -9,7 +9,7 @@
 
 <logic:present name="USER_SESSION_ATTRIBUTE">
 	<div id="navops">
-		<!-- HAS_CONTEXT --><html:link page="/content.do?method=prepareCreateNewPage">
+		<!-- HAS_CONTEXT --><html:link page="/home.do?method=addContent">
 			<bean:message bundle="MYORG_RESOURCES" key="label.content.page.new"/>
 		</html:link>
 	</div>
