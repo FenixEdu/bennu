@@ -10,14 +10,14 @@
 <bean:size id="ne" name="context" property="elements"/>
 <logic:greaterThan name="ne" value="1">
 	<div id="beadCrumbs">
-		<logic:iterate id="node" type="module.contents.domain.Node" name="context" property="elements" indexId="i">
+		<logic:iterate id="node" type="myorg.domain.contents.INode" name="context" property="elements" indexId="i">
 			<logic:greaterThan name="i" value="0">
 				<% path += ","; %>
 				>
 			</logic:greaterThan>
-			<% path += node.getOID(); %>
+			<% path += node.asString(); %>
 			<!-- HAS_CONTEXT --><html:link page="<%= path %>">
-				<bean:write name="node" property="childPage.link"/>
+				<bean:write name="node" property="link"/>
 			</html:link>
 		</logic:iterate>
 	</div>

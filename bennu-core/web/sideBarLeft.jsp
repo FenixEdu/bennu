@@ -32,22 +32,22 @@
 				<div <% if (reorder) {%>dragableBox="true"<% } %> id="<%= articleId %>">
 					<% if (!reorder) { %>
 						<!-- HAS_CONTEXT --><html:link page="<%= url %>">
-							<bean:write name="node" property="childPage.link"/>
+							<bean:write name="node" property="link"/>
 						</html:link>
 					<% } else { %>
 						<div class="navigationContentMove">
-							<bean:write name="node" property="childPage.link"/>
+							<bean:write name="node" property="link"/>
 						</div>
 					<% } %>
 				</div>
 			</li>
-			<logic:notEmpty name="node" property="childPage.childNodes">
+			<logic:notEmpty name="node" property="children">
 				<% if (!reorder && context.getSelectedNode() == node) { %>
-					<logic:iterate id="childNode" name="node" property="childPage.orderedChildNodes">
+					<logic:iterate id="childNode" name="node" property="orderedChildren">
 						<li class="navsublist">
 							<bean:define id="urlChild"><bean:write name="url" filter="false"/>,<bean:write name="childNode" property="OID"/></bean:define>
 							<!-- HAS_CONTEXT --><html:link page="<%= urlChild %>">
-								<bean:write name="childNode" property="childPage.link"/>
+								<bean:write name="childNode" property="link"/>
 							</html:link>
 						</li>
 					</logic:iterate>

@@ -1,5 +1,6 @@
 package myorg.domain;
 
+
 valueType org.joda.time.DateTime as DateTime;
 valueType org.joda.time.LocalDate as LocalDate;
 
@@ -7,6 +8,7 @@ valueType pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString as MultiLanguageS
 valueType pt.utl.ist.fenix.tools.util.Strings as Strings;
 
 enum myorg.domain.RoleType as RoleType;
+
 
 class MyOrg {
 	MultiLanguageString applicationTitle;
@@ -22,6 +24,12 @@ class User {
 class Role {
 	RoleType roleType;
 }
+
+class contents.Node {
+	String ojbConcreteClass;
+	Integer nodeOrder;
+}
+
 
 relation MyOrgUser {
 	MyOrg playsRole myOrg;
@@ -42,6 +50,27 @@ relation RoleUser {
 		multiplicity *;
 	}
 	User playsRole user {
+		multiplicity *;
+	}
+}
+
+relation MyOrgNode {
+	MyOrg playsRole myOrg;
+	contents.Node playsRole nodes {
+		multiplicity *;
+	}
+}
+
+relation MyOrgTopLevelNode {
+	MyOrg playsRole myOrgFromTopLevelNode;
+	contents.Node playsRole topLevelNodes {
+		multiplicity *;
+	}
+}
+
+relation NodeNode {
+	contents.Node playsRole parentNode;
+	contents.Node playsRole childNodes {
 		multiplicity *;
 	}
 }

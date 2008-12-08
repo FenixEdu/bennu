@@ -12,7 +12,7 @@ import pt.ist.fenixWebFramework.struts.annotations.Forwards;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
 @Mapping(path = "/home")
-@Forwards( { @Forward(name = "page.hello", path = "/content.do?method=viewPage") })
+@Forwards( { @Forward(name = "page.hello", path = "/node.do?method=viewElement") })
 public class HomeAction extends BaseAction {
 
     public final ActionForward firstPage(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,

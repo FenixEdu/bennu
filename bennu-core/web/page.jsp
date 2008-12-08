@@ -8,7 +8,7 @@
 
 <logic:present name="context" property="selectedNode">
 	<bean:define id="selectedNode" name="context" property="selectedNode"/>
-	<bean:define id="selectedPage" name="selectedNode" property="childPage"/>
+	<bean:define id="selectedPage" name="selectedNode" property="page"/>
 	<h2><bean:write name="selectedPage" property="title"/></h2>
 	<%
 		final Object o = request.getAttribute("reorderSections");

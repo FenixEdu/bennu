@@ -8,32 +8,3 @@
 	<slot name="language" key="label.application.language" bundle="MYORG_RESOURCES" layout="postback"/>
 </schema>
 
-<schema name="module.contents.domain.Page.PageBean" type="module.contents.domain.Page$PageBean" bundle="MYORG_RESOURCES">
-	<slot name="title" key="label.content.page.title" bundle="MYORG_RESOURCES"/>
-	<slot name="link" key="label.content.page.link" bundle="MYORG_RESOURCES"/>
-</schema>
-
-<schema name="module.contents.domain.Page" type="module.contents.domain.Page" bundle="MYORG_RESOURCES">
-	<slot name="title" key="label.content.page.title" bundle="MYORG_RESOURCES"/>
-	<slot name="link" key="label.content.page.link" bundle="MYORG_RESOURCES"/>
-</schema>
-
-<schema name="module.contents.domain.Section.SectionBean" type="module.contents.domain.Section$SectionBean" bundle="MYORG_RESOURCES">
-	<slot name="title" key="label.content.page.title" bundle="MYORG_RESOURCES"/>
-	<slot name="contents" key="label.content.page.contents" bundle="MYORG_RESOURCES" layout="rich-text">
-   		<property name="safe" value="true" />
-   		<property name="columns" value="65"/>
-   		<property name="rows" value="20"/>
-   		<property name="config" value="advanced" />
-   	</slot>
-</schema>
-
-<schema name="module.contents.domain.Section" type="module.contents.domain.Section" bundle="MYORG_RESOURCES">
-	<slot name="title" key="label.content.page.title" bundle="MYORG_RESOURCES"/>
-	<slot name="contents" key="label.content.page.contents" bundle="MYORG_RESOURCES" layout="rich-text">
-   		<property name="safe" value="true" />
-   		<property name="columns" value="65"/>
-   		<property name="rows" value="20"/>
-   		<property name="config" value="advanced" />
-   	</slot>
-</schema>

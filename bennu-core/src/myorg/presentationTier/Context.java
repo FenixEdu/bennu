@@ -4,15 +4,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
-import module.contents.domain.Node;
-import module.contents.domain.Page;
-import pt.ist.fenixframework.pstm.Transaction;
+import myorg.domain.contents.INode;
+import myorg.domain.contents.Node;
 
 public class Context {
 
     public static final String PATH_PART_SEPERATOR = ",";
 
-    private Stack<Node> elements = new Stack<Node>();
+    private Stack<INode> elements = new Stack<INode>();
 
     public Context() {
     }
@@ -27,22 +26,20 @@ public class Context {
 	    elements.clear();
 	} else {
 	    for (final String pathPart : path.split(PATH_PART_SEPERATOR)) {
-		final Long oid = Long.valueOf(pathPart);
-		final Node node = (Node) Transaction.getObjectForOID(oid.longValue());
+		final INode node = Node.fromString(pathPart);
 		elements.add(node);
 	    }
 	}	
     }
 
-    public List<Node> getElements() {
+    public List<INode> getElements() {
         return elements;
     }
 
-    public Collection<Node> getMenuElements() {
+    public Collection<INode> getMenuElements() {
 	if (elements.size() > 1) {
-	    final Node parentNode = elements.get(elements.size() - 2);
-	    final Page parentPage = parentNode.getChildPage();
-	    return parentPage.getOrderedChildNodes();
+	    final INode parentNode = elements.get(elements.size() - 2);
+	    return parentNode.getOrderedChildren();
 	} else {
 	    return Node.getOrderedTopLevelNodes();
 	}
@@ -50,12 +47,12 @@ public class Context {
 
     public String getPath() {
 	final StringBuilder stringBuilder = new StringBuilder();
-	for (final Node node : elements) {
+	for (final INode node : elements) {
 	    if (node != null) {
 		if (stringBuilder.length() > 0) {
 		    stringBuilder.append(PATH_PART_SEPERATOR);
 		}
-		stringBuilder.append(node.getOID());
+		stringBuilder.append(node.asString());
 	    }
 	}
 	return stringBuilder.toString();
@@ -64,12 +61,12 @@ public class Context {
     public String getPrefixPath() {
 	final StringBuilder stringBuilder = new StringBuilder();
 	int i = 0;
-	for (final Node node : elements) {
+	for (final INode node : elements) {
 	    if (++i < elements.size()) {
 		if (stringBuilder.length() > 0) {
 		    stringBuilder.append(PATH_PART_SEPERATOR);
 		}
-		stringBuilder.append(node.getOID());
+		stringBuilder.append(node.asString());
 	    }
 	}
 	if (stringBuilder.length() > 0) {
@@ -78,7 +75,7 @@ public class Context {
 	return stringBuilder.toString();
     }
 
-    public void push(final Node node) {
+    public void push(final INode node) {
 	elements.push(node);
     }
 
@@ -88,7 +85,7 @@ public class Context {
 	}
     }
 
-    public void pop(final Node node) {
+    public void pop(final INode node) {
 	final int nodeIndex = elements.indexOf(node);
 	if (nodeIndex >= 0) {
 	    for (int i = elements.size() - 1; i >= nodeIndex; i--) {
@@ -97,11 +94,11 @@ public class Context {
 	}
     }
 
-    public Node getSelectedNode() {
+    public INode getSelectedNode() {
 	return elements.isEmpty() ? null : elements.peek();
     }
 
-    public Node getParentNode() {
+    public INode getParentNode() {
 	final int s = elements.size();
 	return s > 1 ? elements.get(s - 2) : null;
     }
