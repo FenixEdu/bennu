@@ -1,5 +1,7 @@
 package myorg.presentationTier.servlets;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +12,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.apache.struts.action.ActionServlet;
+import org.apache.struts.config.MessageResourcesConfig;
+import org.apache.struts.config.ModuleConfig;
+
+import pt.utl.ist.fenix.tools.util.FileUtils;
 
 public class ActionServletWrapper extends ActionServlet {
 
@@ -71,6 +77,54 @@ public class ActionServletWrapper extends ActionServlet {
 	final ServletConfigWrapper servletConfigWrapper = new ServletConfigWrapper(config);
 	super.init(servletConfigWrapper);
 	this.servletConfig = config;
+    }
+
+    @Override
+    protected ModuleConfig initModuleConfig(String prefix, String paths) throws ServletException {
+	final ModuleConfig moduleConfig = super.initModuleConfig(prefix, paths);
+
+	final InputStream inputStream = getClass().getResourceAsStream("/.messageResources");
+	try {
+	    final String contents = FileUtils.readFile(inputStream);
+	    final String[] lines = contents.split("\n");
+	    for (final String resourceBundleName : lines) {
+		final String key = getMessageResourceBundleKey(resourceBundleName);
+		final String parameter = getMessageResourceBundleParameter(resourceBundleName);
+		createMessageResourcesConfig(moduleConfig, key, parameter);
+		if (resourceBundleName.equals("MyorgResources")) {
+		    createMessageResourcesConfig(moduleConfig, "org.apache.struts.action.MESSAGE", parameter);
+		}
+	    }
+	} catch (final IOException e) {
+	    e.printStackTrace();
+	}
+
+	return moduleConfig;
+    }
+
+    private void createMessageResourcesConfig(final ModuleConfig moduleConfig, final String key, final String parameter) {
+	final MessageResourcesConfig messageResourcesConfig = new MessageResourcesConfig();
+	messageResourcesConfig.setFactory("org.apache.struts.util.PropertyMessageResourcesFactory");
+	messageResourcesConfig.setKey(key);
+	messageResourcesConfig.setNull(false);
+	messageResourcesConfig.setParameter(parameter);
+	moduleConfig.addMessageResourcesConfig(messageResourcesConfig);
+    }
+
+    private String getMessageResourceBundleKey(final String resourceBundleName) {
+	final StringBuilder stringBuilder = new StringBuilder(resourceBundleName.length() + 1);
+	for (int i = 0; i < resourceBundleName.length(); i++) {
+	    final char c = resourceBundleName.charAt(i);
+	    if (i > 0 && Character.isUpperCase(c)) {
+		stringBuilder.append("_");
+	    }
+	    stringBuilder.append(Character.toUpperCase(c));
+	}
+	return stringBuilder.toString();
+    }
+
+    private String getMessageResourceBundleParameter(final String resourceBundleName) {
+	return "resources." + resourceBundleName;
     }
 
 }

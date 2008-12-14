@@ -54,6 +54,14 @@
 		<echo file="${build.home.webinf.classes}/.build.version">${build.version}</echo>
 		<copy file="build.properties" tofile="${build.home.webinf.classes}/configuration.properties"/>
 		<ant antfile="build_compile_aux.xml" target="prepare" inheritall="true" inheritrefs="true"/>
+		<java fork="true" classname="tools.compile.MessageResourceFinder">
+			<classpath>
+				<fileset dir="${lib}">
+					<include name="compile-tools.jar"/>
+				</fileset>
+			</classpath>
+			<arg value="${build.home.webinf.classes}"/>
+		</java>
 	</target>
 
 	<path id="class.path.ref">
