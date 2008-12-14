@@ -1,10 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="/WEB-INF/struts-tiles.tld" prefix="tiles" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@page import="myorg.presentationTier.LayoutContext"%>
+<%@page import="myorg.presentationTier.actions.ContextBaseAction"%>
 <html:html xhtml="true">
+
+<%
+	final LayoutContext layoutContext = (LayoutContext) ContextBaseAction.getContext(request);
+%>
+
 <head>
-	<tiles:insert attribute="head" ignore="true"/>
+	<jsp:include page="<%= layoutContext.getHead() %>"/>
 </head>
 
 <body>
@@ -12,29 +19,29 @@
 <div id="container">
 
 	<div id="header">
-		<tiles:insert attribute="pageHeader" ignore="true"/>
+		<jsp:include page="<%= layoutContext.getPageHeader() %>"/>
 	</div>
 
 	<div id="container2">
 		<div id="navigation">
-			<tiles:insert attribute="sideBarLeft"/>
+			<jsp:include page="<%= layoutContext.getSideBarLeft() %>"/>
 		</div>
 
 <!-- 
 		<div id="sidebar">
-			<tiles:insert attribute="sideBar"/>
+			<jsp:include page="<%= layoutContext.getSideBar() %>"/>
 		</div>
  -->
 
 		<div id="content">
-			<tiles:insert attribute="pageOperations" ignore="true"/>
-			<tiles:insert attribute="breadCrumbs" ignore="true"/>
-		  	<tiles:insert attribute="body" ignore="true"/>
+			<jsp:include page="<%= layoutContext.getPageOperations() %>"/>
+			<jsp:include page="<%= layoutContext.getBreadCrumbs() %>"/>
+			<jsp:include page="<%= layoutContext.getBody() %>"/>
 		</div>
 	</div>
 
 	<div id="footer">
-		<tiles:insert attribute="footer"/>
+		<jsp:include page="<%= layoutContext.getFooter() %>"/>
 	</div>
 
 	<div class="cont_c1"></div>

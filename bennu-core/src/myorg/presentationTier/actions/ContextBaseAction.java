@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import myorg.presentationTier.Context;
+import myorg.presentationTier.LayoutContext;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -38,11 +39,15 @@ public abstract class ContextBaseAction extends BaseAction {
 
     }
 
+    public Context createContext(final String contextPathString) {
+	return new LayoutContext(contextPathString);
+    }
+
     @Override
     public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
 	final String contextPathString = getAttribute(request, CONTEXT_PATH);
-	final Context context = new Context(contextPathString);
+	final Context context = createContext(contextPathString);
 	request.setAttribute(CONTEXT, context);
 
 	final LocaleBean localeBean = new LocaleBean();
@@ -53,6 +58,11 @@ public abstract class ContextBaseAction extends BaseAction {
 
     public static Context getContext(final HttpServletRequest request) {
 	return (Context) request.getAttribute(CONTEXT);
+    }
+
+    public static ActionForward forward(final HttpServletRequest request, final String forward) {
+	final Context context = getContext(request);
+	return context.forward(forward);
     }
 
 }

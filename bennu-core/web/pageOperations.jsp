@@ -8,10 +8,10 @@
 	<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
 
 	<div id="pageops">
-		<html:link page="/content.do?method=prepareCreateNewPage">
-			<bean:message bundle="MYORG_RESOURCES" key="label.content.page.new"/>
-		</html:link>
 		<logic:present name="context" property="selectedNode">
+			<html:link page="/content.do?method=prepareCreateNewPage">
+				<bean:message bundle="MYORG_RESOURCES" key="label.content.page.new"/>
+			</html:link>
 			<bean:define id="selectedNode" name="context" property="selectedNode"/>
 			<bean:define id="contextPath" name="context" property="path"/>
 			|

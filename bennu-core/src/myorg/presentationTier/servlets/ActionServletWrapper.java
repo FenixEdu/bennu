@@ -15,6 +15,8 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.config.MessageResourcesConfig;
 import org.apache.struts.config.ModuleConfig;
 
+import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
+import pt.ist.fenixWebFramework.renderers.plugin.SimpleRenderersRequestProcessor;
 import pt.utl.ist.fenix.tools.util.FileUtils;
 
 public class ActionServletWrapper extends ActionServlet {
@@ -75,6 +77,7 @@ public class ActionServletWrapper extends ActionServlet {
     @Override
     public void init(final ServletConfig config) throws ServletException {
 	final ServletConfigWrapper servletConfigWrapper = new ServletConfigWrapper(config);
+	RenderersRequestProcessorImpl.implementationClass = SimpleRenderersRequestProcessor.class;
 	super.init(servletConfigWrapper);
 	this.servletConfig = config;
     }

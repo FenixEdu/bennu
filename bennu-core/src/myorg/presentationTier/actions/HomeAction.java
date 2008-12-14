@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import myorg.presentationTier.Context;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -59,7 +61,7 @@ public class HomeAction extends ContextBaseAction {
 
     public final ActionForward firstPage(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
-	return mapping.findForward("page.hello");
+	return new ActionForward("/node.do?method=viewElement");
     }
 
     public final ActionForward addContent(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
@@ -78,7 +80,9 @@ public class HomeAction extends ContextBaseAction {
 	    }
 	}
 	request.setAttribute("contentCreators", contentCreators);
-	return mapping.findForward("add.content");
+
+	final Context context = getContext(request);
+	return context.forward("/newContent.jsp");
     }
 
 }

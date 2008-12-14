@@ -7,7 +7,9 @@ import java.util.Stack;
 import myorg.domain.contents.INode;
 import myorg.domain.contents.Node;
 
-public class Context {
+import org.apache.struts.action.ActionForward;
+
+public abstract class Context {
 
     public static final String PATH_PART_SEPERATOR = ",";
 
@@ -102,5 +104,8 @@ public class Context {
 	final int s = elements.size();
 	return s > 1 ? elements.get(s - 2) : null;
     }
+
+
+    public abstract ActionForward forward(final String forward);
 
 }
