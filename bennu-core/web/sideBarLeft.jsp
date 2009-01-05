@@ -25,10 +25,10 @@
 	</logic:empty>
 	<logic:notEmpty name="menuElements">
 
-		<logic:iterate id="node" name="menuElements" indexId="nindex">
+		<logic:iterate id="node" name="menuElements" indexId="nindex" type="myorg.domain.contents.Node">
 			<bean:define id="articleId">articleNode<%= nindex %></bean:define>
 			<li>
-				<bean:define id="url">/content.do?method=viewPage&amp;_CONTEXT_PATH_=<bean:write name="prefixPath"/><bean:write name="node" property="OID"/></bean:define>
+				<% String url = node.getUrl(context); %>
 				<div <% if (reorder) {%>dragableBox="true"<% } %> id="<%= articleId %>">
 					<% if (!reorder) { %>
 						<!-- HAS_CONTEXT --><html:link page="<%= url %>">
@@ -45,7 +45,7 @@
 				<% if (!reorder && context.getSelectedNode() == node) { %>
 					<logic:iterate id="childNode" name="node" property="orderedChildren">
 						<li class="navsublist">
-							<bean:define id="urlChild"><bean:write name="url" filter="false"/>,<bean:write name="childNode" property="OID"/></bean:define>
+							<bean:define id="urlChild"><%= url %>,<bean:write name="childNode" property="OID"/></bean:define>
 							<!-- HAS_CONTEXT --><html:link page="<%= urlChild %>">
 								<bean:write name="childNode" property="link"/>
 							</html:link>

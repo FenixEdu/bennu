@@ -7,6 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import myorg.domain.MyOrg;
+import myorg.presentationTier.Context;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.pstm.Transaction;
 
@@ -17,6 +18,8 @@ public abstract class Node extends Node_Base implements INode {
 	setMyOrg(MyOrg.getInstance());
 	setOjbConcreteClass(getClass().getName());
     }
+
+    public abstract String getUrl(final Context context);
 
     @Override
     public Set<INode> getChildren() {

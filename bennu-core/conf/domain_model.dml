@@ -30,6 +30,13 @@ class contents.Node {
 	Integer nodeOrder;
 }
 
+	class contents.ActionNode extends contents.Node {
+		String path;
+		String method;
+		String linkBundle;
+		String linkKey;
+	}
+
 
 relation MyOrgUser {
 	MyOrg playsRole myOrg;
