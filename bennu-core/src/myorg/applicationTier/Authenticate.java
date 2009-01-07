@@ -99,6 +99,11 @@ public class Authenticate implements Serializable {
 	    }
 	    return privateConstantForDigestCalculation;
 	}
+
+	public static User getCurrentUser() {
+	    final UserView userView = (UserView) pt.ist.fenixWebFramework.security.UserView.getUser();
+	    return userView == null ? null : userView.getUser();
+	}
     }
 
     @Service
