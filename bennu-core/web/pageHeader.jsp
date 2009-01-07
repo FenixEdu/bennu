@@ -51,7 +51,7 @@
 		<td align="right" nowrap="nowrap" width="40%">
 			<div>
 				<bean:define id="languageUrl"><%= request.getContextPath() %>/content.do</bean:define>
-				<form action="<%= languageUrl %>" method="post">
+				<form action="<%= languageUrl %>" method="post" class="login">
 					<input type="hidden" name="method" value="viewPage" />
 					<logic:present name="selectedNode">
 						<bean:define id="arg" name="selectedNode" property="OID"/>

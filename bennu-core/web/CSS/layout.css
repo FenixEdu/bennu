@@ -54,11 +54,16 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 
 		
 		form {
+			margin-top: 0px;
+			font-size: 9px;
+		}
+
+		form.login {
 			float:right;
 			margin-top: 0px;
 			font-size: 9px;
 		}
-		
+
 		input {
 			background-color: #FFF;
 			color: #999999;
