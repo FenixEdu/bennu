@@ -122,4 +122,11 @@ public abstract class BaseAction extends DispatchAction {
 	messages.add(property, new ActionMessage(key, args));
 	saveMessages(request, messages);
     }
+
+    protected void setAttribute(final HttpServletRequest request, final String attributeName, final Object attributeValue) {
+	if (request != null) {
+	    request.setAttribute(attributeName, attributeValue);
+	}
+    }
+
 }
