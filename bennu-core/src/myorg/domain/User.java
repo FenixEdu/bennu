@@ -1,8 +1,19 @@
 package myorg.domain;
 
+import java.util.Comparator;
+
 import myorg.domain.MyOrg;
 
 public class User extends User_Base {
+
+    public static final Comparator<User> COMPARATOR_BY_NAME = new Comparator<User>() {
+
+	@Override
+	public int compare(final User user1, final User user2) {
+	    return user1.getUsername().compareTo(user2.getUsername());
+	}
+	
+    };
 
     public User() {
         super();
