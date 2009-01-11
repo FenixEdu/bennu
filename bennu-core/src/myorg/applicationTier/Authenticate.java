@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import myorg.domain.Role;
 import myorg.domain.RoleType;
 import myorg.domain.User;
+import myorg.domain.groups.Role;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixWebFramework.util.DomainReference;
 
@@ -123,7 +123,7 @@ public class Authenticate implements Serializable {
 
     protected static void addRoleType(final User user, final RoleType roleType) {
 	if (!user.hasRoleType(roleType)) {
-	    user.addRoles(Role.getRole(roleType));
+	    user.addPeopleGroups(Role.getRole(roleType));
 	}
     }
 

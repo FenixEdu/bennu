@@ -2,7 +2,8 @@ package myorg.domain;
 
 import java.util.Comparator;
 
-import myorg.domain.MyOrg;
+import myorg.domain.groups.People;
+import myorg.domain.groups.Role;
 
 public class User extends User_Base {
 
@@ -35,9 +36,12 @@ public class User extends User_Base {
     }
 
     public boolean hasRoleType(final RoleType roleType) {
-	for (final Role role : getRolesSet()) {
-	    if (role.getRoleType() == roleType) {
-		return true;
+	for (final People people : getPeopleGroupsSet()) {
+	    if (people instanceof Role) {
+		final Role role = (Role) people;
+		if (role.getRoleType() == roleType) {
+		    return true;
+		}
 	    }
 	}
 	return false;

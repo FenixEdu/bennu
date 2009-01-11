@@ -26,33 +26,37 @@
 	<logic:notEmpty name="menuElements">
 
 		<logic:iterate id="node" name="menuElements" indexId="nindex" type="myorg.domain.contents.Node">
-			<bean:define id="articleId">articleNode<%= nindex %></bean:define>
-			<li>
-				<% String url = node.getUrl(context); %>
-				<div <% if (reorder) {%>dragableBox="true"<% } %> id="<%= articleId %>">
-					<% if (!reorder) { %>
-						<!-- HAS_CONTEXT --><html:link page="<%= url %>">
-							<bean:write name="node" property="link"/>
-						</html:link>
-					<% } else { %>
-						<div class="navigationContentMove">
-							<bean:write name="node" property="link"/>
-						</div>
-					<% } %>
-				</div>
-			</li>
-			<logic:notEmpty name="node" property="children">
-				<% if (!reorder && context.getSelectedNode() == node) { %>
-					<logic:iterate id="childNode" name="node" property="orderedChildren">
-						<li class="navsublist">
-							<bean:define id="urlChild"><%= url %>,<bean:write name="childNode" property="OID"/></bean:define>
-							<!-- HAS_CONTEXT --><html:link page="<%= urlChild %>">
-								<bean:write name="childNode" property="link"/>
+			<% if (node.isAccessible()) { %>
+				<bean:define id="articleId">articleNode<%= nindex %></bean:define>
+				<li>
+					<% String url = node.getUrl(context); %>
+					<div <% if (reorder) {%>dragableBox="true"<% } %> id="<%= articleId %>">
+						<% if (!reorder) { %>
+							<!-- HAS_CONTEXT --><html:link page="<%= url %>">
+								<bean:write name="node" property="link"/>
 							</html:link>
-						</li>
-					</logic:iterate>
-				<% } %>
-			</logic:notEmpty>
+						<% } else { %>
+							<div class="navigationContentMove">
+								<bean:write name="node" property="link"/>
+							</div>
+						<% } %>
+					</div>
+				</li>
+				<logic:notEmpty name="node" property="children">
+					<% if (!reorder && context.getSelectedNode() == node) { %>
+						<logic:iterate id="childNode" name="node" property="orderedChildren" type="myorg.domain.contents.Node">
+							<% if (childNode.isAccessible()) { %>
+								<li class="navsublist">
+									<bean:define id="urlChild"><%= url %>,<bean:write name="childNode" property="OID"/></bean:define>
+									<!-- HAS_CONTEXT --><html:link page="<%= urlChild %>">
+										<bean:write name="childNode" property="link"/>
+									</html:link>
+								</li>
+							<% } %>
+						</logic:iterate>
+					<% } %>
+				</logic:notEmpty>
+			<% } %>
 		</logic:iterate>
 	</logic:notEmpty>
 	<% if (reorder) {%>

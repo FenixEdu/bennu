@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import module.coffee.domain.CoffeeItem;
 import module.coffee.domain.ItemBean;
 import myorg.domain.MyOrg;
+import myorg.domain.groups.PersistentGroup;
 import myorg.presentationTier.Context;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
@@ -20,12 +21,13 @@ public class ActionNode extends ActionNode_Base {
     }
 
     @Service
-    public static ActionNode createActionNode(final String path, final String method, final String bundle, final String key) {
+    public static ActionNode createActionNode(final String path, final String method, final String bundle, final String key, final PersistentGroup accessibilityGroup) {
 	final ActionNode actionNode = new ActionNode();
 	actionNode.setPath(path);
 	actionNode.setMethod(method);
 	actionNode.setLinkBundle(bundle);
 	actionNode.setLinkKey(key);
+	actionNode.setAccessibilityGroup(accessibilityGroup);
 
 	initializeItems();
 
@@ -101,5 +103,5 @@ public class ActionNode extends ActionNode_Base {
     public String getUrl(final Context context) {
 	return getPath() + ".do?method=" + getMethod();
     }
-    
+
 }

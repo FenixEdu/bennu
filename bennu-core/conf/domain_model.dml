@@ -16,13 +16,26 @@ class MyOrg {
 	MultiLanguageString applicationCopyright;
 }
 
+class groups.PersistentGroup {
+	String ojbConcreteClass;
+}
+
+	class groups.AnyoneGroup extends groups.PersistentGroup {
+	}
+
+	class groups.UserGroup extends groups.PersistentGroup {
+	}
+
+	class groups.People extends groups.PersistentGroup {
+	}
+
+		class groups.Role extends groups.People {
+			RoleType roleType;
+		}
+
 class User {
 	String username;
 	String password;
-}
-
-class Role {
-	RoleType roleType;
 }
 
 class contents.Node {
@@ -40,22 +53,6 @@ class contents.Node {
 
 relation MyOrgUser {
 	MyOrg playsRole myOrg;
-	User playsRole user {
-		multiplicity *;
-	}
-}
-
-relation MyOrgRole {
-	MyOrg playsRole myOrg;
-	Role playsRole roles {
-		multiplicity *;
-	}
-}
-
-relation RoleUser {
-	Role playsRole roles {
-		multiplicity *;
-	}
 	User playsRole user {
 		multiplicity *;
 	}
@@ -80,4 +77,27 @@ relation NodeNode {
 	contents.Node playsRole childNodes {
 		multiplicity *;
 	}
+}
+
+relation MyOrgPersistentGroup {
+	MyOrg playsRole myOrg;
+	groups.PersistentGroup playsRole persistentGroup {
+		multiplicity *;
+	}
+}
+
+relation UserPeople {
+	groups.People playsRole peopleGroups {
+		multiplicity *;
+	}
+	User playsRole user {
+		multiplicity *;
+	}
+}
+
+relation NodePersistentGroup {
+	contents.Node playsRole nodes {
+		multiplicity *;
+	}
+	groups.PersistentGroup playsRole accessibilityGroup;
 }

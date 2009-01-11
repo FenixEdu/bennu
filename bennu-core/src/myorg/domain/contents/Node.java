@@ -6,7 +6,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import myorg.applicationTier.Authenticate.UserView;
 import myorg.domain.MyOrg;
+import myorg.domain.User;
+import myorg.domain.groups.PersistentGroup;
 import myorg.presentationTier.Context;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.pstm.Transaction;
@@ -156,6 +159,12 @@ public abstract class Node extends Node_Base implements INode {
 
     private static void throwError() {
 	throw new Error("Nodes changed!");
+    }
+
+    public boolean isAccessible() {
+	final PersistentGroup persistentGroup = getAccessibilityGroup();
+	final User user = UserView.getCurrentUser();
+	return persistentGroup != null && persistentGroup.isMember(user);
     }
 
 }
