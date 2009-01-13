@@ -35,11 +35,11 @@ public class StartupServlet extends HttpServlet {
 		}
 	    }
 	}
+	Collections.sort(urls);
 	final String[] paths = new String[urls.size()];
 	for (int i = 0; i < urls.size(); i++) {
 	    paths[i] = urls.get(i);
 	}
-	Collections.sort(urls);
 	try {
 	    FenixWebFramework.initialize(PropertiesManager.getFenixFrameworkConfig(paths));
 	} catch (Throwable t) {
