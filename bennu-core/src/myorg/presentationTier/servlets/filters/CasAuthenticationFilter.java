@@ -49,7 +49,7 @@ public class CasAuthenticationFilter implements Filter {
     public static CASReceipt getCASReceipt(final String casTicket, final String requestURL) throws UnsupportedEncodingException,
 	    CASAuthenticationException {
 	final String casValidateUrl = FenixWebFramework.getConfig().getCasValidateUrl();
-	final String casServiceUrl = URLEncoder.encode(requestURL, "UTF-8");
+	final String casServiceUrl = URLEncoder.encode(requestURL.replace("http://", "https://").replace(":8080", ""), "UTF-8");
 
 	ProxyTicketValidator pv = new ProxyTicketValidator();
 	pv.setCasValidateUrl(casValidateUrl);
