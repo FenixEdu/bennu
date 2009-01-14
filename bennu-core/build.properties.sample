@@ -1,4 +1,4 @@
-db.alias=//localhost:3306/expenditures?useUnicode=true&amp;characterEncoding=UTF-8&amp;clobCharacterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull&amp;statementInterceptors=net.sourceforge.fenixedu.persistenceTier.statementInterceptors.FenixStatementInterceptor
+db.alias=//localhost:3306/myorg?useUnicode=true&amp;characterEncoding=UTF-8&amp;clobCharacterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull&amp;statementInterceptors=net.sourceforge.fenixedu.persistenceTier.statementInterceptors.FenixStatementInterceptor
 db.user=root
 db.pass=
 app.name=myorg
@@ -18,3 +18,4 @@ war.name=myorg.ist.utl.pt
 webServices.external.urls=
 module.src.dirs=
 module.web.dirs=
+project.dirs=/home/marvin/usb/disk/svn/itec/myorg/trunk,/home/marvin/usb/disk/svn/itec/contents-module/trunk,/home/marvin/usb/disk/svn/itec/organization-module/trunk,/home/marvin/usb/disk/svn/itec/coffee/trunk
