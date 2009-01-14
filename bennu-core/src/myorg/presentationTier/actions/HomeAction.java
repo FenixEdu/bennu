@@ -2,8 +2,11 @@ package myorg.presentationTier.actions;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,15 +31,29 @@ import pt.utl.ist.fenix.tools.util.FileUtils;
 public class HomeAction extends ContextBaseAction {
 
     public static class ContentCreator {
+
+	public static Comparator<ContentCreator> COMPARATOR_BY_KEY = new Comparator<ContentCreator>() {
+
+	    @Override
+	    public int compare(final ContentCreator contentCreator1, final ContentCreator contentCreator2) {
+		final String key1 = contentCreator1.getKey();
+		final String key2 = contentCreator2.getKey();
+		return key1.compareTo(key2);
+	    }
+	    
+	};
+
 	private String path;
 	private String bundle;
 	private String key;
+	private String groupKey;
 
 	private ContentCreator(final String line) {
 	    final String[] parts = line.split(CreateNodeActionAnnotationProcessor.FIELD_SEPERATOR);
-	    path = parts[2];
 	    bundle = parts[0];
-	    key = parts[1];
+	    groupKey = parts[1];
+	    key = parts[2];
+	    path = parts[3];
 	}
 
 	public String getPath() {
@@ -54,6 +71,9 @@ public class HomeAction extends ContextBaseAction {
 	public String getKey() {
 	    return key;
 	}
+	public String getGroupKey() {
+	    return groupKey;
+	}
 	public void setKey(String key) {
 	    this.key = key;
 	}
@@ -66,20 +86,28 @@ public class HomeAction extends ContextBaseAction {
 
     public final ActionForward addContent(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
-	final Set<ContentCreator> contentCreators = new HashSet<ContentCreator>();
+	final Map<String, Set<ContentCreator>> contentCreatorsMap = new TreeMap<String, Set<ContentCreator>>();
 	final InputStream inputStream = getClass().getResourceAsStream("/" + CreateNodeActionAnnotationProcessor.LOG_FILENAME);
 	if (inputStream != null) {
 	    try {
 		final String contents = FileUtils.readFile(inputStream);
 		for (final String line : contents.split(CreateNodeActionAnnotationProcessor.ENTRY_SEPERATOR)) {
 		    final ContentCreator contentCreator = new ContentCreator(line);
+		    final String groupKey = contentCreator.getGroupKey();
+		    final Set<ContentCreator> contentCreators;
+		    if (contentCreatorsMap.containsKey(groupKey)) {
+			contentCreators = contentCreatorsMap.get(groupKey);
+		    } else {
+			contentCreators = new TreeSet<ContentCreator>(ContentCreator.COMPARATOR_BY_KEY);
+			contentCreatorsMap.put(groupKey, contentCreators);
+		    }
 		    contentCreators.add(contentCreator);
 		}
 	    } catch (final IOException e) {
 		e.printStackTrace();
 	    }
 	}
-	request.setAttribute("contentCreators", contentCreators);
+	request.setAttribute("contentCreatorsMap", contentCreatorsMap);
 
 	final Context context = getContext(request);
 	return context.forward("/newContent.jsp");

@@ -7,7 +7,7 @@
 <bean:define id="menuElements" name="context" property="menuElements"/>
 <bean:define id="prefixPath" name="context" property="prefixPath"/>
 
-<logic:present name="USER_SESSION_ATTRIBUTE">
+<logic:present role="MANAGER">
 	<div id="navops">
 		<!-- HAS_CONTEXT --><html:link page="/home.do?method=addContent">
 			<bean:message bundle="MYORG_RESOURCES" key="label.content.page.new"/>
@@ -91,13 +91,10 @@
 	</li>
  -->
 </ul>
-<logic:present name="USER_SESSION_ATTRIBUTE">
+<logic:present role="MANAGER">
 	<ul>
 		<li>
 			<html:link action="/configuration.do?method=applicationConfiguration"><bean:message key="label.configuration.link" bundle="MYORG_RESOURCES"/></html:link>
-		</li>
-		<li>
-			<html:link action="/organization.do?method=showOptions"><bean:message key="label.organization" bundle="ORGANIZATION_RESOURCES"/></html:link>
 		</li>
 	</ul>
 </logic:present>
