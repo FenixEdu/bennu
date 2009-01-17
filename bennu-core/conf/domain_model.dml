@@ -81,7 +81,21 @@ relation NodeNode {
 
 relation MyOrgPersistentGroup {
 	MyOrg playsRole myOrg;
-	groups.PersistentGroup playsRole persistentGroup {
+	groups.PersistentGroup playsRole persistentGroups {
+		multiplicity *;
+	}
+}
+
+relation MyOrgSystemGroup {
+	MyOrg playsRole systemGroupMyOrg;
+	groups.PersistentGroup playsRole systemGroups {
+		multiplicity *;
+	}
+}
+
+relation MyOrgUserGroup {
+	User playsRole groupOwner;
+	groups.PersistentGroup playsRole userGroups {
 		multiplicity *;
 	}
 }

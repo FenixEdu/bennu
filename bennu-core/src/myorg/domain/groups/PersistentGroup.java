@@ -16,7 +16,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
     }
 
     protected static PersistentGroup getInstance(final Class clazz) {
-	for (final PersistentGroup persistentGroup : MyOrg.getInstance().getPersistentGroupSet()) {
+	for (final PersistentGroup persistentGroup : MyOrg.getInstance().getPersistentGroupsSet()) {
 	    if (persistentGroup.getClass().isAssignableFrom(clazz)) {
 		return persistentGroup;
 	    }

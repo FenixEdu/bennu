@@ -11,3 +11,7 @@
 		<fr:property name="columnClasses" value=",,tderror"/>
 	</fr:layout>
 </fr:edit>
+
+<html:link page="/configuration.do?method=manageSystemGroups">
+	<bean:message bundle="MYORG_RESOURCES" key="label.configuration.manage.system.groups"/>
+</html:link>

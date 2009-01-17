@@ -9,17 +9,20 @@ public class Role extends Role_Base {
 
     public Role(final RoleType roleType) {
         super();
-        setMyOrg(MyOrg.getInstance());
+        final MyOrg myOrg = MyOrg.getInstance();
+        setMyOrg(myOrg);
+        setSystemGroupMyOrg(myOrg);
         setRoleType(roleType);
     }
 
     @Service
-    public static Role createRole(RoleType roleType) {
-	return new Role(roleType);
+    public static Role createRole(final RoleType roleType) {
+	final Role role = find(roleType);
+	return role == null ? new Role(roleType) : role;
     }
 
-    public static Role getRole(final RoleType roleType) {
-	for (final PersistentGroup group : MyOrg.getInstance().getPersistentGroupSet()) {
+    protected static Role find(final RoleType roleType) {
+	for (final PersistentGroup group : MyOrg.getInstance().getSystemGroupsSet()) {
 	    if (group instanceof Role) {
 		final Role role = (myorg.domain.groups.Role) group;
 		if (role.getRoleType() == roleType) {
@@ -27,7 +30,12 @@ public class Role extends Role_Base {
 		}
 	    }
 	}
-	return createRole(roleType);
+	return null;
+    }
+
+    public static Role getRole(final RoleType roleType) {
+	final Role role = find(roleType);
+	return role == null ? createRole(roleType) : role;
     }
 
     @Override
