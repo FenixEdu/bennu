@@ -118,6 +118,11 @@ public class Authenticate implements Serializable {
 	    }
 	}
 
+	final Role role = Role.getRole(RoleType.MANAGER);
+	if (role.getUserCount() == 0) {
+	    user.addPeopleGroups(role);
+	}
+
 	return userView;
     }
 
