@@ -14,6 +14,8 @@ import myorg._development.PropertiesManager;
 import myorg.applicationTier.Authenticate;
 import myorg.domain.MyOrg;
 import myorg.domain.RoleType;
+import myorg.domain.groups.AnyoneGroup;
+import myorg.domain.groups.UserGroup;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 
 public class StartupServlet extends HttpServlet {
@@ -50,6 +52,13 @@ public class StartupServlet extends HttpServlet {
 
 	final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
 	Authenticate.initRole(RoleType.MANAGER, managerUsernames);
+
+	initializePersistentGroups();
+    }
+
+    private void initializePersistentGroups() {
+	UserGroup.getInstance();
+	AnyoneGroup.getInstance();
     }
 
 }

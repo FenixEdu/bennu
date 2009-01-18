@@ -6,7 +6,9 @@
 
 <h2><bean:message key="label.configuration.manage.group" bundle="MYORG_RESOURCES"/>: <bean:write name="persistentGroup" property="name"/></h2>
 
-<logic:iterate id="user" name="persistentGroup" property="users">
-	<bean:write name="user" property="username"/>
-	<br/>
-</logic:iterate>
+<logic:present name="persistentGroup" property="members">
+	<logic:iterate id="user" name="persistentGroup" property="members">
+		<bean:write name="user" property="username"/>
+		<br/>
+	</logic:iterate>
+</logic:present>

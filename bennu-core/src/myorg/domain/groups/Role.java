@@ -9,8 +9,7 @@ public class Role extends Role_Base {
 
     public Role(final RoleType roleType) {
         super();
-        final MyOrg myOrg = MyOrg.getInstance();
-        setMyOrg(myOrg);
+        final MyOrg myOrg = getMyOrg();
         setSystemGroupMyOrg(myOrg);
         setRoleType(roleType);
     }
