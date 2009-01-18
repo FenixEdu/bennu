@@ -91,11 +91,4 @@
 	</li>
  -->
 </ul>
-<logic:present role="MANAGER">
-	<ul>
-		<li>
-			<html:link action="/configuration.do?method=applicationConfiguration"><bean:message key="label.configuration.link" bundle="MYORG_RESOURCES"/></html:link>
-		</li>
-	</ul>
-</logic:present>
 </div>

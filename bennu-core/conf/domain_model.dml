@@ -104,7 +104,7 @@ relation UserPeople {
 	groups.People playsRole peopleGroups {
 		multiplicity *;
 	}
-	User playsRole user {
+	User playsRole users {
 		multiplicity *;
 	}
 }

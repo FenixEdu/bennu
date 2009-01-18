@@ -5,7 +5,8 @@
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 
 <h2><bean:message key="label.configuration.title" bundle="MYORG_RESOURCES" /></h2>
-<fr:edit id="myOrg" name="myOrg" schema="myOrg.application.configuration">
+<fr:edit id="myOrg" name="myOrg" schema="myOrg.application.configuration"
+		action="/configuration?method=applicationConfiguration">
 	<fr:layout name="tabular">
 		<fr:property name="classes" value="form thwidth150px"/>
 		<fr:property name="columnClasses" value=",,tderror"/>

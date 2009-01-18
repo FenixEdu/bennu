@@ -8,7 +8,7 @@
 
 <logic:notEmpty name="persistentGroups">
 	<logic:iterate id="persistentGroup" name="persistentGroups">
-		<%= persistentGroup.getClass().getName() %>
+		<bean:write name="persistentGroup" property="name"/>
 		<html:link page="/configuration.do?method=viewPersistentGroup" paramId="persistentGroupId" paramName="persistentGroup" paramProperty="OID">
 			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.view.group.link"/>
 		</html:link>
@@ -16,5 +16,5 @@
 	</logic:iterate>
 </logic:notEmpty>
 <logic:empty name="persistentGroups">
-	No groups present.
+	<bean:message key="label.persistent.group.none.found" bundle="MYORG_RESOURCES"/>
 </logic:empty>

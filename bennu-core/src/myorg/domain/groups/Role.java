@@ -50,4 +50,9 @@ public class Role extends Role_Base {
 	return false;
     }
 
+    @Override
+    public String getName() {
+	return getRoleType().getPresentationName();
+    }
+
 }

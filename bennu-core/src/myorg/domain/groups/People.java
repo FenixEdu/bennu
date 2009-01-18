@@ -1,8 +1,8 @@
 package myorg.domain.groups;
 
-public class People extends People_Base {
+public abstract class People extends People_Base {
     
-    public  People() {
+    public People() {
         super();
     }
     
