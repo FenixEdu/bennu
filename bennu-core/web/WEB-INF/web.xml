@@ -36,6 +36,10 @@
 	    <filter-name>CloseTxFilter</filter-name>
 	    <filter-class>pt.ist.fenixWebFramework.servlets.filters.CloseTransactionFilter</filter-class>
 	</filter>
+	<filter>
+	    <filter-name>CloseExternalTxFilter</filter-name>
+	    <filter-class>myorg.presentationTier.servlets.filters.CloseExternalTransactionFilter</filter-class>
+	</filter>
    	<filter>
 	    <filter-name>CasAuthenticationFilter</filter-name>
 	    <filter-class>myorg.presentationTier.servlets.filters.CasAuthenticationFilter</filter-class>
@@ -92,6 +96,10 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CloseTxFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CloseExternalTxFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
