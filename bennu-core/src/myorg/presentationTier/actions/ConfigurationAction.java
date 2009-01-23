@@ -38,7 +38,7 @@ public class ConfigurationAction extends ContextBaseAction {
     public final ActionForward createSystemGroupsInterface(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
 	ActionNode.createActionNode("/configuration", "manageSystemGroups", "resources.MyorgResources", "label.configuration.manage.system.groups", Role.getRole(RoleType.MANAGER));
-	return applicationConfiguration(mapping, form, request, response);
+	return manageSystemGroups(mapping, form, request, response);
     }
 
     public ActionForward manageSystemGroups(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,

@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import myorg.domain.contents.Node;
 import myorg.presentationTier.Context;
 
 import org.apache.struts.action.ActionForm;
@@ -18,16 +19,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import pt.ist.fenixWebFramework.servlets.functionalities.CreateNodeActionAnnotationProcessor;
-import pt.ist.fenixWebFramework.struts.annotations.Forward;
-import pt.ist.fenixWebFramework.struts.annotations.Forwards;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.utl.ist.fenix.tools.util.FileUtils;
 
 @Mapping(path = "/home")
-@Forwards( {
-    @Forward(name = "page.hello", path = "/node.do?method=viewElement"),
-    @Forward(name = "add.content", path = "/newContent.jsp")
-})
 public class HomeAction extends ContextBaseAction {
 
     public static class ContentCreator {
@@ -81,7 +76,14 @@ public class HomeAction extends ContextBaseAction {
 
     public final ActionForward firstPage(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
-	return new ActionForward("/node.do?method=viewElement");
+	final Set<Node> nodes = getMyOrg().getTopLevelNodesSet();
+	for (final Node node : nodes) {
+	    if (node.isAccessible()) {
+		return new ActionForward(node.getUrl(getContext(request)));
+	    }
+	}
+	final Context context = getContext(request);
+	return context.forward("/noContentsAvailable.jsp");
     }
 
     public final ActionForward addContent(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
