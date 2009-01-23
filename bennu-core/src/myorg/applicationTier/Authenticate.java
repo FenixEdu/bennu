@@ -53,6 +53,8 @@ public class Authenticate implements Serializable {
 
     public static class UserView implements pt.ist.fenixWebFramework.security.User, Serializable {
 
+	private static final long serialVersionUID = -3306363183634102130L;
+
 	private final DomainReference<User> userReference;
 
 	private transient String privateConstantForDigestCalculation;
