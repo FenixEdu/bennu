@@ -14,16 +14,18 @@ public abstract class DbQuery {
     final Connection connection;
 
     public DbQuery(final DbHandler dbHandler) {
-	connection = dbHandler.getConnection();
+	connection = dbHandler == null ? null : dbHandler.getConnection();
     }
 
-    public void execute() throws SQLException {
+    public void execute() {
 	PreparedStatement preparedStatement = null;
 	ResultSet resultSet = null;
 	try {
 	    preparedStatement = connection.prepareStatement(getQueryString());
 	    resultSet = preparedStatement.executeQuery();
 	    processResultSet(resultSet);
+	} catch (final SQLException exception) {
+	    throw new Error(exception);
 	} finally {
 	    if (resultSet != null) {
 		try {
