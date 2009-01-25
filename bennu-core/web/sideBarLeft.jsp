@@ -7,13 +7,6 @@
 <bean:define id="menuElements" name="context" property="menuElements"/>
 <bean:define id="prefixPath" name="context" property="prefixPath"/>
 
-<logic:present role="MANAGER">
-	<div id="navops">
-		<!-- HAS_CONTEXT --><html:link page="/home.do?method=addContent">
-			<bean:message bundle="MYORG_RESOURCES" key="label.content.page.new"/>
-		</html:link>
-	</div>
-</logic:present>
 <div id="navlist">
 <%
 	final Object o = request.getAttribute("reorderPages");

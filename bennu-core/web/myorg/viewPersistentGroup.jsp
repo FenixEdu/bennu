@@ -4,7 +4,9 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 
-<h2><bean:message key="label.configuration.manage.group" bundle="MYORG_RESOURCES"/>: <bean:write name="persistentGroup" property="name"/></h2>
+<h2>
+	<bean:message key="label.configuration.manage.group" bundle="MYORG_RESOURCES"/>: <bean:write name="persistentGroup" property="name"/>
+</h2>
 
 <logic:present name="persistentGroup" property="members">
 	<logic:iterate id="user" name="persistentGroup" property="members">

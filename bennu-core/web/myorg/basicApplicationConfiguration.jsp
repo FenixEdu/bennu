@@ -4,7 +4,9 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 
-<h2><bean:message key="label.configuration.title" bundle="MYORG_RESOURCES" /></h2>
+<h2>
+	<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration.basic"/>
+</h2>
 <fr:edit id="myOrg" name="myOrg" schema="myOrg.application.configuration"
 		action="/configuration?method=applicationConfiguration">
 	<fr:layout name="tabular">

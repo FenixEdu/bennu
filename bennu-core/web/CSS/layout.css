@@ -161,7 +161,8 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 /* CONTENT ELEMENTS */
 
 		#content {
-			width: 562px;
+			/* width: 562px; */
+			width: 80%;
 			margin-left: 175px;
 			margin-right: 100px;
 		}

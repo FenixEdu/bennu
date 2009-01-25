@@ -112,7 +112,7 @@ public class HomeAction extends ContextBaseAction {
 	request.setAttribute("contentCreatorsMap", contentCreatorsMap);
 
 	final Context context = getContext(request);
-	return context.forward("/newContent.jsp");
+	return context.forward("/myorg/newContent.jsp");
     }
 
 }
