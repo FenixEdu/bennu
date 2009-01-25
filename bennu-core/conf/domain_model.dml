@@ -16,6 +16,18 @@ class MyOrg {
 	MultiLanguageString applicationCopyright;
 }
 
+class contents.Node {
+	String ojbConcreteClass;
+	Integer nodeOrder;
+}
+
+	class contents.ActionNode extends contents.Node {
+		String path;
+		String method;
+		String linkBundle;
+		String linkKey;
+	}
+
 class groups.PersistentGroup {
 	String ojbConcreteClass;
 }
@@ -33,22 +45,30 @@ class groups.PersistentGroup {
 			RoleType roleType;
 		}
 
+class scheduler.Task {
+	String ojbConcreteClass;
+}
+
+class scheduler.TaskConfiguration {
+	Boolean active;
+	Integer minute;
+	Integer hour;
+	Integer day;
+	Integer month;
+	Integer dayofweek;
+}
+
+class scheduler.TaskLog {
+	DateTime tastStart;
+	DateTime tastEnd;
+	String output;
+	Boolean successful;
+}
+
 class User {
 	String username;
 	String password;
 }
-
-class contents.Node {
-	String ojbConcreteClass;
-	Integer nodeOrder;
-}
-
-	class contents.ActionNode extends contents.Node {
-		String path;
-		String method;
-		String linkBundle;
-		String linkKey;
-	}
 
 
 relation MyOrgUser {
@@ -114,4 +134,39 @@ relation NodePersistentGroup {
 		multiplicity *;
 	}
 	groups.PersistentGroup playsRole accessibilityGroup;
+}
+
+relation MyOrTask {
+	MyOrg playsRole myOrg;
+	scheduler.Task playsRole task {
+		multiplicity *;
+	}
+}
+
+relation MyOrTaskConfiguration {
+	MyOrg playsRole myOrg;
+	scheduler.TaskConfiguration playsRole taskConfiguration {
+		multiplicity *;
+	}
+}
+
+relation MyOrTaskLog {
+	MyOrg playsRole myOrg;
+	scheduler.TaskLog playsRole taskLog {
+		multiplicity *;
+	}
+}
+
+relation TaskTaskConfiguration {
+	scheduler.Task playsRole task;
+	scheduler.TaskConfiguration playsRole taskConfiguration {
+		multiplicity *;
+	}
+}
+
+relation TaskTaskLog {
+	scheduler.Task playsRole task;
+	scheduler.TaskLog playsRole taskLog {
+		multiplicity *;
+	}
 }
