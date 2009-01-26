@@ -16,6 +16,8 @@ import myorg.domain.MyOrg;
 import myorg.domain.RoleType;
 import myorg.domain.groups.AnyoneGroup;
 import myorg.domain.groups.UserGroup;
+import myorg.domain.scheduler.Scheduler;
+import myorg.domain.scheduler.Task;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 
 public class StartupServlet extends HttpServlet {
@@ -54,6 +56,8 @@ public class StartupServlet extends HttpServlet {
 	Authenticate.initRole(RoleType.MANAGER, managerUsernames);
 
 	initializePersistentGroups();
+
+	Scheduler.initialize();
     }
 
     private void initializePersistentGroups() {

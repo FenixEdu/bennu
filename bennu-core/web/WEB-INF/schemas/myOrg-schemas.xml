@@ -8,3 +8,19 @@
 	<slot name="language" key="label.application.language" bundle="MYORG_RESOURCES" layout="postback"/>
 </schema>
 
+<schema name="myorg.domain.scheduler.TaskConfigurationBean" type="myorg.domain.scheduler.TaskConfigurationBean" bundle="MYORG_RESOURCES">
+	<slot name="minute" key="label.scheduler.task.configuration.minute" bundle="MYORG_RESOURCES"/>
+	<slot name="hour" key="label.scheduler.task.configuration.hour" bundle="MYORG_RESOURCES"/>
+	<slot name="day" key="label.scheduler.task.configuration.day" bundle="MYORG_RESOURCES"/>
+	<slot name="month" key="label.scheduler.task.configuration.month" bundle="MYORG_RESOURCES"/>
+	<slot name="dayofweek" key="label.scheduler.task.configuration.dayofweek" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="myorg.domain.scheduler.TaskConfiguration" type="myorg.domain.scheduler.TaskConfiguration" bundle="MYORG_RESOURCES">
+	<slot name="minute" key="label.scheduler.task.configuration.minute" bundle="MYORG_RESOURCES"/>
+	<slot name="hour" key="label.scheduler.task.configuration.hour" bundle="MYORG_RESOURCES"/>
+	<slot name="day" key="label.scheduler.task.configuration.day" bundle="MYORG_RESOURCES"/>
+	<slot name="month" key="label.scheduler.task.configuration.month" bundle="MYORG_RESOURCES"/>
+	<slot name="dayofweek" key="label.scheduler.task.configuration.dayofweek" bundle="MYORG_RESOURCES"/>
+	<slot name="task.localizedName" key="label.scheduler.task.name" bundle="MYORG_RESOURCES"/>
+</schema>

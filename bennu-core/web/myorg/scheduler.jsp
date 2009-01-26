@@ -8,11 +8,99 @@
 	<bean:message bundle="MYORG_RESOURCES" key="label.configuration.tasks.scheduleing"/>
 </h2>
 
-<logic:empty name="taskDomainClass">
-	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.tasks.none"/>
+<h3>
+	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.tasks.active"/>
+</h3>
+<logic:empty name="activeTasks">
+	<p>
+		<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.tasks.none.active"/>
+	</p>
 </logic:empty>
-<logic:notEmpty name="taskDomainClass">
-	<logic:iterate id="taskDomainClass" name="taskDomainClasses">
-		<bean:write name="taskDomainClass"/>
+<logic:notEmpty name="activeTasks">
+	<table class="tstyle2">
+		<tr>
+			<th>
+				<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.name"/>
+			</th>
+			<th>
+				<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.configuration.minute"/>
+			</th>
+			<th>
+				<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.configuration.hour"/>
+			</th>
+			<th>
+				<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.configuration.day"/>
+			</th>
+			<th>
+				<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.configuration.month"/>
+			</th>
+			<th>
+				<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.configuration.dayofweek"/>
+			</th>
+		</tr>
+		<logic:iterate id="task" name="activeTasks">
+			<bean:size id="numberConfigurations" name="task" property="taskConfigurations"/>
+			<logic:iterate id="taskConfiguration" name="task" property="taskConfigurations" length="1">
+				<tr>
+					<td rowspan="<%= numberConfigurations %>">
+						<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="OID">
+							<bean:write name="task" property="localizedName"/>
+						</html:link>
+					</td>
+					<td>
+						<bean:write name="taskConfiguration" property="minute"/>
+					</td>
+					<td>
+						<bean:write name="taskConfiguration" property="hour"/>
+					</td>
+					<td>
+						<bean:write name="taskConfiguration" property="day"/>
+					</td>
+					<td>
+						<bean:write name="taskConfiguration" property="month"/>
+					</td>
+					<td>
+						<bean:write name="taskConfiguration" property="dayofweek"/>
+					</td>
+				</tr>
+			</logic:iterate>
+			<logic:iterate id="taskConfiguration" name="task" property="taskConfigurations" offset="1">
+				<tr>
+					<td>
+						<bean:write name="taskConfiguration" property="minute"/>
+					</td>
+					<td>
+						<bean:write name="taskConfiguration" property="hour"/>
+					</td>
+					<td>
+						<bean:write name="taskConfiguration" property="day"/>
+					</td>
+					<td>
+						<bean:write name="taskConfiguration" property="month"/>
+					</td>
+					<td>
+						<bean:write name="taskConfiguration" property="dayofweek"/>
+					</td>
+				</tr>
+			</logic:iterate>
+		</logic:iterate>
+	</table>
+</logic:notEmpty>
+
+<h3>
+	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.tasks.inactive"/>
+</h3>
+<logic:empty name="inactiveTasks">
+	<p>
+		<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.tasks.none.inactive"/>
+	</p>
+</logic:empty>
+<logic:notEmpty name="inactiveTasks">
+	<logic:iterate id="task" name="inactiveTasks">
+		<p>
+			<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="OID">
+				<bean:write name="task" property="localizedName"/>
+			</html:link>
+		</p>
 	</logic:iterate>
 </logic:notEmpty>
