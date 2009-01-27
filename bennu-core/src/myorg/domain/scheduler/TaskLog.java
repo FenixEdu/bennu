@@ -30,5 +30,10 @@ public class TaskLog extends TaskLog_Base {
 	setTaskEnd(new DateTime());
 	setSuccessful(successful);
     }
-    
+
+    @Override
+    public Boolean getSuccessful() {
+        return getTaskEnd() == null ? null : super.getSuccessful();
+    }
+
 }
