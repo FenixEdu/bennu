@@ -68,6 +68,7 @@ class scheduler.TaskLog {
 class User {
 	String username;
 	String password;
+	DateTime lastLogoutDateTime;
 }
 
 

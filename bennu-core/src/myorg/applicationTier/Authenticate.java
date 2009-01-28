@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.joda.time.DateTime;
+
 import myorg.domain.RoleType;
 import myorg.domain.User;
 import myorg.domain.groups.Role;
@@ -59,6 +61,8 @@ public class Authenticate implements Serializable {
 
 	private transient String privateConstantForDigestCalculation;
 
+	private final DateTime userViewCreationDateTime = new DateTime();
+
 	private UserView(final String username) {
 	    final User user = findByUsername(username);
 	    userReference = new DomainReference<User>(user);
@@ -105,6 +109,16 @@ public class Authenticate implements Serializable {
 	public static User getCurrentUser() {
 	    final UserView userView = (UserView) pt.ist.fenixWebFramework.security.UserView.getUser();
 	    return userView == null ? null : userView.getUser();
+	}
+
+	@Override
+	public DateTime getLastLogoutDateTime() {
+	    return getUser().getLastLogoutDateTime();
+	}
+
+	@Override
+	public DateTime getUserCreationDateTime() {
+	    return userViewCreationDateTime;
 	}
     }
 
