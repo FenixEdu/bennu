@@ -10,6 +10,8 @@
 	final String contextPath = request.getContextPath();
 %>
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/layout.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/print.css" media="print"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/contents.css" media="screen, print"/>
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/dragContents.css" media="screen"/>
  
 <script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/custom.js"></script>

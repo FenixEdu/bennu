@@ -1,0 +1,7 @@
+#header *, #navigation *, #navlist *, #sidebar *, #footer *{
+	display: none;
+}
+
+.noprint{
+	display: none;
+}
