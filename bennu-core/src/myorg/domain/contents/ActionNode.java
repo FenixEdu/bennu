@@ -1,5 +1,6 @@
 package myorg.domain.contents;
 
+import myorg.domain.VirtualHost;
 import myorg.domain.groups.PersistentGroup;
 import myorg.presentationTier.Context;
 import myorg.util.BundleUtil;
@@ -8,14 +9,15 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class ActionNode extends ActionNode_Base {
     
-    public ActionNode() {
+    public ActionNode(final VirtualHost virtualHost, final Node node) {
         super();
-        init(null, null);
+        init(virtualHost, node, null);
     }
 
     @Service
-    public static ActionNode createActionNode(final String path, final String method, final String bundle, final String key, final PersistentGroup accessibilityGroup) {
-	final ActionNode actionNode = new ActionNode();
+    public static ActionNode createActionNode(final VirtualHost virtualHost, final Node node, final String path,
+	    final String method, final String bundle, final String key, final PersistentGroup accessibilityGroup) {
+	final ActionNode actionNode = new ActionNode(virtualHost, node);
 	actionNode.setPath(path);
 	actionNode.setMethod(method);
 	actionNode.setLinkBundle(bundle);

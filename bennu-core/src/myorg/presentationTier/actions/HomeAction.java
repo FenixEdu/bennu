@@ -89,6 +89,11 @@ public class HomeAction extends ContextBaseAction {
 
     public final ActionForward addContent(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
+	request.setAttribute("virtualHostToManage", virtualHost);
+	final Node node = getDomainObject(request, "parentOfNodesToManageId");
+	request.setAttribute("parentOfNodesToManage", node);
+
 	final Map<String, Set<ContentCreator>> contentCreatorsMap = new TreeMap<String, Set<ContentCreator>>();
 	final InputStream inputStream = getClass().getResourceAsStream("/" + CreateNodeActionAnnotationProcessor.LOG_FILENAME);
 	if (inputStream != null) {

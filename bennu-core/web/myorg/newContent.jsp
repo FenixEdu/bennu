@@ -29,7 +29,8 @@
 				<bean:define id="path" name="contentCreator" property="path" type="java.lang.String"/>
 				<bean:define id="bundle" name="contentCreator" property="bundle" type="java.lang.String"/>
 				<bean:define id="key" name="contentCreator" property="key" type="java.lang.String"/>
-				<html:link action="<%= path %>">
+				<bean:define id="url"><bean:write name="path"/>&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="OID"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="OID"/></logic:present></bean:define>
+				<html:link action="<%= url %>">
 					<bean:message bundle="<%= bundle %>" key="<%= key %>"/>
 				</html:link>
 				<br/>

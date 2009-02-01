@@ -40,9 +40,8 @@ public abstract class Node extends Node_Base implements INode {
 	return getParentNode();
     }
 
-    public void init(final Node parentNode, final Integer order) {
+    public void init(final VirtualHost virtualHost, final Node parentNode, final Integer order) {
 	if (parentNode == null) {
-	    final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
 	    setNodeOrder(virtualHost.getTopLevelNodesSet(), order);
 	    setVirtualHost(virtualHost);
 	} else {
@@ -81,8 +80,11 @@ public abstract class Node extends Node_Base implements INode {
     }
 
     public static SortedSet<INode> getOrderedTopLevelNodes() {
+	return getOrderedTopLevelNodes(VirtualHost.getVirtualHostForThread());
+    }
+
+    public static SortedSet<INode> getOrderedTopLevelNodes(final VirtualHost virtualHost) {
 	final SortedSet<INode> nodes = new TreeSet<INode>(Node.COMPARATOR_BY_ORDER);
-	final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
 	nodes.addAll(virtualHost.getTopLevelNodesSet());
 	return nodes;
     }

@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import myorg.domain.VirtualHost;
 import myorg.domain.VirtualHostBean;
+import myorg.domain.contents.INode;
+import myorg.domain.contents.Node;
 import myorg.domain.groups.PersistentGroup;
 import myorg.presentationTier.Context;
 
@@ -67,6 +69,21 @@ public class ConfigurationAction extends ContextBaseAction {
 	final VirtualHostBean virtualHostBean = getRenderedObject();
 	VirtualHost.createVirtualHost(virtualHostBean);
 	return applicationConfiguration(mapping, form, request, response);
+    }
+
+    public ActionForward manageMenus(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
+	request.setAttribute("virtualHostToManage", virtualHost);
+
+	final Node node = getDomainObject(request, "parentOfNodesToManageId");
+	request.setAttribute("parentOfNodesToManage", node);
+
+	final Set<INode> nodes = node == null ? Node.getOrderedTopLevelNodes(virtualHost) : node.getOrderedChildren();
+	request.setAttribute("nodesToManage", nodes);
+
+	final Context context = getContext(request);
+	return context.forward("/myorg/manageMenus.jsp");
     }
 
 }

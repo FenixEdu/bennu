@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import myorg.domain.MyOrg;
+import myorg.domain.VirtualHost;
+import myorg.domain.contents.Node;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -127,6 +129,14 @@ public abstract class BaseAction extends DispatchAction {
 	if (request != null) {
 	    request.setAttribute(attributeName, attributeValue);
 	}
+    }
+
+    protected ActionForward forwardToMuneConfiguration(final HttpServletRequest request, final VirtualHost virtualHost, final Node node) {
+	request.setAttribute("virtualHostToManageId", virtualHost.getOID());
+	if (node != null) {
+	    request.setAttribute("parentOfNodesToManageId", node.getOID());
+	}
+	return new ActionForward("/configuration.do?method=manageMenus");
     }
 
 }

@@ -34,9 +34,15 @@
 <fr:view name="myOrg" property="virtualHosts" schema="virtualHost.application.configuration.summary">
 	<fr:layout name="tabular">
 		<fr:property name="classes" value="tstyle2" />
+
 		<fr:property name="link(edit)" value="/configuration.do?method=basicApplicationConfiguration" />
 		<fr:property name="key(edit)" value="label.edit" />
 		<fr:property name="param(edit)" value="OID/virtualHostId" />
 		<fr:property name="bundle(edit)" value="MYORG_RESOURCES" />
+
+		<fr:property name="link(menu)" value="/configuration.do?method=manageMenus" />
+		<fr:property name="key(menu)" value="label.configuration.manage.menus.features" />
+		<fr:property name="param(menu)" value="OID/virtualHostToManageId" />
+		<fr:property name="bundle(menu)" value="MYORG_RESOURCES" />
 	</fr:layout>
 </fr:view>
