@@ -10,7 +10,6 @@ import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixframework.pstm.DomainClassInfo;
 import pt.ist.fenixframework.pstm.Transaction;
-import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class MyOrg extends MyOrg_Base {
     
@@ -114,9 +113,7 @@ public class MyOrg extends MyOrg_Base {
 
     private MyOrg() {
 	super();
-	setApplicationTitle(new MultiLanguageString("MyOrg Application Title"));
-	setApplicationSubTitle(new MultiLanguageString("MyOrg Application SubTitle"));
-	setApplicationCopyright(new MultiLanguageString("My Organization Name"));
+	new VirtualHost(this);
     }
 
 }

@@ -9,8 +9,8 @@
 <table width="100%">
   <tr>
     <td rowspan="2" width="60%" valign="top">
-		<h1><bean:write name="myOrg" property="applicationTitle"/></h1>
-		<p><bean:write name="myOrg" property="applicationSubTitle"/></p>
+		<h1><bean:write name="virtualHost" property="applicationTitle"/></h1>
+		<p><bean:write name="virtualHost" property="applicationSubTitle"/></p>
     </td>
     <td align="right" nowrap="nowrap" width="40%">
 		<%

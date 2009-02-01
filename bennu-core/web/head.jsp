@@ -3,7 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
-<title><bean:write name="myOrg" property="applicationTitle"/></title>
+<title><bean:write name="virtualHost" property="applicationTitle"/></title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <%

@@ -11,9 +11,6 @@ enum myorg.domain.RoleType as RoleType;
 
 
 class MyOrg {
-	MultiLanguageString applicationTitle;
-	MultiLanguageString applicationSubTitle;
-	MultiLanguageString applicationCopyright;
 }
 
 class contents.Node {
@@ -71,10 +68,24 @@ class User {
 	DateTime lastLogoutDateTime;
 }
 
+class VirtualHost {
+	String hostname;
+	MultiLanguageString applicationTitle;
+	MultiLanguageString applicationSubTitle;
+	MultiLanguageString applicationCopyright;
+}
+
 
 relation MyOrgUser {
 	MyOrg playsRole myOrg;
 	User playsRole user {
+		multiplicity *;
+	}
+}
+
+relation MyOrgVirtualHost {
+	MyOrg playsRole myOrg;
+	VirtualHost playsRole virtualHosts {
 		multiplicity *;
 	}
 }
@@ -86,8 +97,8 @@ relation MyOrgNode {
 	}
 }
 
-relation MyOrgTopLevelNode {
-	MyOrg playsRole myOrgFromTopLevelNode;
+relation VirtualHostTopLevelNode {
+	VirtualHost playsRole virtualHost;
 	contents.Node playsRole topLevelNodes {
 		multiplicity *;
 	}

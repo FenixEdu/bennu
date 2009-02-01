@@ -29,7 +29,7 @@ public abstract class BaseAction extends DispatchAction {
     @Override
     public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
-	final MyOrg myOrg = MyOrg.getInstance();
+	final MyOrg myOrg = getMyOrg();
 	request.setAttribute("myOrg", myOrg);
 	return super.execute(mapping, form, request, response);
     }

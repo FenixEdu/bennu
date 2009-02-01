@@ -10,11 +10,6 @@
 
 <ul>
 	<li>
-			<!-- HAS_CONTEXT --><html:link page="/configuration.do?method=basicApplicationConfiguration">
-				<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration.basic"/>
-			</html:link>
-	</li>
-	<li>
 			<!-- HAS_CONTEXT --><html:link page="/configuration.do?method=manageSystemGroups">
 				<bean:message bundle="MYORG_RESOURCES" key="label.configuration.manage.system.groups"/>
 			</html:link>
@@ -29,4 +24,19 @@
 			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.tasks.scheduleing"/>
 		</html:link>
 	</li>
+	<li>
+		<!-- HAS_CONTEXT --><html:link page="/configuration.do?method=prepareAddVirtualHost">
+			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.virtualHost.add"/>
+		</html:link>
+	</li>
 </ul>
+
+<fr:view name="myOrg" property="virtualHosts" schema="virtualHost.application.configuration.summary">
+	<fr:layout name="tabular">
+		<fr:property name="classes" value="tstyle2" />
+		<fr:property name="link(edit)" value="/configuration.do?method=basicApplicationConfiguration" />
+		<fr:property name="key(edit)" value="label.edit" />
+		<fr:property name="param(edit)" value="OID/virtualHostId" />
+		<fr:property name="bundle(edit)" value="MYORG_RESOURCES" />
+	</fr:layout>
+</fr:view>

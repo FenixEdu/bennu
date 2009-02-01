@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import myorg.applicationTier.Authenticate.UserView;
 import myorg.domain.MyOrg;
 import myorg.domain.User;
+import myorg.domain.VirtualHost;
 import myorg.domain.groups.PersistentGroup;
 import myorg.presentationTier.Context;
 import pt.ist.fenixWebFramework.services.Service;
@@ -41,8 +42,9 @@ public abstract class Node extends Node_Base implements INode {
 
     public void init(final Node parentNode, final Integer order) {
 	if (parentNode == null) {
-	    setNodeOrder(getMyOrg().getTopLevelNodesSet(), order);
-	    setMyOrgFromTopLevelNode(getMyOrg());
+	    final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+	    setNodeOrder(virtualHost.getTopLevelNodesSet(), order);
+	    setVirtualHost(virtualHost);
 	} else {
 	    setNodeOrder(parentNode.getChildNodesSet(), order);
 	    setParentNode(parentNode);
@@ -64,7 +66,7 @@ public abstract class Node extends Node_Base implements INode {
     }
 
     public static Node getFirstTopLevelNode() {
-	final Set<Node> nodes = MyOrg.getInstance().getTopLevelNodesSet();
+	final Set<Node> nodes = VirtualHost.getVirtualHostForThread().getTopLevelNodesSet();
 	return nodes.isEmpty() ? null : Collections.min(nodes, COMPARATOR_BY_ORDER);
     }
 
@@ -80,8 +82,8 @@ public abstract class Node extends Node_Base implements INode {
 
     public static SortedSet<INode> getOrderedTopLevelNodes() {
 	final SortedSet<INode> nodes = new TreeSet<INode>(Node.COMPARATOR_BY_ORDER);
-	final MyOrg myOrg = MyOrg.getInstance();
-	nodes.addAll(myOrg.getTopLevelNodesSet());
+	final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+	nodes.addAll(virtualHost.getTopLevelNodesSet());
 	return nodes;
     }
 
@@ -109,7 +111,8 @@ public abstract class Node extends Node_Base implements INode {
     public void delete() {
 	final Node parentNode = getParentNode();
 	if (parentNode == null) {
-	    descNodeOrders(getMyOrg().getTopLevelNodesSet());
+	    final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+	    descNodeOrders(virtualHost.getTopLevelNodesSet());
 	} else {
 	    removeParentNode();
 	    descNodeOrders(parentNode.getChildNodesSet());
@@ -117,15 +120,15 @@ public abstract class Node extends Node_Base implements INode {
 	for (final Node childNode : getChildNodesSet()) {
 	    childNode.delete();
 	}
-	removeMyOrgFromTopLevelNode();
+	removeVirtualHost();
 	removeMyOrg();
 	Transaction.deleteObject(this);
     }
 
     @Service
     public static void reorderTopLevelNodes(final List<Node> nodes) throws Error {
-	final MyOrg myOrg = MyOrg.getInstance();
-	for (final Node node : myOrg.getTopLevelNodesSet()) {
+	final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+	for (final Node node : virtualHost.getTopLevelNodesSet()) {
 	    if (!nodes.contains(node)) {
 		throwError();
 	    }
@@ -133,7 +136,7 @@ public abstract class Node extends Node_Base implements INode {
 
 	int i = 0;
 	for (final Node node : nodes) {
-	    if (!myOrg.hasTopLevelNodes(node)) {
+	    if (!virtualHost.hasTopLevelNodes(node)) {
 		throwError();
 	    }
 	    node.setNodeOrder(Integer.valueOf(i++));

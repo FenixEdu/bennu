@@ -1,4 +1,19 @@
-<schema name="myOrg.application.configuration" type="myorg.domain.MyOrg" bundle="MYORG_RESOURCES">
+<schema name="virtualHost.application.configuration" type="myorg.domain.VirtualHost" bundle="MYORG_RESOURCES">
+	<slot name="hostname" key="label.application.hostname" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="virtualHost.application.configuration.summary" type="myorg.domain.VirtualHost" bundle="MYORG_RESOURCES">
+	<slot name="hostname" key="label.application.hostname" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="virtualHost.bean" type="myorg.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
+	<slot name="hostname" key="label.application.hostname" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>

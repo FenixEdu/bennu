@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import myorg.domain.VirtualHost;
 import myorg.domain.contents.Node;
 import myorg.presentationTier.Context;
 
@@ -76,7 +77,7 @@ public class HomeAction extends ContextBaseAction {
 
     public final ActionForward firstPage(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
-	final Set<Node> nodes = getMyOrg().getTopLevelNodesSet();
+	final Set<Node> nodes = VirtualHost.getVirtualHostForThread().getTopLevelNodesSet();
 	for (final Node node : nodes) {
 	    if (node.isAccessible()) {
 		return new ActionForward(node.getUrl(getContext(request)));

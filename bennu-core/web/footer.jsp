@@ -11,6 +11,6 @@
 	|
 	<a href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank"><bean:message bundle="MYORG_RESOURCES" key="label.application.valid.css"/></a>
 	<strong>
-		&copy;<dt:format pattern="yyyy"><dt:currentTime/></dt:format> <bean:write name="myOrg" property="applicationCopyright"/>
+		&copy;<dt:format pattern="yyyy"><dt:currentTime/></dt:format> <bean:write name="virtualHost" property="applicationCopyright"/>
 	</strong>
 </p>

@@ -19,6 +19,11 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 			color: #999999;
 		}
 
+		body {
+			color: #333;
+			background:#fff url("../CSS/header_bck.gif") repeat-x left top;
+		}
+
 /* NAVIGATION ELEMENTS */
 
 		 #navigation {

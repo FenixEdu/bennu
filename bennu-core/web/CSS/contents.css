@@ -7,7 +7,6 @@
 			font-size: 11px;
 			line-height: 1.6em;
 			color: #666;
-			background-color: #FFF;
 		}
 		
 		
@@ -18,14 +17,12 @@ h1 {
 	font-size: 32px;
 	color: #CC6633;
 	margin-bottom: 30px;
-	background-color: #FFF;
 }
 
 h2 {
 	color: #666666;
 	font-size: 12px;
 	font-family: Lucida Grande, Tahoma, Arial, Helvetica, sans-serif;
-	background-color: #FFF;
 	padding-bottom: 10px;
 	border-bottom: 2px solid #DDDDDD;
 }
@@ -67,7 +64,6 @@ form.login {
 }
 
 input {
-	background-color: #FFF;
 	color: #999999;
 	border: 1px solid #CCC;
 	font-size: 11px;

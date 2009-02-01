@@ -5,6 +5,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import myorg.domain.VirtualHost;
+import myorg.domain.VirtualHostBean;
 import myorg.domain.groups.PersistentGroup;
 import myorg.presentationTier.Context;
 
@@ -26,6 +28,10 @@ public class ConfigurationAction extends ContextBaseAction {
     public ActionForward basicApplicationConfiguration(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
 	final Context context = getContext(request);
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
+	if (virtualHost != null) {
+	    request.setAttribute("virtualHostToConfigure", virtualHost);
+	}
 	return context.forward("/myorg/basicApplicationConfiguration.jsp");
     }
 
@@ -43,6 +49,24 @@ public class ConfigurationAction extends ContextBaseAction {
 	final PersistentGroup persistentGroup = getDomainObject(request, "persistentGroupId");
 	request.setAttribute("persistentGroup", persistentGroup);
 	return context.forward("/myorg/viewPersistentGroup.jsp");
+    }
+
+    public ActionForward prepareAddVirtualHost(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final Context context = getContext(request);
+	VirtualHostBean virtualHostBean = getRenderedObject();
+	if (virtualHostBean == null) {
+	    virtualHostBean = new VirtualHostBean();
+	}
+	request.setAttribute("virtualHostBean", virtualHostBean);
+	return context.forward("/myorg/addVirtualHost.jsp");
+    }
+
+    public ActionForward addVirtualHost(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final VirtualHostBean virtualHostBean = getRenderedObject();
+	VirtualHost.createVirtualHost(virtualHostBean);
+	return applicationConfiguration(mapping, form, request, response);
     }
 
 }
