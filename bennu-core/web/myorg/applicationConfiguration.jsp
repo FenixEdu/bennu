@@ -15,11 +15,6 @@
 			</html:link>
 	</li>
 	<li>
-			<!-- HAS_CONTEXT --><html:link page="/home.do?method=addContent">
-				<bean:message bundle="MYORG_RESOURCES" key="label.configuration.manage.menus.features"/>
-			</html:link>
-	</li>
-	<li>
 		<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewScheduler">
 			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.tasks.scheduleing"/>
 		</html:link>

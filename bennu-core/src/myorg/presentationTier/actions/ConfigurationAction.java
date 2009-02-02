@@ -86,4 +86,11 @@ public class ConfigurationAction extends ContextBaseAction {
 	return context.forward("/myorg/manageMenus.jsp");
     }
 
+    public final ActionForward deleteNode(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final Node node = getDomainObject(request, "nodeToDeleteId");
+	node.deleteService();
+	return manageMenus(mapping, form, request, response);
+    }
+
 }
