@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.filters.SetUserViewFilter;
 import pt.ist.fenixWebFramework.struts.annotations.Forward;
 import pt.ist.fenixWebFramework.struts.annotations.Forwards;
@@ -68,7 +69,12 @@ public class AuthenticationAction extends ContextBaseAction {
     public final ActionForward logout(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response)
 		throws Exception {
 	logout(request);
-	return mapping.findForward("forward");
+	if (FenixWebFramework.getConfig().isCasEnabled()) {
+	    final String url = FenixWebFramework.getConfig().getCasLogoutUrl();
+	    return new ActionForward(url);
+	} else {
+	    return mapping.findForward("forward");
+	}
     }
 
     public final ActionForward logoutEmptyPage(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response)
