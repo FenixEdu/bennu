@@ -76,7 +76,7 @@ public class AuthenticationAction extends ContextBaseAction {
 	logout(request);
 	if (FenixWebFramework.getConfig().isCasEnabled()) {
 	    final String url = FenixWebFramework.getConfig().getCasLogoutUrl();
-	    return new ActionForward(url);
+	    return new ActionForward(url, true);
 	} else {
 	    return mapping.findForward("forward");
 	}
