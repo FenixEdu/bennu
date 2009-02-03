@@ -83,7 +83,6 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
             defaultLocation = getProperty("location");
             defaultVariant = getProperty("variant");
             updateDataRepositoryStructure = true;
-            updateDataRepositoryStructure = true;
             casEnabled = getBooleanProperty("cas.enable");
             casLoginUrl = getProperty("cas.loginUrl");
             casValidateUrl = getProperty("cas.ValidateUrl");

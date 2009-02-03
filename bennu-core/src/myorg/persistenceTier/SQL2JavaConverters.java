@@ -31,4 +31,8 @@ public class SQL2JavaConverters {
     public static FieldConversion MultiLanguageString2SqlMultiLanguageStringConversion = new MultiLanguageString2SqlMultiLanguageStringConversion();
     public static FieldConversion TimeStamp2DateTimeFieldConversion = new TimeStamp2DateTimeFieldConversion();
     public static FieldConversion BigDecimalConverter = new BigDecimalConverter();
+    public static FieldConversion JavaByteArray2SqlByteArrayFieldConversion = new JavaByteArray2SqlByteArrayFieldConversion();
+    public static FieldConversion JavaMoney2SqlMoneyFieldConversion = new JavaMoney2SqlMoneyFieldConversion();
+    public static FieldConversion AddressConverter = new AddressConverter();
+    public static FieldConversion StringsConverter = new StringsConverter();
 }

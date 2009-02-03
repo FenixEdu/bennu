@@ -32,8 +32,8 @@
 	<property name="compile.deprecation" value="off"/>
 	<property name="compile.optimize"    value="on"/>
 
-	<property name="dml.fenix.sqltypes" value="${config}/dataTypesJDBCTypes.properties"/>
-	<property name="dml.fenix.typeconverters" value="${config}/dataTypeConversors.properties"/>
+	<property name="dml.fenix.sqltypes" value="${build.home.webinf.classes}/dataTypesJDBCTypes.properties"/>
+	<property name="dml.fenix.typeconverters" value="${build.home.webinf.classes}/dataTypeConversors.properties"/>
 
 	<target name="clean-all" description="Removes any generated files">
 		<delete dir="${build.home}"/>
