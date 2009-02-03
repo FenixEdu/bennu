@@ -34,6 +34,7 @@ import myorg.applicationTier.Authenticate.UserView;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.joda.time.DateTime;
 
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.filters.SetUserViewFilter;
@@ -52,6 +53,10 @@ public class AuthenticationAction extends ContextBaseAction {
     }
 
     public static void logout(final HttpServletRequest request) {
+	final UserView userView = pt.ist.fenixWebFramework.security.UserView.getUser();
+	if (userView != null) {
+	    userView.getUser().setLastLogoutDateTime(new DateTime());
+	}
 	pt.ist.fenixWebFramework.security.UserView.setUser(null);
 	final HttpSession httpSession = request.getSession();
 	httpSession.removeAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE);

@@ -29,6 +29,10 @@ import java.util.Comparator;
 import myorg.domain.groups.People;
 import myorg.domain.groups.Role;
 
+import org.joda.time.DateTime;
+
+import pt.ist.fenixWebFramework.services.Service;
+
 public class User extends User_Base {
 
     public static final Comparator<User> COMPARATOR_BY_NAME = new Comparator<User>() {
@@ -69,6 +73,12 @@ public class User extends User_Base {
 	    }
 	}
 	return false;
+    }
+
+    @Service
+    @Override
+    public void setLastLogoutDateTime(final DateTime lastLogoutDateTime) {
+        super.setLastLogoutDateTime(lastLogoutDateTime);
     }
 
 }
