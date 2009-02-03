@@ -67,7 +67,7 @@ public abstract class Context {
 	    final INode parentNode = elements.get(elements.size() - 2);
 	    return parentNode.getOrderedChildren();
 	} else {
-	    return Node.getOrderedTopLevelNodes();
+	    return (Collection) Node.getOrderedTopLevelNodes();
 	}
     }
 

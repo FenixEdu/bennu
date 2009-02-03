@@ -103,7 +103,7 @@ public class ConfigurationAction extends ContextBaseAction {
 	final Node node = getDomainObject(request, "parentOfNodesToManageId");
 	request.setAttribute("parentOfNodesToManage", node);
 
-	final Set<INode> nodes = node == null ? Node.getOrderedTopLevelNodes(virtualHost) : node.getOrderedChildren();
+	final Set<INode> nodes = node == null ? (Set) Node.getOrderedTopLevelNodes(virtualHost) : node.getOrderedChildren();
 	request.setAttribute("nodesToManage", nodes);
 
 	final Context context = getContext(request);
