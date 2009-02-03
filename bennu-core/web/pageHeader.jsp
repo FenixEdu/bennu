@@ -43,11 +43,7 @@
 				</logic:present>
 				<a href="https://193.136.132.88/Qualidade/Aquisicoes" target="_blank"><bean:message key="label.help.link" bundle="MYORG_RESOURCES"/></a> |  
 				<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES"/>: <bean:write name="USER_SESSION_ATTRIBUTE" property="username"/> |
-				<% if (isCasEnabled) {%>
-					<html:link href="<%= FenixWebFramework.getConfig().getCasLogoutUrl() %>"><bean:message key="label.login.logout" bundle="MYORG_RESOURCES"/></html:link>
-				<% } else { %>
-					<html:link action="/authenticationAction.do?method=logout"><bean:message key="label.login.logout" bundle="MYORG_RESOURCES"/></html:link>
-				<% } %>
+				<html:link action="/authenticationAction.do?method=logout"><bean:message key="label.login.logout" bundle="MYORG_RESOURCES"/></html:link>
 			</div>
 		</logic:present>
 	</td>
