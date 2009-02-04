@@ -22,7 +22,7 @@
 			<% if (node.isAccessible()) { %>
 				<bean:define id="articleId">articleNode<%= nindex %></bean:define>
 				<li>
-					<% String url = node.getUrl(context); %>
+					<% String url = node.getUrl(); %>
 					<div <% if (reorder) {%>dragableBox="true"<% } %> id="<%= articleId %>">
 						<% if (!reorder) { %>
 							<!-- HAS_CONTEXT --><html:link page="<%= url %>">
@@ -39,9 +39,9 @@
 					<% if (!reorder && context.getSelectedNode() == node) { %>
 						<logic:iterate id="childNode" name="node" property="orderedChildren" type="myorg.domain.contents.Node">
 							<% if (childNode.isAccessible()) { %>
+								<% String childUrl = childNode.getUrl(); %>
 								<li class="navsublist">
-									<bean:define id="urlChild"><%= url %>,<bean:write name="childNode" property="OID"/></bean:define>
-									<!-- HAS_CONTEXT --><html:link page="<%= urlChild %>">
+									<!-- HAS_CONTEXT --><html:link page="<%= childUrl %>">
 										<bean:write name="childNode" property="link"/>
 									</html:link>
 								</li>

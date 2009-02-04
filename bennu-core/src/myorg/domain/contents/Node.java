@@ -36,6 +36,7 @@ import myorg.domain.User;
 import myorg.domain.VirtualHost;
 import myorg.domain.groups.PersistentGroup;
 import myorg.presentationTier.Context;
+import myorg.presentationTier.actions.ContextBaseAction;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.pstm.Transaction;
 
@@ -47,7 +48,26 @@ public abstract class Node extends Node_Base implements INode {
 	setOjbConcreteClass(getClass().getName());
     }
 
-    public abstract String getUrl(final Context context);
+    public String getUrl() {
+	final StringBuilder stringBuilder = new StringBuilder();
+	appendUrlPrefix(stringBuilder);
+	stringBuilder.append('&');
+	stringBuilder.append(ContextBaseAction.CONTEXT_PATH);
+	stringBuilder.append('=');
+	appendNodePath(stringBuilder);
+	return stringBuilder.toString();
+    }
+
+    protected void appendNodePath(final StringBuilder stringBuilder) {
+	final Node parentNode = getParentNode();
+	if (parentNode != null) {
+	    parentNode.appendNodePath(stringBuilder);
+	    stringBuilder.append(Context.PATH_PART_SEPERATOR);
+	}
+	stringBuilder.append(getOID());
+    }
+
+    protected abstract void appendUrlPrefix(final StringBuilder stringBuilder);
 
     @Override
     public Set<INode> getChildren() {

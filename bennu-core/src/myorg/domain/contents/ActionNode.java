@@ -63,8 +63,10 @@ public class ActionNode extends ActionNode_Base {
     }
 
     @Override
-    public String getUrl(final Context context) {
-	return getPath() + ".do?method=" + getMethod();
+    protected void appendUrlPrefix(final StringBuilder stringBuilder) {
+	stringBuilder.append(getPath());
+	stringBuilder.append(".do?method=");
+	stringBuilder.append(getMethod());
     }
 
 }

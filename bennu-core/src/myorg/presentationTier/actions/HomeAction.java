@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import myorg.domain.VirtualHost;
-import myorg.domain.contents.INode;
 import myorg.domain.contents.Node;
 import myorg.presentationTier.Context;
 
@@ -106,7 +105,7 @@ public class HomeAction extends ContextBaseAction {
 	final SortedSet<Node> nodes = Node.getOrderedTopLevelNodes(VirtualHost.getVirtualHostForThread());
 	for (final Node node : nodes) {
 	    if (node.isAccessible()) {
-		return new ActionForward(node.getUrl(getContext(request)));
+		return new ActionForward(node.getUrl());
 	    }
 	}
 	final Context context = getContext(request);
