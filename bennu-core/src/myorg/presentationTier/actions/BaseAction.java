@@ -66,7 +66,10 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected <T extends DomainObject> T getDomainObject(final String value) {
-	final Long oid = value != null ? Long.valueOf(value) : null;
+	return (T) getDomainObject(value != null ? Long.valueOf(value) : null);
+    }
+    
+    protected <T extends DomainObject> T getDomainObject(final Long oid) {
 	return oid == null ? null : (T) Transaction.getObjectForOID(oid.longValue());
     }
 
