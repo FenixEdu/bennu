@@ -1,5 +1,5 @@
 /*
- * @(#)RoleType.java
+ * @(#)Role.java
  *
  * Copyright 2009 Instituto Superior Tecnico, João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
  * 
@@ -21,23 +21,11 @@
  *   along with MyOrg. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+package myorg.domain.groups;
 
-package myorg.domain;
 
-import myorg.domain.groups.IRoleEnum;
-import myorg.domain.groups.Role;
-import myorg.util.BundleUtil;
+public interface IRoleEnum {
 
-public enum RoleType implements IRoleEnum {
-
-    MANAGER;
-
-    public String getPresentationName() {
-	return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.roleType.name."
-		+ name());
-    }
-
-    public String getRepresentation() {
-	return getClass().getName() + "." + name();
-    }
+    public String getRepresentation();
+    
 }

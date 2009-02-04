@@ -41,12 +41,12 @@ public class User extends User_Base {
 	public int compare(final User user1, final User user2) {
 	    return user1.getUsername().compareTo(user2.getUsername());
 	}
-	
+
     };
 
     public User() {
-        super();
-        setMyOrg(MyOrg.getInstance());
+	super();
+	setMyOrg(MyOrg.getInstance());
     }
 
     public User(final String username) {
@@ -67,7 +67,7 @@ public class User extends User_Base {
 	for (final People people : getPeopleGroupsSet()) {
 	    if (people instanceof Role) {
 		final Role role = (Role) people;
-		if (role.getRoleType() == roleType) {
+		if (role.isRole(roleType)) {
 		    return true;
 		}
 	    }
@@ -78,7 +78,7 @@ public class User extends User_Base {
     @Service
     @Override
     public void setLastLogoutDateTime(final DateTime lastLogoutDateTime) {
-        super.setLastLogoutDateTime(lastLogoutDateTime);
+	super.setLastLogoutDateTime(lastLogoutDateTime);
     }
 
 }

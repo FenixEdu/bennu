@@ -62,8 +62,12 @@ class groups.PersistentGroup {
 	class groups.People extends groups.PersistentGroup {
 	}
 
-		class groups.Role extends groups.People {
-			RoleType roleType;
+		class groups.NamedGroup extends groups.People {
+			String groupName;
+		}
+		
+		class groups.Role extends groups.NamedGroup {
+			
 		}
 
 class scheduler.Task {
