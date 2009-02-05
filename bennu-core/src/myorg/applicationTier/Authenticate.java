@@ -102,9 +102,8 @@ public class Authenticate implements Serializable {
 	}
 
 	public boolean hasRole(final String roleAsString) {
-	    final RoleType roleType = RoleType.valueOf(roleAsString);
 	    final User user = getUser();
-	    return user != null && user.hasRoleType(roleType);
+	    return user != null && user.hasRoleType(roleAsString);
 	}
 
 	@Override

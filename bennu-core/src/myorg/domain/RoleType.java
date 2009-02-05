@@ -25,7 +25,6 @@
 package myorg.domain;
 
 import myorg.domain.groups.IRoleEnum;
-import myorg.domain.groups.Role;
 import myorg.util.BundleUtil;
 
 public enum RoleType implements IRoleEnum {

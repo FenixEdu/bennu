@@ -67,8 +67,20 @@ public class User extends User_Base {
 	for (final People people : getPeopleGroupsSet()) {
 	    if (people instanceof Role) {
 		final Role role = (Role) people;
-		if (role.isRole(roleType)) {
+		if (role.isRole(roleType) && role.isMember(this)) {
 		    return true;
+		}
+	    }
+	}
+	return false;
+    }
+
+    public boolean hasRoleType(final String roleAsString) {
+	for (final People people : getPeopleGroupsSet()) {
+	    if (people instanceof Role) {
+		final Role role = (Role) people;
+		if (role.getGroupName().equals(roleAsString)) {
+		    return role.isMember(this);
 		}
 	    }
 	}
