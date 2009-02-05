@@ -33,11 +33,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.joda.time.DateTime;
-
 import myorg.domain.RoleType;
 import myorg.domain.User;
 import myorg.domain.groups.Role;
+
+import org.joda.time.DateTime;
+
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixWebFramework.util.DomainReference;
 
@@ -82,6 +83,7 @@ public class Authenticate implements Serializable {
 	private static final long serialVersionUID = -3306363183634102130L;
 
 	private final DomainReference<User> userReference;
+	private DomainReference<User> mockReference;
 
 	private transient String privateConstantForDigestCalculation;
 
@@ -90,6 +92,16 @@ public class Authenticate implements Serializable {
 	private UserView(final String username) {
 	    final User user = findByUsername(username);
 	    userReference = new DomainReference<User>(user);
+	    mockReference = null;
+	}
+
+	public void mockUser(final String username) {
+	    final User user = User.findByUsername(username);
+	    mockReference = new DomainReference<User>(user);
+	}
+	
+	public void unmockUser() {
+	    mockReference = null;
 	}
 
 	private User findByUsername(final String username) {
@@ -98,11 +110,11 @@ public class Authenticate implements Serializable {
 	}
 
 	public String getUsername() {
-	    return getUser().getUsername();
+	    return mockReference == null ? getUser().getUsername() : mockReference.getObject().getUsername();
 	}
 
 	public boolean hasRole(final String roleAsString) {
-	    final User user = getUser();
+	    final User user = mockReference == null ? getUser() : mockReference.getObject();
 	    return user != null && user.hasRoleType(roleAsString);
 	}
 
@@ -117,7 +129,7 @@ public class Authenticate implements Serializable {
 	}
 
 	public User getUser() {
-	    return userReference == null ? null : userReference.getObject();
+	    return mockReference == null ? userReference.getObject() : mockReference.getObject();
 	}
 
 	// TODO do an accurate and secure method here
@@ -129,8 +141,13 @@ public class Authenticate implements Serializable {
 	    return privateConstantForDigestCalculation;
 	}
 
-	public static User getCurrentUser() {
+	public static UserView getCurrentUserView() {
 	    final UserView userView = (UserView) pt.ist.fenixWebFramework.security.UserView.getUser();
+	    return userView;
+	}
+
+	public static User getCurrentUser() {
+	    final UserView userView = getCurrentUserView();
 	    return userView == null ? null : userView.getUser();
 	}
 
