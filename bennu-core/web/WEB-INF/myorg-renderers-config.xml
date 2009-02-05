@@ -1,51 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!-- TODO: make this a public id or at least obsolute 
-     Currently there is a semi-hack built in the RendererPlugin to accept this format.
--->
-<!DOCTYPE renderers-config SYSTEM "fenix-renderers-config.dtd">
-
-<renderers-config>
-<!--
-  Example:
-	
- 	<renderer type="java.lang.Integer" layout="testing" 
-			  class="pt.ist.fenixWebFramework.renderers.TemplateRenderer">
-		<property name="template" value="/template.jsp"/>
-	</renderer>
-	
-    <renderer mode="input" type="java.lang.Integer"
-              class="pt.ist.fenixWebFramework.renderers.IntegerInputRenderer"/>
-
-    <renderer mode="input" type="java.lang.Integer" layout="base-16" 
-              class="pt.ist.fenixWebFramework.renderers.IntegerInputRenderer">
-        <property name="base" layout="16"/>
-    </renderer>
-
-	This piece means that any object of type Integer, when presented
-	with the layout "testing" will be rendered by the given TemplateRenderer and
-    that the renderer's property 'template' will be set to "/template.jsp". This 
-    should make the rendere delegate the presentation of the number to the
-    given JSP.
-    
-    The second part speficies that the NumberInputRenderer will be used to
-    generate the input presentation of a number. If the requested layout is
-    "base-16" then input format will be assumed to be in hexadecimal.
-
-Documentation:
-    
-    To document an entry use '@' as the first character of a comment. The first
-    entry after such comment will be documented.replayed
-    
-    Example:
-    
-        <!- -@ the comment with <tt>HTML</tt> embeded - ->
- -->
-  
-    <!-- output -->
-
-    <!--@ The default presentation for a custom component that was "manually" created. -->  
-    <renderer type="pt.ist.fenixWebFramework.renderers.components.HtmlComponent" class="pt.ist.fenixWebFramework.renderers.StandardComponentRenderer"/>
+	<renderer type="pt.ist.fenixWebFramework.renderers.components.HtmlComponent" class="pt.ist.fenixWebFramework.renderers.StandardComponentRenderer"/>
   
     <!--@ The default presentation for every object. -->
     <renderer type="java.lang.Class" layout="label" class="pt.ist.fenixWebFramework.renderers.ClassAsLabelRenderer"/>
@@ -262,6 +215,11 @@ Documentation:
     <!--@ The default layout for editing objects.  -->  
     <renderer mode="input" type="java.lang.Object" class="pt.ist.fenixWebFramework.renderers.StandardInputRenderer">
     		<property name="labelTerminator" value=":"/>
+    		<property name="helpNoJavascriptClasses" value="nojavascript"/>
+    		<property name="helpClosedClasses" value="chelp closed"/>
+    		<property name="helpOpenClasses" value="chelp copen"/>
+    		<property name="helpTextClasses" value="chelptext"/>
+    		<property name="helpImageIcon" value="images/icon_help.gif"/>
     </renderer>
 
     <!--@ Allows an object to be editing in a tabular way, that is, labels are presented in the left column of the table
@@ -269,6 +227,11 @@ Documentation:
           right of the editor. -->  
     <renderer mode="input" type="java.lang.Object" layout="tabular" class="pt.ist.fenixWebFramework.renderers.StandardInputRenderer">
     		<property name="labelTerminator" value=":"/>
+    		<property name="helpNoJavascriptClasses" value="nojavascript"/>
+    		<property name="helpClosedClasses" value="chelp closed"/>
+    		<property name="helpOpenClasses" value="chelp copen"/>
+    		<property name="helpTextClasses" value="chelptext"/>
+    		<property name="helpImageIcon" value="images/icon_help.gif"/>
     </renderer>
     <!--@ Allows an object to be editing in a tabular with break way, that is, labels are presented in an upper row of the table
           and slot editors are presented in the row below. Additionally validation errors messages are presented to the
@@ -283,6 +246,11 @@ Documentation:
         <property name="labelTerminator" value=":"/>
         <property name="classes" value="tstyle5 thlight thright mbottom05"/>
         <property name="columnClasses" value=",,tdclear tderror1"/>
+      	<property name="helpNoJavascriptClasses" value="nojavascript"/>
+  		<property name="helpClosedClasses" value="chelp closed"/>
+   		<property name="helpOpenClasses" value="chelp copen"/>
+   		<property name="helpTextClasses" value="chelptext"/>
+	   	<property name="helpImageIcon" value="images/icon_help.gif"/>
     </renderer>
     
     <!--@ This layout allows several slots to be edited without a specific organization. Each slot's editor e shown after the
@@ -501,7 +469,13 @@ Documentation:
     <!--@ This layout is the default layout for creating objects. The input of a class is the same as creating a new object of the
           type represented by the class. This allows to reuse all the other layouts defined for the input mode, that is, we don't need
           to define a create mode and redefine all the layouts to that mode.  -->
-    <renderer mode="input" type="java.lang.Class" class="pt.ist.fenixWebFramework.renderers.StandardInputRenderer"/>
+    <renderer mode="input" type="java.lang.Class" class="pt.ist.fenixWebFramework.renderers.StandardInputRenderer">
+    	<property name="helpNoJavascriptClasses" value="nojavascript"/>
+    	<property name="helpClosedClasses" value="chelp closed"/>
+    	<property name="helpOpenClasses" value="chelp copen"/>
+    	<property name="helpTextClasses" value="chelptext"/>
+    	<property name="helpImageIcon" value="images/icon_help.gif"/>
+	   </renderer>
 
     <!--@ This layouts is the same as the <tt>values</tt> layout preconfigured with an html separator of values. This
           way it can be used as a property of other layout. -->
@@ -548,5 +522,3 @@ Documentation:
 	</renderer>
 	
 	<renderer type="java.lang.String" layout="slot-as-label" class="pt.ist.fenixWebFramework.renderers.SlotAsLabelRenderer"/>
-
-</renderers-config>
