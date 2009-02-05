@@ -36,7 +36,7 @@
 		</logic:notPresent>
 		<logic:present name="USER_SESSION_ATTRIBUTE">
 			<div class="login">
-				<logic:present role="MANAGER">
+				<logic:present role="myorg.domain.RoleType.MANAGER">
 					<!-- HAS_CONTEXT --><html:link page="/configuration.do?method=applicationConfiguration">
 						<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration"/>
 					</html:link> |
