@@ -47,6 +47,15 @@ public abstract class Context {
 	setElements(path);
     }
 
+    public boolean contains(Node node) {
+	for (INode nodeInStack : elements) {
+	    if (nodeInStack == node) {
+		return true;
+	    }
+	}
+	return false;
+    }
+
     public void setElements(final String path) {
 	if (path == null || path.isEmpty()) {
 	    elements.clear();
@@ -55,11 +64,11 @@ public abstract class Context {
 		final INode node = Node.fromString(pathPart);
 		elements.add(node);
 	    }
-	}	
+	}
     }
 
     public List<INode> getElements() {
-        return elements;
+	return elements;
     }
 
     public Collection<INode> getMenuElements() {
@@ -128,7 +137,6 @@ public abstract class Context {
 	final int s = elements.size();
 	return s > 1 ? elements.get(s - 2) : null;
     }
-
 
     public abstract ActionForward forward(final String forward);
 

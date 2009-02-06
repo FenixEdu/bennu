@@ -56,4 +56,16 @@ public class VirtualHost extends VirtualHost_Base {
 	return new VirtualHost(virtualHostBean);
     }
 
+    @Override
+    public Theme getTheme() {
+	Theme theme = super.getTheme();
+	return theme != null ? theme : setAndReturnDefaultTheme();
+    }
+
+    @Service
+    private Theme setAndReturnDefaultTheme() {
+	Theme theme = getMyOrg().getThemes().get(0);
+	setTheme(theme);
+	return theme;
+    }
 }

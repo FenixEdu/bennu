@@ -25,10 +25,12 @@
 package myorg.presentationTier.servlets;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -38,10 +40,11 @@ import myorg._development.PropertiesManager;
 import myorg.applicationTier.Authenticate;
 import myorg.domain.MyOrg;
 import myorg.domain.RoleType;
+import myorg.domain.Theme;
+import myorg.domain.Theme.ThemeType;
 import myorg.domain.groups.AnyoneGroup;
 import myorg.domain.groups.UserGroup;
 import myorg.domain.scheduler.Scheduler;
-import myorg.domain.scheduler.Task;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 
 public class StartupServlet extends HttpServlet {
@@ -82,6 +85,55 @@ public class StartupServlet extends HttpServlet {
 	initializePersistentGroups();
 
 	Scheduler.initialize();
+
+	syncThemes();
+    }
+
+    private void syncThemes() {
+	File cssDir = new File(getServletContext().getRealPath("CSS"));
+	File[] files = cssDir.listFiles(new FileFilter() {
+
+	    @Override
+	    public boolean accept(File file) {
+		return file.isDirectory();
+	    }
+	});
+
+	for (Theme theme : MyOrg.getInstance().getThemes()) {
+	    if (!matchTheme(theme.getName(), files)) {
+		Theme.deleteTheme(theme);
+	    }
+	}
+
+	for (File directory : files) {
+	    String themeName = directory.getName();
+	    if (!Theme.isThemeAvailable(themeName)) {
+		ThemeType type = getThemeType(themeName);
+		Theme.createTheme(themeName, type);
+	    }
+	}
+
+    }
+
+    private ThemeType getThemeType(String themeName) {
+	Properties properties = null;
+	try {
+	    properties = PropertiesManager.loadPropertiesFromFile(getServletContext().getRealPath(
+		    "CSS/" + themeName + "/theme.properties"));
+	} catch (IOException e) {
+	    e.printStackTrace();
+	    throw new Error(themeName + " could not read property file");
+	}
+	return ThemeType.valueOf(properties.getProperty("theme.type"));
+    }
+
+    private boolean matchTheme(String name, File[] files) {
+	for (File file : files) {
+	    if (file.getName().equals(name)) {
+		return true;
+	    }
+	}
+	return false;
     }
 
     private void initializePersistentGroups() {

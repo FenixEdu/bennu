@@ -3,6 +3,11 @@
 	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
+	<slot name="theme" key="label.application.theme" bundle="MYORG_RESOURCES" layout="menu-select">
+		<property name="providerClass" value="myorg.presentationTier.renderers.providers.ThemeProvider"/>
+		<property name="eachLayout" value="values"/>
+		<property name="eachSchema" value="theme.name"/>  
+	</slot>
 </schema>
 
 <schema name="virtualHost.application.configuration.summary" type="myorg.domain.VirtualHost" bundle="MYORG_RESOURCES">
@@ -39,3 +44,7 @@
 	<slot name="dayofweek" key="label.scheduler.task.configuration.dayofweek" bundle="MYORG_RESOURCES"/>
 	<slot name="task.localizedName" key="label.scheduler.task.name" bundle="MYORG_RESOURCES"/>
 </schema>
+
+<schema name="theme.name" type="myorg.domain.Theme">
+ <slot name="name"/>
+</schema> 

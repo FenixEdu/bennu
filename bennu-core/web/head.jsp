@@ -9,10 +9,18 @@
 <%
 	final String contextPath = request.getContextPath();
 %>
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/layout.css" media="screen"/>
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/print.css" media="print"/>
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/contents.css" media="screen, print"/>
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/dragContents.css" media="screen"/>
+
+<bean:define id="theme" name="virtualHost" property="theme.name"/>
+
+
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/screen.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/print.css" media="print"/>
+<%-- 
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/layout.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/print.css" media="print"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/contents.css" media="screen, print"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/dragContents.css" media="screen"/>
+ --%>
  
 <script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/custom.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/dragContents.js"></script>

@@ -32,7 +32,7 @@ valueType pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString as MultiLanguageS
 valueType pt.utl.ist.fenix.tools.util.Strings as Strings;
 
 enum myorg.domain.RoleType as RoleType;
-
+enum myorg.domain.Theme.ThemeType as ThemeType;
 
 class MyOrg {
 }
@@ -103,6 +103,25 @@ class VirtualHost {
 	MultiLanguageString applicationCopyright;
 }
 
+class Theme {
+	String name;
+	String description;
+	ThemeType type;
+}
+
+relation ThemeMyOrg {
+	MyOrg playsRole myOrg;
+	Theme playsRole themes {
+		multiplicity *;
+	}
+}
+
+relation VirtualHostTheme {
+	VirtualHost playsRole virtualHosts {
+		multiplicity *;
+	}
+	Theme playsRole theme;
+}
 
 relation MyOrgUser {
 	MyOrg playsRole myOrg;

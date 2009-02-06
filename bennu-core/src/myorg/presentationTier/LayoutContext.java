@@ -26,7 +26,6 @@ package myorg.presentationTier;
 
 import org.apache.struts.action.ActionForward;
 
-
 public class LayoutContext extends Context {
 
     private String layout = "/defaultLayout.jsp";
@@ -36,6 +35,8 @@ public class LayoutContext extends Context {
     private String pageHeader = "/pageHeader.jsp";
     private String sideBarLeft = "/sideBarLeft.jsp";
     private String sideBar = "/sideBar.jsp";
+    private String menuTop = "/menuTop.jsp";
+
     private String pageOperations = "/blank.jsp";
     private String breadCrumbs = "/breadCrumbs.jsp";
     private String body = "/blank.jsp";
@@ -50,83 +51,91 @@ public class LayoutContext extends Context {
     }
 
     public String getLayout() {
-        return layout;
+	return layout;
     }
 
     public void setLayout(String layout) {
-        this.layout = layout;
+	this.layout = layout;
     }
 
     public String getTitle() {
-        return title;
+	return title;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+	this.title = title;
     }
 
     public String getHead() {
-        return head;
+	return head;
     }
 
     public void setHead(String head) {
-        this.head = head;
+	this.head = head;
     }
 
     public String getPageHeader() {
-        return pageHeader;
+	return pageHeader;
     }
 
     public void setPageHeader(String pageHeader) {
-        this.pageHeader = pageHeader;
+	this.pageHeader = pageHeader;
     }
 
     public String getSideBarLeft() {
-        return sideBarLeft;
+	return sideBarLeft;
     }
 
     public void setSideBarLeft(String sideBarLeft) {
-        this.sideBarLeft = sideBarLeft;
+	this.sideBarLeft = sideBarLeft;
     }
 
     public String getSideBar() {
-        return sideBar;
+	return sideBar;
     }
 
     public void setSideBar(String sideBar) {
-        this.sideBar = sideBar;
+	this.sideBar = sideBar;
     }
 
     public String getPageOperations() {
-        return pageOperations;
+	return pageOperations;
     }
 
     public void setPageOperations(String pageOperations) {
-        this.pageOperations = pageOperations;
+	this.pageOperations = pageOperations;
     }
 
     public String getBreadCrumbs() {
-        return breadCrumbs;
+	return breadCrumbs;
     }
 
     public void setBreadCrumbs(String breadCrumbs) {
-        this.breadCrumbs = breadCrumbs;
+	this.breadCrumbs = breadCrumbs;
     }
 
     public String getBody() {
-        return body;
+	return body;
     }
 
     public void setBody(String body) {
-        this.body = body;
+	this.body = body;
     }
 
     public String getFooter() {
-        return footer;
+	return footer;
     }
 
     public void setFooter(String footer) {
-        this.footer = footer;
+	this.footer = footer;
+    }
+
+    public String getMenuTop() {
+	return menuTop;
+    }
+
+    public void setMenuTop(String menuTop) {
+	this.menuTop = menuTop;
     }
 
     @Override
