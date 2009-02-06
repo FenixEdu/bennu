@@ -99,6 +99,8 @@ class User {
 
 class VirtualHost {
 	String hostname;
+	Boolean googleSearchEnabled;
+	Boolean languageSelectionEnabled;
 	MultiLanguageString applicationTitle;
 	MultiLanguageString applicationSubTitle;
 	MultiLanguageString applicationCopyright;

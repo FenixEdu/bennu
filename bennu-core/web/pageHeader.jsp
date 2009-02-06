@@ -51,47 +51,50 @@
 	<tr>
 		<td align="right" nowrap="nowrap" width="40%">
 			<div>
-				<bean:define id="languageUrl"><%= request.getContextPath() %>/content.do</bean:define>
-				<form action="<%= languageUrl %>" method="post" class="login">
-					<input type="hidden" name="method" value="viewPage" />
-					<logic:present name="selectedNode">
-						<bean:define id="arg" name="selectedNode" property="OID"/>
-						<input type="hidden" name="nodeOid" value="<%= arg %>"/>
-					</logic:present>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<select name="locale" onchange="this.form.submit();">
-						<% final String country = Language.getLocale().getCountry(); %>
-						<% for (Language language : Language.values()) {
-							if (language == Language.getLanguage()) {
-						    	%>
-							    	<option value="<%= language.name() %>_<%= country %>" selected="selected">
-						    			<%= language.name() %>
-						    		</option>
-						    	<%
-							} else {
-							    %>
-						    		<option value="<%= language.name() %>_<%= country %>">
-							    		<%= language.name() %>
-						    		</option>
-						    	<%							    
-							}
-						} %>
-					</select>
-					<input class=" button" type="submit" name="Submit" value="Ok" />
-				</form>
-
-				<!-- BLOCK_HAS_CONTEXT -->
-				<!-- NO_CHECKSUM --><form method="get" action="http://www.google.com/search">
-					<input type="hidden" name="site" value="" />
-					<input type="hidden" name="hl" value="en" />
-					<input type="hidden" name="btnG" value="Search" />
-					<input type="hidden" name="domains" value="" />
-					<input type="hidden" name="sitesearch" value="" />
-
-					<input type="text" id="q" name="q" value="Search..." />
-					<input class=" button" type="submit" name="Submit" value="Google" />
-				</form>
-				<!-- END_BLOCK_HAS_CONTEXT -->
+				<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
+					<bean:define id="languageUrl"><%= request.getContextPath() %>/content.do</bean:define>
+					<form action="<%= languageUrl %>" method="post" class="login">
+						<input type="hidden" name="method" value="viewPage" />
+						<logic:present name="selectedNode">
+							<bean:define id="arg" name="selectedNode" property="OID"/>
+							<input type="hidden" name="nodeOid" value="<%= arg %>"/>
+						</logic:present>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<select name="locale" onchange="this.form.submit();">
+							<% final String country = Language.getLocale().getCountry(); %>
+							<% for (Language language : Language.values()) {
+								if (language == Language.getLanguage()) {
+							    	%>
+								    	<option value="<%= language.name() %>_<%= country %>" selected="selected">
+							    			<%= language.name() %>
+							    		</option>
+							    	<%
+								} else {
+								    %>
+							    		<option value="<%= language.name() %>_<%= country %>">
+								    		<%= language.name() %>
+							    		</option>
+							    	<%							    
+								}
+							} %>
+						</select>
+						<input class=" button" type="submit" name="Submit" value="Ok" />
+					</form>
+				</logic:equal>
+				<logic:equal name="virtualHost" property="googleSearchEnabled" value="true">	
+					<!-- BLOCK_HAS_CONTEXT -->
+					<!-- NO_CHECKSUM --><form method="get" action="http://www.google.com/search">
+						<input type="hidden" name="site" value="" />
+						<input type="hidden" name="hl" value="en" />
+						<input type="hidden" name="btnG" value="Search" />
+						<input type="hidden" name="domains" value="" />
+						<input type="hidden" name="sitesearch" value="" />
+	
+						<input type="text" id="q" name="q" value="Search..." />
+						<input class=" button" type="submit" name="Submit" value="Google" />
+					</form>
+					<!-- END_BLOCK_HAS_CONTEXT -->
+				</logic:equal>
 			</div>
 		</td>
 	</tr>

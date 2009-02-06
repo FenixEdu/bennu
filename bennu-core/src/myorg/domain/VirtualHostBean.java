@@ -35,30 +35,55 @@ public class VirtualHostBean implements Serializable {
     private MultiLanguageString applicationTitle;
     private MultiLanguageString applicationSubTitle;
     private MultiLanguageString applicationCopyright;
+    private Boolean googleSearchEnabled;
+    private Boolean languageSelectionEnabled;
+
+    public Boolean getGoogleSearchEnabled() {
+	return googleSearchEnabled;
+    }
+
+    public void setGoogleSearchEnabled(Boolean googleSearchEnabled) {
+	this.googleSearchEnabled = googleSearchEnabled;
+    }
+
+    public Boolean getLanguageSelectionEnabled() {
+	return languageSelectionEnabled;
+    }
+
+    public void setLanguageSelectionEnabled(Boolean languageSelectionEnabled) {
+	this.languageSelectionEnabled = languageSelectionEnabled;
+    }
 
     public String getHostname() {
-        return hostname;
+	return hostname;
     }
+
     public void setHostname(String hostname) {
-        this.hostname = hostname;
+	this.hostname = hostname;
     }
+
     public MultiLanguageString getApplicationTitle() {
-        return applicationTitle;
+	return applicationTitle;
     }
+
     public void setApplicationTitle(MultiLanguageString applicationTitle) {
-        this.applicationTitle = applicationTitle;
+	this.applicationTitle = applicationTitle;
     }
+
     public MultiLanguageString getApplicationSubTitle() {
-        return applicationSubTitle;
+	return applicationSubTitle;
     }
+
     public void setApplicationSubTitle(MultiLanguageString applicationSubTitle) {
-        this.applicationSubTitle = applicationSubTitle;
+	this.applicationSubTitle = applicationSubTitle;
     }
+
     public MultiLanguageString getApplicationCopyright() {
-        return applicationCopyright;
+	return applicationCopyright;
     }
+
     public void setApplicationCopyright(MultiLanguageString applicationCopyright) {
-        this.applicationCopyright = applicationCopyright;
+	this.applicationCopyright = applicationCopyright;
     }
 
 }

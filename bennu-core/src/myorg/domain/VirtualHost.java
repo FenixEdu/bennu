@@ -66,6 +66,8 @@ public class VirtualHost extends VirtualHost_Base {
 	setApplicationTitle(new MultiLanguageString("MyOrg Application Title"));
 	setApplicationSubTitle(new MultiLanguageString("MyOrg Application SubTitle"));
 	setApplicationCopyright(new MultiLanguageString("My Organization Name"));
+	setGoogleSearchEnabled(Boolean.TRUE);
+	setLanguageSelectionEnabled(Boolean.TRUE);
     }
 
     public VirtualHost(final VirtualHostBean virtualHostBean) {
@@ -74,6 +76,8 @@ public class VirtualHost extends VirtualHost_Base {
 	setApplicationTitle(virtualHostBean.getApplicationTitle());
 	setApplicationSubTitle(virtualHostBean.getApplicationSubTitle());
 	setApplicationCopyright(virtualHostBean.getApplicationCopyright());
+	setGoogleSearchEnabled(virtualHostBean.getGoogleSearchEnabled());
+	setLanguageSelectionEnabled(virtualHostBean.getLanguageSelectionEnabled());
     }
 
     @Service

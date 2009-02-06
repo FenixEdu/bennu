@@ -8,6 +8,8 @@
 		<property name="eachLayout" value="values"/>
 		<property name="eachSchema" value="theme.name"/>  
 	</slot>
+	<slot name="googleSearchEnabled"/>
+	<slot name="languageSelectionEnabled"/>
 </schema>
 
 <schema name="virtualHost.application.configuration.summary" type="myorg.domain.VirtualHost" bundle="MYORG_RESOURCES">
@@ -22,6 +24,8 @@
 	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
+	<slot name="googleSearchEnabled"/>
+	<slot name="languageSelectionEnabled"/>
 </schema>
 
 <schema name="myorg.presentationTier.actions.ContextBaseAction.LocaleBean" type="myorg.presentationTier.actions.ContextBaseAction$LocaleBean" bundle="MYORG_RESOURCES">
