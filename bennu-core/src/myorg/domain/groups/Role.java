@@ -32,6 +32,7 @@ public class Role extends Role_Base {
     public Role(IRoleEnum roleType) {
 	super();
 	setGroupName(roleType.getRepresentation());
+	setSystemGroupMyOrg(MyOrg.getInstance());
     }
 
     @Service
