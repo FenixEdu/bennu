@@ -5,18 +5,15 @@
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 
 <bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
-<% String path = "/content.do?method=viewPage&amp;_CONTEXT_PATH_="; %>
 
 <bean:size id="ne" name="context" property="elements"/>
 <logic:greaterThan name="ne" value="1">
 	<div id="beadCrumbs">
-		<logic:iterate id="node" type="myorg.domain.contents.INode" name="context" property="elements" indexId="i">
+		<logic:iterate id="node" type="myorg.domain.contents.Node" name="context" property="elements" indexId="i">
 			<logic:greaterThan name="i" value="0">
-				<% path += ","; %>
 				>
 			</logic:greaterThan>
-			<% path += node.asString(); %>
-			<!-- HAS_CONTEXT --><html:link page="<%= path %>">
+			<!-- HAS_CONTEXT --><html:link page="<%= node.getUrl() %>">
 				<bean:write name="node" property="link"/>
 			</html:link>
 		</logic:iterate>
