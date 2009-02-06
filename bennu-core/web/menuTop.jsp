@@ -8,6 +8,8 @@
 
 <logic:notEmpty name="menuElements">
 	<ul>
+	<bean:size name="menuElements" id="size"/>
+	
 	<logic:iterate id="node" name="menuElements" indexId="nindex" type="myorg.domain.contents.Node">
 		<logic:equal name="node" property="accessible" value="true">
 			<% if (context.contains(node)) { %>
@@ -18,8 +20,11 @@
 				<bean:define id="url" name="node" property="url" type="java.lang.String"/>
 				<!-- HAS_CONTEXT --><html:link page="<%= url %>">
 					<span><bean:write name="node" property="link"/></span>
+					<logic:lessThan name="nindex" value="<%= new Integer(size).toString() %>">
+						<div class="lic1"></div>
+					</logic:lessThan>					
 				</html:link>
-				<div class="lic1"></div>
+				
 			</li>
 		</logic:equal>
 	</logic:iterate>

@@ -167,7 +167,7 @@ float: left;
 margin: 0 0 0 2px;
 text-decoration: none;
 background: #b4d5e6;
-background: #6eb6da url(../images/tab_corner2_01.gif) top right no-repeat !important;
+background: #6eb6da url(tab_corner2_01.gif) top right no-repeat !important;
 position: relative;
 }
 #mainnav a span {
@@ -180,7 +180,7 @@ color: #FFF;
 float: none;
 }
 #mainnav ul li div.lic1 {
-background: url(../images/tab_corner1_01.gif) no-repeat;
+background: url(tab_corner1_01.gif) no-repeat;
 width: 5px;
 height: 5px;
 position: absolute;
@@ -188,14 +188,14 @@ top: 0;
 left: 0;
 }
 #mainnav ul li.selected a {
-background: #a1cfe7 url(../images/tab_corner2_02.gif) top right no-repeat !important;
+background: #a1cfe7 url(tab_corner2_02.gif) top right no-repeat !important;
 }
 #mainnav ul li.selected div.lic1 {
-background: url(../images/tab_corner1_02.gif) top right no-repeat !important;
+background: url(tab_corner1_02.gif) top right no-repeat !important;
 }
 
 div.left #mainnav div.c1 {
-background: url(../images/corner1_02.gif) no-repeat;
+background: url(corner1_02.gif) no-repeat;
 width: 7px;
 height: 7px;
 position: absolute;
@@ -203,7 +203,7 @@ bottom: -5px;
 left: 0;
 }
 div.left #mainnav div.c2 {
-background: url(../images/corner2_02.gif) no-repeat;
+background: url(corner2_02.gif) no-repeat;
 width: 7px;
 height: 7px;
 position: absolute;
@@ -212,10 +212,6 @@ right: 0;
 }
 div.left #mainnav div.c1[class] { bottom: 0; } /* all except <= ie6 */
 div.left #mainnav div.c2[class] { bottom: 0; } /* all except <= ie6 */
-
-
-
-
 
 
 div.left div#container2 {
@@ -286,11 +282,11 @@ padding: 4px;
 #container #secnav a.new {
 margin-left: 4px;
 padding-left: 15px;
-background: url(../images/plus01.gif) 0px 0.55em no-repeat;
+background: url(plus01.gif) 0px 0.55em no-repeat;
 }
 
 #container #secnav div.c1 {
-background: url(../images/corner5_02.gif) no-repeat;
+background: url(corner5_02.gif) no-repeat;
 width: 7px;
 height: 7px;
 position: absolute;
@@ -298,7 +294,7 @@ bottom: -5px;
 left: 0;
 }
 #container #secnav div.c2 {
-background: url(../images/corner6_02.gif) no-repeat;
+background: url(corner6_02.gif) no-repeat;
 width: 7px;
 height: 7px;
 position: absolute;
@@ -383,7 +379,7 @@ margin: 1em 0 0 0;
 }
 #sidebar ul li {
 padding: 5px 0 5px 0;
-background: url(../images/dotted01.gif) bottom left repeat-x;
+background: url(dotted01.gif) bottom left repeat-x;
 /*
 background: #fafafa;
 border-bottom: 1px solid #ddd;
@@ -434,7 +430,7 @@ border-bottom: 0px dotted #FFFFFF;
 
 
 #footer div.c1 {
-background: url(../images/corner1_02.gif) no-repeat;
+background: url(corner1_02.gif) no-repeat;
 width: 7px;
 height: 7px;
 position: absolute;
@@ -442,7 +438,7 @@ bottom: -6px;
 left: 0;
 }
 #footer div.c2 {
-background: url(../images/corner2_02.gif) no-repeat;
+background: url(corner2_02.gif) no-repeat;
 width: 7px;
 height: 7px;
 position: absolute;
@@ -453,7 +449,7 @@ right: 0;
 #footer div.c2[class] { bottom: 0px; } /* all except <= ie6 */
 
 #footer div.c3 {
-background: url(../images/corner3_02.gif) no-repeat;
+background: url(corner3_02.gif) no-repeat;
 width: 7px;
 height: 7px;
 position: absolute;
@@ -461,7 +457,7 @@ top: 0px;
 left: 0;
 }
 #footer div.c4 {
-background: url(../images/corner4_02.gif) no-repeat;
+background: url(corner4_02.gif) no-repeat;
 width: 7px;
 height: 7px;
 position: absolute;
@@ -659,7 +655,7 @@ padding: 0.5em 1em 1em 1em;
 div.error1 {
 margin: 0.75em 0;
 padding: 0.4em 0.4em 0.4em 2.5em;
-background: #ffeddd url(../images/error01.gif) 0.5em 0.5em no-repeat;
+background: #ffeddd url(error01.gif) 0.5em 0.5em no-repeat;
 }
 div.error1 span {
 color: #cc1500;
@@ -680,7 +676,7 @@ padding: 5px 5px 5px 25px;
 background: #fbf2cf;
 margin: 1em 0;
 color: #8c6a0b;
-background: #fbf2cf url(../images/warning01.gif) 3px center no-repeat;
+background: #fbf2cf url(warning01.gif) 3px center no-repeat;
 }
 
 div.warning2 {
@@ -700,7 +696,7 @@ margin: 0 0 0.75em 0 !important;
 div.warning3 {
 margin: 0.75em 0;
 padding: 0.4em 0.4em 0.4em 2.5em;
-background: #fbf2cf url(../images/warning01.gif) 0.5em 0.5em no-repeat;
+background: #fbf2cf url(warning01.gif) 0.5em 0.5em no-repeat;
 }
 
 table.tstyle1 {
@@ -861,7 +857,7 @@ margin: 1em 0;
 }
 .documents p {
 margin: 0.25em 0 !important;
-background: url(../images/doc.gif) left 5px no-repeat;
+background: url(doc.gif) left 5px no-repeat;
 padding: 0 0 0 14px;
 }
 .documents em {
@@ -1010,7 +1006,7 @@ position: relative;
 background: #15587a;
 }
 div.corners div.c1 {
-background: url(../images/corner1_02.gif) no-repeat;
+background: url(corner1_02.gif) no-repeat;
 width: 7px;
 height: 7px;
 position: absolute;
@@ -1018,7 +1014,7 @@ bottom: -13px;
 left: 0;
 }
 div.corners div.c2 {
-background: url(../images/corner2_02.gif) no-repeat;
+background: url(corner2_02.gif) no-repeat;
 width: 7px;
 height: 7px;
 position: absolute;
@@ -1175,9 +1171,6 @@ table tr.itemmbottom td { padding-bottom: 1em; }
 table.thright th { text-align: right; }
 
 table.width33 td { width: 33%; }
-
-
-
 
 
 a.selected {
