@@ -1,7 +1,8 @@
 /*
  * @(#)RequestChecksumFilter.java
  *
- * Copyright 2009 Instituto Superior Tecnico, João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
+ * Copyright 2009 Instituto Superior Tecnico
+ * Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
  * 
  *      https://fenix-ashes.ist.utl.pt/
  * 
