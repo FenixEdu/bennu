@@ -82,9 +82,10 @@
 					</form>
 				</logic:equal>
 				<logic:equal name="virtualHost" property="googleSearchEnabled" value="true">	
+					<bean:define id="site" name="virtualHost" property="hostname"/>
 					<!-- BLOCK_HAS_CONTEXT -->
 					<!-- NO_CHECKSUM --><form method="get" action="http://www.google.com/search">
-						<input type="hidden" name="site" value="" />
+						<input type="hidden" name="site" value="<%= site %>" />
 						<input type="hidden" name="hl" value="en" />
 						<input type="hidden" name="btnG" value="Search" />
 						<input type="hidden" name="domains" value="" />
