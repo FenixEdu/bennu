@@ -118,4 +118,11 @@ public class ConfigurationAction extends ContextBaseAction {
 	return manageMenus(mapping, form, request, response);
     }
 
+    public ActionForward deleteVirtualHost(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
+	virtualHost.deleteService();
+	return applicationConfiguration(mapping, form, request, response);
+    }
+
 }

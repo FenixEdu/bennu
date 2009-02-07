@@ -27,7 +27,9 @@ package myorg.domain;
 
 import java.util.Set;
 
+import myorg.domain.contents.Node;
 import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class VirtualHost extends VirtualHost_Base {
@@ -97,4 +99,21 @@ public class VirtualHost extends VirtualHost_Base {
 	setTheme(theme);
 	return theme;
     }
+
+    @Service
+    public void deleteService() {
+	delete();
+    }
+
+    public void delete() {
+	if (MyOrg.getInstance().getVirtualHostsSet().size() > 1) {
+	    for (final Node node : getTopLevelNodesSet()) {
+		node.delete();
+	    }
+	    removeTheme();
+	    removeMyOrg();
+	    Transaction.deleteObject(this);
+	}
+    }
+
 }
