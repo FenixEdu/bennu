@@ -26,7 +26,7 @@ package myorg.domain.util;
 
 import java.io.Serializable;
 
-import pt.ist.expenditureTrackingSystem.domain.DomainException;
+import myorg.domain.exceptions.DomainException;
 
 public class Address implements Serializable {
 

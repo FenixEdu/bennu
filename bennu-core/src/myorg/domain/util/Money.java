@@ -30,7 +30,7 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Currency;
 
-import pt.ist.expenditureTrackingSystem.domain.DomainException;
+import myorg.domain.exceptions.DomainException;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 public class Money implements Serializable, Comparable<Money> {
