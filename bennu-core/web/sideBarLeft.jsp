@@ -5,7 +5,6 @@
 
 <bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
 <bean:define id="menuElements" name="context" property="menuElements"/>
-<bean:define id="prefixPath" name="context" property="prefixPath"/>
 
 <div id="navlist">
 <ul>
@@ -13,27 +12,37 @@
 		<li><!-- NO_CHECKSUM --><a href="home.do?method=firstPage"><bean:message bundle="MYORG_RESOURCES" key="label.application.home"/></a></li>
 	</logic:empty>
 	<logic:notEmpty name="menuElements">
-
 		<logic:iterate id="node" name="menuElements" indexId="nindex" type="myorg.domain.contents.Node">
 			<% if (node.isAccessible()) { %>
-				<bean:define id="articleId">articleNode<%= nindex %></bean:define>
 				<li>
 					<% String url = node.getUrl(); %>
-					<div id="<%= articleId %>">
-						<!-- HAS_CONTEXT --><html:link page="<%= url %>">
-							<bean:write name="node" property="link"/>
-						</html:link>
+					<div>
+						<% if (context.contains(node)) { %>
+							<!-- HAS_CONTEXT --><html:link page="<%= url %>" styleClass="navlistselected">
+								<bean:write name="node" property="link"/>
+							</html:link>
+						<% } else { %>
+							<!-- HAS_CONTEXT --><html:link page="<%= url %>">
+								<bean:write name="node" property="link"/>
+							</html:link>
+						<% } %>
 					</div>
 				</li>
 				<logic:notEmpty name="node" property="children">
-					<% if (context.getSelectedNode() == node) { %>
+					<% if (context.contains(node)) { %>
 						<logic:iterate id="childNode" name="node" property="orderedChildren" type="myorg.domain.contents.Node">
 							<% if (childNode.isAccessible()) { %>
 								<% String childUrl = childNode.getUrl(); %>
 								<li class="navsublist">
-									<!-- HAS_CONTEXT --><html:link page="<%= childUrl %>">
-										<bean:write name="childNode" property="link"/>
-									</html:link>
+									<% if (context.contains(childNode)) { %>
+										<!-- HAS_CONTEXT --><html:link page="<%= childUrl %>" styleClass="navlistselected">
+											<bean:write name="childNode" property="link"/>
+										</html:link>
+									<% } else { %>
+										<!-- HAS_CONTEXT --><html:link page="<%= childUrl %>">
+											<bean:write name="childNode" property="link"/>
+										</html:link>
+									<% } %>
 								</li>
 							<% } %>
 						</logic:iterate>

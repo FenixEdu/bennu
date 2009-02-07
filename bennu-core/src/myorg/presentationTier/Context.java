@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
+import myorg.domain.VirtualHost;
 import myorg.domain.contents.INode;
 import myorg.domain.contents.Node;
 
@@ -73,12 +74,8 @@ public abstract class Context {
     }
 
     public Collection<INode> getMenuElements() {
-	if (elements.size() > 1) {
-	    final INode parentNode = elements.get(elements.size() - 2);
-	    return parentNode.getOrderedChildren();
-	} else {
-	    return (Collection) Node.getOrderedTopLevelNodes();
-	}
+	final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+	return (Collection) virtualHost.getOrderedTopLevelNodes();
     }
 
     public String getPath() {

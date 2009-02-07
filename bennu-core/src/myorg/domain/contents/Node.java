@@ -125,13 +125,8 @@ public abstract class Node extends Node_Base implements INode {
     }
 
     public static SortedSet<Node> getOrderedTopLevelNodes() {
-	return getOrderedTopLevelNodes(VirtualHost.getVirtualHostForThread());
-    }
-
-    public static SortedSet<Node> getOrderedTopLevelNodes(final VirtualHost virtualHost) {
-	final SortedSet<Node> nodes = new TreeSet<Node>(Node.COMPARATOR_BY_ORDER);
-	nodes.addAll(virtualHost.getTopLevelNodesSet());
-	return nodes;
+	final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+	return virtualHost.getOrderedTopLevelNodes();
     }
 
     public Set<INode> getOrderedChildren() {

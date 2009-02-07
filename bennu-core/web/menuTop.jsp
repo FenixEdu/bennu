@@ -24,7 +24,6 @@
 						<div class="lic1"></div>
 					</logic:lessThan>					
 				</html:link>
-				
 			</li>
 		</logic:equal>
 	</logic:iterate>

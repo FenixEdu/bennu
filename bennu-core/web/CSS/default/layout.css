@@ -63,6 +63,12 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 			color:#CC6714;
 		}
 
+		.navlistselected {
+			background-color: #F5F5F5;
+			color:#CC6714;
+			text-decoration: none;
+		}
+		
 		.navigationContentMove {
 			display: block;
 			padding: 5px;

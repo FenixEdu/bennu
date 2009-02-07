@@ -103,7 +103,8 @@ public class HomeAction extends ContextBaseAction {
 
     public final ActionForward firstPage(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
-	final SortedSet<Node> nodes = Node.getOrderedTopLevelNodes(VirtualHost.getVirtualHostForThread());
+	final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+	final SortedSet<Node> nodes = virtualHost.getOrderedTopLevelNodes();
 	for (final Node node : nodes) {
 	    if (node.isAccessible()) {
 		return new ActionForward(node.getUrl());

@@ -3,22 +3,33 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
-<logic:present name="_CONTEXT_" property="selectedNode">
-	<ul>
-		<bean:size id="childsSize" name="_CONTEXT_" property="selectedNode.children"/>
-		<logic:iterate id="childNode" name="_CONTEXT_" property="selectedNode.children" indexId="childIndex">
-			<logic:equal name="childNode" property="accessible" value="true">
-				<bean:define id="childUrl" name="childNode" property="url" type="java.lang.String"/>
-				<li class="navsublist"><!-- HAS_CONTEXT --><html:link
-					page="<%=childUrl%>">
-					<span><bean:write name="childNode" property="link" /></span>
-				</html:link>
-				<logic:lessThan name="childIndex" value="<%= new Integer(childsSize-1).toString() %>">
-					<span class="bar">|</span>
-				</logic:lessThan>
-				</li>
-			</logic:equal>
+<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
+<bean:define id="menuElements" name="context" property="menuElements"/>
 
-		</logic:iterate>
-	</ul>
-</logic:present>
+<logic:notEmpty name="menuElements">
+	<logic:iterate id="node" name="menuElements" indexId="nindex" type="myorg.domain.contents.Node">
+		<logic:equal name="node" property="accessible" value="true">
+			<logic:notEmpty name="node" property="children">
+				<% if (context.contains(node)) { %>
+					<% boolean isFirst = true; %>
+					<ul>
+						<logic:iterate id="childNode" name="node" property="orderedChildren" type="myorg.domain.contents.Node">
+							<logic:equal name="childNode" property="accessible" value="true">
+								<% if (isFirst) {
+							    	isFirst = false;
+								} else { %>
+									<span class="bar">|</span>
+								<% } %>
+								<li class="navsublist">
+									<!-- HAS_CONTEXT --><html:link page="<%= childNode.getUrl() %>">
+										<span><bean:write name="childNode" property="link" /></span>
+									</html:link>
+								</li>
+							</logic:equal>
+						</logic:iterate>
+					</ul>
+				<% } %>
+			</logic:notEmpty>
+		</logic:equal>
+	</logic:iterate>
+</logic:notEmpty>

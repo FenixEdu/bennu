@@ -26,6 +26,8 @@
 package myorg.domain;
 
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import myorg.domain.contents.Node;
 import pt.ist.fenixWebFramework.services.Service;
@@ -114,6 +116,12 @@ public class VirtualHost extends VirtualHost_Base {
 	    removeMyOrg();
 	    Transaction.deleteObject(this);
 	}
+    }
+
+    public SortedSet<Node> getOrderedTopLevelNodes() {
+	final SortedSet<Node> nodes = new TreeSet<Node>(Node.COMPARATOR_BY_ORDER);
+	nodes.addAll(getTopLevelNodesSet());
+	return nodes;
     }
 
 }
