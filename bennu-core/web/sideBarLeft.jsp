@@ -8,11 +8,7 @@
 <bean:define id="prefixPath" name="context" property="prefixPath"/>
 
 <div id="navlist">
-<%
-	final Object o = request.getAttribute("reorderPages");
-	final boolean reorder = o != null && ((Boolean) o).booleanValue();
-%>
-<ul <% if (reorder) {%> id="dragableElementsParentBox" <% } %>>
+<ul>
 	<logic:empty name="menuElements">
 		<li><!-- NO_CHECKSUM --><a href="home.do?method=firstPage"><bean:message bundle="MYORG_RESOURCES" key="label.application.home"/></a></li>
 	</logic:empty>
@@ -23,20 +19,14 @@
 				<bean:define id="articleId">articleNode<%= nindex %></bean:define>
 				<li>
 					<% String url = node.getUrl(); %>
-					<div <% if (reorder) {%>dragableBox="true"<% } %> id="<%= articleId %>">
-						<% if (!reorder) { %>
-							<!-- HAS_CONTEXT --><html:link page="<%= url %>">
-								<bean:write name="node" property="link"/>
-							</html:link>
-						<% } else { %>
-							<div class="navigationContentMove">
-								<bean:write name="node" property="link"/>
-							</div>
-						<% } %>
+					<div id="<%= articleId %>">
+						<!-- HAS_CONTEXT --><html:link page="<%= url %>">
+							<bean:write name="node" property="link"/>
+						</html:link>
 					</div>
 				</li>
 				<logic:notEmpty name="node" property="children">
-					<% if (!reorder && context.getSelectedNode() == node) { %>
+					<% if (context.getSelectedNode() == node) { %>
 						<logic:iterate id="childNode" name="node" property="orderedChildren" type="myorg.domain.contents.Node">
 							<% if (childNode.isAccessible()) { %>
 								<% String childUrl = childNode.getUrl(); %>
@@ -52,36 +42,5 @@
 			<% } %>
 		</logic:iterate>
 	</logic:notEmpty>
-	<% if (reorder) {%>
-		<li>
-				<br/>
-				<div class="clear" id="clear"></div>
-				<ul>
-				<li>
-				<form action="<%= request.getContextPath() %>/content.do" method="post">
-					<input type="hidden" name="method" value="savePageOrders"/>
-					<input type="hidden" id="articleOrders" name="articleOrders"/>
-					<bean:define id="originalArticleIds"><logic:iterate id="node" name="menuElements" indexId="nindex"><% if (nindex > 0) {%>;<% } %><bean:write name="node" property="OID"/></logic:iterate></bean:define>
-					<input type="hidden" name="originalArticleIds" value="<%= originalArticleIds %>"/>
-					<bean:define id="buttonLabel"><bean:message bundle="MYORG_RESOURCES" key="label.content.page.order.save"/></bean:define>
-					<input type="submit" value="<%= buttonLabel %>" onclick="saveArticleOrders();"/>
-				</form>
-				</li>
-				</ul>
-				<div id="insertionMarker">
-					<img src="<%= request.getContextPath() %>/CSS/marker_top.gif" alt=""/>
-					<img src="<%= request.getContextPath() %>/CSS/marker_middle.gif" id="insertionMarkerLine" alt=""/>
-					<img src="<%= request.getContextPath() %>/CSS/marker_bottom.gif" alt=""/>
-				</div>
-		</li>
-	<% } %>
-<!-- 
-	<li>
-		<p>
-			<strong>A tiny little service announcement.</strong>
-			<br/>Put all your little tidbits of information or pictures in this small yet useful little area.
-		</p>
-	</li>
- -->
 </ul>
 </div>

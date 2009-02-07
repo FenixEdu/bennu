@@ -50,7 +50,6 @@
 	</tr>
 	<tr>
 		<td align="right" nowrap="nowrap" width="40%">
-			<div>
 				<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
 					<bean:define id="languageUrl"><%= request.getContextPath() %>/content.do</bean:define>
 					<form action="<%= languageUrl %>" method="post" class="login">
@@ -96,7 +95,6 @@
 					</form>
 					<!-- END_BLOCK_HAS_CONTEXT -->
 				</logic:equal>
-			</div>
 		</td>
 	</tr>
 </table>
