@@ -124,4 +124,14 @@ public class VirtualHost extends VirtualHost_Base {
 	return nodes;
     }
 
+    @Service
+    public void edit(VirtualHostBean bean) {
+	setHostname(bean.getHostname());
+	setApplicationTitle(bean.getApplicationTitle());
+	setApplicationSubTitle(bean.getApplicationSubTitle());
+	setApplicationCopyright(bean.getApplicationCopyright());
+	setGoogleSearchEnabled(bean.getGoogleSearchEnabled());
+	setLanguageSelectionEnabled(bean.getLanguageSelectionEnabled());
+	setTheme(bean.getTheme());
+    }
 }

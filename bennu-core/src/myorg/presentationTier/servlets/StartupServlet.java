@@ -109,14 +109,17 @@ public class StartupServlet extends HttpServlet {
 	for (File directory : files) {
 	    String themeName = directory.getName();
 	    if (!Theme.isThemeAvailable(themeName)) {
-		ThemeType type = getThemeType(themeName);
-		Theme.createTheme(themeName, type);
+		Properties themeProperties = loadThemePropeties(themeName);
+		ThemeType type = ThemeType.valueOf(themeProperties.getProperty("theme.type"));
+		String description = themeProperties.getProperty("theme.description");
+		String screenshotFileName = themeProperties.getProperty("theme.screenshotFileName");
+		Theme.createTheme(themeName, description, type, screenshotFileName);
 	    }
 	}
 
     }
 
-    private ThemeType getThemeType(String themeName) {
+    private Properties loadThemePropeties(String themeName) {
 	Properties properties = null;
 	try {
 	    properties = PropertiesManager.loadPropertiesFromFile(getServletContext().getRealPath(
@@ -125,7 +128,7 @@ public class StartupServlet extends HttpServlet {
 	    e.printStackTrace();
 	    throw new Error(themeName + " could not read property file");
 	}
-	return ThemeType.valueOf(properties.getProperty("theme.type"));
+	return properties;
     }
 
     private boolean matchTheme(String name, File[] files) {

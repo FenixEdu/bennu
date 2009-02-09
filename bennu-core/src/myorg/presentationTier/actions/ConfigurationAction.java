@@ -41,24 +41,47 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
-@Mapping( path="/configuration" )
+@Mapping(path = "/configuration")
 public class ConfigurationAction extends ContextBaseAction {
 
-    public ActionForward applicationConfiguration(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+    public ActionForward applicationConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final Context context = getContext(request);
 	return context.forward("/myorg/applicationConfiguration.jsp");
     }
 
-    public ActionForward basicApplicationConfiguration(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+    public ActionForward basicApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final Context context = getContext(request);
 	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
 	if (virtualHost != null) {
-	    request.setAttribute("virtualHostToConfigure", virtualHost);
+	    request.setAttribute("virtualHost", virtualHost);
+	    request.setAttribute("virtualHostToConfigure", new VirtualHostBean(virtualHost));
 	}
+	return context.forward("/myorg/basicApplicationConfiguration.jsp");
+    }
+
+    public ActionForward editBasicApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+
+	VirtualHostBean bean = getRenderedObject("virtualHostToConfigure");
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
+	virtualHost.edit(bean);
+	return applicationConfiguration(mapping, form, request, response);
+    }
+
+    public ActionForward postbackBasicApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+
+	final Context context = getContext(request);
+	VirtualHostBean bean = getRenderedObject("virtualHostToConfigure");
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
+	RenderUtils.invalidateViewState();
+	request.setAttribute("virtualHost", virtualHost);
+	request.setAttribute("virtualHostToConfigure", bean);
 	return context.forward("/myorg/basicApplicationConfiguration.jsp");
     }
 
@@ -70,16 +93,16 @@ public class ConfigurationAction extends ContextBaseAction {
 	return context.forward("/myorg/manageGroups.jsp");
     }
 
-    public ActionForward viewPersistentGroup(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+    public ActionForward viewPersistentGroup(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final Context context = getContext(request);
 	final PersistentGroup persistentGroup = getDomainObject(request, "persistentGroupId");
 	request.setAttribute("persistentGroup", persistentGroup);
 	return context.forward("/myorg/viewPersistentGroup.jsp");
     }
 
-    public ActionForward prepareAddVirtualHost(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+    public ActionForward prepareAddVirtualHost(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final Context context = getContext(request);
 	VirtualHostBean virtualHostBean = getRenderedObject();
 	if (virtualHostBean == null) {
@@ -111,8 +134,8 @@ public class ConfigurationAction extends ContextBaseAction {
 	return context.forward("/myorg/manageMenus.jsp");
     }
 
-    public final ActionForward deleteNode(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    public final ActionForward deleteNode(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
 	final Node node = getDomainObject(request, "nodeToDeleteId");
 	node.deleteService();
 	return manageMenus(mapping, form, request, response);

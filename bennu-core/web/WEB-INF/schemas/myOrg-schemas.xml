@@ -1,15 +1,8 @@
-<schema name="virtualHost.application.configuration" type="myorg.domain.VirtualHost" bundle="MYORG_RESOURCES">
+<schema name="virtualHost.application.configuration" type="myorg.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
 	<slot name="hostname" key="label.application.hostname" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
-	<slot name="theme" key="label.application.theme" bundle="MYORG_RESOURCES" layout="menu-select">
-		<property name="providerClass" value="myorg.presentationTier.renderers.providers.ThemeProvider"/>
-		<property name="eachLayout" value="values"/>
-		<property name="eachSchema" value="theme.name"/>  
-	</slot>
-	<slot name="googleSearchEnabled"/>
-	<slot name="languageSelectionEnabled"/>
 </schema>
 
 <schema name="virtualHost.application.configuration.summary" type="myorg.domain.VirtualHost" bundle="MYORG_RESOURCES">

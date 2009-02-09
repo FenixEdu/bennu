@@ -110,6 +110,7 @@ class Theme {
 	String name;
 	String description;
 	ThemeType type;
+	String screenshotFileName;
 }
 
 relation ThemeMyOrg {

@@ -27,6 +27,7 @@ package myorg.domain;
 
 import java.io.Serializable;
 
+import pt.ist.fenixWebFramework.util.DomainReference;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class VirtualHostBean implements Serializable {
@@ -37,6 +38,21 @@ public class VirtualHostBean implements Serializable {
     private MultiLanguageString applicationCopyright;
     private Boolean googleSearchEnabled;
     private Boolean languageSelectionEnabled;
+    private DomainReference<Theme> theme;
+
+    public VirtualHostBean() {
+
+    }
+
+    public VirtualHostBean(VirtualHost virtualHost) {
+	setHostname(virtualHost.getHostname());
+	setApplicationTitle(virtualHost.getApplicationTitle());
+	setApplicationSubTitle(virtualHost.getApplicationSubTitle());
+	setApplicationCopyright(virtualHost.getApplicationCopyright());
+	setGoogleSearchEnabled(virtualHost.getGoogleSearchEnabled());
+	setLanguageSelectionEnabled(virtualHost.getLanguageSelectionEnabled());
+	setTheme(virtualHost.getTheme());
+    }
 
     public Boolean getGoogleSearchEnabled() {
 	return googleSearchEnabled;
@@ -84,6 +100,14 @@ public class VirtualHostBean implements Serializable {
 
     public void setApplicationCopyright(MultiLanguageString applicationCopyright) {
 	this.applicationCopyright = applicationCopyright;
+    }
+
+    public void setTheme(Theme theme) {
+	this.theme = new DomainReference<Theme>(theme);
+    }
+
+    public Theme getTheme() {
+	return theme != null ? theme.getObject() : null;
     }
 
 }

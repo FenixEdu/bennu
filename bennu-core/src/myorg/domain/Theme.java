@@ -46,6 +46,11 @@ public class Theme extends Theme_Base {
 	setDescription(description);
     }
 
+    public Theme(String name, String description, ThemeType type, String screenshotFileName) {
+	this(name, description, type);
+	setScreenshotFileName(screenshotFileName);
+    }
+
     public void delete() {
 	removeMyOrg();
 	for (; !getVirtualHosts().isEmpty(); getVirtualHosts().get(0).removeTheme())
@@ -66,9 +71,15 @@ public class Theme extends Theme_Base {
 	return getThemeByName(name) != null;
     }
 
+    @Override
+    public String getScreenshotFileName() {
+	String screenshotName = super.getScreenshotFileName();
+	return screenshotName != null ? screenshotName : getName() + ".jpg";
+    }
+
     @Service
-    public static Theme createTheme(String themeName, ThemeType type) {
-	return new Theme(themeName, type);
+    public static Theme createTheme(String themeName, String description, ThemeType type, String screenshotFileName) {
+	return new Theme(themeName, description, type, screenshotFileName);
     }
 
     @Service
