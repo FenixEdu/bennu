@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixWebFramework.FenixWebFramework;
+import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixWebFramework.servlets.filters.SetUserViewFilter;
 import pt.ist.fenixWebFramework.struts.annotations.Forward;
 import pt.ist.fenixWebFramework.struts.annotations.Forwards;
@@ -74,9 +75,11 @@ public class AuthenticationAction extends ContextBaseAction {
 
     public final ActionForward logout(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response)
 		throws Exception {
+	final String serverName = request.getServerName();
 	logout(request);
-	if (FenixWebFramework.getConfig().isCasEnabled()) {
-	    final String url = FenixWebFramework.getConfig().getCasLogoutUrl();
+	final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
+	if (casConfig.isCasEnabled()) {
+	    final String url = casConfig.getCasLogoutUrl();
 	    return new ActionForward(url, true);
 	} else {
 	    return mapping.findForward("forward");

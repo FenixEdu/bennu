@@ -26,9 +26,13 @@
 package myorg._development;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import pt.ist.fenixWebFramework.Config;
+import pt.ist.fenixWebFramework.Config.CasConfig;
 
 /**
  * The <code>PropertiesManager</code> class is a application wide utility for
@@ -70,13 +74,30 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
     }
 
     public static Config getFenixFrameworkConfig(final String[] domainModels) {
+	final Map<String, CasConfig> casConfigMap = new HashMap<String, CasConfig>();
+	for (final Object key : properties.keySet()) {
+	    final String property = (String) key;
+	    int i = property.indexOf(".cas.enable");
+	    if (i >= 0) {
+		final String hostname = property.substring(0, i);
+		if (getBooleanProperty(property)) {
+		    final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");
+		    final String casLogoutUrl = getProperty(hostname + ".cas.loginUrl");
+		    final String casValidateUrl = getProperty(hostname + ".cas.ValidateUrl");
+		    final String serviceUrl = getProperty(hostname + ".cas.logoutUrl");
+
+		    new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
+		}
+	    }
+	}
+
         return new Config() {{
             domainModelPaths = domainModels;
             dbAlias = getProperty("db.alias");
             dbUsername = getProperty("db.user");
             dbPassword = getProperty("db.pass");
             appName = getProperty("app.name");
-            appContext =getProperty("app.context"); 
+            appContext = getProperty("app.context"); 
             filterRequestWithDigest = getBooleanProperty("filter.request.with.digest");
             tamperingRedirect = getProperty("digest.tampering.url");
             errorIfChangingDeletedObject = getBooleanProperty("error.if.changing.deleted.object");
@@ -84,10 +105,7 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
             defaultLocation = getProperty("location");
             defaultVariant = getProperty("variant");
             updateDataRepositoryStructure = true;
-            casEnabled = getBooleanProperty("cas.enable");
-            casLoginUrl = getProperty("cas.loginUrl");
-            casValidateUrl = getProperty("cas.ValidateUrl");
-            casLogoutUrl = getProperty("cas.logoutUrl");
+            casConfigByHost = Collections.unmodifiableMap(casConfigMap);
         }};
     }
 
