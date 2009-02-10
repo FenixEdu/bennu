@@ -522,3 +522,12 @@
 	</renderer>
 	
 	<renderer type="java.lang.String" layout="slot-as-label" class="pt.ist.fenixWebFramework.renderers.SlotAsLabelRenderer"/>
+
+	<renderer type="java.lang.Object" layout="organization" class="module.organization.presentationTier.renderers.OrganizationRenderer">
+		<property name="classes" value="ostructure"/>
+		
+		<property name="rootClasses" value="osrootunit"/>
+		<property name="unitClasses" value="osunit"/>
+		<property name="personClasses" value="osunit"/>
+		<property name="levelClasses" value="oslevel"/> <!-- 1..n is added to the class name -->
+	</renderer>
