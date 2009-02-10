@@ -4,6 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 <%@page import="pt.ist.fenixWebFramework.FenixWebFramework"%>
+<%@page import="pt.ist.fenixWebFramework.Config.CasConfig"%>
 
 <%@page import="pt.utl.ist.fenix.tools.util.i18n.Language"%>
 <table width="100%">
@@ -15,13 +16,15 @@
     <td align="right" nowrap="nowrap" width="40%">
 		<%
 			final String contextPath = request.getContextPath();
-			final boolean isCasEnabled = FenixWebFramework.getConfig().isCasEnabled();
+			final String serverName = request.getServerName();
+			final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
+			final boolean isCasEnabled = casConfig != null && casConfig.isCasEnabled();
 		%>
 		<logic:notPresent name="USER_SESSION_ATTRIBUTE">
 			<% if (isCasEnabled) {%>
 				<div class="login">
 					<% final String portString = request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort(); %>
-					<bean:define id="loginUrl"><%= FenixWebFramework.getConfig().getCasLoginUrl() + "https" + "://" + request.getServerName() + contextPath %>/</bean:define>
+					<bean:define id="loginUrl"><%= FenixWebFramework.getConfig().getCasConfig(serverName).getCasLoginUrl() + "https" + "://" + request.getServerName() + contextPath %>/</bean:define>
 					<html:link href="<%= loginUrl %>"><bean:message key="label.login.link" bundle="MYORG_RESOURCES"/></html:link>
 				</div>
 			<% } else { %>
