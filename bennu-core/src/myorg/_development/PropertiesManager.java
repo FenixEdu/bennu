@@ -82,9 +82,9 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 		final String hostname = property.substring(0, i);
 		if (getBooleanProperty(property)) {
 		    final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");
-		    final String casLogoutUrl = getProperty(hostname + ".cas.loginUrl");
+		    final String casLogoutUrl = getProperty(hostname + ".cas.logoutUrl");
 		    final String casValidateUrl = getProperty(hostname + ".cas.ValidateUrl");
-		    final String serviceUrl = getProperty(hostname + ".cas.logoutUrl");
+		    final String serviceUrl = getProperty(hostname + ".cas.serviceUrl");
 
 		    new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
 		}
