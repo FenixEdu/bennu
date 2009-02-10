@@ -78,9 +78,7 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 	for (final Object key : properties.keySet()) {
 	    final String property = (String) key;
 	    int i = property.indexOf(".cas.enable");
-	    System.out.println("Processing: " + property);
 	    if (i >= 0) {
-		System.out.println("   found a cas property.");
 		final String hostname = property.substring(0, i);
 		if (getBooleanProperty(property)) {
 		    final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");

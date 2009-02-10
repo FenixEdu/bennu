@@ -5,6 +5,7 @@
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 
 <logic:present name="USER_SESSION_ATTRIBUTE">
+<logic:present role="myorg.domain.RoleType.MANAGER">
 	<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
 
 	<div id="pageops">
@@ -35,4 +36,5 @@
 	</div>
 <br/>
 <br/>
+</logic:present>
 </logic:present>
