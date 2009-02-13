@@ -3,6 +3,7 @@
 	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
+	<slot name="helpLink" key="label.help.link.url" bundle="MYORG_RESOURCES"/>
 </schema>
 
 <schema name="virtualHost.application.configuration.summary" type="myorg.domain.VirtualHost" bundle="MYORG_RESOURCES">
@@ -17,6 +18,7 @@
 	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
+	<slot name="helpLink" key="label.help.link.url" bundle="MYORG_RESOURCES"/>
 	<slot name="googleSearchEnabled"/>
 	<slot name="languageSelectionEnabled"/>
 </schema>

@@ -39,6 +39,15 @@ public class VirtualHostBean implements Serializable {
     private Boolean googleSearchEnabled;
     private Boolean languageSelectionEnabled;
     private DomainReference<Theme> theme;
+    private String helpLink;
+
+    public String getHelpLink() {
+        return helpLink;
+    }
+
+    public void setHelpLink(String helpLink) {
+        this.helpLink = helpLink;
+    }
 
     public VirtualHostBean() {
 
@@ -52,6 +61,7 @@ public class VirtualHostBean implements Serializable {
 	setGoogleSearchEnabled(virtualHost.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(virtualHost.getLanguageSelectionEnabled());
 	setTheme(virtualHost.getTheme());
+	setHelpLink(virtualHost.getHelpLink());
     }
 
     public Boolean getGoogleSearchEnabled() {

@@ -54,7 +54,7 @@ public class VirtualHost extends VirtualHost_Base {
 	final MyOrg myOrg = MyOrg.getInstance();
 	final Set<VirtualHost> virtualHosts = myOrg.getVirtualHostsSet();
 	for (final VirtualHost virtualHost : virtualHosts) {
-	    if (serverName.equals(virtualHost.getHostname())) {
+	    if (virtualHost.getHostname().startsWith(serverName)) {
 		setVirtualHostForThread(virtualHost);
 		return virtualHost;
 	    }
@@ -82,6 +82,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setApplicationCopyright(virtualHostBean.getApplicationCopyright());
 	setGoogleSearchEnabled(virtualHostBean.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(virtualHostBean.getLanguageSelectionEnabled());
+	setHelpLink(virtualHostBean.getHelpLink());
     }
 
     @Service
@@ -133,5 +134,12 @@ public class VirtualHost extends VirtualHost_Base {
 	setGoogleSearchEnabled(bean.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(bean.getLanguageSelectionEnabled());
 	setTheme(bean.getTheme());
+	setHelpLink(bean.getHelpLink());
     }
+
+    @Override
+    public void setHostname(final String hostname) {
+        super.setHostname(hostname.toLowerCase());
+    }
+
 }

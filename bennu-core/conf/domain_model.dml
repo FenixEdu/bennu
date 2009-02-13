@@ -104,6 +104,7 @@ class VirtualHost {
 	MultiLanguageString applicationTitle;
 	MultiLanguageString applicationSubTitle;
 	MultiLanguageString applicationCopyright;
+	String helpLink;
 }
 
 class Theme {

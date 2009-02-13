@@ -51,7 +51,7 @@ public class SetVirtualHostFilter implements Filter {
     		throws IOException, ServletException {
 	final String serverName = servletRequest.getServerName();
 	try {
-	    final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(serverName);
+	    final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(serverName.toLowerCase());
 	    servletRequest.setAttribute("virtualHost", virtualHost);
 	    filterChain.doFilter(servletRequest, servletResponse);
 	} finally {
