@@ -797,7 +797,8 @@ table.tstyle5 td {
 text-align: center;
 border-top: 1px solid #ddd;
 border-bottom: 1px solid #ddd;
-padding: 0.2em 0.4em;
+border: 1px solid #ddd;
+padding: 0.2em 0.8em;
 vertical-align: top;
 }
 tr.lastline td {
@@ -915,7 +916,7 @@ margin: 0.25em 0 !important;
 }
 
 div.item {
-margin-top: 1.5em;
+margin-top: 1em;
 }
 div.item strong {
 }
@@ -1066,6 +1067,21 @@ padding-top: 0.5em;
 font-weight: bold;
 }
 
+.tdleft td {
+text-align: left !important;
+}
+tdmiddle td {
+vertical-align: middle;
+}
+.thleft th {
+text-align: left !important;
+}
+.tdmiddle td { vertical-align: middle !important; }
+.tdnoborder td {
+border-left: none !important;
+border-right: none !important;
+}
+
 span.raquo {
 display: none;
 }
@@ -1073,6 +1089,10 @@ div.infoop1 span.raquo {
 display: inline;
 }
 
+.vpadding05 th, .vpadding05 td {
+padding-top: 0.3em !important;
+padding-bottom: 0.3em !important; 
+}
 
 
 
@@ -1085,22 +1105,18 @@ display: inline;
 .dinline { display: inline; }
 .dblock { display: block; }
 
-.width30px {
-width: 30px !important;
-}
+.width30px { width: 30px !important; }
+.width100px { width: 30px !important; }
+
 .width100pc {
 width: 100%;
 }
 
 table.tstyle2 tr td a {
 padding: 4px 5px;
-/*
-background: #f3f3e7;
-text-decoration: none !important;
-*/
 }
 table.tstyle2 tr td a:hover {
-background: #f3f3e7;
+background: #fef7e2;
 }
 
 
