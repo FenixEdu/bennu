@@ -59,7 +59,10 @@
 					<td colspan="2">
 						<bean:define id="themeName" name="virtualHostToConfigure" property="theme.name"/>
 						<bean:define id="screenShot" name="virtualHostToConfigure" property="theme.screenshotFileName"/>
+
+<%--
 						<img src='<%= request.getContextPath() + "/CSS/" + themeName + "/" + screenShot %>'/>
+--%>
 					</td>
 				</tr>
 			</logic:present>
@@ -67,5 +70,13 @@
 		
 	<html:submit styleClass="inputbutton"><bean:message key="renderers.form.submit.name" bundle="RENDERER_RESOURCES"/></html:submit>
 	</fr:form>
-	
+
+	<br/>
+
+	<bean:define id="themeName" name="virtualHostToConfigure" property="theme.name"/>
+	<iframe src="<%= request.getContextPath() + "/home.do?method=firstPage&themeName=" + themeName %>"
+			width="90%" height="400" frameborder="0">
+		<p>Preview not available.</p>
+	</iframe>
+
 </logic:present>

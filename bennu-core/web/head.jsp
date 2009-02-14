@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-tiles.tld" prefix="tiles" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@page import="myorg.domain.VirtualHost"%>
 
 <title><bean:write name="virtualHost" property="applicationTitle"/></title>
 
@@ -10,11 +11,15 @@
 	final String contextPath = request.getContextPath();
 %>
 
-<bean:define id="theme" name="virtualHost" property="theme.name"/>
+<%
+	String themeName = request.getParameter("themeName");
+	if (themeName == null) {
+	    themeName = ((VirtualHost) request.getAttribute("virtualHost")).getTheme().getName();
+	}
+%>
 
-
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/screen.css" media="screen"/>
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/print.css" media="print"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= themeName %>/screen.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= themeName %>/print.css" media="print"/>
 <%-- 
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/layout.css" media="screen"/>
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/print.css" media="print"/>
