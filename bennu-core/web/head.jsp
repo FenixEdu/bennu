@@ -11,15 +11,10 @@
 	final String contextPath = request.getContextPath();
 %>
 
-<%
-	String themeName = request.getParameter("themeName");
-	if (themeName == null) {
-	    themeName = ((VirtualHost) request.getAttribute("virtualHost")).getTheme().getName();
-	}
-%>
+<bean:define id="theme" name="virtualHost" property="theme.name"/>
 
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= themeName %>/screen.css" media="screen"/>
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= themeName %>/print.css" media="print"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/screen.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/print.css" media="print"/>
 <%-- 
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/layout.css" media="screen"/>
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/print.css" media="print"/>

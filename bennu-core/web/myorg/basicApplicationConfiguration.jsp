@@ -73,8 +73,8 @@
 
 	<br/>
 
-	<bean:define id="themeName" name="virtualHostToConfigure" property="theme.name"/>
-	<iframe src="<%= request.getContextPath() + "/home.do?method=firstPage&themeName=" + themeName %>"
+	<bean:define id="themeId" name="virtualHostToConfigure" property="theme.OID"/>
+	<iframe src="<%= request.getContextPath() + "/home.do?method=previewTheme&themeId=" + themeId %>"
 			width="90%" height="400" frameborder="0">
 		<p>Preview not available.</p>
 	</iframe>
