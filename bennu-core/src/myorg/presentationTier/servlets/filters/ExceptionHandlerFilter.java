@@ -38,8 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 public class ExceptionHandlerFilter implements Filter {
 
     public void destroy() {
-	// TODO Auto-generated method stub
-
     }
 
     public void init(FilterConfig arg0) throws ServletException {
