@@ -5,11 +5,17 @@
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 <%@page import="pt.ist.fenixWebFramework.FenixWebFramework"%>
 <%@page import="pt.ist.fenixWebFramework.Config.CasConfig"%>
-
 <%@page import="pt.utl.ist.fenix.tools.util.i18n.Language"%>
+
 <table width="100%">
   <tr>
-    <td rowspan="2" width="60%" valign="top">
+    <td rowspan="2" width="5%" valign="center">
+		<logic:present name="virtualHost" property="logo">
+	    	<bean:define id="logoUrl"><%= request.getContextPath() %>/home.do?method=logo&virtualHostId=<bean:write name="virtualHost" property="OID"/></bean:define>
+			<html:img src='<%= logoUrl %>'/>
+		</logic:present>
+    </td>
+    <td rowspan="2" width="55%" valign="top">
 		<h1><bean:write name="virtualHost" property="applicationTitle"/></h1>
 		<p><bean:write name="virtualHost" property="applicationSubTitle"/></p>
     </td>

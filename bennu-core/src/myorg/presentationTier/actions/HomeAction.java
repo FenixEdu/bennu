@@ -27,6 +27,7 @@ package myorg.presentationTier.actions;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import myorg.domain.Theme;
 import myorg.domain.VirtualHost;
 import myorg.domain.contents.Node;
+import myorg.domain.util.ByteArray;
 import myorg.presentationTier.Context;
 import myorg.presentationTier.LayoutContext;
 
@@ -160,5 +162,33 @@ public class HomeAction extends ContextBaseAction {
 	return context.forward("");
     }
 
+    protected ActionForward outputImage(final HttpServletResponse response, final ByteArray byteArray) throws Exception {
+	OutputStream outputStream = null;
+	try {
+	    outputStream = response.getOutputStream();
+	    if (byteArray != null) {
+		outputStream.write(byteArray.getBytes());
+	    }
+	} finally {
+	    if (outputStream != null) {
+		outputStream.close();
+	    }
+	}
+	return null;
+    }
+
+    public ActionForward favico(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
+	final ByteArray favico = virtualHost.getFavicon();
+	return outputImage(response, favico);
+    }
+
+    public ActionForward logo(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
+	final ByteArray logo = virtualHost.getLogo();
+	return outputImage(response, logo);
+    }
 
 }

@@ -73,6 +73,34 @@
 
 	<br/>
 
+	<logic:present name="virtualHost" property="logo">
+		<html:img action='<%= "/home.do?method=logo&virtualHostId=" + vhostOID%>'/>
+	</logic:present>
+
+	<fr:edit id="virtualHostToConfigureLogo" name="virtualHostToConfigure" schema="virtualHost.application.configuration.logo"
+			action='<%= "/configuration.do?method=editBasicApplicationConfigurationLogo&virtualHostId=" + vhostOID%>'>
+		<fr:layout name="tabular">
+			<fr:property name="classes" value="form thwidth150px"/>
+			<fr:property name="columnClasses" value=",,tderror"/>
+		</fr:layout>
+	</fr:edit>
+
+	<br/>
+
+	<logic:present name="virtualHost" property="favicon">
+		<html:img action='<%= "/home.do?method=favico&virtualHostId=" + vhostOID%>'/>
+	</logic:present>
+
+	<fr:edit id="virtualHostToConfigureFavico" name="virtualHostToConfigure" schema="virtualHost.application.configuration.favico"
+			action='<%= "/configuration.do?method=editBasicApplicationConfigurationFavico&virtualHostId=" + vhostOID%>'>
+		<fr:layout name="tabular">
+			<fr:property name="classes" value="form thwidth150px"/>
+			<fr:property name="columnClasses" value=",,tderror"/>
+		</fr:layout>
+	</fr:edit>
+
+	<br/>
+
 	<bean:define id="themeId" name="virtualHostToConfigure" property="theme.OID"/>
 	<iframe src="<%= request.getContextPath() + "/home.do?method=previewTheme&themeId=" + themeId %>"
 			width="90%" height="400" frameborder="0">

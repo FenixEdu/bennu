@@ -23,6 +23,20 @@
 	<slot name="languageSelectionEnabled"/>
 </schema>
 
+<schema name="virtualHost.application.configuration.logo" type="myorg.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
+	<slot name="logoInputStream" key="label.application.logo" bundle="MYORG_RESOURCES">
+		<property name="fileNameSlot" value="logoFilename" />
+		<property name="size" value="30"/>
+	</slot>
+</schema>
+
+<schema name="virtualHost.application.configuration.favico" type="myorg.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
+	<slot name="faviconInputStream" key="label.application.favicon" bundle="MYORG_RESOURCES">
+		<property name="fileNameSlot" value="faviconFilename" />
+		<property name="size" value="30"/>
+	</slot>
+</schema>
+
 <schema name="myorg.presentationTier.actions.ContextBaseAction.LocaleBean" type="myorg.presentationTier.actions.ContextBaseAction$LocaleBean" bundle="MYORG_RESOURCES">
 	<slot name="language" key="label.application.language" bundle="MYORG_RESOURCES" layout="postback"/>
 </schema>

@@ -30,6 +30,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import myorg.domain.contents.Node;
+import myorg.domain.util.ByteArray;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
@@ -83,6 +84,12 @@ public class VirtualHost extends VirtualHost_Base {
 	setGoogleSearchEnabled(virtualHostBean.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(virtualHostBean.getLanguageSelectionEnabled());
 	setHelpLink(virtualHostBean.getHelpLink());
+	if (virtualHostBean.getLogo() != null) {
+	    virtualHostBean.setLogo(virtualHostBean.getLogo());
+	}
+	if (virtualHostBean.getFavicon() != null) {
+	    virtualHostBean.setFavicon(virtualHostBean.getFavicon());
+	}
     }
 
     @Service
@@ -135,11 +142,29 @@ public class VirtualHost extends VirtualHost_Base {
 	setLanguageSelectionEnabled(bean.getLanguageSelectionEnabled());
 	setTheme(bean.getTheme());
 	setHelpLink(bean.getHelpLink());
+	if (bean.getLogo() != null) {
+	    bean.setLogo(bean.getLogo());
+	}
+	if (bean.getFavicon() != null) {
+	    bean.setFavicon(bean.getFavicon());
+	}
     }
 
     @Override
     public void setHostname(final String hostname) {
         super.setHostname(hostname.toLowerCase());
+    }
+
+    @Service
+    @Override
+    public void setFavicon(final ByteArray favicon) {
+        super.setFavicon(favicon);
+    }
+
+    @Service
+    @Override
+    public void setLogo(final ByteArray logo) {
+        super.setLogo(logo);
     }
 
 }

@@ -32,6 +32,8 @@ valueType org.joda.time.LocalDate as LocalDate;
 valueType pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString as MultiLanguageString;
 valueType pt.utl.ist.fenix.tools.util.Strings as Strings;
 
+valueType myorg.domain.util.ByteArray as ByteArray;
+
 enum myorg.domain.RoleType as RoleType;
 enum myorg.domain.Theme.ThemeType as ThemeType;
 
@@ -105,6 +107,8 @@ class VirtualHost {
 	MultiLanguageString applicationSubTitle;
 	MultiLanguageString applicationCopyright;
 	String helpLink;
+	ByteArray logo;
+	ByteArray favicon;
 }
 
 class Theme {

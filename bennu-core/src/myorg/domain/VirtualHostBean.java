@@ -25,7 +25,10 @@
 
 package myorg.domain;
 
+import java.io.InputStream;
 import java.io.Serializable;
+
+import myorg.domain.util.ByteArray;
 
 import pt.ist.fenixWebFramework.util.DomainReference;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
@@ -40,6 +43,14 @@ public class VirtualHostBean implements Serializable {
     private Boolean languageSelectionEnabled;
     private DomainReference<Theme> theme;
     private String helpLink;
+    private ByteArray logo;
+    private transient InputStream logoInputStream;
+    private String logoFilename;
+    private String logoDisplayName;
+    private ByteArray favicon;
+    private transient InputStream faviconInputStream;
+    private String faviconFilename;
+    private String faviconDisplayName;
 
     public String getHelpLink() {
         return helpLink;
@@ -118,6 +129,70 @@ public class VirtualHostBean implements Serializable {
 
     public Theme getTheme() {
 	return theme != null ? theme.getObject() : null;
+    }
+
+    public ByteArray getLogo() {
+        return logo;
+    }
+
+    public void setLogo(ByteArray logo) {
+        this.logo = logo;
+    }
+
+    public ByteArray getFavicon() {
+        return favicon;
+    }
+
+    public void setFavicon(ByteArray favicon) {
+        this.favicon = favicon;
+    }
+
+    public InputStream getLogoInputStream() {
+        return logoInputStream;
+    }
+
+    public void setLogoInputStream(InputStream logoInputStream) {
+        this.logoInputStream = logoInputStream;
+    }
+
+    public String getLogoFilename() {
+        return logoFilename;
+    }
+
+    public void setLogoFilename(String logoFilename) {
+        this.logoFilename = logoFilename;
+    }
+
+    public String getLogoDisplayName() {
+        return logoDisplayName;
+    }
+
+    public void setLogoDisplayName(String logoDisplayName) {
+        this.logoDisplayName = logoDisplayName;
+    }
+
+    public InputStream getFaviconInputStream() {
+        return faviconInputStream;
+    }
+
+    public void setFaviconInputStream(InputStream faviconInputStream) {
+        this.faviconInputStream = faviconInputStream;
+    }
+
+    public String getFaviconFilename() {
+        return faviconFilename;
+    }
+
+    public void setFaviconFilename(String faviconFilename) {
+        this.faviconFilename = faviconFilename;
+    }
+
+    public String getFaviconDisplayName() {
+        return faviconDisplayName;
+    }
+
+    public void setFaviconDisplayName(String faviconDisplayName) {
+        this.faviconDisplayName = faviconDisplayName;
     }
 
 }

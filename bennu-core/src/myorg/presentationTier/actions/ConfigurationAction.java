@@ -35,6 +35,7 @@ import myorg.domain.VirtualHostBean;
 import myorg.domain.contents.INode;
 import myorg.domain.contents.Node;
 import myorg.domain.groups.PersistentGroup;
+import myorg.domain.util.ByteArray;
 import myorg.presentationTier.Context;
 
 import org.apache.struts.action.ActionForm;
@@ -66,16 +67,37 @@ public class ConfigurationAction extends ContextBaseAction {
 
     public ActionForward editBasicApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
 	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-
-	VirtualHostBean bean = getRenderedObject("virtualHostToConfigure");
+	final VirtualHostBean bean = getRenderedObject("virtualHostToConfigure");
 	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
 	virtualHost.edit(bean);
 	return applicationConfiguration(mapping, form, request, response);
     }
 
+    
+    public ActionForward editBasicApplicationConfigurationLogo(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final VirtualHostBean bean = getRenderedObject("virtualHostToConfigureLogo");
+	final byte[] logo = consumeInputStream(bean.getLogoInputStream());
+	if (logo != null) {
+	    final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
+	    virtualHost.setLogo(new ByteArray(logo));
+	}
+	return applicationConfiguration(mapping, form, request, response);
+    }
+
+    public ActionForward editBasicApplicationConfigurationFavico(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final VirtualHostBean bean = getRenderedObject("virtualHostToConfigureFavico");
+	final byte[] favico = consumeInputStream(bean.getFaviconInputStream());
+	if (favico != null) {
+	    final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
+	    virtualHost.setFavicon(new ByteArray(favico));
+	}
+	return applicationConfiguration(mapping, form, request, response);
+    }
+
     public ActionForward postbackBasicApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
 	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-
 	final Context context = getContext(request);
 	VirtualHostBean bean = getRenderedObject("virtualHostToConfigure");
 	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
