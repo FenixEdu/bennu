@@ -175,17 +175,3 @@ CSS Document For Leaves v1.0 - Anthonyy @ OSWD.org
 		}
 
 		/* And they lived happily ever after. The End. */
-		
-/* lists */
-		ul.liinline {
-			margin: 0;
-			padding: 0;
-		}
-
-		ul.liinline li {
-			display: inline;
-			margin: 0;
-			padding: 0 0.25em;
-		}
-
-		.nobullet { list-style: none; }
