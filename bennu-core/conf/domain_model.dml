@@ -52,6 +52,9 @@ class contents.Node {
 		String linkKey;
 	}
 
+	class contents.JumpToFirstAccessibleChildNode extends contents.Node {
+	}
+
 class groups.PersistentGroup {
 	String ojbConcreteClass;
 }
