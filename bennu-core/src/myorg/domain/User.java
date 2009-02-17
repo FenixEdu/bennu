@@ -45,14 +45,10 @@ public class User extends User_Base {
 
     };
 
-    public User() {
-	super();
-	setMyOrg(MyOrg.getInstance());
-    }
-
     public User(final String username) {
-	this();
+	super();
 	setUsername(username);
+	setMyOrg(MyOrg.getInstance());
     }
 
     public static User findByUsername(final String username) {
