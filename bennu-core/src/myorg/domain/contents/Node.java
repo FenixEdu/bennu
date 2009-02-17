@@ -114,6 +114,16 @@ public abstract class Node extends Node_Base implements INode {
 	return nodes.isEmpty() ? null : Collections.min(nodes, COMPARATOR_BY_ORDER);
     }
 
+    public static Node getFirstAvailableTopLevelNode() {
+	final Set<Node> nodes = VirtualHost.getVirtualHostForThread().getOrderedTopLevelNodes();
+	for (final Node node : nodes) {
+	    if (node.isAccessible()) {
+		return node;
+	    }
+	}
+	return null;
+    }
+
     protected void descNodeOrders(final Set<Node> nodes) {
 	final int threshold = getNodeOrder().intValue();
 	for (final Node node : nodes) {

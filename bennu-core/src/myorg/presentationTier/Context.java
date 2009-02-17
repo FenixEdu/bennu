@@ -31,7 +31,6 @@ import java.util.Stack;
 
 import myorg.domain.VirtualHost;
 import myorg.domain.contents.INode;
-import myorg.domain.contents.JumpToFirstAccessibleChildNode;
 import myorg.domain.contents.Node;
 
 import org.apache.struts.action.ActionForward;
@@ -111,9 +110,6 @@ public abstract class Context {
 
     public void push(final INode node) {
 	elements.push(node);
-	if (node instanceof JumpToFirstAccessibleChildNode) {
-	    elements.push(((JumpToFirstAccessibleChildNode) node).getFirstAccessibleChildNode());
-	}
     }
 
     public void pop() {
