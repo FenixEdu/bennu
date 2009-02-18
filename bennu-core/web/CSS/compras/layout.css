@@ -11,11 +11,11 @@ padding: 0;
 }
 
 h1 {
-font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-font-weight: normal;
-font-size: 32px;
-color: #6DA6E2;
-margin-bottom: 30px;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-style: bold;
+	font-size: 32px;
+	color: #FFFFFF;
+	margin-bottom: 30px;
 }
 
 h2 {
@@ -127,10 +127,12 @@ padding-bottom: 0;
 padding-top: 10px;
 background: #15587a;
 }
-#header p { 
+#header p {
+font-style: bold;
 margin-top: -20px;
 margin-left: 30px;
-color: #999999;
+/** color: #999999; **/
+color: #b6d7e8;
 }
 #header img {
 padding: 10px 15px 10px 25px;
