@@ -106,6 +106,7 @@ class VirtualHost {
 	String hostname;
 	Boolean googleSearchEnabled;
 	Boolean languageSelectionEnabled;
+	Boolean breadCrumbsEnabled;
 	MultiLanguageString applicationTitle;
 	MultiLanguageString applicationSubTitle;
 	MultiLanguageString applicationCopyright;

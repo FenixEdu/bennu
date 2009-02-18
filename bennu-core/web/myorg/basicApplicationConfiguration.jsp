@@ -32,6 +32,10 @@
 				<td><bean:message key="label.languageSelectionEnabled" bundle="MYORG_RESOURCES"/></td>
 				<td><fr:edit name="virtualHostToConfigure" slot="languageSelectionEnabled"/></td>
 			</tr>
+			<tr>
+				<td><bean:message key="label.application.breadCrumbs" bundle="MYORG_RESOURCES"/></td>
+				<td><fr:edit name="virtualHostToConfigure" slot="breadCrumbsEnabled"/></td>
+			</tr>
 		</table>
 		
 		

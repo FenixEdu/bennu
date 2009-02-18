@@ -73,6 +73,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setApplicationCopyright(new MultiLanguageString("My Organization Name"));
 	setGoogleSearchEnabled(Boolean.TRUE);
 	setLanguageSelectionEnabled(Boolean.TRUE);
+	setBreadCrumbsEnabled(Boolean.TRUE);
     }
 
     public VirtualHost(final VirtualHostBean virtualHostBean) {
@@ -90,6 +91,7 @@ public class VirtualHost extends VirtualHost_Base {
 	if (virtualHostBean.getFavicon() != null) {
 	    virtualHostBean.setFavicon(virtualHostBean.getFavicon());
 	}
+	setBreadCrumbsEnabled(virtualHostBean.getBreadCrumbsEnabled());
     }
 
     @Service
@@ -148,6 +150,7 @@ public class VirtualHost extends VirtualHost_Base {
 	if (bean.getFavicon() != null) {
 	    bean.setFavicon(bean.getFavicon());
 	}
+	setBreadCrumbsEnabled(bean.getBreadCrumbsEnabled());
     }
 
     @Override

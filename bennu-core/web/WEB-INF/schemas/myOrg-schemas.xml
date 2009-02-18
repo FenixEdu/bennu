@@ -21,6 +21,7 @@
 	<slot name="helpLink" key="label.help.link.url" bundle="MYORG_RESOURCES"/>
 	<slot name="googleSearchEnabled"/>
 	<slot name="languageSelectionEnabled"/>
+	<slot name="breadCrumbsEnabled" key="label.application.breadCrumbs" bundle="MYORG_RESOURCES"/>
 </schema>
 
 <schema name="virtualHost.application.configuration.logo" type="myorg.domain.VirtualHostBean" bundle="MYORG_RESOURCES">

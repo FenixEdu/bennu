@@ -48,7 +48,9 @@
 		<div id="container3">
 			<div id="content">
 				<jsp:include page="<%= layoutContext.getPageOperations() %>"/>
-				<jsp:include page="<%= layoutContext.getBreadCrumbs() %>"/>
+				<logic:equal name="virtualHost" property="breadCrumbsEnabled" value="true">
+					<jsp:include page="<%= layoutContext.getBreadCrumbs() %>"/>
+				</logic:equal>
 				<jsp:include page="<%= layoutContext.getBody() %>"/>
 			</div>
 		</div>

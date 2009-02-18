@@ -29,7 +29,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import myorg.domain.util.ByteArray;
-
 import pt.ist.fenixWebFramework.util.DomainReference;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
@@ -41,6 +40,8 @@ public class VirtualHostBean implements Serializable {
     private MultiLanguageString applicationCopyright;
     private Boolean googleSearchEnabled;
     private Boolean languageSelectionEnabled;
+    private Boolean breadCrumbsEnabled;
+
     private DomainReference<Theme> theme;
     private String helpLink;
     private ByteArray logo;
@@ -73,6 +74,7 @@ public class VirtualHostBean implements Serializable {
 	setLanguageSelectionEnabled(virtualHost.getLanguageSelectionEnabled());
 	setTheme(virtualHost.getTheme());
 	setHelpLink(virtualHost.getHelpLink());
+	setBreadCrumbsEnabled(virtualHost.getBreadCrumbsEnabled());
     }
 
     public Boolean getGoogleSearchEnabled() {
@@ -193,6 +195,14 @@ public class VirtualHostBean implements Serializable {
 
     public void setFaviconDisplayName(String faviconDisplayName) {
         this.faviconDisplayName = faviconDisplayName;
+    }
+
+    public Boolean getBreadCrumbsEnabled() {
+        return breadCrumbsEnabled;
+    }
+
+    public void setBreadCrumbsEnabled(Boolean breadCrumbsEnabled) {
+        this.breadCrumbsEnabled = breadCrumbsEnabled;
     }
 
 }
