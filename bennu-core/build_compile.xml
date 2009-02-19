@@ -48,6 +48,7 @@
 		<mkdir dir="${build.home.webinf.classes}"/>
 		<mkdir dir="${deploy.home}"/>
 		<mkdir dir="${src_gen}"/>
+		<copy file="build.properties" tofile="${build.home.webinf.classes}/.build.properties"/>
 		<tstamp>
 		   <format property="build.version" pattern="yyyy/MM/dd HH:mm:ss"/>
 		</tstamp>
