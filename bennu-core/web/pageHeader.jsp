@@ -11,12 +11,17 @@
 
 <div class="title">
 	<logic:present name="virtualHost" property="logo">
+	<div class="img">
     	<bean:define id="logoUrl"><%= request.getContextPath() %>/home.do?method=logo&virtualHostId=<bean:write name="virtualHost" property="OID"/></bean:define>
 		<html:img src='<%= logoUrl %>'/>
+	</div>
 	</logic:present>
-
-	<h1><bean:write name="virtualHost" property="applicationTitle"/></h1>
-	<p><bean:write name="virtualHost" property="applicationSubTitle"/></p>
+	
+	<div class="txt">
+		<h1><bean:write name="virtualHost" property="applicationTitle"/></h1>
+		<p><bean:write name="virtualHost" property="applicationSubTitle"/></p>
+	</div>
+	<div style="clear: both;"></div>
 </div>
 
 
