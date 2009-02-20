@@ -32,8 +32,6 @@ import java.sql.Statement;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.joda.time.DateTime;
-
 import jvstm.TransactionalCommand;
 import pt.ist.fenixframework.pstm.Transaction;
 
