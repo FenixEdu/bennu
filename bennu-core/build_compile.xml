@@ -46,6 +46,7 @@
 	<target name="prepare" description="Create necessary dirs">
 		<mkdir dir="${build.home}"/>
 		<mkdir dir="${build.home.webinf.classes}"/>
+		<mkdir dir="${build.home.webinf.classes}/reports"/>
 		<mkdir dir="${deploy.home}"/>
 		<mkdir dir="${src_gen}"/>
 		<copy file="build.properties" tofile="${build.home.webinf.classes}/.build.properties"/>
@@ -151,20 +152,25 @@
 	<target name="compile-reports" >
 		<mkdir dir="${build.home.reports}"/>
 		<mkdir dir="${build.home.reports.images}"/>
+		<copy todir="${build.home.webinf.classes}/images/">
+			<fileset dir="${build.home.reports}/images"/>
+		</copy>
 		<taskdef name="jrc" 
 		      classname="net.sf.jasperreports.ant.JRAntCompileTask">
 			<classpath refid="class.path.ref"/>
 		</taskdef>
-		<jrc destdir="${build.home.reports}" srcdir="${reports}">
-			<classpath refid="class.path.ref"/>
+		<jrc destdir="${build.home.reports}" srcdir="${build.home.reports}">
 			<classpath>
-				<pathelement path="${build.home.webinf.classes};"/>
+		        <fileset dir="${lib}">
+		   		    <include name="*.jar"/>
+		   		</fileset>
+				<fileset dir="${build.home.webinf.libs}">
+					<include name="*.jar"/>
+				</fileset>
+				<pathelement path="${build.home.webinf.classes}"/>
 			</classpath>
 			<include name="**/*.jrxml"/>
 		</jrc>
-		<copy todir="${build.home.reports.images}/">
-			<fileset dir="${reports.images}"/>
-		</copy>
 	</target>
 
     <target name="gen-sqls" depends="compile"
