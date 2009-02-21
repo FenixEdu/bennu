@@ -1,6 +1,4 @@
-/*****************************************************/
 /**************** body and tag styles ****************/
-
 body {
 margin-top: 0px;	  
 margin-bottom: 30px;
@@ -13,13 +11,14 @@ padding: 0;
 }
 
 h1 {
-font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-font-weight: normal;
-font-size: 32px;
-color: #fff;
-margin-top: 0;
-margin-bottom: 30px;
+	font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
+/*	font-family: MS Sans Serif, Geneva, sans-serif; */
+	font-weight: bold;
+	font-size: 22px;
+	color: #FFFFFF;
+	margin-bottom: 23px;
 }
+
 h2 {
 color: #555;
 font-size: 18px;
@@ -35,91 +34,123 @@ color: #6DA6E2;
 text-decoration: none;
 font-weight: bold;
 }
+
 a:hover {
 font-weight: bold;
 text-decoration: underline;
 }
+
 a.bluelink {
 color: #41a7da !important;
 font-weight: normal;
 text-decoration: none;
 }
 
+/***********************************************/
+/**************** images styles ****************/
+
+a img{
+border: none;
+}
+
+img.left,img.center,img.right {
+padding: 4px;
+border: 1px solid #a0a0a0;
+}
+
+img.left {
+float: left;
+margin: 0 12px 5px 0;
+}
+
+img.center {
+display: block;
+margin: 0 auto 5px auto;
+}
+
+img.right {
+float: right;
+margin: 0 0 5px 12px;
+}
 
 /***********************************************/
-/**************** header styles ****************/
+/**************** form styles ****************/
+form {
+float: left;
+font-size: 10Fpx;
+}
 
+form.login {
+float:right;
+font-size: 10px;
+}
+
+div.login {
+float: right;
+color: #fff;
+padding-right: 15px;
+}
+
+div.login a {
+color: #8bc4ff;
+color: #9fd8ff;
+}
+
+input {
+color: #555;
+/*border: 1px solid #2763A5;*/
+font-size: 11px;
+padding: 2px;
+}
+
+.inputbutton {
+padding: 3px 4px;
+background: #6DA6E2;
+background: #e89267;
+color: #fff;
+border: 1px solid #2763A5;
+border: 1px solid #ab4f20;
+font-weight: bold;
+}
+.inputbuttonlogin {
+padding: 3px 4px;
+background: #e89267;
+color: #fff;
+border: 1px solid #ab4f20;
+font-weight: bold;
+}
+
+/***********************************************/	
+/**************** header styles ****************/
 #header {
 border: 0px;
-height: 72px;
 padding-bottom: 0;
 padding-top: 10px;
 background: #15587a;
 }
-#header p { 
-margin-top: -20px;
-margin-left: 30px;
+#header p {
+	font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
+	font-style: bold;
+	font-size: 12px;
+	margin-top: -20px;
+	margin-left: 0px;
+	/** color: #999999; **/
+	color: #b6d7e8;
 }
+
 #header img {
-padding: 10px 15px 10px 15px;
+padding: 10px 15px 10px 25px;
 }
 #header form {
 color: #fff;
 padding-right: 0.5em;
 }
 
-div.support {
-position: absolute;
-top: 12px;
-right: 20px;
-/*background: #acd;*/
-margin-right: 20px;
-color: #fff;
-}
-div.support a {
-color: #9fd8ff;	
-}
-
-
-div.title {
-padding: 15px 10px 10px 25px;
-text-indent: -8000px;
-background: url(central_de_compras_01.gif) 25px 10px no-repeat;
-}
-div.title h1 {
-}
-div.title p {
-margin-top: 0;
-color: #a0c9dd;
-}
-div.title img {
-margin: 0 !important;
-padding: 0 !important;
-}
-div.title div.img {
-float: left;
-padding: 0;
-margin: 0;
-margin-right: 10px;
-}
-div.title div.txt {
-float: left;
-}
-
-
-div.search {
-position: absolute;
-top: 60px;
-right: 20px;
-margin-right: 20px;
-}
-
-/*********************************************/	
+/***********************************************/	
 /**************** menu styles ****************/
-
 #mainnav {
 position: relative;
-height: 3.2em;
+height: 3.7em;
 font-size: 93%;
 background: #15587a;
 text-transform: uppercase;
@@ -141,10 +172,12 @@ position: relative;
 float: left;
 margin: 0 0 0 2px;
 text-decoration: none;
+background: #b4d5e6;
 background: #6eb6da url(tab_corner2_01.gif) top right no-repeat !important;
 position: relative;
 }
 #mainnav a span {
+/*float: left;*/
 display: block;
 padding: 6px 15px 6px 15px;
 color: #FFF;
@@ -166,8 +199,6 @@ background: #a1cfe7 url(tab_corner2_02.gif) top right no-repeat !important;
 #mainnav ul li.selected div.lic1 {
 background: url(tab_corner1_02.gif) top right no-repeat !important;
 }
-
-
 
 div.left #mainnav div.c1 {
 background: url(corner1_02.gif) no-repeat;
@@ -218,7 +249,6 @@ color: #5d9aba;
 div.left #secnav span.bar {
 display: none;
 }
-
 
 
 #container ul li.header {
@@ -282,80 +312,8 @@ right: 0;
 #container #secnav div.c2[class] { bottom: 0; } /* all except <= ie6 */
 
 
-
-/***********************************************/
-/**************** images styles ****************/
-
-a img{
-border: none;
-}
-
-img.left,img.center,img.right {
-padding: 4px;
-border: 1px solid #a0a0a0;
-}
-
-img.left {
-float: left;
-margin: 0 12px 5px 0;
-}
-
-img.center {
-display: block;
-margin: 0 auto 5px auto;
-}
-
-img.right {
-float: right;
-margin: 0 0 5px 12px;
-}
-
-/***********************************************/
-/**************** form styles ****************/
-form {
-}
-form.login {
-font-size: 10px;
-}
-
-div.login {
-float: right;
-color: #fff;
-padding-right: 15px;
-}
-
-div.login a {
-color: #8bc4ff;
-color: #9fd8ff;
-}
-
-input {
-color: #555;
-font-size: 11px;
-padding: 2px;
-}
-
-.inputbutton {
-padding: 3px 4px;
-background: #6DA6E2;
-background: #e89267;
-color: #fff;
-border: 1px solid #2763A5;
-border: 1px solid #ab4f20;
-font-weight: bold;
-}
-.inputbuttonlogin {
-padding: 3px 4px;
-background: #e89267;
-color: #fff;
-border: 1px solid #ab4f20;
-font-weight: bold;
-}
-
-
 /***********************************************/	
 /**************** content styles ****************/
-
 #header { width: 875px; }
 #mainnav { width: 875px; }
 #container { width: 875px; }
@@ -1256,5 +1214,3 @@ color: #888 !important;
 }
 
 table table { border-collapse: collapse; } /* auto-complete input left margin fix */
-
-.forminline form { display: inline; }
