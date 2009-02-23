@@ -16,6 +16,7 @@ h1 {
 	font-weight: bold;
 	font-size: 22px;
 	color: #FFFFFF;
+	margin-left: -7px;
 	margin-bottom: 23px;
 }
 
@@ -133,7 +134,7 @@ background: #15587a;
 	font-style: bold;
 	font-size: 12px;
 	margin-top: -20px;
-	margin-left: 0px;
+	margin-left: -7px;
 	/** color: #999999; **/
 	color: #b6d7e8;
 }
