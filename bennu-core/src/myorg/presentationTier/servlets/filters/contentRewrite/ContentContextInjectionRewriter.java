@@ -35,7 +35,7 @@ public class ContentContextInjectionRewriter extends RequestRewriter {
 
     public static final String HAS_CONTEXT_PREFIX_STRING = "HAS_CONTEXT";
 
-    public static final String BLOCK_HAS_CONTEXT_STRING = "BLOCK_HAS_CONTEXT ";
+    public static final String BLOCK_HAS_CONTEXT_STRING = "BLOCK_HAS_CONTEXT";
 
     public static final String BLOCK_END_HAS_CONTEXT_STRING = "END_BLOCK_HAS_CONTEXT";
 
