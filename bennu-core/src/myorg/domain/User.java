@@ -30,6 +30,7 @@ import java.util.Comparator;
 import myorg.domain.groups.People;
 import myorg.domain.groups.Role;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixWebFramework.services.Service;
@@ -88,6 +89,17 @@ public class User extends User_Base {
     @Override
     public void setLastLogoutDateTime(final DateTime lastLogoutDateTime) {
 	super.setLastLogoutDateTime(lastLogoutDateTime);
+    }
+
+    @Service
+    public void generatePassword() {
+	final String password = RandomStringUtils.randomAlphanumeric(10);
+	setPassword(password);
+    }
+
+    @Service
+    public static User createNewUser(final String username) {
+	return new User(username);
     }
 
 }

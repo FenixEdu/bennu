@@ -61,4 +61,22 @@
 
 <schema name="theme.name" type="myorg.domain.Theme">
  <slot name="name"/>
-</schema> 
+</schema>
+
+<schema name="application.searchUsers"
+		type="myorg.domain.SearchUsers"
+		bundle="EXPENDITURE_ORGANIZATION_RESOURCES">
+	<slot name="user" layout="autoComplete" key="label.user" bundle="MYORG_RESOURCES">
+        <property name="labelField" value="username"/>
+		<property name="format" value="${username}"/>
+		<property name="minChars" value="3"/>		
+		<property name="args" value="provider=myorg.presentationTier.renderers.autoCompleteProvider.UserAutoComplete"/>
+		<property name="size" value="40"/>
+	</slot>
+</schema>
+
+<schema name="create.new.user"
+		type="myorg.domain.SearchUsers"
+		bundle="EXPENDITURE_ORGANIZATION_RESOURCES">
+	<slot name="username" key="label.user.username" bundle="MYORG_RESOURCES"/>
+</schema>
