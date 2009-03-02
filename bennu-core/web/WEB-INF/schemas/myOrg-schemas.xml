@@ -65,7 +65,7 @@
 
 <schema name="application.searchUsers"
 		type="myorg.domain.SearchUsers"
-		bundle="EXPENDITURE_ORGANIZATION_RESOURCES">
+		bundle="MYORG_RESOURCES">
 	<slot name="user" layout="autoComplete" key="label.user" bundle="MYORG_RESOURCES">
         <property name="labelField" value="username"/>
 		<property name="format" value="${username}"/>
@@ -77,6 +77,19 @@
 
 <schema name="create.new.user"
 		type="myorg.domain.SearchUsers"
-		bundle="EXPENDITURE_ORGANIZATION_RESOURCES">
+		bundle="MYORG_RESOURCES">
 	<slot name="username" key="label.user.username" bundle="MYORG_RESOURCES"/>
 </schema>
+
+<schema name="edit.user"
+		type="myorg.domain.User"
+		bundle="MYORG_RESOURCES">
+	<slot name="username" key="label.user.username" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="change.password"
+		type="myorg.domain.User"
+		bundle="MYORG_RESOURCES">
+	<slot name="password" key="label.user.password" bundle="MYORG_RESOURCES" layout="password"/>
+</schema>
+

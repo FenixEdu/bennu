@@ -133,4 +133,28 @@ public class ManageUsersAction extends ContextBaseAction {
 	return forward(request, "/myorg/searchUsers.jsp");
     }
 
+    public ActionForward editUser(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws ClassNotFoundException {
+	final User user = getDomainObject(request, "userId");
+	request.setAttribute("user", user);
+	return forward(request, "/myorg/editUser.jsp");
+    }
+
+    public ActionForward forwardToSearchUser(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws ClassNotFoundException {
+	final User user = getDomainObject(request, "userId");
+	final SearchUsers searchUsers = new SearchUsers();
+	searchUsers.setUser(user);
+	searchUsers.setUsername(user.getUsername());
+	request.setAttribute("searchUsers", searchUsers);
+	return forward(request, "/myorg/searchUsers.jsp");
+    }
+
+    public ActionForward changePassword(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws ClassNotFoundException {
+	final User user = getDomainObject(request, "userId");
+	request.setAttribute("user", user);
+	return forward(request, "/myorg/changePassword.jsp");
+    }
+
 }

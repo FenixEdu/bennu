@@ -34,8 +34,21 @@
 		:
 		<bean:write name="searchUsers" property="user.username"/>
 	</h3>
-	<logic:present role="myorg.domain.RoleType.MANAGER,myorg.domain.RoleType.USER_MANAGER">
-		<p>
+	<bean:define id="username" name="searchUsers" property="user.username"/>
+	<p>
+		<logic:present user="<%= username.toString() %>">
+			<html:link action="manageUsers.do?method=changePassword" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
+				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.change.password"/>
+			</html:link>
+		</logic:present>
+		<logic:present role="myorg.domain.RoleType.MANAGER,myorg.domain.RoleType.USER_MANAGER">
+			<logic:present user="<%= username.toString() %>">
+				|
+			</logic:present>
+			<html:link action="manageUsers.do?method=editUser" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
+				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.edit"/>
+			</html:link>
+			|
 			<html:link action="manageUsers.do?method=generatePassword" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
 				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.generate.password"/>
 			</html:link>
@@ -46,8 +59,8 @@
 					<bean:write name="password"/>
 				</font>
 			</logic:present>
-		</p>
-	</logic:present>
+		</logic:present>
+	</p>
 	<h4>
 		<bean:message bundle="MYORG_RESOURCES" key="label.user.lastLogoutDateTime"/>
 	</h4>
