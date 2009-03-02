@@ -345,10 +345,13 @@
 
     <renderer mode="input" type="java.util.Date" class="pt.ist.fenixWebFramework.renderers.DateInputRenderer"/>
     <renderer mode="input" type="org.joda.time.DateTime" class="pt.ist.fenixWebFramework.rendererExtensions.DateTimeInputRenderer"/>
-    <renderer mode="input" layout="picker" type="java.util.Date" class="pt.ist.fenixWebFramework.rendererExtensions.DateInputRendererWithPicker"/>
-    <renderer mode="input" layout="picker" type="org.joda.time.DateTime" class="pt.ist.fenixWebFramework.rendererExtensions.DateTimeInputRendererWithPicker"/>
-	<renderer mode="input" layout="picker" type="org.joda.time.LocalDate" class="pt.ist.fenixWebFramework.rendererExtensions.LocalDateInputRendererWithPicker"/>
-
+    <renderer mode="input" layout="picker" type="java.util.Date" class="pt.ist.fenixWebFramework.rendererExtensions.DateInputRendererWithPicker">
+    	<property name="image" value="images/calendar.gif"/>
+    </renderer>
+	<renderer mode="input" layout="picker" type="org.joda.time.LocalDate" class="pt.ist.fenixWebFramework.rendererExtensions.LocalDateInputRendererWithPicker">
+		<property name="image" value="images/calendar.gif"/>
+	</renderer>
+	
 	<!--@ The layout year-month allows you to insert a joda time partial given a month and a year -->
 	<renderer mode="input" type="org.joda.time.Partial" layout="year-month" class="pt.ist.fenixWebFramework.rendererExtensions.PartialInputRenderer">
 		<property name="year" value="true"/>

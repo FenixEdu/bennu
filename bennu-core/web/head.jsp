@@ -28,7 +28,3 @@
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/dragContents.css" media="screen"/>
  --%>
  
-<script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/custom.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/dragContents.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/controls.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath() %>/javaScript/prototype.js"></script>
