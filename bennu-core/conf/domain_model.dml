@@ -71,10 +71,9 @@ class groups.PersistentGroup {
 		class groups.NamedGroup extends groups.People {
 			String groupName;
 		}
-		
-		class groups.Role extends groups.NamedGroup {
-			
-		}
+
+			class groups.Role extends groups.NamedGroup {
+			}
 
 class scheduler.Task {
 	String ojbConcreteClass;

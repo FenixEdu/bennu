@@ -30,7 +30,7 @@ import myorg.util.BundleUtil;
 
 public enum RoleType implements IRoleEnum {
 
-    MANAGER;
+    MANAGER, USER_MANAGER;
 
     public String getPresentationName() {
 	return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.roleType.name."
@@ -40,4 +40,9 @@ public enum RoleType implements IRoleEnum {
     public String getRepresentation() {
 	return getClass().getName() + "." + name();
     }
+
+    public String getName() {
+	return name();
+    }
+
 }

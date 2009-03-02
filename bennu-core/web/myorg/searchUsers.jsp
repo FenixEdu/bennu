@@ -19,10 +19,12 @@
 	</fr:layout>
 </fr:edit>
 
-<br/>
-<html:link action="manageUsers.do?method=prepareCreateNewUser">
-	<bean:message bundle="MYORG_RESOURCES" key="label.application.users.create.new"/>
-</html:link>
+<logic:present role="myorg.domain.RoleType.MANAGER,myorg.domain.RoleType.USER_MANAGER">
+	<br/>
+	<html:link action="manageUsers.do?method=prepareCreateNewUser">
+		<bean:message bundle="MYORG_RESOURCES" key="label.application.users.create.new"/>
+	</html:link>
+</logic:present>
 
 <logic:present name="searchUsers" property="user">
 	<br/>
@@ -32,18 +34,20 @@
 		:
 		<bean:write name="searchUsers" property="user.username"/>
 	</h3>
-	<p>
-		<html:link action="manageUsers.do?method=generatePassword" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
-			<bean:message bundle="MYORG_RESOURCES" key="label.application.users.generate.password"/>
-		</html:link>
-		<logic:present name="password">
-			<br/>
-			<br/>
-			<font size="4" color="red">
-				<bean:write name="password"/>
-			</font>
-		</logic:present>
-	</p>
+	<logic:present role="myorg.domain.RoleType.MANAGER,myorg.domain.RoleType.USER_MANAGER">
+		<p>
+			<html:link action="manageUsers.do?method=generatePassword" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
+				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.generate.password"/>
+			</html:link>
+			<logic:present name="password">
+				<br/>
+				<br/>
+				<font size="4" color="red">
+					<bean:write name="password"/>
+				</font>
+			</logic:present>
+		</p>
+	</logic:present>
 	<h4>
 		<bean:message bundle="MYORG_RESOURCES" key="label.user.lastLogoutDateTime"/>
 	</h4>
@@ -54,8 +58,18 @@
 		<bean:message bundle="MYORG_RESOURCES" key="label.user.groups"/>
 	</h4>
 	<p>
+		<logic:present role="myorg.domain.RoleType.MANAGER,myorg.domain.RoleType.USER_MANAGER">
+			<html:link action="manageUsers.do?method=prepareAddGroup" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
+				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.group.add"/>
+			</html:link>
+			<br/>
+		</logic:present>
 		<logic:iterate id="peopleGroup" name="searchUsers" property="user.peopleGroups">
 			<bean:write name="peopleGroup" property="name"/>
+			<bean:define id="url">manageUsers.do?method=removeGroup&amp;peopleId=<bean:write name="peopleGroup" property="OID"/></bean:define>
+			<html:link action="<%= url %>" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
+				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.group.remove"/>
+			</html:link>			
 			<br/>
 		</logic:iterate>
 	</p>

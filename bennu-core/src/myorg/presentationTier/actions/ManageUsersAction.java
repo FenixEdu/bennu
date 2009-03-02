@@ -29,11 +29,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import myorg.applicationTier.Authenticate.UserView;
+import myorg.domain.RoleType;
 import myorg.domain.SearchUsers;
 import myorg.domain.User;
 import myorg.domain.VirtualHost;
 import myorg.domain.contents.ActionNode;
 import myorg.domain.contents.Node;
+import myorg.domain.groups.People;
 import myorg.domain.groups.UserGroup;
 
 import org.apache.struts.action.ActionForm;
@@ -95,6 +97,40 @@ public class ManageUsersAction extends ContextBaseAction {
 	final User user = User.createNewUser(searchUsers.getUsername());
 	searchUsers.setUser(user);
 	return searchUsers(mapping, form, request, response);
+    }
+
+    public ActionForward prepareAddGroup(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws ClassNotFoundException {
+	final User user = getDomainObject(request, "userId");
+	request.setAttribute("user", user);
+	request.setAttribute("roleTypes", RoleType.values());
+	return forward(request, "/myorg/addGroup.jsp");
+    }
+
+    public ActionForward addGroup(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws ClassNotFoundException {
+	final User user = getDomainObject(request, "userId");
+	final String roleTypeString = request.getParameter("roleType");
+	final RoleType roleType = RoleType.valueOf(roleTypeString);
+	user.addRoleType(roleType);
+	final SearchUsers searchUsers = new SearchUsers();
+	searchUsers.setUser(user);
+	searchUsers.setUsername(user.getUsername());
+	request.setAttribute("searchUsers", searchUsers);
+	return forward(request, "/myorg/searchUsers.jsp");
+    }
+
+    public ActionForward removeGroup(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws ClassNotFoundException {
+	final User user = getDomainObject(request, "userId");
+	final SearchUsers searchUsers = new SearchUsers();
+	searchUsers.setUser(user);
+	searchUsers.setUsername(user.getUsername());
+	request.setAttribute("searchUsers", searchUsers);
+
+	final People people = getDomainObject(request, "peopleId");
+	user.removePeopleGroups(people);
+	return forward(request, "/myorg/searchUsers.jsp");
     }
 
 }

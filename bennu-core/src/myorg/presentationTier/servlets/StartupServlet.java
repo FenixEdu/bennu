@@ -44,6 +44,7 @@ import myorg.domain.RoleType;
 import myorg.domain.Theme;
 import myorg.domain.Theme.ThemeType;
 import myorg.domain.groups.AnyoneGroup;
+import myorg.domain.groups.Role;
 import myorg.domain.groups.UserGroup;
 import myorg.domain.scheduler.Scheduler;
 import pt.ist.fenixWebFramework.FenixWebFramework;
@@ -143,6 +144,9 @@ public class StartupServlet extends HttpServlet {
     private void initializePersistentGroups() {
 	UserGroup.getInstance();
 	AnyoneGroup.getInstance();
+	for (final RoleType roleType : RoleType.values()) {
+	    Role.getRole(roleType);
+	}
     }
 
 }

@@ -102,4 +102,16 @@ public class User extends User_Base {
 	return new User(username);
     }
 
+    @Service
+    public void addRoleType(final RoleType roleType) {
+	final Role role = Role.getRole(roleType);
+	addPeopleGroups(role);
+    }
+
+    @Service
+    @Override
+    public void removePeopleGroups(final People peopleGroups) {
+        super.removePeopleGroups(peopleGroups);
+    }
+
 }
