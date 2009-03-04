@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import myorg.domain.MyOrg;
 import myorg.domain.RoleType;
 import myorg.domain.User;
 import myorg.domain.VirtualHost;
@@ -110,7 +111,7 @@ public class Authenticate implements Serializable {
 	    final User user = User.findByUsername(username);
 	    if (user == null) {
 		final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-		if (virtualHost.isCasEnabled()) {
+		if (virtualHost.isCasEnabled() || MyOrg.getInstance().getUserCount() == 0) {
 		    return new User(username);
 		}
 		throw new Error("authentication.exception");
