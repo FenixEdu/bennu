@@ -36,6 +36,7 @@ import java.util.Map.Entry;
 
 import myorg.domain.RoleType;
 import myorg.domain.User;
+import myorg.domain.VirtualHost;
 import myorg.domain.groups.Role;
 
 import org.joda.time.DateTime;
@@ -107,7 +108,14 @@ public class Authenticate implements Serializable {
 
 	private User findByUsername(final String username) {
 	    final User user = User.findByUsername(username);
-	    return user == null ? new User(username) : user;
+	    if (user == null) {
+		final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+		if (virtualHost.isCasEnabled()) {
+		    return new User(username);
+		}
+		throw new Error("authentication.exception");
+	    }
+	    return user;
 	}
 
 	public String getUsername() {
