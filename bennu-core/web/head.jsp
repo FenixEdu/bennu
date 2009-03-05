@@ -21,10 +21,7 @@
 
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/screen.css" media="screen"/>
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/print.css" media="print"/>
-<%-- 
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/layout.css" media="screen"/>
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/print.css" media="print"/>
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/contents.css" media="screen, print"/>
-<link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/dragContents.css" media="screen"/>
- --%>
+
+<script src="<%= contextPath%>/javaScript/jquery.js" type="text/javascript"></script>
+<script src="<%= contextPath%>/javaScript/jquery-ui.js" type="text/javascript"></script>
  

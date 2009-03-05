@@ -50,6 +50,7 @@ jQuery.fn.autocomplete = function(url, settings )
 			after : null,
 			before : null,
 			select : null,
+			cleanSelection: null,
 			validSelection : true,
 			parameters : {'inputName' : valueInput.attr('name'), 'inputId' : textInput.attr('id')}
 		} , settings);
@@ -127,6 +128,10 @@ jQuery.fn.autocomplete = function(url, settings )
 			
 			else if (e.which == 46 || e.which == 8)//delete and backspace
 			{
+				valueInput.val('');
+				if(settings.cleanSelection != null) {
+					settings.cleanSelection(textInput,textInput.val());
+				}
 				if (textInput.val().length > 3) {
 					typingTimeout = window.setTimeout(function() { getData(textInput.val()) },settings.timeout);
 				}
@@ -136,9 +141,9 @@ jQuery.fn.autocomplete = function(url, settings )
 			}
 			else if(e.which == 13)//enter 
 			{ 
-				if ( list.css("display") == "none")//if the list is not visible then make a new request, otherwise hide the list
+				if ( list.css("display") == "none")
 				{ 
-					getData(textInput.val());
+					valueInput.parents("form").submit();
 				} else
 				{
 					
@@ -150,6 +155,7 @@ jQuery.fn.autocomplete = function(url, settings )
 					}
 					
 					clear();
+					
 				}
 				e.preventDefault();
 				return false;

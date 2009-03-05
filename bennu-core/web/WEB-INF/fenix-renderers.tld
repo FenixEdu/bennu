@@ -783,6 +783,67 @@
         Selects the target of the form.
       </description>
     </attribute>
+    
+      <attribute>
+      <name>confirmationNeeded</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.Boolean</type>
+      <description>
+        Indicates if the form needs confirmation
+      </description>
+    </attribute>
+    
+     <attribute>
+      <name>bundle</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+        Bundle used for confirmation labels.
+      </description>
+    </attribute>
+    
+      <attribute>
+      <name>titleKey</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+       Title Key for confirmation dialog
+      </description>
+    </attribute>
+    
+      <attribute>
+      <name>messageKey</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+       Message Key for confirmation dialog
+      </description>
+    </attribute>
+    
+    <attribute>
+      <name>okKey</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+       Ok Key Button for confirmation dialog
+      </description>
+    </attribute>
+    
+    <attribute>
+      <name>cancelKey</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+       Cancel Key Button for confirmation dialog
+      </description>
+    </attribute>
+    
   </tag>
   
   <tag>
@@ -850,7 +911,7 @@
         The custom value that will be used as the slot's value.
       </description>
     </attribute>
-
+  
   </tag>
 
   <tag>
