@@ -58,6 +58,7 @@ jQuery.fn.autocomplete = function(url, settings )
 		function getData(text)
 		{
 			window.clearInterval(typingTimeout);
+			
 			if (text != oldText && (settings.minChars != null && text.length >= settings.minChars))
 			{
 				clear();
@@ -116,7 +117,13 @@ jQuery.fn.autocomplete = function(url, settings )
 			list.hide();
 			size = 0;
 			selected = 0;
+			oldText = '';
 		}	
+		
+		textInput.blur( function(e) {
+			clear();
+		
+		});
 		
 		textInput.keydown(function(e) 
 		{
