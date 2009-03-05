@@ -34,6 +34,8 @@
 
 <br/>
 
+<script type="text/javascript" src="<%= request.getContextPath() + "/javaScript/dragContents.js" %>"></script>
+
 <div id="navlist">
 	<logic:empty name="nodesToManage">
 		<br/>
