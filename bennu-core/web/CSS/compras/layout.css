@@ -1220,44 +1220,50 @@ color: #888 !important;
 table table { border-collapse: collapse; } /* auto-complete input left margin fix */
 
 
-/** new auto complete ***/
-label
-{
-        display:block;
-}
 
+
+
+
+
+/** new auto complete ***/
+label {
+display:block;
+}
 
 /* autocomplete */
-input.autocomplete-loading
-{
-        background-image:url(autocomplete.gif);
-        background-position: center right;
-        background-repeat:no-repeat;
+input.autocomplete-loading {
+background-image: url(autocomplete.gif);
+background-position: center right;
+background-repeat: no-repeat;
 }
-div ul.autocomplete
-{
-    position: absolute;
-    overflow: hidden;
-    background-color: #fff;
-    border: 1px solid ButtonShadow;
-    margin: 0px;
-    padding: 0px;
-    list-style: none;
-    color: #000;
-        display:none;
-        z-index:1000;
+div ul.autocomplete {
+/*overflow: hidden;*/
+width:375px !important;
+position: absolute;
+background-color: #fff;
+border: 1px solid #aaa;
+margin: 0px;
+padding: 0px;
+list-style: none;
+color: #000;
+display: none;
+z-index: 1000;
+/* text-transform: lowercase; */
 }
-div ul.autocomplete li
-{
-  display: block;
-  padding: 0.3em;
-  overflow: hidden;
-  width: 100%;
-  cursor:pointer;
+div ul.autocomplete li {
+/*overflow: hidden;*/
+display: block;
+padding: 1px 4px;
+/*width: 100%;*/
+cursor: pointer;
+}
+div ul.autocomplete li.selected {
+background: #fef7e2;
+}
+div ul.autocomplete li strong {
+/*
+font-weight: normal;
+background: #fef7e2;
+*/
 }
 
-div ul.autocomplete li.selected
-{
-  background-color: Highlight ;
-
-}

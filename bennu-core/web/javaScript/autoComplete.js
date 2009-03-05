@@ -35,9 +35,9 @@ jQuery.fn.autocomplete = function(url, settings )
 		textInput.after('<input type=hidden name="' + textInput.attr("name") + '"/>').attr("name", textInput.attr("name") + "_text");
 		var valueInput = $(this).next();
 		//create the ul that will hold the text and values
-		valueInput.after('<div><ul class="autocomplete"></ul></div>');
+		valueInput.after('<div><ul class="autocomplete"><li></li></ul></div>');
 		var list = valueInput.next().children();
-		list.css({ width: textInput.width()});
+		//list.css({ width: textInput.width()});
 		var oldText = '';
 		var typingTimeout;
 		var size = 0;
