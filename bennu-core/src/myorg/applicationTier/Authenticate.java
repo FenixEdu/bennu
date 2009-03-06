@@ -74,11 +74,9 @@ public class Authenticate implements Serializable {
 	private final DomainReference<User> userReference;
 	private DomainReference<User> mockReference;
 
-	private transient String privateConstantForDigestCalculation;
+	private String privateConstantForDigestCalculation;
 
 	private final DateTime userViewCreationDateTime = new DateTime();
-
-	private final String randomValue;
 
 	private UserView(final String username) {
 	    final User user = findByUsername(username);
@@ -91,10 +89,12 @@ public class Authenticate implements Serializable {
 		random = SecureRandom.getInstance("SHA1PRNG");
 	    } catch (NoSuchAlgorithmException e) {
 		e.printStackTrace();
+		throw new Error("No secure algorithm available.");
 	    }
 
 	    random.setSeed(System.currentTimeMillis());
-	    randomValue = String.valueOf(random.nextLong());
+
+	    privateConstantForDigestCalculation = user.getUsername() + user.getPassword() + random.nextLong();
 	}
 
 	public void mockUser(final String username) {
@@ -142,12 +142,7 @@ public class Authenticate implements Serializable {
 	    return mockReference == null ? userReference.getObject() : mockReference.getObject();
 	}
 
-	// TODO do an accurate and secure method here
 	public String getPrivateConstantForDigestCalculation() {
-	    if (privateConstantForDigestCalculation == null) {
-		final User user = getUser();
-		privateConstantForDigestCalculation = user.getUsername() + user.getPassword() + randomValue;
-	    }
 	    return privateConstantForDigestCalculation;
 	}
 
