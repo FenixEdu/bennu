@@ -55,7 +55,7 @@ public class Authenticate implements Serializable {
 	Set<String> usernames = roleUsernamesMap.get(roleType);
 	if (usernames == null) {
 	    usernames = new HashSet<String>();
-	    roleUsernamesMap.put(roleType, usernames);		    
+	    roleUsernamesMap.put(roleType, usernames);
 	}
 	return usernames;
     }
@@ -74,7 +74,7 @@ public class Authenticate implements Serializable {
 	private final DomainReference<User> userReference;
 	private DomainReference<User> mockReference;
 
-	private String privateConstantForDigestCalculation;
+	private final String privateConstantForDigestCalculation;
 
 	private final DateTime userViewCreationDateTime = new DateTime();
 
@@ -95,13 +95,14 @@ public class Authenticate implements Serializable {
 	    random.setSeed(System.currentTimeMillis());
 
 	    privateConstantForDigestCalculation = user.getUsername() + user.getPassword() + random.nextLong();
+	    System.out.println("Using : " + privateConstantForDigestCalculation + " for " + user.getUsername());
 	}
 
 	public void mockUser(final String username) {
 	    final User user = User.findByUsername(username);
 	    mockReference = new DomainReference<User>(user);
 	}
-	
+
 	public void unmockUser() {
 	    mockReference = null;
 	}
@@ -114,7 +115,7 @@ public class Authenticate implements Serializable {
 		    return new User(username);
 		}
 		return new User(username);
-//		throw new Error("authentication.exception");
+		// throw new Error("authentication.exception");
 	    }
 	    return user;
 	}
