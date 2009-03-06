@@ -92,13 +92,14 @@
 		<java classname="dml.ConverterClassAwareDmlCompiler" fork="true">
 			<jvmarg value="-Ddml.fenix.sqltypes=${dml.fenix.sqltypes}"/>
 			<jvmarg value="-Ddml.fenix.typeconverters=${dml.fenix.typeconverters}"/>
-			<arg value="-f"/>
 			<arg value="-d"/>
 			<arg value="${src}"/>
 			<arg value="-db"/>
 			<arg value="${src_gen}"/>
-			<arg value="-generator"/>
-			<arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParam"/>
+	        <arg value="-domainModelClass" />
+	        <arg value="pt.ist.fenixframework.pstm.dml.FenixDomainModel" />
+	        <arg value="-generator" />
+	        <arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParam" />
 			<arg value="${build.home.webinf.classes}"/>
 			<arg value="myorg.persistenceTier.SQL2JavaConverters"/>
 			<arg value="myorg.persistenceTier."/>

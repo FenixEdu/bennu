@@ -107,4 +107,37 @@ public class Address implements Serializable {
 			.equals(address.getLine2()))) && getPostalCode().equals(address.getPostalCode())
 		&& getLocation().equals(address.getLocation()) && getCountry().equals(address.getCountry());
     }
+
+    static final String CHARACTER = ":";
+    static final String SEPARATOR = CHARACTER + CHARACTER;
+
+    public String exportAsString() {
+	final StringBuilder builder = new StringBuilder();
+	builder.append(escapeFieldSeparator(getLine1()));
+	builder.append(SEPARATOR);
+	builder.append(escapeFieldSeparator(getLine2()));
+	builder.append(SEPARATOR);
+	builder.append(escapeFieldSeparator(getPostalCode()));
+	builder.append(SEPARATOR);
+	builder.append(escapeFieldSeparator(getLocation()));
+	builder.append(SEPARATOR);
+	builder.append(escapeFieldSeparator(getCountry()));
+	return builder.toString();
+    }
+
+    private String escapeFieldSeparator(String field) {
+	return field != null ? field.replaceAll(CHARACTER, "\\\\" + CHARACTER + "\\\\") : "";
+    }
+
+    public static Address importFromString(String string) {
+	String[] split = string.split(SEPARATOR);
+	return new Address(removeEscapeFieldSeparator(split[0]), removeEscapeFieldSeparator(split[1]),
+		removeEscapeFieldSeparator(split[2]), removeEscapeFieldSeparator(split[3]),
+		removeEscapeFieldSeparator(split[4]));
+    }
+
+    private static String removeEscapeFieldSeparator(String field) {
+	return field != null ? field.replaceAll("\\\\" + CHARACTER + "\\\\", CHARACTER) : null;
+    }
+
 }

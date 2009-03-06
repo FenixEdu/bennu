@@ -224,4 +224,13 @@ public class Money implements Serializable, Comparable<Money> {
     public Money round() {
 	return new Money(getRoundedValue());
     }
+
+    public String exportAsString() {
+	return serialize();
+    }
+
+    public static Money importFromString(String string) {
+	return deserialize(string);
+    }
+
 }
