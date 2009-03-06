@@ -114,7 +114,8 @@ public class Authenticate implements Serializable {
 		if (virtualHost.isCasEnabled() || MyOrg.getInstance().getUserCount() == 0) {
 		    return new User(username);
 		}
-		throw new Error("authentication.exception");
+		return new User(username);
+//		throw new Error("authentication.exception");
 	    }
 	    return user;
 	}
