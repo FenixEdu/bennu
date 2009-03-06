@@ -48,20 +48,6 @@ import pt.ist.fenixWebFramework.util.DomainReference;
 public class Authenticate implements Serializable {
 
     private static final long serialVersionUID = -8446811315540707574L;
-    private static final String randomValue;
-
-    static {
-	SecureRandom random = null;
-
-	try {
-	    random = SecureRandom.getInstance("SHA1PRNG");
-	} catch (NoSuchAlgorithmException e) {
-	    e.printStackTrace();
-	}
-
-	random.setSeed(System.currentTimeMillis());
-	randomValue = String.valueOf(random.nextLong());
-    }
 
     private static final Map<RoleType, Set<String>> roleUsernamesMap = new HashMap<RoleType, Set<String>>();
 
@@ -92,10 +78,23 @@ public class Authenticate implements Serializable {
 
 	private final DateTime userViewCreationDateTime = new DateTime();
 
+	private final String randomValue;
+
 	private UserView(final String username) {
 	    final User user = findByUsername(username);
 	    userReference = new DomainReference<User>(user);
 	    mockReference = null;
+
+	    SecureRandom random = null;
+
+	    try {
+		random = SecureRandom.getInstance("SHA1PRNG");
+	    } catch (NoSuchAlgorithmException e) {
+		e.printStackTrace();
+	    }
+
+	    random.setSeed(System.currentTimeMillis());
+	    randomValue = String.valueOf(random.nextLong());
 	}
 
 	public void mockUser(final String username) {
