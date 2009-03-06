@@ -111,7 +111,7 @@ public class Authenticate implements Serializable {
 	    final User user = User.findByUsername(username);
 	    if (user == null) {
 		final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-		if (virtualHost.isCasEnabled() || MyOrg.getInstance().getUserCount() == 0) {
+		if ((virtualHost != null && virtualHost.isCasEnabled()) || MyOrg.getInstance().getUserCount() == 0) {
 		    return new User(username);
 		}
 		return new User(username);
