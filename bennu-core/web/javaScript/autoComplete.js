@@ -83,7 +83,7 @@ jQuery.fn.autocomplete = function(url, settings )
 						  list.show().children().
 						  hover(function() { $(this).addClass("selected").siblings().removeClass("selected");}, function() { $(this).removeClass("selected") } ).
 						  click(function () { 
-						    valueInput.val( $(this).attr('name') );
+						     valueInput.val( $(this).attr('name') );
 							textInput.val( $(this).text() ); 
 							if (settings.select != null) {
 								settings.select(textInput,text,$(this));
@@ -119,11 +119,6 @@ jQuery.fn.autocomplete = function(url, settings )
 			selected = 0;
 			oldText = '';
 		}	
-		
-		textInput.blur( function(e) {
-			clear();
-		
-		});
 		
 		textInput.keydown(function(e) 
 		{
