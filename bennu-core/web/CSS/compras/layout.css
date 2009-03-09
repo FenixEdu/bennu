@@ -1258,7 +1258,7 @@ padding: 1px 4px;
 cursor: pointer;
 }
 div ul.autocomplete li.selected {
-background: #fef7e2;
+background: #fceed0;
 }
 div ul.autocomplete li strong {
 /*
