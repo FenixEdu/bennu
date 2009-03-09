@@ -60,17 +60,15 @@ public class AuthenticationAction extends ContextBaseAction {
 
     public static void logout(final HttpServletRequest request) {
 	final UserView userView = pt.ist.fenixWebFramework.security.UserView.getUser();
-	User user = null;
 	if (userView != null) {
-	    user = (User) userView.getUser();
 	    userView.getUser().setLastLogoutDateTime(new DateTime());
 	}
-	pt.ist.fenixWebFramework.security.UserView.setUser(null);
 	final HttpSession httpSession = request.getSession();
-	System.out.println("[LOGOUT]" + "User:" + (user == null ? "NULL" : user.getUsername()) + "Current time: "
-		+ System.currentTimeMillis() + " session creation time: " + httpSession.getCreationTime() + "Session id:"
-		+ httpSession.getId());
+	System.out.println("[LOGOUT]" + "User:" + (userView.getUser() == null ? "NULL" : userView.getUsername())
+		+ "Current time: " + System.currentTimeMillis() + " session creation time: " + httpSession.getCreationTime()
+		+ "Session id:" + httpSession.getId());
 
+	pt.ist.fenixWebFramework.security.UserView.setUser(null);
 	httpSession.removeAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE);
 	httpSession.invalidate();
 
