@@ -95,7 +95,7 @@ public class Authenticate implements Serializable {
 	    random.setSeed(System.currentTimeMillis());
 
 	    privateConstantForDigestCalculation = user.getUsername() + user.getPassword() + random.nextLong();
-	    System.out.println("Using : " + privateConstantForDigestCalculation + " for " + user.getUsername());
+	    System.out.println("[Key] User: " + user.getUsername() + " Key: " + privateConstantForDigestCalculation);
 	}
 
 	public void mockUser(final String username) {

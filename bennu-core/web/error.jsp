@@ -9,8 +9,6 @@
 </head>
 
 <body>
-ERRO
-<%-- 
 <div class="errorcontainer">
 	<div class="errorlogo">
 		<img src="images/logo03.gif"/>
@@ -35,6 +33,5 @@ ERRO
 		</p>
 	</div>
 </div>
---%>
 </body>
 </html:html>
