@@ -72,7 +72,7 @@ public class Authenticate implements Serializable {
 	private static final long serialVersionUID = -3306363183634102130L;
 
 	private final DomainReference<User> userReference;
-	private transient ThreadLocal<User> mockUser = new ThreadLocal<User>();
+	private static transient ThreadLocal<User> mockUser = new ThreadLocal<User>();
 
 	private final String privateConstantForDigestCalculation;
 
