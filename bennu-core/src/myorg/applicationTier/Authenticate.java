@@ -72,7 +72,7 @@ public class Authenticate implements Serializable {
 	private static final long serialVersionUID = -3306363183634102130L;
 
 	private final DomainReference<User> userReference;
-	private DomainReference<User> mockReference;
+	private transient ThreadLocal<User> mockUser = new ThreadLocal<User>();
 
 	private final String privateConstantForDigestCalculation;
 
@@ -81,7 +81,6 @@ public class Authenticate implements Serializable {
 	private UserView(final String username) {
 	    final User user = findByUsername(username);
 	    userReference = new DomainReference<User>(user);
-	    mockReference = null;
 
 	    SecureRandom random = null;
 
@@ -100,11 +99,11 @@ public class Authenticate implements Serializable {
 
 	public void mockUser(final String username) {
 	    final User user = User.findByUsername(username);
-	    mockReference = new DomainReference<User>(user);
+	    mockUser.set(user);
 	}
 
 	public void unmockUser() {
-	    mockReference = null;
+	    mockUser.set(null);
 	}
 
 	private User findByUsername(final String username) {
@@ -121,11 +120,11 @@ public class Authenticate implements Serializable {
 	}
 
 	public String getUsername() {
-	    return mockReference == null ? getUser().getUsername() : mockReference.getObject().getUsername();
+	    return mockUser.get() == null ? getUser().getUsername() : mockUser.get().getUsername();
 	}
 
 	public boolean hasRole(final String roleAsString) {
-	    final User user = mockReference == null ? getUser() : mockReference.getObject();
+	    final User user = mockUser.get() == null ? getUser() : mockUser.get();
 	    return user != null && user.hasRoleType(roleAsString);
 	}
 
@@ -140,7 +139,7 @@ public class Authenticate implements Serializable {
 	}
 
 	public User getUser() {
-	    return mockReference == null ? userReference.getObject() : mockReference.getObject();
+	    return mockUser.get() == null ? userReference.getObject() : mockUser.get();
 	}
 
 	public String getPrivateConstantForDigestCalculation() {
