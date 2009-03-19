@@ -122,7 +122,7 @@ jQuery.fn.autocomplete = function(url, settings )
 		
 
 		textInput.blur( function(e) {
-			 window.setTimeout(function() { list.hide(); },'150');
+			 window.setTimeout(function() { list.hide(); },'300');
 		});
 		
 		textInput.keydown(function(e) 
