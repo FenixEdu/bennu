@@ -33,7 +33,7 @@ public class RequestChecksumFilter extends pt.ist.fenixWebFramework.servlets.fil
     protected boolean shoudFilterReques(HttpServletRequest httpServletRequest) {
 	return !httpServletRequest.getRequestURI().endsWith("/home.do")
 		&& !httpServletRequest.getRequestURI().endsWith("/isAlive.do")
-		&& (httpServletRequest.getRequestURI().endsWith("/authenticationAction.do")
+		&& !(httpServletRequest.getRequestURI().endsWith("/authenticationAction.do")
 			&& httpServletRequest.getQueryString() != null && httpServletRequest.getQueryString().contains(
 			"method=logoutEmptyPage"));
     }
