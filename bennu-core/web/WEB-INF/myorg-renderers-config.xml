@@ -66,17 +66,22 @@
 	</renderer>
 	    
 	<renderer type="java.lang.Object" layout="output-with-hover" class="pt.ist.fenixWebFramework.renderers.GenericOutputWithHoverMessage">
-	    <property name="noJavascriptClasses" value="nojavascript"/>
-    	<property name="closedClasses" value="chelp closed"/>
-    	<property name="openClasses" value="chelp copen"/>
-    	<property name="textClasses" value="chelptext"/>
+    	<property name="closedClasses" value="cinfo closed"/>
+    	<property name="openClasses" value="cinfo copen"/>
+    	<property name="textClasses" value="cinfotext"/>
 	</renderer>
-    
+
+	<renderer type="java.lang.Object" layout="output-with-list-hover" class="pt.ist.fenixWebFramework.renderers.GenericOutputWithHoverList">
+    	<property name="closedClasses" value="cinfo closed"/>
+    	<property name="openClasses" value="cinfo copen"/>
+    	<property name="textClasses" value="cinfotext"/>
+	</renderer>
+	    
     <renderer type="java.lang.String" class="pt.ist.fenixWebFramework.renderers.StringRenderer">
     	<property name="noJavascriptClasses" value="nojavascript"/>
-    	<property name="closedClasses" value="chelp closed"/>
-    	<property name="openClasses" value="chelp copen"/>
-    	<property name="textClasses" value="chelptext"/>
+    	<property name="closedClasses" value="cinfo closed"/>
+    	<property name="openClasses" value="cinfo copen"/>
+    	<property name="textClasses" value="cinfotext"/>
     </renderer>
           
     <renderer type="java.lang.String" layout="short" class="pt.ist.fenixWebFramework.renderers.StringRenderer">

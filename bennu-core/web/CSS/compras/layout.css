@@ -605,7 +605,7 @@ table.structural td { padding: 0 0.2em 0 0; margin: 0; }
 .dinline { display: inline; }
 span.valid { color: #0a0; font-weight: bold; }
 span.invalid { color: #a00; font-weight: bold; }
-
+.bold { font-weight: bold; }
 
 .inputsize40 input { width: 257px; }
 .inputsize200px input { width: 200px; }
@@ -1134,8 +1134,55 @@ background: #fef7e2;
 
 
 
+/***********************************************/
+/****************** info **********************/
 
+div.cinfo {
+display: inline;
+}
+div.cinfo img {
+padding-top: 5px;
+}
+div.closed div.cinfotext {
+display: none;
+}
+div.copen div.cinfotext {
+display: inline;
+}
+div.cinfo {
+position: relative;
+}
+div.cinfo div.cinfotext {
+position: absolute;
+z-index: 10;
+top: 0;
+left: 25px;
+width: 325px;
+background: #edf4f8;
+padding: 5px 10px;
+border: 1px solid #c5dae7;
+text-align: left;
+}
+div.cinfo div.cinfotext a {
+font-weight: normal;
+}
+div.cinfo div.cinfotext ul {
+margin: 0;
+padding: 0;
+list-style: none;
+text-align: left;
+}
+div.cinfo div.cinfotext ul li {
+margin: 0;
+padding: 0;
+}
 
+div.cinfo span {
+border-bottom: 1px dotted #aaa !important;
+}
+div.cinfo .cinfotext span {
+border-bottom: none !important;
+}
 
 /***********************************************/	
 /**************** help  *********************/
@@ -1266,4 +1313,3 @@ font-weight: normal;
 background: #fef7e2;
 */
 }
-
