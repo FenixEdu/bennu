@@ -10,25 +10,8 @@
 
 	<div id="pageops">
 		<logic:present name="context" property="selectedNode">
-			<html:link page="/content.do?method=prepareCreateNewPage">
-				<bean:message bundle="MYORG_RESOURCES" key="label.content.page.new"/>
-			</html:link>
 			<bean:define id="selectedNode" name="context" property="selectedNode"/>
 			<bean:define id="contextPath" name="context" property="path"/>
-			|
-			<html:link page="/content.do?method=prepareEditPage" paramId="_CONTEXT_PATH_" paramName="contextPath">
-				<bean:message bundle="MYORG_RESOURCES" key="label.content.page.edit"/>
-			</html:link>
-			|
-			<html:link page="/content.do?method=reorderPages" paramId="_CONTEXT_PATH_" paramName="contextPath">
-				<bean:message bundle="MYORG_RESOURCES" key="label.content.page.order.change"/>
-			</html:link>
-			|
-			<bean:define id="confirmDelete">return confirmDelete('<bean:message bundle="MYORG_RESOURCES" key="label.content.page.delete.confirm"/>');</bean:define>
-			<html:link page="/content.do?method=deletePage" paramId="_CONTEXT_PATH_" paramName="contextPath" onclick="<%= confirmDelete %>">
-				<bean:message bundle="MYORG_RESOURCES" key="label.content.page.delete"/>
-			</html:link>
-			|
 			<html:link page="/content.do?method=prepareAddSection" paramId="_CONTEXT_PATH_" paramName="contextPath">
 				<bean:message bundle="MYORG_RESOURCES" key="label.content.section.add"/>
 			</html:link>
