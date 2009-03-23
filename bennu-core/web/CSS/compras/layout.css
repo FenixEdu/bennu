@@ -411,7 +411,8 @@ margin: 0 0 15px 0;
 padding: 10px 0;
 clear: both;
 background: #15587a;
-/*position: relative;*/
+position: relative;
+z-index: 1;
 }
 
 #footer p {
@@ -1130,14 +1131,12 @@ background: #fef7e2;
 }
 
 
-
-
-
-
 /***********************************************/
 /****************** info **********************/
+
 div.cinfo {
 display: inline;
+z-index: 2;
 }
 div.cinfo img {
 padding-top: 5px;
@@ -1157,6 +1156,7 @@ width: 325px;
 background: #edf4f8;
 padding: 5px 10px;
 border: 1px solid #c5dae7;
+text-align: left;
 }
 div.cinfo div.cinfotext a {
 font-weight: normal;
@@ -1171,9 +1171,8 @@ div.cinfo div.cinfotext ul li {
 margin: 0;
 padding: 0;
 }
-
-.cinfo_above div.cinfo {
-}
+div.cinfo span { border-bottom: 1px dotted #888; }
+div.cinfo div.cinfotext span { border-bottom: none; }
 
 .prel {
 position: relative !important;
