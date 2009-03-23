@@ -411,7 +411,7 @@ margin: 0 0 15px 0;
 padding: 10px 0;
 clear: both;
 background: #15587a;
-position: relative;
+/*position: relative;*/
 }
 
 #footer p {
@@ -1136,7 +1136,6 @@ background: #fef7e2;
 
 /***********************************************/
 /****************** info **********************/
-
 div.cinfo {
 display: inline;
 }
@@ -1149,9 +1148,6 @@ display: none;
 div.copen div.cinfotext {
 display: inline;
 }
-div.cinfo {
-position: relative;
-}
 div.cinfo div.cinfotext {
 position: absolute;
 z-index: 10;
@@ -1161,7 +1157,6 @@ width: 325px;
 background: #edf4f8;
 padding: 5px 10px;
 border: 1px solid #c5dae7;
-text-align: left;
 }
 div.cinfo div.cinfotext a {
 font-weight: normal;
@@ -1177,12 +1172,13 @@ margin: 0;
 padding: 0;
 }
 
-div.cinfo span {
-border-bottom: 1px dotted #aaa !important;
+.cinfo_above div.cinfo {
 }
-div.cinfo .cinfotext span {
-border-bottom: none !important;
+
+.prel {
+position: relative !important;
 }
+
 
 /***********************************************/	
 /**************** help  *********************/
