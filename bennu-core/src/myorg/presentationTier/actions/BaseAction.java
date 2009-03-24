@@ -69,14 +69,15 @@ public abstract class BaseAction extends DispatchAction {
     protected <T extends DomainObject> T getDomainObject(final String value) {
 	return (T) getDomainObject(value != null ? Long.valueOf(value) : null);
     }
-    
+
     protected <T extends DomainObject> T getDomainObject(final Long oid) {
 	return oid == null ? null : (T) Transaction.getObjectForOID(oid.longValue());
     }
 
     protected <T extends DomainObject> T getDomainObject(final HttpServletRequest request, final String attributeName) {
 	final String parameter = request.getParameter(attributeName);
-	final Long oid = parameter != null ? Long.valueOf(parameter) : (Long) request.getAttribute(attributeName);
+	final Long oid = (parameter != null && parameter.length() > 0) ? Long.valueOf(parameter) : (Long) request
+		.getAttribute(attributeName);
 	return oid == null ? null : (T) Transaction.getObjectForOID(oid.longValue());
     }
 
@@ -159,7 +160,8 @@ public abstract class BaseAction extends DispatchAction {
 	}
     }
 
-    protected ActionForward forwardToMuneConfiguration(final HttpServletRequest request, final VirtualHost virtualHost, final Node node) {
+    protected ActionForward forwardToMuneConfiguration(final HttpServletRequest request, final VirtualHost virtualHost,
+	    final Node node) {
 	request.setAttribute("virtualHostToManageId", virtualHost.getOID());
 	if (node != null) {
 	    request.setAttribute("parentOfNodesToManageId", node.getOID());
