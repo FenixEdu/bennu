@@ -1308,3 +1308,34 @@ font-weight: normal;
 background: #fef7e2;
 */
 }
+
+
+.acquisitionNumber {
+font-weight: normal;
+font-size: 11px;
+font-family: Verdana;
+}
+
+
+table.structural {
+border-collapse: collapse;
+margin: 0;
+padding: 0;
+margin: 1em 0;
+}
+table.structural td {
+margin: 0;
+padding: 0;
+vertical-align: top;
+}
+
+ul.operations {
+padding-left: 1.3em;
+}
+
+span.link {
+color: #d17647;
+text-decoration: underline;
+font-weight: bold;
+cursor: pointer;
+}
