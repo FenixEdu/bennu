@@ -1171,7 +1171,7 @@ div.cinfo div.cinfotext ul li {
 margin: 0;
 padding: 0;
 }
-div.cinfo span { border-bottom: 1px dotted #888; }
+div.cinfo span { border-bottom: 1px dotted #888; cursor: default; }
 div.cinfo div.cinfotext span { border-bottom: none; }
 
 .prel {
