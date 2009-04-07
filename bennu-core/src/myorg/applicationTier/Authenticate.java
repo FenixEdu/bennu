@@ -97,8 +97,7 @@ public class Authenticate implements Serializable {
 	    System.out.println("[Key] User: " + user.getUsername() + " Key: " + privateConstantForDigestCalculation);
 	}
 
-	public void mockUser(final String username) {
-	    final User user = User.findByUsername(username);
+	public void mockUser(final User user) {
 	    mockUser.set(user);
 	}
 
