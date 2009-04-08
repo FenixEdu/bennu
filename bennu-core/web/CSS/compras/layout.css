@@ -1339,3 +1339,65 @@ text-decoration: underline;
 font-weight: bold;
 cursor: pointer;
 }
+
+
+div.portlet {
+border: 1px solid #ccc;
+margin-right: 10px;
+background: #fff;
+margin-bottom: 10px;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+}
+div.portlet-header {
+background: #eaeaea;
+padding: 6px 10px;
+margin: 0 0 0 0;
+font-weight: bold;
+color: #333;
+-moz-border-radius-topleft: 6px;
+-webkit-border-top-left-radius: 6px;
+-moz-border-radius-topright: 6px;
+-webkit-border-top-right-radius: 6px;
+}
+div.portlet-content {
+margin-top: 0;
+}
+div.portlet-content p {
+padding: 0 10px;
+}
+div.portlet table {
+border-collapse: collapse;	
+margin-top: 0;
+}
+div.portlet table tr td {
+vertical-align: top;
+padding: 3px 10px !important;
+border-top: 1px solid #eee;
+border-bottom: 1px solid #eee;
+}
+div.portlet table tr.first td {
+border-top: 1px solid #ddd !important;
+}
+div.portlet table tr.last td {
+border-bottom: none;
+}
+
+.column { width: 270px; float: left; padding-bottom: 100px; }
+.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }
+.ui-sortable-placeholder * { visibility: hidden; }
+
+
+span.notallocated {
+padding: 2px;
+background: #fff;
+cursor: default;
+}
+span.allocated {
+cursor: default;
+padding: 2px 4px;
+font-weight: bold;
+background: #ded;
+background: #dcecdc;
+color: #397239;
+}
