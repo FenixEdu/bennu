@@ -78,7 +78,7 @@
     </filter>
     <filter>
 	    <filter-name>RequestChecksumFilter</filter-name>
-	    <filter-class>myorg.presentationTier.servlets.filters.contentRewrite.RequestChecksumFilter</filter-class>
+	    <filter-class>pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter</filter-class>
 	</filter>
    	<filter>
 	    <filter-name>RequestRewriteFilter</filter-name>

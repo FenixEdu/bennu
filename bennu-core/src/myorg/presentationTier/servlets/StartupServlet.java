@@ -36,6 +36,7 @@ import java.util.Properties;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 
 import myorg._development.PropertiesManager;
 import myorg.applicationTier.Authenticate;
@@ -48,6 +49,8 @@ import myorg.domain.groups.Role;
 import myorg.domain.groups.UserGroup;
 import myorg.domain.scheduler.Scheduler;
 import pt.ist.fenixWebFramework.FenixWebFramework;
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter;
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter.ChecksumPredicate;
 
 public class StartupServlet extends HttpServlet {
 
@@ -89,6 +92,8 @@ public class StartupServlet extends HttpServlet {
 	Scheduler.initialize();
 
 	syncThemes();
+
+	registerFilterCheckSumRules();
     }
 
     private void syncThemes() {
@@ -149,4 +154,18 @@ public class StartupServlet extends HttpServlet {
 	}
     }
 
+    private void registerFilterCheckSumRules() {
+
+	RequestChecksumFilter.registerFilterRule(new ChecksumPredicate() {
+
+	    public boolean shouldFilter(HttpServletRequest httpServletRequest) {
+		return !httpServletRequest.getRequestURI().endsWith("/home.do")
+			&& !httpServletRequest.getRequestURI().endsWith("/isAlive.do")
+			&& !(httpServletRequest.getRequestURI().endsWith("/authenticationAction.do")
+				&& httpServletRequest.getQueryString() != null && httpServletRequest.getQueryString().contains(
+				"method=logoutEmptyPage"));
+	    }
+	});
+
+    }
 }
