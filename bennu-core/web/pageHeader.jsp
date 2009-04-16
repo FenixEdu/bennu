@@ -9,17 +9,17 @@
 
 <table width="100%">
   <tr>
-    <td rowspan="2" width="5%" valign="middle">
+    <td rowspan="2" width="60px" valign="middle">
 		<logic:present name="virtualHost" property="logo">
 	    	<bean:define id="logoUrl"><%= request.getContextPath() %>/home.do?method=logo&virtualHostId=<bean:write name="virtualHost" property="OID"/></bean:define>
 			<html:img src='<%= logoUrl %>'/>
 		</logic:present>
     </td>
-    <td rowspan="2" width="55%" valign="top" align="left">
-		<h1><bean:write name="virtualHost" property="applicationTitle"/></h1>
+    <td rowspan="2" valign="top" align="left" style="padding-left: 5px; vertical-align: middle;">
+		<h1 style="margin-top: 0;"><bean:write name="virtualHost" property="applicationTitle"/></h1>
 		<p><bean:write name="virtualHost" property="applicationSubTitle"/></p>
     </td>
-    <td align="right" nowrap="nowrap" width="40%">
+    <td align="right" nowrap="nowrap" style="vertical-align: top;">
 		<%
 			final String contextPath = request.getContextPath();
 			final String serverName = request.getServerName();
