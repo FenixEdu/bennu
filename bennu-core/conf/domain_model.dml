@@ -91,6 +91,9 @@ class groups.PersistentGroup {
 			class groups.Role extends groups.NamedGroup {
 			}
 
+	class groups.UnionGroup extends groups.PersistentGroup {
+	}
+
 class scheduler.Task {
 	String ojbConcreteClass;
 	DateTime lastRun;
@@ -203,6 +206,15 @@ relation MyOrgSystemGroup {
 relation MyOrgUserGroup {
 	User playsRole groupOwner;
 	groups.PersistentGroup playsRole userGroups {
+		multiplicity *;
+	}
+}
+
+relation PersistentGroupUnionGroup {
+	groups.PersistentGroup playsRole persistentGroups {
+		multiplicity *;
+	}
+	groups.UnionGroup playsRole unionGroups {
 		multiplicity *;
 	}
 }
