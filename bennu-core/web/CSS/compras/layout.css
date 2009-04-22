@@ -961,7 +961,7 @@ margin: 0;
 padding: 0;
 }
 ul.liinline li {
-display: inline;
+display: inline; 
 margin: 0;
 padding: 0 0.25em;
 }
@@ -1268,7 +1268,7 @@ table table { border-collapse: collapse; } /* auto-complete input left margin fi
 
 
 /** new auto complete ***/
-label {
+ul.autocomplete label {
 display:block;
 }
 
