@@ -1,0 +1,29 @@
+package pt.ist.emailNotifier.domain;
+
+valueType pt.ist.emailNotifier.util.EmailAddressList as EmailAddressList {
+    externalizeWith {
+        String toString();
+    }
+}
+
+class EmailNotifier {
+}
+
+class Email {
+	EmailAddressList bccAddresses;
+	String body;
+	EmailAddressList ccAddresses;
+	String fromAddress;
+	String fromName;
+	EmailAddressList replyTos;
+	String subject;
+	EmailAddressList toAddresses;
+}
+
+
+relation EmailNotifierEmail {
+	EmailNotifier playsRole emailNotifier;
+	Email playsRole emails {
+		multiplicity *;
+	}
+}
