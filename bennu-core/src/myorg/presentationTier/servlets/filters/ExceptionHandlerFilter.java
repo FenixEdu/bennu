@@ -35,6 +35,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import myorg.domain.VirtualHost;
+
 public class ExceptionHandlerFilter implements Filter {
 
     public void destroy() {
@@ -58,7 +60,8 @@ public class ExceptionHandlerFilter implements Filter {
 	     * servletException.getRootCause().printStackTrace(new
 	     * PrintWriter(out)); request.setAttribute("error", out.toString());
 	     */
-	    httpServletRequest.getRequestDispatcher("/error.jsp").forward(request, response);
+	    httpServletRequest.getRequestDispatcher(VirtualHost.getVirtualHostForThread().getErrorPage()).forward(request,
+		    response);
 	} catch (Throwable throwable) {
 	    throwable.printStackTrace();
 	    /*
@@ -66,7 +69,8 @@ public class ExceptionHandlerFilter implements Filter {
 	     * exception.printStackTrace(new PrintWriter(out));
 	     * request.setAttribute("error", out.toString());
 	     */
-	    httpServletRequest.getRequestDispatcher("/error.jsp").forward(request, response);
+	    httpServletRequest.getRequestDispatcher(VirtualHost.getVirtualHostForThread().getErrorPage()).forward(request,
+		    response);
 	}
 
     }

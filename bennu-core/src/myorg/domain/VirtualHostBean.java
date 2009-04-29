@@ -28,6 +28,7 @@ package myorg.domain;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import myorg._development.PropertiesManager;
 import myorg.domain.util.ByteArray;
 import pt.ist.fenixWebFramework.util.DomainReference;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
@@ -44,6 +45,7 @@ public class VirtualHostBean implements Serializable {
 
     private DomainReference<Theme> theme;
     private String helpLink;
+    private String errorPage;
     private ByteArray logo;
     private transient InputStream logoInputStream;
     private String logoFilename;
@@ -54,15 +56,15 @@ public class VirtualHostBean implements Serializable {
     private String faviconDisplayName;
 
     public String getHelpLink() {
-        return helpLink;
+	return helpLink;
     }
 
     public void setHelpLink(String helpLink) {
-        this.helpLink = helpLink;
+	this.helpLink = helpLink;
     }
 
     public VirtualHostBean() {
-
+	setErrorPage(PropertiesManager.getProperty("errorPage"));
     }
 
     public VirtualHostBean(VirtualHost virtualHost) {
@@ -74,7 +76,16 @@ public class VirtualHostBean implements Serializable {
 	setLanguageSelectionEnabled(virtualHost.getLanguageSelectionEnabled());
 	setTheme(virtualHost.getTheme());
 	setHelpLink(virtualHost.getHelpLink());
+	setErrorPage(virtualHost.getErrorPage());
 	setBreadCrumbsEnabled(virtualHost.getBreadCrumbsEnabled());
+    }
+
+    public String getErrorPage() {
+	return errorPage;
+    }
+
+    public void setErrorPage(String errorPage) {
+	this.errorPage = errorPage;
     }
 
     public Boolean getGoogleSearchEnabled() {
@@ -134,75 +145,75 @@ public class VirtualHostBean implements Serializable {
     }
 
     public ByteArray getLogo() {
-        return logo;
+	return logo;
     }
 
     public void setLogo(ByteArray logo) {
-        this.logo = logo;
+	this.logo = logo;
     }
 
     public ByteArray getFavicon() {
-        return favicon;
+	return favicon;
     }
 
     public void setFavicon(ByteArray favicon) {
-        this.favicon = favicon;
+	this.favicon = favicon;
     }
 
     public InputStream getLogoInputStream() {
-        return logoInputStream;
+	return logoInputStream;
     }
 
     public void setLogoInputStream(InputStream logoInputStream) {
-        this.logoInputStream = logoInputStream;
+	this.logoInputStream = logoInputStream;
     }
 
     public String getLogoFilename() {
-        return logoFilename;
+	return logoFilename;
     }
 
     public void setLogoFilename(String logoFilename) {
-        this.logoFilename = logoFilename;
+	this.logoFilename = logoFilename;
     }
 
     public String getLogoDisplayName() {
-        return logoDisplayName;
+	return logoDisplayName;
     }
 
     public void setLogoDisplayName(String logoDisplayName) {
-        this.logoDisplayName = logoDisplayName;
+	this.logoDisplayName = logoDisplayName;
     }
 
     public InputStream getFaviconInputStream() {
-        return faviconInputStream;
+	return faviconInputStream;
     }
 
     public void setFaviconInputStream(InputStream faviconInputStream) {
-        this.faviconInputStream = faviconInputStream;
+	this.faviconInputStream = faviconInputStream;
     }
 
     public String getFaviconFilename() {
-        return faviconFilename;
+	return faviconFilename;
     }
 
     public void setFaviconFilename(String faviconFilename) {
-        this.faviconFilename = faviconFilename;
+	this.faviconFilename = faviconFilename;
     }
 
     public String getFaviconDisplayName() {
-        return faviconDisplayName;
+	return faviconDisplayName;
     }
 
     public void setFaviconDisplayName(String faviconDisplayName) {
-        this.faviconDisplayName = faviconDisplayName;
+	this.faviconDisplayName = faviconDisplayName;
     }
 
     public Boolean getBreadCrumbsEnabled() {
-        return breadCrumbsEnabled;
+	return breadCrumbsEnabled;
     }
 
     public void setBreadCrumbsEnabled(Boolean breadCrumbsEnabled) {
-        this.breadCrumbsEnabled = breadCrumbsEnabled;
+	this.breadCrumbsEnabled = breadCrumbsEnabled;
     }
 
 }

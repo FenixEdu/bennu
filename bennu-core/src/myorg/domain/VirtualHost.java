@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import myorg._development.PropertiesManager;
 import myorg.domain.contents.Node;
 import myorg.domain.util.ByteArray;
 import pt.ist.fenixWebFramework.Config;
@@ -77,6 +78,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setGoogleSearchEnabled(Boolean.TRUE);
 	setLanguageSelectionEnabled(Boolean.TRUE);
 	setBreadCrumbsEnabled(Boolean.TRUE);
+	setErrorPage(PropertiesManager.getProperty("errorPage"));
     }
 
     public VirtualHost(final VirtualHostBean virtualHostBean) {
@@ -88,6 +90,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setGoogleSearchEnabled(virtualHostBean.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(virtualHostBean.getLanguageSelectionEnabled());
 	setHelpLink(virtualHostBean.getHelpLink());
+	setErrorPage(virtualHostBean.getErrorPage());
 	if (virtualHostBean.getLogo() != null) {
 	    virtualHostBean.setLogo(virtualHostBean.getLogo());
 	}
@@ -147,6 +150,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setLanguageSelectionEnabled(bean.getLanguageSelectionEnabled());
 	setTheme(bean.getTheme());
 	setHelpLink(bean.getHelpLink());
+	setErrorPage(bean.getErrorPage());
 	if (bean.getLogo() != null) {
 	    bean.setLogo(bean.getLogo());
 	}
@@ -158,19 +162,19 @@ public class VirtualHost extends VirtualHost_Base {
 
     @Override
     public void setHostname(final String hostname) {
-        super.setHostname(hostname.toLowerCase());
+	super.setHostname(hostname.toLowerCase());
     }
 
     @Service
     @Override
     public void setFavicon(final ByteArray favicon) {
-        super.setFavicon(favicon);
+	super.setFavicon(favicon);
     }
 
     @Service
     @Override
     public void setLogo(final ByteArray logo) {
-        super.setLogo(logo);
+	super.setLogo(logo);
     }
 
     public boolean isCasEnabled() {

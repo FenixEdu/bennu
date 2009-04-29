@@ -6,6 +6,7 @@ error.if.changing.deleted.object=true
 language=pt
 location=PT
 variant=
+errorPage=/error.jsp
 app.context=myorg
 filter.request.with.digest=true
 digest.tampering.url=http://localhost:8080/myorg

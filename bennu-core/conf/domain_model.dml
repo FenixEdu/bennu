@@ -128,6 +128,7 @@ class VirtualHost {
 	MultiLanguageString applicationTitle;
 	MultiLanguageString applicationSubTitle;
 	MultiLanguageString applicationCopyright;
+	String errorPage (REQUIRED);
 	String helpLink;
 	ByteArray logo;
 	ByteArray favicon;

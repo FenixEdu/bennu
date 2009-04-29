@@ -22,15 +22,6 @@
 		<h2>
 			<span><bean:message key="messages.exception.errorOccured" bundle="EXPENDITURE_RESOURCES"/></span>
 		</h2>
-		<p class="mbottom05" style="border-top: 1px solid #ccc; padding-top: 1em; color: #555;"><strong><bean:message key="messages.exception.contacts" bundle="EXPENDITURE_RESOURCES"/></strong></p>
-		<ul>
-			<li><bean:message key="messages.exception.processDoubt" bundle="EXPENDITURE_RESOURCES"/></li>
-			<li><bean:message key="messages.exception.technicalContact" bundle="EXPENDITURE_RESOURCES"/></li>
-		</ul>
-		<p class="mtop15">
-			<bean:message key="messages.exception.backToHomepage" bundle="EXPENDITURE_RESOURCES"/>
-			<a href="<%= request.getContextPath() %>"><bean:message key="messages.exception.backToHomepageLink" bundle="EXPENDITURE_RESOURCES"/></a>
-		</p>
 	</div>
 </div>
 </body>
