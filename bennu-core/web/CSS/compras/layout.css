@@ -1350,7 +1350,7 @@ margin-bottom: 10px;
 -webkit-border-radius: 6px;
 }
 div.portlet-header {
-background: #eaeaea;
+background: #eeeeee;
 padding: 6px 10px;
 margin: 0 0 0 0;
 font-weight: bold;
@@ -1359,7 +1359,6 @@ color: #555;
 -webkit-border-top-left-radius: 6px;
 -moz-border-radius-topright: 6px;
 -webkit-border-top-right-radius: 6px;
-
 border-bottom: 1px solid #ddd;
 margin-bottom: 1px;
 }
@@ -1389,9 +1388,19 @@ div.portlet table tr.last td {
 border-bottom: none;
 }
 
-.column { width: 270px; float: left; padding-bottom: 100px; }
-.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }
-.ui-sortable-placeholder * { visibility: hidden; }
+.column {
+width: 270px;
+float: left;
+padding-bottom: 100px;
+}
+.ui-sortable-placeholder {
+border: 1px dotted #ccc !important;
+visibility: visible !important;
+height: 50px !important;
+}
+.ui-sortable-placeholder * {
+visibility: hidden;
+}
 
 
 span.notallocated {
@@ -1425,3 +1434,12 @@ div.portlet-content table.quicksearch {
 margin: 1em 0;
 }
 
+div.helpicon {
+width: 10px;
+height: 10px;
+float: right;
+margin-top: 14px;
+}
+div.helpicon a {
+outline: none;
+}
