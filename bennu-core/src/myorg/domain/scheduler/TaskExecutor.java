@@ -27,6 +27,7 @@ package myorg.domain.scheduler;
 
 import jvstm.TransactionalCommand;
 import pt.ist.fenixframework.pstm.Transaction;
+import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 public class TaskExecutor extends Thread {
 
@@ -39,6 +40,7 @@ public class TaskExecutor extends Thread {
     @Override
     public void run() {
 	super.run();
+	Language.setLocale(Language.getDefaultLocale());
 	Transaction.withTransaction(false, new TransactionalCommand() {
 
 	    @Override
