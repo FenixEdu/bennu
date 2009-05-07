@@ -1449,6 +1449,7 @@ outline: none;
 
 table.plist {
 border-collapse: collapse;
+width: 100%;
 margin: 1em 0;
 }
 table.plist th {
@@ -1466,7 +1467,8 @@ border: 1px solid #ccc;
 background: #fff;
 }
 
-table.plist td {
-overflow: scroll;
+table.plist td.smalltxt {
+font-size: 0.9em;
 }
+
 
