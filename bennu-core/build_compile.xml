@@ -203,4 +203,46 @@
     	</replace>
     </target>
 
+	<target name="s" depends="compile">
+		<java classname="pt.ist.expenditureTrackingSystem.EncodingFixer" fork="true" maxmemory="2000m">
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+	    	    <fileset dir="${lib}">
+	   			    <include name="*.jar"/>
+	   			</fileset>
+				<fileset dir="${build.home.webinf.libs}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="d" depends="compile">
+		<java classname="pt.ist.expenditureTrackingSystem.DashBoardResetter" fork="true" maxmemory="2000m">
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+	    	    <fileset dir="${lib}">
+	   			    <include name="*.jar"/>
+	   			</fileset>
+				<fileset dir="${build.home.webinf.libs}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="m" depends="compile">
+		<java classname="pt.ist.expenditureTrackingSystem.MarkCommentsAsRead" fork="true" maxmemory="2000m">
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+	    	    <fileset dir="${lib}">
+	   			    <include name="*.jar"/>
+	   			</fileset>
+				<fileset dir="${build.home.webinf.libs}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
 </project>
