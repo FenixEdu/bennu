@@ -11,13 +11,13 @@ padding: 0;
 }
 
 h1 {
-	font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
+font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
 /*	font-family: MS Sans Serif, Geneva, sans-serif; */
-	font-weight: bold;
-	font-size: 22px;
-	color: #FFFFFF;
-	margin-left: -7px;
-	margin-bottom: 23px;
+font-weight: bold;
+font-size: 22px;
+color: #FFFFFF;
+margin-left: -7px;
+margin-bottom: 23px;
 }
 
 h2 {
@@ -1401,7 +1401,6 @@ height: 50px !important;
 visibility: hidden;
 }
 
-
 span.notallocated {
 padding: 2px;
 background: #fff;
@@ -1415,7 +1414,6 @@ background: #ded;
 background: #dcecdc;
 color: #397239;
 }
-
 
 div.portlet-content table.quicksearch th, div.portlet-content table.quicksearch td {
 margin: 0 !important;
@@ -1470,5 +1468,3 @@ background: #fff;
 table.plist td.smalltxt {
 font-size: 0.9em;
 }
-
-
