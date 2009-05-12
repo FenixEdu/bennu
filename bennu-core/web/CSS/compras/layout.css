@@ -660,6 +660,15 @@ border: 1px solid #eaeaea;
 background: #fafafa;
 padding: 0.5em 1em 1em 1em;
 }
+div.infoop7 {
+/*
+border-top: 1px solid #f0ce6f;
+border-bottom: 1px solid #f0ce6f;
+*/
+padding: 5px 10px;
+background: #fbf2cf;
+margin: 1em 0;
+}
 div.error1 {
 margin: 0.75em 0;
 padding: 0.4em 0.4em 0.4em 2.5em;
@@ -965,6 +974,8 @@ margin: 0;
 padding: 0 0.25em;
 }
 .nobullet { list-style: none; }
+.indent0 { margin-left: 0; padding-left: 0;  }
+.indent0 li { margin-left: 0; padding-left: 0;  }
 .forminline form { display: inline !important; }
 
 
@@ -1116,8 +1127,8 @@ padding-bottom: 0.3em !important;
 .dblock { display: block; }
 
 .width30px { width: 30px !important; }
-.width100px { width: 30px !important; }
-
+.width165px { width: 165px !important; }
+.width215px { width: 215px !important; }
 .width100pc {
 width: 100%;
 }
