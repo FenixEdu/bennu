@@ -1412,19 +1412,33 @@ height: 50px !important;
 visibility: hidden;
 }
 
-span.notallocated {
-padding: 2px;
+span.off {
+padding: 1px;
 background: #fff;
 cursor: default;
 }
-span.allocated {
+span.on {
 cursor: default;
-padding: 2px;
+padding: 1px;
 font-weight: bold;
-background: #ded;
 background: #dcecdc;
 color: #397239;
 }
+.punits span.off {
+margin: 0.5em 0;
+}
+.punits span.on {
+margin: 0.5em 0;
+}
+.punits td {
+padding: 4px !important;
+}
+.punits div.cinfo div.cinfotext {
+width: 330px;
+}
+.punits div.cinfo span { border-bottom: none; }
+.punits div.cinfo div.cinfotext span { border-bottom: none; }
+
 
 div.portlet-content table.quicksearch th, div.portlet-content table.quicksearch td {
 margin: 0 !important;
@@ -1478,4 +1492,15 @@ background: #fff;
 
 table.plist td.smalltxt {
 font-size: 0.9em;
+}
+
+.secondaryLink {
+border-bottom: 1px dotted #aaa !important;
+cursor: pointer;
+font-weight: normal;
+color: #444 !important;
+text-decoration: none !important;
+}
+.secondaryLink:hover {
+font-weight: normal;
 }
