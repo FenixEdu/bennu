@@ -82,7 +82,6 @@ public class StartupServlet extends HttpServlet {
 	    t.printStackTrace();
 	    throw new Error(t);
 	}
-	MyOrg.initialize(FenixWebFramework.getConfig());
 
 	final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
 	Authenticate.initRole(RoleType.MANAGER, managerUsernames);

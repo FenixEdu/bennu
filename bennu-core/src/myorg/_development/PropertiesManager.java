@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import myorg.domain.MyOrg;
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
 
@@ -107,6 +108,7 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
             defaultVariant = getProperty("variant");
             updateDataRepositoryStructure = true;
             casConfigByHost = Collections.unmodifiableMap(casConfigMap);
+            rootClass = MyOrg.class;
         }};
     }
 
