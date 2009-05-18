@@ -1424,6 +1424,15 @@ font-weight: bold;
 background: #dcecdc;
 color: #397239;
 }
+span.half {
+padding: 1px;
+cursor: default;
+background: #f8ebc4;
+background: #f6e6b4;
+color: #a67c00;
+color: #9f7700;
+font-weight: bold;
+}
 .punits span.off {
 margin: 0.5em 0;
 }
