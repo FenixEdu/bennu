@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +48,7 @@ import org.apache.struts.actions.DispatchAction;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.FileUtils;
@@ -169,4 +171,28 @@ public abstract class BaseAction extends DispatchAction {
 	return new ActionForward("/configuration.do?method=manageMenus");
     }
 
+    protected void writeJsonReply(HttpServletResponse response, JsonObject jsonObject) throws IOException {
+	byte[] jsonReply = jsonObject.getJsonString().getBytes();
+
+	final OutputStream outputStream = response.getOutputStream();
+
+	response.setContentLength(jsonReply.length);
+	outputStream.write(jsonReply);
+	outputStream.flush();
+	outputStream.close();
+
+    }
+
+    protected void writeJsonReply(HttpServletResponse response, List<JsonObject> jsonObject) throws IOException {
+
+	byte[] jsonReply = JsonObject.getJsonArrayString(jsonObject).getBytes();
+
+	final OutputStream outputStream = response.getOutputStream();
+
+	response.setContentLength(jsonReply.length);
+	outputStream.write(jsonReply);
+	outputStream.flush();
+	outputStream.close();
+
+    }
 }
