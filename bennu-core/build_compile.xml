@@ -245,4 +245,18 @@
 		</java>
 	</target>
 
+	<target name="p" depends="compile">
+		<java classname="pt.ist.expenditureTrackingSystem.RunSyncProjects" fork="true" maxmemory="2000m">
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+	    	    <fileset dir="${lib}">
+	   			    <include name="*.jar"/>
+	   			</fileset>
+				<fileset dir="${build.home.webinf.libs}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
 </project>
