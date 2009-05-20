@@ -28,14 +28,21 @@ package myorg.domain;
 import pt.ist.fenixframework.FenixFramework;
 
 public class MyOrg extends MyOrg_Base {
-    
+
     public static MyOrg getInstance() {
 	return FenixFramework.getRoot();
     }
 
-    private MyOrg() {
+    public MyOrg() {
 	super();
+	checkIfIsSingleton();
 	new VirtualHost(this);
+    }
+
+    private void checkIfIsSingleton() {
+	if (FenixFramework.getRoot() != null && FenixFramework.getRoot() != this) {
+	    throw new Error("There can only be one! (instance of MyOrg)");
+	}
     }
 
 }
