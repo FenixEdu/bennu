@@ -25,6 +25,8 @@
 
 package myorg.domain.scheduler;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 
 import myorg.domain.MyOrg;
@@ -32,7 +34,7 @@ import myorg.domain.MyOrg;
 import org.joda.time.DateTime;
 
 public class TaskLog extends TaskLog_Base {
-    
+
     public static final Comparator<TaskLog> COMPARATOR_BY_START = new Comparator<TaskLog>() {
 
 	@Override
@@ -40,25 +42,29 @@ public class TaskLog extends TaskLog_Base {
 	    final int c = taskLog1.getTaskStart().compareTo(taskLog2.getTaskStart());
 	    return c == 0 ? taskLog1.getIdInternal().compareTo(taskLog2.getIdInternal()) : c;
 	}
-	
+
     };
 
     public TaskLog(final Task task) {
-        super();
-        setMyOrg(MyOrg.getInstance());
-        setTask(task);
-        setSuccessful(Boolean.FALSE);
-        setTaskStart(new DateTime());
+	super();
+	setMyOrg(MyOrg.getInstance());
+	setTask(task);
+	setSuccessful(Boolean.FALSE);
+	setTaskStart(new DateTime());
     }
 
-    public void update(final Boolean successful) {
+    public void update(final Boolean successful, String output) {
 	setTaskEnd(new DateTime());
+	setOutput(output);
 	setSuccessful(successful);
     }
 
     @Override
     public Boolean getSuccessful() {
-        return getTaskEnd() == null ? null : super.getSuccessful();
+	return getTaskEnd() == null ? null : super.getSuccessful();
     }
 
+    public Collection<String> getOutputLines() {
+	return Arrays.asList(getOutput() != null ? getOutput().split("\n") : new String[0]);
+    }
 }

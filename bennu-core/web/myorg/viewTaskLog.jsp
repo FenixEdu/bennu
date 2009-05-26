@@ -21,19 +21,19 @@
 			<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.log.successful"/>
 		</th>
 	</tr>
-	<logic:iterate id="taskLog" name="task" property="taskLogs">
-		<tr>
-			<td>
-				<bean:write name="taskLog" property="taskStart"/>
-			</td>
-			<td>
-				<bean:write name="taskLog" property="taskEnd"/>
-			</td>
-			<td>
-				<bean:write name="taskLog" property="successful"/>
-			</td>
-		</tr>
-	</logic:iterate>
+	<tr>
+		<td>
+			<bean:write name="taskLog" property="taskStart"/>
+		</td>
+		<td>
+			<bean:write name="taskLog" property="taskEnd"/>
+		</td>
+		<td>
+			<bean:write name="taskLog" property="successful"/>
+		</td>
+	</tr>
 </table>
 
-<bean:write name="taskLog" property="output"/>
+<logic:iterate id="line" name="taskLog" property="outputLines">
+	<p><bean:write name="line"/></p>
+</logic:iterate>

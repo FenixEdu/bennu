@@ -46,12 +46,13 @@ public abstract class Task extends Task_Base {
 	    final int c = task1.getLocalizedName().compareTo(task2.getLocalizedName());
 	    return c == 0 ? task1.getIdInternal().compareTo(task2.getIdInternal()) : c;
 	}
-	
+
     };
 
     private final TimerTask timerTask = new TimerTask() {
 
-	// This reference will garantee that the task instance will not be GC'ed while the
+	// This reference will garantee that the task instance will not be GC'ed
+	// while the
 	// TimerTask is still scheduled in the Timer.
 	private final Task task = getThis();
 
@@ -68,10 +69,12 @@ public abstract class Task extends Task_Base {
 
     };
 
+    private StringBuilder log = null;
+
     public Task() {
-        super();
-        setOjbConcreteClass(getClass().getName());
-        setMyOrg(MyOrg.getInstance());
+	super();
+	setOjbConcreteClass(getClass().getName());
+	setMyOrg(MyOrg.getInstance());
     }
 
     private Task getThis() {
@@ -114,7 +117,8 @@ public abstract class Task extends Task_Base {
 	return false;
     }
 
-    private static void initTask(final DomainClass domainClass) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    private static void initTask(final DomainClass domainClass) throws ClassNotFoundException, InstantiationException,
+	    IllegalAccessException {
 	final Class taskClass = Class.forName(domainClass.getFullName());
 	taskClass.newInstance();
     }
@@ -140,6 +144,13 @@ public abstract class Task extends Task_Base {
 	new TaskConfiguration(taskConfigurationBean);
     }
 
+    protected synchronized void logInfo(String msg) {
+	if (log == null) {
+	    log = new StringBuilder();
+	}
+	log.append(msg + "\n");
+    }
+
     public void createNewLog() {
 	final TaskLog taskLog = new TaskLog(this);
 	setLastRun(taskLog.getTaskStart());
@@ -147,7 +158,8 @@ public abstract class Task extends Task_Base {
 
     public void updateLastLog(final Boolean successful) {
 	final TaskLog taskLog = getLastLog();
-	taskLog.update(successful);
+	taskLog.update(successful, log != null ? log.toString() : null);
+	log = null;
     }
 
     private TaskLog getLastLog() {
