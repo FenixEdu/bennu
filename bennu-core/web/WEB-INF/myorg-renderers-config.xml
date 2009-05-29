@@ -483,6 +483,10 @@
         	<property name="eachClasses" value="dinline" />
         <property name="style" value="list-style: none; padding: 0; margin: 0;" />
     </renderer>
+    <renderer mode="input" type="java.lang.Object" layout="radio-select-postback" class="pt.ist.fenixWebFramework.renderers.RadioButtonListRendererWithPostback">
+        	<property name="eachClasses" value="dinline" />
+        <property name="style" value="list-style: none; padding: 0; margin: 0;" />
+    </renderer>
     
     <!--@ This layout allows you to construct a list of objects for input. The deletion if managed by the renderer the
           addition of objects to the list must be handled by an external action. -->
