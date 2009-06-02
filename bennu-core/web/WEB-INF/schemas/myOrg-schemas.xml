@@ -72,7 +72,7 @@
 		bundle="MYORG_RESOURCES">
 	<slot name="user" layout="autoComplete" key="label.user" bundle="MYORG_RESOURCES">
         <property name="labelField" value="username"/>
-		<property name="format" value="${username}"/>
+		<property name="format" value="${presentationName}"/>
 		<property name="minChars" value="3"/>		
 		<property name="args" value="provider=myorg.presentationTier.renderers.autoCompleteProvider.UserAutoComplete"/>
 		<property name="size" value="40"/>

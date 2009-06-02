@@ -31,11 +31,25 @@ import myorg.domain.groups.People;
 import myorg.domain.groups.Role;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixWebFramework.services.Service;
 
 public class User extends User_Base {
+
+    public interface UserPresentationStrategy {
+	public String present(User user);
+    }
+
+    public static final UserPresentationStrategy defaultStrategy = new UserPresentationStrategy() {
+
+	@Override
+	public String present(User user) {
+	    return user.getUsername();
+	}
+
+    };
 
     public static final Comparator<User> COMPARATOR_BY_NAME = new Comparator<User>() {
 
@@ -45,6 +59,8 @@ public class User extends User_Base {
 	}
 
     };
+
+    private static UserPresentationStrategy strategy = defaultStrategy;
 
     public User(final String username) {
 	super();
@@ -111,7 +127,17 @@ public class User extends User_Base {
     @Service
     @Override
     public void removePeopleGroups(final People peopleGroups) {
-        super.removePeopleGroups(peopleGroups);
+	super.removePeopleGroups(peopleGroups);
     }
 
+    public String getPresentationName() {
+	return strategy.present(this);
+    }
+
+    public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
+	if (strategy != defaultStrategy) {
+	    Logger.getLogger(User.class).warn("Overriding non-default strategy");
+	}
+	strategy = newStrategy;
+    }
 }
