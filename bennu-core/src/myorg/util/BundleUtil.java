@@ -35,7 +35,15 @@ public class BundleUtil {
 
     public static String getStringFromResourceBundle(final String bundle, final String key) {
 	final ResourceBundle resourceBundle = ResourceBundle.getBundle(bundle, Language.getLocale());
-	return resourceBundle.getString(key);	
+	return resourceBundle.getString(key);
+    }
+
+    public static String getFormattedStringFromResourceBundle(final String bundle, final String key, String... arguments) {
+	String resourceString = getStringFromResourceBundle(bundle, key);
+	for (int i = 0; i < arguments.length; i++) {
+	    resourceString = resourceString.replace("{" + i + "}", arguments[i]);
+	}
+	return resourceString;
     }
 
     public static MultiLanguageString getMultilanguageString(final String bundle, final String key) {
