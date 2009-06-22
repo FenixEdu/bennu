@@ -35,7 +35,7 @@
 		<attribute>
 			<name>id</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>type</name>

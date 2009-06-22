@@ -5,8 +5,11 @@ import java.util.Collection;
 
 public class OrganizationChart<T> extends ArrayList<OrganizationChartRow<T>> {
 
+    final int elementRowIndex;
+
     public OrganizationChart(final T element, final Collection<T> parents, final Collection<T> children) {
 	addAll(parents);
+	elementRowIndex = size();
 	add(new OrganizationChartRow<T>(element));
 	addAll(children);
     }
@@ -24,5 +27,10 @@ public class OrganizationChart<T> extends ArrayList<OrganizationChartRow<T>> {
 	    }
 	}
     }
+
+    public int getElementRowIndex() {
+        return elementRowIndex;
+    }
+
 
 }

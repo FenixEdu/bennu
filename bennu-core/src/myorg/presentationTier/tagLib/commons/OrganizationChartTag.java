@@ -3,7 +3,6 @@ package myorg.presentationTier.tagLib.commons;
 import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import myorg.presentationTier.component.OrganizationChart;
@@ -13,7 +12,9 @@ import org.apache.struts.taglib.TagUtils;
 
 public class OrganizationChartTag extends BodyTagSupport {
 
-    private static final String HEIGHT_VERTICAL_LINE = "height: 106px;";
+    private static final String VERTICAL_LINE_HEIGHT = "height: 106px;";
+    private static final String VERTICAL_LINE_WIDTH = "width: 5px;";
+    private static final String VERTICAL_LINE_STYLE = VERTICAL_LINE_HEIGHT + " " + VERTICAL_LINE_WIDTH;
     private static final String HEIGHT_CONNECTOR = "height: 20px;";
 
     private static final String BORDER_TOP = "border-top: 1px solid #000;";
@@ -39,7 +40,7 @@ public class OrganizationChartTag extends BodyTagSupport {
     private int rowIndex = 0;
     private int columnIndex = 0;
 
-    private StringBuilder stringBuilder = new StringBuilder();
+    private StringBuilder stringBuilder = null;
 
     private void print(final String string) throws JspException {
 	stringBuilder.append(string);
@@ -55,8 +56,12 @@ public class OrganizationChartTag extends BodyTagSupport {
     }
 
     private void printToJsp() throws JspException {
+	printToJsp(stringBuilder.toString());
+    }
+
+    private void printToJsp(final String string) throws JspException {
 	try {
-	    pageContext.getOut().print(stringBuilder.toString());
+	    pageContext.getOut().print(string);
 	} catch (IOException e) {
 	    throw new JspException(e);
 	}
@@ -65,12 +70,11 @@ public class OrganizationChartTag extends BodyTagSupport {
     @Override
     public int doStartTag() throws JspException {
 	super.doStartTag();
-	if (organizationChart == null) {
-	    organizationChart = (OrganizationChart) TagUtils.getInstance().lookup(pageContext, name, "request");
-	}
+	stringBuilder = new StringBuilder();
+	organizationChart = (OrganizationChart) TagUtils.getInstance().lookup(pageContext, name, "request");
 
 	print(TABLE_OPEN);
-
+	
 	return !organizationChart.isEmpty() && rowIndex < organizationChart.size() ? EVAL_BODY_TAG : SKIP_BODY;
     }
 
@@ -79,6 +83,13 @@ public class OrganizationChartTag extends BodyTagSupport {
 	print(TABLE_CLOSE);
 
 	printToJsp();
+
+	name = null;
+	id = null;
+	type = null;
+	organizationChart = null;
+	rowIndex = 0;
+	columnIndex = 0;
 
 	super.doEndTag();
 	return EVAL_PAGE;
@@ -95,8 +106,18 @@ public class OrganizationChartTag extends BodyTagSupport {
 
 	final OrganizationChartRow row = organizationChart.get(rowIndex);
 	final int rowSize = row.size();
-	if (columnIndex == 3 && rowSize != 1 && rowSize != 3 && rowSize != 5) {
-	    printVerticalLine();
+	if (rowIndex > organizationChart.getElementRowIndex()) {
+	    if (rowIndex < organizationChart.size() - 1) {
+		if (columnIndex == 3) {
+		    printVerticalLine();
+		}
+	    } else {
+		if ((rowSize == 4 && columnIndex == 2) ||
+			(rowSize == 6 && columnIndex == 3) ||
+			(rowSize == 2 && columnIndex == 1)) {
+		    printColumn(null, null, null);
+		}
+	    }
 	}
 
 	final int colspan = rowSize == 1 || (rowSize == 3 && columnIndex == 1)|| (rowSize == 5 && columnIndex == 2) ? 3 : 1;
@@ -133,20 +154,8 @@ public class OrganizationChartTag extends BodyTagSupport {
 
     @Override
     public void release() {
+	organizationChart = null;
         super.release();
-        organizationChart = null;
-    }
-
-    @Override
-    public BodyContent getBodyContent() {
-	// TODO Auto-generated method stub
-	return super.getBodyContent();
-    }
-
-    @Override
-    public void setBodyContent(BodyContent b) {
-	// TODO Auto-generated method stub
-	super.setBodyContent(b);
     }
 
     public String getName() {
@@ -175,7 +184,7 @@ public class OrganizationChartTag extends BodyTagSupport {
 
     private void printRowBuffer() throws JspException {
 	final int rowSize = organizationChart.get(rowIndex).size();
-	final int padSize = rowSize == 3 ? 1 : (rowSize < 3 ? 2 : 0);
+	final int padSize = (rowSize == 3 || rowSize == 4) ? 1 : (rowSize < 3 ? 2 : 0);
 	for (int i = 0; i < padSize; i++) {
 	    print(COLUMN_OPEN);
 	    print(COLUMN_CLOSE);
@@ -187,7 +196,7 @@ public class OrganizationChartTag extends BodyTagSupport {
 	{
 	    print(TABLE_OPEN);
 	    {
-		printRowOpen(HEIGHT_VERTICAL_LINE);
+		printRowOpen(VERTICAL_LINE_STYLE);
 		{
 		    printColumn(null, BORDER_TOP_RIGHT, null);
 		    printColumn(null, BORDER_TOP, null);
@@ -255,7 +264,7 @@ public class OrganizationChartTag extends BodyTagSupport {
     }
 
     private String getBoxLowerLeftStyle() {
-	return rowIndex == 0 ? BORDER_RIGHT : null;
+	return rowIndex <= organizationChart.getElementRowIndex() && rowIndex < organizationChart.size() - 1 ? BORDER_RIGHT : null;
     }
 
     private String getBoxLowerRightStyle() {
