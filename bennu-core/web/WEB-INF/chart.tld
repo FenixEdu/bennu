@@ -23,6 +23,7 @@
 	<tag>
 	   <name>orgChart</name>
 	   <tag-class>myorg.presentationTier.tagLib.commons.OrganizationChartTag</tag-class>
+	   <tei-class>myorg.presentationTier.tagLib.commons.OrganizationChartTei</tei-class>
 	   <body-content>JSP</body-content>
 	   <description>
 			Renders the specified organizational chart.

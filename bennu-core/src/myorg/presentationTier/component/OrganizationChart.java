@@ -32,5 +32,8 @@ public class OrganizationChart<T> extends ArrayList<OrganizationChartRow<T>> {
         return elementRowIndex;
     }
 
+    public T getElement() {
+        return get(elementRowIndex).iterator().next();
+    }
 
 }
