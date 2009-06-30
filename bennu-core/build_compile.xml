@@ -118,7 +118,7 @@
 			</classpath>
 			<arg value="${build.home.webinf.classes}"/>
 			<arg value="${build.home.webinf.libs}/jvstm.jar"/>
-			<arg value="${build.home.webinf.libs}/fenix-framework-r42068.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-framework-r42666.jar"/>
 			<arg value="${build.home.webinf.libs}/fenix-web-framework.jar"/>
 			<arg value="${build.home.webinf.libs}/joda-time-1.5.2.jar"/>
 			<arg value="${build.home.webinf.libs}/fenix-tools.jar"/>
@@ -261,6 +261,20 @@
 
 	<target name="r" depends="compile">
 		<java classname="pt.ist.expenditureTrackingSystem.RevertProcessState" fork="true" maxmemory="2000m">
+			<classpath>
+				<pathelement path="${build.home.webinf.classes}"/>
+	    	    <fileset dir="${lib}">
+	   			    <include name="*.jar"/>
+	   			</fileset>
+				<fileset dir="${build.home.webinf.libs}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="OidSqlGenerator" depends="compile">
+		<java classname="myorg.OidSqlGenerator" fork="true" maxmemory="2000m">
 			<classpath>
 				<pathelement path="${build.home.webinf.classes}"/>
 	    	    <fileset dir="${lib}">

@@ -1,10 +1,13 @@
 package myorg;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -15,8 +18,8 @@ import myorg._development.PropertiesManager;
 
 import org.joda.time.DateTime;
 
-import pt.ist.fenixframework.Config;
-import pt.ist.fenixframework.pstm.MetadataManager;
+import pt.ist.fenixWebFramework.FenixWebFramework;
+import pt.utl.ist.fenix.tools.util.i18n.Language;
 import dml.DomainClass;
 import dml.DomainEntity;
 import dml.DomainModel;
@@ -122,7 +125,7 @@ public class OidSqlGenerator {
 	protected void writeSelect(final FileWriter fileWriter, final String domainClassName, final String tablename)
 		throws IOException {
 	    fileWriter
-		    .append("select @xpto:=null;\nselect @xpto:=DOMAIN_CLASS_INFO.DOMAIN_CLASS_ID from DOMAIN_CLASS_INFO where DOMAIN_CLASS_INFO.DOMAIN_CLASS_NAME = '");
+		    .append("select @xpto:=null;\nselect @xpto:=FF$DOMAIN_CLASS_INFO.DOMAIN_CLASS_ID from FF$DOMAIN_CLASS_INFO where FF$DOMAIN_CLASS_INFO.DOMAIN_CLASS_NAME = '");
 	    fileWriter.append(domainClassName);
 	    fileWriter.append("';\n");
 	}
@@ -215,17 +218,43 @@ public class OidSqlGenerator {
 
     public static void main(String[] args) {
 	try {
-	    generate(args);
+	    init();
+	    generate();
 	} catch (IOException e) {
 	    throw new Error(e);
 	}
 	System.exit(0);
     }
 
-    private static void generate(final String[] dmlFilePath) throws IOException {
-	Config config = PropertiesManager.getFenixFrameworkConfig(dmlFilePath);
-	MetadataManager.init(config);
-	domainModel = MetadataManager.getDomainModel();
+    public static void init() {
+	final String domainmodelPath = new File("build/WEB-INF/classes").getAbsolutePath();
+	System.out.println("domainmodelPath: " + domainmodelPath);
+	final File dir = new File(domainmodelPath);
+	final List<String> urls = new ArrayList<String>();
+	for (final File file : dir.listFiles()) {
+	    if (file.isFile() && file.getName().endsWith(".dml")) {
+		try {
+		    urls.add(file.getCanonicalPath());
+		} catch (IOException e) {
+		    e.printStackTrace();
+		    throw new Error(e);
+		}
+	    }
+	}
+	Collections.sort(urls);
+	final String[] paths = new String[urls.size()];
+	for (int i = 0; i < urls.size(); i++) {
+	    paths[i] = urls.get(i);
+	}
+
+	Language.setDefaultLocale(new Locale("pt", "PT"));
+	Language.setLocale(Language.getDefaultLocale());
+
+	FenixWebFramework.initialize(PropertiesManager.getFenixFrameworkConfig(paths));
+    }
+
+    private static void generate() throws IOException {
+	domainModel = FenixWebFramework.getDomainModel();
 
 	for (final DomainClass domainClass : domainModel.getDomainClasses()) {
 	    final int domainClassHierarchyLevel = calculateHierarchyLevel(domainClass);
