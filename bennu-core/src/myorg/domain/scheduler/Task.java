@@ -25,6 +25,7 @@
 
 package myorg.domain.scheduler;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.SortedSet;
@@ -166,4 +167,14 @@ public abstract class Task extends Task_Base {
 	return Collections.max(getTaskLogsSet(), TaskLog.COMPARATOR_BY_START);
     }
 
+    public void cleanupLogs(int maxNumberOfLogs) {
+	ArrayList<TaskLog> logs = new ArrayList<TaskLog>(getTaskLogs());
+	int logsToRemove = logs.size() - maxNumberOfLogs;
+	if (logsToRemove > 0) {
+	    Collections.sort(logs, TaskLog.COMPARATOR_BY_START);
+	    for (TaskLog log : logs.subList(0, logsToRemove)) {
+		removeTaskLogs(log);
+	    }
+	}
+    }
 }

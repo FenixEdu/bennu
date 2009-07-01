@@ -30,6 +30,7 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 public class TaskLogger extends Thread {
 
+    static private final int MAX_LOG_ENTRIES = 100;
     private final long taskId;
     private final Boolean successful;
 
@@ -55,10 +56,9 @@ public class TaskLogger extends Thread {
 		    task.createNewLog();
 		} else {
 		    task.updateLastLog(successful);
+		    task.cleanupLogs(MAX_LOG_ENTRIES);
 		}
 	    }
-	    
 	});
     }
-
 }

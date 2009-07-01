@@ -35,12 +35,45 @@ import org.joda.time.DateTime;
 
 public class TaskLog extends TaskLog_Base {
 
+    public static final Comparator<TaskLog> COMPARATOR_BY_ID = new Comparator<TaskLog>() {
+
+	@Override
+	public int compare(final TaskLog taskLog1, final TaskLog taskLog2) {
+	    return taskLog1.getIdInternal().compareTo(taskLog2.getIdInternal());
+	}
+
+    };
+
     public static final Comparator<TaskLog> COMPARATOR_BY_START = new Comparator<TaskLog>() {
 
 	@Override
 	public int compare(final TaskLog taskLog1, final TaskLog taskLog2) {
-	    final int c = taskLog1.getTaskStart().compareTo(taskLog2.getTaskStart());
-	    return c == 0 ? taskLog1.getIdInternal().compareTo(taskLog2.getIdInternal()) : c;
+	    int c = 0;
+	    if ((taskLog1.getTaskStart() != null) && (taskLog2.getTaskStart() != null)) {
+		c = taskLog1.getTaskStart().compareTo(taskLog2.getTaskStart());
+	    } else if (taskLog1.getTaskStart() != null) {
+		c = -1;
+	    } else if (taskLog2.getTaskStart() != null) {
+		c = 1;
+	    }
+	    return c != 0 ? c : COMPARATOR_BY_ID.compare(taskLog1, taskLog2);
+	}
+
+    };
+
+    public static final Comparator<TaskLog> COMPARATOR_BY_END = new Comparator<TaskLog>() {
+
+	@Override
+	public int compare(final TaskLog taskLog1, final TaskLog taskLog2) {
+	    int c = 0;
+	    if ((taskLog1.getTaskEnd() != null) && (taskLog2.getTaskEnd() != null)) {
+		c = taskLog1.getTaskEnd().compareTo(taskLog2.getTaskEnd());
+	    } else if (taskLog1.getTaskEnd() != null) {
+		c = -1;
+	    } else if (taskLog2.getTaskEnd() != null) {
+		c = 1;
+	    }
+	    return c != 0 ? c : COMPARATOR_BY_START.compare(taskLog1, taskLog2);
 	}
 
     };
