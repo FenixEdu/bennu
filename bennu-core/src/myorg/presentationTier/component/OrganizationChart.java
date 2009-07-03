@@ -7,10 +7,13 @@ public class OrganizationChart<T> extends ArrayList<OrganizationChartRow<T>> {
 
     final int elementRowIndex;
 
-    public OrganizationChart(final T element, final Collection<T> parents, final Collection<T> children) {
+    final int unitsPerPart;
+
+    public OrganizationChart(final T element, final Collection<T> parents, final Collection<T> children, final int unitsPerPart) {
+	this.unitsPerPart = unitsPerPart;
 	addAll(parents);
 	elementRowIndex = size();
-	add(new OrganizationChartRow<T>(element));
+	add(new OrganizationChartRow<T>(element, unitsPerPart));
 	addAll(children);
     }
 
@@ -19,7 +22,7 @@ public class OrganizationChart<T> extends ArrayList<OrganizationChartRow<T>> {
 	    OrganizationChartRow<T> row = null;
 	    for (final T t : elements) {
 		if (row == null || row.isFull()) {
-		    row = new OrganizationChartRow<T>(t);
+		    row = new OrganizationChartRow<T>(t, unitsPerPart);
 		    add(row);
 		} else {
 		    row.add(t);
@@ -34,6 +37,10 @@ public class OrganizationChart<T> extends ArrayList<OrganizationChartRow<T>> {
 
     public T getElement() {
         return get(elementRowIndex).iterator().next();
+    }
+
+    public int getUnitsPerPart() {
+        return unitsPerPart;
     }
 
 }

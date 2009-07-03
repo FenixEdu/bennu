@@ -108,7 +108,7 @@ public class OrganizationChartTag extends BodyTagSupport {
 	final int rowSize = row.size();
 	if (rowIndex > organizationChart.getElementRowIndex()) {
 	    if (rowIndex < organizationChart.size() - 1) {
-		if (columnIndex == 3) {
+		if (columnIndex == row.getUnitsPerPart()) {
 		    printVerticalLine();
 		}
 	    } else {

@@ -4,18 +4,21 @@ import java.util.ArrayList;
 
 public class OrganizationChartRow<T> extends ArrayList<T> {
 
-    public static final int UNITS_PER_PART = 3;
-
     public static final int PARTS = 2;
 
-    private static final int CAPACITY = UNITS_PER_PART * PARTS;
+    private final int unitsPerPart;
 
-    public OrganizationChartRow(final T t) {
+    public OrganizationChartRow(final T t, final int unitsPerPart) {
+	this.unitsPerPart = unitsPerPart;
 	add(t);
     }
 
+    private int capacity() {
+	return PARTS * unitsPerPart;
+    }
+
     public boolean isFull() {
-	return size() == CAPACITY;
+	return size() == capacity();
     }
 
     @Override
@@ -24,6 +27,10 @@ public class OrganizationChartRow<T> extends ArrayList<T> {
 	    throw new Error("Row is full!");
 	}
 	return super.add(t);
+    }
+
+    public int getUnitsPerPart() {
+        return unitsPerPart;
     }
 
 }
