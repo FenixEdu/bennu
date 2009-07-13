@@ -1514,3 +1514,27 @@ text-decoration: none !important;
 .secondaryLink:hover {
 font-weight: normal;
 }
+
+.roundCorners {
+	-moz-border-radius-topleft: 6px; 
+	-moz-border-radius-topright: 6px; 
+	-moz-border-radius-bottomright: 6px; 
+	-moz-border-radius-bottomleft: 6px;
+	-webkit-border-radius: 6px;
+}
+
+.photoHolder {
+	vertical-align: top;
+	width: 100px;
+	height: 100px;
+}
+
+.photoHolder img {
+	width: 75%;
+}
+
+.dotted {
+	border: 1px dotted #aaa; 
+	padding-right: 1em; 
+	padding-left: 1em;	
+}	
