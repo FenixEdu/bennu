@@ -9,6 +9,11 @@
 		</layout>
 	</appender>
 
+	<logger name="pt.ist.fenixWebFramework.servlets.filters.ProfilingFilter">
+		<level value="info"/>
+		<appender-ref ref="ConsoleAppender"/>
+	</logger>
+
 	<logger name="myorg" additivity="false">
 		<level value="info"/>
 		<appender-ref ref="ConsoleAppender"/>
