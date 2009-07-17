@@ -3,13 +3,10 @@ package myorg.presentationTier.renderers.providers;
 import java.util.ArrayList;
 import java.util.List;
 
-import module.workflow.domain.GenericFile;
-
-import org.apache.commons.lang.ArrayUtils;
-
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.renderers.DataProvider;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
+import pt.ist.fenixframework.DomainObject;
 import dml.DomainClass;
 import dml.DomainModel;
 
@@ -23,11 +20,11 @@ public abstract class AbstractDomainClassProvider implements DataProvider {
     @Override
     public Object provide(Object arg0, Object arg1) {
 	final DomainModel domainModel = FenixWebFramework.getDomainModel();
-	List<Class<? extends GenericFile>> classNames = new ArrayList<Class<? extends GenericFile>>();
+	List<Class<? extends DomainObject>> classNames = new ArrayList<Class<? extends DomainObject>>();
 	for (DomainClass domainClass : domainModel.getDomainClasses()) {
 	    if (isClassInstance(domainClass)) {
 		try {
-		    classNames.add((Class<? extends GenericFile>) Class.forName(domainClass.getFullName()));
+		    classNames.add((Class<? extends DomainObject>) Class.forName(domainClass.getFullName()));
 		} catch (ClassNotFoundException e) {
 		    // ignore error
 		    e.printStackTrace();
