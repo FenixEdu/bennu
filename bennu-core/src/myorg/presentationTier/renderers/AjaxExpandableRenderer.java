@@ -1,4 +1,4 @@
-package myorg.presentationTier.renderers.renderers;
+package myorg.presentationTier.renderers;
 
 import java.util.HashMap;
 import java.util.Iterator;

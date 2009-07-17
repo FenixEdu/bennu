@@ -551,4 +551,6 @@
 	
 	<renderer type="java.lang.String" layout="slot-as-label" class="pt.ist.fenixWebFramework.renderers.SlotAsLabelRenderer"/>
 
-	<renderer type="pt.ist.fenixframework.DomainObject" layout="expandable" class="myorg.presentationTier.renderers.renderers.AjaxExpandableRenderer"/>
+	<renderer type="pt.ist.fenixframework.DomainObject" layout="expandable" class="myorg.presentationTier.renderers.AjaxExpandableRenderer"/>
+	
+	<renderer type="java.lang.Class" layout="name-resolver" class="myorg.presentationTier.renderers.ClassNameResolverRenderer"/>
