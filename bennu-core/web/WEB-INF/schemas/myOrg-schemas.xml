@@ -97,3 +97,8 @@
 	<slot name="password" key="label.user.password" bundle="MYORG_RESOURCES" layout="password"/>
 </schema>
 
+<schema name="view.user.presentationName"
+		type="myorg.domain.User"
+		bundle="MYORG_RESOURCES">
+	<slot name="presentationName" key="label.user.presentationName" bundle="MYORG_RESOURCES"/>
+</schema>
