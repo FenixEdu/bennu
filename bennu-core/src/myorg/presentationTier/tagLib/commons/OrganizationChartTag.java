@@ -106,8 +106,9 @@ public class OrganizationChartTag extends BodyTagSupport {
 
 	final OrganizationChartRow row = organizationChart.get(rowIndex);
 	final int rowSize = row.size();
-	if (rowIndex > organizationChart.getElementRowIndex()) {
-	    if (rowIndex < organizationChart.size() - 1) {
+	final int elementRowIndex = organizationChart.getElementRowIndex();
+	if (rowIndex > elementRowIndex) {
+	    if (elementRowIndex >= 0 && rowIndex < organizationChart.size() - 1) {
 		if (columnIndex == row.getUnitsPerPart()) {
 		    printVerticalLine();
 		}
@@ -120,7 +121,7 @@ public class OrganizationChartTag extends BodyTagSupport {
 	    }
 	}
 
-	final int colspan = rowSize == 1 || (rowSize == 3 && columnIndex == 1)|| (rowSize == 5 && columnIndex == 2) ? 3 : 1;
+	final int colspan = rowSize == 1  || (rowSize == 3 && columnIndex == 1)|| (rowSize == 5 && columnIndex == 2) ? 3 : 1;
 	printColumnOpen(colspan, null, null, null);
 
 	final Object object = row.get(columnIndex);
@@ -255,16 +256,17 @@ public class OrganizationChartTag extends BodyTagSupport {
     }
 
     private String getBoxUpperLeftStyle() {
-	return rowIndex == 0 ? null : (columnIndex == 0 ? BORDER_RIGHT : BORDER_TOP_RIGHT);
+	return organizationChart.getElementRowIndex() == -1 || rowIndex == 0 ? null : (columnIndex == 0 ? BORDER_RIGHT : BORDER_TOP_RIGHT);
     }
 
     private String getBoxUpperRightStyle() {
 	final int rowSize = organizationChart.get(rowIndex).size();
-	return rowIndex == 0 ? null : (columnIndex == rowSize - 1 ? null : BORDER_TOP);
+	return organizationChart.getElementRowIndex() == -1 || rowIndex == 0 ? null : (columnIndex == rowSize - 1 ? null : BORDER_TOP);
     }
 
-    private String getBoxLowerLeftStyle() {
-	return rowIndex <= organizationChart.getElementRowIndex() && rowIndex < organizationChart.size() - 1 ? BORDER_RIGHT : null;
+    private String getBoxLowerLeftStyle() { 
+	return organizationChart.getElementRowIndex() > -1 && rowIndex <= organizationChart.getElementRowIndex()
+		&& rowIndex < organizationChart.size() - 1 ? BORDER_RIGHT : null;
     }
 
     private String getBoxLowerRightStyle() {
