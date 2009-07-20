@@ -141,6 +141,57 @@ class Theme {
 	String screenshotFileName;
 }
 
+class index.IndexDirectory {
+	String indexForClass;
+}
+
+class index.IndexFile {
+	String name;
+	Long lastModified;
+	Long length;
+	Integer indexMarker;
+}
+
+class index.IndexFileBuffer {
+	Integer indexMarker;
+	ByteArray buffer;
+}
+
+relation MyOrgIndexDirectory {
+	MyOrg playsRole myOrg;
+	index.IndexDirectory playsRole indexDirectory {
+		multiplicity *;
+	}	
+}
+ 
+relation MyOrgIndexFile {
+	MyOrg playsRole myOrg;
+	index.IndexFile playsRole IndexFile {
+		multiplicity *;
+	}	
+}
+
+relation MyOrgIndexFileBuffer {
+	MyOrg playsRole myOrg;
+	index.IndexFileBuffer playsRole indexFilebuffers {
+		multiplicity *;
+	}	
+}
+
+relation IndexDirectoryIndexFile {
+	index.IndexDirectory playsRole directory;
+	index.IndexFile playsRole indexFiles {
+		multiplicity *;
+	}	
+}
+
+relation IndexFileIndexFileBuffer {
+	index.IndexFile playsRole indexFile;
+	index.IndexFileBuffer playsRole indexFileBuffers {
+		multiplicity *;
+	}	
+}
+
 relation ThemeMyOrg {
 	MyOrg playsRole myOrg;
 	Theme playsRole themes {

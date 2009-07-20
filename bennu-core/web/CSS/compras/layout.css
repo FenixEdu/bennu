@@ -1632,7 +1632,7 @@ border: 1px solid #bbb;
 background: #eee;
 }
 #wfprocess .ui-state-default a {
-text-decoration: none;
+text-decoration: underline !important;
 }
 #wfprocess .ui-state-default .ui-icon {
 background-image: none;
