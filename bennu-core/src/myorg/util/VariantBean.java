@@ -67,7 +67,7 @@ public class VariantBean implements Serializable {
 	setType(Type.DOMAIN_OBJECT);
     }
 
-    public DomainObject getDomainObject(DomainObject value) {
+    public DomainObject getDomainObject() {
 	return (DomainObject) (isType(Type.DOMAIN_OBJECT) ? this.value : null);
     }
 }
