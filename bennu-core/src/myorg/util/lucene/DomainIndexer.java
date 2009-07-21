@@ -7,6 +7,7 @@ import java.util.Map;
 
 import myorg.domain.index.IndexDirectory;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -22,11 +23,16 @@ import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.LockObtainFailedException;
 
+import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class DomainIndexer {
+
+    public static final String DEFAULT_FIELD = "all";
+
+    public static final int DEFAULT_MAX_SIZE = 200;
 
     public static class DomainIndexException extends RuntimeException {
 
@@ -54,24 +60,35 @@ public class DomainIndexer {
 	return singletonInstance;
     }
 
-    private LuceneDomainDirectory getIndexDirectory(String name) throws CorruptIndexException, LockObtainFailedException,
-	    IOException {
+    private LuceneDomainDirectory getIndexDirectory(String name) {
 	IndexDirectory directory = IndexDirectory.getIndexDirectory(name);
 	LuceneDomainDirectory domainDirectory = null;
 	if (directory == null) {
-	    directory = IndexDirectory.createNewIndexDirectory(name);
-	    domainDirectory = new LuceneDomainDirectory(directory);
-	    initIndex(domainDirectory);
+	    domainDirectory = initIndex(name);
 	} else {
 	    domainDirectory = new LuceneDomainDirectory(directory);
 	}
 	return domainDirectory;
     }
 
-    private void initIndex(LuceneDomainDirectory domainDirectory) throws CorruptIndexException, LockObtainFailedException,
-	    IOException {
-	IndexWriter writer = new IndexWriter(domainDirectory, new StandardAnalyzer(), true, MaxFieldLength.UNLIMITED);
-	writer.close();
+    @Service
+    private LuceneDomainDirectory initIndex(String name) {
+	IndexDirectory directory = IndexDirectory.createNewIndexDirectory(name);
+	LuceneDomainDirectory domainDirectory = new LuceneDomainDirectory(directory);
+	try {
+	    IndexWriter writer = new IndexWriter(domainDirectory, new StandardAnalyzer(), true, MaxFieldLength.UNLIMITED);
+	    writer.close();
+	} catch (CorruptIndexException e) {
+	    e.printStackTrace();
+	    throw new DomainIndexException(e);
+	} catch (LockObtainFailedException e) {
+	    e.printStackTrace();
+	    throw new DomainIndexException(e);
+	} catch (IOException e) {
+	    e.printStackTrace();
+	    throw new DomainIndexException(e);
+	}
+	return domainDirectory;
     }
 
     public void indexDomainObject(DomainObject domainObject, Map<String, String> indexMap) {
@@ -164,9 +181,16 @@ public class DomainIndexer {
 
     }
 
+    public <T extends DomainObject> List<T> search(Class<T> domainObjectClass, String value) {
+	return search(domainObjectClass, DEFAULT_FIELD, value, DEFAULT_MAX_SIZE);
+    }
+
     public <T extends DomainObject> List<T> search(Class<T> domainObjectClass, String slot, String value, int maxHits) {
 
 	List<T> domainObjects = new ArrayList<T>();
+	if (StringUtils.isEmpty(value)) {
+	    return domainObjects;
+	}
 	try {
 	    LuceneDomainDirectory luceneDomainDirectory = getIndexDirectory(findDirectoryNameForClass(domainObjectClass));
 
@@ -210,13 +234,18 @@ public class DomainIndexer {
 
     private Document createDocument(DomainObject domainObject, Map<String, String> indexMap) {
 	Document doc = new Document();
+	StringBuilder builder = new StringBuilder();
 
 	doc.add(new Field("OID", String.valueOf(domainObject.getOID()), Field.Store.COMPRESS, Field.Index.NOT_ANALYZED));
 
 	for (String key : indexMap.keySet()) {
-	    doc.add(new Field(key, indexMap.get(key), Field.Store.NO, Field.Index.ANALYZED));
+	    String value = indexMap.get(key);
+	    doc.add(new Field(key, value, Field.Store.NO, Field.Index.ANALYZED));
+	    builder.append(value);
+	    builder.append(" ");
 	}
 
+	doc.add(new Field(DEFAULT_FIELD, builder.toString(), Field.Store.NO, Field.Index.ANALYZED));
 	return doc;
     }
 }
