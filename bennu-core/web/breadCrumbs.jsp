@@ -18,5 +18,4 @@
 			</html:link>
 		</logic:iterate>
 	</div>
-	<br/>
 </logic:greaterThan>
