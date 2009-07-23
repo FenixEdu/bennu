@@ -1056,12 +1056,15 @@ margin-bottom: 1em;
 ul.operations {
 margin: 0;
 padding-top: 0;
-padding-left: 3em;
+padding-left: 1.3em;
 }
 ul.operations li {
 margin-top: 0;
 padding-top: 0;
 }
+
+
+
 
 /***********************************************/	
 /**************** comments *********************/
@@ -1342,10 +1345,6 @@ padding: 0;
 vertical-align: top;
 }
 
-ul.operations {
-padding-left: 1.3em;
-}
-
 span.link {
 color: #d17647;
 text-decoration: underline;
@@ -1521,7 +1520,10 @@ font-weight: normal;
 
 
 
-/* metaworklow process */
+
+
+/********************************************/
+/********** metaworklow process ************/
 
 .roundCorners {
 -moz-border-radius-topleft: 6px; 
@@ -1532,9 +1534,10 @@ font-weight: normal;
 }
 .photoHolder {
 vertical-align: top;
-width: 100px;
+width: 112px;
 height: 100px;
 text-align: left;
+padding-left: 1em;
 }
 .photoHolder img {
 border: 1px solid #ddd;
@@ -1548,14 +1551,25 @@ padding-left: 1em;
 }
 
 .comment {
+/*
 -moz-border-radius: 6px; 
 -webkit-border-radius: 6px;
-border-top: 1px dotted #aaa;
-border-bottom: 1px dotted #aaa;
+*/
+border: 1px dotted #aaa;
 padding: 1em 0; 
 margin: 1em 0;
 }
-
+.comment table td p span {
+font-weight: normal;
+/*color: #555;*/
+/*font-size: 0.8em;*/
+}
+.addcomment {
+border-top: 3px solid #ddd;
+padding: 5px 10px;
+background: #f5f5f5;
+margin: 1em 0;
+}
 
 #wfprocess .ui-tabs {
 padding: 0;
@@ -1591,7 +1605,9 @@ display: none !important;
 }
 
 /* widget */
-
+#wfprocess #tabs {
+border: 1px solid #ccc;
+}
 #wfprocess .ui-widget {
 font-family: Verdana,Arial,sans-serif;
 font-size: 1.0em;
@@ -1605,7 +1621,7 @@ background: #ddd;
 #wfprocess .ui-widget-header a {
 }
 #wfprocess .ui-widget-content {
-border: 1px solid #bbb;
+/*border: 1px solid #bbb;*/
 background: #fafafa;
 }
 #wfprocess .ui-widget-content a {
@@ -1639,3 +1655,56 @@ text-decoration: underline !important;
 background-image: none;
 }
 
+
+table.mtlist {
+margin-top: 1em;
+}
+table.mtlist div {
+background: #eee;
+padding: 4px;
+/*padding: 1em;*/
+}
+table.mtlist table {
+border-collapse: collapse;
+width: 100%;
+/*margin: 1em 0;*/
+border: 1px solid #ddd;
+}
+table.mtlist table th {
+text-align: left;
+font-weight: normal;
+padding: 2px 4px;
+text-align: center;
+background: #f5f5f5;
+border-top: 1px solid #ddd;
+border-bottom: 1px solid #ddd;
+}
+table.mtlist table td {
+text-align: center;
+padding: 2px 4px !important;
+border-top: 1px solid #ddd;
+border-bottom: 1px solid #ddd;
+background: #fff;
+}
+table.mtlist td {
+vertical-align: top;
+}
+table.mtlist td table td {
+vertical-align: middle;
+}
+table.mtlist table td.smalltxt {
+font-size: 0.9em;
+}
+
+
+
+table td.secondaryLink a {
+border-bottom: 1px dotted #aaa !important;
+cursor: pointer;
+font-weight: normal;
+color: #444 !important;
+text-decoration: none !important;
+}
+table td.secondaryLink a:hover {
+font-weight: normal;
+}
