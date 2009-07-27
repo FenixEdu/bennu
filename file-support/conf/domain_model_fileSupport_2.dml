@@ -1,0 +1,28 @@
+
+relation MyOrgGenericFile {
+	myorg.domain.MyOrg playsRole myOrg;
+	module.fileSupport.domain.GenericFile playsRole genericFiles {
+		multiplicity *;
+	}
+}
+
+relation MyOrgFileContent {
+	myorg.domain.MyOrg playsRole myOrg;
+	module.fileSupport.domain.FileContent playsRole fileContents {
+		multiplicity *;
+	}
+}
+
+relation MyOrgFileStorage {
+	myorg.domain.MyOrg playsRole myOrg;
+	module.fileSupport.domain.FileStorage playsRole fileStorages {
+		multiplicity *;
+	}
+}
+
+relation MyOrgFileStorageConfiguration {
+	myorg.domain.MyOrg playsRole myOrg;
+	module.fileSupport.domain.FileStorageConfiguration playsRole fileStorageConfigurations {
+		multiplicity *;
+	}
+}

@@ -1,0 +1,57 @@
+package module.fileSupport.domain;
+
+valueType myorg.domain.util.ByteArray as ByteArray {
+    externalizeWith {
+        bytearray getBytes();
+    }
+}
+
+class GenericFile {
+	String ojbConcreteClass;
+	String filename;
+	String displayName;
+	String contentType;
+	String contentKey;
+}
+
+class FileContent {
+	String contentKey;
+	ByteArray content;
+}
+
+class FileStorage {
+	String ojbConcreteClass;
+	String name;
+}
+	class DomainStorage extends FileStorage{
+	}
+	class DBStorage extends FileStorage{
+		String host;
+		Integer port;
+		String dbName;
+		String tableName;
+		String username;
+		String password;
+	}
+	class LocalFileSystemStorage extends FileStorage{
+		String path;
+		Integer treeDirectoriesNameLength;
+	}	
+
+class FileStorageConfiguration {
+	String fileType;
+}
+	
+relation FileStorageFile {
+	GenericFile playsRole files {
+		multiplicity *;
+	}	
+	FileStorage playsRole storage;
+}
+
+relation FileStorageConfigurationFileStorage {
+	FileStorageConfiguration playsRole configurations{
+		multiplicity *;
+	} 
+	FileStorage playsRole storage; 
+} 
