@@ -1,6 +1,7 @@
 package module.fileSupport.domain;
 
 import myorg.domain.MyOrg;
+import myorg.domain.exceptions.DomainException;
 
 /**
  * 
@@ -33,7 +34,10 @@ abstract public class GenericFile extends GenericFile_Base {
     }
 
     private FileStorage getFileStorage() {
-	return FileStorageConfiguration.readFileStorageByFileType(getClass().getName());
-	// FIXME: get default fileStorage if(fileStorage == null)
+	final FileStorage fileStorage = FileStorageConfiguration.readFileStorageByFileType(getClass().getName());
+	if (fileStorage == null) {
+	    throw new DomainException("error.fileStorage.notDefinedForClassType");
+	}
+	return fileStorage;
     }
 }
