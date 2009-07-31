@@ -257,6 +257,7 @@ public class OidSqlGenerator {
 	domainModel = FenixWebFramework.getDomainModel();
 
 	for (final DomainClass domainClass : domainModel.getDomainClasses()) {
+	    System.out.println(domainClass.getFullName());
 	    final int domainClassHierarchyLevel = calculateHierarchyLevel(domainClass);
 	    if (domainClassHierarchyLevel == 0) {
 		final Slot slot = domainClass.findSlot("ojbConcreteClass");
@@ -277,6 +278,7 @@ public class OidSqlGenerator {
 	final String tablename = getTableName(domainClass.getName());
 	alterTableRegistry.addOidColumn(tablename);
 
+	updateRegistry.addClassnameAndTableForUpdateInHierchy(domainClass.getFullName(), tablename);
 	for (final DomainClass otherDomainClass : domainModel.getDomainClasses()) {
 	    final int domainClassHierarchyLevel = calculateHierarchyLevel(otherDomainClass);
 	    if (domainClassHierarchyLevel > 0) {
@@ -347,7 +349,7 @@ public class OidSqlGenerator {
 
     private static DomainClass findDirectDomainObjectDecendent(final DomainClass domainClass) {
 	final int domainClassHierarchyLevel = calculateHierarchyLevel(domainClass);
-	return domainClassHierarchyLevel == 1 ? domainClass : findDirectDomainObjectDecendent((DomainClass) domainClass
+	return domainClassHierarchyLevel == 0 ? domainClass : findDirectDomainObjectDecendent((DomainClass) domainClass
 		.getSuperclass());
     }
 
