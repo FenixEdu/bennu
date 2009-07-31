@@ -728,15 +728,10 @@ span.onGoing {
  * extend AbtractToolTipRenderer)
  * When it happens: Should be configured in the render so it generates
  * all the markup correctly
- * replaces: cinfo
- * replaces: closed
- * replaces: copen
- * replaces: cinfotext
  */
  
 div.tooltip {
 	display: inline;
-	z-index: 2;
 	position: relative;
 }
 div.tooltip img {

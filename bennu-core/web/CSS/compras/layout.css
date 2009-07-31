@@ -1151,20 +1151,20 @@ background: #fef7e2;
 /***********************************************/
 /****************** info **********************/
 
-div.cinfo {
+div.tooltip {
 display: inline;
-z-index: 2;
+position: relative
 }
-div.cinfo img {
+div.tooltip img {
 padding-top: 5px;
 }
-div.closed div.cinfotext {
+div.tooltipClosed div.tooltipText {
 display: none;
 }
-div.copen div.cinfotext {
+div.tooltipOpen div.tooltipText {
 display: inline;
 }
-div.cinfo div.cinfotext {
+div.tooltip div.tooltipText {
 position: absolute;
 z-index: 10;
 top: 0;
@@ -1175,25 +1175,21 @@ padding: 5px 10px;
 border: 1px solid #c5dae7;
 text-align: left;
 }
-div.cinfo div.cinfotext a {
+div.tooltip div.tooltipText a {
 font-weight: normal;
 }
-div.cinfo div.cinfotext ul {
+div.tooltip div.tooltipText ul {
 margin: 0;
 padding: 0;
 list-style: none;
 text-align: left;
 }
-div.cinfo div.cinfotext ul li {
+div.tooltip div.tooltipText ul li {
 margin: 0;
 padding: 0;
 }
-div.cinfo span { border-bottom: 1px dotted #888; cursor: default; }
-div.cinfo div.cinfotext span { border-bottom: none; }
-
-.prel {
-position: relative !important;
-}
+div.tooltip span { border-bottom: 1px dotted #888; cursor: default; }
+div.tooltip div.tooltipText span { border-bottom: none; }
 
 
 /*********************************************/	
@@ -1445,11 +1441,11 @@ margin: 0.5em 0;
 .punits td {
 padding: 4px !important;
 }
-.punits div.cinfo div.cinfotext {
+.punits div.tooltip div.tooltipText {
 width: 330px;
 }
-.punits div.cinfo span { border-bottom: none; }
-.punits div.cinfo div.cinfotext span { border-bottom: none; }
+.punits div.tooltip span { border-bottom: none; }
+.punits div.tooltip div.tooltipText span { border-bottom: none; }
 
 
 div.portlet-content table.quicksearch th, div.portlet-content table.quicksearch td {
