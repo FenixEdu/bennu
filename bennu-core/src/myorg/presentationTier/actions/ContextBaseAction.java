@@ -64,7 +64,11 @@ public abstract class ContextBaseAction extends BaseAction {
 
     }
 
-    public Context createContext(final String contextPathString) {
+    public Context createContext(final String contextPaString) {
+	return createContext(contextPaString, null);
+    }
+
+    public Context createContext(final String contextPathString, HttpServletRequest request) {
 	return new LayoutContext(contextPathString);
     }
 
@@ -72,7 +76,7 @@ public abstract class ContextBaseAction extends BaseAction {
     public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
 	final String contextPathString = getAttribute(request, CONTEXT_PATH);
-	final Context context = createContext(contextPathString);
+	final Context context = createContext(contextPathString, request);
 	request.setAttribute(CONTEXT, context);
 
 	final LocaleBean localeBean = new LocaleBean();

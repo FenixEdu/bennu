@@ -47,10 +47,12 @@ import myorg.domain.Theme.ThemeType;
 import myorg.domain.groups.AnyoneGroup;
 import myorg.domain.groups.Role;
 import myorg.domain.groups.UserGroup;
+import myorg.domain.index.IndexListener;
 import myorg.domain.scheduler.Scheduler;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter.ChecksumPredicate;
+import pt.ist.fenixframework.pstm.TopLevelTransaction;
 
 public class StartupServlet extends HttpServlet {
 
@@ -82,6 +84,8 @@ public class StartupServlet extends HttpServlet {
 	    t.printStackTrace();
 	    throw new Error(t);
 	}
+
+	TopLevelTransaction.addCommitListener(new IndexListener());
 
 	final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
 	Authenticate.initRole(RoleType.MANAGER, managerUsernames);

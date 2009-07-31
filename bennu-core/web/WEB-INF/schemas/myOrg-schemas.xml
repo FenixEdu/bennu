@@ -102,3 +102,9 @@
 		bundle="MYORG_RESOURCES">
 	<slot name="presentationName" key="label.user.presentationName" bundle="MYORG_RESOURCES"/>
 </schema>
+
+<schema name="view.user.shortPresentationName"
+		type="myorg.domain.User"
+		bundle="MYORG_RESOURCES">
+	<slot name="shortPresentationName" key="label.user.presentationName" bundle="MYORG_RESOURCES"/>
+</schema>

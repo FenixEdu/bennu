@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.DomainObject;
 
 public abstract class Search<T> implements Serializable {
 
@@ -51,6 +52,9 @@ public abstract class Search<T> implements Serializable {
 	    return criteria == null || criteria.length() == 0 || criteria.equals(value);
 	}
 
+	protected boolean matchCriteria(final DomainObject criteria, final DomainObject value) {
+	    return criteria == null || criteria == value;
+	}
     }
 
     public abstract Set<T> search();
