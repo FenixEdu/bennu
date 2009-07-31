@@ -40,12 +40,19 @@ public class User extends User_Base {
 
     public interface UserPresentationStrategy {
 	public String present(User user);
+
+	public String shortPresent(User user);
     }
 
     public static final UserPresentationStrategy defaultStrategy = new UserPresentationStrategy() {
 
 	@Override
 	public String present(User user) {
+	    return user.getUsername();
+	}
+
+	@Override
+	public String shortPresent(User user) {
 	    return user.getUsername();
 	}
 
@@ -132,6 +139,10 @@ public class User extends User_Base {
 
     public String getPresentationName() {
 	return strategy.present(this);
+    }
+
+    public String getShortPresentationName() {
+	return strategy.shortPresent(this);
     }
 
     public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
