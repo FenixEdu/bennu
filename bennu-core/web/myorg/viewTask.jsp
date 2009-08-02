@@ -9,6 +9,8 @@
 	<bean:write name="task" property="localizedName"/>
 </h2>
 
+<bean:define id="taskId" name="task" property="OID"/>
+
 <logic:notEmpty name="task" property="taskConfigurations">
 	<table class="tstyle2">
 		<tr>
@@ -48,7 +50,7 @@
 					<bean:write name="taskConfiguration" property="dayofweek"/>
 				</td>
 				<td>
-					<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=deleteTaskConfiguration" paramId="taskConfigurationId" paramName="taskConfiguration" paramProperty="OID">
+					<!-- HAS_CONTEXT --><html:link page="<%= "/scheduler.do?method=deleteTaskConfiguration&taskId=" + taskId.toString() %>" paramId="taskConfigurationId" paramName="taskConfiguration" paramProperty="OID">
 						<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.configuration.delete"/>
 					</html:link>
 				</td>

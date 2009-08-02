@@ -40,7 +40,7 @@ import org.apache.struts.action.ActionMapping;
 
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
-@Mapping( path="/scheduler" )
+@Mapping(path = "/scheduler")
 public class SchedulerAction extends ContextBaseAction {
 
     public ActionForward viewScheduler(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
@@ -51,8 +51,8 @@ public class SchedulerAction extends ContextBaseAction {
 	return context.forward("/myorg/scheduler.jsp");
     }
 
-    public ActionForward prepareAddTaskConfiguration(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+    public ActionForward prepareAddTaskConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final Context context = getContext(request);
 	final Task task = getDomainObject(request, "taskId");
 	TaskConfigurationBean taskConfigurationBean = getRenderedObject();
@@ -63,8 +63,8 @@ public class SchedulerAction extends ContextBaseAction {
 	return context.forward("/myorg/addTaskConfiguration.jsp");
     }
 
-    public ActionForward addTaskConfiguration(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+    public ActionForward addTaskConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final TaskConfigurationBean taskConfigurationBean = getRenderedObject();
 	taskConfigurationBean.create();
 	return viewScheduler(mapping, form, request, response);
@@ -78,11 +78,13 @@ public class SchedulerAction extends ContextBaseAction {
 	return context.forward("/myorg/viewTask.jsp");
     }
 
-    public ActionForward deleteTaskConfiguration(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+    public ActionForward deleteTaskConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final TaskConfiguration taskConfiguration = getDomainObject(request, "taskConfigurationId");
+	int taskConfigurationCount = taskConfiguration.getTask().getTaskConfigurationsCount();
 	taskConfiguration.delete();
-	return viewScheduler(mapping, form, request, response);
+	return taskConfigurationCount == 1 ? viewScheduler(mapping, form, request, response) : viewTask(mapping, form, request,
+		response);
     }
 
     public ActionForward viewTaskLog(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
