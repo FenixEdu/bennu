@@ -9,7 +9,7 @@
 	<bean:write name="task" property="localizedName"/>
 </h2>
 
-<bean:define id="taskId" name="task" property="OID"/>
+<bean:define id="taskId" name="task" property="externalId"/>
 
 <logic:notEmpty name="task" property="taskConfigurations">
 	<table class="tstyle2">
@@ -50,7 +50,7 @@
 					<bean:write name="taskConfiguration" property="dayofweek"/>
 				</td>
 				<td>
-					<!-- HAS_CONTEXT --><html:link page="<%= "/scheduler.do?method=deleteTaskConfiguration&taskId=" + taskId.toString() %>" paramId="taskConfigurationId" paramName="taskConfiguration" paramProperty="OID">
+					<!-- HAS_CONTEXT --><html:link page="<%= "/scheduler.do?method=deleteTaskConfiguration&taskId=" + taskId.toString() %>" paramId="taskConfigurationId" paramName="taskConfiguration" paramProperty="externalId">
 						<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.configuration.delete"/>
 					</html:link>
 				</td>
@@ -59,7 +59,7 @@
 	</table>
 </logic:notEmpty>
 
-<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=prepareAddTaskConfiguration" paramId="taskId" paramName="task" paramProperty="OID">
+<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=prepareAddTaskConfiguration" paramId="taskId" paramName="task" paramProperty="externalId">
 	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.add.configuration"/>
 </html:link>
 
@@ -90,7 +90,7 @@
 					<bean:write name="taskLog" property="successful"/>
 				</td>
 				<td>
-					<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTaskLog" paramId="taskLogId" paramName="taskLog" paramProperty="OID">
+					<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTaskLog" paramId="taskLogId" paramName="taskLog" paramProperty="externalId">
 						<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.log.view"/>
 					</html:link>
 				</td>

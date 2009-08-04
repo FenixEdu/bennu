@@ -14,7 +14,7 @@
 	<bean:write name="user" property="username"/>
 </h3>
 
-<bean:define id="url">manageUsers.do?method=forwardToSearchUser&amp;userId=<bean:write name="user" property="OID"/></bean:define>
+<bean:define id="url">manageUsers.do?method=forwardToSearchUser&amp;userId=<bean:write name="user" property="externalId"/></bean:define>
 <fr:edit id="user"
 		name="user"
 		type="myorg.domain.User"

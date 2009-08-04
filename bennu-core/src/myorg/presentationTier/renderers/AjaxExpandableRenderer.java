@@ -24,11 +24,11 @@ public class AjaxExpandableRenderer extends OutputRenderer {
 
     private String smallLayout;
     private String smallSchema;
-    private Map<String, String> smallProperties = new HashMap<String, String>();
+    private final Map<String, String> smallProperties = new HashMap<String, String>();
 
     private String expandedLayout;
     private String expandedSchema;
-    private Map<String, String> expandedProperties = new HashMap<String, String>();
+    private final Map<String, String> expandedProperties = new HashMap<String, String>();
 
     private Map<String, String> getSmallPropertiesMap() {
 	return smallProperties;
@@ -99,18 +99,18 @@ public class AjaxExpandableRenderer extends OutputRenderer {
 
 		largerContainer.addChild(swapingContainer);
 		String swapingContainerId = HtmlComponent.getValidIdOrName(domainObject.getClass().getSimpleName()
-			+ String.valueOf(domainObject.getOID()));
+			+ domainObject.getExternalId());
 		swapingContainer.setId(swapingContainerId);
 
 		HtmlComponent resultRenderer = getActualRendereringResult(object, type);
 		swapingContainer.addChild(resultRenderer);
 
 		HtmlInlineContainer viewMoreSpan = new HtmlInlineContainer();
-		String viewMoreId = HtmlComponent.getValidIdOrName("moreAbout" + String.valueOf(domainObject.getOID()));
+		String viewMoreId = HtmlComponent.getValidIdOrName("moreAbout" + domainObject.getExternalId());
 		viewMoreSpan.setId(viewMoreId);
 
 		HtmlInlineContainer viewLessSpan = new HtmlInlineContainer();
-		String viewLessId = HtmlComponent.getValidIdOrName("viewLessAbout" + String.valueOf(domainObject.getOID()));
+		String viewLessId = HtmlComponent.getValidIdOrName("viewLessAbout" + domainObject.getExternalId());
 		viewLessSpan.setId(viewLessId);
 
 		viewMoreSpan.addChild(new HtmlText(RenderUtils.getResourceString("MYORG_RESOURCES", "label.viewMore")));
@@ -146,9 +146,8 @@ public class AjaxExpandableRenderer extends OutputRenderer {
 
 	    private String getSmallLink(DomainObject domainObject) {
 		String url = RenderersRequestProcessorImpl.getCurrentRequest().getContextPath()
-			+ "/render.do?method=renderOutput&oid=" + String.valueOf(domainObject.getOID()) + "&schema="
-			+ getSmallSchema() + "&layout=" + getSmallLayout() + "&properties="
-			+ convertProperties(getSmallPropertiesMap());
+			+ "/render.do?method=renderOutput&oid=" + domainObject.getExternalId() + "&schema=" + getSmallSchema()
+			+ "&layout=" + getSmallLayout() + "&properties=" + convertProperties(getSmallPropertiesMap());
 
 		String calculateChecksum = GenericChecksumRewriter.calculateChecksum(url);
 		return url + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "=" + calculateChecksum;
@@ -156,9 +155,8 @@ public class AjaxExpandableRenderer extends OutputRenderer {
 
 	    private String getExpandLink(DomainObject domainObject) {
 		String url = RenderersRequestProcessorImpl.getCurrentRequest().getContextPath()
-			+ "/render.do?method=renderOutput&oid=" + String.valueOf(domainObject.getOID()) + "&schema="
-			+ getExpandedSchema() + "&layout=" + getExpandedLayout() + "&properties="
-			+ convertProperties(getExpandedPropertiesMap());
+			+ "/render.do?method=renderOutput&oid=" + domainObject.getExternalId() + "&schema=" + getExpandedSchema()
+			+ "&layout=" + getExpandedLayout() + "&properties=" + convertProperties(getExpandedPropertiesMap());
 
 		String calculateChecksum = GenericChecksumRewriter.calculateChecksum(url);
 		return url + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "=" + calculateChecksum;

@@ -43,7 +43,7 @@
 			<logic:iterate id="taskConfiguration" name="task" property="taskConfigurations" length="1">
 				<tr>
 					<td rowspan="<%= numberConfigurations %>">
-						<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="OID">
+						<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="externalId">
 							<bean:write name="task" property="localizedName"/>
 						</html:link>
 					</td>
@@ -98,7 +98,7 @@
 <logic:notEmpty name="inactiveTasks">
 	<logic:iterate id="task" name="inactiveTasks">
 		<p>
-			<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="OID">
+			<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="externalId">
 				<bean:write name="task" property="localizedName"/>
 			</html:link>
 		</p>

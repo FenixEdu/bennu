@@ -18,7 +18,7 @@
 <p>
 	<logic:iterate id="roleType" name="roleTypes">
 		<bean:define id="url">manageUsers.do?method=addGroup&amp;roleType=<bean:write name="roleType" property="name"/></bean:define>
-		<html:link action="<%= url %>" paramId="userId" paramName="user" paramProperty="OID">
+		<html:link action="<%= url %>" paramId="userId" paramName="user" paramProperty="externalId">
 			<bean:write name="roleType" property="presentationName"/>
 		</html:link>
 		<br/>

@@ -64,11 +64,11 @@
 				<tr>
 					<td align="right" nowrap="nowrap" width="40%">
 						<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
-							<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do?method=previewTheme&themeId=<%= Long.toString(theme.getOID()) %></bean:define>
+							<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do?method=previewTheme&themeId=<%= theme.getExternalId() %></bean:define>
 							<form action="<%= languageUrl %>" method="post" class="login">
 								<input type="hidden" name="method" value="viewPage" />
 								<logic:present name="selectedNode">
-									<bean:define id="arg" name="selectedNode" property="OID"/>
+									<bean:define id="arg" name="selectedNode" property="externalId"/>
 									<input type="hidden" name="nodeOid" value="<%= arg %>"/>
 								</logic:present>
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -95,7 +95,7 @@
 						</logic:equal>
 						<logic:equal name="virtualHost" property="googleSearchEnabled" value="true">	
 							<bean:define id="site" name="virtualHost" property="hostname"/>
-							<bean:define id="searchUrl"><%= request.getContextPath() %>/home.do?method=previewTheme&themeId=<%= Long.toString(theme.getOID()) %></bean:define>
+							<bean:define id="searchUrl"><%= request.getContextPath() %>/home.do?method=previewTheme&themeId=<%= theme.getExternalId() %></bean:define>
 							<form method="post" action="<%= searchUrl %>">
 								<input type="text" id="q" name="q" value="Search..." />
 								<input class=" button" type="submit" name="Submit" value="Google" />

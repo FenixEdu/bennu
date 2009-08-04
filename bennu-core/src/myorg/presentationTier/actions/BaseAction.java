@@ -50,6 +50,7 @@ import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.FileUtils;
 
@@ -68,19 +69,30 @@ public abstract class BaseAction extends DispatchAction {
 	return t == null ? (T) request.getParameter(attributeName) : t;
     }
 
+    @SuppressWarnings("unchecked")
     protected <T extends DomainObject> T getDomainObject(final String value) {
-	return (T) getDomainObject(value != null ? Long.valueOf(value) : null);
+	return (T) AbstractDomainObject.fromExternalId(value);
     }
 
+    @Deprecated
     protected <T extends DomainObject> T getDomainObject(final Long oid) {
 	return oid == null ? null : (T) Transaction.getObjectForOID(oid.longValue());
     }
 
+    @SuppressWarnings("unchecked")
     protected <T extends DomainObject> T getDomainObject(final HttpServletRequest request, final String attributeName) {
-	final String parameter = request.getParameter(attributeName);
-	final Long oid = (parameter != null && parameter.length() > 0) ? Long.valueOf(parameter) : (Long) request
-		.getAttribute(attributeName);
-	return oid == null ? null : (T) Transaction.getObjectForOID(oid.longValue());
+	String oid = request.getParameter(attributeName);
+	if (oid == null || oid.length() == 0) {
+	    // This workaround must remain until there is at least one oid being
+	    // passed as a long and not its external String format.
+	    Object attribute = request.getAttribute(attributeName);
+	    if (attribute instanceof Long) {
+		oid = attribute.toString();
+	    } else {
+		oid = (String) attribute;
+	    }
+	}
+	return (T) AbstractDomainObject.fromExternalId(oid);
     }
 
     protected <T extends Object> T getRenderedObject() {
@@ -164,9 +176,9 @@ public abstract class BaseAction extends DispatchAction {
 
     protected ActionForward forwardToMuneConfiguration(final HttpServletRequest request, final VirtualHost virtualHost,
 	    final Node node) {
-	request.setAttribute("virtualHostToManageId", virtualHost.getOID());
+	request.setAttribute("virtualHostToManageId", virtualHost.getExternalId());
 	if (node != null) {
-	    request.setAttribute("parentOfNodesToManageId", node.getOID());
+	    request.setAttribute("parentOfNodesToManageId", node.getExternalId());
 	}
 	return new ActionForward("/configuration.do?method=manageMenus");
     }

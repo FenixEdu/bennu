@@ -27,7 +27,7 @@
 	</h3>
 </logic:present>
 
-<bean:define id="addContentUrl">/home.do?method=addContent&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="OID"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="OID"/></logic:present></bean:define>
+<bean:define id="addContentUrl">/home.do?method=addContent&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="externalId"/></logic:present></bean:define>
 <!-- HAS_CONTEXT --><html:link page="<%= addContentUrl %>">
 	<bean:message bundle="MYORG_RESOURCES" key="label.virtualHost.add.feature"/>
 </html:link>
@@ -51,13 +51,13 @@
 						<bean:write name="node" property="link"/>
 					</th>
 					<td>
-						<bean:define id="selectNodeUrl">/configuration.do?method=manageMenus&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="OID"/>&amp;parentOfNodesToManageId=<bean:write name="node" property="OID"/></bean:define>
+						<bean:define id="selectNodeUrl">/configuration.do?method=manageMenus&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/>&amp;parentOfNodesToManageId=<bean:write name="node" property="externalId"/></bean:define>
 						<!-- HAS_CONTEXT --><html:link page="<%= selectNodeUrl %>">
 							<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.select"/>
 						</html:link>
 					</td>
 					<td>
-						<bean:define id="deleteNodeUrl">/configuration.do?method=deleteNode&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="OID"/>&amp;nodeToDeleteId=<bean:write name="node" property="OID"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="OID"/></logic:present></bean:define>
+						<bean:define id="deleteNodeUrl">/configuration.do?method=deleteNode&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/>&amp;nodeToDeleteId=<bean:write name="node" property="externalId"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="externalId"/></logic:present></bean:define>
 						<!-- HAS_CONTEXT --><html:link page="<%= deleteNodeUrl %>">
 							<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.delete"/>
 						</html:link>
@@ -66,15 +66,15 @@
 			</logic:iterate>
 		</table>
 					<form action="<%= request.getContextPath() %>/content.do" method="post">
-						<bean:define id="virtualHostToManageId" name="virtualHostToManage" property="OID"/>
+						<bean:define id="virtualHostToManageId" name="virtualHostToManage" property="externalId"/>
 						<input type="hidden" name="virtualHostToManageId" value="<%= virtualHostToManageId %>"/>
 						<logic:present name="parentOfNodesToManage">
-							<bean:define id="parentOfNodesToManageId" name="parentOfNodesToManage" property="OID"/>
+							<bean:define id="parentOfNodesToManageId" name="parentOfNodesToManage" property="externalId"/>
 							<input type="hidden" name="parentOfNodesToManage" value="<%= parentOfNodesToManageId %>"/>
 						</logic:present>
 						<input type="hidden" name="method" value="savePageOrders"/>
 						<input type="hidden" id="articleOrders" name="articleOrders"/>
-						<bean:define id="originalArticleIds"><logic:iterate id="node" name="nodesToManage" indexId="nindex"><% if (nindex > 0) {%>;<% } %><bean:write name="node" property="OID"/></logic:iterate></bean:define>
+						<bean:define id="originalArticleIds"><logic:iterate id="node" name="nodesToManage" indexId="nindex"><% if (nindex > 0) {%>;<% } %><bean:write name="node" property="externalId"/></logic:iterate></bean:define>
 						<input type="hidden" name="originalArticleIds" value="<%= originalArticleIds %>"/>
 						<bean:define id="buttonLabel"><bean:message bundle="MYORG_RESOURCES" key="label.content.page.order.save"/></bean:define>
 						<input type="submit" value="<%= buttonLabel %>" onclick="saveArticleOrders();"/>

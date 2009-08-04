@@ -39,6 +39,7 @@ import myorg.domain.groups.PersistentGroup;
 import myorg.presentationTier.Context;
 import myorg.presentationTier.actions.ContextBaseAction;
 import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public abstract class Node extends Node_Base implements INode {
@@ -65,7 +66,7 @@ public abstract class Node extends Node_Base implements INode {
 	    parentNode.appendNodePath(stringBuilder);
 	    stringBuilder.append(Context.PATH_PART_SEPERATOR);
 	}
-	stringBuilder.append(getOID());
+	stringBuilder.append(getExternalId());
     }
 
     protected abstract void appendUrlPrefix(final StringBuilder stringBuilder);
@@ -147,12 +148,12 @@ public abstract class Node extends Node_Base implements INode {
 
     @Override
     public String asString() {
-	return Long.toString(getOID());
+	return getExternalId();
     }
 
     public static INode fromString(final String string) {
-	final long oid = Long.parseLong(string);
-	return (INode) Transaction.getObjectForOID(oid);
+	Node node = AbstractDomainObject.fromExternalId(string);
+	return node;
     }
 
     @Service

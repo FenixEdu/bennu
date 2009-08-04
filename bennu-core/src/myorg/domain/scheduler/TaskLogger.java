@@ -26,21 +26,22 @@
 package myorg.domain.scheduler;
 
 import jvstm.TransactionalCommand;
+import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class TaskLogger extends Thread {
 
     static private final int MAX_LOG_ENTRIES = 100;
-    private final long taskId;
+    private final String taskId;
     private final Boolean successful;
 
     public TaskLogger(final Task task) {
-	taskId = task.getOID();
+	taskId = task.getExternalId();
 	this.successful = null;
     }
 
     public TaskLogger(final Task task, final boolean successful) {
-	taskId = task.getOID();
+	taskId = task.getExternalId();
 	this.successful = Boolean.valueOf(successful);
     }
 
@@ -51,7 +52,7 @@ public class TaskLogger extends Thread {
 
 	    @Override
 	    public void doIt() {
-		final Task task = (Task) Transaction.getObjectForOID(taskId);
+		final Task task = AbstractDomainObject.fromExternalId(taskId);
 		if (successful == null) {
 		    task.createNewLog();
 		} else {

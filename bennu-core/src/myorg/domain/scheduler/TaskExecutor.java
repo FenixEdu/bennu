@@ -26,15 +26,16 @@
 package myorg.domain.scheduler;
 
 import jvstm.TransactionalCommand;
+import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 public class TaskExecutor extends Thread {
 
-    private long taskId;
+    private final String taskId;
 
     public TaskExecutor(final Task task) {
-	taskId = task.getOID();
+	taskId = task.getExternalId();
     }
 
     @Override
@@ -45,10 +46,10 @@ public class TaskExecutor extends Thread {
 
 	    @Override
 	    public void doIt() {
-		final Task task = (Task) Transaction.getObjectForOID(taskId);
+		Task task = AbstractDomainObject.fromExternalId(taskId);
 		task.executeTask();
 	    }
-	    
+
 	});
     }
 

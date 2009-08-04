@@ -11,7 +11,7 @@
   <tr>
     <td rowspan="2" width="60px" valign="middle">
 		<logic:present name="virtualHost" property="logo">
-	    	<bean:define id="logoUrl"><%= request.getContextPath() %>/home.do?method=logo&virtualHostId=<bean:write name="virtualHost" property="OID"/></bean:define>
+	    	<bean:define id="logoUrl"><%= request.getContextPath() %>/home.do?method=logo&virtualHostId=<bean:write name="virtualHost" property="externalId"/></bean:define>
 			<html:img src='<%= logoUrl %>'/>
 		</logic:present>
     </td>
@@ -69,7 +69,7 @@
 					<form action="<%= languageUrl %>" method="post">
 						<input type="hidden" name="method" value="viewPage" />
 						<logic:present name="selectedNode">
-							<bean:define id="arg" name="selectedNode" property="OID"/>
+							<bean:define id="arg" name="selectedNode" property="externalId"/>
 							<input type="hidden" name="nodeOid" value="<%= arg %>"/>
 						</logic:present>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

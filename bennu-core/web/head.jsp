@@ -13,7 +13,7 @@
 %>
 
 <bean:define id="theme" name="virtualHost" property="theme.name"/>
-<bean:define id="iconUrl"><%= contextPath %>/home.do?method=favico&virtualHostId=<bean:write name="virtualHost" property="OID"/></bean:define>
+<bean:define id="iconUrl"><%= contextPath %>/home.do?method=favico&virtualHostId=<bean:write name="virtualHost" property="externalId"/></bean:define>
 
 <logic:present name="virtualHost" property="favicon">
 	<link rel="shortcut icon" type="image/x-icon" href="<%= iconUrl %>"/>

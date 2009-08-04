@@ -37,7 +37,7 @@
 	<bean:define id="username" name="searchUsers" property="user.username"/>
 	<p>
 		<logic:present user="<%= username.toString() %>">
-			<html:link action="manageUsers.do?method=changePassword" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
+			<html:link action="manageUsers.do?method=changePassword" paramId="userId" paramName="searchUsers" paramProperty="user.externalId">
 				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.change.password"/>
 			</html:link>
 		</logic:present>
@@ -45,11 +45,11 @@
 			<logic:present user="<%= username.toString() %>">
 				|
 			</logic:present>
-			<html:link action="manageUsers.do?method=editUser" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
+			<html:link action="manageUsers.do?method=editUser" paramId="userId" paramName="searchUsers" paramProperty="user.externalId">
 				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.edit"/>
 			</html:link>
 			|
-			<html:link action="manageUsers.do?method=generatePassword" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
+			<html:link action="manageUsers.do?method=generatePassword" paramId="userId" paramName="searchUsers" paramProperty="user.externalId">
 				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.generate.password"/>
 			</html:link>
 			<logic:present name="password">
@@ -72,15 +72,15 @@
 	</h4>
 	<p>
 		<logic:present role="myorg.domain.RoleType.MANAGER,myorg.domain.RoleType.USER_MANAGER">
-			<html:link action="manageUsers.do?method=prepareAddGroup" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
+			<html:link action="manageUsers.do?method=prepareAddGroup" paramId="userId" paramName="searchUsers" paramProperty="user.externalId">
 				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.group.add"/>
 			</html:link>
 			<br/>
 		</logic:present>
 		<logic:iterate id="peopleGroup" name="searchUsers" property="user.peopleGroups">
 			<bean:write name="peopleGroup" property="name"/>
-			<bean:define id="url">manageUsers.do?method=removeGroup&amp;peopleId=<bean:write name="peopleGroup" property="OID"/></bean:define>
-			<html:link action="<%= url %>" paramId="userId" paramName="searchUsers" paramProperty="user.OID">
+			<bean:define id="url">manageUsers.do?method=removeGroup&amp;peopleId=<bean:write name="peopleGroup" property="externalId"/></bean:define>
+			<html:link action="<%= url %>" paramId="userId" paramName="searchUsers" paramProperty="user.externalId">
 				<bean:message bundle="MYORG_RESOURCES" key="label.application.users.group.remove"/>
 			</html:link>			
 			<br/>

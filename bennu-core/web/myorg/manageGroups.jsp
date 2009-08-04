@@ -11,7 +11,7 @@
 <logic:notEmpty name="persistentGroups">
 	<logic:iterate id="persistentGroup" name="persistentGroups">
 		<bean:write name="persistentGroup" property="name"/>
-		<html:link page="/configuration.do?method=viewPersistentGroup" paramId="persistentGroupId" paramName="persistentGroup" paramProperty="OID">
+		<html:link page="/configuration.do?method=viewPersistentGroup" paramId="persistentGroupId" paramName="persistentGroup" paramProperty="externalId">
 			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.view.group.link"/>
 		</html:link>
 		<br/>
