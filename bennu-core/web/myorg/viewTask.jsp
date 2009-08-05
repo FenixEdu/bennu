@@ -59,10 +59,17 @@
 	</table>
 </logic:notEmpty>
 
-<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=prepareAddTaskConfiguration" paramId="taskId" paramName="task" paramProperty="externalId">
-	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.add.configuration"/>
-</html:link>
-
+<ul>
+	<!-- HAS_CONTEXT --><li><html:link page="/scheduler.do?method=prepareAddTaskConfiguration" paramId="taskId" paramName="task" paramProperty="externalId">
+		<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.add.configuration"/>
+	</html:link></li>
+	<!-- HAS_CONTEXT --><li><html:link page="/scheduler.do?method=viewScheduler">
+		<bean:message bundle="MYORG_RESOURCES" key="link.back"/>
+	</html:link></li>
+	<!-- HAS_CONTEXT --><li><html:link page="/scheduler.do?method=runNow" paramId="taskId" paramName="task" paramProperty="externalId">
+		<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.runNow"/>
+	</html:link></li>
+</ul>
 <logic:notEmpty name="task" property="taskLogs">
 	<table class="tstyle2">
 		<tr>

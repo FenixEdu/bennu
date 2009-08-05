@@ -8,6 +8,12 @@
 	<bean:message bundle="MYORG_RESOURCES" key="label.configuration.tasks.scheduleing"/>
 </h2>
 
+<ul>
+	<!-- HAS_CONTEXT --><li><html:link page="/configuration.do?method=applicationConfiguration">
+		<bean:message bundle="MYORG_RESOURCES" key="link.back"/>
+	</html:link></li>
+</ul>
+
 <h3>
 	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.tasks.active"/>
 </h3>

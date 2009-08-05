@@ -9,10 +9,12 @@
 	<bean:write name="taskConfigurationBean" property="task.localizedName"/>
 </h2>
 
+<bean:define id="taskId" name="taskConfigurationBean" property="task.externalId"/>
 <fr:edit id="taskConfigurationBean" name="taskConfigurationBean" schema="myorg.domain.scheduler.TaskConfigurationBean"
 		action="scheduler.do?method=addTaskConfiguration">
 	<fr:layout name="tabular">
 		<fr:property name="classes" value="form thwidth150px"/>
 		<fr:property name="columnClasses" value=",,tderror"/>
 	</fr:layout>
+	<fr:destination name="cancel" path="<%="/scheduler.do?method=viewTask&taskId="+taskId%>" />
 </fr:edit>

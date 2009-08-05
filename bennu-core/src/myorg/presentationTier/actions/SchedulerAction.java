@@ -37,6 +37,7 @@ import myorg.presentationTier.Context;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.joda.time.DateTime;
 
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
@@ -68,6 +69,21 @@ public class SchedulerAction extends ContextBaseAction {
 	final TaskConfigurationBean taskConfigurationBean = getRenderedObject();
 	taskConfigurationBean.create();
 	return viewScheduler(mapping, form, request, response);
+    }
+    
+    public ActionForward runNow(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final Task task = getDomainObject(request, "taskId");
+	TaskConfigurationBean taskConfigurationBean =new TaskConfigurationBean(task);
+	DateTime now = new DateTime();
+	taskConfigurationBean.setMinute(now.getMinuteOfHour());
+	taskConfigurationBean.setHour(now.getHourOfDay());
+	taskConfigurationBean.setDay(now.getDayOfMonth());
+	taskConfigurationBean.setMonth(now.getMonthOfYear());
+	taskConfigurationBean.create();
+	final Context context = getContext(request);
+	request.setAttribute("task", task);
+	return context.forward("/myorg/viewTask.jsp");
     }
 
     public ActionForward viewTask(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
