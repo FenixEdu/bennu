@@ -22,7 +22,7 @@
 		<fr:property name="sortBy" value="name"/>
 		
 		<fr:property name="customLink(delete)">
-			<html:link page="/fileStorageManagement.do?method=deleteStorage&storageOID=${oid}">
+			<html:link page="/fileStorageManagement.do?method=deleteStorage&storageOID=${externalId}">
 	        	<bean:message key="link.delete" bundle="FILE_SUPPORT_RESOURCES"/>
 			</html:link>
 		</fr:property>

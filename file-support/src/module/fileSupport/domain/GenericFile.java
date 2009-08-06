@@ -24,13 +24,13 @@ abstract public class GenericFile extends GenericFile_Base {
 
     public void setContent(byte[] content) {
 	final FileStorage fileStorage = getFileStorage();
-	fileStorage.store(String.valueOf(getOid()), content);
+	fileStorage.store(getExternalId(), content);
 	setStorage(fileStorage);
-	setContentKey(String.valueOf(getOid()));
+	setContentKey(getExternalId());
     }
 
     public byte[] getContent() {
-	return getStorage().read(String.valueOf(getOid()));
+	return getStorage().read(getExternalId());
     }
 
     private FileStorage getFileStorage() {
