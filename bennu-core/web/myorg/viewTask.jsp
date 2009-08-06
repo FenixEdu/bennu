@@ -9,7 +9,7 @@
 	<bean:write name="task" property="localizedName"/>
 </h2>
 
-<bean:define id="taskId" name="task" property="externalId"/>
+<bean:define id="taskId" name="task" property="externalId" type="java.lang.String"/>
 
 <logic:notEmpty name="task" property="taskConfigurations">
 	<table class="tstyle2">
@@ -50,7 +50,7 @@
 					<bean:write name="taskConfiguration" property="dayofweek"/>
 				</td>
 				<td>
-					<!-- HAS_CONTEXT --><html:link page="<%= "/scheduler.do?method=deleteTaskConfiguration&taskId=" + taskId.toString() %>" paramId="taskConfigurationId" paramName="taskConfiguration" paramProperty="externalId">
+					<!-- HAS_CONTEXT --><html:link page="<%= "/scheduler.do?method=deleteTaskConfiguration&taskId=" + taskId %>" paramId="taskConfigurationId" paramName="taskConfiguration" paramProperty="externalId">
 						<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.configuration.delete"/>
 					</html:link>
 				</td>

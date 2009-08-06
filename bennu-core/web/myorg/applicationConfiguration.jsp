@@ -32,19 +32,19 @@
 
 		<fr:property name="link(edit)" value="/configuration.do?method=basicApplicationConfiguration" />
 		<fr:property name="key(edit)" value="label.edit" />
-		<fr:property name="param(edit)" value="OID/virtualHostId" />
+		<fr:property name="param(edit)" value="externalId/virtualHostId" />
 		<fr:property name="bundle(edit)" value="MYORG_RESOURCES" />
 		<fr:property name="order(edit)" value="1" />
 
 		<fr:property name="link(menu)" value="/configuration.do?method=manageMenus" />
 		<fr:property name="key(menu)" value="label.configuration.manage.menus.features" />
-		<fr:property name="param(menu)" value="OID/virtualHostToManageId" />
+		<fr:property name="param(menu)" value="externalId/virtualHostToManageId" />
 		<fr:property name="bundle(menu)" value="MYORG_RESOURCES" />
 		<fr:property name="order(menu)" value="2" />
 
 		<fr:property name="link(delete)" value="/configuration.do?method=deleteVirtualHost" />
 		<fr:property name="key(delete)" value="label.configuration.vitual.host.delete" />
-		<fr:property name="param(delete)" value="OID/virtualHostToManageId" />
+		<fr:property name="param(delete)" value="externalId/virtualHostToManageId" />
 		<fr:property name="bundle(delete)" value="MYORG_RESOURCES" />
 		<fr:property name="order(delete)" value="3" />
 	</fr:layout>

@@ -9,7 +9,7 @@
 	<bean:write name="taskConfigurationBean" property="task.localizedName"/>
 </h2>
 
-<bean:define id="taskId" name="taskConfigurationBean" property="task.externalId"/>
+<bean:define id="taskId" name="taskConfigurationBean" property="task.externalId" type="java.lang.String"/>
 <fr:edit id="taskConfigurationBean" name="taskConfigurationBean" schema="myorg.domain.scheduler.TaskConfigurationBean"
 		action="scheduler.do?method=addTaskConfiguration">
 	<fr:layout name="tabular">

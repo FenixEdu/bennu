@@ -45,7 +45,7 @@ public abstract class Task extends Task_Base {
 	@Override
 	public int compare(final Task task1, final Task task2) {
 	    final int c = task1.getLocalizedName().compareTo(task2.getLocalizedName());
-	    return c == 0 ? task1.getIdInternal().compareTo(task2.getIdInternal()) : c;
+	    return c == 0 ? task1.getExternalId().compareTo(task2.getExternalId()) : c;
 	}
 
     };

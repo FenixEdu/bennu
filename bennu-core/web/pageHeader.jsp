@@ -69,7 +69,7 @@
 					<form action="<%= languageUrl %>" method="post">
 						<input type="hidden" name="method" value="viewPage" />
 						<logic:present name="selectedNode">
-							<bean:define id="arg" name="selectedNode" property="externalId"/>
+							<bean:define id="arg" name="selectedNode" property="externalId" type="java.lang.String"/>
 							<input type="hidden" name="nodeOid" value="<%= arg %>"/>
 						</logic:present>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

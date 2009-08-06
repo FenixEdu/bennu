@@ -39,7 +39,7 @@ public class TaskLog extends TaskLog_Base {
 
 	@Override
 	public int compare(final TaskLog taskLog1, final TaskLog taskLog2) {
-	    return taskLog1.getIdInternal().compareTo(taskLog2.getIdInternal());
+	    return taskLog1.getExternalId().compareTo(taskLog2.getExternalId());
 	}
 
     };

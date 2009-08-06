@@ -14,7 +14,7 @@
 
 		<fr:property name="link(edit)" value="/configuration.do?method=basicApplicationConfiguration" />
 		<fr:property name="key(edit)" value="label.edit" />
-		<fr:property name="param(edit)" value="OID/virtualHostId" />
+		<fr:property name="param(edit)" value="externalId/virtualHostId" />
 		<fr:property name="bundle(edit)" value="MYORG_RESOURCES" />
 	</fr:layout>
 </fr:view>
@@ -66,10 +66,10 @@
 			</logic:iterate>
 		</table>
 					<form action="<%= request.getContextPath() %>/content.do" method="post">
-						<bean:define id="virtualHostToManageId" name="virtualHostToManage" property="externalId"/>
+						<bean:define id="virtualHostToManageId" name="virtualHostToManage" property="externalId" type="java.lang.String"/>
 						<input type="hidden" name="virtualHostToManageId" value="<%= virtualHostToManageId %>"/>
 						<logic:present name="parentOfNodesToManage">
-							<bean:define id="parentOfNodesToManageId" name="parentOfNodesToManage" property="externalId"/>
+							<bean:define id="parentOfNodesToManageId" name="parentOfNodesToManage" property="externalId" type="java.lang.String"/>
 							<input type="hidden" name="parentOfNodesToManage" value="<%= parentOfNodesToManageId %>"/>
 						</logic:present>
 						<input type="hidden" name="method" value="savePageOrders"/>

@@ -10,7 +10,7 @@
 
 <logic:present name="virtualHostToConfigure">
 	
-	<bean:define id="vhostOID" name="virtualHost" property="externalId"/>
+	<bean:define id="vhostOID" name="virtualHost" property="externalId" type="java.lang.String"/>
 	
 	<fr:form action='<%= "/configuration.do?method=editBasicApplicationConfiguration&virtualHostId=" + vhostOID%>'>
 		<fr:edit id="virtualHostToConfigure" name="virtualHostToConfigure" visible="false"/>
@@ -105,7 +105,7 @@
 
 	<br/>
 
-	<bean:define id="themeId" name="virtualHostToConfigure" property="theme.externalId"/>
+	<bean:define id="themeId" name="virtualHostToConfigure" property="theme.externalId" type="java.lang.String"/>
 	<iframe src="<%= request.getContextPath() + "/home.do?method=previewTheme&themeId=" + themeId %>"
 			width="90%" height="400" frameborder="0">
 		<p>Preview not available.</p>
