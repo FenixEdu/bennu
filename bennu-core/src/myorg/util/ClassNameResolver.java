@@ -3,19 +3,17 @@ package myorg.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import pt.ist.fenixframework.DomainObject;
-
 public class ClassNameResolver {
 
-    private static Map<Class<? extends DomainObject>, Resolver> nameMap = new HashMap<Class<? extends DomainObject>, Resolver>();
+    private static Map<Class<?>, Resolver> nameMap = new HashMap<Class<?>, Resolver>();
 
-    public static void registerType(Class<? extends DomainObject> domainType, String bundle, String key) {
-	nameMap.put(domainType, new Resolver(bundle, key));
+    public static void registerType(Class<?> objectType, String bundle, String key) {
+	nameMap.put(objectType, new Resolver(bundle, key));
     }
 
-    public static String getNameFor(Class<? extends DomainObject> domainType) {
-	Resolver resolver = nameMap.get(domainType);
-	return resolver == null ? domainType.getName() : BundleUtil.getStringFromResourceBundle(resolver.getBundle(), resolver
+    public static String getNameFor(Class<?> objectType) {
+	Resolver resolver = nameMap.get(objectType);
+	return resolver == null ? objectType.getName() : BundleUtil.getStringFromResourceBundle(resolver.getBundle(), resolver
 		.getKey());
     }
 
