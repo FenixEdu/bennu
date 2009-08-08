@@ -786,3 +786,83 @@ div.errortxt {
 	font-size: 11px;
 	line-height: 1.6em;
 }
+
+/*
+ * Definition: Defines presentation for widgets used in dashboard
+ * module. Most of the definition is taken care by jquery although
+ * there are a few things that should be defined here.
+ * For more information see comments bellow on the classes.
+ * When it happens: This is rendered automatically so you don't
+ * need to worry to apply this styles
+ */
+ 
+ /*
+  * Definition: The porlet is the container that contains both the widget
+  * header and widget content.
+  * When it happens: -
+  */
+div.portlet {
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+/*
+ *  Definition: The portlet-header defines the widget header
+ *  When it happens: - 
+ */
+div.portlet-header {
+	padding: 6px 10px;
+	margin: 0 0 0 0;
+}
+
+/*
+ *  Definition: Defines the placement of the icons that show
+ *  up in the widget header
+ *  When it happens: - 
+ */
+ 
+div.portlet-header .ui-icon {
+	float: right;	
+}
+
+/*
+ *  Definition: The portlet-content defines the content
+ *  When it happens: - 
+ */
+div.portlet-content {
+	margin: 3px;
+}
+div.portlet-content p {
+	padding: 0 10px;
+}
+
+div.portlet-content textarea {
+	width: 90%;
+	margin-left: 5%;	
+}
+/* 
+ * Definition: The column is the container that holds several
+ * widgets. Since this is a fluid layout we've set this to 
+ * 30% each (since we're working with dashboards with 3 columns)
+ * When it happens: -
+ */
+#dashboard .column {
+	width: 30%;  /* PAGE SIZE MARKER */
+	float: left;
+	padding-bottom: 100px;
+}
+
+/*
+ * Definition: The placeholder represents a dropabble place
+ * for a widget when dragging.
+ * When it happens: - 
+ */
+.ui-sortable-placeholder {
+	border: 1px dotted #C35957 !important;
+	visibility: visible !important;
+	height: 50px !important;
+}
+.ui-sortable-placeholder * {
+	visibility: hidden;
+}
+ 
