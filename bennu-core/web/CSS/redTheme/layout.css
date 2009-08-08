@@ -840,6 +840,10 @@ div.portlet-content textarea {
 	width: 90%;
 	margin-left: 5%;	
 }
+
+div.portlet-content input {
+	width: 90%;	
+}
 /* 
  * Definition: The column is the container that holds several
  * widgets. Since this is a fluid layout we've set this to 
