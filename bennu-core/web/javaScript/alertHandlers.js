@@ -9,6 +9,17 @@
            }
         });
 }
+ 
+ function requestConfirmationForJQueryForm(form,messageKey,titleKey) {
+	 $.alerts.overlayOpacity= 0.4;
+	 $.alerts.overlayColor= '#333';
+	 jConfirm(messageKey, titleKey,function(userInput) {
+		  if(userInput) {
+			 form.submit(); 
+           }
+        });
+} 
+ 
 
 function linkConfirmationHook(linkId, messageKey, titleKey) {
   var href = $("#" + linkId ).attr('href');
