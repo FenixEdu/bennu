@@ -1,7 +1,12 @@
 package module.fileSupport.domain;
 
+import javax.activation.MimetypesFileTypeMap;
+
 import myorg.domain.MyOrg;
 import myorg.domain.exceptions.DomainException;
+import myorg.domain.util.ByteArray;
+import pt.utl.ist.fenix.tools.util.FileUtils;
+import pt.utl.ist.fenix.tools.util.StringNormalizer;
 
 /**
  * 
@@ -22,12 +27,24 @@ abstract public class GenericFile extends GenericFile_Base {
 	setContent(content);
     }
 
+    @Override
+    public void setFilename(String filename) {
+	final String nicerFilename = FileUtils.getFilenameOnly(filename);
+	final String normalizedFilename = StringNormalizer.normalizePreservingCapitalizedLetters(nicerFilename);
+	super.setFilename(normalizedFilename);
+	super.setContentType(guessContentType(normalizedFilename));
+    }
+
     public void setContent(byte[] content) {
 	final FileStorage fileStorage = getFileStorage();
 	fileStorage.store(getExternalId(), content);
 	setStorage(fileStorage);
 	setContentKey(getExternalId());
     }
+    
+    public void setContent(final ByteArray content) {
+	setContent(content != null ? content.getBytes() : null);
+    }    
 
     public byte[] getContent() {
 	return getStorage().read(getExternalId());
@@ -40,4 +57,9 @@ abstract public class GenericFile extends GenericFile_Base {
 	}
 	return fileStorage;
     }
+
+    protected String guessContentType(final String filename) {
+	return new MimetypesFileTypeMap().getContentType(filename);
+    }
+
 }
