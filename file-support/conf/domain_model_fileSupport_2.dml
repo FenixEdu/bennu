@@ -6,9 +6,9 @@ relation MyOrgGenericFile {
 	}
 }
 
-relation MyOrgFileContent {
+relation MyOrgFileRawDatat {
 	myorg.domain.MyOrg playsRole myOrg;
-	module.fileSupport.domain.FileContent playsRole fileContents {
+	module.fileSupport.domain.FileRawData playsRole fileRawDatas {
 		multiplicity *;
 	}
 }

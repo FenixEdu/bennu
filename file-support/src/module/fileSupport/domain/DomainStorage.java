@@ -24,13 +24,13 @@ public class DomainStorage extends DomainStorage_Base {
 
     @Override
     public void store(String uniqueIdentification, byte[] content) {
-	new FileContent(uniqueIdentification, content);
+	new FileRawData(uniqueIdentification, content);
     }
 
     @Override
     public byte[] read(String uniqueIdentification) {
-	final FileContent fileContent = FileContent.readByUniqueIdentification(uniqueIdentification);
-	return fileContent != null ? fileContent.getContent().getBytes() : null;
+	final FileRawData rawData = FileRawData.readByUniqueIdentification(uniqueIdentification);
+	return rawData != null ? rawData.getContent().getBytes() : null;
     }
 
     @Override
