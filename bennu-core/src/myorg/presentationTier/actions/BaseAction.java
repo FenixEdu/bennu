@@ -56,6 +56,8 @@ import pt.utl.ist.fenix.tools.util.FileUtils;
 
 public abstract class BaseAction extends DispatchAction {
 
+    public static final String USED_CHARSET = "UTF-8";
+
     @Override
     public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
@@ -184,10 +186,11 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected void writeJsonReply(HttpServletResponse response, JsonObject jsonObject) throws IOException {
-	byte[] jsonReply = jsonObject.getJsonString().getBytes();
+	byte[] jsonReply = jsonObject.getJsonString().getBytes(USED_CHARSET);
 
 	final OutputStream outputStream = response.getOutputStream();
 
+	response.setContentType("text");
 	response.setContentLength(jsonReply.length);
 	outputStream.write(jsonReply);
 	outputStream.flush();
@@ -197,10 +200,11 @@ public abstract class BaseAction extends DispatchAction {
 
     protected void writeJsonReply(HttpServletResponse response, List<JsonObject> jsonObject) throws IOException {
 
-	byte[] jsonReply = JsonObject.getJsonArrayString(jsonObject).getBytes();
+	byte[] jsonReply = JsonObject.getJsonArrayString(jsonObject).getBytes(USED_CHARSET);
 
 	final OutputStream outputStream = response.getOutputStream();
 
+	response.setContentType("text");
 	response.setContentLength(jsonReply.length);
 	outputStream.write(jsonReply);
 	outputStream.flush();
