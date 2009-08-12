@@ -87,6 +87,13 @@ public class StartupServlet extends HttpServlet {
 
 	TopLevelTransaction.addCommitListener(new IndexListener());
 
+	try {
+	    MyOrg.initModules();
+	} catch (Throwable t) {
+	    t.printStackTrace();
+	    throw new Error(t);
+	}
+
 	final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
 	Authenticate.initRole(RoleType.MANAGER, managerUsernames);
 
@@ -97,6 +104,7 @@ public class StartupServlet extends HttpServlet {
 	syncThemes();
 
 	registerFilterCheckSumRules();
+
     }
 
     private void syncThemes() {
