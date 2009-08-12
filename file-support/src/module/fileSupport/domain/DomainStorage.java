@@ -24,7 +24,13 @@ public class DomainStorage extends DomainStorage_Base {
 
     @Override
     public void store(String uniqueIdentification, byte[] content) {
-	new FileRawData(uniqueIdentification, content);
+	final FileRawData existingRawData = FileRawData.readByUniqueIdentification(uniqueIdentification);
+	if (existingRawData != null) {
+	    existingRawData.delete();
+	}
+	if (content != null) {
+	    new FileRawData(uniqueIdentification, content);
+	}
     }
 
     @Override

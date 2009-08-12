@@ -36,9 +36,17 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 
     @Override
     public void store(String uniqueIdentification, byte[] content) {
+
+	final String fullPath = getFullPath(uniqueIdentification);
 	try {
-	    FileUtils.createDir(getFullPath(uniqueIdentification));
-	    FileUtils.writeFile(getFullPath(uniqueIdentification) + uniqueIdentification, content, false);
+
+	    if (content == null) {
+		new LocalFileToDelete(fullPath + uniqueIdentification);
+	    } else {
+		FileUtils.createDir(fullPath);
+		FileUtils.writeFile(fullPath + uniqueIdentification, content, false);
+	    }
+
 	} catch (IOException e) {
 	    throw new DomainException("error.store.file", e);
 	}

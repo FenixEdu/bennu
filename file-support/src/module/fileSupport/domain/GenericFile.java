@@ -4,7 +4,8 @@ import javax.activation.MimetypesFileTypeMap;
 
 import myorg.domain.MyOrg;
 import myorg.domain.exceptions.DomainException;
-import myorg.domain.util.ByteArray;
+import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.FileUtils;
 import pt.utl.ist.fenix.tools.util.StringNormalizer;
 
@@ -35,16 +36,12 @@ abstract public class GenericFile extends GenericFile_Base {
 	super.setContentType(guessContentType(normalizedFilename));
     }
 
-    public void setContent(byte[] content) {
+    private void setContent(byte[] content) {
 	final FileStorage fileStorage = getFileStorage();
 	fileStorage.store(getExternalId(), content);
 	setStorage(fileStorage);
 	setContentKey(getExternalId());
     }
-    
-    public void setContent(final ByteArray content) {
-	setContent(content != null ? content.getBytes() : null);
-    }    
 
     public byte[] getContent() {
 	return getStorage().read(getExternalId());
@@ -62,4 +59,11 @@ abstract public class GenericFile extends GenericFile_Base {
 	return new MimetypesFileTypeMap().getContentType(filename);
     }
 
+    @Service
+    public void delete() {
+	setContent(null);
+	removeStorage();
+	removeMyOrg();
+	Transaction.deleteObject(this);
+    }
 }

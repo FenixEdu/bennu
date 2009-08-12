@@ -1,3 +1,5 @@
+class module.fileSupport.domain.LocalFilesDeleter extends myorg.domain.scheduler.Task {	
+}
 
 relation MyOrgGenericFile {
 	myorg.domain.MyOrg playsRole myOrg;
@@ -26,3 +28,11 @@ relation MyOrgFileStorageConfiguration {
 		multiplicity *;
 	}
 }
+
+relation MyOrgLocalFileToDelete {
+	myorg.domain.MyOrg playsRole myOrg;
+	module.fileSupport.domain.LocalFileToDelete playsRole localFilesToDelete {
+		multiplicity *;
+	}
+}
+
