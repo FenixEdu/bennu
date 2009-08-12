@@ -21,7 +21,8 @@ public class DomainModelUtil {
 	for (DomainClass domainClass : domainModel.getDomainClasses()) {
 	    if (isClassInstance(domainClass, superClass, shouldContainSuperClass)) {
 		try {
-		    final Class<? extends DomainObject> clazz = (Class<? extends DomainObject>) Class.forName(domainClass.getFullName());
+		    final Class<? extends DomainObject> clazz = (Class<? extends DomainObject>) Class.forName(domainClass
+			    .getFullName());
 		    if (shouldContainAbstractClass || !Modifier.isAbstract(clazz.getModifiers())) {
 			classNames.add(clazz);
 		    }
@@ -33,6 +34,16 @@ public class DomainModelUtil {
 	}
 
 	return classNames;
+    }
+
+    public static DomainClass getDomainClassFor(final Class<? extends DomainObject> className) {
+	final DomainModel domainModel = FenixWebFramework.getDomainModel();
+	for (DomainClass domainClass : domainModel.getDomainClasses()) {
+	    if (domainClass.getFullName().equals(className.getName())) {
+		return domainClass;
+	    }
+	}
+	return null;
     }
 
     public static List<Class<? extends DomainObject>> getDomainClassHierarchy(final Class superClass,
