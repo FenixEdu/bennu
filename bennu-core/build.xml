@@ -17,6 +17,7 @@
 			</classpath>
 			<arg value="build_compile_aux.xml"/>
 			<arg value="${project.dirs}"/>
+			<arg value="${modules.default.src.dir}"/>
 		</java>
 	</target>
 
