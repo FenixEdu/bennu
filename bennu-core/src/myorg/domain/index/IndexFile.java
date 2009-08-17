@@ -38,7 +38,7 @@ public class IndexFile extends IndexFile_Base {
 
     public IndexFileBuffer getBuffer(Integer index) {
 	for (IndexFileBuffer buffer : getIndexFileBuffers()) {
-	    if (buffer.getIndexMarker() == index) {
+	    if (buffer.getIndexMarker().intValue() == index.intValue()) {
 		return buffer;
 	    }
 	}
