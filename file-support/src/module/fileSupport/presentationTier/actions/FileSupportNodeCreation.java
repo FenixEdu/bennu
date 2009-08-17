@@ -8,11 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import module.contents.domain.Page;
 import module.contents.domain.Page.PageBean;
+import myorg.domain.RoleType;
 import myorg.domain.VirtualHost;
 import myorg.domain.contents.ActionNode;
 import myorg.domain.contents.Node;
-import myorg.domain.groups.AnyoneGroup;
 import myorg.domain.groups.PersistentGroup;
+import myorg.domain.groups.Role;
 import myorg.presentationTier.actions.ContextBaseAction;
 import myorg.util.BundleUtil;
 
@@ -38,12 +39,12 @@ public class FileSupportNodeCreation extends ContextBaseAction {
 	final Node node = getDomainObject(request, "parentOfNodesToManageId");
 
 	final Node homeNode = createNodeForPage(virtualHost, node, "resources.FileSupportResources", "link.topBar.FileSupport",
-		AnyoneGroup.getInstance());
+		Role.getRole(RoleType.MANAGER));
 	ActionNode.createActionNode(virtualHost, homeNode, "/fileStorageManagement", "prepare", "resources.FileSupportResources",
-		"link.sideBar.fileSupport.fileStorageManagement", AnyoneGroup.getInstance());
+		"link.sideBar.fileSupport.fileStorageManagement", Role.getRole(RoleType.MANAGER));
 	ActionNode.createActionNode(virtualHost, homeNode, "/storageConfigurationManagement", "prepare",
-		"resources.FileSupportResources", "link.sideBar.fileSupport.storageConfigurationManagement", AnyoneGroup
-			.getInstance());
+		"resources.FileSupportResources", "link.sideBar.fileSupport.storageConfigurationManagement", Role
+			.getRole(RoleType.MANAGER));
 
 	return forwardToMuneConfiguration(request, virtualHost, node);
     }
