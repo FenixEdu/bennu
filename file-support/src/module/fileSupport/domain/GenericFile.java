@@ -2,6 +2,8 @@ package module.fileSupport.domain;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import org.apache.commons.lang.StringUtils;
+
 import myorg.domain.MyOrg;
 import myorg.domain.exceptions.DomainException;
 import pt.ist.fenixWebFramework.services.Service;
@@ -36,15 +38,16 @@ abstract public class GenericFile extends GenericFile_Base {
 	super.setContentType(guessContentType(normalizedFilename));
     }
 
-    private void setContent(byte[] content) {
+    public void setContent(byte[] content) {
 	final FileStorage fileStorage = getFileStorage();
-	fileStorage.store(getExternalId(), content);
+	final String uniqueIdentification = fileStorage.store(StringUtils.isEmpty(getContentKey()) ? getExternalId()
+		: getContentKey(), content);
 	setStorage(fileStorage);
-	setContentKey(getExternalId());
+	setContentKey(StringUtils.isEmpty(uniqueIdentification) ? getExternalId() : uniqueIdentification);
     }
 
     public byte[] getContent() {
-	return getStorage().read(getExternalId());
+	return getStorage().read(getContentKey());
     }
 
     private FileStorage getFileStorage() {

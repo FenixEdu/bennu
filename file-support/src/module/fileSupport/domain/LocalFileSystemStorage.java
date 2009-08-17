@@ -35,7 +35,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     @Override
-    public void store(String uniqueIdentification, byte[] content) {
+    public String store(String uniqueIdentification, byte[] content) {
 
 	final String fullPath = getFullPath(uniqueIdentification);
 	try {
@@ -46,6 +46,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 		FileUtils.createDir(fullPath);
 		FileUtils.writeFile(fullPath + uniqueIdentification, content, false);
 	    }
+	    return uniqueIdentification;
 
 	} catch (IOException e) {
 	    throw new DomainException("error.store.file", e);

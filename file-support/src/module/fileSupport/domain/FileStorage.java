@@ -12,7 +12,7 @@ import pt.utl.ist.fenix.tools.util.Pair;
 
 /**
  * 
- * @author Shezad Anavarali Date: Jul 15, 2009
+ * @author Shezad Anavarali Date: Jul 15, bb2009
  * 
  */
 abstract public class FileStorage extends FileStorage_Base {
@@ -23,7 +23,7 @@ abstract public class FileStorage extends FileStorage_Base {
 	setMyOrg(MyOrg.getInstance());
     }
 
-    abstract public void store(String uniqueIdentification, byte[] content);
+    abstract public String store(String uniqueIdentification, byte[] content);
 
     abstract public byte[] read(String uniqueIdentification);
 

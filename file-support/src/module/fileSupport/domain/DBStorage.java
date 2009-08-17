@@ -29,9 +29,9 @@ public class DBStorage extends DBStorage_Base {
     }
 
     @Override
-    public void store(String uniqueIdentification, byte[] content) {
+    public String store(String uniqueIdentification, byte[] content) {
 	// TODO Auto-generated method stub
-
+	return null;
     }
 
     @Override

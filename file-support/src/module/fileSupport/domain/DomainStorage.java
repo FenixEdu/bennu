@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import module.fileSupport.dto.DomainStorageDTO;
+import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 /**
@@ -23,19 +25,21 @@ public class DomainStorage extends DomainStorage_Base {
     }
 
     @Override
-    public void store(String uniqueIdentification, byte[] content) {
-	final FileRawData existingRawData = FileRawData.readByUniqueIdentification(uniqueIdentification);
-	if (existingRawData != null) {
-	    existingRawData.delete();
+    public String store(String uniqueIdentification, byte[] content) {
+	final DomainObject existingRawData = AbstractDomainObject.fromExternalId(uniqueIdentification);
+	if (existingRawData instanceof FileRawData && existingRawData != null) {
+	    ((FileRawData) existingRawData).delete();
 	}
+
 	if (content != null) {
-	    new FileRawData(uniqueIdentification, content);
+	    return new FileRawData(uniqueIdentification, content).getExternalId();
 	}
+	return null;
     }
 
     @Override
     public byte[] read(String uniqueIdentification) {
-	final FileRawData rawData = FileRawData.readByUniqueIdentification(uniqueIdentification);
+	final FileRawData rawData = FileRawData.fromExternalId(uniqueIdentification);
 	return rawData != null ? rawData.getContent().getBytes() : null;
     }
 

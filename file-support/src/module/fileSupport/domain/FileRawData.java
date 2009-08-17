@@ -22,15 +22,6 @@ public class FileRawData extends FileRawData_Base {
 	setContentKey(uniqueIdentification);
     }
 
-    public static FileRawData readByUniqueIdentification(final String uniqueIdentification) {
-	for (final FileRawData rawData : MyOrg.getInstance().getFileRawDatas()) {
-	    if (rawData.getContentKey().equals(uniqueIdentification)) {
-		return rawData;
-	    }
-	}
-	return null;
-    }
-
     public void delete() {
 	removeMyOrg();
 	Transaction.deleteObject(this);
