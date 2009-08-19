@@ -36,3 +36,8 @@ relation MyOrgLocalFileToDelete {
 	}
 }
 
+relation MyOrgFileSupport {
+	myorg.domain.MyOrg playsRole myOrg;
+	module.fileSupport.domain.FileSupport playsRole fileSupport;
+}
+
