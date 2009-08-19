@@ -823,6 +823,7 @@ div.portlet-header {
  
 div.portlet-header .ui-icon {
 	float: right;	
+	cursor: pointer;
 }
 
 /*
