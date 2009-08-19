@@ -38,9 +38,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
         setOjbConcreteClass(getClass().getName());
     }
 
-    public boolean isMember(final User user) {
-	return false;
-    }
+    public abstract boolean isMember(final User user);
 
     public abstract String getName();
 
