@@ -1,0 +1,902 @@
+/*
+ * If you only want to change page size, please look
+ * for the maker PAGE SIZE MARKER in comments and 
+ * you'll find it easily.
+ *
+ * All colors are in hex so to find all colors simply
+ * search for #
+ *
+ */
+
+/*
+ * Definition: Standard styles of the theme
+ * When it happens: They are defined by element, so they always 
+ * happen on the element definition.
+ */
+ 
+body {
+	margin-top: 0px;	  
+	margin-bottom: 30px;
+	background: url(images/bg.jpg); 
+}
+
+div, p, form {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
+	font-weight: bold;
+	font-size: 22px;
+	color: #FFFFFF; 
+	margin-left: -7px;
+	margin-bottom: 23px;
+}
+
+h2 {
+	color: #555;
+	font-size: 18px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0;
+	padding: 0.75em 0 0.5em 0;
+}
+h3 {
+	font-size: 1.2em;
+}
+a {
+	color: #B3591F;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+a:hover {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+/*
+ * Definition: Sometimes it might be desirable that a link has 
+ * less visibility. This class provides that.
+ * When it happens: Applying CLASS secondaryLink to a link (a)
+ */
+a.secondaryLink {
+	border-bottom: 1px dotted #aaa !important;
+	cursor: pointer;
+	font-weight: normal;
+	color: #444 !important;
+	text-decoration: none !important;
+}
+a:hover.secondaryLink  {
+	font-weight: normal;
+}
+
+/*
+ * Definition: Image styles
+ * When it happens: look in the specific classes
+ */
+
+a img{
+	border: none;
+}
+
+img.left,img.center,img.right {
+	padding: 4px;
+	border: 1px solid #a0a0a0;
+}
+
+/*
+ * Definition: Float image to left
+ * When it happens: apply CLASS left to an img
+ */
+img.left {
+	float: left;
+	margin: 0 12px 5px 0;
+}
+
+/*
+ * Definition: Centers image
+ * When it happens: apply CLASS center to an img
+ */
+img.center {
+	display: block;
+	margin: 0 auto 5px auto;
+}
+
+/*
+ * Definition: Float image to right
+ * When it happens: apply CLASS right to an img
+ */
+img.right {
+	float: right;
+	margin: 0 0 5px 12px;
+}
+
+/*
+ * Definition: Standard definition of forms
+ * When it happens: is applied to elements itself,
+ * also keep in mind that rendering framework puts
+ * the class inputbutton in all inputbuttons.
+ */
+form {
+	float: left;
+	font-size: 10Fpx;
+}
+
+div.login a {
+	color: #B6D7E8;
+}
+
+input {
+	color: #555;
+	font-size: 11px;
+	padding: 2px;
+}
+
+.inputbutton {
+	padding: 3px 4px;
+	background: #6A6767;
+	color: #fff;
+	border: 1px solid #383F3F;
+	font-weight: bold;
+}
+
+/*
+ * Definition: Presentation of login form
+ * When it happens: it's specific for the login form.
+ *
+ */
+form.login {
+	float:right;
+	font-size: 10px;
+}
+
+div.login {
+	float: right;
+	color: #fff;
+	padding-right: 15px;
+}
+
+.inputbuttonlogin {
+	padding: 3px 4px;
+	background: #6A6767;
+	color: #fff;
+	border: 1px solid #383F3F;
+	font-weight: bold;
+}
+
+/*
+ * Definition: Defines presentation for the div with id header
+ * When it happens: - 
+ *
+ */
+#header {
+	width: 100%;     /* PAGE SIZE MARKER */
+	border: 0px;
+	padding-bottom: 0;
+	padding-top: 10px;
+	min-height: 100px;
+	background: #673212;
+	-webkit-border-top-right-radius: 6px;
+	-webkit-border-top-left-radius: 6px;
+	-moz-border-radius-topright: 6px; 
+	-moz-border-radius-topleft: 6px;
+}
+#header p {
+	font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
+	font-style: bold;
+	font-size: 12px;
+	margin-top: -20px;
+	margin-left: -7px;
+	color: #B6D7E8;
+}
+
+#header img {
+	padding: 10px 15px 10px 25px;
+}
+#header form {
+	color: #B6D7E8;
+	padding-right: 0.5em;
+}
+
+/*
+ * Definition: Defines presentation for the div with id mainnav.
+ * This is the div where the tabs show up
+ * When it happens: - 
+ *
+ */
+#mainnav {
+	width: 100%;  /* PAGE SIZE MARKER */
+	position: relative;
+	height: 3.7em;
+	font-size: 93%;
+	background: #673212;
+	text-transform: uppercase;
+}
+#mainnav ul {
+	position: absolute;
+	bottom: 0;
+	margin: 0;
+	padding: 0 10px 0 25px;
+	list-style: none;
+}
+#mainnav ul li {
+	display: inline;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+#mainnav a {
+	float: left;
+	margin: 0 0 0 2px;
+	text-decoration: none;
+	background: #80573D;
+	position: relative;
+	-webkit-border-top-right-radius: 6px;
+	-webkit-border-top-left-radius: 6px;
+	-moz-border-radius-topright: 6px; 
+	-moz-border-radius-topleft: 6px;
+}
+
+#mainnav ul li.selected a {
+	background: #B37955;
+	-webkit-border-top-right-radius: 6px;
+	-webkit-border-top-left-radius: 6px;
+	-moz-border-radius-topright: 6px; 
+	-moz-border-radius-topleft: 6px;
+}
+
+#mainnav a span, #mainnav ul li.selected a:hover span {
+	display: block;
+	padding: 6px 15px 6px 15px;
+	color: #fff;
+	float: none;
+}
+
+#mainnav ul li a:hover span {
+	color: #fff;
+}
+
+/*
+ * Definition: Defines presentation for the div with id container.
+ * This is the div that contains the header, the main navigation and
+ * a second container (container2) which hold the secondary navigation (secnav)
+ * the content itself (container3 > content) and the footer (footer)
+ * When it happens: - 
+ * 
+ */
+
+#container {
+	width: 90%; /* PAGE SIZE MARKER */
+	margin: 0 auto;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 1.6em;
+	padding: 3px;
+	position: relative;
+	margin:5px auto 0;
+	background: #FFF;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px; 
+}
+
+#container ul li.header {
+	display: none !important;
+}
+
+#container #secnav {
+	position: relative;
+	height: 3.2em;
+	border-top: 4px solid #B37955;
+	background: #B37955;
+	color: #fff;
+	-webkit-border-bottom-right-radius: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-moz-border-radius-bottomright: 6px; 
+	-moz-border-radius-bottomleft: 6px;
+}
+
+#container #secnav ul {
+	bottom: 0;
+	margin: 0;
+	padding: 9px 10px 0 23px;
+}
+
+#container #secnav ul li {
+	bottom: 0;
+	margin: 0;
+	display: inline;
+}
+
+#container #secnav a {
+	margin: 0;
+	text-decoration: none;
+	padding: 4px;
+}
+
+#container #secnav a span { 
+	color: #fff; 
+}
+
+#container #secnav a:hover span { 
+	text-decoration: underline 
+}
+#container #secnav a span { 
+	float: none; 
+}
+
+/*
+ * Definition: Defines presentation for the div with id container2.
+ * This is the div that contains the secondary navigation (secnav)
+ * the content itself (container3 > content) and the footer (footer)
+ * When it happens: - 
+ * 
+ */
+ 
+#container2 {
+	background-color: #fff;
+}
+
+/*
+ * Definition: Defines presentation for the div with id container3.
+ * This is the div that contains a content div where the content is
+ * held
+ * When it happens: - 
+ * 
+ */
+
+#container3 {
+	width: 95%; /* PAGE SIZE MARKER */
+	margin: 0 auto;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 1.6em;
+	color: #555;
+	padding: 0 15px;
+}
+
+#container3 a {
+	color: #B3591F;
+}
+
+/*
+ * Definition: Defines presentation for the div with id content.
+ * This is the div that contains the content
+ * When it happens: - 
+ * 
+ */
+ 
+#content {
+	width: 100%; /* PAGE SIZE MARKER */
+	padding-left: 10px;
+	padding-right: 0;
+	padding-top: 10px;
+	padding-bottom: 2em;
+	float: left;
+}
+
+#content a {
+	text-decoration: underline;
+}
+
+#content form{
+	float: none;
+}
+#content p {
+	margin: 1em 0;
+}
+
+/*
+ * Definition: Footer Presentation
+ * When it happens: Applied to element with ID #footer
+ *
+ */
+ 
+#footer {
+	width: 100%; /* PAGE SIZE MARKER */
+	margin: 0 0 1px;
+	padding: 10px 0;
+	clear: both;
+	background: #673212;
+	position: relative;
+	z-index: 1;
+	-moz-border-radius-topleft: 6px; 
+	-moz-border-radius-topright: 6px; 
+	-moz-border-radius-bottomright: 6px; 
+	-moz-border-radius-bottomleft: 6px;
+	-webkit-border-radius: 6px;
+}
+
+#footer p {
+	color:#FFFFFF;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+}
+
+
+/*
+ * Definition: Data Forms
+ * When it happens: Table inside forms that are inside #container 
+ *
+ */
+ 
+#content form table {
+	border-collapse: collapse;
+	margin: 1em 0 1.5em 0;
+}
+
+#content form table th {
+	text-align: left;
+	border: none;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	padding: 5px 0;
+	white-space: nowrap;
+	font-weight: normal;
+	vertical-align: top;
+	background: none;
+}
+
+#content form table td {
+	text-align: left;
+	border: none;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	padding: 5px 0;
+	padding-left: 10px;
+	vertical-align: top;
+	background: none;
+}
+#content form table table th {
+	border: none;
+}
+#content form table table td {
+	border: none;
+}
+#content form table tr td.tderror {
+	border-top: none !important;
+	border-bottom: none !important;
+	color: #cc2200;
+}
+#content form table tr td.tderror span {
+	background-color: #fff0dd;
+}
+#content form table table tr th { 
+	margin: 0; 
+	padding: 0 2px 0 0; 
+}
+#content form table table tr td { 
+	margin: 0; 
+	padding: 0 2px 0 0;
+}
+
+
+/*
+ * Definition: Strutural table
+ * When it happens: TABLEs with CLASS structural
+ *
+ */
+ 
+#content table.structural { 
+	border-collapse: collapse; 
+	padding: 0;
+	margin: 1em 0;
+	width: 100%;
+}
+#content table.structural th { 
+	padding: 0 0.5em 0 0; 
+	margin: 0; 
+}
+#content table.structural td { 
+	padding: 0 0.2em 0 0; 
+	margin: 0; 
+	vertical-align: top;
+}
+
+/**
+ * Definition: Error Box, Div element that should be used to present errors.
+ * When it happens: Applying CLASS errorBox to a DIV
+ * replaces: error1
+ */
+
+div.errorBox { 
+	margin: 0.75em 0;
+	padding: 0.4em 0.4em 0.4em 2.5em;
+	background: #ffeddd url(images/error01.gif) 0.5em 0.5em no-repeat;
+}
+
+/**
+ * Definition: Warning Box, Div element that should be used to present warnings.
+ * When it happens: Applying CLASS warningBox to a DIV
+ * replaces: warning1
+ * replaces: warning2
+ * replaces: warning3
+ */
+
+div.warningBox {
+	margin: 0.75em 0;
+	padding: 0.4em 0.4em 0.4em 2.5em;
+	background: #fbf2cf url(images/warning01.gif) 0.5em 0.5em no-repeat;
+}
+
+/**
+ * Definition: Highlight Box, Div element that should present important 
+ * and sporadic information to user.
+ * When it happens: Applying CLASS highlightBox to a DIV
+ * replaces: infoop4
+ * replaces: infoop7
+ */
+ 
+div.highlightBox {
+	border: 1px solid #f0ce6f;
+	padding: 5px 10px;
+	background: #fbf2cf;
+	margin: 1em 0;
+}
+ 
+/**
+ * Definition: Data Box, Div element that presents regular information
+ * to the user
+ * When it happens: Applying CLASS dataBox to a DIV
+ * replaces: infoop2
+ * replaces: infoop6
+ */
+ 
+div.dataBox {
+	border: 1px solid #ddd;
+	padding: 5px 10px;
+	background: #f5f5f5;
+	margin: 1em 0;
+} 
+ 
+/**
+ * Definition: Option Box, Div element that contains various links
+ * that a user can choose. Should be used for operation links and 
+ * navigation.
+ * When it happens: Applying CLASS optionBox to a DIV
+ * replaces: infoop1
+ */
+ 
+div.optionBox {
+	border: 1px solid #ddd;
+	padding: 5px 10px;
+	background: #f5f5f5;
+	margin: 1em 0;
+}
+
+
+/* 
+ * Definition: Default table display
+ * When it happens: Any table inside CONTAINER content
+ */
+
+#content table.table {
+	border-collapse: collapse;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #eee;
+	width: 100%;
+}
+
+#content table.table th {
+	font-weight: normal;
+	padding: 3px 4px;
+	background: #DDFF7D;
+	border-bottom: 1px solid #eee;
+}
+
+#content table.table td {
+	padding: 3px 5px;
+	background: #fff;
+	border-bottom: 1px solid #eee;
+}
+
+
+/*
+ * Definition: Presentation for auto complete list
+ * When it happens: Applied to any UL list with autoComplete class,
+ * the rendering framework takes care of this automatically so 
+ * there's no need to worry.
+ *
+ */
+ 
+ul.autocomplete label {
+	display:block;
+}
+
+input.autocomplete-loading {
+	background-image: url(images/autocomplete.gif);
+	background-position: center right;
+	background-repeat: no-repeat;
+}
+div ul.autocomplete {
+	width:375px !important;
+	position: absolute;
+	background-color: #fff;
+	border: 1px solid #aaa;
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	color: #000;
+	display: none;
+	z-index: 1000;
+}
+div ul.autocomplete li {
+	display: block;
+	padding: 1px 4px;
+	cursor: pointer;
+}
+div ul.autocomplete li.selected {
+	background: #DDFF7D;
+}
+div ul.autocomplete li strong {
+
+}
+
+
+/*
+ * Definition: Help box generated by renderers when
+ * a schema contains a help attribute defined.
+ * When it happens: The classes are setted by default
+ * so basically it is set to the DIV generated.
+ *
+ */
+
+div.chelp {
+	display: inline;
+	padding-top: 5px;
+	padding-bottom: 15px;
+}
+div.chelp img {
+	padding-right: 10px;
+}
+div.closed div.chelptext {
+	display: none;
+}
+div.copen div.chelptext {
+	display: inline;
+}
+div.chelp div.icon {
+	background: #efa url(images/icon_help.gif) no-repeat;
+	width: 20px;
+	height: 20px;
+}
+div.chelp {
+	position: relative;
+}
+div.chelp div.chelptext {
+	position: absolute;
+	z-index: 10;
+	top: 0;
+	left: 25px;
+	width: 200px;
+	background: #DDFF7D;
+	padding: 5px 10px;
+	border: 1px solid #7C982C;
+}
+div.chelp div.chelptext a {
+	font-weight: normal;
+}
+
+div.nojavascript {
+	color: #888;
+	font-size: 0.9em;
+}
+div.nojavascript img {
+	display: none;
+}
+div.nojavascript div.chelptext {
+	display: block;
+}
+
+/*
+ * Definition: Style used to mark an off/closed/rejected marker on a span
+ * When it happens: Apply CLASS off to a SPAN
+ */
+
+span.off {
+	padding: 1px;
+	background: #fff;
+	cursor: default;
+}
+
+/*
+ * Definition: Style used to mark an on/open/completed marker on a span
+ * When it happens: Apply CLASS on to a SPAN
+ */
+ 
+span.on {
+	cursor: default;
+	padding: 1px;
+	font-weight: bold;
+	background: #dcecdc;
+	color: #397239;
+}
+
+/*
+ * Definition: Style used to mark an on going marker on a span
+ * When it happens: Apply CLASS onGoing to a SPAN
+ * replaces: half
+ */
+span.onGoing {
+	padding: 1px;
+	cursor: default;
+	background: #f8ebc4;
+	background: #f6e6b4;
+	color: #a67c00;
+	color: #9f7700;
+	font-weight: bold;
+}
+
+/*
+ * Definition: Default support for ToolTip Renderers (renders that
+ * extend AbtractToolTipRenderer)
+ * When it happens: Should be configured in the render so it generates
+ * all the markup correctly
+ */
+ 
+div.tooltip {
+	display: inline;
+	position: relative;
+}
+div.tooltip img {
+	padding-top: 5px;
+}
+div.tooltipClosed div.tooltipText {
+	display: none;
+}
+div.tooltipOpen div.tooltipText {
+	display: inline;
+}
+div.tooltip div.tooltipText {
+	position: absolute;
+	z-index: 10;
+	top: 0;
+	left: 25px;
+	width: 325px;
+	background: #edf4f8;
+	padding: 5px 10px;
+	border: 1px solid #c5dae7;
+	text-align: left;
+}
+div.tooltip div.tooltipText a {
+	font-weight: normal;
+}
+div.tooltip div.tooltipText ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-align: left;
+}
+div.tooltip div.tooltipText ul li {
+	margin: 0;
+	padding: 0;
+}
+div.tooltip span { 
+	border-bottom: 1px dotted #888; 
+	cursor: default;
+}
+div.tooltip div.tooltipText span { 
+	border-bottom: none; 
+}
+
+/*
+ * Definition: Generates round corners using CSS3
+ * When it happens: When CLASS roundCorners is applied to a DIV
+ *
+ */
+ 
+.roundCorners {
+	-moz-border-radius-topleft: 6px; 
+	-moz-border-radius-topright: 6px; 
+	-moz-border-radius-bottomright: 6px; 
+	-moz-border-radius-bottomleft: 6px;
+	-webkit-border-radius: 6px;
+}
+
+
+/*
+ * Definition: Defines presentation for the default error page.
+ * When it happens: The default error page uses these classes.
+ *
+ */
+div.errorcontainer {
+	width: 50%;
+	margin: 0px auto;
+	background: #fff;
+	padding: 0 0.5em;
+}
+
+div.errorcontainer h2 {
+	color: #555;
+}
+
+div.errortxt {
+	padding: 0 1em 2em 1em;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 1.6em;
+}
+
+/*
+ * Definition: Defines presentation for widgets used in dashboard
+ * module. Most of the definition is taken care by jquery although
+ * there are a few things that should be defined here.
+ * For more information see comments bellow on the classes.
+ * When it happens: This is rendered automatically so you don't
+ * need to worry to apply this styles
+ */
+ 
+ /*
+  * Definition: The porlet is the container that contains both the widget
+  * header and widget content.
+  * When it happens: -
+  */
+div.portlet {
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+/*
+ *  Definition: The portlet-header defines the widget header
+ *  When it happens: - 
+ */
+div.portlet-header {
+	padding: 6px 10px;
+	margin: 0 0 0 0;
+}
+
+/*
+ *  Definition: Defines the placement of the icons that show
+ *  up in the widget header
+ *  When it happens: - 
+ */
+ 
+div.portlet-header .ui-icon {
+	float: right;	
+}
+
+/*
+ *  Definition: The portlet-content defines the content
+ *  When it happens: - 
+ */
+div.portlet-content {
+	margin: 3px;
+}
+div.portlet-content p {
+	padding: 0 10px;
+}
+
+div.portlet-content textarea {
+	width: 90%;
+	margin-left: 5%;	
+}
+
+div.portlet-content input {
+	width: 90%;	
+}
+/* 
+ * Definition: The column is the container that holds several
+ * widgets. Since this is a fluid layout we've set this to 
+ * 30% each (since we're working with dashboards with 3 columns)
+ * When it happens: -
+ */
+#dashboard .column {
+	width: 30%;  /* PAGE SIZE MARKER */
+	float: left;
+	padding-bottom: 100px;
+}
+
+/*
+ * Definition: The placeholder represents a dropabble place
+ * for a widget when dragging.
+ * When it happens: - 
+ */
+.ui-sortable-placeholder {
+	border: 1px dotted #DDFF7D !important;
+	visibility: visible !important;
+	height: 50px !important;
+}
+.ui-sortable-placeholder * {
+	visibility: hidden;
+}
