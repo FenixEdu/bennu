@@ -2,7 +2,6 @@
   
     <!--@ The default presentation for every object. -->
     <renderer type="java.lang.Class" layout="label" class="pt.ist.fenixWebFramework.renderers.ClassAsLabelRenderer"/>
-    <renderer type="java.lang.String" layout="label" class="pt.ist.fenixWebFramework.renderers.ClassAsLabelRenderer"/>
 
     <!--@ The default presentation for every object. -->
     <renderer type="java.lang.Class" layout="label-to-material-type-in-spaces-management" class="pt.ist.fenixWebFramework.renderers.ClassAsLabelRenderer">
