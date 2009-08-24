@@ -41,7 +41,7 @@ jQuery.fn.autocomplete = function(url, settings )
 		var oldText = '';
 		var typingTimeout;
 		var size = 0;
-		var selected = 0;
+		var selected = -1;
 
 		settings = jQuery.extend(//provide default settings
 		{
@@ -88,7 +88,9 @@ jQuery.fn.autocomplete = function(url, settings )
 							if (settings.select != null) {
 								settings.select(textInput,text,$(this));
 							}
-							clear(); });
+							clear(); 
+							selectNextInput();
+						  	});
 						}
 						if (settings.after != null) 
 						{
@@ -116,11 +118,23 @@ jQuery.fn.autocomplete = function(url, settings )
 		{
 			list.hide();
 			size = 0;
-			selected = 0;
+			selected = -1;
 			oldText = '';
 		}	
 		
-
+		function selectNextInput() {
+			var nextRow = textInput.parents("tr").next("tr")
+			if (nextRow.size() != 0) {
+				var nextInput = nextRow.find(":input:visible:first");
+				nextInput.focus();
+			}
+			else {
+			// table ended let's try to find the submit button
+				var submitButton = textInput.parents("table").next(":input[type=submit]:visible:first");
+				submitButton.focus();
+			}				
+		}
+		
 		textInput.blur( function(e) {
 			 window.setTimeout(function() { list.hide(); },'300');
 		});
@@ -162,17 +176,39 @@ jQuery.fn.autocomplete = function(url, settings )
 					}
 					
 					clear();
-					
+					selectNextInput();
 				}
 				e.preventDefault();
 				return false;
 			}
-			else if(e.which == 40 || e.which == 9 || e.which == 38)//move up, down 
+			else if (e.which == 9)  
+			// Tab
+			{
+				if (list.css("display") == "block") 
+				{
+					// when the suggestion list is open
+					// and tab is pressed we'll select 
+					// the value that is highlighted, if
+					// none is, then we'll select the 1st.
+					if (selected == -1) {
+						selected = 0;
+					}
+					textInput.val( list.children().removeClass('selected').eq(selected).addClass('selected').text() );	        
+					selectedItem = $(list.children()[selected]);
+					settings.select(textInput,textInput.val(),selectedItem);
+					valueInput = textInput.next();
+					valueInput.val(selectedItem.attr('name'));
+					clear();
+					selectNextInput();
+					e.preventDefault();
+				}
+
+			}
+			else if(e.which == 40  || e.which == 38)//move up, down 
 			{
 			  switch(e.which) 
 			  {
 				case 40: 
-				case 9:
 				  selected = selected >= size - 1 ? 0 : selected + 1; break;
 				case 38:
 				  selected = selected <= 0 ? size - 1 : selected - 1; break;
