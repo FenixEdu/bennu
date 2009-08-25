@@ -37,6 +37,7 @@ import myorg.domain.contents.Node;
 import myorg.domain.groups.PersistentGroup;
 import myorg.domain.util.ByteArray;
 import myorg.presentationTier.Context;
+import myorg.presentationTier.LayoutContext;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -70,10 +71,11 @@ public class ConfigurationAction extends ContextBaseAction {
 	final VirtualHostBean bean = getRenderedObject("virtualHostToConfigure");
 	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
 	virtualHost.edit(bean);
+
+	((LayoutContext) getContext(request)).setLayout(bean.getTheme());
 	return applicationConfiguration(mapping, form, request, response);
     }
 
-    
     public ActionForward editBasicApplicationConfigurationLogo(final ActionMapping mapping, final ActionForm form,
 	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final VirtualHostBean bean = getRenderedObject("virtualHostToConfigureLogo");

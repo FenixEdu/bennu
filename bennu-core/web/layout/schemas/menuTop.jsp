@@ -12,7 +12,9 @@
 %>
 
 <head>
-	<jsp:include page="<%= layoutContext.getHead() %>"/>
+	<logic:iterate id="head" collection="<%= layoutContext.getHead() %>" type="java.lang.String">
+		<jsp:include page="<%= head %>"/>
+	</logic:iterate>
 </head>
 
 <body>
@@ -24,9 +26,7 @@
 	</div>
 
 	<div id="mainnav">
-		<logic:equal name="virtualHost" property="theme.type" value="TOP">
 			<jsp:include page="<%= layoutContext.getMenuTop() %>"/>
-		</logic:equal>
 		<div class="c1"></div>
 		<div class="c2"></div>
 	</div>
@@ -34,12 +34,7 @@
 	
 	<div id="container2">
 		<div id="secnav">
-			<logic:equal name="virtualHost" property="theme.type" value="TOP">
-				<jsp:include page="<%= layoutContext.getSideBar() %>"/>
-			</logic:equal>
-			<logic:equal name="virtualHost" property="theme.type" value="SIDE">
-				<jsp:include page="<%= layoutContext.getSideBarLeft() %>"/>
-			</logic:equal>
+				<jsp:include page="<%= layoutContext.getSubMenuTop() %>"/>
 			<div class="c1"></div>
 			<div class="c2"></div>
 		</div>

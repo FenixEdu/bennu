@@ -25,30 +25,40 @@
 
 package myorg.presentationTier;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import myorg.domain.Theme;
+import myorg.domain.VirtualHost;
+
 import org.apache.struts.action.ActionForward;
 
 public class LayoutContext extends Context {
 
-    private String layout = "/defaultLayout.jsp";
+    private String layout;
 
     private String title = "";
-    private String head = "/head.jsp";
-    private String pageHeader = "/pageHeader.jsp";
-    private String sideBarLeft = "/sideBarLeft.jsp";
-    private String sideBar = "/sideBar.jsp";
-    private String menuTop = "/menuTop.jsp";
+    private List<String> head = new ArrayList<String>();
+    private String pageHeader = "/layout/pageHeader.jsp";
+    private String sideBar = "/layout/sideBar.jsp";
+    private String subMenuTop = "/layout/subMenuTop.jsp";
+    private String menuTop = "/layout/menuTop.jsp";
 
-    private String pageOperations = "/blank.jsp";
-    private String breadCrumbs = "/breadCrumbs.jsp";
-    private String body = "/blank.jsp";
-    private String footer = "/footer.jsp";
+    private String pageOperations = "/layout/blank.jsp";
+    private String breadCrumbs = "/layout/breadCrumbs.jsp";
+    private String body = "/layout/blank.jsp";
+    private String footer = "/layout/footer.jsp";
 
     public LayoutContext() {
 	super();
+	setLayout(VirtualHost.getVirtualHostForThread().getTheme());
+	head.add("/layout/head.jsp");
     }
 
     public LayoutContext(final String path) {
 	super(path);
+	setLayout(VirtualHost.getVirtualHostForThread().getTheme());
+	head.add("/layout/head.jsp");
     }
 
     public String getLayout() {
@@ -67,12 +77,12 @@ public class LayoutContext extends Context {
 	this.title = title;
     }
 
-    public String getHead() {
+    public List<String> getHead() {
 	return head;
     }
 
-    public void setHead(String head) {
-	this.head = head;
+    public void addHead(String head) {
+	this.head.add(head);
     }
 
     public String getPageHeader() {
@@ -83,20 +93,20 @@ public class LayoutContext extends Context {
 	this.pageHeader = pageHeader;
     }
 
-    public String getSideBarLeft() {
-	return sideBarLeft;
-    }
-
-    public void setSideBarLeft(String sideBarLeft) {
-	this.sideBarLeft = sideBarLeft;
-    }
-
     public String getSideBar() {
 	return sideBar;
     }
 
     public void setSideBar(String sideBar) {
 	this.sideBar = sideBar;
+    }
+
+    public String getSubMenuTop() {
+	return subMenuTop;
+    }
+
+    public void setSubMenuTop(String subMenuTop) {
+	this.subMenuTop = subMenuTop;
     }
 
     public String getPageOperations() {
@@ -143,6 +153,10 @@ public class LayoutContext extends Context {
     public ActionForward forward(final String body) {
 	setBody(body);
 	return new ActionForward(getLayout());
+    }
+
+    public void setLayout(Theme theme) {
+	this.layout = "/CSS/" + theme.getName() + "/layout.jsp";
     }
 
 }
