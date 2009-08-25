@@ -17,14 +17,16 @@ public class OrganizationChart<T> extends ArrayList<OrganizationChartRow<T>> {
 
     public OrganizationChart(final T element, final Collection<T> parents, final Collection<T> children, final int unitsPerPart) {
 	this.unitsPerPart = unitsPerPart;
-	addAll(parents);
+	if (parents != null && !parents.isEmpty()) {
+	    addAll(parents);
+	}
 	elementRowIndex = size();
 	add(new OrganizationChartRow<T>(element, unitsPerPart));
 	addAll(children);
     }
 
     public void addAll(final Collection<T> elements) {
-	if (elements != null) {
+	if (elements != null && !elements.isEmpty()) {
 	    OrganizationChartRow<T> row = null;
 	    for (final T t : elements) {
 		if (row == null || row.isFull()) {
