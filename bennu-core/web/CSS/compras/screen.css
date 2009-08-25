@@ -1,3 +1,7 @@
 @import url("layout.css");
-@import url("ui.all.css");
+@import url("commons.css");
+@import url("compras.css");
+@import url("metaworkflow.css");
+
+@import url("jqTheme/ui.all.css");
 @import url("jquery.alerts.css");

@@ -134,7 +134,7 @@
 	
 	
 	<div id="container2">
-		<div id="secnav">
+		<div id="secondarynav">
 			<logic:equal name="theme" property="type" value="TOP">
 				<ul>
 					<li class="navsublist">

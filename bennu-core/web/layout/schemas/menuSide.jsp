@@ -32,7 +32,7 @@
 	
 	
 	<div id="container2">
-		<div id="secnav">
+		<div id="secondarynav">
 				<jsp:include page="<%= layoutContext.getSideBar() %>"/>
 			<div class="c1"></div>
 			<div class="c2"></div>

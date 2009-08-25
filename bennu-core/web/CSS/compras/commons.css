@@ -1,0 +1,132 @@
+
+/************************************
+       GENERAL
+***********************************/
+
+.aleft { text-align: left !important; }
+.aright { text-align: right !important; }
+.smalltxt { font-size: 0.95em; }
+.mbottom0 { margin-bottom: 0em !important; }
+.mbottom025 { margin-bottom: 0.25em !important; }
+.mbottom05 { margin-bottom: 0.5em !important; }
+.mbottom075 { margin-bottom: 0.75em !important; }
+.mbottom1 { margin-bottom: 1em !important; }
+.mbottom15 { margin-bottom: 1.5em !important; }
+.mbottom2 { margin-bottom: 2em !important; }
+.mtop0 { margin-top: 0em !important; }
+.mtop025 { margin-top: 0.25em !important; }
+.mtop05 { margin-top: 0.5em !important; }
+.mtop075 { margin-top: 0.75em !important; }
+.mtop1 { margin-top: 1em !important; }
+.mtop15 { margin-top: 1.5em !important; }
+.mtop2 { margin-top: 2em !important; }
+.mvert0 { margin-top: 0em !important; margin-bottom: 0em !important; }
+.mvert025 { margin-top: 0.25em !important; margin-bottom: 0.25em !important; }
+.mvert05 { margin-top: 0.5em !important; margin-bottom: 0.5em !important; }
+.mvert1 { margin-top: 1em !important; margin-bottom: 1em !important; }
+.mvert15 { margin-top: 1.5em !important; margin-bottom: 1.5em !important; }
+.mvert2 { margin-top: 2em !important; margin-bottom: 2em !important; }
+.aleft { text-align: left !important; }
+.acenter { text-align: center !important; }
+.aright { text-align: right !important; }
+.dnone { display: none; }
+.dinline { display: inline; }
+span.valid { color: #0a0; font-weight: bold; }
+span.invalid { color: #a00; font-weight: bold; }
+.bold { font-weight: bold; }
+.nowrap { white-space: nowrap; }
+.vatop { vertical-align: top; }
+
+.width30px { width: 30px !important; }
+.width165px { width: 165px !important; }
+.width215px { width: 215px !important; }
+.width190px { width: 190px !important; }
+.width100pc { width: 100%; }
+
+.inputsize40 input { width: 257px; }
+.inputsize200px input { width: 200px; }
+.inputsize225px input { width: 225px; }
+.inputsize250px input { width: 250px; }
+.inputsize300px input { width: 300px; }
+.inputsize350px input { width: 350px; }
+.inputsize400px input { width: 400px; }
+
+.inputaright input { text-align: right !important; }
+
+/************************************
+       LISTS
+***********************************/
+
+ul.liinline {
+margin: 0;
+padding: 0;
+}
+ul.liinline li {
+display: inline; 
+margin: 0;
+padding: 0 0.25em;
+}
+.nobullet { list-style: none; }
+.indent0 { margin-left: 0; padding-left: 0;  }
+.indent0 li { margin-left: 0; padding-left: 0;  }
+.forminline form { display: inline !important; }
+
+
+/************************************
+       TABLES
+***********************************/
+
+
+table.thwidth150px th { width: 150px; }
+table.thnone th { display: none; }
+table.thmiddle th { vertical-align: middle; }
+table.thleft th { text-align: left; }
+table.thcenter th { text-align: center; }
+table.thnowrap th { white-space: nowrap; }
+
+.thnoborder th { border-left: none !important; border-right: none !important; }
+.thleft th { text-align: left !important; }
+
+.tdleft td { text-align: left !important; }
+.tdbold td { font-weight: bold; }
+.tdmiddle td { vertical-align: middle; }
+.tdmiddle td { vertical-align: middle !important; }
+.tdnoborder td { border-left: none !important; border-right: none !important; }
+
+
+.vpadding05 th, .vpadding05 td {
+padding-top: 0.3em !important;
+padding-bottom: 0.3em !important; 
+}
+
+.nopadding table tr th { padding: 0 !important; }
+.nopadding table tr td { padding: 0 !important; }
+
+table.thpadding02505 th { padding: 0.25em 0.5em; } /* higher th paddings for table.tstyle1 */
+table.thright th { text-align: right; }
+table.width33 td { width: 33%; }
+.noborder th, .noborder td { border: none; }
+
+
+
+
+/************************************
+       ACCESSIBILITY JAVASCRIPT
+***********************************/
+
+.switchInline { display: none; }
+.switchBlock { display: none; }
+.switchNone { display: block; }
+.dnone { display: none; }
+.dinline { display: inline; }
+.dblock { display: block; }
+
+
+/************************************
+       ???
+***********************************/
+
+/*
+span.raquo { display: none; }
+*/
+div.infobox_dotted span.raquo { display: inline; }

@@ -264,7 +264,7 @@
     <!--@ This layout is the same as the default tabular layout but it includes the default presentation for an objecti input.  -->  
     <renderer mode="input" type="java.lang.Object" layout="tabular-style5" class="pt.ist.fenixWebFramework.renderers.StandardInputRenderer">
         <property name="labelTerminator" value=":"/>
-        <property name="classes" value="tstyle5 thlight thright mbottom05"/>
+        <property name="classes" value="tstyle3 thlight thright mbottom05"/>
         <property name="columnClasses" value=",,tdclear tderror1"/>
       	<property name="helpNoJavascriptClasses" value="nojavascript"/>
   		<property name="helpClosedClasses" value="chelp closed"/>
