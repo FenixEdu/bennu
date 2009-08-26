@@ -6,10 +6,11 @@
 <bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
 <bean:define id="menuElements" name="context" property="menuElements"/>
 
+
 <logic:notEmpty name="menuElements">
 	<ul>
 	<bean:size name="menuElements" id="size"/>
-	
+
 	<logic:iterate id="node" name="menuElements" indexId="nindex" type="myorg.domain.contents.Node">
 		<logic:equal name="node" property="accessible" value="true">
 			<% if (context.contains(node)) { %>
@@ -28,4 +29,7 @@
 		</logic:equal>
 	</logic:iterate>
 	</ul>
+	
+	<div class="clear"></div>
+	
 </logic:notEmpty>	

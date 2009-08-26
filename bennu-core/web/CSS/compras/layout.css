@@ -135,6 +135,7 @@ width: 500px;
 margin-left: 27px;
 padding-bottom: 17px;
 height: 55px;
+height: 1%;
 }
 div#header div#logo img {
 margin-top: 12px;
@@ -210,14 +211,11 @@ float: right;
 ***********************************/
 
 #mainnav {
-position: relative;
-height: 3.7em;
 font-size: 93%;
 background: #15587a;
 text-transform: uppercase;
 }
 #mainnav ul {
-position: absolute;
 bottom: 0;
 margin: 0;
 padding: 0 10px 0 25px;
@@ -227,7 +225,6 @@ list-style: none;
 display: inline;
 margin: 0;
 padding: 0;
-position: relative;
 }
 #mainnav a {
 position: relative;
