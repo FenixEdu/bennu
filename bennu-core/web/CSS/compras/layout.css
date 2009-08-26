@@ -201,6 +201,9 @@ padding-right: 20px;
 div#header div#login span {
 padding-right: 5px;
 }
+div#header div#login a {
+color: #9fd8ff;
+}
 
 form.login {
 float: right;
