@@ -10,10 +10,15 @@ package module.fileSupport.dto;
 public class DBStorageDTO extends FileStorageDTO {
 
     String host;
+
     Integer port;
+
     String dbName;
+
     String tableName;
+
     String username;
+
     String password;
 
     public String getHost() {
