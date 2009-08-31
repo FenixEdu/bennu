@@ -36,7 +36,7 @@ span.invalid { color: #a00; font-weight: bold; }
 .bold { font-weight: bold; }
 .nowrap { white-space: nowrap; }
 .vatop { vertical-align: top; }
-div.clear { clear: both; }
+div.clear { clear: both;}
 
 .width30px { width: 30px !important; }
 .width165px { width: 165px !important; }

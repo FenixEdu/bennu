@@ -199,6 +199,88 @@ div.login {
 	padding-right: 0.5em;
 }
 
+
+/***
+ * Still need to take care of this
+ **/
+ /* logo */
+
+div#header div#logo {
+width: 500px;
+margin-left: 27px;
+padding-bottom: 17px;
+height: 55px;
+}
+div#header div#logo img {
+margin-top: 12px;
+margin-right: 12px;
+float: left;
+padding-bottom: 5px;
+}
+div#header div#logo div#text {
+padding-top: 17px;
+}
+div#header div#logo div#text h1 {
+color: #fff;
+margin-bottom: 23px;
+}
+div#header div#logo div#text p {
+font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
+font-size: 12px;
+margin-top: -20px;
+color: #b6d7e8;
+}
+
+/* support nav */
+
+div#header div#supportnav {
+position: absolute;
+top: 15px;
+right: 0;
+color: #fff;
+padding-right: 20px;
+}
+div#header div#supportnav a {
+color: #9fd8ff;
+}
+
+
+/* language and global search */
+
+div#header div#headerforms {
+position: absolute;
+top: 45px;
+right: 0;
+padding-right: 18px;
+}
+div#header div#headerforms form#language {
+margin-right: 10px;
+}
+div#header div#headerforms form#globalsearch {
+}
+div#header div#headerforms form {
+float: left;
+}
+
+/* login form */
+
+div#header div#login {
+position: absolute;
+top: 15px;
+right: 0;
+color: #fff;
+padding-right: 20px;
+}
+
+div#header div#login span {
+padding-right: 5px;
+}
+
+form.login {
+float: right;
+}
+ 
+ 
 /*
  * Definition: Defines presentation for the div with id mainnav.
  * This is the div where the tabs show up
@@ -260,7 +342,7 @@ div.login {
 /*
  * Definition: Defines presentation for the div with id container.
  * This is the div that contains the header, the main navigation and
- * a second container (container2) which hold the secondary navigation (secnav)
+ * a second container (container2) which hold the secondary navigation (secondarynav)
  * the content itself (container3 > content) and the footer (footer)
  * When it happens: - 
  * 
@@ -284,7 +366,7 @@ div.login {
 	display: none !important;
 }
 
-#container #secnav {
+#container #secondarynav {
 	position: relative;
 	height: 3.2em;
 	border-top: 4px solid #B37955;
@@ -296,38 +378,38 @@ div.login {
 	-moz-border-radius-bottomleft: 6px;
 }
 
-#container #secnav ul {
+#container #secondarynav ul {
 	bottom: 0;
 	margin: 0;
 	padding: 9px 10px 0 23px;
 }
 
-#container #secnav ul li {
+#container #secondarynav ul li {
 	bottom: 0;
 	margin: 0;
 	display: inline;
 }
 
-#container #secnav a {
+#container #secondarynav a {
 	margin: 0;
 	text-decoration: none;
 	padding: 4px;
 }
 
-#container #secnav a span { 
+#container #secondarynav a span { 
 	color: #fff; 
 }
 
-#container #secnav a:hover span { 
+#container #secondarynav a:hover span { 
 	text-decoration: underline 
 }
-#container #secnav a span { 
+#container #secondarynav a span { 
 	float: none; 
 }
 
 /*
  * Definition: Defines presentation for the div with id container2.
- * This is the div that contains the secondary navigation (secnav)
+ * This is the div that contains the secondary navigation (secondarynav)
  * the content itself (container3 > content) and the footer (footer)
  * When it happens: - 
  * 
