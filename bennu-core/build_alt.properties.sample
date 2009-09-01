@@ -1,0 +1,57 @@
+################################################################################
+# Instalation Related Properties                                               #
+################################################################################
+# Property: instalations (required)
+#
+# Comma separated list of installations, each installation has a name and a list
+# of modules to include in that build. Only the top level modules need to be
+# included, the dependencies are managed by the build system. The syntax for an
+# installation definition is: <name>[<options>](<comma separated modules>)
+# The options supported at the moment are just the "default" option, at least
+# one installation has to be marked as default.
+#
+# Example: instalations=expenditures[default](expenditure-tracking)
+instalations=
+
+# Property: module.dirs (required)
+#
+# Comma separated list of directories in which modules are present. A module is
+# any folder with a file named "module" inside it.
+#
+# Example: module.dirs=../modules
+module.dirs=
+
+################################################################################
+# Folder Related Properties                                                    #
+################################################################################
+# Prefix for build folders, installations will be named:
+# ${build.prefix}<installation-name> 
+build.prefix=build_
+# Prefix for generated java _Base files, directories will be named:
+# ${src.gen.prefix}<installation-name>
+src.gen.prefix=src_
+# Directory in core that contains libraries necessary for build only.
+build.lib=lib
+
+# Structure of a module (relative folders)
+src=src
+conf=conf
+conf.resources=${conf}/resources
+reports=reports
+web=web
+web.inf=${web}/WEB-INF
+
+# Directory that contains deployables from all installations
+deploy.home=deploy
+
+################################################################################
+# Compilation Related Properties                                               #
+################################################################################
+compile.debug=true
+compile.optimize=true
+compile.deprecation=false
+encoding=UTF-8
+
+################################################################################
+# End Of Bennu Config                                                          #
+################################################################################
