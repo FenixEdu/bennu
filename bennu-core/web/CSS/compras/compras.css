@@ -138,12 +138,16 @@ div.item strong {
 
 
 /* process number in process page title */
-.acquisitionNumber {
+.processNumber {
 color: #777;
 font-weight: normal;
 padding-top: 1em;
 }
-
+.processType {
+color: #777;
+font-weight: normal;
+font-size: 14px;
+}
 
 /* paying units tabular list */
 .punits span.off {

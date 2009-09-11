@@ -31,6 +31,7 @@
 		<div class="c2"></div>
 	</div>
 	
+	<div class="clear"></div>
 	
 	<div id="container2">
 		<div id="secondarynav">

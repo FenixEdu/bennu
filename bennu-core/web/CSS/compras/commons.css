@@ -39,6 +39,7 @@ span.invalid { color: #a00; font-weight: bold; }
 div.clear { clear: both;}
 
 .width30px { width: 30px !important; }
+.width100px { width: 100px !important; }
 .width165px { width: 165px !important; }
 .width215px { width: 215px !important; }
 .width190px { width: 190px !important; }
@@ -64,14 +65,27 @@ padding: 0;
 }
 ul.liinline li {
 display: inline; 
-margin: 0;
-padding: 0 0.25em;
+margin: 0 !important;
+padding: 0 !important;
 }
 .nobullet { list-style: none; }
 .indent0 { margin-left: 0; padding-left: 0;  }
 .indent0 li { margin-left: 0; padding-left: 0;  }
 .forminline form { display: inline !important; }
 
+.listInsideClear ul {
+list-style: none;
+margin: 0;
+padding: 0;
+}
+.listInsideClear ul li {
+margin: 0;
+padding: 0;
+}
+
+.inputInsideAlignRight input {
+text-align: right;
+}
 
 /************************************
        TABLES

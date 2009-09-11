@@ -476,7 +476,6 @@ margin: 1em 0;
 }
 
 
-
 /************************************
        TABULAR INFO
 ***********************************/
@@ -665,6 +664,12 @@ border-top: 1px solid #e6e6dc;
 padding: 2px 0;
 }
 
+h3.bar {
+margin: 1em 0 0.5em 0;
+background: #f5f5eb;
+border-top: 1px solid #e6e6dc;
+padding: 2px 0;
+}
 
 
 
