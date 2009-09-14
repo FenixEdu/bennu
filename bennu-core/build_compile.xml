@@ -41,6 +41,7 @@
 		<delete dir="${src_gen}"/>
 		<delete file=".actionAnnotationLog"/>
 		<delete file=".createNodeActionAnnotationLog"/>
+		<delete file=".restAnnotationLog"/>
 	</target>
 
 	<target name="prepare" description="Create necessary dirs">
@@ -109,6 +110,7 @@
 		<ant antfile="build_compile_aux.xml" target="compile" inheritall="true" inheritrefs="true"/>
 		<copy file=".actionAnnotationLog" todir="${build.home.webinf.classes}" overwrite="true" failonerror="false"/>
 		<copy file=".createNodeActionAnnotationLog" todir="${build.home.webinf.classes}" overwrite="true" failonerror="false"/>
+		<copy file=".restAnnotationLog" todir="${build.home.webinf.classes}" overwrite="true" failonerror="false"/>
 		<java classname="pt.ist.fenixWebFramework.services.ServiceAnnotationInjector" failonerror="true">
 			<classpath refid="class.path.ref"/>
 			<classpath>
