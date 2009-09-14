@@ -179,7 +179,7 @@
         <servlet-class>myorg.presentationTier.servlets.ajax.MyorgAutoCompleteServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
-    
+
     
     <!-- Servlet Mapping -->
     <servlet-mapping>
@@ -190,8 +190,24 @@
 		<servlet-name>AutoCompleteServlet</servlet-name>
 		<url-pattern>/ajax/AutoCompleteServlet</url-pattern>
 	</servlet-mapping>
-    
-    
+
+
+	<context-param>
+		<param-name>org.restlet.application</param-name>
+		<param-value>myorg.presentationTier.rest.MyOrgRestApplication</param-value>
+	</context-param>
+
+	<!-- Restlet adapter -->
+	<servlet>
+		<servlet-name>RestletServlet</servlet-name>
+		<servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
+	</servlet>
+
+	<!-- Catch all requests -->
+	<servlet-mapping>
+		<servlet-name>RestletServlet</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping> 
 
 	<session-config>
 			<session-timeout>120</session-timeout>
