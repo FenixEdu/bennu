@@ -204,7 +204,7 @@ public abstract class BaseAction extends DispatchAction {
 
 	final OutputStream outputStream = response.getOutputStream();
 
-	response.setContentType("text");
+	response.setContentType("application/json");
 	response.setContentLength(jsonReply.length);
 	outputStream.write(jsonReply);
 	outputStream.flush();
