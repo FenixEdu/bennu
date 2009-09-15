@@ -218,6 +218,10 @@ font-size: 93%;
 background: #15587a;
 text-transform: uppercase;
 }
+body.top #mainnav {
+float: left; /* mozilla 1.7.2 (ff 0.9.3) main nav fix + div clear both */
+}
+
 #mainnav ul {
 bottom: 0;
 margin: 0;
@@ -614,7 +618,6 @@ border-bottom: 1px solid #ddd;
 vertical-align: top;
 text-align: left;
 }
-
 form table th {
 padding: 5px 0;
 white-space: nowrap;
@@ -671,6 +674,23 @@ border-top: 1px solid #e6e6dc;
 padding: 2px 0;
 }
 
+
+form table {
+margin: 1em 0 1.5em 0;
+}
+form table th, form table td {
+border-top: 1px solid #ddd;
+border-bottom: 1px solid #ddd;
+vertical-align: top;
+text-align: left;
+}
+form table th {
+padding: 5px 0;
+white-space: nowrap;
+}
+form table td {
+padding: 5px 0 5px 10px;
+}
 
 
 /************************************

@@ -17,7 +17,7 @@
 	</logic:iterate>
 </head>
 
-<body>
+<body class="side">
 
 <div id="container">
 
