@@ -53,7 +53,7 @@ public abstract class Node extends Node_Base implements INode {
     public String getUrl() {
 	final StringBuilder stringBuilder = new StringBuilder();
 	appendUrlPrefix(stringBuilder);
-	stringBuilder.append("&amp;");
+	stringBuilder.append("&");
 	stringBuilder.append(ContextBaseAction.CONTEXT_PATH);
 	stringBuilder.append('=');
 	appendNodePath(stringBuilder);
