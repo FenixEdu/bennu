@@ -27,13 +27,9 @@ package myorg.domain;
 
 import java.util.Comparator;
 
-import module.mailtracking.domain.MailTracking;
-import module.organization.domain.Unit;
 import myorg.domain.groups.People;
 import myorg.domain.groups.Role;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -154,23 +150,5 @@ public class User extends User_Base {
 	    Logger.getLogger(User.class).warn("Overriding non-default strategy");
 	}
 	strategy = newStrategy;
-    }
-
-    public java.util.List<MailTracking> getMailTrackingsWhereUserIsOperator() {
-	java.util.List<MailTracking> mailTrackingList = new java.util.ArrayList<MailTracking>();
-
-	if (this.getPerson() == null && this.hasRoleType(RoleType.MANAGER))
-	    return MyOrg.getInstance().getMailTrackings();
-
-	CollectionUtils.select(this.getPerson().getAncestorUnits(), new Predicate() {
-
-	    @Override
-	    public boolean evaluate(Object arg0) {
-		return ((Unit) arg0).isUserOperatorOfMailTracking(User.this);
-	    }
-
-	}, mailTrackingList);
-
-	return mailTrackingList;
     }
 }
