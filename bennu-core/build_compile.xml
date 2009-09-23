@@ -119,7 +119,7 @@
 			<arg value="${build.home.webinf.classes}"/>
 			<arg value="${build.home.webinf.libs}/jvstm.jar"/>
 			<arg value="${build.home.webinf.libs}/fenix-framework-r43008.jar"/>
-			<arg value="${build.home.webinf.libs}/fenix-web-framework-r43738.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-web-framework-r43815.jar"/>
 			<arg value="${build.home.webinf.libs}/joda-time-1.5.2.jar"/>
 			<arg value="${build.home.webinf.libs}/fenix-tools.jar"/>
 		</java>
