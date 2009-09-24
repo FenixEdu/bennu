@@ -403,7 +403,12 @@
 		dragableElementsParentBox = document.getElementById('dragableElementsParentBox');
 		insertionMarkerDiv = document.getElementById('insertionMarker');
 		insertionMarkerLine = document.getElementById('insertionMarkerLine');
-		dragableAreaWidth = dragableElementsParentBox.offsetWidth;
+		dragableAreaWidth = null;
+		if (dragableElementsParentBox == null) {
+			return	;
+		}
+		dragableElementsParentBox.offsetWidth;
+		
 		
 		if(!useRectangle){
 			dragDropMoveLayer = document.createElement('DIV');
