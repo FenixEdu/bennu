@@ -110,7 +110,7 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
             updateRepositoryStructureIfNeeded = true;
             casConfigByHost = Collections.unmodifiableMap(casConfigMap);
             rootClass = MyOrg.class;
-            javascriptValidationEnabled = false;
+            javascriptValidationEnabled = true;
         }};
     }
 
