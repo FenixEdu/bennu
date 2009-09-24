@@ -55,6 +55,7 @@ div.clear { clear: both;}
 
 .inputaright input { text-align: right !important; }
 
+
 /************************************
        LISTS
 ***********************************/
@@ -91,7 +92,6 @@ text-align: right;
        TABLES
 ***********************************/
 
-
 table.thwidth150px th { width: 150px; }
 table.thnone th { display: none; }
 table.thmiddle th { vertical-align: middle; }
@@ -123,8 +123,6 @@ table.width33 td { width: 33%; }
 .noborder th, .noborder td { border: none; }
 
 
-
-
 /************************************
        ACCESSIBILITY JAVASCRIPT
 ***********************************/
@@ -136,12 +134,9 @@ table.width33 td { width: 33%; }
 .dinline { display: inline; }
 .dblock { display: block; }
 
-
 /************************************
        ???
 ***********************************/
 
-/*
-span.raquo { display: none; }
-*/
+/* span.raquo { display: none; } */
 div.infobox_dotted span.raquo { display: inline; }

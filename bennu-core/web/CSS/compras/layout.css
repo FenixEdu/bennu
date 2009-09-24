@@ -750,11 +750,18 @@ div.corners div.c2[class] { bottom: 0; } /* all except <= ie6 */
        ERROR, SUCCESS, WARNING
 ***********************************/
 
+span.error0 {
+color: #cc2200;
+background-color: #fff0dd;
+}
+
+
 div.error1 {
 margin: 0.75em 0;
 padding: 0.4em 0.4em 0.4em 2.5em;
 background: #ffeddd url(images/error01.gif) 0.5em 0.5em no-repeat;
 }
+
 div.error1 span {
 color: #cc1500;
 }
