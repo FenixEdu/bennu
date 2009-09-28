@@ -3,6 +3,7 @@
     <taskdef resource="tools/ant/compile-tools.xml">
         <classpath>
             <fileset dir="lib" includes="*.jar" />
+            <fileset dir="web/WEB-INF/lib" includes="*.jar" />
         </classpath>
     </taskdef>
 
