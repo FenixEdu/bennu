@@ -7,7 +7,6 @@ color: #555;
 background: #f0f0f0;
 }
 
-
 div, p, form, h1, h2, h3, h4 {
 margin: 0;
 padding: 0;
@@ -477,6 +476,13 @@ border: 1px solid #f0ce6f;
 padding: 5px 10px;
 background: #fbf2cf;
 margin: 1em 0;
+}
+
+div.highlightBox {
+border: 1px solid #f0ce6f;
+padding: 5px 10px;
+background: #fbf2cf;
+margin: 0.5em 0;
 }
 
 
@@ -1064,3 +1070,4 @@ display: none;
 div.nojavascript div.chelptext {
 display: block;
 }
+

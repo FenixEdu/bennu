@@ -1,6 +1,6 @@
 
 /************************************
-       GENERAL
+       Gneneral
 ***********************************/
 
 .aleft { text-align: left !important; }
@@ -57,7 +57,7 @@ div.clear { clear: both;}
 
 
 /************************************
-       LISTS
+       Lists
 ***********************************/
 
 ul.liinline {
@@ -89,7 +89,7 @@ text-align: right;
 }
 
 /************************************
-       TABLES
+       Tables
 ***********************************/
 
 table.thwidth150px th { width: 150px; }
@@ -124,7 +124,7 @@ table.width33 td { width: 33%; }
 
 
 /************************************
-       ACCESSIBILITY JAVASCRIPT
+   Accessibility and Javascritt
 ***********************************/
 
 .switchInline { display: none; }
@@ -140,3 +140,13 @@ table.width33 td { width: 33%; }
 
 /* span.raquo { display: none; } */
 div.infobox_dotted span.raquo { display: inline; }
+
+/************************************
+       Ruler
+***********************************/
+
+
+div.ruler1 {
+border-bottom: 1px dotted #ccc;
+margin: 0.5em 0;
+}
