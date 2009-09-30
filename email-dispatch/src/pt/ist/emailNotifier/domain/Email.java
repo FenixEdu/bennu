@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import pt.ist.emailNotifier.util.EmailAddressList;
-import pt.ist.fenixframework.pstm.Transaction;
 
 public class Email extends Email_Base {
 
@@ -29,7 +28,7 @@ public class Email extends Email_Base {
 
     public void delete() {
 	removeEmailNotifier();
-	Transaction.deleteObject(this);
+	deleteDomainObject();
     }
 
     public String[] replyTos() {
