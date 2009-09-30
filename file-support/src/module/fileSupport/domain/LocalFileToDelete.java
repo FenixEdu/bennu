@@ -3,7 +3,6 @@ package module.fileSupport.domain;
 import java.io.File;
 
 import myorg.domain.MyOrg;
-import pt.ist.fenixframework.pstm.Transaction;
 
 /**
  * 
@@ -25,7 +24,7 @@ public class LocalFileToDelete extends LocalFileToDelete_Base {
     public void delete() {
 	final File existingFile = new File(getFilePath());
 	if (!existingFile.exists() || existingFile.delete()) {
-	    Transaction.deleteObject(this);
+	    deleteDomainObject();
 	}
     }
 

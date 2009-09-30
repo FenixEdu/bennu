@@ -7,7 +7,6 @@ import module.fileSupport.dto.DomainStorageDTO;
 import module.fileSupport.dto.LocalFileSystemStorageDTO;
 import myorg.domain.MyOrg;
 import pt.ist.fenixWebFramework.services.Service;
-import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.Pair;
 
 /**
@@ -47,7 +46,7 @@ abstract public class FileStorage extends FileStorage_Base {
 	if (isCanBeDeleted()) {
 	    getConfigurations().clear();
 	    removeMyOrg();
-	    Transaction.deleteObject(this);
+	    deleteDomainObject();
 	}
     }
 

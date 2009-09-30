@@ -2,12 +2,12 @@ package module.fileSupport.domain;
 
 import javax.activation.MimetypesFileTypeMap;
 
-import org.apache.commons.lang.StringUtils;
-
 import myorg.domain.MyOrg;
 import myorg.domain.exceptions.DomainException;
+
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.fenixWebFramework.services.Service;
-import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.FileUtils;
 import pt.utl.ist.fenix.tools.util.StringNormalizer;
 
@@ -67,6 +67,6 @@ abstract public class GenericFile extends GenericFile_Base {
 	setContent(null);
 	removeStorage();
 	removeMyOrg();
-	Transaction.deleteObject(this);
+	deleteDomainObject();
     }
 }

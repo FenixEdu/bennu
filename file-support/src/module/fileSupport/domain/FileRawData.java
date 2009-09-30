@@ -2,7 +2,6 @@ package module.fileSupport.domain;
 
 import myorg.domain.MyOrg;
 import myorg.domain.util.ByteArray;
-import pt.ist.fenixframework.pstm.Transaction;
 
 /**
  * 
@@ -24,6 +23,6 @@ public class FileRawData extends FileRawData_Base {
 
     public void delete() {
 	removeMyOrg();
-	Transaction.deleteObject(this);
+	deleteDomainObject();
     }
 }

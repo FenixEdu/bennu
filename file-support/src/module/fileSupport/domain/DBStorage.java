@@ -3,8 +3,8 @@ package module.fileSupport.domain;
 import java.util.Collection;
 import java.util.Collections;
 
-import pt.utl.ist.fenix.tools.util.Pair;
 import module.fileSupport.dto.DBStorageDTO;
+import pt.utl.ist.fenix.tools.util.Pair;
 
 /**
  * 
