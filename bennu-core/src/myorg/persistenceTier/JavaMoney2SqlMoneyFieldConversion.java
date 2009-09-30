@@ -24,9 +24,9 @@
 
 package myorg.persistenceTier;
 
-import org.apache.ojb.broker.accesslayer.conversions.FieldConversion;
-
 import myorg.domain.util.Money;
+
+import org.apache.ojb.broker.accesslayer.conversions.FieldConversion;
 
 public class JavaMoney2SqlMoneyFieldConversion implements FieldConversion {
 

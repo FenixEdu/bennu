@@ -26,7 +26,6 @@
 package myorg.domain;
 
 import pt.ist.fenixWebFramework.services.Service;
-import pt.ist.fenixframework.pstm.Transaction;
 
 public class Theme extends Theme_Base {
 
@@ -55,7 +54,7 @@ public class Theme extends Theme_Base {
 	removeMyOrg();
 	for (; !getVirtualHosts().isEmpty(); getVirtualHosts().get(0).removeTheme())
 	    ;
-	Transaction.deleteObject(this);
+	deleteDomainObject();
     }
 
     public static Theme getThemeByName(String name) {

@@ -25,10 +25,10 @@
 
 package myorg.persistenceTier;
 
-import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
-
 import org.apache.ojb.broker.accesslayer.conversions.ConversionException;
 import org.apache.ojb.broker.accesslayer.conversions.FieldConversion;
+
+import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class MultiLanguageString2SqlMultiLanguageStringConversion implements FieldConversion {
 

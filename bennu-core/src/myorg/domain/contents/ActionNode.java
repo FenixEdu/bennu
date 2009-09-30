@@ -27,7 +27,6 @@ package myorg.domain.contents;
 
 import myorg.domain.VirtualHost;
 import myorg.domain.groups.PersistentGroup;
-import myorg.presentationTier.Context;
 import myorg.util.BundleUtil;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;

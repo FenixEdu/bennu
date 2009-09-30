@@ -30,7 +30,6 @@ import myorg.domain.MyOrg;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixWebFramework.services.Service;
-import pt.ist.fenixframework.pstm.Transaction;
 
 public class TaskConfiguration extends TaskConfiguration_Base {
 
@@ -53,7 +52,7 @@ public class TaskConfiguration extends TaskConfiguration_Base {
     public void delete() {
 	removeTask();
 	removeMyOrg();
-	Transaction.deleteObject(this);
+	deleteDomainObject();
     }
 
     public boolean shouldRunNow() {

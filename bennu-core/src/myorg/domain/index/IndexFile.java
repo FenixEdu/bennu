@@ -1,9 +1,7 @@
 package myorg.domain.index;
 
-import myorg.domain.index.IndexFileBuffer;
 import myorg.domain.MyOrg;
 import myorg.domain.util.ByteArray;
-import pt.ist.fenixframework.pstm.Transaction;
 
 public class IndexFile extends IndexFile_Base {
 
@@ -20,7 +18,7 @@ public class IndexFile extends IndexFile_Base {
 	for (IndexFileBuffer buffer : getIndexFileBuffers()) {
 	    buffer.delete();
 	}
-	Transaction.deleteObject(this);
+	deleteDomainObject();
     }
 
     public Integer getIndexMarkerAndIncrement() {

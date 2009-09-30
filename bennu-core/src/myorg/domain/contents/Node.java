@@ -40,7 +40,6 @@ import myorg.presentationTier.Context;
 import myorg.presentationTier.actions.ContextBaseAction;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.fenixframework.pstm.Transaction;
 
 public abstract class Node extends Node_Base implements INode {
 
@@ -175,7 +174,7 @@ public abstract class Node extends Node_Base implements INode {
 	}
 	removeVirtualHost();
 	removeMyOrg();
-	Transaction.deleteObject(this);
+	deleteDomainObject();
     }
 
     @Service

@@ -1,7 +1,5 @@
 package myorg.domain.index;
 
-import pt.ist.fenixframework.pstm.Transaction;
-import myorg.domain.index.IndexFile;
 import myorg.domain.MyOrg;
 import myorg.domain.util.ByteArray;
 
@@ -32,7 +30,7 @@ public class IndexFileBuffer extends IndexFileBuffer_Base {
     public void delete() {
 	removeIndexFile();
 	removeMyOrg();
-	Transaction.deleteObject(this);
+	deleteDomainObject();
     }
 
 }

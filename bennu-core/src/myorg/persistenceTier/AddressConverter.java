@@ -24,10 +24,10 @@
 
 package myorg.persistenceTier;
 
+import myorg.domain.util.Address;
+
 import org.apache.ojb.broker.accesslayer.conversions.ConversionException;
 import org.apache.ojb.broker.accesslayer.conversions.FieldConversion;
-
-import myorg.domain.util.Address;
 
 public class AddressConverter implements FieldConversion {
 

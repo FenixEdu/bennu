@@ -24,9 +24,9 @@
 
 package myorg.persistenceTier;
 
-import org.apache.ojb.broker.accesslayer.conversions.FieldConversion;
-
 import myorg.domain.util.ByteArray;
+
+import org.apache.ojb.broker.accesslayer.conversions.FieldConversion;
 
 public class JavaByteArray2SqlByteArrayFieldConversion implements FieldConversion {
 

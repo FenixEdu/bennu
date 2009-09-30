@@ -111,6 +111,7 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
             casConfigByHost = Collections.unmodifiableMap(casConfigMap);
             rootClass = MyOrg.class;
             javascriptValidationEnabled = true;
+            errorfIfDeletingObjectNotDisconnected = true;
         }};
     }
 

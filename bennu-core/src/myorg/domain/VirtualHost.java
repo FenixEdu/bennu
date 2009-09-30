@@ -36,7 +36,6 @@ import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixWebFramework.services.Service;
-import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class VirtualHost extends VirtualHost_Base {
@@ -130,7 +129,7 @@ public class VirtualHost extends VirtualHost_Base {
 	    }
 	    removeTheme();
 	    removeMyOrg();
-	    Transaction.deleteObject(this);
+	    deleteDomainObject();
 	}
     }
 

@@ -27,9 +27,6 @@ package myorg.domain.scheduler;
 
 import jvstm.TransactionalCommand;
 import myorg.domain.MyOrg;
-
-import org.joda.time.DateTime;
-
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class SchedulerThread extends Thread implements TransactionalCommand {
