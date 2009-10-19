@@ -43,7 +43,7 @@ import myorg.domain.groups.Role;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixWebFramework.services.Service;
-import pt.ist.fenixWebFramework.util.DomainReference;
+import pt.ist.fenixframework.pstm.AbstractDomainObject;
 
 public class Authenticate implements Serializable {
 
@@ -69,9 +69,9 @@ public class Authenticate implements Serializable {
 
     public static class UserView implements pt.ist.fenixWebFramework.security.User, Serializable {
 
-	private static final long serialVersionUID = -3306363183634102130L;
+	private static final long serialVersionUID = -16953310282144136L;
 
-	private final DomainReference<User> userReference;
+	private final String userExternalId;
 	private static transient ThreadLocal<User> mockUser = new ThreadLocal<User>();
 
 	private final String privateConstantForDigestCalculation;
@@ -80,7 +80,7 @@ public class Authenticate implements Serializable {
 
 	private UserView(final String username) {
 	    final User user = findByUsername(username);
-	    userReference = new DomainReference<User>(user);
+	    userExternalId = user == null ? null : user.getExternalId();
 
 	    SecureRandom random = null;
 
@@ -137,7 +137,11 @@ public class Authenticate implements Serializable {
 	}
 
 	public User getUser() {
-	    return mockUser.get() == null ? userReference.getObject() : mockUser.get();
+	    return mockUser.get() == null ? readUser() : mockUser.get();
+	}
+
+	private User readUser() {
+	    return userExternalId == null ? null : (User) AbstractDomainObject.fromExternalId(userExternalId);
 	}
 
 	public String getPrivateConstantForDigestCalculation() {
