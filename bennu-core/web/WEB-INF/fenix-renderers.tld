@@ -479,6 +479,106 @@
   </tag>
   
   <tag>
+    <name>schema</name>
+    <tag-class>pt.ist.fenixWebFramework.renderers.taglib.SchemaConfigTag</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+     Allows to define an anonymous schema on the fly.
+    </description>
+    
+    <attribute>
+      <name>bundle</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Bundle to use in schema
+      </description>
+    </attribute>
+    
+    <attribute>
+      <name>type</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Class type
+      </description>
+    </attribute>
+    
+  </tag>
+  
+  <tag>
+    <name>slot</name>
+    <tag-class>pt.ist.fenixWebFramework.renderers.taglib.SchemaSlotConfigTag</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+     Defines a slot from the schema.
+    </description>
+    
+     <attribute>
+      <name>name</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The name of the slot
+      </description>
+    </attribute>
+    
+     <attribute>
+      <name>validator</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+       	Validators class
+      </description>
+    </attribute>
+    
+     <attribute>
+      <name>readOnly</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+       	If slot is read-only
+      </description>
+    </attribute>
+    
+     <attribute>
+      <name>bundle</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Localization bundle to use
+      </description>
+    </attribute>
+    
+    <attribute>
+      <name>key</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Label key to use
+      </description>
+    </attribute>
+    
+      <attribute>
+      <name>layout</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Layout for slot
+      </description>
+    </attribute>
+    
+     <attribute>
+      <name>help</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Displays on hover help
+      </description>
+    </attribute>
+  </tag>
+  
+  <tag>
     <name>layout</name>
     <tag-class>pt.ist.fenixWebFramework.renderers.taglib.LayoutConfigTag</tag-class>
     <body-content>JSP</body-content>

@@ -180,7 +180,7 @@ public class AjaxExpandableRenderer extends OutputRenderer {
 	    private HtmlComponent getActualRendereringResult(Object object, Class type) {
 		OutputContext context = getOutputContext();
 
-		context.setSchema(getSmallSchema());
+		context.setSchema(RenderKit.getInstance().findSchema(getSmallSchema()));
 		context.setLayout(getSmallLayout());
 		context.setProperties(getProperties(getSmallPropertiesMap()));
 		RenderKit instance = RenderKit.getInstance();

@@ -15,6 +15,7 @@ import pt.ist.fenixWebFramework.renderers.OutputRenderer;
 import pt.ist.fenixWebFramework.renderers.components.HtmlComponent;
 import pt.ist.fenixWebFramework.renderers.contexts.OutputContext;
 import pt.ist.fenixWebFramework.renderers.model.MetaObjectFactory;
+import pt.ist.fenixWebFramework.renderers.schemas.Schema;
 import pt.ist.fenixWebFramework.renderers.utils.RenderKit;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixframework.DomainObject;
@@ -32,12 +33,15 @@ public class RenderAction extends BaseAction {
 
 	RenderKit instance = RenderKit.getInstance();
 	OutputContext context = new OutputContext();
+	Schema realSchema = instance.findSchema(schema);
+	
 	context.setLayout(layout);
-	context.setSchema(schema);
+	context.setSchema(realSchema);
 	if (properties != null) {
 	    context.setProperties(readProperties(properties));
 	}
-	context.setMetaObject(MetaObjectFactory.createObject(domainObject, instance.findSchema(schema)));
+	
+	context.setMetaObject(MetaObjectFactory.createObject(domainObject, realSchema));
 
 	OutputRenderer renderer = (OutputRenderer) instance.getRenderer(context, domainObject.getClass(), layout);
 	HtmlComponent component = instance.renderUsing(renderer, context, domainObject, domainObject.getClass());
