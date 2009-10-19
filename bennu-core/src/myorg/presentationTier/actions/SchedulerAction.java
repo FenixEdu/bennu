@@ -75,7 +75,7 @@ public class SchedulerAction extends ContextBaseAction {
 	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final Task task = getDomainObject(request, "taskId");
 	TaskConfigurationBean taskConfigurationBean =new TaskConfigurationBean(task);
-	DateTime now = new DateTime();
+	DateTime now = new DateTime().plusMinutes(1);
 	taskConfigurationBean.setMinute(now.getMinuteOfHour());
 	taskConfigurationBean.setHour(now.getHourOfDay());
 	taskConfigurationBean.setDay(now.getDayOfMonth());
