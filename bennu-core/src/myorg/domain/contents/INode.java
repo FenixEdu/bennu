@@ -36,7 +36,8 @@ public interface INode {
 
 	@Override
 	public int compare(final INode node1, final INode node2) {
-	    return node1.getOrder().compareTo(node2.getOrder());
+	    final int co = node1.getOrder().compareTo(node2.getOrder());
+	    return co == 0 ? node2.hashCode() - node1.hashCode() : co;
 	}
 
     };
