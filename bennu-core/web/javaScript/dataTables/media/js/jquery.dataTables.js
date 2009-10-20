@@ -1,5 +1,5 @@
 /*
- * File:        jquery.dataTables.js
+ * 1File:        jquery.dataTables.js
  * Version:     1.5.2
  * CVS:         $Id$
  * Description: Paginate, search and sort HTML tables
@@ -2788,6 +2788,11 @@
 					nTmp = _fnFeatureHtmlFilter( oSettings );
 					oSettings.anFeatures[cOption] = nTmp;
 					nInsertNode.appendChild( nTmp );
+					
+					var nTheSaviourNode = document.createElement( 'div' );
+					nTheSaviourNode.innerHTML = "&nbsp;";
+					nTheSaviourNode.className='saviourDiv';
+					nInsertNode.appendChild( nTheSaviourNode );
 				}
 				else if ( cOption == 'r' && oSettings.oFeatures.bProcessing )
 				{
