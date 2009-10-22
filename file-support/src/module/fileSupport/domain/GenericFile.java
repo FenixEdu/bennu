@@ -63,6 +63,10 @@ abstract public class GenericFile extends GenericFile_Base {
     }
 
     @Service
+    public void deleteService() {
+	delete();
+    }
+    
     public void delete() {
 	setContent(null);
 	removeStorage();
