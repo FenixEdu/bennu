@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import module.fileSupport.dto.LocalFileSystemStorageDTO;
 import myorg.domain.exceptions.DomainException;
@@ -54,8 +56,27 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     private String getFullPath(final String uniqueIdentification) {
-	return (getPath().endsWith(PATH_SEPARATOR) ? getPath() : getPath() + PATH_SEPARATOR)
-		+ transformIDInPath(uniqueIdentification) + PATH_SEPARATOR;
+	final String path = getPath().endsWith(PATH_SEPARATOR) ? getPath() : getPath() + PATH_SEPARATOR;
+	return getPhysicalPath(path) + transformIDInPath(uniqueIdentification) + PATH_SEPARATOR;
+    }
+
+    private String getPhysicalPath(final String path) {
+	if (path.indexOf("{") != -1 && path.indexOf("}") != -1) {
+	    // Compile regular expression
+	    Matcher matcher = Pattern.compile("(\\{.+?\\})").matcher(path);
+
+	    // Replace all occurrences of pattern in input
+	    StringBuffer result = new StringBuffer();
+	    boolean found = false;
+	    while ((found = matcher.find())) {
+		String replaceStr = StringUtils.strip(matcher.group(), "{}");
+		matcher.appendReplacement(result, System.getProperty(replaceStr));
+	    }
+	    matcher.appendTail(result);
+
+	    return result.toString();
+	}
+	return path;
     }
 
     private String transformIDInPath(final String uniqueIdentification) {
