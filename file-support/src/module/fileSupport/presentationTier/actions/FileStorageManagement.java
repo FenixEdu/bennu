@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import module.fileSupport.domain.FileStorage;
+import module.fileSupport.domain.GenericFile;
 import module.fileSupport.dto.DBStorageDTO;
 import module.fileSupport.dto.DomainStorageDTO;
 import module.fileSupport.dto.LocalFileSystemStorageDTO;
@@ -41,6 +42,15 @@ public class FileStorageManagement extends ContextBaseAction {
 
 	final FileStorage storage = getDomainObject(request, "storageOID");
 	storage.delete();
+	return prepare(mapping, form, request, response);
+    }
+
+    public ActionForward convertFileStorage(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) {
+
+	final FileStorage storage = getDomainObject(request, "storageOID");
+	GenericFile.convertFileStorages(storage);
+
 	return prepare(mapping, form, request, response);
     }
 

@@ -50,6 +50,22 @@ abstract public class GenericFile extends GenericFile_Base {
 	return getStorage().read(getContentKey());
     }
 
+    @Service
+    private void updateFileStorage() {
+	setContent(getContent());
+    }
+
+    public static void convertFileStorages(final FileStorage fileStorageToUpdate) {
+
+	if (fileStorageToUpdate != null) {
+	    for (final GenericFile genericFile : MyOrg.getInstance().getGenericFiles()) {
+		if (fileStorageToUpdate == genericFile.getFileStorage() && fileStorageToUpdate != genericFile.getStorage()) {
+		    genericFile.updateFileStorage();
+		}
+	    }
+	}
+    }
+
     private FileStorage getFileStorage() {
 	final FileStorage fileStorage = FileStorageConfiguration.readFileStorageByFileType(getClass().getName());
 	if (fileStorage == null) {

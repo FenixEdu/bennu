@@ -20,6 +20,12 @@
 		<fr:property name="classes" value="tstyle2"/>
 		<fr:property name="columnClasses" value="smalltxt bold,smalltxt,smalltxt,smalltxt,smalltxt"/>
 		<fr:property name="sortBy" value="name"/>
+
+        <fr:property name="customLink(convertFiles)">
+            <html:link page="/fileStorageManagement.do?method=convertFileStorage&storageOID=${externalId}">
+                <bean:message key="link.convertFileStorage" bundle="FILE_SUPPORT_RESOURCES"/>
+            </html:link>
+        </fr:property>
 		
 		<fr:property name="customLink(delete)">
 			<html:link page="/fileStorageManagement.do?method=deleteStorage&storageOID=${externalId}">
