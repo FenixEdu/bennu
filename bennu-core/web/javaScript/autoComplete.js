@@ -50,6 +50,7 @@ jQuery.fn.autocomplete = function(url, settings )
 			after : null,
 			before : null,
 			select : null,
+			error: null,
 			cleanSelection: null,
 			validSelection : true,
 			parameters : {'inputName' : valueInput.attr('name'), 'inputId' : textInput.attr('id')}
@@ -68,37 +69,49 @@ jQuery.fn.autocomplete = function(url, settings )
 				}
 				textInput.addClass('autocomplete-loading');
 				settings.parameters.value = text;
-				$.getJSON(url,settings.parameters,function(data)
-				{
-					var items = '';
-					if (data)
-					{
-						size = data.length;
-						for (i = 0; i < data.length; i++)//iterate over all options
-						{
-						  items += '<li id="' + data[i]['oid'] + '" name="' + data[i]['description'] + '">' + highlightData(text,data[i]['description'])  + '</li>'
-						
-						  list.html(items);
-						  //on mouse hover over elements set selected class and on click set the selected value and close list
-						  list.show().children().
-						  hover(function() { $(this).addClass("selected").siblings().removeClass("selected");}, function() { $(this).removeClass("selected") } ).
-						  click(function () { 
-							valueInput.val( $(this).attr('name') );
-							textInput.val( $(this).text() ); 
-							if (settings.select != null) {
-								settings.select(textInput,text,$(this));
-							}
-							clear(); 
-							selectNextInput();
-						  	});
+				$.ajax({ 
+                    url: url, 
+                    data: settings.parameters,
+                    dataType: 'json', 
+                    success: function(data) { 
+        					var items = '';
+        					if (data)
+        					{
+        						size = data.length;
+        						for (i = 0; i < data.length; i++)//iterate over all options
+        						{
+        						  items += '<li id="' + data[i]['oid'] + '" name="' + data[i]['description'] + '">' + highlightData(text,data[i]['description'])  + '</li>'
+        						
+        						  list.html(items);
+        						  //on mouse hover over elements set selected class and on click set the selected value and close list
+        						  list.show().children().
+        						  hover(function() { $(this).addClass("selected").siblings().removeClass("selected");}, function() { $(this).removeClass("selected") } ).
+        						  click(function () { 
+        							valueInput.val( $(this).attr('name') );
+        							textInput.val( $(this).text() ); 
+        							if (settings.select != null) {
+        								settings.select(textInput,text,$(this));
+        							}
+        							clear(); 
+        							selectNextInput();
+        						  	});
+        						}
+        						if (settings.after != null) 
+        						{
+        							settings.after(textInput,text);
+        						}
+        					}
+        					textInput.removeClass('autocomplete-loading');
+					}, 
+					error: function (XMLHttpRequest, textStatus, errorThrown) { 
+						textInput.removeClass('autocomplete-loading');
+						if (settings.error != null) {
+							settings.error(textInput,text);
 						}
-						if (settings.after != null) 
-						{
-							settings.after(textInput,text);
-						}
-					}
-					textInput.removeClass('autocomplete-loading');
-				});
+					} 
+				}); 
+
+			
 				oldText = text;
 			}
 		}
