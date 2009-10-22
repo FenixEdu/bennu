@@ -3,24 +3,25 @@
 <%@ taglib uri="/WEB-INF/struts-tiles.tld" prefix="tiles" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<html:html xhtml="true">
+
+<%@page import="myorg.presentationTier.LayoutContext"%>
+<%@page import="myorg.presentationTier.actions.ContextBaseAction"%><html:html xhtml="true">
 <head>
-	<tiles:insert page="head.jsp"/>
+	<tiles:insert page="/layout/head.jsp"/>
 </head>
 
 <body>
 <div class="errorcontainer">
-	<div class="errorlogo">
-		<img src="images/logo03.gif"/>
-	</div>
-	<div class="corners">
-		<div class="c1"></div>
-		<div class="c2"></div>
+	<%
+	final LayoutContext layoutContext = (LayoutContext) ContextBaseAction.getContext(request);
+	%>
+	<div id="header">
+		<jsp:include page="<%= layoutContext.getPageHeader() %>"/>
 	</div>
 
 	<div class="errortxt">
 		<h2>
-			<span><bean:message key="messages.exception.errorOccured" bundle="EXPENDITURE_RESOURCES"/></span>
+			<span><bean:message key="messages.exception.errorOccured" bundle="MYORG_RESOURCES"/></span>
 		</h2>
 	</div>
 </div>
