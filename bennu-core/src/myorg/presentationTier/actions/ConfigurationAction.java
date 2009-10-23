@@ -172,4 +172,8 @@ public class ConfigurationAction extends ContextBaseAction {
 	return applicationConfiguration(mapping, form, request, response);
     }
 
+    public ActionForward viewSystemConfig(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) {
+	return getContext(request).forward("/myorg/systemInfo.jsp");
+    }
 }

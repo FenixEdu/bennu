@@ -24,6 +24,11 @@
 			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.virtualHost.add"/>
 		</html:link>
 	</li>
+	<li>
+		<!--  HAS_CONTEXT --><html:link page="/configuration.do?method=viewSystemConfig">
+			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.viewProperties"/>
+		</html:link>
+	</li>
 </ul>
 
 <fr:view name="myOrg" property="virtualHosts" schema="virtualHost.application.configuration.summary">
