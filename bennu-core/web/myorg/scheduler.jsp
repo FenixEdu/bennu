@@ -14,6 +14,12 @@
 	</html:link></li>
 </ul>
 
+	<p>
+		<html:link page="/scheduler.do?method=prepareLoadAndRun">
+			<bean:message bundle="MYORG_RESOURCES" key="link.scheduler.load.and.run"/>
+		</html:link>
+	</p>
+
 <h3>
 	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.tasks.active"/>
 </h3>

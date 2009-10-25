@@ -28,6 +28,7 @@ package myorg.presentationTier.actions;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import myorg.domain.scheduler.ClassBean;
 import myorg.domain.scheduler.Task;
 import myorg.domain.scheduler.TaskConfiguration;
 import myorg.domain.scheduler.TaskConfigurationBean;
@@ -109,6 +110,24 @@ public class SchedulerAction extends ContextBaseAction {
 	final TaskLog taskLog = getDomainObject(request, "taskLogId");
 	request.setAttribute("taskLog", taskLog);
 	return context.forward("/myorg/viewTaskLog.jsp");
+    }
+
+    public ActionForward prepareLoadAndRun(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	ClassBean classBean = getRenderedObject();
+	if (classBean == null) {
+	    classBean = new ClassBean();
+	}
+	request.setAttribute("classBean", classBean);
+	return forward(request, "/myorg/loadAndRun.jsp");
+    }
+
+    public ActionForward loadAndRun(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final ClassBean classBean = getRenderedObject();
+	classBean.run();
+	request.setAttribute("classBean", classBean);
+	return forward(request, "/myorg/loadAndRun.jsp");
     }
 
 }

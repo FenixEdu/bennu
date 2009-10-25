@@ -108,3 +108,8 @@
 		bundle="MYORG_RESOURCES">
 	<slot name="shortPresentationName" key="label.user.presentationName" bundle="MYORG_RESOURCES"/>
 </schema>
+
+<schema name="myorg.domain.scheduler.ClassBean" type="myorg.domain.scheduler.ClassBean" bundle="MYORG_RESOURCES">
+	<slot name="className" key="label.scheduler.className"/>
+	<slot name="contents" key="label.scheduler.contents" layout="longText"/>
+</schema>
