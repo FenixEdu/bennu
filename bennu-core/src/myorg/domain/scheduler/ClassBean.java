@@ -208,16 +208,16 @@ public class ClassBean implements Serializable {
 	private void attemptLoad() throws ClassNotFoundException, InstantiationException, IllegalAccessException, MalformedURLException, SecurityException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException, InterruptedException {
 	    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 	    System.out.println("Classloader: " + classLoader.getClass().getName());
-	    final URL[] urls = new URL[] { new File(getBaseClassPathDirName()).toURL() };
+	    final URL[] urls = new URL[] { new File(getBaseClassPathDirName()).toURI().toURL() };
 	    final MyClassLoader urlClassLoader = new MyClassLoader(urls, classLoader);
 
 	    urlClassLoader.loadClass(getClassName());
 
-	    final Class clazz = Class.forName(getClassName(), true, urlClassLoader);
+	    final Class<?> clazz = Class.forName(getClassName(), true, urlClassLoader);
 
 	    final Object o = clazz.newInstance();
-	    final Method method = clazz.getMethod("run", null);
-	    method.invoke(o, null);
+	    final Method method = clazz.getMethod("run", new Class[0]);
+	    method.invoke(o, new Object[0]);
 	    System.out.println("Created object: " + o.getClass().getName());
 	}
 
