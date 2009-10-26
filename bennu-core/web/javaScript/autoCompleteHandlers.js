@@ -6,6 +6,7 @@ function clearAutoComplete(input,inputText) {
 function updateCustomValue(input,inputText) {
 	id = escapeId(input.attr('id')) + "_OldValue";
 	$("input#" + id).val( inputText);
+	$("input#" + escapeId(input.attr('id')) + "_AutoComplete").val("custom");
 }
 function selectElement(input,inputText,element) {
 	id = escapeId(input.attr('id'));  
