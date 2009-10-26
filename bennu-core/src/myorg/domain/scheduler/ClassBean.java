@@ -3,7 +3,10 @@ package myorg.domain.scheduler;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -24,6 +27,12 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import javax.tools.JavaCompiler.CompilationTask;
+
+import jvstm.TransactionalCommand;
+
+import org.joda.time.DateTime;
+
+import pt.ist.fenixframework.pstm.Transaction;
 
 public class ClassBean implements Serializable {
 
@@ -134,31 +143,42 @@ public class ClassBean implements Serializable {
 
     private static int classpathIndexCounter = 0; 
 
-    static {
-	cleanup();
-    }
+    private static final List<Executer> runningExecuters = Collections.synchronizedList(new ArrayList<Executer>());
 
-    public static void cleanup() {
-	final String tmpDirName = System.getProperty("java.io.tmpdir");
-	final File file = new File(tmpDirName);
-	for (final File dir : file.listFiles()) {
-	    if (dir.isDirectory() && dir.getName().indexOf("ClassBean_classpath_") >= 0) {
-		dir.delete();
-	    }
-	}	
+    public static List<Executer> getRunningExecuters() {
+	return Collections.unmodifiableList(runningExecuters);
     }
 
     public class Executer extends Thread {
 
+	public class ExecutionLogger extends Thread {
 
-	private final int classpathIndex = classpathIndexCounter++;
+	    @Override
+	    public void run() {
+		Transaction.withTransaction(false, new TransactionalCommand() {
+
+		    @Override
+		    public void doIt() {
+			new CustomTaskLog(getClassName(), getContents(), uploadTime, taskStart, taskEnd, out.toString() );
+		    }
+
+		});
+	    }
+	}
+
+	private final DateTime uploadTime = new DateTime();
+
+	private DateTime taskStart;
+	private DateTime taskEnd;
+	private Writer out = new StringWriter();
 
 	public Executer() {
+	    runningExecuters.add(this);
 	}
 
 	private String getBaseClassPathDirName() {
 	    final String tmpDirName = System.getProperty("java.io.tmpdir");
-	    return tmpDirName + File.separatorChar + "ClassBean_classpath_" + classpathIndex;
+	    return tmpDirName + File.separatorChar + "ClassBean_classpath_" + hashCode();
 	}
 
 	private String getBaseFileName() {
@@ -197,71 +217,113 @@ public class ClassBean implements Serializable {
 	    final Collection<JavaFileObject> javaFileObjects = new ArrayList<JavaFileObject>();
 	    javaFileObjects.add(javaSourceFromString);
 
-	    final CompilationTask compilationTask = javaCompiler.getTask(null, standardJavaFileManager, null, null, null, javaFileObjects);
-	    final Boolean result = compilationTask.call();
-
-	    System.out.println("Compile result: " + result);
+	    final CompilationTask compilationTask = javaCompiler.getTask(out, standardJavaFileManager, null, null, null, javaFileObjects);
+	    compilationTask.call();
 
 	    standardJavaFileManager.close();
 	}
 
-	private void attemptLoad() throws ClassNotFoundException, InstantiationException, IllegalAccessException, MalformedURLException, SecurityException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException, InterruptedException {
+	private void runTask() throws ClassNotFoundException, InstantiationException, IllegalAccessException, MalformedURLException, SecurityException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException, InterruptedException {
 	    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-	    System.out.println("Classloader: " + classLoader.getClass().getName());
 	    final URL[] urls = new URL[] { new File(getBaseClassPathDirName()).toURI().toURL() };
 	    final MyClassLoader urlClassLoader = new MyClassLoader(urls, classLoader);
 
 	    urlClassLoader.loadClass(getClassName());
 
 	    final Class<?> clazz = Class.forName(getClassName(), true, urlClassLoader);
-
 	    final Object o = clazz.newInstance();
-	    final Method method = clazz.getMethod("run", new Class[0]);
-	    method.invoke(o, new Object[0]);
-	    System.out.println("Created object: " + o.getClass().getName());
+
+	    if (o instanceof CustomTask) {
+		final CustomTask customTask = (CustomTask) o;
+		final PrintWriter printWriter = new PrintWriter(out, true);
+		customTask.setOut(printWriter);
+		taskStart = new DateTime();
+		customTask.run();
+		taskEnd = new DateTime();
+	    } else {
+		final Method method = clazz.getMethod("run", new Class[0]);
+		taskStart = new DateTime();
+		method.invoke(o, new Object[0]);
+		taskEnd = new DateTime();		
+	    }
 	}
 
 	@Override
 	public void run() {
 	    try {
-		createDirs();
-		compileFile();
-		attemptLoad();
-	    } catch (InstantiationException e) {
-		throw new Error(e);
-	    } catch (IllegalAccessException e) {
-		throw new Error(e);
-	    } catch (IllegalArgumentException e) {
-		throw new Error(e);
-	    } catch (InvocationTargetException e) {
-		throw new Error(e);
-	    } catch (SecurityException e) {
-		throw new Error(e);
-	    } catch (NoSuchMethodException e) {
-		throw new Error(e);
-	    } catch (IOException e) {
-		throw new Error(e);
-	    } catch (URISyntaxException e) {
-		throw new Error(e);
-	    } catch (ClassNotFoundException e) {
-		throw new Error(e);
-	    } catch (InterruptedException e) {
-		throw new Error(e);
+		try {
+		    try {
+			createDirs();
+			compileFile();
+			runTask();
+		    } catch (InstantiationException e) {
+			throw new Error(e);
+		    } catch (IllegalAccessException e) {
+			throw new Error(e);
+		    } catch (IllegalArgumentException e) {
+			throw new Error(e);
+		    } catch (InvocationTargetException e) {
+			throw new Error(e);
+		    } catch (SecurityException e) {
+			throw new Error(e);
+		    } catch (NoSuchMethodException e) {
+			throw new Error(e);
+		    } catch (IOException e) {
+			throw new Error(e);
+		    } catch (URISyntaxException e) {
+			throw new Error(e);
+		    } catch (ClassNotFoundException e) {
+			throw new Error(e);
+		    } catch (InterruptedException e) {
+			throw new Error(e);
+		    } finally {
+			log();
+		    }
+		} finally {
+		    cleanup();
+		}
+	    } finally {
+		runningExecuters.remove(this);
 	    }
 	}
 
+	private void log() {
+	    final ExecutionLogger executionLogger = new ExecutionLogger();
+	    executionLogger.start();
+	    try {
+		executionLogger.join();
+	    } catch (InterruptedException e) {
+		throw new Error(e);
+	    }	    
+	}
+
+	private void cleanup() {
+	    final String dirName = getBaseClassPathDirName();
+	    final File file = new File(dirName);
+	    delete(file);
+	}
+
+	private void delete(final File file) {
+	    if (file.isDirectory()) {
+		for (final File subFile : file.listFiles()) {
+		    delete(subFile);
+		}
+	    }
+	    file.delete();
+	}
+
+	public String getClassBeanClassName() {
+	    return getClassName();
+	}
+
+	public DateTime getUploaded() {
+	    return uploadTime;
+	}
     }
 
-    public synchronized void run() {
+    public void run() {
 	final Executer executer = new Executer();
-	try {
-	    executer.start();
-	    executer.join();
-	} catch (final Exception ex) {
-	    throw new Error(ex);
-	} finally {
-	    cleanup();
-	}
+	executer.start();
     }
 
 }

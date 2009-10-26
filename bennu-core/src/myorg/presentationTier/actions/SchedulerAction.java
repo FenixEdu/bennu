@@ -25,14 +25,19 @@
 
 package myorg.presentationTier.actions;
 
+import java.util.List;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import myorg.domain.scheduler.ClassBean;
+import myorg.domain.scheduler.CustomTaskLog;
 import myorg.domain.scheduler.Task;
 import myorg.domain.scheduler.TaskConfiguration;
 import myorg.domain.scheduler.TaskConfigurationBean;
 import myorg.domain.scheduler.TaskLog;
+import myorg.domain.scheduler.ClassBean.Executer;
 import myorg.presentationTier.Context;
 
 import org.apache.struts.action.ActionForm;
@@ -127,7 +132,23 @@ public class SchedulerAction extends ContextBaseAction {
 	final ClassBean classBean = getRenderedObject();
 	classBean.run();
 	request.setAttribute("classBean", classBean);
-	return forward(request, "/myorg/loadAndRun.jsp");
+	return listCustomTaskLogs(mapping, form, request, response);
+    }
+
+    public ActionForward listCustomTaskLogs(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final List<Executer> runningExecuters = ClassBean.getRunningExecuters();
+	request.setAttribute("runningExecuters", runningExecuters);
+	final Set<CustomTaskLog> customTaskLogs = CustomTaskLog.getSortedCustomTaskLogs();
+	request.setAttribute("customTaskLogs", customTaskLogs);
+	return forward(request, "/myorg/listCustomTaskLogs.jsp");
+    }
+
+    public ActionForward viewCustomTaskLog(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final CustomTaskLog customTaskLog = getDomainObject(request, "customTaskLogId");
+	request.setAttribute("customTaskLog", customTaskLog);
+	return forward(request, "/myorg/viewCustomTaskLog.jsp");
     }
 
 }

@@ -114,6 +114,15 @@ class scheduler.TaskLog {
 	Boolean successful;
 }
 
+class scheduler.CustomTaskLog {
+    String className;
+    String contents;
+	DateTime uploaded;
+	DateTime taskStart;
+	DateTime taskEnd;
+	String output;
+}
+
 class User {
 	String username;
 	String password;
@@ -321,3 +330,11 @@ relation TaskTaskLog {
 		multiplicity *;
 	}
 }
+
+relation MyOrgCustomTaskLog {
+	MyOrg playsRole myOrg;
+	scheduler.CustomTaskLog playsRole customTaskLog {
+		multiplicity *;
+	}
+}
+

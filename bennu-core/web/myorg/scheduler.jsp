@@ -19,6 +19,11 @@
 			<bean:message bundle="MYORG_RESOURCES" key="link.scheduler.load.and.run"/>
 		</html:link>
 	</p>
+	<p>
+		<html:link page="/scheduler.do?method=listCustomTaskLogs">
+			<bean:message bundle="MYORG_RESOURCES" key="link.scheduler.listCustomTasks"/>
+		</html:link>
+	</p>
 
 <h3>
 	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.tasks.active"/>

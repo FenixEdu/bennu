@@ -113,3 +113,15 @@
 	<slot name="className" key="label.scheduler.className"/>
 	<slot name="contents" key="label.scheduler.contents" layout="longText"/>
 </schema>
+
+<schema name="myorg.domain.scheduler.CustomTaskLog.list" type="myorg.domain.scheduler.CustomTaskLog" bundle="MYORG_RESOURCES">
+	<slot name="className" key="label.scheduler.customTask.className"/>
+	<slot name="uploaded" key="label.scheduler.customTask.uploaded"/>
+	<slot name="taskStart" key="label.scheduler.customTask.taskStart"/>
+	<slot name="taskEnd" key="label.scheduler.customTask.taskEnd"/>
+</schema>
+
+<schema name="myorg.domain.scheduler.ClassBean.Executer" type="myorg.domain.scheduler.ClassBean$Executer" bundle="MYORG_RESOURCES">
+	<slot name="classBeanClassName" key="label.scheduler.customTask.className"/>
+	<slot name="uploaded" key="label.scheduler.customTask.uploaded"/>
+</schema>
