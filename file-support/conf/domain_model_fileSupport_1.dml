@@ -14,6 +14,9 @@ class GenericFile {
 	String contentKey;
 }
 
+	class TestFile extends GenericFile {
+	}
+
 class FileRawData {
 	String contentKey;
 	ByteArray content;
