@@ -39,13 +39,16 @@ abstract public class GenericFile extends GenericFile_Base {
     }
 
     public void setContent(byte[] content) {
+	System.out.println("is content null: " + (content == null));
 	final FileStorage fileStorage = getFileStorage();
+	System.out.println("FileStorage: " + fileStorage.getName());
 	final String uniqueIdentification = fileStorage.store(StringUtils.isEmpty(getContentKey()) ? getExternalId()
 		: getContentKey(), content);
+	System.out.println("uniqueIdentification: " + uniqueIdentification);
 	setStorage(fileStorage);
 	
 	if (StringUtils.isEmpty(uniqueIdentification) && content != null) {
-	    throw new Error();
+	    throw new DomainException();
 	}
 	
 	setContentKey(uniqueIdentification);
