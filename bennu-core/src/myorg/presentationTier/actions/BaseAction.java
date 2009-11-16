@@ -48,6 +48,7 @@ import org.apache.struts.actions.DispatchAction;
 import pt.ist.fenixWebFramework.renderers.components.state.IViewState;
 import pt.ist.fenixWebFramework.renderers.model.MetaObject;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
@@ -195,7 +196,6 @@ public abstract class BaseAction extends DispatchAction {
 	outputStream.write(jsonReply);
 	outputStream.flush();
 	outputStream.close();
-
     }
 
     protected void writeJsonReply(HttpServletResponse response, List<JsonObject> jsonObject) throws IOException {
@@ -209,6 +209,13 @@ public abstract class BaseAction extends DispatchAction {
 	outputStream.write(jsonReply);
 	outputStream.flush();
 	outputStream.close();
-
     }
+
+    protected ActionForward redirect(final HttpServletRequest request, final String url) {
+	final String digest = GenericChecksumRewriter.calculateChecksum(request.getContextPath() + url);
+	final char seperator = url.indexOf('?') >= 0 ? '&' : '?';
+	final String urlWithChecksum = url + seperator + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + '=' +  digest;
+	return new ActionForward(urlWithChecksum, true);
+    }
+
 }

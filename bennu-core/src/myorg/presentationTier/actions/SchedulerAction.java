@@ -132,7 +132,7 @@ public class SchedulerAction extends ContextBaseAction {
 	final ClassBean classBean = getRenderedObject();
 	classBean.run();
 	request.setAttribute("classBean", classBean);
-	return listCustomTaskLogs(mapping, form, request, response);
+	return redirect(request, "/scheduler.do?method=listCustomTaskLogs");
     }
 
     public ActionForward listCustomTaskLogs(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
@@ -149,6 +149,18 @@ public class SchedulerAction extends ContextBaseAction {
 	final CustomTaskLog customTaskLog = getDomainObject(request, "customTaskLogId");
 	request.setAttribute("customTaskLog", customTaskLog);
 	return forward(request, "/myorg/viewCustomTaskLog.jsp");
+    }
+
+    public ActionForward reloadCustomTask(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final CustomTaskLog customTaskLog = getDomainObject(request, "customTaskLogId");
+
+	ClassBean classBean = new ClassBean();
+	classBean.setClassName(customTaskLog.getClassName());
+	classBean.setContents(customTaskLog.getContents());
+	request.setAttribute("classBean", classBean);
+
+	return forward(request, "/myorg/loadAndRun.jsp");
     }
 
 }
