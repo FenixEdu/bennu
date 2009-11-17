@@ -150,53 +150,34 @@ class Theme {
 	String screenshotFileName;
 }
 
-class index.IndexDirectory {
+class index.DomainIndexDirectory {
 	String indexForClass;
 }
 
-class index.IndexFile {
+class index.DomainIndexFile {
 	String name;
 	Long lastModified;
 	Long length;
-	Integer indexMarker;
-}
-
-class index.IndexFileBuffer {
-	Integer indexMarker;
-	ByteArray buffer;
+	ByteArray indexContent;	
 }
 
 relation MyOrgIndexDirectory {
 	MyOrg playsRole myOrg;
-	index.IndexDirectory playsRole indexDirectory {
+	index.DomainIndexDirectory playsRole domainIndexDirectories {
 		multiplicity *;
 	}	
 }
  
 relation MyOrgIndexFile {
 	MyOrg playsRole myOrg;
-	index.IndexFile playsRole IndexFile {
-		multiplicity *;
-	}	
-}
-
-relation MyOrgIndexFileBuffer {
-	MyOrg playsRole myOrg;
-	index.IndexFileBuffer playsRole indexFilebuffers {
+	index.DomainIndexFile playsRole DomainIndexFiles {
 		multiplicity *;
 	}	
 }
 
 relation IndexDirectoryIndexFile {
-	index.IndexDirectory playsRole directory;
-	index.IndexFile playsRole indexFiles {
-		multiplicity *;
-	}	
-}
-
-relation IndexFileIndexFileBuffer {
-	index.IndexFile playsRole indexFile;
-	index.IndexFileBuffer playsRole indexFileBuffers {
+	index.DomainIndexDirectory playsRole directory;
+	index.DomainIndexFile playsRole indexFiles {
 		multiplicity *;
 	}	
 }

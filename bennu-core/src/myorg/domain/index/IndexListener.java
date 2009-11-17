@@ -14,29 +14,30 @@ public class IndexListener implements CommitListener {
 
     @Override
     public void afterCommit(TopLevelTransaction topLevelTransaction) {
-	
+
     }
 
     @Override
     public void beforeCommit(TopLevelTransaction topLevelTransaction) {
 	if (topLevelTransaction.isWriteTransaction()) {
-	    Set<Indexable> indexableObjects = new HashSet<Indexable>();
+	    Set<IndexDocument> documentsToIndex = new HashSet<IndexDocument>();
 
 	    for (DomainObject domainObject : new HashSet<DomainObject>(topLevelTransaction.getNewObjects())) {
 		if (domainObject instanceof Searchable) {
-		    indexableObjects.addAll(((Searchable) domainObject).getObjectsToIndex());
+		    for (Indexable indexableObject : ((Searchable) domainObject).getObjectsToIndex()) {
+			documentsToIndex.add(indexableObject.getDocumentToIndex());
+		    }
 		}
 	    }
 
 	    for (DomainObject domainObject : topLevelTransaction.getModifiedObjects()) {
 		if (domainObject instanceof Searchable) {
-		    indexableObjects.addAll(((Searchable) domainObject).getObjectsToIndex());
+		    for (Indexable indexableObject : ((Searchable) domainObject).getObjectsToIndex()) {
+			documentsToIndex.add(indexableObject.getDocumentToIndex());
+		    }
 		}
 	    }
-
-	    for (Indexable indexableObject : indexableObjects) {
-		DomainIndexer.getInstance().indexDomainObject(indexableObject.getDocumentToIndex());
-	    }
+	    DomainIndexer.getInstance().indexDomainObjects(documentsToIndex);
 	}
     }
 

@@ -37,4 +37,19 @@ public class IndexDocument {
     public Class<? extends DomainObject> getDomainObjectClass() {
 	return this.domainObjectClass;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (obj instanceof IndexDocument) {
+	    IndexDocument otherDocument = (IndexDocument) obj;
+	    return indexId.equals(otherDocument.getIndexId());
+	}
+
+	return false;
+    }
+
+    @Override
+    public int hashCode() {
+	return this.indexId.hashCode();
+    }
 }

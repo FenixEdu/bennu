@@ -2,8 +2,7 @@ package myorg.util.lucene;
 
 import java.io.IOException;
 
-import myorg.domain.index.IndexFile;
-import myorg.domain.index.IndexFileBuffer;
+import myorg.domain.index.DomainIndexFile;
 
 import org.apache.lucene.store.IndexInput;
 
@@ -11,6 +10,7 @@ public class DomainIndexInput extends IndexInput {
     static final int BUFFER_SIZE = 1024;
 
     private long length;
+    private int numBuffers;
 
     private int currentBufferIndex;
 
@@ -18,38 +18,33 @@ public class DomainIndexInput extends IndexInput {
     private long bufferStart;
     private int bufferLength;
 
-    IndexFile file;
-    IndexFileBuffer currentBuffer;
+    private DomainIndexFile file;
 
-    public DomainIndexInput() {
-	this.file = new IndexFile();
-    }
-
-    public DomainIndexInput(IndexFile file) {
+    public DomainIndexInput(DomainIndexFile file) {
+	this.currentBufferIndex = -1;
+	this.length = file.getLength();
 	this.file = file;
-	currentBufferIndex = -1;
-	currentBuffer = null;
-	this.length = this.file.getLength();
+	this.numBuffers = (int) (this.length / BUFFER_SIZE) + 1;
     }
 
     @Override
     public void close() throws IOException {
-	// do nothing
 
     }
 
     @Override
     public long length() {
-	return this.file.getLength();
+	return this.length;
     }
 
     @Override
     public byte readByte() throws IOException {
+
 	if (bufferPosition >= bufferLength) {
 	    currentBufferIndex++;
 	    switchCurrentBuffer(true);
 	}
-	return currentBuffer.getByteAt(bufferPosition++);
+	return this.file.readByte(currentBufferIndex * BUFFER_SIZE + bufferPosition++);
     }
 
     @Override
@@ -62,15 +57,17 @@ public class DomainIndexInput extends IndexInput {
 
 	    int remainInBuffer = bufferLength - bufferPosition;
 	    int bytesToCopy = len < remainInBuffer ? len : remainInBuffer;
-	    System.arraycopy(currentBuffer.getBuffer().getBytes(), bufferPosition, b, offset, bytesToCopy);
+	    System.arraycopy(this.file.getIndexContent().getBytes(), currentBufferIndex * BUFFER_SIZE + bufferPosition, b,
+		    offset, bytesToCopy);
 	    offset += bytesToCopy;
 	    len -= bytesToCopy;
 	    bufferPosition += bytesToCopy;
 	}
+
     }
 
     private final void switchCurrentBuffer(boolean enforceEOF) throws IOException {
-	if (currentBufferIndex >= this.file.getIndexFileBuffersCount()) {
+	if (currentBufferIndex >= this.numBuffers) {
 	    // end of file reached, no more buffers left
 	    if (enforceEOF)
 		throw new IOException("Read past EOF");
@@ -80,7 +77,6 @@ public class DomainIndexInput extends IndexInput {
 		bufferPosition = BUFFER_SIZE;
 	    }
 	} else {
-	    currentBuffer = file.getBuffer(currentBufferIndex);
 	    bufferPosition = 0;
 	    bufferStart = (long) BUFFER_SIZE * (long) currentBufferIndex;
 	    long buflen = length - bufferStart;
@@ -95,7 +91,7 @@ public class DomainIndexInput extends IndexInput {
 
     @Override
     public void seek(long pos) throws IOException {
-	if (currentBuffer == null || pos < bufferStart || pos >= bufferStart + BUFFER_SIZE) {
+	if (this.currentBufferIndex > -1 || pos < bufferStart || pos >= bufferStart + BUFFER_SIZE) {
 	    currentBufferIndex = (int) (pos / BUFFER_SIZE);
 	    switchCurrentBuffer(false);
 	}

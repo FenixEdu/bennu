@@ -2,9 +2,13 @@ package myorg.util.lucene;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import myorg.domain.index.IndexDirectory;
-import myorg.domain.index.IndexFile;
+import myorg.domain.index.DomainIndexDirectory;
+import myorg.domain.index.DomainIndexFile;
 
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.IndexInput;
@@ -13,44 +17,71 @@ import org.apache.lucene.store.SingleInstanceLockFactory;
 
 public class LuceneDomainDirectory extends Directory {
 
-    private IndexDirectory directory;
+    private DomainIndexDirectory directory;
+    private Map<String, RAMIndex> workingIndexes;
 
-    public LuceneDomainDirectory(IndexDirectory directory) {
+    public LuceneDomainDirectory(DomainIndexDirectory directory) {
 	setLockFactory(new SingleInstanceLockFactory());
 	this.directory = directory;
+	this.workingIndexes = new HashMap<String, RAMIndex>();
+    }
+
+    public DomainIndexDirectory getDomainIndexDirectory() {
+	return this.directory;
     }
 
     @Override
     public void close() throws IOException {
 	this.directory = null;
+	this.workingIndexes.clear();
+	this.workingIndexes = null;
+    }
+
+    public IndexFile getFile(String name) {
+	IndexFile file = workingIndexes.get(name);
+	if (file != null) {
+	    return file;
+	}
+
+	return this.directory.getIndexFile(name);
     }
 
     @Override
     public IndexOutput createOutput(String name) throws IOException {
-	IndexFile file = this.directory.getIndexFile(name);
+	IndexFile file = getFile(name);
 	if (file != null) {
-	    file.removeDirectory();
+	    removeFile(file);
+	}
+
+	file = new DomainIndexFile();
+	file.setName(name);
+	((DomainIndexFile) file).setDirectory(this.directory);
+
+	return new DomainIndexOutput(file.getNonPersistentIndex(), this);
+    }
+
+    private void removeFile(IndexFile file) {
+	if (file.isPersisted()) {
+	    DomainIndexFile domainFile = (DomainIndexFile) file;
+	    domainFile.removeDirectory();
 	    // On the original RamDirectory the file isn't being deleted
 	    // but probably only because since it's RAM will be flushed
 	    // as soon the application stops. I'm deleting it explicity
 	    // from the database in order to avoid garbage.
 	    // Paulo Abrantes - 18/07/2009
 
-	    file.delete();
+	    domainFile.delete();
+	} else {
+	    workingIndexes.remove(file.getName());
+	    ((RAMIndex) file).getPersistentIndex().delete();
 	}
-
-	file = new IndexFile();
-	file.setName(name);
-	file.setDirectory(this.directory);
-
-	return new DomainIndexOutput(file);
     }
 
     @Override
     public void deleteFile(String name) throws IOException {
-	IndexFile indexFile = this.directory.getIndexFile(name);
+	IndexFile indexFile = getFile(name);
 	if (indexFile != null) {
-	    indexFile.delete();
+	    removeFile(indexFile);
 	} else {
 	    throw new FileNotFoundException(name);
 	}
@@ -59,12 +90,12 @@ public class LuceneDomainDirectory extends Directory {
 
     @Override
     public boolean fileExists(String name) throws IOException {
-	return this.directory.getIndexFile(name) != null;
+	return getFile(name) != null;
     }
 
     @Override
     public long fileLength(String name) throws IOException {
-	IndexFile file = this.directory.getIndexFile(name);
+	IndexFile file = getFile(name);
 	if (file == null) {
 	    throw new FileNotFoundException(name);
 	}
@@ -73,7 +104,7 @@ public class LuceneDomainDirectory extends Directory {
 
     @Override
     public long fileModified(String name) throws IOException {
-	IndexFile file = this.directory.getIndexFile(name);
+	IndexFile file = getFile(name);
 	if (file == null) {
 	    throw new FileNotFoundException(name);
 	}
@@ -82,30 +113,36 @@ public class LuceneDomainDirectory extends Directory {
 
     @Override
     public String[] list() throws IOException {
-	String[] list = new String[this.directory.getIndexFilesCount()];
+	Set<String> files = new HashSet<String>();
+	files.addAll(workingIndexes.keySet());
+	for (DomainIndexFile file : this.directory.getIndexFiles()) {
+	    files.add(file.getName());
+	}
+	int size = files.size();
 	int i = 0;
-	for (IndexFile file : this.directory.getIndexFiles()) {
-	    list[i++] = file.getName();
+	String[] list = new String[size];
+	for (String fileName : files) {
+	    list[i++] = fileName;
 	}
 	return list;
     }
 
     @Override
     public IndexInput openInput(String name) throws IOException {
-	IndexFile file = this.directory.getIndexFile(name);
+	IndexFile file = getFile(name);
 	if (file == null) {
 	    throw new FileNotFoundException(name);
 	}
-	return new DomainIndexInput(file);
+	return new DomainIndexInput(file.getPersistentIndex());
     }
 
     @Override
     public void renameFile(String oldName, String newName) throws IOException {
-	IndexFile fromFile = this.directory.getIndexFile(oldName);
+	IndexFile fromFile = getFile(oldName);
 	if (fromFile == null) {
 	    throw new FileNotFoundException(oldName);
 	}
-	IndexFile toFile = this.directory.getIndexFile(newName);
+	DomainIndexFile toFile = this.directory.getIndexFile(newName);
 	if (toFile != null) {
 	    toFile.delete();
 	}
@@ -114,7 +151,7 @@ public class LuceneDomainDirectory extends Directory {
 
     @Override
     public void touchFile(String name) throws IOException {
-	IndexFile file = this.directory.getIndexFile(name);
+	IndexFile file = getFile(name);
 
 	if (file == null) {
 	    throw new FileNotFoundException(name);
@@ -130,6 +167,10 @@ public class LuceneDomainDirectory extends Directory {
 	} while (ts1 == ts2);
 
 	file.setLastModified(ts2);
+    }
+
+    public void removeFileFromMap(RAMIndex ramIndex) {
+	workingIndexes.remove(ramIndex);
     }
 
 }

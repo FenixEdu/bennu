@@ -2,10 +2,6 @@ package myorg.util.lucene;
 
 import java.io.IOException;
 
-import myorg.domain.index.IndexFile;
-import myorg.domain.index.IndexFileBuffer;
-import myorg.domain.util.ByteArray;
-
 import org.apache.lucene.store.IndexOutput;
 
 public class DomainIndexOutput extends IndexOutput {
@@ -18,18 +14,23 @@ public class DomainIndexOutput extends IndexOutput {
     private long bufferStart;
     private int bufferLength;
 
-    private IndexFile file;
-    private IndexFileBuffer currentBuffer;
+    private RAMIndex file;
+    private byte[] currentBuffer;
+    private LuceneDomainDirectory directory;
 
-    public DomainIndexOutput(IndexFile file) {
+    public DomainIndexOutput(RAMIndex file, LuceneDomainDirectory directory) {
 	this.file = file;
 
-	currentBufferIndex = -1;
-	currentBuffer = null;
+	this.currentBufferIndex = -1;
+	this.currentBuffer = null;
+	this.directory = directory;
     }
 
     @Override
     public void close() throws IOException {
+	if (this.directory != null) {
+	    this.directory.removeFileFromMap(this.file);
+	}
 	flush();
     }
 
@@ -37,6 +38,7 @@ public class DomainIndexOutput extends IndexOutput {
     public void flush() throws IOException {
 	this.file.setLastModified(System.currentTimeMillis());
 	setFileLength();
+	this.file.persist();
     }
 
     private void setFileLength() {
@@ -68,14 +70,14 @@ public class DomainIndexOutput extends IndexOutput {
     }
 
     private final void switchCurrentBuffer() throws IOException {
-	if (currentBufferIndex == this.file.getIndexFileBuffersCount()) {
-	    currentBuffer = this.file.addBuffer(BUFFER_SIZE);
+	if (currentBufferIndex == this.file.numBuffers()) {
+	    currentBuffer = this.file.addBuffer(BUFFER_SIZE).getBytes();
 	} else {
-	    currentBuffer = this.file.getBuffer(currentBufferIndex);
+	    currentBuffer = this.file.getBuffer(currentBufferIndex).getBytes();
 	}
 	bufferPosition = 0;
 	bufferStart = (long) BUFFER_SIZE * (long) currentBufferIndex;
-	bufferLength = currentBuffer.getLength();
+	bufferLength = currentBuffer.length;
     }
 
     @Override
@@ -84,7 +86,7 @@ public class DomainIndexOutput extends IndexOutput {
 	    currentBufferIndex++;
 	    switchCurrentBuffer();
 	}
-	currentBuffer.writeByteAt(bufferPosition++, b);
+	currentBuffer[bufferPosition++] = b;
     }
 
     @Override
@@ -96,17 +98,11 @@ public class DomainIndexOutput extends IndexOutput {
 		switchCurrentBuffer();
 	    }
 
-	    int remainInBuffer = currentBuffer.getLength() - bufferPosition;
+	    int remainInBuffer = currentBuffer.length - bufferPosition;
 	    int bytesToCopy = len < remainInBuffer ? len : remainInBuffer;
 
-	    /*
-	     * We need this to persist right?
-	     */
-	    ByteArray byteArray = this.currentBuffer.getBuffer();
-	    byte[] byteArrayToBeDestination = byteArray.getBytes();
+	    byte[] byteArrayToBeDestination = this.currentBuffer;
 	    System.arraycopy(b, offset, byteArrayToBeDestination, bufferPosition, bytesToCopy);
-	    byteArray.setBytes(byteArrayToBeDestination);
-	    this.currentBuffer.setBuffer(byteArray);
 
 	    offset += bytesToCopy;
 	    len -= bytesToCopy;
