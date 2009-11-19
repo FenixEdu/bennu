@@ -80,15 +80,16 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     private String transformIDInPath(final String uniqueIdentification) {
-	final String reversedId = StringUtils.reverse(uniqueIdentification);
 	final Integer directoriesNameLength = getTreeDirectoriesNameLength();
 
 	final StringBuilder result = new StringBuilder();
 
-	char[] idArray = reversedId.toCharArray();
+	char[] idArray = uniqueIdentification.toCharArray();
 	for (int i = 0; i < idArray.length; i++) {
-	    if (i > 0 && i % directoriesNameLength == 0) {
+	    if (i > 0 && i % directoriesNameLength == 0 && ((i + directoriesNameLength) < uniqueIdentification.length())) {
 		result.append(PATH_SEPARATOR);
+	    } else if ((i + directoriesNameLength) >= uniqueIdentification.length()) {
+		break;
 	    }
 	    result.append(idArray[i]);
 	}
