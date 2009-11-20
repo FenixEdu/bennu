@@ -98,10 +98,9 @@
 	        <arg value="-domainModelClass" />
 	        <arg value="pt.ist.fenixframework.pstm.dml.FenixDomainModel" />
 	        <arg value="-generator" />
-                <arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParam" />
+            <arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParamOneBoxPerObject" />
 <!--
-	                <arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParamOneBoxPerObject" />
-			<arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParam" />
+            <arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParam" />
  -->
 			<arg value="${build.home.webinf.classes}"/>
 			<arg value="myorg.persistenceTier.SQL2JavaConverters"/>
