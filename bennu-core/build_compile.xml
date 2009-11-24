@@ -99,9 +99,6 @@
 	        <arg value="pt.ist.fenixframework.pstm.dml.FenixDomainModel" />
 	        <arg value="-generator" />
             <arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParamOneBoxPerObject" />
-<!--
-            <arg value="dml.FenixCodeGeneratorReadFromRsWithConverterClassParam" />
- -->
 			<arg value="${build.home.webinf.classes}"/>
 			<arg value="myorg.persistenceTier.SQL2JavaConverters"/>
 			<arg value="myorg.persistenceTier."/>
@@ -121,8 +118,8 @@
 			</classpath>
 			<arg value="${build.home.webinf.classes}"/>
 			<arg value="${build.home.webinf.libs}/jvstm.jar"/>
-			<arg value="${build.home.webinf.libs}/fenix-framework-r44585.jar"/>
-			<arg value="${build.home.webinf.libs}/fenix-web-framework-r44747.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-framework-r*.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-web-framework-r*.jar"/>
 			<arg value="${build.home.webinf.libs}/joda-time-1.5.2.jar"/>
 			<arg value="${build.home.webinf.libs}/fenix-tools.jar"/>
 		</java>
