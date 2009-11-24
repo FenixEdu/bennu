@@ -1,5 +1,8 @@
 package module.fileSupport.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.activation.MimetypesFileTypeMap;
 
 import myorg.domain.MyOrg;
@@ -39,18 +42,15 @@ abstract public class GenericFile extends GenericFile_Base {
     }
 
     public void setContent(byte[] content) {
-	System.out.println("is content null: " + (content == null));
 	final FileStorage fileStorage = getFileStorage();
-	System.out.println("FileStorage: " + fileStorage.getName());
 	final String uniqueIdentification = fileStorage.store(StringUtils.isEmpty(getContentKey()) ? getExternalId()
 		: getContentKey(), content);
-	System.out.println("uniqueIdentification: " + uniqueIdentification);
 	setStorage(fileStorage);
-	
+
 	if (StringUtils.isEmpty(uniqueIdentification) && content != null) {
 	    throw new DomainException();
 	}
-	
+
 	setContentKey(uniqueIdentification);
     }
 
@@ -90,11 +90,21 @@ abstract public class GenericFile extends GenericFile_Base {
     public void deleteService() {
 	delete();
     }
-    
+
     public void delete() {
 	setContent(null);
 	removeStorage();
 	removeMyOrg();
 	deleteDomainObject();
+    }
+
+    public static <T extends GenericFile> List<T> getFiles(final Class<T> clazz) {
+	final List<T> files = new ArrayList<T>();
+	for (final GenericFile file : MyOrg.getInstance().getGenericFiles()) {
+	    if (file.getClass().equals(clazz)) {
+		files.add((T) file);
+	    }
+	}
+	return files;
     }
 }
