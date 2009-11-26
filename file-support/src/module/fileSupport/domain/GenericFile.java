@@ -66,10 +66,16 @@ abstract public class GenericFile extends GenericFile_Base {
     public static void convertFileStorages(final FileStorage fileStorageToUpdate) {
 
 	if (fileStorageToUpdate != null) {
-	    for (final GenericFile genericFile : MyOrg.getInstance().getGenericFiles()) {
-		if (fileStorageToUpdate == genericFile.getFileStorage() && fileStorageToUpdate != genericFile.getStorage()) {
-		    genericFile.updateFileStorage();
+	    try {
+		for (final GenericFile genericFile : MyOrg.getInstance().getGenericFiles()) {
+		    if (fileStorageToUpdate == genericFile.getFileStorage() && fileStorageToUpdate != genericFile.getStorage()) {
+			genericFile.updateFileStorage();
+		    }
 		}
+		System.out.println("FILE Conversion: DONE SUCESSFULLY!");
+	    } catch (Throwable e) {
+		System.out.println("FILE Conversion: ABORTED!!!");
+		e.printStackTrace();
 	    }
 	}
     }
