@@ -174,6 +174,7 @@ public abstract class Node extends Node_Base implements INode {
 	}
 	removeVirtualHost();
 	removeMyOrg();
+	removeAccessibilityGroup();
 	deleteDomainObject();
     }
 
