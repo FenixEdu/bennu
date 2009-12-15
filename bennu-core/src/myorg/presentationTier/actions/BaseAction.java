@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import myorg.domain.MyOrg;
 import myorg.domain.VirtualHost;
 import myorg.domain.contents.Node;
+import myorg.util.InputStreamUtil;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -119,28 +120,7 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected byte[] consumeInputStream(final InputStream inputStream) {
-	byte[] result = null;
-	if (inputStream != null) {
-	    final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-	    try {
-		try {
-		    FileUtils.copy(inputStream, byteArrayOutputStream);
-		    byteArrayOutputStream.flush();
-		    result = byteArrayOutputStream.toByteArray();
-		    byteArrayOutputStream.close();
-		} catch (IOException e) {
-		    e.printStackTrace();
-		}
-	    } finally {
-		try {
-		    inputStream.close();
-		    byteArrayOutputStream.close();
-		} catch (IOException e) {
-		    e.printStackTrace();
-		}
-	    }
-	}
-	return result;
+	return InputStreamUtil.consumeInputStream(inputStream);
     }
 
     protected ActionForward download(final HttpServletResponse response, final String filename, final byte[] bytes,
