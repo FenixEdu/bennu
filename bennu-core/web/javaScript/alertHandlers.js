@@ -27,5 +27,5 @@ function linkConfirmationHook(linkId, messageKey, titleKey) {
 	  requestConfirmation(linkId + "form",messageKey,titleKey);
         });
   $("#" + linkId).attr('href',"#");
-  $("<form id='" +  linkId + "form' action='" + href + "' method=\"post\"'></form>").insertBefore("#" + linkId);
+  $("<div class=\"dinline forminline\"><form id='" +  linkId + "form' action='" + href + "' method=\"post\"'></form></div>").insertBefore("#" + linkId);
 }
