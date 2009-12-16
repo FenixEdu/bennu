@@ -141,6 +141,13 @@ public abstract class BaseAction extends DispatchAction {
 	return MyOrg.getInstance();
     }
 
+    protected void addLocalizedMessage(final HttpServletRequest request, final String localizedMessage) {
+	final ActionMessages messages = getMessages(request);
+	ActionMessage actionMessage = new ActionMessage(localizedMessage, false);
+	messages.add("message", actionMessage);
+	saveMessages(request, messages);
+    }
+
     protected void addMessage(final HttpServletRequest request, final String key, final String... args) {
 	addMessage(request, "message", key, args);
     }
@@ -194,7 +201,7 @@ public abstract class BaseAction extends DispatchAction {
     protected ActionForward redirect(final HttpServletRequest request, final String url) {
 	final String digest = GenericChecksumRewriter.calculateChecksum(request.getContextPath() + url);
 	final char seperator = url.indexOf('?') >= 0 ? '&' : '?';
-	final String urlWithChecksum = url + seperator + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + '=' +  digest;
+	final String urlWithChecksum = url + seperator + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + '=' + digest;
 	return new ActionForward(urlWithChecksum, true);
     }
 
