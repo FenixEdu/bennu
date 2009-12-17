@@ -35,7 +35,7 @@ public class DomainException extends Error {
 
     private final String[] args;
 
-    private final String bundle;
+    private final ResourceBundle bundle;
 
     public DomainException() {
 	this(null, (String[]) null);
@@ -55,14 +55,14 @@ public class DomainException extends Error {
 	this.bundle = null;
     }
 
-    public DomainException(final String key, final String bundle) {
+    public DomainException(final String key, final ResourceBundle bundle) {
 	super(key);
 	this.key = key;
 	this.bundle = bundle;
 	this.args = null;
     }
 
-    public DomainException(final String key, final String bundle, final String... args) {
+    public DomainException(final String key, final ResourceBundle bundle, final String... args) {
 	super(key);
 	this.key = key;
 	this.bundle = bundle;
@@ -77,7 +77,7 @@ public class DomainException extends Error {
 	return args;
     }
 
-    public String getBundle() {
+    public ResourceBundle getBundle() {
 	return bundle;
     }
 
@@ -86,8 +86,7 @@ public class DomainException extends Error {
 	if (getBundle() == null) {
 	    return getMessage();
 	}
-	return (getArgs() != null) ? getFormattedStringFromResourceBundle(getBundle(), getKey(), getArgs())
-		: getStringFromResourceBundle(getBundle(), getKey());
+	return (getArgs() != null) ? getFormattedStringFromResourceBundle() : getStringFromResourceBundle();
     }
 
     /*
@@ -98,19 +97,23 @@ public class DomainException extends Error {
      * 
      * PS: This code is repeated because bundleUtil deppends of
      * MultiLanguateString for example. And both me and LC felt that it made no
-     * sence.
+     * sns
      */
-    private String getStringFromResourceBundle(final String bundle, final String key) {
-	final ResourceBundle resourceBundle = ResourceBundle.getBundle(bundle, Language.getLocale());
-	return resourceBundle.getString(key);
+    private String getStringFromResourceBundle() {
+	return getBundle().getString(getKey());
     }
 
-    private String getFormattedStringFromResourceBundle(final String bundle, final String key, String... arguments) {
-	String resourceString = getStringFromResourceBundle(bundle, key);
+    private String getFormattedStringFromResourceBundle() {
+	String resourceString = getStringFromResourceBundle();
+	String[] arguments = getArgs();
 	for (int i = 0; i < arguments.length; i++) {
 	    resourceString = resourceString.replace("{" + i + "}", arguments[i]);
 	}
 	return resourceString;
+    }
+
+    public static ResourceBundle getResourceFor(String resourceName) {
+	return ResourceBundle.getBundle(resourceName, Language.getLocale());
     }
 
 }
