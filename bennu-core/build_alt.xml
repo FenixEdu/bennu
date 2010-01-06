@@ -1,111 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="bennu" basedir="." default="build">
-    <taskdef resource="tools/ant/compile-tools.xml">
-        <classpath>
-            <fileset dir="lib" includes="*.jar" />
-            <fileset dir="web/WEB-INF/lib" includes="*.jar" />
-        </classpath>
-    </taskdef>
+	<taskdef resource="tools/ant/compile-tools.xml">
+		<classpath>
+			<fileset dir="lib" includes="*.jar" />
+			<fileset dir="web/WEB-INF/lib" includes="*.jar" />
+		</classpath>
+	</taskdef>
 
-    <target name="generate-module-targets">
-        <gen-module-targets targetAntFile="build_alt_modules.xml"
-                            propertiesFile="build_alt.properties" />
-    </target>
+	<target name="generate-module-targets">
+		<gen-module-targets targetAntFile="build_alt_modules.xml" propertiesFile="build_alt.properties" />
+	</target>
 
-    <target name="clean" depends="generate-module-targets" description="Clean default installation">
-        <ant antfile="build_alt_modules.xml" target="clean" />
-    </target>
+	<target name="clean" depends="generate-module-targets" description="Clean default installation">
+		<ant antfile="build_alt_modules.xml" target="clean" />
+		<delete file="build_alt_modules.xml" />
+	</target>
 
-    <target name="clean-"
-            depends="generate-module-targets"
-            description="Clean installation by name">
-        <input message="Installation name:" addproperty="installation" />
-        <ant antfile="build_alt_modules.xml" target="clean-${installation}" />
-    </target>
+	<target name="clean-" depends="generate-module-targets" description="Clean installation by name">
+		<input message="Installation name:" addproperty="installation" />
+		<ant antfile="build_alt_modules.xml" target="clean-${installation}" />
+		<delete file="build_alt_modules.xml" />
+	</target>
 
-    <target name="clean-all"
-            depends="generate-module-targets"
-            description="Clean all installations">
-        <ant antfile="build_alt_modules.xml" target="clean-all" />
-    </target>
+	<target name="clean-all" depends="generate-module-targets" description="Clean all installations">
+		<ant antfile="build_alt_modules.xml" target="clean-all" />
+		<delete file="build_alt_modules.xml" />
+	</target>
 
-    <target name="prepare"
-            depends="generate-module-targets"
-            description="Prepare default installation">
-        <ant antfile="build_alt_modules.xml" target="prepare" />
-    </target>
+	<target name="prepare" depends="generate-module-targets" description="Prepare default installation">
+		<ant antfile="build_alt_modules.xml" target="prepare" />
+	</target>
 
-    <target name="prepare-"
-            depends="generate-module-targets"
-            description="Prepare installation by name">
-        <input message="Installation name:" addproperty="installation" />
-        <ant antfile="build_alt_modules.xml" target="prepare-${installation}" />
-    </target>
+	<target name="prepare-" depends="generate-module-targets" description="Prepare installation by name">
+		<input message="Installation name:" addproperty="installation" />
+		<ant antfile="build_alt_modules.xml" target="prepare-${installation}" />
+	</target>
 
-    <target name="prepare-all"
-            depends="generate-module-targets"
-            description="Prepare all installations">
-        <ant antfile="build_alt_modules.xml" target="prepare-all" />
-    </target>
+	<target name="prepare-all" depends="generate-module-targets" description="Prepare all installations">
+		<ant antfile="build_alt_modules.xml" target="prepare-all" />
+	</target>
 
-    <target name="compile"
-            depends="generate-module-targets"
-            description="Compile default installation">
-        <ant antfile="build_alt_modules.xml" target="compile" />
-    </target>
+	<target name="compile" depends="generate-module-targets" description="Compile default installation">
+		<ant antfile="build_alt_modules.xml" target="compile" />
+	</target>
 
-    <target name="compile-"
-            depends="generate-module-targets"
-            description="Compile installation by name">
-        <input message="Installation name:" addproperty="installation" />
-        <ant antfile="build_alt_modules.xml" target="compile-${installation}" />
-    </target>
+	<target name="compile-" depends="generate-module-targets" description="Compile installation by name">
+		<input message="Installation name:" addproperty="installation" />
+		<ant antfile="build_alt_modules.xml" target="compile-${installation}" />
+	</target>
 
-    <target name="compile-all"
-            depends="generate-module-targets"
-            description="Compile all installations">
-        <ant antfile="build_alt_modules.xml" target="compile-all" />
-    </target>
+	<target name="compile-all" depends="generate-module-targets" description="Compile all installations">
+		<ant antfile="build_alt_modules.xml" target="compile-all" />
+	</target>
 
-    <target name="build" depends="generate-module-targets" description="Build default installation">
-        <ant antfile="build_alt_modules.xml" target="build" />
-    </target>
+	<target name="build" depends="generate-module-targets" description="Build default installation">
+		<ant antfile="build_alt_modules.xml" target="build" />
+	</target>
 
-    <target name="build-"
-            depends="generate-module-targets"
-            description="Build installation by name">
-        <input message="Installation name:" addproperty="installation" />
-        <ant antfile="build_alt_modules.xml" target="build-${installation}" />
-    </target>
+	<target name="build-" depends="generate-module-targets" description="Build installation by name">
+		<input message="Installation name:" addproperty="installation" />
+		<ant antfile="build_alt_modules.xml" target="build-${installation}" />
+	</target>
 
-    <target name="build-all"
-            depends="generate-module-targets"
-            description="Build all installations">
-        <ant antfile="build_alt_modules.xml" target="build-all" />
-    </target>
+	<target name="build-all" depends="generate-module-targets" description="Build all installations">
+		<ant antfile="build_alt_modules.xml" target="build-all" />
+	</target>
 
-    <target name="war"
-            depends="generate-module-targets"
-            description="Generate war deployable for default installation">
-        <ant antfile="build_alt_modules.xml" target="war" />
-    </target>
+	<target name="war" depends="generate-module-targets" description="Generate war deployable for default installation">
+		<ant antfile="build_alt_modules.xml" target="war" />
+	</target>
 
-    <target name="war-"
-            depends="generate-module-targets"
-            description="Generate war deployable for installation by name">
-        <input message="Installation name:" addproperty="installation" />
-        <ant antfile="build_alt_modules.xml" target="war-${installation}" />
-    </target>
+	<target name="war-" depends="generate-module-targets" description="Generate war deployable for installation by name">
+		<input message="Installation name:" addproperty="installation" />
+		<ant antfile="build_alt_modules.xml" target="war-${installation}" />
+	</target>
 
-    <target name="war-all"
-            depends="generate-module-targets"
-            description="Generate war deployable for all installations">
-        <ant antfile="build_alt_modules.xml" target="war-all" />
-    </target>
+	<target name="war-all" depends="generate-module-targets" description="Generate war deployable for all installations">
+		<ant antfile="build_alt_modules.xml" target="war-all" />
+	</target>
 
-    <target name="seed"
-            depends="generate-module-targets"
-            description="Generates a new module skeleton in the first modules directory found">
-        <ant antfile="build_alt_modules.xml" target="seed" />
-    </target>
+	<target name="seed" depends="generate-module-targets" description="Generates a new module skeleton in the first modules directory found">
+		<ant antfile="build_alt_modules.xml" target="seed" />
+	</target>
 </project>
