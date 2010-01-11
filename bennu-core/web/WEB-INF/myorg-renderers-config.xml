@@ -365,6 +365,11 @@
 
     <renderer mode="input" type="java.util.Date" class="pt.ist.fenixWebFramework.renderers.DateInputRenderer"/>
     <renderer mode="input" type="org.joda.time.DateTime" class="pt.ist.fenixWebFramework.rendererExtensions.DateTimeInputRenderer"/>
+   
+    <renderer mode="input" layout="picker" type="org.joda.time.DateTime" class="pt.ist.fenixWebFramework.rendererExtensions.DateTimeInputRendererWithPicker">
+    	<property name="image" value="images/calendar.gif"/>
+    </renderer>
+   
     <renderer mode="input" layout="picker" type="java.util.Date" class="pt.ist.fenixWebFramework.rendererExtensions.DateInputRendererWithPicker">
     	<property name="image" value="images/calendar.gif"/>
     </renderer>
