@@ -72,9 +72,9 @@
 <div id="headerforms">
 
 	<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
-		<bean:define id="languageUrl"><%= request.getContextPath() %>/content.do</bean:define>
+		<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
 		<form action="<%= languageUrl %>" method="post">
-			<input type="hidden" name="method" value="viewPage" />
+			<input type="hidden" name="method" value="firstPage" />
 			<logic:present name="selectedNode">
 				<bean:define id="arg" name="selectedNode" property="externalId" type="java.lang.String"/>
 				<input type="hidden" name="nodeOid" value="<%= arg %>"/>
