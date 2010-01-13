@@ -103,7 +103,7 @@ public class Money implements Serializable, Comparable<Money> {
     }
 
     public Money multiply(final BigDecimal mult) {
-	return newMoney(getValue().multiply(mult));
+	return newMoney(getValue().multiply(mult).setScale(getScale(), RoundingMode.HALF_EVEN));
     }
 
     public Money multiply(final long mult) {
