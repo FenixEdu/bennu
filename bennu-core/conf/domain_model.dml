@@ -150,38 +150,6 @@ class Theme {
 	String screenshotFileName;
 }
 
-class index.DomainIndexDirectory {
-	String indexForClass;
-}
-
-class index.DomainIndexFile {
-	String name;
-	Long lastModified;
-	Long length;
-	ByteArray indexContent;	
-}
-
-relation MyOrgIndexDirectory {
-	MyOrg playsRole myOrg;
-	index.DomainIndexDirectory playsRole domainIndexDirectories {
-		multiplicity *;
-	}	
-}
- 
-relation MyOrgIndexFile {
-	MyOrg playsRole myOrg;
-	index.DomainIndexFile playsRole DomainIndexFiles {
-		multiplicity *;
-	}	
-}
-
-relation IndexDirectoryIndexFile {
-	index.DomainIndexDirectory playsRole directory;
-	index.DomainIndexFile playsRole indexFiles {
-		multiplicity *;
-	}	
-}
-
 relation ThemeMyOrg {
 	MyOrg playsRole myOrg;
 	Theme playsRole themes {
