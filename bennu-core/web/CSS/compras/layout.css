@@ -984,7 +984,20 @@ background: #fff;
 margin-bottom: 10px;
 -moz-border-radius: 6px;
 -webkit-border-radius: 6px;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 11px;
+line-height: 1.6em;
 }
+
+div.portlet a {
+color: #d17647;
+font-weight: bold;
+text-decoration: none;
+}
+div.portlet a:hover {
+text-decoration: underline;
+}
+
 div.portlet-header {
 background: #eeeeee;
 padding: 6px 10px;
@@ -997,6 +1010,7 @@ color: #555;
 -webkit-border-top-right-radius: 6px;
 border-bottom: 1px solid #ddd;
 margin-bottom: 1px;
+border: none;
 }
 div.portlet-content {
 margin-top: 0;
@@ -1054,6 +1068,11 @@ padding: 0 4px !important;
 }
 div.portlet-content table.quicksearch {
 margin: 1em 0;
+}
+
+div.portlet-header .ui-icon {
+       float: right;     
+       cursor: pointer;   
 }
 
 /************************************
