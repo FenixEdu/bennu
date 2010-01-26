@@ -12,7 +12,7 @@
   * 
   */
 function formatString(string, formatTokens) {
-	text = string;
+	var text = string;
 	for (i=0; i < formatTokens.length ; i++) {
 		text = text.replace(new RegExp("\\{" + i + "\\}"),formatTokens[i]);
 	}
