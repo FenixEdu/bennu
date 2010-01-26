@@ -30,7 +30,6 @@ import java.io.Serializable;
 
 import myorg._development.PropertiesManager;
 import myorg.domain.util.ByteArray;
-import pt.ist.fenixWebFramework.util.DomainReference;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class VirtualHostBean implements Serializable {
@@ -43,7 +42,7 @@ public class VirtualHostBean implements Serializable {
     private Boolean languageSelectionEnabled;
     private Boolean breadCrumbsEnabled;
 
-    private DomainReference<Theme> theme;
+    private Theme theme;
     private String helpLink;
     private String errorPage;
     private ByteArray logo;
@@ -137,11 +136,11 @@ public class VirtualHostBean implements Serializable {
     }
 
     public void setTheme(Theme theme) {
-	this.theme = new DomainReference<Theme>(theme);
+	this.theme = theme;
     }
 
     public Theme getTheme() {
-	return theme != null ? theme.getObject() : null;
+	return theme;
     }
 
     public ByteArray getLogo() {

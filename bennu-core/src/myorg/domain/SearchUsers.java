@@ -31,15 +31,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import myorg.domain.util.Search;
-import pt.ist.fenixWebFramework.util.DomainReference;
 
 public class SearchUsers extends Search<User> {
 
     private String username;
-    private DomainReference<User> user;
+    private User user;
     private RoleType roleType;
 
-    protected  class SearchResult extends SearchResultSet<User> {
+    protected class SearchResult extends SearchResultSet<User> {
 
 	public SearchResult(final Collection<? extends User> c) {
 	    super(c);
@@ -47,8 +46,7 @@ public class SearchUsers extends Search<User> {
 
 	@Override
 	protected boolean matchesSearchCriteria(final User user) {
-	    return matchCriteria(username, user.getUsername())
-	    		&& matchCriteria(roleType, user);
+	    return matchCriteria(username, user.getUsername()) && matchCriteria(roleType, user);
 	}
 
 	private boolean matchCriteria(final RoleType roleType, final User user) {
@@ -65,33 +63,32 @@ public class SearchUsers extends Search<User> {
 	    users.add(user);
 	    return users;
 	}
-	final Set<User> users = username != null || roleType != null ?
-		MyOrg.getInstance().getUserSet() : Collections.EMPTY_SET;
+	final Set<User> users = username != null || roleType != null ? MyOrg.getInstance().getUserSet() : Collections.EMPTY_SET;
 	return new SearchResult(users);
     }
 
     public String getUsername() {
-        return username;
+	return username;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+	this.username = username;
     }
 
     public RoleType getRoleType() {
-        return roleType;
+	return roleType;
     }
 
     public void setRoleType(RoleType roleType) {
-        this.roleType = roleType;
+	this.roleType = roleType;
     }
 
     public User getUser() {
-        return user == null ? null : user.getObject();
+	return user;
     }
 
     public void setUser(final User user) {
-        this.user = user == null ? null : new DomainReference<User>(user);
+	this.user = user;
     }
 
 }

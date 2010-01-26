@@ -1,4 +1,4 @@
- <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <eclipse-userlibraries version="2">
     <library name="MYORG" systemlibrary="false">
         <archive path="/myorg/web/WEB-INF/lib/ant-contrib-1.0b3.jar"/>
@@ -23,7 +23,6 @@
         <archive path="/myorg/web/WEB-INF/lib/db-ojb-1.0.0.jar"/>
         <archive path="/myorg/web/WEB-INF/lib/dml-20091101.jar"/>
         <archive path="/myorg/web/WEB-INF/lib/expenditures-stubs.jar"/>
-        <archive path="/myorg/web/WEB-INF/lib/fenix-framework-r44585.jar"/>
         <archive path="/myorg/web/WEB-INF/lib/fenix-framework-search-plugin.jar"/>
         <archive path="/myorg/web/WEB-INF/lib/fenix-tools.jar" source="/fenix-tools"/>
         <archive path="/myorg/web/WEB-INF/lib/fenix-web-framework-r45460.jar"/>
@@ -68,5 +67,6 @@
         <archive path="/fileSupport/web/WEB-INF/lib/bcprov-jdk16-143.jar"/>
         <archive path="/fileSupport/web/WEB-INF/lib/fontbox-0.8.0-incubating.jar"/>
         <archive path="/fileSupport/web/WEB-INF/lib/pdfbox-0.8.0-incubating.jar"/>
+        <archive path="/myorg/web/WEB-INF/lib/fenix-framework-r45415.jar"/>
     </library>
 </eclipse-userlibraries>
