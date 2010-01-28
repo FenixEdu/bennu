@@ -1,0 +1,43 @@
+package pt.ist.fenixframework.plugins.luceneIndexing.domain;
+
+
+valueType pt.ist.fenixframework.plugins.luceneIndexing.util.ByteArray as ByteArray {
+    externalizeWith {
+        bytearray getBytes();
+    }
+}
+
+class LuceneSearchPluginRoot {
+}
+
+class DomainIndexDirectory {
+	String indexForClass;
+}
+
+class DomainIndexFile {
+	String name;
+	Long lastModified;
+	Long length;
+	ByteArray indexContent;	
+}
+
+relation IndexDirectoryIndexFile {
+	DomainIndexDirectory playsRole directory;
+	DomainIndexFile playsRole indexFiles {
+		multiplicity *;
+	}	
+}
+
+relation LuceneSearchPluginRootIndexDirectory {
+	LuceneSearchPluginRoot playsRole pluginRoot;
+	DomainIndexDirectory playsRole domainIndexDirectories {
+		multiplicity *;
+	}	
+}
+ 
+relation LuceneSearchPluginRootIndexFile {
+	LuceneSearchPluginRoot playsRole pluginRoot;
+	DomainIndexFile playsRole DomainIndexFiles {
+		multiplicity *;
+	}	
+}
