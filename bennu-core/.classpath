@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src_workingCapital"/>
 	<classpathentry kind="src" path="src_workflow_module"/>
-	<classpathentry kind="src" path="src_publications"/>
 	<classpathentry kind="src" path="src_projects"/>
 	<classpathentry kind="src" path="src_projectManagement"/>
 	<classpathentry kind="src" path="src_personal_information"/>

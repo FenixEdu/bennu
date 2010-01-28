@@ -18,112 +18,107 @@
 		<link>
 			<name>src_a3es</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/a3es/src</location>
+			<locationURI>BENNU_MODULES/a3es/src</locationURI>
 		</link>
 		<link>
 			<name>src_coffee</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/coffee/src</location>
+			<location>BENNU_MODULES/coffee/src</location>
 		</link>
 		<link>
 			<name>src_content</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/content/src</location>
+			<location>BENNU_MODULES/contents-module/src</location>
 		</link>
 		<link>
 			<name>src_contract</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/contract/src</location>
+			<location>BENNU_MODULES/contract/src</location>
 		</link>
 		<link>
 			<name>src_contract_ist</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/contract-ist/src</location>
+			<location>BENNU_MODULES/contract-ist/src</location>
 		</link>
 		<link>
 			<name>src_dashBoard</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/dashBoard/src</location>
+			<location>BENNU_MODULES/dashBoard/src</location>
 		</link>
 		<link>
 			<name>src_email_module</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/email-module/src</location>
+			<location>BENNU_MODULES/email-module/src</location>
 		</link>
 		<link>
 			<name>src_equivalence_plan</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/equivalence-plan/src</location>
+			<location>BENNU_MODULES/equivalence-plan/src</location>
 		</link>
 		<link>
 			<name>src_expenditure_tracking</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/expenditure-tracking/src</location>
+			<location>BENNU_MODULES/expenditure-tracking-system/src</location>
 		</link>
 		<link>
 			<name>src_fileSupport</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/fileSupport/src</location>
+			<location>BENNU_MODULES/fileSupport/src</location>
 		</link>
 		<link>
 			<name>src_geography</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/geography/src</location>
+			<location>BENNU_MODULES/geography/src</location>
 		</link>
 		<link>
 			<name>src_mail_tracking</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/mail-tracking/src</location>
+			<location>BENNU_MODULES/mail-tracking/src</location>
 		</link>
 		<link>
 			<name>src_metaWorkflow</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/metaWorkflow/src</location>
+			<location>BENNU_MODULES/metaWorkflow/src</location>
 		</link>
 		<link>
 			<name>src_mission</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/mission/src</location>
+			<location>BENNU_MODULES/mission/src</location>
 		</link>
 		<link>
 			<name>src_organization</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/organization/src</location>
+			<location>BENNU_MODULES/organization-module/src</location>
 		</link>
 		<link>
 			<name>src_organization_ist</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/organization-ist/src</location>
+			<location>BENNU_MODULES/organization-ist/src</location>
 		</link>
 		<link>
 			<name>src_personal_information</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/personal-information/src</location>
+			<location>BENNU_MODULES/personal-information/src</location>
 		</link>
 		<link>
 			<name>src_projectManagement</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/projectManagement/src</location>
+			<location>BENNU_MODULES/accounting/src</location>
 		</link>
 		<link>
 			<name>src_projects</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/projects/src</location>
-		</link>
-		<link>
-			<name>src_publications</name>
-			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/publications/src</location>
+			<location>BENNU_MODULES/project-visualization-module/src</location>
 		</link>
 		<link>
 			<name>src_workflow_module</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/workflow-module/src</location>
+			<location>BENNU_MODULES/workflow/src</location>
 		</link>
 		<link>
 			<name>src_workingCapital</name>
 			<type>2</type>
-			<location>/home/pedro/workspace/bennu/modules/workingCapital/src</location>
+			<location>BENNU_MODULES/workingCapital/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>
