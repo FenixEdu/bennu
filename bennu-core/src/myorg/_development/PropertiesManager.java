@@ -34,16 +34,18 @@ import java.util.Properties;
 import myorg.domain.MyOrg;
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
+import pt.ist.fenixframework.FenixFrameworkPlugin;
+import pt.ist.fenixframework.plugins.LuceneSearchPlugin;
 
 /**
  * The <code>PropertiesManager</code> class is a application wide utility for
  * accessing the applications configuration and properties.
- *
- * @author  João Figueiredo
- * @author  Luis Cruz
- * @author  Paulo Abrantes
- * @author  Susana Fernandes
- *
+ * 
+ * @author João Figueiredo
+ * @author Luis Cruz
+ * @author Paulo Abrantes
+ * @author Susana Fernandes
+ * 
  * @version 1.0
  */
 public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesManager {
@@ -51,27 +53,27 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
     private static final Properties properties = new Properties();
 
     static {
-        try {
-            loadProperties(properties, "/configuration.properties");
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to load properties files.", e);
-        }
+	try {
+	    loadProperties(properties, "/configuration.properties");
+	} catch (IOException e) {
+	    throw new RuntimeException("Unable to load properties files.", e);
+	}
     }
 
     public static String getProperty(final String key) {
-        return properties.getProperty(key);
+	return properties.getProperty(key);
     }
 
     public static boolean getBooleanProperty(final String key) {
-    	return Boolean.parseBoolean(properties.getProperty(key));
+	return Boolean.parseBoolean(properties.getProperty(key));
     }
 
     public static Integer getIntegerProperty(final String key) {
-    	return Integer.valueOf(properties.getProperty(key));
+	return Integer.valueOf(properties.getProperty(key));
     }
 
     public static void setProperty(final String key, final String value) {
-        properties.setProperty(key, value);
+	properties.setProperty(key, value);
     }
 
     public static Config getFenixFrameworkConfig(final String[] domainModels) {
@@ -93,26 +95,29 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 	    }
 	}
 
-        return new Config() {{
-            domainModelPaths = domainModels;
-            dbAlias = getProperty("db.alias");
-            dbUsername = getProperty("db.user");
-            dbPassword = getProperty("db.pass");
-            appName = getProperty("app.name");
-            appContext = getProperty("app.context"); 
-            filterRequestWithDigest = getBooleanProperty("filter.request.with.digest");
-            tamperingRedirect = getProperty("digest.tampering.url");
-            errorIfChangingDeletedObject = getBooleanProperty("error.if.changing.deleted.object");
-            defaultLanguage = getProperty("language");
-            defaultLocation = getProperty("location");
-            defaultVariant = getProperty("variant");
-            updateDataRepositoryStructure = true;
-            updateRepositoryStructureIfNeeded = true;
-            casConfigByHost = Collections.unmodifiableMap(casConfigMap);
-            rootClass = MyOrg.class;
-            javascriptValidationEnabled = true;
-            errorfIfDeletingObjectNotDisconnected = true;
-        }};
+	return new Config() {
+	    {
+		domainModelPaths = domainModels;
+		dbAlias = getProperty("db.alias");
+		dbUsername = getProperty("db.user");
+		dbPassword = getProperty("db.pass");
+		appName = getProperty("app.name");
+		appContext = getProperty("app.context");
+		filterRequestWithDigest = getBooleanProperty("filter.request.with.digest");
+		tamperingRedirect = getProperty("digest.tampering.url");
+		errorIfChangingDeletedObject = getBooleanProperty("error.if.changing.deleted.object");
+		defaultLanguage = getProperty("language");
+		defaultLocation = getProperty("location");
+		defaultVariant = getProperty("variant");
+		updateDataRepositoryStructure = true;
+		updateRepositoryStructureIfNeeded = true;
+		casConfigByHost = Collections.unmodifiableMap(casConfigMap);
+		rootClass = MyOrg.class;
+		javascriptValidationEnabled = true;
+		errorfIfDeletingObjectNotDisconnected = true;
+		plugins = new FenixFrameworkPlugin[] { new LuceneSearchPlugin() };
+	    }
+	};
     }
 
 }
