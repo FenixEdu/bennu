@@ -25,18 +25,58 @@
 
 package myorg.presentationTier.servlets.ajax;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import myorg.presentationTier.renderers.autoCompleteProvider.AutoCompleteProvider;
+import pt.ist.fenixWebFramework.security.User;
+import pt.ist.fenixWebFramework.security.UserView;
 import pt.ist.fenixWebFramework.servlets.ajax.AutoCompleteServlet;
 
 public class MyorgAutoCompleteServlet extends AutoCompleteServlet {
 
+    private static List<String> statsInfo = new ArrayList<String>();
+
+    private static void registerString(String className, String value, String username) {
+	String result = "[AutoCompleteStatsInfo]: " + className + ":" + value + ":" + username;
+	synchronized (statsInfo) {
+	    statsInfo.add(result);
+	}
+    }
+
+    static {
+	Runnable runnable = new Runnable() {
+
+	    @Override
+	    public void run() {
+		while (true) {
+		    try {
+			Thread.sleep(30000);
+		    } catch (InterruptedException e) {
+			e.printStackTrace();
+		    }
+		    synchronized (statsInfo) {
+			for (String info : statsInfo) {
+			    System.out.println(info);
+			}
+			statsInfo.clear();
+		    }
+		}
+	    }
+
+	};
+
+	Thread thread = new Thread(runnable);
+	thread.start();
+    }
+
     @Override
     protected Collection getSearchResult(Map<String, String> argsMap, String value, int maxCount) {
 	AutoCompleteProvider provider = getProvider(argsMap.get("provider"));
-	System.out.println("[AutoCompleteStatsInfo]: " + provider.getClass().getName() + ":" + value);
+	User user = UserView.getUser();
+	MyorgAutoCompleteServlet.registerString(provider.getClass().getName(), value, user != null ? user.getUsername() : "-");
 	return provider.getSearchResults(argsMap, value, maxCount);
     }
 
