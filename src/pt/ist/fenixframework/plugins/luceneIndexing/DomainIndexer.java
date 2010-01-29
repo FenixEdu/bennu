@@ -28,6 +28,7 @@ import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.DomainIndexDirectory;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.IndexDocument;
 import pt.ist.fenixframework.plugins.luceneIndexing.queryBuilder.dsl.DSLState;
+import pt.ist.fenixframework.plugins.luceneIndexing.util.LuceneStringEscaper;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.OneBoxDomainObject;
 
@@ -308,7 +309,7 @@ public class DomainIndexer {
 	if (StringUtils.isEmpty(value)) {
 	    return Collections.emptyList();
 	}
-	return search(domainObjectClass, value, maxHits, searchField);
+	return search(domainObjectClass, LuceneStringEscaper.escape(value), maxHits, searchField);
     }
 
     public <T extends DomainObject> List<T> search(Class<T> domainObjectClass, DSLState queryHelper, int maxHits) {
