@@ -36,6 +36,7 @@ public class MyorgAutoCompleteServlet extends AutoCompleteServlet {
     @Override
     protected Collection getSearchResult(Map<String, String> argsMap, String value, int maxCount) {
 	AutoCompleteProvider provider = getProvider(argsMap.get("provider"));
+	System.out.println("[AutoCompleteStatsInfo]: " + provider.getClass().getName() + ":" + value);
 	return provider.getSearchResults(argsMap, value, maxCount);
     }
 
