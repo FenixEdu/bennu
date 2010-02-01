@@ -18,6 +18,7 @@ import org.apache.lucene.index.SerialMergeScheduler;
 import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
@@ -28,7 +29,6 @@ import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.DomainIndexDirectory;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.IndexDocument;
 import pt.ist.fenixframework.plugins.luceneIndexing.queryBuilder.dsl.DSLState;
-import pt.ist.fenixframework.plugins.luceneIndexing.util.LuceneStringEscaper;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.OneBoxDomainObject;
 
@@ -65,6 +65,8 @@ public class DomainIndexer {
 	}
     }
 
+    private int maxClouseCount = 10000;
+    
     private static DomainIndexer singletonInstance;
 
     private DomainIndexer() {
@@ -82,6 +84,15 @@ public class DomainIndexer {
 	    init();
 	}
 	return singletonInstance;
+    }
+
+    
+    public int getMaxClouseCount() {
+        return maxClouseCount;
+    }
+
+    public void setMaxClouseCount(int maxClouseCount) {
+        this.maxClouseCount = maxClouseCount;
     }
 
     private boolean hasIndexDirectory(String name) {
@@ -309,7 +320,7 @@ public class DomainIndexer {
 	if (StringUtils.isEmpty(value)) {
 	    return Collections.emptyList();
 	}
-	return search(domainObjectClass, LuceneStringEscaper.escape(value), maxHits, searchField);
+	return search(domainObjectClass, value, maxHits, searchField);
     }
 
     public <T extends DomainObject> List<T> search(Class<T> domainObjectClass, DSLState queryHelper, int maxHits) {
@@ -341,6 +352,7 @@ public class DomainIndexer {
 	    Searcher searcher = new IndexSearcher(luceneDomainDirectory);
 	    QueryParser queryParser = new QueryParser(defaultField.getFieldName(), new StandardAnalyzer());
 	    Query query = queryParser.parse(luceneQuery);
+	    BooleanQuery.setMaxClauseCount(getMaxClouseCount());
 
 	    TopDocs topDocs = searcher.search(query, maxHits);
 
