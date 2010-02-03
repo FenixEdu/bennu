@@ -4,7 +4,7 @@
 	<property environment="env"/>
 	<property name="encoding" value="UTF-8"/>
 
-	<property file="build.properties"/>
+	<property file="build_old.properties"/>
 
 	<!-- Source code directories -->
 	<property name="config" value="conf"/>
@@ -50,12 +50,12 @@
 		<mkdir dir="${build.home.webinf.classes}/reports"/>
 		<mkdir dir="${deploy.home}"/>
 		<mkdir dir="${src_gen}"/>
-		<copy file="build.properties" tofile="${build.home.webinf.classes}/.build.properties"/>
+		<copy file="build_old.properties" tofile="${build.home.webinf.classes}/.build.properties"/>
 		<tstamp>
 		   <format property="build.version" pattern="yyyy/MM/dd HH:mm:ss"/>
 		</tstamp>
 		<echo file="${build.home.webinf.classes}/.build.version">${build.version}</echo>
-		<copy file="build.properties" tofile="${build.home.webinf.classes}/configuration.properties"/>
+		<copy file="build_old.properties" tofile="${build.home.webinf.classes}/configuration.properties"/>
 		<ant antfile="build_compile_aux.xml" target="prepare" inheritall="true" inheritrefs="true"/>
 		<java fork="true" classname="tools.compile.MessageResourceFinder">
 			<classpath>

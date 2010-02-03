@@ -4,7 +4,7 @@
 	<property environment="env"/>
 	<property name="encoding" value="UTF-8"/>
 
-	<property file="build.properties"/>
+	<property file="build_old.properties"/>
 
 	<property name="lib" location="lib"/>
 
