@@ -34,12 +34,15 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import myorg._development.LogLevel;
 import myorg.applicationTier.Authenticate.UserView;
 import myorg.domain.User;
 import myorg.domain.VirtualHost;
 
+import org.apache.log4j.Logger;
+
 public class SetVirtualHostFilter implements Filter {
+
+    private static final Logger logger = Logger.getLogger(SetVirtualHostFilter.class.getName());
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -51,15 +54,15 @@ public class SetVirtualHostFilter implements Filter {
 
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-    		throws IOException, ServletException {
+	    throws IOException, ServletException {
 	final String serverName = servletRequest.getServerName();
 	try {
 	    final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(serverName.toLowerCase());
-	    if (LogLevel.DEBUG) {
+	    if (logger.isDebugEnabled()) {
 		final String hostname = virtualHost == null ? null : virtualHost.getHostname();
 		final User user = UserView.getCurrentUser();
 		final String username = user == null ? null : user.getUsername();
-		System.out.println("Setting virtual host: " + hostname + " for user: " + username + " on server: " + serverName);
+		logger.debug("Setting virtual host: " + hostname + " for user: " + username + " on server: " + serverName);
 	    }
 	    servletRequest.setAttribute("virtualHost", virtualHost);
 	    filterChain.doFilter(servletRequest, servletResponse);

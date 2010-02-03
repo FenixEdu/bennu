@@ -30,6 +30,8 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.log4j.Logger;
+
 import myorg.util.DomainModelUtil;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.FenixFramework;
@@ -38,6 +40,8 @@ import dml.DomainClass;
 import dml.Role;
 
 public class MyOrg extends MyOrg_Base {
+
+    private static final Logger logger = Logger.getLogger(MyOrg.class.getName());
 
     public static MyOrg getInstance() {
 	return FenixFramework.getRoot();
@@ -59,7 +63,7 @@ public class MyOrg extends MyOrg_Base {
     public static void initModules() throws SecurityException, IllegalAccessException, InvocationTargetException,
 	    NoSuchMethodException, ClassNotFoundException {
 
-	System.out.println("=== Modules Init System ===");
+	logger.info("Initiating Module System");
 	Set<DomainClass> inits = getModuleRootsFor(MyOrg.class);
 
 	MyOrg myorg = MyOrg.getInstance();
@@ -71,18 +75,18 @@ public class MyOrg extends MyOrg_Base {
 		root = (ModuleInitializer) clazz.getMethod("getInstance", new Class[] {}).invoke(clazz, new Object[] {});
 	    } catch (InvocationTargetException e) {
 		if (e.getCause() instanceof IllegalWriteException) {
-		    System.out.println("IllegalWrite restarting!");
+		    logger.debug("IllegalWrite restarting!");
 		    throw new IllegalWriteException();
 		} else {
 		    throw e;
 		}
 	    }
-	    System.out.print("Initiating " + root.getClass().getName() + "..");
+	    logger.info("Initiating " + root.getClass().getName());
 	    root.init(myorg);
-	    System.out.println("Done");
+	    logger.debug("Initiated " + root.getClass().getName());
 	}
 
-	System.out.println("=== Finished Modules Init System ===");
+	logger.info("Finished Modules Initiation System");
     }
 
     private static Set<DomainClass> getModuleRootsFor(Class<?> clazz) throws ClassNotFoundException {
