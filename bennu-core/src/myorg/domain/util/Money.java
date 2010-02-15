@@ -114,6 +114,10 @@ public class Money implements Serializable, Comparable<Money> {
 	return multiply(BigDecimal.valueOf(mult));
     }
 
+    public Money divideAndRound(final BigDecimal divisor) {
+	return newMoney(getValue().divide(divisor, getScale(), RoundingMode.HALF_EVEN));
+    }
+
     public boolean isZero() {
 	return getValue().equals(BigDecimal.ZERO);
     }
