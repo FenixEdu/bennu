@@ -13,6 +13,13 @@
 # Example: instalations=expenditures[default](expenditure-tracking)
 instalations=
 
+# Property: host.project.dir (required)
+#
+# Location of the eclipse project relative to the build.xml directory.
+#
+# Example: workspace.dir=.
+host.project.dir=
+
 # Property: module.dirs (required)
 #
 # Comma separated list of directories in which modules are present. A module is
