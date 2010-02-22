@@ -17,7 +17,7 @@ instalations=
 #
 # Location of the eclipse project relative to the build.xml directory.
 #
-# Example: workspace.dir=.
+# Example: host.project.dir=.
 host.project.dir=
 
 # Property: module.dirs (required)
