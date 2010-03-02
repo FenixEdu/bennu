@@ -98,7 +98,6 @@
 					}
 				} %>
 			</select>
-			<input class=" button" type="submit" name="Submit" value="Ok" />
 		</form>
 	</logic:equal>
 	
