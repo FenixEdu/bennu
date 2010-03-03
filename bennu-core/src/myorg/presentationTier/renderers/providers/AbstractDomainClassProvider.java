@@ -1,6 +1,6 @@
 package myorg.presentationTier.renderers.providers;
 
-import myorg.util.DomainModelUtil;
+import pt.ist.fenixframework.DomainModelUtil;
 import pt.ist.fenixWebFramework.renderers.DataProvider;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 

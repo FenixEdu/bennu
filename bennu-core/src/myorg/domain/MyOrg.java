@@ -32,8 +32,8 @@ import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
-import myorg.util.DomainModelUtil;
 import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.DomainModelUtil;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.pstm.IllegalWriteException;
 import dml.DomainClass;

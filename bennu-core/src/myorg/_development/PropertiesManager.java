@@ -35,6 +35,7 @@ import myorg.domain.MyOrg;
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixframework.FenixFrameworkPlugin;
+import pt.ist.fenixframework.plugins.FileSupportPlugin;
 import pt.ist.fenixframework.plugins.LuceneSearchPlugin;
 
 /**
@@ -115,9 +116,9 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 		rootClass = MyOrg.class;
 		javascriptValidationEnabled = true;
 		errorfIfDeletingObjectNotDisconnected = true;
-		plugins = new FenixFrameworkPlugin[] {};// new
-							// LuceneSearchPlugin()
-							// };
+		plugins = new FenixFrameworkPlugin[] { new FileSupportPlugin(), new LuceneSearchPlugin() };// new
+		// LuceneSearchPlugin()
+		// };
 	    }
 	};
     }

@@ -52,6 +52,8 @@ valueType myorg.domain.util.ByteArray as ByteArray {
     }
 }
 
+external class .pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
+
 
 class MyOrg {
 }
