@@ -21,23 +21,23 @@
 	</slot>
 </schema>
 
-<schema name="view.fileStorage.list" type="module.fileSupport.domain.FileStorage" bundle="FILE_SUPPORT_RESOURCES">
+<schema name="view.fileStorage.list" type="pt.ist.fenixframework.plugins.fileSupport.domain.FileStorage" bundle="FILE_SUPPORT_RESOURCES">
 	<slot name="name" key="label.fileStorage.name" />
 
-	<slot name="name" key="label.fileStorage.name" layout="output-with-list-hover">
-		<property name="subLayout" value="default"/>
+	<slot name="name" key="label.fileStorage.name">
+	<!--  <property name="subLayout" value="default"/>
 		<property name="javascriptEnabled" value="true"/>
 		<property name="useParent" value="true"/>
 		<property name="list" value="presentationDetails"/>
 		<property name="key" value="false"/>
-		<property name="listFormat" value="${key} - ${value}"/>
+		<property name="listFormat" value="${key} - ${value}"/>-->
 	</slot>	
 	
 	<slot name="class.simpleName" key="label.fileStorage.type" />
 	<slot name="filesCount" key="label.fileStorage.filesCount" />
 </schema>
 
-<schema name="edit.fileStorageConfigurations" type="module.fileSupport.domain.FileStorageConfiguration" bundle="FILE_SUPPORT_RESOURCES">
+<schema name="edit.fileStorageConfigurations" type="pt.ist.fenixframework.plugins.fileSupport.domain.FileStorageConfiguration" bundle="FILE_SUPPORT_RESOURCES">
 	<slot name="fileType" key="label.fileStorageConfiguration.fileType" read-only="true"/>
 	<slot name="storage" layout="menu-select" key="label.fileStorageConfiguration.storage">
 		<property name="providerClass" value="module.fileSupport.presentationTier.renderers.providers.FileStorageProvider"/>

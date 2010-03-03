@@ -6,12 +6,9 @@ package module.fileSupport.presentationTier.actions;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import module.fileSupport.domain.FileStorage;
-import module.fileSupport.domain.GenericFile;
 import module.fileSupport.dto.DBStorageDTO;
 import module.fileSupport.dto.DomainStorageDTO;
 import module.fileSupport.dto.LocalFileSystemStorageDTO;
-import myorg.domain.MyOrg;
 import myorg.presentationTier.actions.ContextBaseAction;
 
 import org.apache.struts.action.ActionForm;
@@ -19,7 +16,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
+import pt.ist.fenixframework.plugins.fileSupport.domain.FileStorage;
+import pt.ist.fenixframework.plugins.fileSupport.domain.FileSupport;
+import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
 /**
  * @author Shezad Anavarali Date: Jul 16, 2009
@@ -30,7 +31,7 @@ public class FileStorageManagement extends ContextBaseAction {
 
     public ActionForward prepare(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) {
-	request.setAttribute("fileStorages", MyOrg.getInstance().getFileStorages());
+	request.setAttribute("fileStorages", FileSupport.getInstance().getFileStorages());
 	request.setAttribute("domainStorage", new DomainStorageDTO());
 	request.setAttribute("localFileSystemStorage", new LocalFileSystemStorageDTO());
 	request.setAttribute("dbStorage", new DBStorageDTO());
@@ -57,7 +58,8 @@ public class FileStorageManagement extends ContextBaseAction {
     public ActionForward createDomainStorage(final ActionMapping mapping, final ActionForm form,
 	    final HttpServletRequest request, final HttpServletResponse response) {
 
-	FileStorage.createNew((DomainStorageDTO) getRenderedObject("domainStorage"));
+	DomainStorageDTO domainStorageDTO = (DomainStorageDTO) getRenderedObject("domainStorage");
+	ServiceHack.createDomainStorage(domainStorageDTO);
 	RenderUtils.invalidateViewState();
 	return prepare(mapping, form, request, response);
     }
@@ -65,7 +67,8 @@ public class FileStorageManagement extends ContextBaseAction {
     public ActionForward createDBStorage(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) {
 
-	FileStorage.createNew((DBStorageDTO) getRenderedObject("dbStorage"));
+	DBStorageDTO dbStorageDTO = (DBStorageDTO) getRenderedObject("dbStorage");
+	ServiceHack.createDBStorage(dbStorageDTO);
 	RenderUtils.invalidateViewState();
 	return prepare(mapping, form, request, response);
     }
@@ -73,7 +76,8 @@ public class FileStorageManagement extends ContextBaseAction {
     public ActionForward createLocalFileSystemStorage(final ActionMapping mapping, final ActionForm form,
 	    final HttpServletRequest request, final HttpServletResponse response) {
 
-	FileStorage.createNew((LocalFileSystemStorageDTO) getRenderedObject("localFileSystemStorage"));
+	LocalFileSystemStorageDTO fdStorageDTO = (LocalFileSystemStorageDTO) getRenderedObject("localFileSystemStorage");
+	ServiceHack.createLocalFileSystemStorage(fdStorageDTO);
 	RenderUtils.invalidateViewState();
 	return prepare(mapping, form, request, response);
     }

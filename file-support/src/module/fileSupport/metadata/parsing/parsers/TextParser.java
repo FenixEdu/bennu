@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import module.fileSupport.domain.GenericFile;
 import module.fileSupport.metadata.parsing.FileMetaDataParser;
+import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
 public class TextParser extends FileMetaDataParser {
 

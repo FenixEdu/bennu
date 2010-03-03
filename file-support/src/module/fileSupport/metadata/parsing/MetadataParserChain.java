@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import module.fileSupport.domain.GenericFile;
+import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
 public class MetadataParserChain {
 

@@ -3,9 +3,9 @@ package module.fileSupport.metadata.parsing;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import module.fileSupport.domain.GenericFile;
-
 import org.apache.commons.lang.StringUtils;
+
+import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
 public abstract class FileMetaDataParser {
 

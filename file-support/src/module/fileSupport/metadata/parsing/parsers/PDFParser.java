@@ -3,11 +3,12 @@ package module.fileSupport.metadata.parsing.parsers;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-import module.fileSupport.domain.GenericFile;
 import module.fileSupport.metadata.parsing.FileMetaDataParser;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
+
+import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
 public class PDFParser extends FileMetaDataParser {
 
