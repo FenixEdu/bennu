@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project basedir="." default="compile" name="The File Plugin For FenixFramework">
+	
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="build" />
+	<property name="dist.dir" location="dist" />
+	<property name="lib.dir" location="lib" />
+	<property name="conf.dir" location="conf"/>
+	<property name="jar.filename" value="${dist.dir}/fenix-framework-file-plugin" />
+	<property name="src.gen" location="src_gen" />
+
+	<import file="${conf.dir}/dml-generate.xml" />
+
+	<path id="class.path.ref">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${dist.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="clean-all" description="Removes any generated files">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${src.gen}" />
+	</target>
+
+	<target name="compile" depends="generate-domain" description="Compiles the plugin">
+		<mkdir dir="${build.dir}" />
+		<javac destdir="${build.dir}" extdirs="${lib.dir}" target="1.5" debug="on"> 
+			<src path="${src.dir}" />
+			<src path="${src.gen}" />
+		</javac>
+		<antcall target="post-compile"/>
+	</target>
+
+	<target name="post-compile" description="Bytecode Magic to inject constructors">
+        <post-process-domain dir="${build.dir}" dml="${build.dir}/file-plugin.dml">
+            <classpath refid="class.path.ref" />
+            <classpath>
+              <pathelement path="${build.dir}" />
+            </classpath>
+         </post-process-domain>
+	</target>
+	
+	<target name="jar" depends="generate-domain,compile" description="Generates the jar with the plugin">
+		<jar destfile="${jar.filename}.jar" basedir="${build.dir}" />
+	</target>
+
+	<target name="prepare" description="Copies property files">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${src.gen}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<target name="generate-domain" depends="prepare">
+		<copy file="${conf.dir}/file-plugin.dml" todir="${build.dir}" />
+		<dml-compile dml="${build.dir}/file-plugin.dml" java-sources="${src.dir}" java-gen="${src.gen}">
+			<classpath refid="class.path.ref" />
+		</dml-compile>
+	</target>
+</project>
