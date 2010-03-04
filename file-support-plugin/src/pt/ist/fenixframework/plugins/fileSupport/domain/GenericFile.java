@@ -28,6 +28,9 @@ abstract public class GenericFile extends GenericFile_Base {
     }
 
     protected void init(String displayName, String filename, byte[] content) {
+	if (content == null) {
+	    throw new NullPointerException("Content byte[] is null");
+	}
 	setDisplayName(displayName);
 	setFilename(filename);
 	setContent(content);
