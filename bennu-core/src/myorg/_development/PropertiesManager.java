@@ -116,11 +116,11 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 		rootClass = MyOrg.class;
 		javascriptValidationEnabled = true;
 		errorfIfDeletingObjectNotDisconnected = true;
-		plugins = new FenixFrameworkPlugin[] {}; // new
-							 // FileSupportPlugin(),
-							 // new
-							 // LuceneSearchPlugin()
-							 // };
+		plugins = new FenixFrameworkPlugin[] { new FileSupportPlugin() }; // new
+		// FileSupportPlugin(),
+		// new
+		// LuceneSearchPlugin()
+		// };
 	    }
 	};
     }
