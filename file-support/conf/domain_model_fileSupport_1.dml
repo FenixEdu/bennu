@@ -1,4 +1,6 @@
 package module.fileSupport.domain;
 
+external class .pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
+
 class TestFile extends .pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile {
 }
