@@ -37,7 +37,15 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 	    if (content == null) {
 		new LocalFileToDelete(fullPath + uniqueIdentification);
 	    } else {
-		FileUtils.forceMkdir(new File(fullPath));
+		File directory = new File(fullPath);
+		if (!directory.exists()) {
+		    directory.mkdirs();
+		} else {
+		    if (!directory.isDirectory()) {
+			throw new RuntimeException("Trying to create " + fullPath
+				+ " as a directory but, it already exists and it's not a directory");
+		    }
+		}
 		FileUtils.writeByteArrayToFile(new File(fullPath + uniqueIdentification), content);
 	    }
 	    return uniqueIdentification;
