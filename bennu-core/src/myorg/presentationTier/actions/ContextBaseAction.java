@@ -89,6 +89,10 @@ public abstract class ContextBaseAction extends BaseAction {
 	return (Context) request.getAttribute(CONTEXT);
     }
 
+    public static void setContext(final HttpServletRequest request, final Context context) {
+	request.setAttribute(CONTEXT, context);
+    }
+
     public static ActionForward forward(final HttpServletRequest request, final String forward) {
 	final Context context = getContext(request);
 	return context.forward(forward);
