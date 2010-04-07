@@ -35,8 +35,6 @@ import myorg.domain.MyOrg;
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixframework.FenixFrameworkPlugin;
-import pt.ist.fenixframework.plugins.FileSupportPlugin;
-import pt.ist.fenixframework.plugins.LuceneSearchPlugin;
 
 /**
  * The <code>PropertiesManager</code> class is a application wide utility for
@@ -116,11 +114,26 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 		rootClass = MyOrg.class;
 		javascriptValidationEnabled = true;
 		errorfIfDeletingObjectNotDisconnected = true;
-		plugins = new FenixFrameworkPlugin[] { new FileSupportPlugin() }; // new
-		// FileSupportPlugin(),
-		// new
-		// LuceneSearchPlugin()
-		// };
+		plugins = getPluginArray();
+	    }
+
+	    private FenixFrameworkPlugin[] getPluginArray() {
+		String property = getProperty("plugins");
+		String[] classNames = property.split("\\s*,\\s*");
+
+		FenixFrameworkPlugin[] pluginArray = new FenixFrameworkPlugin[classNames.length];
+		for (int i = 0; i < classNames.length; i++) {
+		    try {
+			pluginArray[i] = (FenixFrameworkPlugin) Class.forName(classNames[i]).newInstance();
+		    } catch (InstantiationException e) {
+			throw new Error(e);
+		    } catch (IllegalAccessException e) {
+			throw new Error(e);
+		    } catch (ClassNotFoundException e) {
+			throw new Error(e);
+		    }
+		}
+		return pluginArray;
 	    }
 	};
     }
