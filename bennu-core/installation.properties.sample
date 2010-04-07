@@ -21,3 +21,8 @@ localhost.cas.loginUrl=https://login.ist.utl.pt/login?service=
 localhost.cas.ValidateUrl=https://login.ist.utl.pt/serviceValidate
 localhost.cas.logoutUrl=https://login.ist.utl.pt/logout
 manager.usernames=manager
+
+#
+# Over here specify full class name of the FenixFrameworkPlugin classes
+# from the plugins that will be used
+plugins=
