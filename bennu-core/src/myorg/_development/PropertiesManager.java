@@ -32,6 +32,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import myorg.domain.MyOrg;
+
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixframework.FenixFrameworkPlugin;
@@ -119,6 +122,9 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 
 	    private FenixFrameworkPlugin[] getPluginArray() {
 		String property = getProperty("plugins");
+		if (StringUtils.isEmpty(property)) {
+		    return new FenixFrameworkPlugin[0];
+		}
 		String[] classNames = property.split("\\s*,\\s*");
 
 		FenixFrameworkPlugin[] pluginArray = new FenixFrameworkPlugin[classNames.length];
