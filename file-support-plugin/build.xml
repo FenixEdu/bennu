@@ -9,8 +9,12 @@
 	<property name="jar.filename" value="${dist.dir}/fenix-framework-file-plugin" />
 	<property name="src.gen" location="src_gen" />
 
-	<import file="${conf.dir}/dml-generate.xml" />
-
+	<taskdef resource="pt/ist/fenixframework/dml-ant.xml">
+		<classpath>
+	 			<fileset dir="${lib.dir}" includes="*.jar"/>
+		</classpath>
+	</taskdef>
+	
 	<path id="class.path.ref">
 		<fileset dir="${lib.dir}">
 			<include name="*.jar" />
@@ -36,28 +40,26 @@
 	</target>
 
 	<target name="post-compile" description="Bytecode Magic to inject constructors">
-        <post-process-domain dir="${build.dir}" dml="${build.dir}/file-plugin.dml">
-            <classpath refid="class.path.ref" />
-            <classpath>
-              <pathelement path="${build.dir}" />
-            </classpath>
-         </post-process-domain>
+		<dml-post-processor dir="${build.dir}">
+			<fileset dir="${conf.dir}"/>
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar" />
+				<dirset dir="${build.dir}" />
+			</classpath>
+		</dml-post-processor>
 	</target>
 	
 	<target name="jar" depends="generate-domain,compile" description="Generates the jar with the plugin">
+		<copy file="${conf.dir}/file-plugin.dml" todir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
 		<jar destfile="${jar.filename}.jar" basedir="${build.dir}" />
 	</target>
 
-	<target name="prepare" description="Copies property files">
-		<mkdir dir="${build.dir}" />
-		<mkdir dir="${src.gen}" />
-		<mkdir dir="${dist.dir}" />
-	</target>
-
-	<target name="generate-domain" depends="prepare">
-		<copy file="${conf.dir}/file-plugin.dml" todir="${build.dir}" />
-		<dml-compile dml="${build.dir}/file-plugin.dml" java-sources="${src.dir}" java-gen="${src.gen}">
-			<classpath refid="class.path.ref" />
-		</dml-compile>
+	<target name="generate-domain">
+		<dml-domain-generator destDirectory="${src.dir}" destDirectoryBase="${src.gen}">
+			<fileset dir="${conf.dir}">
+				<include name="*.dml" />
+			</fileset>
+		</dml-domain-generator>
 	</target>
 </project>
