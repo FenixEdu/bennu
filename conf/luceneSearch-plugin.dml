@@ -1,5 +1,7 @@
 package pt.ist.fenixframework.plugins.luceneIndexing.domain;
 
+external class .pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
+
 class LuceneSearchPluginRoot {
 }
 

@@ -1,3 +1,0 @@
-package ;
-
-external class .pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
