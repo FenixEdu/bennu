@@ -36,8 +36,8 @@
 	</target>
 
 	<target name="post-compile" description="Bytecode Magic to inject constructors">
-        <post-process-domain dir="${build.dir}" dml="${build.dir}/luceneSearch-plugin.dml">
-            <classpath refid="class.path.ref" />
+        <post-process-domain dml="${conf.dir}" dir="${build.dir}">
+        	<classpath refid="class.path.ref" />
             <classpath>
               <pathelement path="${build.dir}" />
             </classpath>
@@ -56,7 +56,8 @@
 
 	<target name="generate-domain" depends="prepare">
 		<copy file="${conf.dir}/luceneSearch-plugin.dml" todir="${build.dir}" />
-		<dml-compile dml="${build.dir}/luceneSearch-plugin.dml" java-sources="${src.dir}" java-gen="${src.gen}">
+		<dml-compile dml="${conf.dir}/lucene-externalEntity-import.dml" java-sources="${src.dir}" java-gen="${src.gen}">
+			<arg value="${conf.dir}/luceneSearch-plugin.dml"/>
 			<classpath refid="class.path.ref" />
 		</dml-compile>
 	</target>

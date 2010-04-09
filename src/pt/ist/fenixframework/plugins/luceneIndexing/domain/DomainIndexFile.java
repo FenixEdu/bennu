@@ -6,7 +6,7 @@ import java.util.List;
 
 import pt.ist.fenixframework.plugins.luceneIndexing.IndexFile;
 import pt.ist.fenixframework.plugins.luceneIndexing.RAMIndex;
-import pt.ist.fenixframework.plugins.luceneIndexing.util.ByteArray;
+import pt.ist.fenixframework.util.ByteArray;
 
 public class DomainIndexFile extends DomainIndexFile_Base implements IndexFile {
 
@@ -14,12 +14,17 @@ public class DomainIndexFile extends DomainIndexFile_Base implements IndexFile {
 	super();
 	setPluginRoot(LuceneSearchPluginRoot.getInstance());
 	setLength(0L);
+
     }
 
     public void delete() {
 	removeDirectory();
 	removePluginRoot();
-	setIndexContent(null);
+	DomainIndexContent storedFile = getStoredFile();
+	if (storedFile != null) {
+	    storedFile.delete();
+	}
+	setStoredFile(null);
 	deleteDomainObject();
     }
 
@@ -40,10 +45,10 @@ public class DomainIndexFile extends DomainIndexFile_Base implements IndexFile {
 
     public List<ByteArray> split(int bufferSize) {
 	long length = getLength();
-	ByteArray indexContent = getIndexContent();
+	byte[] indexContent = getIndexContent();
 	ArrayList<ByteArray> buffers = new ArrayList<ByteArray>();
 
-	byte[] content = indexContent != null ? indexContent.getBytes() : new byte[Math.min((int) length, bufferSize)];
+	byte[] content = indexContent != null ? indexContent : new byte[Math.min((int) length, bufferSize)];
 	int runner = 0;
 
 	while (runner < length) {
@@ -61,11 +66,23 @@ public class DomainIndexFile extends DomainIndexFile_Base implements IndexFile {
      * we're casting from long to int.
      */
     public byte readByte(long pos) throws IOException {
-	return getIndexContent().getBytes()[(int) pos];
+	return getIndexContent()[(int) pos];
     }
 
     public void readBytes(long pos, byte[] b, int offset, int len) throws IOException {
-	System.arraycopy(getIndexContent().getBytes(), (int) pos, b, offset, len);
+	System.arraycopy(getIndexContent(), (int) pos, b, offset, len);
     }
 
+    public byte[] getIndexContent() {
+	DomainIndexContent storedFile = getStoredFile();
+	return storedFile != null ? storedFile.getContent() : null;
+    }
+
+    public void setIndexContent(byte[] byteArray) {
+	DomainIndexContent storedFile = getStoredFile();
+	if (storedFile != null) {
+	    storedFile.delete();
+	}
+	setStoredFile(new DomainIndexContent(getName(), byteArray));
+    }
 }

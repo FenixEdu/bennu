@@ -57,8 +57,8 @@ public class DomainIndexInput extends IndexInput {
 
 	    int remainInBuffer = bufferLength - bufferPosition;
 	    int bytesToCopy = len < remainInBuffer ? len : remainInBuffer;
-	    System.arraycopy(this.file.getIndexContent().getBytes(), currentBufferIndex * BUFFER_SIZE + bufferPosition, b,
-		    offset, bytesToCopy);
+	    System.arraycopy(this.file.getIndexContent(), currentBufferIndex * BUFFER_SIZE + bufferPosition, b, offset,
+		    bytesToCopy);
 	    offset += bytesToCopy;
 	    len -= bytesToCopy;
 	    bufferPosition += bytesToCopy;

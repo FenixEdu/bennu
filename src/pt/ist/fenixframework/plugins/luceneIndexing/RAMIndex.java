@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.DomainIndexFile;
-import pt.ist.fenixframework.plugins.luceneIndexing.util.ByteArray;
+import pt.ist.fenixframework.util.ByteArray;
 
 public class RAMIndex implements IndexFile {
 
@@ -26,10 +26,9 @@ public class RAMIndex implements IndexFile {
 	this.name = domainIndexFile.getName();
 	this.length = domainIndexFile.getLength();
 	Long lastModified2 = domainIndexFile.getLastModified();
-	this.lastModified = lastModified2 != null ? lastModified2 :System.currentTimeMillis()  ;
+	this.lastModified = lastModified2 != null ? lastModified2 : System.currentTimeMillis();
 	this.buffers = this.domainIndexFile.split(BUFFER_SIZE);
     }
-
 
     private void dumpBuffersToDomainIndex() {
 	byte[] totalArray = new byte[BUFFER_SIZE * buffers.size()];
@@ -42,7 +41,7 @@ public class RAMIndex implements IndexFile {
 	    System.arraycopy(bytes, 0, totalArray, offset, Math.min(bytes.length, BUFFER_SIZE));
 	    offset += BUFFER_SIZE;
 	}
-	this.domainIndexFile.setIndexContent(new ByteArray(totalArray));
+	this.domainIndexFile.setIndexContent(totalArray);
     }
 
     public synchronized Long getLength() {
