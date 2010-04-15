@@ -130,7 +130,7 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 		FenixFrameworkPlugin[] pluginArray = new FenixFrameworkPlugin[classNames.length];
 		for (int i = 0; i < classNames.length; i++) {
 		    try {
-			pluginArray[i] = (FenixFrameworkPlugin) Class.forName(classNames[i]).newInstance();
+			pluginArray[i] = (FenixFrameworkPlugin) Class.forName(classNames[i].trim()).newInstance();
 		    } catch (InstantiationException e) {
 			throw new Error(e);
 		    } catch (IllegalAccessException e) {
