@@ -6,20 +6,20 @@
  * 
  *      https://fenix-ashes.ist.utl.pt/
  * 
- *   This file is part of the MyOrg web application infrastructure.
+ *   This file is part of the Bennu Web Application Infrastructure.
  *
- *   MyOrg is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU Lesser General Public License as published
- *   by the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.*
+ *   The Bennu Web Application Infrastructure is free software: you can 
+ *   redistribute it and/or modify it under the terms of the GNU Lesser General 
+ *   Public License as published by the Free Software Foundation, either version 
+ *   3 of the License, or (at your option) any later version.*
  *
- *   MyOrg is distributed in the hope that it will be useful,
+ *   Bennu is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *   GNU Lesser General Public License for more details.
  *
  *   You should have received a copy of the GNU Lesser General Public License
- *   along with MyOrg. If not, see <http://www.gnu.org/licenses/>.
+ *   along with Bennu. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 
@@ -40,8 +40,11 @@ import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixframework.FenixFrameworkPlugin;
 
 /**
- * The <code>PropertiesManager</code> class is a application wide utility for
- * accessing the applications configuration and properties.
+ * The <code>PropertiesManager</code> class is a application wide utility for 
+ * accessing the applications configuration and properties. If you need to 
+ * to add compile-time properties to the application and access them during 
+ * the applications execution then just add them to the 
+ * configuration.properties file of your module. 
  * 
  * @author João Figueiredo
  * @author Luis Cruz
