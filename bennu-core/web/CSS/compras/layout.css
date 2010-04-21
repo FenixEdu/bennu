@@ -1090,3 +1090,16 @@ div.nojavascript div.chelptext {
 display: block;
 }
 
+
+h3.separator {
+margin: 1em 0 0.5em 0;
+background: #f5f5eb;
+border-top: 1px solid #e6e6dc;
+padding: 2px 0;
+}
+table.thmiddle th {
+vertical-align: middle;
+}
+table.tdmiddle td {
+vertical-align: middle;
+}
