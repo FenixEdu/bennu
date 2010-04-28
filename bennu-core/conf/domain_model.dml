@@ -92,6 +92,12 @@ class groups.PersistentGroup {
 
 	class groups.UnionGroup extends groups.PersistentGroup {
 	}
+	
+	class groups.IntersectionGroup extends groups.PersistentGroup {
+	}
+	
+	class groups.NegationGroup extends groups.PersistentGroup {
+	}
 
 class scheduler.Task {
 	String ojbConcreteClass;
@@ -224,6 +230,22 @@ relation PersistentGroupUnionGroup {
 		multiplicity *;
 	}
 	groups.UnionGroup playsRole unionGroups {
+		multiplicity *;
+	}
+}
+
+relation PersistentGroupIntersectionGroup {
+	groups.PersistentGroup playsRole persistentGroups {
+		multiplicity *;
+	}
+	groups.IntersectionGroup playsRole intersectionGroups {
+		multiplicity *;
+	}
+}
+
+relation PersistentGroupNegationGroup {
+	groups.PersistentGroup playsRole persistentGroup;
+	groups.NegationGroup playsRole negationGroups {
 		multiplicity *;
 	}
 }
