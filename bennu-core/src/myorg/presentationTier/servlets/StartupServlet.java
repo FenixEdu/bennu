@@ -58,6 +58,19 @@ public class StartupServlet extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
 	super.init(config);
+
+	final String preInitClassnames = PropertiesManager.getProperty("pre.init.classnames");
+	if (preInitClassnames != null) {
+	    final String[] classnames = preInitClassnames.split(",");
+	    for (final String classname : classnames) {
+		try {
+		    Class.forName(classname.trim());
+		} catch (final ClassNotFoundException e) {
+		    throw new Error(e);
+		}
+	    }
+	}
+
 	final String domainmodelPath = getServletContext().getRealPath(getInitParameter("domainmodelPath"));
 	final File dir = new File(domainmodelPath);
 	final List<String> urls = new ArrayList<String>();
