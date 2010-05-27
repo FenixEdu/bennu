@@ -19,17 +19,31 @@
 				<li>
 			<% } %>
 				<bean:define id="url" name="node" property="url" type="java.lang.String"/>
-					<!-- HAS_CONTEXT --><html:link page="<%= url %>">
-						<logic:present name="node" property="link">
-							<span><bean:write name="node" property="link"/></span>
-						</logic:present>
-						<logic:notPresent name="node" property="link">
-							<span><bean:write name="node"/></span>
-						</logic:notPresent>
-						<logic:lessThan name="nindex" value="<%= new Integer(size).toString() %>">
-							<div class="lic1"></div>
-						</logic:lessThan>					
-					</html:link>				
+					<% if (url.indexOf(':') > 0) { %>
+						<!-- HAS_CONTEXT --><html:link href="<%= url %>">
+							<logic:present name="node" property="link">
+								<span><bean:write name="node" property="link"/></span>
+							</logic:present>
+							<logic:notPresent name="node" property="link">
+								<span><bean:write name="node"/></span>
+							</logic:notPresent>
+							<logic:lessThan name="nindex" value="<%= new Integer(size).toString() %>">
+								<div class="lic1"></div>
+							</logic:lessThan>
+						</html:link>
+					<% } else { %>
+						<!-- HAS_CONTEXT --><html:link page="<%= url %>">
+							<logic:present name="node" property="link">
+								<span><bean:write name="node" property="link"/></span>
+							</logic:present>
+							<logic:notPresent name="node" property="link">
+								<span><bean:write name="node"/></span>
+							</logic:notPresent>
+							<logic:lessThan name="nindex" value="<%= new Integer(size).toString() %>">
+								<div class="lic1"></div>
+							</logic:lessThan>					
+						</html:link>				
+					<% } %>
 			</li>
 		</logic:equal>
 	</logic:iterate>

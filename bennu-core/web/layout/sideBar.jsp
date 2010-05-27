@@ -18,13 +18,25 @@
 					<% String url = node.getUrl(); %>
 					<div>
 						<% if (context.contains(node)) { %>
-							<!-- HAS_CONTEXT --><html:link page="<%= url %>" styleClass="navlistselected">
-								<bean:write name="node" property="link"/>
-							</html:link>
+							<% if (url.indexOf(':') > 0) { %>
+								<!-- HAS_CONTEXT --><html:link href="<%= url %>" styleClass="navlistselected">
+									<bean:write name="node" property="link"/>
+								</html:link>
+							<% } else { %>
+								<!-- HAS_CONTEXT --><html:link page="<%= url %>" styleClass="navlistselected">
+									<bean:write name="node" property="link"/>
+								</html:link>
+							<% } %>
 						<% } else { %>
-							<!-- HAS_CONTEXT --><html:link page="<%= url %>">
-								<bean:write name="node" property="link"/>
-							</html:link>
+							<% if (url.indexOf(':') > 0) { %>
+								<!-- HAS_CONTEXT --><html:link href="<%= url %>">
+									<bean:write name="node" property="link"/>
+								</html:link>
+							<% } else { %>
+								<!-- HAS_CONTEXT --><html:link page="<%= url %>">
+									<bean:write name="node" property="link"/>
+								</html:link>
+							<% } %>
 						<% } %>
 					</div>
 				</li>

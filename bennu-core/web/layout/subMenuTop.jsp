@@ -21,9 +21,15 @@
 									<span class="bar">|</span>
 								<% } %>
 								<li class="navsublist">
-									<!-- HAS_CONTEXT --><html:link page="<%= childNode.getUrl() %>">
-										<span><bean:write name="childNode" property="link" /></span>
-									</html:link>
+									<% if (childNode.getUrl().indexOf(':') > 0) { %>
+										<!-- HAS_CONTEXT --><html:link href="<%= childNode.getUrl() %>">
+											<span><bean:write name="childNode" property="link" /></span>
+										</html:link>
+									<% } else { %>
+										<!-- HAS_CONTEXT --><html:link page="<%= childNode.getUrl() %>">
+											<span><bean:write name="childNode" property="link" /></span>
+										</html:link>
+									<% } %>
 								</li>
 							</logic:equal>
 						</logic:iterate>

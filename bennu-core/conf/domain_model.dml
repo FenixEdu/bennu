@@ -67,6 +67,12 @@ class contents.Node {
 		String linkKey;
 	}
 
+	class contents.LinkNode extends contents.Node {
+		String url;
+		String linkBundle;
+		String linkKey;
+	}
+
 class groups.PersistentGroup {
 	String ojbConcreteClass;
 }
