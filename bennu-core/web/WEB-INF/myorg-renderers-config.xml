@@ -562,3 +562,9 @@
 	<renderer mode="input" type="java.lang.String" layout="advanced-password" class="pt.ist.fenixWebFramework.renderers.AdvancedPasswordRenderer"/>
 	
 	<renderer mode="input" type="java.lang.Object" layout="matrix" class="pt.ist.fenixWebFramework.renderers.MatrixRenderer"/>
+	
+	<renderer type="java.lang.Boolean" layout="boolean-icon" class="pt.ist.fenixWebFramework.renderers.BooleanImageRenderer">
+		<property name="trueIconPath" value="/images/ok.jpg"/>
+		<property name="falseIconPath" value="/images/cancel.jpg"/>
+		<property name="contextRelative" value="true"/>
+	</renderer>
