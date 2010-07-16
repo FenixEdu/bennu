@@ -78,8 +78,7 @@ public class Authenticate implements Serializable {
 
 	private final DateTime userViewCreationDateTime = new DateTime();
 
-	private UserView(final String username) {
-	    final User user = findByUsername(username);
+	private UserView(final User user) {
 	    userExternalId = user == null ? null : user.getExternalId();
 
 	    SecureRandom random = null;
@@ -96,6 +95,10 @@ public class Authenticate implements Serializable {
 	    privateConstantForDigestCalculation = user.getUsername() + user.getPassword() + random.nextLong();
 	}
 
+	private UserView(final String username) {
+	    this(findByUsername(username));
+	}
+
 	public void mockUser(final User user) {
 	    mockUser.set(user);
 	}
@@ -104,7 +107,7 @@ public class Authenticate implements Serializable {
 	    mockUser.set(null);
 	}
 
-	private User findByUsername(final String username) {
+	private static User findByUsername(final String username) {
 	    final User user = User.findByUsername(username);
 	    if (user == null) {
 		final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
@@ -172,11 +175,23 @@ public class Authenticate implements Serializable {
     @Service
     public static UserView authenticate(final String username, final String password) {
 	final UserView userView = new UserView(username);
+	authenticate(userView);
+	return userView;
+    }
+
+    @Service
+    public static UserView authenticate(final User user) {
+	final UserView userView = new UserView(user);
+	authenticate(userView);
+	return userView;
+    }
+
+    private static void authenticate(final UserView userView) {
 	pt.ist.fenixWebFramework.security.UserView.setUser(userView);
 
 	final User user = userView.getUser();
 	for (final Entry<RoleType, Set<String>> entry : roleUsernamesMap.entrySet()) {
-	    if (entry.getValue().contains(username)) {
+	    if (entry.getValue().contains(userView.getUsername())) {
 		addRoleType(user, entry.getKey());
 	    }
 	}
@@ -185,8 +200,6 @@ public class Authenticate implements Serializable {
 	if (role.getUsersCount() == 0) {
 	    user.addPeopleGroups(role);
 	}
-
-	return userView;
     }
 
     protected static void addRoleType(final User user, final RoleType roleType) {
