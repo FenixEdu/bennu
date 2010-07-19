@@ -26,3 +26,5 @@ manager.usernames=manager
 # Over here specify full class name of the FenixFrameworkPlugin classes
 # from the plugins that will be used
 plugins=
+
+pre.init.classnames=
