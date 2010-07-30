@@ -33,13 +33,15 @@ import myorg.domain.MyOrg;
 
 import org.joda.time.DateTime;
 
+import pt.ist.fenixWebFramework.services.Service;
+
 public class CustomTaskLog extends CustomTaskLog_Base {
 
-    public static final Comparator<CustomTaskLog> COMPARATORY_BY_UPLOAD_TIME_AND_CLASSNAME = new Comparator<CustomTaskLog>() {
+    public static final Comparator<CustomTaskLog> COMPARATOR_BY_UPLOAD_TIME_AND_CLASSNAME = new Comparator<CustomTaskLog>() {
 
 	@Override
 	public int compare(final CustomTaskLog o1, final CustomTaskLog o2) {
-	    final int d = o1.getUploaded().compareTo(o2.getUploaded());
+	    final int d = o2.getUploaded().compareTo(o1.getUploaded());
 	    return d == 0 ? compareByName(o1, o2) : d;
 	}
 
@@ -51,12 +53,12 @@ public class CustomTaskLog extends CustomTaskLog_Base {
     };
 
     public CustomTaskLog() {
-        super();
-        setMyOrg(MyOrg.getInstance());
+	super();
+	setMyOrg(MyOrg.getInstance());
     }
 
-    public CustomTaskLog(final String className, final String contents, final DateTime uploadTime,
-	    final DateTime taskStart, final DateTime taskEnd, final String out) {
+    public CustomTaskLog(final String className, final String contents, final DateTime uploadTime, final DateTime taskStart,
+	    final DateTime taskEnd, final String out) {
 	this();
 	setClassName(className);
 	setContents(contents);
@@ -67,9 +69,14 @@ public class CustomTaskLog extends CustomTaskLog_Base {
     }
 
     public static SortedSet<CustomTaskLog> getSortedCustomTaskLogs() {
-	final SortedSet<CustomTaskLog> sortedCustomTaskLogs = new TreeSet<CustomTaskLog>(COMPARATORY_BY_UPLOAD_TIME_AND_CLASSNAME);
+	final SortedSet<CustomTaskLog> sortedCustomTaskLogs = new TreeSet<CustomTaskLog>(COMPARATOR_BY_UPLOAD_TIME_AND_CLASSNAME);
 	sortedCustomTaskLogs.addAll(MyOrg.getInstance().getCustomTaskLogSet());
 	return sortedCustomTaskLogs;
     }
 
+    @Service
+    public void delete() {
+	setMyOrg(null);
+	deleteDomainObject();
+    }
 }

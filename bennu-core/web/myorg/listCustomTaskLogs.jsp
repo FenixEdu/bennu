@@ -33,21 +33,29 @@
 	<bean:message bundle="MYORG_RESOURCES" key="link.scheduler.customTasks.terminated"/>
 </h3>
 
-<fr:view name="customTaskLogs" schema="myorg.domain.scheduler.CustomTaskLog.list">
+<fr:view name="customTaskLogAggregates">
+	<fr:schema type="myorg.presentationTier.CustomTaskLogAggregate" bundle="MYORG_RESOURCES">
+		<fr:slot name="className" key="label.scheduler.className"/>
+		<fr:slot name="lastUploadDate" key="label.scheduler.customTaskAggregate.lastUploadDate"/>
+		<fr:slot name="size" key="label.scheduler.customTaskAggregate.size"/>
+	</fr:schema>
 	<fr:layout name="tabular">
 		<fr:property name="classes" value="tstyle2" />
 
-		<fr:property name="link(view)" value="/scheduler.do?method=viewCustomTaskLog" />
-		<fr:property name="key(view)" value="link.scheduler.customTask.view" />
-		<fr:property name="param(view)" value="externalId/customTaskLogId" />
+		<fr:property name="link(view)" value="/scheduler.do?method=searchCustomTaskLogs" />
+		<fr:property name="key(view)" value="label.scheduler.customTaskAggregate.view" />
+		<fr:property name="param(view)" value="className/className" />
 		<fr:property name="bundle(view)" value="MYORG_RESOURCES" />
 		<fr:property name="order(view)" value="1" />
 
-		<fr:property name="link(reload)" value="/scheduler.do?method=reloadCustomTask" />
-		<fr:property name="key(reload)" value="link.scheduler.customTask.reload" />
-		<fr:property name="param(reload)" value="externalId/customTaskLogId" />
-		<fr:property name="bundle(reload)" value="MYORG_RESOURCES" />
-		<fr:property name="order(reload)" value="2" />
+		<fr:property name="link(delete)" value="/scheduler.do?method=deleteCustomTaskLogs" />
+		<fr:property name="key(delete)" value="label.scheduler.customTaskAggregate.delete" />
+		<fr:property name="param(delete)" value="className/className" />
+		<fr:property name="confirmationBundle(delete)" value="MYORG_RESOURCES" />
+		<fr:property name="confirmationKey(delete)" value="label.scheduler.customTaskAggregate.delete.confirmation" />
+		<fr:property name="confirmationTitleKey(delete)" value="label.scheduler.customTaskAggregate.delete" />
+		<fr:property name="bundle(delete)" value="MYORG_RESOURCES" />
+		<fr:property name="order(delete)" value="2" />
 	</fr:layout>
 </fr:view>
 

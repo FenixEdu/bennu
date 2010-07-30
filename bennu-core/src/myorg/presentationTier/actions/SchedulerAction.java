@@ -25,8 +25,10 @@
 
 package myorg.presentationTier.actions;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +41,7 @@ import myorg.domain.scheduler.TaskConfigurationBean;
 import myorg.domain.scheduler.TaskLog;
 import myorg.domain.scheduler.ClassBean.Executer;
 import myorg.presentationTier.Context;
+import myorg.presentationTier.CustomTaskLogAggregate;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -76,11 +79,11 @@ public class SchedulerAction extends ContextBaseAction {
 	taskConfigurationBean.create();
 	return viewScheduler(mapping, form, request, response);
     }
-    
-    public ActionForward runNow(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+
+    public ActionForward runNow(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
 	final Task task = getDomainObject(request, "taskId");
-	TaskConfigurationBean taskConfigurationBean =new TaskConfigurationBean(task);
+	TaskConfigurationBean taskConfigurationBean = new TaskConfigurationBean(task);
 	DateTime now = new DateTime().plusMinutes(1);
 	taskConfigurationBean.setMinute(now.getMinuteOfHour());
 	taskConfigurationBean.setHour(now.getHourOfDay());
@@ -139,9 +142,43 @@ public class SchedulerAction extends ContextBaseAction {
 	    final HttpServletResponse response) throws Exception {
 	final List<Executer> runningExecuters = ClassBean.getRunningExecuters();
 	request.setAttribute("runningExecuters", runningExecuters);
-	final Set<CustomTaskLog> customTaskLogs = CustomTaskLog.getSortedCustomTaskLogs();
-	request.setAttribute("customTaskLogs", customTaskLogs);
+
+	final Set<CustomTaskLogAggregate> customTaskLogAggregates = new TreeSet<CustomTaskLogAggregate>(
+		CustomTaskLogAggregate.COMPARATOR_BY_LAST_UPLOAD_DATE_AND_CLASS_NAME);
+	final Set<String> visitedClassNames = new HashSet<String>();
+	for (CustomTaskLog taskLog : CustomTaskLog.getSortedCustomTaskLogs()) {
+	    String taskClassName = taskLog.getClassName();
+	    if (taskClassName == null) {
+		taskClassName = "";
+	    }
+
+	    if (visitedClassNames.contains(taskClassName)) {
+		continue;
+	    }
+	    visitedClassNames.add(taskClassName);
+	    customTaskLogAggregates.add(new CustomTaskLogAggregate(taskClassName));
+	}
+
+	request.setAttribute("customTaskLogAggregates", customTaskLogAggregates);
 	return forward(request, "/myorg/listCustomTaskLogs.jsp");
+    }
+
+    public ActionForward searchCustomTaskLogs(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	String className = getAttribute(request, "className");
+	final CustomTaskLogAggregate aggregate = new CustomTaskLogAggregate(className);
+	request.setAttribute("customTaskLogs", aggregate.getCustomTaskLogs());
+	request.setAttribute("className", className);
+	return forward(request, "/myorg/searchCustomTaskLogs.jsp");
+    }
+
+    public ActionForward deleteCustomTaskLogs(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	String className = getAttribute(request, "className");
+	final CustomTaskLogAggregate aggregate = new CustomTaskLogAggregate(className);
+	aggregate.deleteCustomTaskLogs();
+
+	return listCustomTaskLogs(mapping, form, request, response);
     }
 
     public ActionForward viewCustomTaskLog(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
