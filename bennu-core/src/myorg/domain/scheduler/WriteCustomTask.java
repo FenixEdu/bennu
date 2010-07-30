@@ -25,10 +25,20 @@
 
 package myorg.domain.scheduler;
 
-public abstract class WriteCustomTask extends TransactionalCustomTask {
+import pt.ist.fenixWebFramework.services.Service;
 
-    protected boolean readOnly() {
-	return false;
+public abstract class WriteCustomTask extends ReadCustomTask {
+
+    protected abstract void doService();
+
+    @Override
+    public final void doIt() {
+	callService();
+    }
+
+    @Service
+    private void callService() {
+	doService();
     }
 
 }
