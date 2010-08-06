@@ -48,6 +48,13 @@ public class DomainException extends Error {
 	this.bundle = null;
     }
 
+    public DomainException(final String key, final ResourceBundle bundle, final String... args) {
+	super(key);
+	this.key = key;
+	this.bundle = bundle;
+	this.args = args;
+    }
+
     public DomainException(final String key, final Throwable cause, final String... args) {
 	super(key, cause);
 	this.key = key;
@@ -55,18 +62,11 @@ public class DomainException extends Error {
 	this.bundle = null;
     }
 
-    public DomainException(final String key, final ResourceBundle bundle) {
-	super(key);
+    public DomainException(final String key, final Throwable cause, final ResourceBundle bundle, final String... args) {
+	super(key, cause);
 	this.key = key;
-	this.bundle = bundle;
-	this.args = null;
-    }
-
-    public DomainException(final String key, final ResourceBundle bundle, final String... args) {
-	super(key);
-	this.key = key;
-	this.bundle = bundle;
 	this.args = args;
+	this.bundle = bundle;
     }
 
     public String getKey() {
