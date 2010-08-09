@@ -33,6 +33,9 @@ import java.util.TimerTask;
 import java.util.TreeSet;
 
 import myorg.domain.MyOrg;
+
+import org.joda.time.DateTime;
+
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.services.Service;
 import dml.DomainClass;
@@ -176,5 +179,15 @@ public abstract class Task extends Task_Base {
 		removeTaskLogs(log);
 	    }
 	}
+    }
+
+    @Service
+    public void invokeNow() {
+	TaskConfiguration configuration = new TaskConfiguration(this);
+	DateTime now = new DateTime().plusMinutes(1);
+	configuration.setMinute(now.getMinuteOfHour());
+	configuration.setHour(now.getHourOfDay());
+	configuration.setDay(now.getDayOfMonth());
+	configuration.setMonth(now.getMonthOfYear());
     }
 }
