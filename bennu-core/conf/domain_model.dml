@@ -110,6 +110,9 @@ class scheduler.Task {
 	DateTime lastRun;
 }
 
+class scheduler.PendingExecutionTaskQueue {
+}
+
 class scheduler.TaskConfiguration {
 	Integer minute;
 	Integer hour;
@@ -279,6 +282,11 @@ relation MyOrTask {
 	}
 }
 
+relation MyOrgPendingExecutionTaskQueue {
+	MyOrg playsRole myOrg;
+	scheduler.PendingExecutionTaskQueue playsRole pendingExecutionTaskQueue;
+}
+
 relation MyOrTaskConfiguration {
 	MyOrg playsRole myOrg;
 	scheduler.TaskConfiguration playsRole taskConfigurations {
@@ -289,6 +297,13 @@ relation MyOrTaskConfiguration {
 relation MyOrTaskLog {
 	MyOrg playsRole myOrg;
 	scheduler.TaskLog playsRole taskLogs {
+		multiplicity *;
+	}
+}
+
+relation TaskPendingExecutionTaskQueue {
+	scheduler.PendingExecutionTaskQueue playsRole pendingExecutionTaskQueue;
+	scheduler.Task playsRole tasks {
 		multiplicity *;
 	}
 }

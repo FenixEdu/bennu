@@ -25,29 +25,45 @@
 
 package myorg.domain.scheduler;
 
-import jvstm.TransactionalCommand;
+import pt.ist.fenixWebFramework.services.ServiceManager;
+import pt.ist.fenixWebFramework.services.ServicePredicate;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 public class TaskExecutor extends Thread {
 
     private final String taskId;
 
+    private boolean successful;
+
+    public boolean isSuccessful() {
+	return successful;
+    }
+
+    private void setSuccessful(boolean successful) {
+	this.successful = successful;
+    }
+
     public TaskExecutor(final Task task) {
 	taskId = task.getExternalId();
+	setSuccessful(false);
     }
 
     @Override
     public void run() {
 	super.run();
 	Language.setLocale(Language.getDefaultLocale());
-	Transaction.withTransaction(false, new TransactionalCommand() {
+	ServiceManager.execute(new ServicePredicate() {
 
 	    @Override
-	    public void doIt() {
+	    public void execute() {
 		Task task = AbstractDomainObject.fromExternalId(taskId);
-		task.executeTask();
+		try {
+		    task.executeTask();
+		    setSuccessful(true);
+		} catch (Exception ex) {
+		    throw new RuntimeException(ex);
+		}
 	    }
 
 	});

@@ -9,7 +9,33 @@
 	<bean:write name="task" property="localizedName"/>
 </h2>
 
+<ul>
+<!-- HAS_CONTEXT --><li><html:link page="/scheduler.do?method=viewScheduler">
+	<bean:message bundle="MYORG_RESOURCES" key="link.back"/>
+</html:link></li>
+</ul>
+
 <bean:define id="taskId" name="task" property="externalId" type="java.lang.String"/>
+
+
+<logic:equal name="task" property="executionPending" value="true">
+	<p><bean:message bundle="MYORG_RESOURCES" key="in.execution"/></p>
+</logic:equal>
+	
+<logic:equal name="task" property="repeatedOnFailure" value="true">
+	<p><strong><bean:message bundle="MYORG_RESOURCES" key="repeat.on.fail"/></strong></p>
+</logic:equal>
+	
+<logic:equal name="task" property="executionPending" value="true">
+	<p><html:link page="<%= "/scheduler.do?method=stopRunning&taskId=" + taskId %>">
+		<bean:message bundle="MYORG_RESOURCES" key="stop.running"/>
+	</html:link></p>
+</logic:equal>
+<logic:equal name="task" property="executionPending" value="false">
+	<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=runNow" paramId="taskId" paramName="task" paramProperty="externalId">
+		<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.runNow"/>
+	</html:link>
+</logic:equal>
 
 <logic:notEmpty name="task" property="taskConfigurations">
 	<table class="tstyle2">
@@ -62,12 +88,6 @@
 <ul>
 	<!-- HAS_CONTEXT --><li><html:link page="/scheduler.do?method=prepareAddTaskConfiguration" paramId="taskId" paramName="task" paramProperty="externalId">
 		<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.add.configuration"/>
-	</html:link></li>
-	<!-- HAS_CONTEXT --><li><html:link page="/scheduler.do?method=viewScheduler">
-		<bean:message bundle="MYORG_RESOURCES" key="link.back"/>
-	</html:link></li>
-	<!-- HAS_CONTEXT --><li><html:link page="/scheduler.do?method=runNow" paramId="taskId" paramName="task" paramProperty="externalId">
-		<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.runNow"/>
 	</html:link></li>
 </ul>
 <logic:notEmpty name="task" property="taskLogs">

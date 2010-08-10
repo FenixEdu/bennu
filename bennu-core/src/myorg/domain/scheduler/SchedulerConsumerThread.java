@@ -25,59 +25,76 @@
 
 package myorg.domain.scheduler;
 
+import java.util.ArrayList;
+
 import jvstm.TransactionalCommand;
-import myorg.domain.MyOrg;
 import pt.ist.fenixframework.pstm.Transaction;
 
-public class SchedulerThread extends Thread implements TransactionalCommand {
+public class SchedulerConsumerThread extends Thread implements TransactionalCommand {
+
+    public class TaskRepeatQueue extends ArrayList<Task> {
+	private static final long serialVersionUID = 1L;
+
+	public void offer(Task task) {
+	    add(0, task);
+	}
+
+	public Task poll() {
+	    int lastPosition = size() - 1;
+	    Task lastTask = get(lastPosition);
+	    remove(lastPosition);
+	    return lastTask;
+	}
+    }
+
+    private final TaskRepeatQueue tasksToRepeat = new TaskRepeatQueue();
 
     @Override
     public void run() {
 	super.run();
-	Transaction.withTransaction(true, this);
+	Transaction.withTransaction(false, this);
     }
 
     @Override
     public void doIt() {
-	for (final Task task : MyOrg.getInstance().getTasksSet()) {
-	    for (final TaskConfiguration taskConfiguration : task.getTaskConfigurationsSet()) {
-		if (taskConfiguration.shouldRunNow()) {
-		    logTaskStart(task);
-		    boolean successful = false;
-		    try {
-			final TaskExecutor taskExecutor = new TaskExecutor(task);
-			taskExecutor.start();
-			try {
-			    taskExecutor.join();
-			    successful = true;;
-			} catch (InterruptedException e) {
-			    throw new Error(e);
-			}
-		    } finally {
-			logTaskEnd(task, successful);
-		    }
-		}
+	final PendingExecutionTaskQueue pendingTasksQueue = PendingExecutionTaskQueue.getPendingExecutionTaskQueue();
+	while (!pendingTasksQueue.isEmpty()) {
+	    Task task = pendingTasksQueue.poll();
+	    runTask(task);
+	}
+
+	while (!tasksToRepeat.isEmpty()) {
+	    PendingExecutionTaskQueue.getPendingExecutionTaskQueue().offer(tasksToRepeat.poll());
+	}
+    }
+
+    private void runTask(final Task task) {
+	logTaskStart(task);
+	boolean successful = false;
+	try {
+	    final TaskExecutor taskExecutor = new TaskExecutor(task);
+	    taskExecutor.start();
+	    try {
+		taskExecutor.join();
+		successful = taskExecutor.isSuccessful();
+	    } catch (InterruptedException e) {
+	    }
+	} finally {
+	    logTaskEnd(task, successful);
+	    if ((!successful) && task.isRepeatedOnFailure()) {
+		tasksToRepeat.offer(task);
 	    }
 	}
     }
 
     private void logTaskStart(final Task task) {
 	final TaskLogger taskLogger = new TaskLogger(task);
-	logTask(taskLogger);
+	taskLogger.run();
     }
 
     private void logTaskEnd(final Task task, final boolean successful) {
 	final TaskLogger taskLogger = new TaskLogger(task, successful);
-	logTask(taskLogger);
-    }
-
-    private void logTask(final TaskLogger taskLogger) throws Error {
-	taskLogger.start();
-	try {
-	    taskLogger.join();
-	} catch (InterruptedException e) {
-	    throw new Error(e);
-	}
+	taskLogger.run();
     }
 
 }

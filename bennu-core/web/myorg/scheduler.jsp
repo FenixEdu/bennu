@@ -4,6 +4,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 
+<%@page import="myorg.domain.scheduler.Task"%>
+
 <h2>
 	<bean:message bundle="MYORG_RESOURCES" key="label.configuration.tasks.scheduleing"/>
 </h2>
@@ -24,6 +26,45 @@
 			<bean:message bundle="MYORG_RESOURCES" key="link.scheduler.listCustomTasks"/>
 		</html:link>
 	</p>
+	
+<h3>
+	<bean:message bundle="MYORG_RESOURCES" key="tasks.in.execution"/>
+</h3>
+<logic:empty name="executingTasks">
+	<p>
+		<bean:message bundle="MYORG_RESOURCES" key="message.no.tasks.in.execution.now"/>
+	</p>
+</logic:empty>
+<logic:notEmpty name="executingTasks">
+	<table class="tstyle2">
+		<tr>
+			<th>
+				<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.name"/>
+			</th>
+			<th>
+				<bean:message bundle="MYORG_RESOURCES" key="repeat.on.fail"/>
+			</th>
+			<th></th>
+		</tr>
+		<logic:iterate id="task" name="executingTasks">
+			<tr>
+				<td>
+					<html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="externalId">
+						<bean:write name="task" property="localizedName"/>
+					</html:link>
+				</td>
+				<td>
+					<bean:write name="task" property="repeatedOnFailure"/>
+				</td>
+				<td>
+					<html:link page="/scheduler.do?method=stopRunning" paramId="taskId" paramName="task" paramProperty="externalId">
+						<bean:message bundle="MYORG_RESOURCES" key="stop.running"/>
+					</html:link>
+				</td>
+			</tr>
+		</logic:iterate>
+	</table>
+</logic:notEmpty>
 
 <h3>
 	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.tasks.active"/>

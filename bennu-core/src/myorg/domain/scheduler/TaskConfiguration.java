@@ -34,18 +34,18 @@ import pt.ist.fenixWebFramework.services.Service;
 public class TaskConfiguration extends TaskConfiguration_Base {
 
     public TaskConfiguration(final Task task) {
-        super();
-        setMyOrg(MyOrg.getInstance());
-        setTask(task);
+	super();
+	setMyOrg(MyOrg.getInstance());
+	setTask(task);
     }
 
     public TaskConfiguration(final TaskConfigurationBean taskConfigurationBean) {
-        this(taskConfigurationBean.getTask());
-        setMinute(taskConfigurationBean.getMinute());
-        setHour(taskConfigurationBean.getHour());
-        setDay(taskConfigurationBean.getDay());
-        setMonth(taskConfigurationBean.getMonth());
-        setDayofweek(taskConfigurationBean.getDayofweek());
+	this(taskConfigurationBean.getTask());
+	setMinute(taskConfigurationBean.getMinute());
+	setHour(taskConfigurationBean.getHour());
+	setDay(taskConfigurationBean.getDay());
+	setMonth(taskConfigurationBean.getMonth());
+	setDayofweek(taskConfigurationBean.getDayofweek());
     }
 
     @Service
@@ -56,18 +56,18 @@ public class TaskConfiguration extends TaskConfiguration_Base {
     }
 
     public boolean shouldRunNow() {
-	final DateTime now = new DateTime();
+	return shouldRunNow(new DateTime());
+    }
+
+    public boolean shouldRunNow(DateTime now) {
 	final int min = now.getMinuteOfHour();
 	final int hour = now.getHourOfDay();
 	final int day = now.getDayOfMonth();
 	final int month = now.getMonthOfYear();
 	final int dayofweek = now.getDayOfWeek();
 
-	if (matchField(getMinute(), min)
-		&& matchField(getHour(), hour)
-		&& matchField(getDay(), day)
-		&& matchField(getMonth(), month)
-		&& matchField(getDayofweek(), dayofweek)) {
+	if (matchField(getMinute(), min) && matchField(getHour(), hour) && matchField(getDay(), day)
+		&& matchField(getMonth(), month) && matchField(getDayofweek(), dayofweek)) {
 
 	    final DateTime lastRun = getLastRun();
 	    return lastRun == null || nowIsAfterLastRun(now, lastRun);

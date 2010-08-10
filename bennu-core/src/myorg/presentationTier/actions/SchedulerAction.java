@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import myorg.domain.scheduler.ClassBean;
 import myorg.domain.scheduler.CustomTaskLog;
+import myorg.domain.scheduler.PendingExecutionTaskQueue;
 import myorg.domain.scheduler.Task;
 import myorg.domain.scheduler.TaskConfiguration;
 import myorg.domain.scheduler.TaskConfigurationBean;
@@ -46,23 +47,37 @@ import myorg.presentationTier.CustomTaskLogAggregate;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.joda.time.DateTime;
 
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
 @Mapping(path = "/scheduler")
 public class SchedulerAction extends ContextBaseAction {
 
+    public final String SCHEDULER_URL = "/scheduler.do?method=viewScheduler";
+    public final String TASK_URL = "/scheduler.do?method=viewTask";
+
     public ActionForward viewScheduler(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+	    final HttpServletResponse response) {
 	final Context context = getContext(request);
+	request.setAttribute("executingTasks", PendingExecutionTaskQueue.getPendingExecutionTasks());
 	request.setAttribute("activeTasks", Task.getTasksSortedByLocalizedName(true));
 	request.setAttribute("inactiveTasks", Task.getTasksSortedByLocalizedName(false));
 	return context.forward("/myorg/scheduler.jsp");
     }
 
+    public ActionForward forwardToViewScheduler(HttpServletRequest request) {
+
+	ActionForward forward = new ActionForward();
+	forward.setRedirect(true);
+	String realPath = SCHEDULER_URL + "&" + CONTEXT_PATH + "=" + getContext(request).getPath();
+	forward.setPath(realPath + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "="
+		+ GenericChecksumRewriter.calculateChecksum(request.getContextPath() + realPath));
+	return forward;
+    }
+
     public ActionForward prepareAddTaskConfiguration(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	    final HttpServletRequest request, final HttpServletResponse response) {
 	final Context context = getContext(request);
 	final Task task = getDomainObject(request, "taskId");
 	TaskConfigurationBean taskConfigurationBean = getRenderedObject();
@@ -74,46 +89,57 @@ public class SchedulerAction extends ContextBaseAction {
     }
 
     public ActionForward addTaskConfiguration(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	    final HttpServletRequest request, final HttpServletResponse response) {
 	final TaskConfigurationBean taskConfigurationBean = getRenderedObject();
 	taskConfigurationBean.create();
-	return viewScheduler(mapping, form, request, response);
+	return forwardToViewScheduler(request);
     }
 
     public ActionForward runNow(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+	    final HttpServletResponse response) {
 	final Task task = getDomainObject(request, "taskId");
-	TaskConfigurationBean taskConfigurationBean = new TaskConfigurationBean(task);
-	DateTime now = new DateTime().plusMinutes(1);
-	taskConfigurationBean.setMinute(now.getMinuteOfHour());
-	taskConfigurationBean.setHour(now.getHourOfDay());
-	taskConfigurationBean.setDay(now.getDayOfMonth());
-	taskConfigurationBean.setMonth(now.getMonthOfYear());
-	taskConfigurationBean.create();
-	final Context context = getContext(request);
-	request.setAttribute("task", task);
-	return context.forward("/myorg/viewTask.jsp");
+	task.invokeNow();
+
+	return forwardToViewScheduler(request);
+    }
+
+    public ActionForward stopRunning(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) {
+	final Task task = getDomainObject(request, "taskId");
+	task.stop();
+
+	return forwardToViewScheduler(request);
     }
 
     public ActionForward viewTask(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+	    final HttpServletResponse response) {
 	final Context context = getContext(request);
 	final Task task = getDomainObject(request, "taskId");
 	request.setAttribute("task", task);
 	return context.forward("/myorg/viewTask.jsp");
     }
 
+    public ActionForward forwardToViewTask(Task task, HttpServletRequest request) {
+
+	ActionForward forward = new ActionForward();
+	forward.setRedirect(true);
+	String realPath = TASK_URL + "&" + "taskId=" + task.getExternalId() + "&" + CONTEXT_PATH + "="
+		+ getContext(request).getPath();
+	forward.setPath(realPath + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "="
+		+ GenericChecksumRewriter.calculateChecksum(request.getContextPath() + realPath));
+	return forward;
+    }
+
     public ActionForward deleteTaskConfiguration(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	    final HttpServletRequest request, final HttpServletResponse response) {
 	final TaskConfiguration taskConfiguration = getDomainObject(request, "taskConfigurationId");
-	int taskConfigurationCount = taskConfiguration.getTask().getTaskConfigurationsCount();
+	Task task = taskConfiguration.getTask();
 	taskConfiguration.delete();
-	return taskConfigurationCount == 1 ? viewScheduler(mapping, form, request, response) : viewTask(mapping, form, request,
-		response);
+	return task.getTaskConfigurationsCount() == 1 ? forwardToViewScheduler(request) : forwardToViewTask(task, request);
     }
 
     public ActionForward viewTaskLog(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+	    final HttpServletResponse response) {
 	final Context context = getContext(request);
 	final TaskLog taskLog = getDomainObject(request, "taskLogId");
 	request.setAttribute("taskLog", taskLog);
@@ -121,7 +147,7 @@ public class SchedulerAction extends ContextBaseAction {
     }
 
     public ActionForward prepareLoadAndRun(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+	    final HttpServletResponse response) {
 	ClassBean classBean = getRenderedObject();
 	if (classBean == null) {
 	    classBean = new ClassBean();
@@ -131,7 +157,7 @@ public class SchedulerAction extends ContextBaseAction {
     }
 
     public ActionForward loadAndRun(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+	    final HttpServletResponse response) {
 	final ClassBean classBean = getRenderedObject();
 	classBean.run();
 	request.setAttribute("classBean", classBean);
@@ -139,7 +165,7 @@ public class SchedulerAction extends ContextBaseAction {
     }
 
     public ActionForward listCustomTaskLogs(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+	    final HttpServletResponse response) {
 	final List<Executer> runningExecuters = ClassBean.getRunningExecuters();
 	request.setAttribute("runningExecuters", runningExecuters);
 
@@ -164,7 +190,7 @@ public class SchedulerAction extends ContextBaseAction {
     }
 
     public ActionForward searchCustomTaskLogs(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	    final HttpServletRequest request, final HttpServletResponse response) {
 	String className = getAttribute(request, "className");
 	final CustomTaskLogAggregate aggregate = new CustomTaskLogAggregate(className);
 	request.setAttribute("customTaskLogs", aggregate.getCustomTaskLogs());
@@ -173,7 +199,7 @@ public class SchedulerAction extends ContextBaseAction {
     }
 
     public ActionForward deleteCustomTaskLogs(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	    final HttpServletRequest request, final HttpServletResponse response) {
 	String className = getAttribute(request, "className");
 	final CustomTaskLogAggregate aggregate = new CustomTaskLogAggregate(className);
 	aggregate.deleteCustomTaskLogs();
@@ -182,14 +208,14 @@ public class SchedulerAction extends ContextBaseAction {
     }
 
     public ActionForward viewCustomTaskLog(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+	    final HttpServletResponse response) {
 	final CustomTaskLog customTaskLog = getDomainObject(request, "customTaskLogId");
 	request.setAttribute("customTaskLog", customTaskLog);
 	return forward(request, "/myorg/viewCustomTaskLog.jsp");
     }
 
     public ActionForward reloadCustomTask(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
+	    final HttpServletResponse response) {
 	final CustomTaskLog customTaskLog = getDomainObject(request, "customTaskLogId");
 
 	ClassBean classBean = new ClassBean();

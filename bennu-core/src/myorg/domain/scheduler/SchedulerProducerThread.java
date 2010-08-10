@@ -1,5 +1,5 @@
 /*
- * @(#)TaskLogger.java
+ * @(#)SchedulerThread.java
  *
  * Copyright 2009 Instituto Superior Tecnico
  * Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
@@ -25,31 +25,50 @@
 
 package myorg.domain.scheduler;
 
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import jvstm.TransactionalCommand;
+import myorg.domain.MyOrg;
 
-public class TaskLogger {
+import org.joda.time.DateTime;
 
-    static private final int MAX_LOG_ENTRIES = 100;
-    private final String taskId;
-    private final Boolean successful;
+import pt.ist.fenixframework.pstm.Transaction;
 
-    public TaskLogger(final Task task) {
-	taskId = task.getExternalId();
-	this.successful = null;
+public class SchedulerProducerThread extends Thread implements TransactionalCommand {
+
+    private DateTime startTime;
+
+    public void setStartTime(DateTime startTime) {
+	this.startTime = startTime;
     }
 
-    public TaskLogger(final Task task, final boolean successful) {
-	taskId = task.getExternalId();
-	this.successful = Boolean.valueOf(successful);
+    public DateTime getStartTime() {
+	return startTime;
     }
 
+    @Override
+    public void start() {
+	setStartTime(new DateTime());
+	super.start();
+    }
+
+    @Override
     public void run() {
-	final Task task = AbstractDomainObject.fromExternalId(taskId);
-	if (successful == null) {
-	    task.createNewLog();
-	} else {
-	    task.updateLastLog(successful);
-	    task.cleanupLogs(MAX_LOG_ENTRIES);
+	super.run();
+	Transaction.withTransaction(false, this);
+    }
+
+    @Override
+    public void doIt() {
+	PendingExecutionTaskQueue queue = PendingExecutionTaskQueue.getPendingExecutionTaskQueue();
+	for (final Task task : MyOrg.getInstance().getTasksSet()) {
+	    if (queue.contains(task)) {
+		continue;
+	    }
+	    for (final TaskConfiguration taskConfiguration : task.getTaskConfigurationsSet()) {
+		if (taskConfiguration.shouldRunNow(getStartTime())) {
+		    queue.offer(task);
+		    break;
+		}
+	    }
 	}
     }
 }

@@ -124,10 +124,13 @@ public class Scheduler extends TimerTask {
     }
 
     private void runTasks() {
-	final SchedulerThread schedulerThread = new SchedulerThread();
-	schedulerThread.start();
+	final SchedulerProducerThread schedulerProducerThread = new SchedulerProducerThread();
+	schedulerProducerThread.start();
 	try {
-	    schedulerThread.join();
+	    schedulerProducerThread.join();
+	    final SchedulerConsumerThread schedulerConsumerThread = new SchedulerConsumerThread();
+	    schedulerConsumerThread.start();
+	    schedulerConsumerThread.join();
 	} catch (InterruptedException e) {
 	    throw new Error(e);
 	}
