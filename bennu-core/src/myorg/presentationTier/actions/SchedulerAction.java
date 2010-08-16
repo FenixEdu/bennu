@@ -135,7 +135,7 @@ public class SchedulerAction extends ContextBaseAction {
 	final TaskConfiguration taskConfiguration = getDomainObject(request, "taskConfigurationId");
 	Task task = taskConfiguration.getTask();
 	taskConfiguration.delete();
-	return task.getTaskConfigurationsCount() == 1 ? forwardToViewScheduler(request) : forwardToViewTask(task, request);
+	return task.getTaskConfigurationsCount() == 0 ? forwardToViewScheduler(request) : forwardToViewTask(task, request);
     }
 
     public ActionForward viewTaskLog(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
