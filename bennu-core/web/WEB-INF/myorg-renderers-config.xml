@@ -232,6 +232,9 @@
     <renderer type="java.math.BigDecimal" class="pt.ist.fenixWebFramework.renderers.DecimalRenderer" layout="decimal-format"/>
     <renderer type="java.lang.Double" class="pt.ist.fenixWebFramework.renderers.DecimalRenderer" layout="decimal-format"/>
     
+    <renderer type="myorg.domain.util.Money" class="myorg.presentationTier.renderers.MoneyRenderer" />
+
+    
     <!--@ The default layout for editing objects.  -->  
     <renderer mode="input" type="java.lang.Object" class="pt.ist.fenixWebFramework.renderers.StandardInputRenderer">
     		<property name="labelTerminator" value=":"/>
@@ -568,3 +571,5 @@
 		<property name="falseIconPath" value="/images/cancel.jpg"/>
 		<property name="contextRelative" value="true"/>
 	</renderer>
+	
+	<renderer mode="input" type="myorg.domain.util.Money" class="myorg.presentationTier.renderers.MoneyInputRenderer" />
