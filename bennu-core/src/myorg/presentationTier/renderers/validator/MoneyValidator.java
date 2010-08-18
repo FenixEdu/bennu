@@ -10,13 +10,13 @@ public class MoneyValidator extends HtmlValidator {
     public MoneyValidator(HtmlChainValidator htmlChainValidator) {
 	super(htmlChainValidator);
 
-	setBundle("EXPENDITURE_RESOURCES");
+	setBundle("MYORG_RESOURCES");
 	setMessage("messages.exception.validation.invalidMoney");
     }
 
     public MoneyValidator() {
 	super();
-	setBundle("EXPENDITURE_RESOURCES");
+	setBundle("MYORG_RESOURCES");
 	setMessage("messages.exception.validation.invalidMoney");
     }
 
