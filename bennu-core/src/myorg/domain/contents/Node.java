@@ -68,6 +68,12 @@ public abstract class Node extends Node_Base implements INode {
 	stringBuilder.append(getExternalId());
     }
 
+    public String getContextPath() {
+	final StringBuilder stringBuilder = new StringBuilder();
+	appendNodePath(stringBuilder);
+	return stringBuilder.toString();
+    }
+
     protected abstract void appendUrlPrefix(final StringBuilder stringBuilder);
 
     @Override

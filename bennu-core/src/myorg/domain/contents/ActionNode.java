@@ -32,10 +32,10 @@ import pt.ist.fenixWebFramework.services.Service;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class ActionNode extends ActionNode_Base {
-    
+
     public ActionNode(final VirtualHost virtualHost, final Node node) {
-        super();
-        init(virtualHost, node, null);
+	super();
+	init(virtualHost, node, null);
     }
 
     @Service
@@ -59,7 +59,12 @@ public class ActionNode extends ActionNode_Base {
     public MultiLanguageString getLink() {
 	final String bundle = getLinkBundle();
 	final String key = getLinkKey();
-	return BundleUtil.getMultilanguageString(bundle, key);
+	try {
+	    return BundleUtil.getMultilanguageString(bundle, key);
+	} catch (java.util.MissingResourceException e) {
+	    e.printStackTrace();
+	    return new MultiLanguageString(getLinkKey());
+	}
     }
 
     @Override
