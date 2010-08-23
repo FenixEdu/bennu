@@ -37,7 +37,6 @@ jQuery.fn.autocomplete = function(url, settings )
 		//create the ul that will hold the text and values
 		valueInput.after('<div><ul class="autocomplete"><li></li></ul></div>');
 		var list = valueInput.next().children();
-		//list.css({ width: textInput.width()});
 		var oldText = '';
 		var typingTimeout;
 		var size = 0;
@@ -47,6 +46,7 @@ jQuery.fn.autocomplete = function(url, settings )
 		{
 			minChars : 1,
 			timeout: 300,
+			width: null,
 			after : null,
 			before : null,
 			select : null,
@@ -134,7 +134,7 @@ jQuery.fn.autocomplete = function(url, settings )
 			selected = -1;
 			oldText = '';
 		}	
-		
+				
 		function selectNextInput() {
 			var nextRow = textInput.parents("tr").next("tr")
 			if (nextRow.size() != 0) {
@@ -147,6 +147,15 @@ jQuery.fn.autocomplete = function(url, settings )
 				submitButton.focus();
 			}				
 		}
+		
+		textInput.focus(function focus(e) {
+			list.html("<li style=\"background: rgb(204,204,204)\">Preencha para completar automáticamente</li>");
+			var currentWidth = settings.width != null ? settings.width : $(e.currentTarget).width();
+			if (list.width() != currentWidth) {
+				list.css({ width: currentWidth});
+			}
+			list.show();
+		});
 		
 		textInput.blur( function(e) {
 			 window.setTimeout(function() { list.hide(); },'300');

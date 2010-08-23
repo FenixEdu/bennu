@@ -950,10 +950,11 @@ background-position: center right;
 background-repeat: no-repeat;
 }
 div ul.autocomplete {
-width: 375px !important;
+/*width: 375px !important;*/
 position: absolute;
 background-color: #fff;
 border: 1px solid #aaa;
+border-top: none;
 margin: 0px;
 padding: 0px;
 list-style: none;
@@ -1089,7 +1090,6 @@ display: none;
 div.nojavascript div.chelptext {
 display: block;
 }
-
 
 h3.separator {
 margin: 1em 0 0.5em 0;
