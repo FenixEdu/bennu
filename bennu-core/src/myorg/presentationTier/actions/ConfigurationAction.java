@@ -165,6 +165,14 @@ public class ConfigurationAction extends ContextBaseAction {
 	return manageMenus(mapping, form, request, response);
     }
 
+    public final ActionForward editNodeAvailability(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final Node node = getDomainObject(request, "nodeId");
+	request.setAttribute("node", node);
+	final Context context = getContext(request);
+	return context.forward("/myorg/editAvailability.jsp");
+    }
+
     public ActionForward deleteVirtualHost(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
 	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");

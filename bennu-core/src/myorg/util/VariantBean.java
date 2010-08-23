@@ -33,7 +33,7 @@ import pt.ist.fenixframework.DomainObject;
 
 public class VariantBean implements Serializable {
     public static enum Type {
-	INTEGER, STRING, LOCAL_DATE, DOMAIN_OBJECT
+	INTEGER, STRING, LOCAL_DATE, DOMAIN_OBJECT, OBJECT
     };
 
     /**
@@ -92,7 +92,16 @@ public class VariantBean implements Serializable {
 	setType(Type.DOMAIN_OBJECT);
     }
 
-    public DomainObject getDomainObject() {
-	return (DomainObject) (isType(Type.DOMAIN_OBJECT) ? this.value : null);
+    public <T extends DomainObject> T getDomainObject() {
+	return (T) (isType(Type.DOMAIN_OBJECT) ? this.value : null);
+    }
+
+    public void setObject(Object object) {
+	this.value = object;
+	setType(Type.OBJECT);
+    }
+
+    public Object getObject() {
+	return (isType(Type.OBJECT) ? this.value : null);
     }
 }

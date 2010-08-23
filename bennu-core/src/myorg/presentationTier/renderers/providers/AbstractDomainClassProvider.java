@@ -38,12 +38,17 @@ public abstract class AbstractDomainClassProvider implements DataProvider {
 
     @Override
     public Object provide(Object arg0, Object arg1) {
-	return DomainModelUtil.getDomainClassHierarchy(getSuperClass(), shouldContainSuperClass());
+	return DomainModelUtil.getDomainClassHierarchy(getSuperClass(), shouldContainSuperClass(),
+		shouldContainerAbstractClasses());
     }
 
     protected abstract Class getSuperClass();
 
     protected boolean shouldContainSuperClass() {
 	return false;
+    }
+
+    protected boolean shouldContainerAbstractClasses() {
+	return true;
     }
 }

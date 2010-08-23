@@ -83,6 +83,10 @@
 				<!-- HAS_CONTEXT --><html:link page="<%= deleteNodeUrl %>">
 					<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.delete"/>
 				</html:link>
+				<bean:define id="editNodeUrl">/configuration.do?method=editNodeAvailability&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/>&amp;nodeId=<bean:write name="node" property="externalId"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="externalId"/></logic:present></bean:define>
+				<!-- HAS_CONTEXT --><html:link page="<%= editNodeUrl %>">
+					<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.editAvailability"/>
+				</html:link>
 				</div>
 <bean:write name="node" property="link"/>
 				</div>
