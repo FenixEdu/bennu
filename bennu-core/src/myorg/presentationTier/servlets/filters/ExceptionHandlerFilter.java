@@ -26,6 +26,8 @@
 package myorg.presentationTier.servlets.filters;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -39,11 +41,29 @@ import myorg.domain.VirtualHost;
 
 public class ExceptionHandlerFilter implements Filter {
 
+    public static abstract class CustomeHandler {
+
+	public abstract boolean isCustomizedFor(final Throwable t);
+
+	public abstract void handle(final HttpServletRequest httpServletRequest, final ServletResponse response) throws ServletException, IOException;
+	
+    }
+
+    private static final List<CustomeHandler> customeHandlers = new ArrayList<CustomeHandler>();
+
+    public static void register(final CustomeHandler customeHandler) {
+	System.out.println("Registering: " + customeHandler);
+	customeHandlers.add(customeHandler);
+    }
+
+    public static void unregister(final CustomeHandler customeHandler) {
+	customeHandlers.remove(customeHandler);
+    }
+
     public void destroy() {
     }
 
     public void init(FilterConfig arg0) throws ServletException {
-
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
@@ -51,27 +71,26 @@ public class ExceptionHandlerFilter implements Filter {
 	HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 	try {
 	    filterChain.doFilter(request, response);
-	} catch (ServletException servletException) {
+	} catch (final Throwable t) {
+	    for (final CustomeHandler customeHandler : customeHandlers) {
+		if (customeHandler.isCustomizedFor(t)) {
+		    customeHandler.handle(httpServletRequest, response);
+		    return;
+		}
+	    }
+	    httpServletRequest.getRequestDispatcher(VirtualHost.getVirtualHostForThread().getErrorPage()).forward(request, response);
+	}
+    }
+
+    private void printTraceInformation(final Throwable t) {
+	if (t instanceof ServletException) {
+	    final ServletException servletException = (ServletException) t;
 	    if (servletException.getRootCause() != null) {
 		servletException.getRootCause().printStackTrace();
+		return;
 	    }
-	    /*
-	     * StringWriter out = new StringWriter();
-	     * servletException.getRootCause().printStackTrace(new
-	     * PrintWriter(out)); request.setAttribute("error", out.toString());
-	     */
-	    httpServletRequest.getRequestDispatcher(VirtualHost.getVirtualHostForThread().getErrorPage()).forward(request,
-		    response);
-	} catch (Throwable throwable) {
-	    throwable.printStackTrace();
-	    /*
-	     * StringWriter out = new StringWriter();
-	     * exception.printStackTrace(new PrintWriter(out));
-	     * request.setAttribute("error", out.toString());
-	     */
-	    httpServletRequest.getRequestDispatcher(VirtualHost.getVirtualHostForThread().getErrorPage()).forward(request,
-		    response);
 	}
-
+	t.printStackTrace();
     }
+
 }

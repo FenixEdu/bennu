@@ -158,7 +158,7 @@
 	    <filter-name>RequestRewriteFilter</filter-name>
 	    <url-pattern>*.do</url-pattern>
     </filter-mapping>
-    
+
     <!-- Listeners -->
 	<servlet>
         <servlet-name>StartupServlet</servlet-name>
