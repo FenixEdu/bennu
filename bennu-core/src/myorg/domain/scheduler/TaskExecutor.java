@@ -25,9 +25,11 @@
 
 package myorg.domain.scheduler;
 
+import jvstm.TransactionalCommand;
 import pt.ist.fenixWebFramework.services.ServiceManager;
 import pt.ist.fenixWebFramework.services.ServicePredicate;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.pstm.Transaction;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 public class TaskExecutor extends Thread {
@@ -53,10 +55,9 @@ public class TaskExecutor extends Thread {
     public void run() {
 	super.run();
 	Language.setLocale(Language.getDefaultLocale());
-	ServiceManager.execute(new ServicePredicate() {
-
+	Transaction.withTransaction(true, new TransactionalCommand() {
 	    @Override
-	    public void execute() {
+	    public void doIt() {
 		Task task = AbstractDomainObject.fromExternalId(taskId);
 		try {
 		    task.executeTask();
@@ -65,7 +66,6 @@ public class TaskExecutor extends Thread {
 		    throw new RuntimeException(ex);
 		}
 	    }
-
 	});
     }
 
