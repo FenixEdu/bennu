@@ -181,6 +181,8 @@ public abstract class Node extends Node_Base implements INode {
 	removeVirtualHost();
 	removeMyOrg();
 	removeAccessibilityGroup();
+	for (; !getNodeMapping().isEmpty(); getNodeMapping().get(0).delete())
+	    ;
 	deleteDomainObject();
     }
 
