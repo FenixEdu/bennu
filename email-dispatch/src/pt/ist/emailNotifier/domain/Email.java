@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import pt.ist.emailNotifier.util.EmailAddressList;
+import pt.ist.fenixWebFramework.services.Service;
 
 public class Email extends Email_Base {
 
@@ -26,6 +27,7 @@ public class Email extends Email_Base {
 	setBody(body);
     }
 
+    @Service
     public void delete() {
 	removeEmailNotifier();
 	deleteDomainObject();
