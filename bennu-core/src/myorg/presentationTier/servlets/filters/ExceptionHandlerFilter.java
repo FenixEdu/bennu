@@ -38,6 +38,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import myorg.domain.VirtualHost;
+import myorg.presentationTier.util.ExceptionInformation;
 
 public class ExceptionHandlerFilter implements Filter {
 
@@ -45,8 +46,9 @@ public class ExceptionHandlerFilter implements Filter {
 
 	public abstract boolean isCustomizedFor(final Throwable t);
 
-	public abstract void handle(final HttpServletRequest httpServletRequest, final ServletResponse response) throws ServletException, IOException;
-	
+	public abstract void handle(final HttpServletRequest httpServletRequest, final ServletResponse response)
+		throws ServletException, IOException;
+
     }
 
     private static final List<CustomeHandler> customeHandlers = new ArrayList<CustomeHandler>();
@@ -78,7 +80,10 @@ public class ExceptionHandlerFilter implements Filter {
 		    return;
 		}
 	    }
-	    httpServletRequest.getRequestDispatcher(VirtualHost.getVirtualHostForThread().getErrorPage()).forward(request, response);
+	    request.setAttribute("exceptionInfo", ExceptionInformation
+		    .buildUncaughtExceptionInfo((HttpServletRequest) request, t));
+	    httpServletRequest.getRequestDispatcher(VirtualHost.getVirtualHostForThread().getErrorPage()).forward(request,
+		    response);
 	}
     }
 
