@@ -33,11 +33,11 @@ public class FileSupportNodeCreation extends ContextBaseAction {
 	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
 	final Node node = getDomainObject(request, "parentOfNodesToManageId");
 
-	final Node homeNode = ActionNode.createActionNode(virtualHost, node, "/fileStorageManagement", "prepare", "resources.FileSupportResources",
+//	final Node homeNode = ActionNode.createActionNode(virtualHost, node, "/fileStorageManagement", "prepare", "resources.FileSupportResources",
+//		"link.sideBar.fileSupport.fileStorageManagement", Role.getRole(RoleType.MANAGER));
+	ActionNode.createActionNode(virtualHost, node, "/fileStorageManagement", "prepare", "resources.FileSupportResources",
 		"link.sideBar.fileSupport.fileStorageManagement", Role.getRole(RoleType.MANAGER));
-	ActionNode.createActionNode(virtualHost, homeNode, "/fileStorageManagement", "prepare", "resources.FileSupportResources",
-		"link.sideBar.fileSupport.fileStorageManagement", Role.getRole(RoleType.MANAGER));
-	ActionNode.createActionNode(virtualHost, homeNode, "/storageConfigurationManagement", "prepare",
+	ActionNode.createActionNode(virtualHost, node, "/storageConfigurationManagement", "prepare",
 		"resources.FileSupportResources", "link.sideBar.fileSupport.storageConfigurationManagement", Role
 			.getRole(RoleType.MANAGER));
 
