@@ -149,7 +149,7 @@ jQuery.fn.autocomplete = function(url, settings )
 		}
 		
 		textInput.focus(function focus(e) {
-			list.html("<li style=\"background: rgb(204,204,204)\">Preencha para completar automáticamente</li>");
+			list.html("<li style=\"background: rgb(204,204,204)\">Preencha para completar automaticamente</li>");
 			var currentWidth = settings.width != null ? settings.width : $(e.currentTarget).width();
 			if (list.width() != currentWidth) {
 				list.css({ width: currentWidth});
