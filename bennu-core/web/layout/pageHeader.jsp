@@ -56,13 +56,13 @@
 				<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration"/>
 			</html:link> |
 		</logic:present>
+		<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES"/>: <bean:write name="USER_SESSION_ATTRIBUTE" property="username"/> |
 		<logic:present name="virtualHost" property="helpLink">
 			<logic:notEmpty name="virtualHost" property="helpLink">
 				<bean:define id="helpUrl"><bean:write name="virtualHost" property="helpLink"/></bean:define>
 				<a href="<%= helpUrl %>" target="_blank"><bean:message key="label.help.link" bundle="MYORG_RESOURCES"/></a> |  
 			</logic:notEmpty>
 		</logic:present>
-		<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES"/>: <bean:write name="USER_SESSION_ATTRIBUTE" property="username"/> |
 		<html:link action="/authenticationAction.do?method=logout"><bean:message key="label.login.logout" bundle="MYORG_RESOURCES"/></html:link>
 	</div>
 </logic:present>
