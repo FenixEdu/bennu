@@ -1,6 +1,5 @@
 body {
-background: #333;
-background: url(images/back01.gif);
+background: #333 url(images/back01.gif);
 }
 
 body, div, p, form, h1, h2, h3, h4, ul, li {
@@ -26,17 +25,16 @@ height: 600px;
 ---------------------------------------*/
 
 
-
-#container		{ width: 935px; width: 945px; width: 955px; }
+#container		{ width: 955px; }
 #header			{ }
-#mainnav		{ width: 935px; width: 945px; width: 955px; }
+#mainnav		{ width: 955px; }
 #container2 	{ }
 #container3 	{ }
 #content		{ }
 #footer			{ }
 
 
-#container {
+#container-1 {
 position: relative;
 }
 
@@ -153,8 +151,6 @@ border-bottom: 1px solid #e8baa3;
 }
 */
 
-
-
 a.link-button {
 border: 1px #cccccc solid;
 color: #333;
@@ -176,13 +172,11 @@ border-radius: 14px;
 }
 
 a.link-button:hover {
-
 background-color: #eeeeee;
 background: -webkit-gradient(linear, 0 0, 0 100%, from(#e3e3e3), to(white)) repeat-x, #eeeeee;
 background: -moz-linear-gradient(90deg, white, #e3e3e3) repeat-x scroll 0 0 #eeeeee;
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e3e3e3', endColorstr='white');
 -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#e3e3e3', endColorstr='white')";
-
 }
 
 
@@ -211,18 +205,24 @@ margin: 0;
 #logo {
 width: 500px;
 height: 1%;
+
 }
 #logo img {
+/* border: 1px solid red; */
 float: left;
+padding: 20px 10px 0 0 !important;
 }
 #logo #text {
 }
 #logo #text h1 {
 color: #fff;
+padding-bottom: 8px; 
+/* border: 1px solid red; */
 }
 #logo #text p {
 font-size: 11px;
 color: #b6d7e8;
+/* border: 1px solid red; */
 }
 
 /*---------------------------------------
@@ -274,7 +274,6 @@ border-bottom: 1px solid #9fd8ff;
 float: right;
 }
 
-
 /*---------------------------------------
        Mainnav
 ---------------------------------------*/
@@ -324,22 +323,6 @@ background: #eee;
 color: #444;
 }
 
-/*
-#mainnav ul li div.lic1 {
-position: absolute;
-top: 0;
-left: 0;
-width: 5px;
-height: 5px;
-background: url(tab_corner1_01.gif) no-repeat;
-}
-*/
-
-/*
-#mainnav ul li.selected div.lic1 {
-background: url(tab_corner1_02.gif) top right no-repeat !important;
-}
-*/
 
 /*---------------------------------------
        Secondary Nav
@@ -365,8 +348,6 @@ text-decoration: none;
 border: none;
 }
 #secondarynav a span {
-border-bottom: 1px solid #000;
-border-bottom: 1px solid #79a4bd;
 border-bottom: 1px solid #a5c3d3;
 }
 #secondarynav a:hover span {
@@ -391,7 +372,6 @@ float: left;
 margin: 1em 0 0 0;
 padding: 0 10px 2em 0;
 }
-
 #sidebar ul {
 list-style: none;
 padding: 1px 0 0 0;
@@ -416,7 +396,6 @@ position: relative;
 z-index: 1;
 clear: both;
 padding: 20px 0 20px 0;
-/*background: #15587a;*/
 }
 #footer p {
 color: #fff;
@@ -439,10 +418,10 @@ border-bottom: 0px dotted #fff;
 
 
 
+
 /*---------------------------------------
        New
 ---------------------------------------*/
-
 
 div.section1 {
 margin: 10px 0 10px 0;
@@ -452,7 +431,6 @@ div.section1 h3 {
 padding: 5px 10px 5px 10px;
 border-bottom: 2px solid #ddd;
 }
-
 
 div.warning1 {
 background: #fdeaa5;
@@ -464,15 +442,9 @@ div.warning1 p {
 margin: 0 !important;
 }
 
-
-
-
-
-
 /*---------------------------------------
        Buttons
 ---------------------------------------*/
-
 
 input {
 color: #333;
@@ -495,8 +467,6 @@ border: 1px solid #ab4f20;
 font-weight: bold;
 background: #e89267;
 }
-
-
 
 
 /*---------------------------------------
@@ -697,8 +667,6 @@ padding: 0;
 div.tooltip span { border-bottom: 1px dotted #888; cursor: default; }
 div.tooltip div.tooltipText span { border-bottom: none; }
 
-
-
 div.activities div.tooltip {
 margin-left: 10px;
 }
@@ -720,10 +688,13 @@ margin-top: 14px;
 div.helpicon a {
 outline: none;
 }
-
+div.helpicon * {
+border: none;
+text-decoration: none;
+}
 
 /*---------------------------------------
-       Autocomplete
+       Auto-Complete
 ---------------------------------------*/
 
 /** new auto complete ***/
@@ -913,11 +884,7 @@ C O M P O N E N T S
 
 
 
-h2 span {
-font-weight: normal;
-font-size: 0.8em;
-color: #888;
-}
+
 
 
 
@@ -1678,6 +1645,18 @@ margin: 0.5em 0;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 M O D U L E
 M O D U L E
@@ -1744,8 +1723,11 @@ margin: 0 10px;
 }
 
 
-
-
+h2 span.processNumber {
+font-weight: normal;
+font-size: 0.8em;
+color: #888;
+}
 
 
 table.process-files tr th {
