@@ -96,11 +96,16 @@ font-size: 15px;
 padding: 10px 0 10px 0;
 margin-bottom: -10px;
 }
+h3.small {
+font-size: 12px;
+font-family: Verdana;
+}
 
 h4 {
-font-size: 12px;
+font-size: 11px;
 padding: 10px 0 10px 0;
 margin-bottom: -10px;
+font-family: Verdana;
 }
 
 p {
@@ -125,6 +130,9 @@ padding: 0;
 border-top: 1px solid #ddd;
 }
 
+address {
+font-style: normal;
+}
 
 /*---------------------------------------
        Links
@@ -1074,6 +1082,15 @@ padding: 5px 10px 5px 0px;
 div.infobox1 p {
 }
 
+div.infobox1 div.header {
+padding: 5px 10px 5px 10px;
+margin: 0;
+background: #eee;
+}
+div.infobox1 div.header h3 {
+padding: 0px;
+margin: 0;
+}
 
 
 
@@ -1341,6 +1358,22 @@ form table td {
 padding: 5px 0 5px 10px;
 }
 
+form table.vert {
+margin: 10px 0 10px 0;
+}
+form table.vert th, form table.vert td {
+border-top: 1px solid #ddd;
+border-bottom: 1px solid #ddd;
+vertical-align: top;
+padding: 5px;
+}
+form table.vert th {
+background: #eee;
+}
+form table.vert td {
+text-align: center;
+}
+
 
 input {
 font-family: Verdana, Arial, sans-serif;
@@ -1497,8 +1530,8 @@ C O M M O N S
 .mvert075 { margin-top: 0.75em !important; margin-bottom: 0.75em !important; }
 
 
-.aleft { text-align: left !important; }
-.aright { text-align: right !important; }
+.aleft, .aleft * { text-align: left !important; }
+.aright, .aright * { text-align: right !important; }
 .smalltxt { font-size: 0.95em; }
 .aleft { text-align: left !important; }
 .acenter { text-align: center !important; }
@@ -1510,13 +1543,14 @@ span.invalid { color: #a00; font-weight: bold; }
 .bold { font-weight: bold; }
 .nowrap { white-space: nowrap; }
 .vatop { vertical-align: top; }
+.weight-normal { font-weight: normal; }
+.lighter { font-size: 10px; color: #999; }
+
 
 /* lists */
 .no-bullets, .no-bullets ul, .no-bullets ul li { list-style: none; }
 .list-reset, .list-reset ul, .list-reset ul li { list-style: none; padding-left: 0; }
 
-
-div.clear { clear: both;}
 
 .width30px { width: 30px !important; }
 .width100px { width: 100px !important; }
@@ -1596,6 +1630,8 @@ table.thnowrap th			{ white-space: nowrap; }
 .tdmiddle td		{ vertical-align: middle !important; }
 .tdnoborder td		{ border-left: none !important; border-right: none !important; }
 
+
+
 .vpadding05 th, .vpadding05 td {
 padding-top: 0.3em !important;
 padding-bottom: 0.3em !important; 
@@ -1611,8 +1647,8 @@ table.thright th { text-align: right; }
 
 table.width33 td 	{ width: 33%; } /* <<< mudar para tdwidth33pc */
 
-
-
+table.th-width-min th { width: 1px; white-space: nowrap; }
+table.th-width-120 th { width: 120px; }
 
 /*----------------------------------------
       Accessibility and Javascritt
