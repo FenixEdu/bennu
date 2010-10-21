@@ -1,9 +1,17 @@
 package pt.ist.fenixframework.plugins.fileSupport.domain;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import jvstm.PerTxBox;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -13,7 +21,25 @@ import org.apache.commons.lang.StringUtils;
  * @author Shezad Anavarali Date: Jul 16, 2009
  * 
  */
+
 public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
+
+    private PerTxBox<Map<String, FileWriteIntention>> fileIntentions;
+
+    private static class FileWriteIntention {
+
+	private String path;
+	private byte[] contents;
+
+	FileWriteIntention(String path, byte[] contents) {
+	    this.path = path;
+	    this.contents = contents;
+	}
+
+	public void write() throws IOException {
+	    FileUtils.writeByteArrayToFile(new File(path), contents);
+	}
+    }
 
     private static final String PATH_SEPARATOR = "/";
 
@@ -32,27 +58,32 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     public String store(String uniqueIdentification, byte[] content) {
 
 	final String fullPath = getFullPath(uniqueIdentification);
-	try {
 
-	    if (content == null) {
-		new LocalFileToDelete(fullPath + uniqueIdentification);
+	if (content == null) {
+	    new LocalFileToDelete(fullPath + uniqueIdentification);
+	} else {
+	    File directory = new File(fullPath);
+	    if (!directory.exists()) {
+		directory.mkdirs();
 	    } else {
-		File directory = new File(fullPath);
-		if (!directory.exists()) {
-		    directory.mkdirs();
-		} else {
-		    if (!directory.isDirectory()) {
-			throw new RuntimeException("Trying to create " + fullPath
-				+ " as a directory but, it already exists and it's not a directory");
-		    }
+		if (!directory.isDirectory()) {
+		    throw new RuntimeException("Trying to create " + fullPath
+			    + " as a directory but, it already exists and it's not a directory");
 		}
-		FileUtils.writeByteArrayToFile(new File(fullPath + uniqueIdentification), content);
 	    }
-	    return uniqueIdentification;
 
-	} catch (IOException e) {
-	    throw new RuntimeException("error.store.file", e);
+	    Map<String, FileWriteIntention> map = getPerTxBox().get();
+	    if (map == null) {
+		map = new HashMap<String, FileWriteIntention>();
+		fileIntentions.put(map);
+	    }
+	    if (map.containsKey(uniqueIdentification)) {
+		map.remove(uniqueIdentification);
+	    }
+	    map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, content));
 	}
+	return uniqueIdentification;
+
     }
 
     private String getFullPath(final String uniqueIdentification) {
@@ -100,10 +131,48 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     @Override
     public byte[] read(String uniqueIdentification) {
 	try {
+	    Map<String, FileWriteIntention> map = getPerTxBox().get();
+	    if (map != null && map.containsKey(uniqueIdentification)) {
+		return map.get(uniqueIdentification).contents;
+	    }
+
 	    return FileUtils.readFileToByteArray(new File(getFullPath(uniqueIdentification) + uniqueIdentification));
 	} catch (IOException e) {
 	    throw new RuntimeException("error.store.file", e);
 	}
+    }
+
+    @Override
+    public InputStream readAsInputStream(String uniqueIdentification) {
+	try {
+	    Map<String, FileWriteIntention> map = getPerTxBox().get();
+	    if (map != null && map.containsKey(uniqueIdentification)) {
+		return new ByteArrayInputStream(map.get(uniqueIdentification).contents);
+	    }
+
+	    return new FileInputStream(new File(getFullPath(uniqueIdentification) + uniqueIdentification));
+	} catch (FileNotFoundException e) {
+	    e.printStackTrace();
+	    throw new RuntimeException("file.not.found", e);
+	}
+    }
+
+    private synchronized PerTxBox<Map<String, FileWriteIntention>> getPerTxBox() {
+	if (fileIntentions == null) {
+	    fileIntentions = new PerTxBox<Map<String, FileWriteIntention>>(null) {
+		@Override
+		public void commit(Map<String, FileWriteIntention> map) {
+		    for (String key : map.keySet()) {
+			try {
+			    map.get(key).write();
+			} catch (IOException e) {
+			    throw new RuntimeException("error.store.file", e);
+			}
+		    }
+		}
+	    };
+	}
+	return fileIntentions;
     }
 
     // @Override
