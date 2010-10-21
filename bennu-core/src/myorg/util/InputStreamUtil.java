@@ -25,13 +25,18 @@
 
 package myorg.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import pt.utl.ist.fenix.tools.util.FileUtils;
 
 public class InputStreamUtil {
+
+    public static final int DEFAULT_BUFFER_SIZE = 1024;
 
     public static byte[] consumeInputStream(final InputStream inputStream) {
 	byte[] result = null;
@@ -56,5 +61,23 @@ public class InputStreamUtil {
 	    }
 	}
 	return result;
+    }
+
+    public static int copyStream(InputStream source, OutputStream target) throws IOException {
+	return copyStream(source, target, DEFAULT_BUFFER_SIZE);
+    }
+
+    public static int copyStream(InputStream source, OutputStream target, int bufferSize) throws IOException {
+
+	int countBytesRead = -1;
+	int totalBytes = 0;
+	byte[] bufferCopy = new byte[bufferSize];
+	while ((countBytesRead = source.read(bufferCopy)) != -1) {
+	    target.write(bufferCopy, 0, countBytesRead);
+	    totalBytes += countBytesRead;
+	}
+
+	target.flush();
+	return totalBytes;
     }
 }

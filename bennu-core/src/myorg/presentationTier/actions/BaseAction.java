@@ -25,7 +25,6 @@
 
 package myorg.presentationTier.actions;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -54,7 +53,6 @@ import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
-import pt.utl.ist.fenix.tools.util.FileUtils;
 
 public abstract class BaseAction extends DispatchAction {
 
@@ -134,6 +132,24 @@ public abstract class BaseAction extends DispatchAction {
 	}
 	outputStream.flush();
 	outputStream.close();
+
+	return null;
+
+    }
+
+    protected ActionForward download(final HttpServletResponse response, final String filename, InputStream stream,
+	    final String contentType) throws IOException {
+	final OutputStream outputStream = response.getOutputStream();
+	try {
+	    response.setContentType(contentType);
+	    response.setHeader("Content-disposition", "attachment; filename=" + filename.replace(" ", "_"));
+	    int byteCount = InputStreamUtil.copyStream(stream, outputStream);
+	    response.setContentLength(byteCount);
+	    outputStream.flush();
+	} finally {
+	    outputStream.close();
+	    stream.close();
+	}
 	return null;
     }
 
