@@ -1,5 +1,7 @@
 package pt.ist.fenixframework.plugins.fileSupport.domain;
 
+import java.io.InputStream;
+
 /**
  * 
  * @author Shezad Anavarali Date: Jul 15, bb2009
@@ -17,6 +19,8 @@ abstract public class FileStorage extends FileStorage_Base {
 
     abstract public byte[] read(String uniqueIdentification);
 
+    abstract public InputStream readAsInputStream(String uniqueIdentification);
+
     // @Service
     public static DomainStorage createNewDomainStorage(final String name) {
 	return new DomainStorage(name);
@@ -28,8 +32,8 @@ abstract public class FileStorage extends FileStorage_Base {
     }
 
     // @Service
-    public static DBStorage createNewDatabaseStorage(String name, String host, Integer port, String dbName, String tableName, String username,
-	    String password) {
+    public static DBStorage createNewDatabaseStorage(String name, String host, Integer port, String dbName, String tableName,
+	    String username, String password) {
 	return new DBStorage(name, host, port, dbName, tableName, username, password);
     }
 

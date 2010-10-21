@@ -1,5 +1,6 @@
 package pt.ist.fenixframework.plugins.fileSupport.domain;
 
+import java.io.InputStream;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
@@ -59,6 +60,10 @@ abstract public class GenericFile extends GenericFile_Base {
 
     public byte[] getContent() {
 	return getStorage().read(getContentKey());
+    }
+
+    public InputStream getStream() {
+	return getStorage().readAsInputStream(getContentKey());
     }
 
     private void updateFileStorage() {
