@@ -52,6 +52,13 @@ valueType myorg.domain.util.ByteArray as ByteArray {
     }
 }
 
+valueType java.lang.Class as Class {
+	externalizeWith {
+		String getName();
+	}
+	internalizeWith myorg.domain.util.ClassInternalizer.internalize();
+}
+
 class MyOrg {
 }
 
