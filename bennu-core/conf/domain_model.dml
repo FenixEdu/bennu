@@ -112,6 +112,14 @@ class groups.PersistentGroup {
 	class groups.NegationGroup extends groups.PersistentGroup {
 	}
 
+class groups.PeopleUserLog {
+	DateTime operationDate;
+	String operation;
+	String username;
+	String groupName;
+	String executor;
+}
+
 class scheduler.Task {
 	String ojbConcreteClass;
 	DateTime lastRun;
@@ -332,6 +340,13 @@ relation TaskTaskLog {
 relation MyOrgCustomTaskLog {
 	MyOrg playsRole myOrg;
 	scheduler.CustomTaskLog playsRole customTaskLog {
+		multiplicity *;
+	}
+}
+
+relation MyOrgPeopleUserLog {
+	MyOrg playsRole myOrg;
+	groups.PeopleUserLog playsRole peopleUserLog {
 		multiplicity *;
 	}
 }

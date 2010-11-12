@@ -30,10 +30,12 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import myorg.domain.User;
 import myorg.domain.VirtualHost;
 import myorg.domain.VirtualHostBean;
 import myorg.domain.contents.INode;
 import myorg.domain.contents.Node;
+import myorg.domain.groups.People;
 import myorg.domain.groups.PersistentGroup;
 import myorg.domain.util.ByteArray;
 import myorg.presentationTier.Context;
@@ -119,8 +121,12 @@ public class ConfigurationAction extends ContextBaseAction {
 
     public ActionForward viewPersistentGroup(final ActionMapping mapping, final ActionForm form,
 	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-	final Context context = getContext(request);
 	final PersistentGroup persistentGroup = getDomainObject(request, "persistentGroupId");
+	return viewPersistentGroup(request, persistentGroup);
+    }
+
+    private ActionForward viewPersistentGroup(final HttpServletRequest request, final PersistentGroup persistentGroup) {
+	final Context context = getContext(request);
 	request.setAttribute("persistentGroup", persistentGroup);
 	return context.forward("/myorg/viewPersistentGroup.jsp");
     }
@@ -184,4 +190,13 @@ public class ConfigurationAction extends ContextBaseAction {
 	    final HttpServletResponse response) {
 	return getContext(request).forward("/myorg/systemInfo.jsp");
     }
+
+    public ActionForward removeUser(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final People people = getDomainObject(request, "persistentGroupId");
+	final User user = getDomainObject(request, "userId");
+	people.removeMember(user);
+	return viewPersistentGroup(request, people);
+    }
+
 }

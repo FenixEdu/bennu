@@ -62,4 +62,11 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 	return null;
     }
 
+    public void delete() {
+	removeGroupOwner();
+	removeSystemGroupMyOrg();
+	removeMyOrg();
+	deleteDomainObject();
+    }
+
 }

@@ -26,12 +26,16 @@
 package myorg.domain.groups;
 
 import myorg.domain.MyOrg;
+import myorg.domain.exceptions.DomainException;
 import pt.ist.fenixWebFramework.services.Service;
 
 public class Role extends Role_Base {
 
     public Role(IRoleEnum roleType) {
 	super();
+	if (find(roleType) != null) {
+	    throw new DomainException("role.already.exists", roleType.getRepresentation());
+	}
 	setGroupName(roleType.getRepresentation());
 	setSystemGroupMyOrg(MyOrg.getInstance());
     }
@@ -46,7 +50,7 @@ public class Role extends Role_Base {
 	for (final PersistentGroup group : MyOrg.getInstance().getSystemGroupsSet()) {
 	    if (group instanceof Role) {
 		final Role role = (myorg.domain.groups.Role) group;
-		if (role.getGroupName().equals(roleType.getRepresentation())) {
+		if (role.isRole(roleType)) {
 		    return role;
 		}
 	    }
