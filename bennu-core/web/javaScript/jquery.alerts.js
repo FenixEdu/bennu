@@ -87,7 +87,7 @@
 				margin: 0
 			});
 			
-			$("#popup_title").text(title);
+			$("#popup_title").html(title);
 			$("#popup_content").addClass(type);
 			$("#popup_message").text(msg);
 			$("#popup_message").html( $("#popup_message").text().replace(/\n/g, '<br />') );
