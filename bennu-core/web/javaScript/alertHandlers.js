@@ -20,7 +20,13 @@
         });
 } 
  
+function linkConfirmationHookForm(formId, messageKey, titleKey) {
+	 var submitButton = $("#" + formId + " :submit");
+	    
+	    submitButton.attr('onclick','jConfirm('+messageKey+', '+titleKey+',function(userInput) { if (userInput) {$(#'+formId+').submit(); } return false; });return false; ');
+	    $("<div class=\"dinline forminline\"><form id='" +  formId + "form' action='" + 'teste' + "' method=\"post\"'></form></div>").insertBefore("#" + formId);    
 
+}
 function linkConfirmationHook(linkId, messageKey, titleKey) {
   var href = $("#" + linkId ).attr('href');
   $("#" + linkId).click(function() {
