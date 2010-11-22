@@ -28,3 +28,9 @@ manager.usernames=manager
 plugins=
 
 pre.init.classnames=
+
+### Some example values
+#plugins=pt.ist.fenixframework.plugins.FileSupportPlugin,pt.ist.fenixframework.plugins.remote.RemotePlugin
+
+#pre.init.classnames=module.organizationIst.ModuleInitializer
+
