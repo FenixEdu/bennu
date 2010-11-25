@@ -31,8 +31,8 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import myorg.domain.MyOrg;
 import myorg.domain.RoleType;
@@ -62,8 +62,10 @@ public class Authenticate implements Serializable {
 
     public static synchronized void initRole(final RoleType roleType, final String usernameStrings) {
 	final Set<String> usernames = getUsernames(roleType);
-	for (final String username : usernameStrings.split(",")) {
-	    usernames.add(username.trim());
+	if (usernameStrings != null && !usernameStrings.isEmpty()) {
+	    for (final String username : usernameStrings.split(",")) {
+		usernames.add(username.trim());
+	    }
 	}
     }
 
