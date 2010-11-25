@@ -63,10 +63,12 @@ public class StartupServlet extends HttpServlet {
 	if (preInitClassnames != null) {
 	    final String[] classnames = preInitClassnames.split(",");
 	    for (final String classname : classnames) {
-		try {
-		    Class.forName(classname.trim());
-		} catch (final ClassNotFoundException e) {
-		    throw new Error(e);
+		if (classname != null && !classname.isEmpty()) {
+		    try {
+			Class.forName(classname.trim());
+		    } catch (final ClassNotFoundException e) {
+			throw new Error(e);
+		    }
 		}
 	    }
 	}
