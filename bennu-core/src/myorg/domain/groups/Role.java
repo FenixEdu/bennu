@@ -64,7 +64,7 @@ public class Role extends Role_Base {
     }
 
     public boolean isRole(IRoleEnum roleType) {
-	return getGroupName().equals(roleType.getRepresentation());
+	return roleType != null && getGroupName().equals(roleType.getRepresentation());
     }
 
 }
