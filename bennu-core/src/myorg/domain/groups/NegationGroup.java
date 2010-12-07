@@ -21,7 +21,7 @@ public class NegationGroup extends NegationGroup_Base {
 
     @Override
     public String getName() {
-	return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.negationGroup.name");
+	return ("NOT " + getPersistentGroup().getName());
     }
 
     @Override
