@@ -27,6 +27,7 @@ package myorg.domain;
 
 import java.util.Comparator;
 
+import myorg.domain.groups.IRoleEnum;
 import myorg.domain.groups.People;
 import myorg.domain.groups.Role;
 
@@ -126,7 +127,7 @@ public class User extends User_Base {
     }
 
     @Service
-    public void addRoleType(final RoleType roleType) {
+    public void addRoleType(final IRoleEnum roleType) {
 	final Role role = Role.getRole(roleType);
 	addPeopleGroups(role);
     }
@@ -144,6 +145,11 @@ public class User extends User_Base {
     public String getShortPresentationName() {
 	return strategy.shortPresent(this);
     }
+
+	@Override
+	public String toString() {
+		return getUsername();
+	}
 
     public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
 	if (strategy != defaultStrategy) {
