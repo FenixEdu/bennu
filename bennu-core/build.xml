@@ -82,4 +82,18 @@
 	<target name="seed" depends="generate-module-targets" description="Generates a new module skeleton in the first modules directory found">
 		<ant antfile="build_modules.xml" target="seed" />
 	</target>
+
+	<target name="xxx" description="XXX">
+		<condition property="xxx">
+			<and>
+				<contains string="abc" substring="bc"/>
+			</and>
+		</condition>
+		<antcall target="zzTop"></antcall>
+	</target>
+
+	<target name="zzTop" unless="xxx" description="subtask">
+		<echo>Hello World</echo>
+	</target>
+
 </project>
