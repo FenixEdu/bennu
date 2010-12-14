@@ -577,6 +577,15 @@
         Label key to use
       </description>
     </attribute>
+
+    <attribute>
+      <name>arg0</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Label argument0 to use for key
+      </description>
+    </attribute>
     
       <attribute>
       <name>layout</name>

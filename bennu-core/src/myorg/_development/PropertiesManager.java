@@ -114,7 +114,6 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 		defaultLanguage = getProperty("language");
 		defaultLocation = getProperty("location");
 		defaultVariant = getProperty("variant");
-		updateDataRepositoryStructure = true;
 		updateRepositoryStructureIfNeeded = true;
 		casConfigByHost = Collections.unmodifiableMap(casConfigMap);
 		rootClass = MyOrg.class;
