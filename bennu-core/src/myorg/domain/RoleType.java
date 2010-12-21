@@ -37,12 +37,18 @@ public enum RoleType implements IRoleEnum {
 		+ name());
     }
 
-    public String getRepresentation() {
-	return getClass().getName() + "." + name();
-    }
-
     public String getName() {
 	return name();
+    }
+
+    @Override
+    public String getRoleName() {
+	return this.getName();
+    }
+
+    @Override
+    public String getLocalizedName() {
+	return this.getPresentationName();
     }
 
 }

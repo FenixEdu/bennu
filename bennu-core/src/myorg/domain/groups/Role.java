@@ -31,12 +31,15 @@ import pt.ist.fenixWebFramework.services.Service;
 
 public class Role extends Role_Base {
 
+    private transient IRoleEnum roleType;
+
     public Role(IRoleEnum roleType) {
 	super();
+	this.roleType = roleType;
 	if (find(roleType) != null) {
-	    throw new DomainException("role.already.exists", roleType.getRepresentation());
+	    throw new DomainException("role.already.exists", getRepresentationName(roleType));
 	}
-	setGroupName(roleType.getRepresentation());
+	setGroupName(getRepresentationName(roleType));
 	setSystemGroupMyOrg(MyOrg.getInstance());
     }
 
@@ -58,6 +61,7 @@ public class Role extends Role_Base {
 	return null;
     }
 
+
     public static Role getRole(final IRoleEnum roleType) {
 	final Role role = find(roleType);
 	return role == null ? createRole(roleType) : role;
@@ -65,7 +69,32 @@ public class Role extends Role_Base {
 
     public boolean isRole(IRoleEnum roleType) {
 	final String groupName = getGroupName();
-	return roleType != null && groupName != null && groupName.equals(roleType.getRepresentation());
+	return roleType != null && groupName != null && groupName.equals(getRepresentationName(roleType));
+    }
+
+    private String getRepresentationName(IRoleEnum roleType) {
+	return roleType.getClass().getName() + "." + roleType.getRoleName();
+    }
+
+    @Override
+    public String getName() {
+	if (this.roleType == null) {
+	    try {
+		String groupName = this.getGroupName();
+		final int lastDot = groupName.lastIndexOf('.');
+		final String className = groupName.substring(0, lastDot);
+		final String enumName = groupName.substring(lastDot + 1);
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		Class<Enum> enumClass = (Class<Enum>) Class.forName(className);
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		final Enum valueOf = Enum.valueOf(enumClass, enumName);
+		this.roleType = (IRoleEnum) valueOf;
+	    } catch (ClassNotFoundException e) {
+		throw new Error(e);
+	    }
+	}
+
+	return roleType.getLocalizedName();
     }
 
 }

@@ -24,9 +24,11 @@
  */
 package myorg.domain.groups;
 
+import pt.ist.fenixWebFramework.rendererExtensions.util.IPresentableEnum;
 
-public interface IRoleEnum {
 
-    public String getRepresentation();
-    
+public interface IRoleEnum extends IPresentableEnum {
+
+    public String getRoleName();
+
 }
