@@ -27,16 +27,14 @@ package myorg.domain.scheduler;
 
 import java.util.ArrayList;
 
-import jvstm.TransactionalCommand;
-import pt.ist.fenixframework.pstm.Transaction;
-
-public class SchedulerConsumerThread extends Thread implements TransactionalCommand {
+public class SchedulerConsumerThread extends TransactionalThread {
 
     public class TaskRepeatQueue extends ArrayList<Task> {
 	private static final long serialVersionUID = 1L;
 
 	public void offer(Task task) {
-	    add(0, task);
+	    //add(0, task);
+	    add(task);
 	}
 
 	public Task poll() {
@@ -50,13 +48,7 @@ public class SchedulerConsumerThread extends Thread implements TransactionalComm
     private final TaskRepeatQueue tasksToRepeat = new TaskRepeatQueue();
 
     @Override
-    public void run() {
-	super.run();
-	Transaction.withTransaction(false, this);
-    }
-
-    @Override
-    public void doIt() {
+    public void transactionalRun() {
 	final PendingExecutionTaskQueue pendingTasksQueue = PendingExecutionTaskQueue.getPendingExecutionTaskQueue();
 	while (!pendingTasksQueue.isEmpty()) {
 	    Task task = pendingTasksQueue.poll();
@@ -77,7 +69,7 @@ public class SchedulerConsumerThread extends Thread implements TransactionalComm
 	    try {
 		taskExecutor.join();
 		successful = taskExecutor.isSuccessful();
-	    } catch (InterruptedException e) {
+	    } catch (final InterruptedException e) {
 	    }
 	} finally {
 	    logTaskEnd(task, successful);

@@ -25,50 +25,24 @@
 
 package myorg.domain.scheduler;
 
-import jvstm.TransactionalCommand;
 import myorg.domain.MyOrg;
 
-import org.joda.time.DateTime;
-
-import pt.ist.fenixframework.pstm.Transaction;
-
-public class SchedulerProducerThread extends Thread implements TransactionalCommand {
-
-    private DateTime startTime;
-
-    public void setStartTime(DateTime startTime) {
-	this.startTime = startTime;
-    }
-
-    public DateTime getStartTime() {
-	return startTime;
-    }
+public class SchedulerProducerThread extends TransactionalThread {
 
     @Override
-    public void start() {
-	setStartTime(new DateTime());
-	super.start();
-    }
-
-    @Override
-    public void run() {
-	super.run();
-	Transaction.withTransaction(false, this);
-    }
-
-    @Override
-    public void doIt() {
-	PendingExecutionTaskQueue queue = PendingExecutionTaskQueue.getPendingExecutionTaskQueue();
+    public void transactionalRun() {
+	final PendingExecutionTaskQueue queue = PendingExecutionTaskQueue.getPendingExecutionTaskQueue();
 	for (final Task task : MyOrg.getInstance().getTasksSet()) {
 	    if (queue.contains(task)) {
 		continue;
 	    }
 	    for (final TaskConfiguration taskConfiguration : task.getTaskConfigurationsSet()) {
-		if (taskConfiguration.shouldRunNow(getStartTime())) {
+		if (taskConfiguration.shouldRunNow()) {
 		    queue.offer(task);
 		    break;
 		}
 	    }
 	}
     }
+
 }

@@ -10,17 +10,14 @@ import myorg.domain.MyOrg;
 
 public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base implements Queue<Task> {
 
-    public PendingExecutionTaskQueue() {
+    protected PendingExecutionTaskQueue() {
 	super();
 	setMyOrg(MyOrg.getInstance());
     }
 
     public static PendingExecutionTaskQueue getPendingExecutionTaskQueue() {
-	PendingExecutionTaskQueue queue = MyOrg.getInstance().getPendingExecutionTaskQueue();
-	if (queue == null) {
-	    queue = new PendingExecutionTaskQueue();
-	}
-	return queue;
+	final PendingExecutionTaskQueue queue = MyOrg.getInstance().getPendingExecutionTaskQueue();
+	return queue == null ? new PendingExecutionTaskQueue() : queue;
     }
 
     public static List<Task> getPendingExecutionTasks() {
@@ -51,10 +48,7 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
 
     @Override
     public Task peek() {
-	if (isEmpty()) {
-	    return null;
-	}
-	return getHead();
+	return isEmpty() ? null : getHead();
     }
 
     @Override
@@ -72,9 +66,7 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
 	if (isEmpty()) {
 	    throw new NoSuchElementException();
 	}
-	Task task = getHead();
-	removeHead();
-	return task;
+	return poll();
     }
 
     @Override
@@ -88,14 +80,14 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
     }
 
     @Override
-    public boolean add(Task task) {
+    public boolean add(final Task task) {
 	offer(task);
 	return true;
     }
 
     @Override
-    public boolean addAll(Collection<? extends Task> c) {
-	for (Task task : c) {
+    public boolean addAll(final Collection<? extends Task> c) {
+	for (final Task task : c) {
 	    offer(task);
 	}
 	return true;
@@ -107,12 +99,12 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
     }
 
     @Override
-    public boolean contains(Object o) {
+    public boolean contains(final Object o) {
 	return getTasks().contains(o);
     }
 
     @Override
-    public boolean containsAll(Collection<?> c) {
+    public boolean containsAll(final Collection<?> c) {
 	return getTasks().containsAll(c);
     }
 
@@ -122,17 +114,17 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(final Object o) {
 	return getTasks().remove(o);
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(final Collection<?> c) {
 	return getTasks().removeAll(c);
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
+    public boolean retainAll(final Collection<?> c) {
 	return getTasks().retainAll(c);
     }
 
@@ -142,7 +134,7 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
     }
 
     @Override
-    public <T> T[] toArray(T[] a) {
+    public <T> T[] toArray(final T[] a) {
 	return getTasks().toArray(a);
     }
 

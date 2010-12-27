@@ -43,13 +43,13 @@ public class Scheduler extends TimerTask {
 	try {
 	    Task.initTasks();
 	    new Scheduler();
-	} catch (ClassNotFoundException e) {
+	} catch (final ClassNotFoundException e) {
 	    e.printStackTrace();
 	    throw new Error(e);
-	} catch (InstantiationException e) {
+	} catch (final InstantiationException e) {
 	    e.printStackTrace();
 	    throw new Error(e);
-	} catch (IllegalAccessException e) {
+	} catch (final IllegalAccessException e) {
 	    e.printStackTrace();
 	    throw new Error(e);
 	}
@@ -99,7 +99,7 @@ public class Scheduler extends TimerTask {
 		    if (statement2 != null) {
 			try {
 			    statement2.close();
-			} catch (SQLException e) {
+			} catch (final SQLException e) {
 			    e.printStackTrace();
 			}
 		    }
@@ -131,7 +131,8 @@ public class Scheduler extends TimerTask {
 	    final SchedulerConsumerThread schedulerConsumerThread = new SchedulerConsumerThread();
 	    schedulerConsumerThread.start();
 	    schedulerConsumerThread.join();
-	} catch (InterruptedException e) {
+	} catch (final InterruptedException e) {
+	    e.printStackTrace();
 	    throw new Error(e);
 	}
     }

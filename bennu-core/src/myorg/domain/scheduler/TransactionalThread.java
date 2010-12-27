@@ -1,5 +1,5 @@
 /*
- * @(#)TaskExecutor.java
+ * @(#)SchedulerThread.java
  *
  * Copyright 2009 Instituto Superior Tecnico
  * Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
@@ -25,29 +25,46 @@
 
 package myorg.domain.scheduler;
 
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.utl.ist.fenix.tools.util.i18n.Language;
+import jvstm.TransactionalCommand;
+import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.pstm.Transaction;
 
-public class TaskExecutor extends TransactionalThread {
+public abstract class TransactionalThread extends Thread {
 
-    private final String taskId;
+    private final boolean readOnly;
 
-    private boolean successful = false;
-
-    public boolean isSuccessful() {
-	return successful;
+    public TransactionalThread(final boolean readOnly) {
+	this.readOnly = readOnly;
     }
 
-    public TaskExecutor(final Task task) {
-	taskId = task.getExternalId();
+    public TransactionalThread() {
+	this(false);
     }
 
     @Override
-    public void transactionalRun() {
-	Language.setLocale(Language.getDefaultLocale());
-	final Task task = AbstractDomainObject.fromExternalId(taskId);
-	task.executeTask();
-	successful = true;
+    public void run() {
+	try {
+	    Transaction.withTransaction(true, new TransactionalCommand() {
+		@Override
+		public void doIt() {
+		    if (readOnly) {
+			transactionalRun();
+		    } else {
+			callService();
+		    }
+		}
+
+	    });
+	} finally {
+	    Transaction.forceFinish();
+	}
+    }
+
+    public abstract void transactionalRun();
+
+    @Service
+    private void callService() {
+	transactionalRun();
     }
 
 }

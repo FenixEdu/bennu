@@ -34,7 +34,11 @@ public abstract class TransactionalCustomTask extends CustomTask implements Tran
 
     @Override
     public void run() {
-	Transaction.withTransaction(readOnly(), this);
+	try {
+	    Transaction.withTransaction(readOnly(), this);
+	} finally {
+	    Transaction.forceFinish();
+	}
     }
 
 }
