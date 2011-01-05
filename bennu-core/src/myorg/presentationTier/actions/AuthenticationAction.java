@@ -31,14 +31,16 @@ import javax.servlet.http.HttpSession;
 
 import myorg.applicationTier.Authenticate;
 import myorg.applicationTier.Authenticate.UserView;
+import myorg.applicationTier.AuthenticationListner;
+import myorg.domain.scheduler.TransactionalThread;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 
-import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.Config.CasConfig;
+import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.filters.SetUserViewFilter;
 import pt.ist.fenixWebFramework.struts.annotations.Forward;
 import pt.ist.fenixWebFramework.struts.annotations.Forwards;
@@ -53,6 +55,9 @@ public class AuthenticationAction extends ContextBaseAction {
 	final HttpSession httpSession = request.getSession();
 	httpSession.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, user);
 
+	for (final AuthenticationListner authenticationListner : AuthenticationListner.LOGIN_LISTNERS) {
+	    callLoginListner(user, authenticationListner);
+	}
     }
 
     public static void logout(final HttpServletRequest request) {
@@ -95,6 +100,18 @@ public class AuthenticationAction extends ContextBaseAction {
 	logout(request);
 	response.getOutputStream().close();
 	return null;
+    }
+
+    private static void callLoginListner(final UserView userView, final AuthenticationListner authenticationListner) {
+	final TransactionalThread thread = new TransactionalThread() {
+	    
+	    @Override
+	    public void transactionalRun() {
+		authenticationListner.afterLogin(userView);
+	    }
+
+	};
+	thread.start();
     }
 
 }
