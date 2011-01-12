@@ -33,9 +33,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jvstm.cps.ConsistencyException;
 import myorg.domain.MyOrg;
 import myorg.domain.VirtualHost;
 import myorg.domain.contents.Node;
+import myorg.util.BundleUtil;
 import myorg.util.InputStreamUtil;
 
 import org.apache.struts.action.ActionForm;
@@ -219,6 +221,18 @@ public abstract class BaseAction extends DispatchAction {
 	final char seperator = url.indexOf('?') >= 0 ? '&' : '?';
 	final String urlWithChecksum = url + seperator + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + '=' + digest;
 	return new ActionForward(urlWithChecksum, true);
+    }
+
+    protected void displayConsistencyException(Error error, HttpServletRequest request) {
+	if (!(error.getCause() instanceof ConsistencyException)) {
+	    throw error;
+	}
+	if (error.getCause().getLocalizedMessage() != null) {
+	    addLocalizedMessage(request, error.getCause().getLocalizedMessage());
+	} else {
+	    addLocalizedMessage(request,
+		    BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "error.ConsistencyException"));
+	}
     }
 
 }
