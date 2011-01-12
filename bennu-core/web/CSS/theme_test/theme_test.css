@@ -1558,6 +1558,7 @@ span.invalid { color: #a00; font-weight: bold; }
 .width215px { width: 215px !important; }
 .width190px { width: 190px !important; }
 .width100pc { width: 100%; }
+.width300px { width: 300px !important; }
 
 .inputsize40 input { width: 257px; }
 .inputsize200px input { width: 200px; }
@@ -1649,6 +1650,12 @@ table.width33 td 	{ width: 33%; } /* <<< mudar para tdwidth33pc */
 
 table.th-width-min th { width: 1px; white-space: nowrap; }
 table.th-width-120 th { width: 120px; }
+
+
+table.tgluetop tr td, table.tgluetop tr th { 
+border-top: none; 
+}
+
 
 /*----------------------------------------
       Accessibility and Javascritt
