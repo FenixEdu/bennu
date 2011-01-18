@@ -230,6 +230,7 @@ public abstract class BaseAction extends DispatchAction {
 	if (error.getCause().getLocalizedMessage() != null) {
 	    addLocalizedMessage(request, error.getCause().getLocalizedMessage());
 	} else {
+	    error.getCause().printStackTrace();
 	    addLocalizedMessage(request,
 		    BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "error.ConsistencyException"));
 	}
