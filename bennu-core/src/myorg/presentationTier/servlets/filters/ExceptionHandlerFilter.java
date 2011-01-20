@@ -79,6 +79,7 @@ public class ExceptionHandlerFilter implements Filter {
 		    customeHandler.handle(httpServletRequest, response);
 		    return;
 		}
+		printTraceInformation(t);
 	    }
 	    request.setAttribute("exceptionInfo", ExceptionInformation
 		    .buildUncaughtExceptionInfo((HttpServletRequest) request, t));
