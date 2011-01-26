@@ -31,6 +31,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import myorg.presentationTier.servlets.filters.requestWrappers.ResponseWrapper;
@@ -41,9 +42,17 @@ public class MyOrgRequestWrapperFilter extends RequestWrapperFilter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	    ServletException {
-	ResponseWrapper responseWrapper = new ResponseWrapper((HttpServletResponse) response);
-	super.doFilter(request, responseWrapper, chain);
-	responseWrapper.writeRealResponse();
+	final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+	if (httpServletRequest.getRequestURI().contains("vaadin")
+		|| httpServletRequest.getRequestURI().contains("VAADIN")
+		// && httpServletRequest.getHeader("Content-Type").equals("multipart/form-data")
+	) {
+	    chain.doFilter(request, response);
+	} else {
+	    final ResponseWrapper responseWrapper = new ResponseWrapper((HttpServletResponse) response);
+	    super.doFilter(request, responseWrapper, chain);
+	    responseWrapper.writeRealResponse();
+	}
     }
 
 }
