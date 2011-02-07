@@ -1202,7 +1202,7 @@ div.highlightBox {
 border: 1px solid #f0ce6f;
 padding: 5px 10px;
 background: #fbf2cf;
-margin: 0.5em 0;
+margin: 1em 0;
 }
 
 
@@ -1303,6 +1303,22 @@ table.tstyle4 td {
 border-color: #ddd;
 }
 
+
+table.tstyle5 th {
+border-top: 1px solid #ddd;
+border-bottom: 1px solid #ddd;
+padding: 0.5em 0.5em;
+text-align: center;
+}
+table.tstyle5 td {
+border-top: 1px solid #ddd;
+border-bottom: 1px solid #ddd;
+padding: 0.5em 0.5em;
+text-align: left;
+}
+
+
+
 /* table text align */
 
 table.taleft th, table.taleft td { text-align: left !important; }
@@ -1320,22 +1336,30 @@ padding-left: 0;
 }
 
 /* structural */
-table.structural {
+table.structural, table.structural-vertical {
 border-collapse: collapse;
 margin: 0;
 padding: 0;
 margin: 1em 0;
 }
-table.structural th {
+table.structural th, table.structural-vertical th {
+padding: 0;
 border: none !important;
 }
-table.structural td {
+table.structural td, table.structural-vertical td {
 border: none !important;;
-margin: 0;
 padding: 0;
 vertical-align: top;
 }
 
+table.structural-vertical th {
+padding: 3px 10px 3px 0;
+vertical-align: top;
+}
+table.structural-vertical td {
+padding: 3px;
+vertical-align: top;
+}
 
 /*---------------------------------------
        Forms
@@ -1516,7 +1540,7 @@ C O M M O N S
 .mtop075 { margin-top: 0.75em !important; }
 .mtop1 { margin-top: 1em !important; }
 .mtop15 { margin-top: 1.5em !important; }
-.mtop2 { margin-top: 1em !important; }
+.mtop2 { margin-top: 2em !important; }
 
 .mbottom025 { margin-bottom: 0.25em !important; }
 .mbottom05 { margin-bottom: 0.5em !important; }
@@ -1528,7 +1552,8 @@ C O M M O N S
 .mvert025 { margin-top: 0.25em !important; margin-bottom: 0.25em !important; }
 .mvert05 { margin-top: 0.5em !important; margin-bottom: 0.5em !important; }
 .mvert075 { margin-top: 0.75em !important; margin-bottom: 0.75em !important; }
-
+.mvert1 { margin-top: 1em !important; margin-bottom: 1em !important; }
+.mvert15 { margin-top: 1.5em !important; margin-bottom: 1.5em !important; }
 
 .aleft, .aleft * { text-align: left !important; }
 .aright, .aright * { text-align: right !important; }
@@ -1618,16 +1643,17 @@ text-align: right;
 
 table.thwidth150px th	{ width: 150px; }
 table.thnone th			{ display: none; }
-table.thmiddle th			{ vertical-align: middle; }
+table.thtop th			{ vertical-align: top; }
+table.thmiddle th		{ vertical-align: middle; }
 table.thleft th			{ text-align: left; }
-table.thcenter th			{ text-align: center; }
-table.thnowrap th			{ white-space: nowrap; }
+table.thcenter th		{ text-align: center; }
+table.thnowrap th		{ white-space: nowrap; }
 .thnoborder th 			{ border-left: none !important; border-right: none !important; }
-.thleft th 					{ text-align: left !important; }
+.thleft th 				{ text-align: left !important; }
 
 .tdleft td 			{ text-align: left !important; }
 .tdbold td			{ font-weight: bold; }
-.tdmiddle td		{ vertical-align: middle; }
+.tdtop td			{ vertical-align: top !important; }
 .tdmiddle td		{ vertical-align: middle !important; }
 .tdnoborder td		{ border-left: none !important; border-right: none !important; }
 
@@ -1764,7 +1790,9 @@ margin-left: 0.4em;
 div.activities ul#other-activities {
 margin: 0 10px;
 }
-
+div.activities p {
+margin: 10px 5px 5px 10px !important;
+}
 
 h2 span.processNumber {
 font-weight: normal;
@@ -1997,7 +2025,7 @@ padding: 5px 15px 0 0;
 
 /* MISC - TO ORGANIZE*/
 
-/* p‡gina do processo, estados referente ˆs unidades pagadoras */
+/* pï¿½gina do processo, estados referente ï¿½s unidades pagadoras */
 
 span.off {
 padding: 1px;
