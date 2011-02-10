@@ -157,4 +157,10 @@ public class User extends User_Base {
 	}
 	strategy = newStrategy;
     }
+
+    public void delete() {
+	removeMyOrg();
+	deleteDomainObject();
+    }
+
 }
