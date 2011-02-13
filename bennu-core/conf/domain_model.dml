@@ -84,6 +84,9 @@ class groups.PersistentGroup {
 	String ojbConcreteClass;
 }
 
+	class groups.EmptyGroup extends groups.PersistentGroup {
+	}
+
 	class groups.AnonymousGroup extends groups.PersistentGroup {
 	}
 
