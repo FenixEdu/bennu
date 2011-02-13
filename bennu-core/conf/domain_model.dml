@@ -93,6 +93,9 @@ class groups.PersistentGroup {
 	class groups.UserGroup extends groups.PersistentGroup {
 	}
 
+	class groups.SingleUserGroup extends groups.PersistentGroup {
+	}
+
 	class groups.People extends groups.PersistentGroup {
 	}
 
@@ -105,10 +108,10 @@ class groups.PersistentGroup {
 
 	class groups.UnionGroup extends groups.PersistentGroup {
 	}
-	
+
 	class groups.IntersectionGroup extends groups.PersistentGroup {
 	}
-	
+
 	class groups.NegationGroup extends groups.PersistentGroup {
 	}
 
@@ -351,3 +354,7 @@ relation MyOrgPeopleUserLog {
 	}
 }
 
+relation UserSingleUserGroup {
+	groups.SingleUserGroup playsRole singleUserGroup;
+	User playsRole user;
+}
