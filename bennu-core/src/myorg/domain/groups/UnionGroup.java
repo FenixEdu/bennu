@@ -28,7 +28,6 @@ package myorg.domain.groups;
 import java.util.HashSet;
 import java.util.Set;
 
-import module.organization.domain.Unit;
 import myorg.domain.User;
 import myorg.util.BundleUtil;
 import pt.ist.fenixWebFramework.services.Service;
