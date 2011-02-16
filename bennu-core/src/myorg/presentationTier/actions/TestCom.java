@@ -5,11 +5,14 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import myorg.applicationTier.Authenticate.UserView;
 import myorg.communication.RemoteCallProcessor;
 import myorg.communication.transport.PrimiviteWithEnumConverter;
 import myorg.communication.transport.RemoteCallReply;
 import myorg.communication.transport.RemoteCallRequest;
 import myorg.communication.transport.converters.Type;
+import myorg.domain.RoleType;
+import myorg.domain.User;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -19,6 +22,16 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
 @Mapping(path = "/testCom")
 public class TestCom extends BaseAction {
+
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+	final User user = UserView.getCurrentUser();
+	if (user == null || !user.hasRoleType(RoleType.MANAGER)) {
+	    throw new Error("unauthorized.access");
+	}
+        return super.execute(mapping, form, request, response);
+    }
 
     private static PrimiviteWithEnumConverter enumConverter = new PrimiviteWithEnumConverter();
 

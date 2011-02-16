@@ -33,6 +33,9 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import myorg.applicationTier.Authenticate.UserView;
+import myorg.domain.RoleType;
+import myorg.domain.User;
 import myorg.domain.scheduler.ClassBean;
 import myorg.domain.scheduler.CustomTaskLog;
 import myorg.domain.scheduler.PendingExecutionTaskQueue;
@@ -53,6 +56,16 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
 @Mapping(path = "/scheduler")
 public class SchedulerAction extends ContextBaseAction {
+
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+	final User user = UserView.getCurrentUser();
+	if (user == null || !user.hasRoleType(RoleType.MANAGER)) {
+	    throw new Error("unauthorized.access");
+	}
+        return super.execute(mapping, form, request, response);
+    }
 
     public final String SCHEDULER_URL = "/scheduler.do?method=viewScheduler";
     public final String TASK_URL = "/scheduler.do?method=viewTask";

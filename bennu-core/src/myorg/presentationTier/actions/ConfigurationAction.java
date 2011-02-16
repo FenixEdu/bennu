@@ -30,6 +30,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import myorg.applicationTier.Authenticate.UserView;
+import myorg.domain.RoleType;
 import myorg.domain.User;
 import myorg.domain.VirtualHost;
 import myorg.domain.VirtualHostBean;
@@ -50,6 +52,16 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
 @Mapping(path = "/configuration")
 public class ConfigurationAction extends ContextBaseAction {
+
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+	final User user = UserView.getCurrentUser();
+	if (user == null || !user.hasRoleType(RoleType.MANAGER)) {
+	    throw new Error("unauthorized.access");
+	}
+        return super.execute(mapping, form, request, response);
+    }
 
     public ActionForward applicationConfiguration(final ActionMapping mapping, final ActionForm form,
 	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {

@@ -48,6 +48,16 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 @Mapping(path = "/manageUsers")
 public class ManageUsersAction extends ContextBaseAction {
 
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+	final User user = UserView.getCurrentUser();
+	if (user == null || !user.hasRoleType(RoleType.MANAGER)) {
+	    throw new Error("unauthorized.access");
+	}
+        return super.execute(mapping, form, request, response);
+    }
+
     @CreateNodeAction( bundle="MYORG_RESOURCES", key="label.application.users.create.interface", groupKey="label.application" )
     public final ActionForward createManageCoffeeOrdersNode(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
