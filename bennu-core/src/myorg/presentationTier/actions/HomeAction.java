@@ -111,7 +111,7 @@ public class HomeAction extends ContextBaseAction {
 	final SortedSet<Node> nodes = virtualHost.getOrderedTopLevelNodes();
 	for (final Node node : nodes) {
 	    if (node.isAccessible()) {
-		return new ActionForward(node.getUrl());
+		return new ActionForward(node.getUrl(), true);
 	    }
 	}
 	final Context context = getContext(request);
