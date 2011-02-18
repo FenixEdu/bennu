@@ -229,4 +229,8 @@ public abstract class Node extends Node_Base implements INode {
 	return persistentGroup != null && persistentGroup.isMember(user);
     }
 
+    public boolean isRedirect() {
+	return false;
+    }
+
 }
