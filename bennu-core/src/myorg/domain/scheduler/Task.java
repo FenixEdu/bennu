@@ -44,17 +44,15 @@ public abstract class Task extends Task_Base {
 
 	@Override
 	public int compare(final Task task1, final Task task2) {
-	    String task1Name = task1.getLocalizedName();
-	    String task2Name = task2.getLocalizedName();
-	    if (task1Name == null) {
-		task1Name = new String("");
-	    }
-	    if (task2Name == null) {
-		task2Name = new String("");
-	    }
-
+	    final String task1Name = getTaskName(task1);
+	    final String task2Name = getTaskName(task2);
 	    final int c = task1Name.compareTo(task2Name);
 	    return c == 0 ? task1.getExternalId().compareTo(task2.getExternalId()) : c;
+	}
+
+	private String getTaskName(final Task task) {
+	    final String taskName = task.getLocalizedName();
+	    return taskName == null ? task.getExternalId() : taskName;
 	}
 
     };
