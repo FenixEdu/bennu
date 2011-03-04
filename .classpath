@@ -13,7 +13,7 @@
 	<classpathentry kind="lib" path="lib/jvstm.jar"/>
 	<classpathentry kind="lib" path="lib/fenix-framework-file-plugin.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-core-2.4.1.jar"/>
-	<classpathentry kind="lib" path="lib/fenix-framework-r46762.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="lib/fenix-framework-r51115.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
