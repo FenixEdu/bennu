@@ -13,6 +13,6 @@
 	<classpathentry kind="lib" path="lib/jvstm.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.8.jar"/>
-	<classpathentry kind="lib" path="lib/fenix-framework-r46762.jar"/>
+	<classpathentry kind="lib" path="lib/fenix-framework-r51115.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
