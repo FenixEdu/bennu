@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixframework.plugins.fileSupport.domain.FileStorageConfiguration;
@@ -28,6 +29,7 @@ public class StorageConfigurationManagement extends ContextBaseAction {
     public ActionForward prepare(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) {
 
+	RenderUtils.invalidateViewState();
 	createMissingConfigurations();
 	request.setAttribute("storageConfigurations", FileSupport.getInstance().getFileStorageConfigurations());
 
