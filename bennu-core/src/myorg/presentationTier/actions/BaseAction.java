@@ -223,14 +223,11 @@ public abstract class BaseAction extends DispatchAction {
 	return new ActionForward(urlWithChecksum, true);
     }
 
-    protected void displayConsistencyException(Error error, HttpServletRequest request) {
-	if (!(error.getCause() instanceof ConsistencyException)) {
-	    throw error;
-	}
-	if (error.getCause().getLocalizedMessage() != null) {
-	    addLocalizedMessage(request, error.getCause().getLocalizedMessage());
+    protected void displayConsistencyException(ConsistencyException exc, HttpServletRequest request) {
+	if (exc.getLocalizedMessage() != null) {
+	    addLocalizedMessage(request, exc.getLocalizedMessage());
 	} else {
-	    error.getCause().printStackTrace();
+	    exc.printStackTrace();
 	    addLocalizedMessage(request,
 		    BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "error.ConsistencyException"));
 	}
