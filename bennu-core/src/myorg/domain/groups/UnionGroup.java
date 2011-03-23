@@ -25,6 +25,7 @@
 
 package myorg.domain.groups;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +36,13 @@ import pt.ist.fenixWebFramework.services.Service;
 public class UnionGroup extends UnionGroup_Base {
     
     public UnionGroup(final PersistentGroup... persistentGroups) {
+        super();
+        for (final PersistentGroup persistentGroup : persistentGroups) {
+            addPersistentGroups(persistentGroup);
+        }
+    }
+
+    public UnionGroup(final Collection<PersistentGroup> persistentGroups) {
         super();
         for (final PersistentGroup persistentGroup : persistentGroups) {
             addPersistentGroups(persistentGroup);
