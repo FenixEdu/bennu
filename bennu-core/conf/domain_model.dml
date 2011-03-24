@@ -159,7 +159,7 @@ class scheduler.CustomTaskLog {
 }
 
 class User {
-	String username;
+	String username  (REQUIRED);
 	String password;
 	DateTime lastLogoutDateTime;
 }
