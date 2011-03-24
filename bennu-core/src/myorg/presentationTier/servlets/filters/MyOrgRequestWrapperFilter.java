@@ -44,7 +44,7 @@ public class MyOrgRequestWrapperFilter extends RequestWrapperFilter {
 	    ServletException {
 	final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 	if (httpServletRequest.getRequestURI().contains("vaadin")
-		|| httpServletRequest.getRequestURI().contains("VAADIN")
+		|| httpServletRequest.getRequestURI().contains("VAADIN") || httpServletRequest.getRequestURI().contains("CertDocSisREST")
 		// && httpServletRequest.getHeader("Content-Type").equals("multipart/form-data")
 	) {
 	    chain.doFilter(request, response);
