@@ -2,7 +2,6 @@
 <project basedir="." name="Module Compilation Targets">
 
 	<target name="pre-compile">
-		<echo>XXXXXXXXXXXXxx</echo>
 		<echo file="${build_home}/WEB-INF/classes/.compileProcessors"
 			append="no"
 			message="compiler.processor.args=pt.ist.fenixWebFramework.services.ServiceAnnotationProcessor,pt.ist.fenixWebFramework.struts.annotations.ActionAnnotationProcessor,pt.ist.fenixWebFramework.servlets.functionalities.CreateNodeActionAnnotationProcessor,pt.ist.fenixWebFramework.servlets.rest.RestAnnotationProcessor"/>
