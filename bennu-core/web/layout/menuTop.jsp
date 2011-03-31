@@ -18,7 +18,7 @@
 			<% } else { %>
 				<li>
 			<% } %>
-				<bean:define id="url" name="node" property="url" type="java.lang.String"/>
+					<% final String url = node.getUrl(request.getContextPath()); %>
 					<% if (url.indexOf(':') > 0) { %>
 						<!-- HAS_CONTEXT --><html:link href="<%= url %>">
 							<logic:present name="node" property="link">

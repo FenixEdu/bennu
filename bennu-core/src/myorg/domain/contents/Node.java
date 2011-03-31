@@ -39,6 +39,7 @@ import myorg.domain.groups.PersistentGroup;
 import myorg.presentationTier.Context;
 import myorg.presentationTier.actions.ContextBaseAction;
 import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 
 public abstract class Node extends Node_Base implements INode {
@@ -49,14 +50,24 @@ public abstract class Node extends Node_Base implements INode {
 	setOjbConcreteClass(getClass().getName());
     }
 
-    public String getUrl() {
+    public String getUrl(final String appContext) {
 	final StringBuilder stringBuilder = new StringBuilder();
 	appendUrlPrefix(stringBuilder);
 	stringBuilder.append("&");
 	stringBuilder.append(ContextBaseAction.CONTEXT_PATH);
 	stringBuilder.append('=');
 	appendNodePath(stringBuilder);
+	if (isRedirect()) {
+	    stringBuilder.append("&");
+	    stringBuilder.append(GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME);
+	    stringBuilder.append('=');
+	    stringBuilder.append(appendChecksum(stringBuilder.toString(), appContext));
+	}
 	return stringBuilder.toString();
+    }
+
+    protected String appendChecksum(final String url, final String appContext) {
+	return GenericChecksumRewriter.calculateChecksum(appContext + url);
     }
 
     protected void appendNodePath(final StringBuilder stringBuilder) {
