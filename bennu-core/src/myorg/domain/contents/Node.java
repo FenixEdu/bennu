@@ -50,6 +50,16 @@ public abstract class Node extends Node_Base implements INode {
 	setOjbConcreteClass(getClass().getName());
     }
 
+    public String getUrl() {
+	final StringBuilder stringBuilder = new StringBuilder();
+	appendUrlPrefix(stringBuilder);
+	stringBuilder.append("&");
+	stringBuilder.append(ContextBaseAction.CONTEXT_PATH);
+	stringBuilder.append('=');
+	appendNodePath(stringBuilder);
+	return stringBuilder.toString();
+    }
+
     public String getUrl(final String appContext) {
 	final StringBuilder stringBuilder = new StringBuilder();
 	appendUrlPrefix(stringBuilder);
