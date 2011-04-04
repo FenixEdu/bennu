@@ -49,4 +49,8 @@ public class EmailAddressList implements Serializable {
 	return collection;
     }
 
+    public boolean isEmpty() {
+	return emailAddresses == null || emailAddresses.length() == 0;
+    }
+
 }
