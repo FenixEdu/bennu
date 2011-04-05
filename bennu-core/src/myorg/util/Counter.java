@@ -25,10 +25,14 @@
 
 package myorg.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Counter<T> {
 
     T countableObject;
     int counter;
+    final Set<Object> objects = new HashSet<Object>();
 
     public Counter(T countableObject) {
 	this.countableObject = countableObject;
@@ -44,12 +48,21 @@ public class Counter<T> {
 	this.counter++;
     }
 
+    public void increment(final Object object) {
+	increment();
+	objects.add(object);
+    }
+
     public int getValue() {
 	return this.counter;
     }
 
     public T getCountableObject() {
 	return this.countableObject;
+    }
+
+    public Set<Object> getObjects() {
+        return objects;
     }
 
 }

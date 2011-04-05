@@ -31,9 +31,11 @@ import java.util.Map;
 public class MultiCounter<T> {
     T countableObject;
     Map<String, Counter<T>> counters;
+    final boolean holdElements;
 
-    public MultiCounter(T countableObject, String... counterNames) {
+    public MultiCounter(T countableObject, final boolean holdElements, String... counterNames) {
 	this.countableObject = countableObject;
+	this.holdElements = holdElements;
 	counters = new HashMap<String, Counter<T>>();
 	for (String name : counterNames) {
 	    counters.put(name, new Counter<T>(countableObject));
@@ -48,7 +50,13 @@ public class MultiCounter<T> {
 	return counters.get(counterName);
     }
 
-    public void increment(String counterName) {
-	getCounter(counterName).increment();
+    public void increment(final String counterName, final Object object) {
+	final Counter<T> counter = getCounter(counterName);
+	if (holdElements) {
+	    counter.increment(object);
+	} else {
+	    counter.increment();
+	}
     }
+
 }
