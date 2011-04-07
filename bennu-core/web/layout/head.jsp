@@ -8,6 +8,7 @@
 <title><bean:write name="virtualHost" property="applicationTitle"/></title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1"/>
 <%
 	final String contextPath = request.getContextPath();
 %>
@@ -21,6 +22,9 @@
 
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/screen.css" media="screen"/>
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/print.css" media="print"/>
+
+<link rel="stylesheet" type="text/css" href="<%=contextPath + "/VAADIN/themes/" + theme + "/styles.css"%>">
+<link rel="stylesheet" type="text/css" href="<%=contextPath + "/head.css"%>">
 
 <script src="<%= contextPath%>/javaScript/jquery.js" type="text/javascript"></script>
 <script src="<%= contextPath%>/javaScript/jquery-ui.js" type="text/javascript"></script>
