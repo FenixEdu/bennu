@@ -8,7 +8,7 @@ public class MultiProperty extends Properties {
     public synchronized Object put(final Object key, final Object value) {
 	final String property = getProperty((String) key);
 	final String putValue;
-	if (property != null && !property.isEmpty()) {
+	if (property != null && !property.isEmpty() && property.indexOf((String) value) < 0) {
 	    putValue = ((String) value) + ',' + property;
 	} else {
 	    putValue = (String) value;
