@@ -55,7 +55,7 @@ import pt.ist.fenixframework.FenixFrameworkPlugin;
  */
 public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesManager {
 
-    private static final Properties properties = new Properties();
+    private static final Properties properties = new MultiProperty();
 
     static {
 	try {
