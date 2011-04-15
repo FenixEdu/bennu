@@ -28,9 +28,6 @@ package myorg.presentationTier.servlets;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -51,6 +48,7 @@ import myorg.domain.scheduler.Scheduler;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter.ChecksumPredicate;
+import pt.ist.fenixframework.FenixFrameworkInitializer;
 
 public class StartupServlet extends HttpServlet {
 
@@ -59,47 +57,7 @@ public class StartupServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
 	super.init(config);
 
-	final String preInitClassnames = PropertiesManager.getProperty("pre.init.classnames");
-	if (preInitClassnames != null) {
-	    final String[] classnames = preInitClassnames.split(",");
-	    for (final String classname : classnames) {
-		if (classname != null && !classname.isEmpty()) {
-		    try {
-			Class.forName(classname.trim());
-		    } catch (final ClassNotFoundException e) {
-			throw new Error(e);
-		    }
-		}
-	    }
-	}
-
-	final String domainmodelPath = getServletContext().getRealPath(getInitParameter("domainmodelPath"));
-	final File dir = new File(domainmodelPath);
-	final List<String> urls = new ArrayList<String>();
-	for (final File file : dir.listFiles()) {
-	    if (file.isFile() && file.getName().endsWith(".dml")) {
-		try {
-		    urls.add(file.getCanonicalPath());
-		} catch (IOException e) {
-		    e.printStackTrace();
-		    throw new ServletException(e);
-		}
-	    }
-	}
-	
-	Collections.sort(urls);
-	final String[] paths = new String[urls.size()];
-	for (int i = 0; i < urls.size(); i++) {
-	    paths[i] = urls.get(i);
-	}
-	try {
-	    FenixWebFramework.initialize(PropertiesManager.getFenixFrameworkConfig(paths));
-	} catch (Throwable t) {
-	    t.printStackTrace();
-	    throw new Error(t);
-	}
-
-	//TopLevelTransaction.addCommitListener(new IndexListener());
+	FenixWebFramework.initialize(PropertiesManager.getFenixFrameworkConfig(FenixFrameworkInitializer.CONFIG_PATHS));
 
 	try {
 	    MyOrg.initModules();
