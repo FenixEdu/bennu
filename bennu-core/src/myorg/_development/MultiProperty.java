@@ -19,7 +19,9 @@ public class MultiProperty extends Properties {
 	    for (final String property : properties) {
 		final String trimmed = property.trim();
 		if (result.indexOf(trimmed) < 0) {
-		    result.append(",");
+		    if (result.length() > 0) {
+			result.append(",");
+		    }
 		    result.append(trimmed);
 		}
 	    }
