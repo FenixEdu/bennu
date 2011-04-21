@@ -6,14 +6,24 @@ public class MultiProperty extends Properties {
 
     @Override
     public synchronized Object put(final Object key, final Object value) {
+	final StringBuilder result = new StringBuilder();
 	final String property = getProperty((String) key);
-	final String putValue;
-	if (property != null && !property.isEmpty() && property.indexOf((String) value) < 0) {
-	    putValue = ((String) value) + ',' + property;
-	} else {
-	    putValue = (String) value;
-	}
-        return super.put(key, putValue);
+	addValues(result, property);
+	addValues(result, (String) value);
+	return result.toString();
+    }
+
+    private void addValues(final StringBuilder result, final String value) {
+	if (value != null && !value.isEmpty()) {
+	    final String[] properties = value.split(",");
+	    for (final String property : properties) {
+		final String trimmed = property.trim();
+		if (result.indexOf(trimmed) < 0) {
+		    result.append(",");
+		    result.append(trimmed);
+		}
+	    }
+	}	
     }
 
 }
