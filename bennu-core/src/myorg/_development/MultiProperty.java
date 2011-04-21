@@ -10,7 +10,7 @@ public class MultiProperty extends Properties {
 	final String property = getProperty((String) key);
 	addValues(result, property);
 	addValues(result, (String) value);
-	return result.toString();
+	return super.put(key, result.toString());
     }
 
     private void addValues(final StringBuilder result, final String value) {
