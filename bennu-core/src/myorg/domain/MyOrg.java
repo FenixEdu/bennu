@@ -81,9 +81,9 @@ public class MyOrg extends MyOrg_Base {
 		    throw e;
 		}
 	    }
-	    logger.info("Initiating " + root.getClass().getName());
+	    logger.info("Initiating " + clazz.getName());
 	    root.init(myorg);
-	    logger.debug("Initiated " + root.getClass().getName());
+	    logger.debug("Initiated " + clazz.getName());
 	}
 
 	logger.info("Finished Modules Initiation System");
