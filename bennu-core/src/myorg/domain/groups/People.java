@@ -75,4 +75,9 @@ public abstract class People extends People_Base {
 	removeUsers(user);
     }
 
+    @Service
+    public void addMember(final User user) {
+	addUsers(user);
+    }
+
 }
