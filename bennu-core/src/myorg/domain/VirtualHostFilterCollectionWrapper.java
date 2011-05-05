@@ -160,8 +160,17 @@ public class VirtualHostFilterCollectionWrapper<Type extends VirtualHostAware> i
     }
 
     @Override
-    public Type get(int index) {
-	throw new UnsupportedOperationException();
+    public Type get(final int index) {
+	int i = 0;
+	for (final Type type : this) {
+	    if (type.isConnectedToCurrentHost()) {
+		if (i == index) {
+		    return type;
+		}
+		i++;
+	    }
+	}
+	throw new IndexOutOfBoundsException(Integer.toString(index));
     }
 
     @Override
