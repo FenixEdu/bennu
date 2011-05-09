@@ -82,7 +82,9 @@ public class MyOrg extends MyOrg_Base {
 		}
 	    }
 	    logger.info("Initiating " + clazz.getName());
-	    root.init(myorg);
+	    if (root != null) {
+		root.init(myorg);
+	    }
 	    logger.debug("Initiated " + clazz.getName());
 	}
 
