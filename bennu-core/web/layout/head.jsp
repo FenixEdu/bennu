@@ -5,7 +5,14 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@page import="myorg.domain.VirtualHost"%>
 
-<title><bean:write name="virtualHost" property="applicationTitle"/></title>
+<title>
+	<logic:notEmpty name="virtualHost" property="htmlTitle">
+		<bean:write name="virtualHost" property="htmlTitle"/>
+	</logic:notEmpty>
+	<logic:empty name="virtualHost" property="htmlTitle">
+		<bean:write name="virtualHost" property="applicationTitle"/>
+	</logic:empty>
+</title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>

@@ -33,8 +33,8 @@ import myorg._development.PropertiesManager;
 import myorg.domain.contents.Node;
 import myorg.domain.util.ByteArray;
 import pt.ist.fenixWebFramework.Config;
-import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.Config.CasConfig;
+import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
@@ -86,6 +86,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setApplicationTitle(virtualHostBean.getApplicationTitle());
 	setApplicationSubTitle(virtualHostBean.getApplicationSubTitle());
 	setApplicationCopyright(virtualHostBean.getApplicationCopyright());
+	setHtmlTitle(virtualHostBean.getHtmlTitle());
 	setGoogleSearchEnabled(virtualHostBean.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(virtualHostBean.getLanguageSelectionEnabled());
 	setHelpLink(virtualHostBean.getHelpLink());
@@ -144,6 +145,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setHostname(bean.getHostname());
 	setApplicationTitle(bean.getApplicationTitle());
 	setApplicationSubTitle(bean.getApplicationSubTitle());
+	setHtmlTitle(bean.getHtmlTitle());
 	setApplicationCopyright(bean.getApplicationCopyright());
 	setGoogleSearchEnabled(bean.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(bean.getLanguageSelectionEnabled());

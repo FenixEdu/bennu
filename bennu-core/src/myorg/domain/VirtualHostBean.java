@@ -36,6 +36,7 @@ public class VirtualHostBean implements Serializable {
 
     private String hostname;
     private MultiLanguageString applicationTitle;
+    private MultiLanguageString htmlTitle;
     private MultiLanguageString applicationSubTitle;
     private MultiLanguageString applicationCopyright;
     private Boolean googleSearchEnabled;
@@ -70,6 +71,7 @@ public class VirtualHostBean implements Serializable {
 	setHostname(virtualHost.getHostname());
 	setApplicationTitle(virtualHost.getApplicationTitle());
 	setApplicationSubTitle(virtualHost.getApplicationSubTitle());
+	setHtmlTitle(virtualHost.getHtmlTitle());
 	setApplicationCopyright(virtualHost.getApplicationCopyright());
 	setGoogleSearchEnabled(virtualHost.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(virtualHost.getLanguageSelectionEnabled());
@@ -213,6 +215,14 @@ public class VirtualHostBean implements Serializable {
 
     public void setBreadCrumbsEnabled(Boolean breadCrumbsEnabled) {
 	this.breadCrumbsEnabled = breadCrumbsEnabled;
+    }
+
+    public MultiLanguageString getHtmlTitle() {
+        return htmlTitle;
+    }
+
+    public void setHtmlTitle(MultiLanguageString htmlTitle) {
+        this.htmlTitle = htmlTitle;
     }
 
 }

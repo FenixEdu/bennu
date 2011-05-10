@@ -170,6 +170,7 @@ class VirtualHost {
 	Boolean languageSelectionEnabled;
 	Boolean breadCrumbsEnabled;
 	MultiLanguageString applicationTitle;
+	MultiLanguageString htmlTitle;
 	MultiLanguageString applicationSubTitle;
 	MultiLanguageString applicationCopyright;
 	String errorPage (REQUIRED);
