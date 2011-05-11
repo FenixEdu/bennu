@@ -25,6 +25,7 @@
 
 package myorg.domain.scheduler;
 
+import myorg.domain.VirtualHost;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
@@ -44,10 +45,15 @@ public class TaskExecutor extends TransactionalThread {
 
     @Override
     public void transactionalRun() {
-	Language.setLocale(Language.getDefaultLocale());
-	final Task task = AbstractDomainObject.fromExternalId(taskId);
-	task.executeTask();
-	successful = true;
+	try {
+	    VirtualHost.setVirtualHostForThread("dot.ist.utl.pt");
+	    Language.setLocale(Language.getDefaultLocale());
+	    final Task task = AbstractDomainObject.fromExternalId(taskId);
+	    task.executeTask();
+	    successful = true;
+	} finally {
+	    VirtualHost.releaseVirtualHostFromThread();
+	}
     }
 
 }
