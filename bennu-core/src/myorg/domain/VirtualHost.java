@@ -111,6 +111,11 @@ public class VirtualHost extends VirtualHost_Base {
 	return theme != null ? theme : setAndReturnDefaultTheme();
     }
 
+    @Override
+    public boolean hasTheme() {
+	return super.getTheme() != null;
+    }
+
     @Service
     private Theme setAndReturnDefaultTheme() {
 	Theme theme = getMyOrg().getThemes().get(0);
@@ -128,6 +133,10 @@ public class VirtualHost extends VirtualHost_Base {
 	    for (final Node node : getTopLevelNodesSet()) {
 		node.delete();
 	    }
+	    removeExpenditureTrackingSystem();
+	    removeWorkflowSystem();
+	    removeWorkingCapitalSystem();
+
 	    removeTheme();
 	    removeMyOrg();
 	    deleteDomainObject();
