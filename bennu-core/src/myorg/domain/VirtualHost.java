@@ -133,9 +133,6 @@ public class VirtualHost extends VirtualHost_Base {
 	    for (final Node node : getTopLevelNodesSet()) {
 		node.delete();
 	    }
-	    removeExpenditureTrackingSystem();
-	    removeWorkflowSystem();
-	    removeWorkingCapitalSystem();
 
 	    removeTheme();
 	    removeMyOrg();
