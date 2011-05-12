@@ -32,6 +32,7 @@ import javax.servlet.http.HttpSession;
 import myorg.applicationTier.Authenticate;
 import myorg.applicationTier.Authenticate.UserView;
 import myorg.applicationTier.AuthenticationListner;
+import myorg.domain.VirtualHost;
 import myorg.domain.scheduler.TransactionalThread;
 
 import org.apache.struts.action.ActionForm;
@@ -104,10 +105,17 @@ public class AuthenticationAction extends ContextBaseAction {
 
     private static void callLoginListner(final UserView userView, final AuthenticationListner authenticationListner) {
 	final TransactionalThread thread = new TransactionalThread() {
-	    
+
+	    final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+
 	    @Override
 	    public void transactionalRun() {
 		authenticationListner.afterLogin(userView);
+		try {
+		    VirtualHost.setVirtualHostForThread(virtualHost);
+		} finally {
+		    VirtualHost.releaseVirtualHostFromThread();
+		}
 	    }
 
 	};
