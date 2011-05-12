@@ -46,6 +46,8 @@ public class TaskExecutor extends TransactionalThread {
     @Override
     public void transactionalRun() {
 	try {
+	    // TODO : This needs to be placed in the apps task configuration
+	    //        and used whenever the app is launchede.
 	    VirtualHost.setVirtualHostForThread("dot.ist.utl.pt");
 	    Language.setLocale(Language.getDefaultLocale());
 	    final Task task = AbstractDomainObject.fromExternalId(taskId);
