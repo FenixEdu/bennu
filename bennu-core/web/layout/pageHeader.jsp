@@ -28,10 +28,13 @@
 		final String serverName = request.getServerName();
 		final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
 		// If no config is found don't allow login.
-		if (casConfig != null) {
+		if (casConfig == null) {
+	%>
+			<!-- context: <%= contextPath %> - serverName: <%= serverName %> -->
+	<%
+		} else {
 			final boolean isCasEnabled = casConfig.isCasEnabled();
 	%>
-	<!-- context: <%= contextPath %> - serverName: <%= serverName %> -->
 	<logic:notPresent name="USER_SESSION_ATTRIBUTE">
 		<% if (isCasEnabled) {%>
 			<div class="login">
