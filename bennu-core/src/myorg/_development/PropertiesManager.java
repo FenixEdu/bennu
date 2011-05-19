@@ -96,6 +96,9 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 
 		    final CasConfig casConfig = new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
 		    casConfigMap.put(hostname, casConfig);
+		} else {
+		    final CasConfig casConfig = new CasConfig();
+		    casConfigMap.put(hostname, casConfig);		    
 		}
 	    }
 	}
