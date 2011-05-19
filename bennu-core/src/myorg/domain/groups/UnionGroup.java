@@ -27,10 +27,10 @@ package myorg.domain.groups;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import myorg.domain.User;
-import myorg.util.BundleUtil;
 import pt.ist.fenixWebFramework.services.Service;
 
 public class UnionGroup extends UnionGroup_Base {
@@ -60,7 +60,15 @@ public class UnionGroup extends UnionGroup_Base {
 
     @Override
     public String getName() {
-	return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.anyoneGroup.name");
+	String groupName = "Union of: ";
+	for (Iterator persistentGroupIterator = getPersistentGroupsIterator(); persistentGroupIterator.hasNext();)
+	{
+	    PersistentGroup group = (PersistentGroup) persistentGroupIterator.next();
+	    groupName = groupName.concat(group.getName());
+	    if (persistentGroupIterator.hasNext())
+		groupName = groupName.concat(" AND ");
+	}
+	return groupName;
     }
 
     @Override
