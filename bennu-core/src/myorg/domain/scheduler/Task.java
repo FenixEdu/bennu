@@ -25,6 +25,7 @@
 
 package myorg.domain.scheduler;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -131,7 +132,9 @@ public abstract class Task extends Task_Base {
     private static void initTask(final DomainClass domainClass) throws ClassNotFoundException, InstantiationException,
 	    IllegalAccessException {
 	final Class taskClass = Class.forName(domainClass.getFullName());
-	taskClass.newInstance();
+	if (!Modifier.isAbstract(taskClass.getModifiers())) {
+	    taskClass.newInstance();
+	}
     }
 
     private static boolean isTask(final DomainClass domainClass) {
