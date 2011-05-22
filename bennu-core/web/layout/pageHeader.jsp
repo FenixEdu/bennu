@@ -6,7 +6,7 @@
 <%@page import="pt.ist.fenixWebFramework.FenixWebFramework"%>
 <%@page import="pt.ist.fenixWebFramework.Config.CasConfig"%>
 <%@page import="pt.utl.ist.fenix.tools.util.i18n.Language"%>
-
+<%@page import="pt.ist.fenixWebFramework.security.User"%>
 
 <div id="logo">
 	<logic:present name="virtualHost" property="logo">
@@ -58,11 +58,14 @@
 
 <logic:present name="USER_SESSION_ATTRIBUTE">
 	<div id="supportnav">
-		<logic:present role="myorg.domain.RoleType.MANAGER">
+	<%
+		final User user = (User) request.getSession(false).getAttribute("USER_SESSION_ATTRIBUTE");
+		if (user.hasRole("myorg.domain.RoleType.MANAGER")) {
+	%>
 			<!-- HAS_CONTEXT --><html:link page="/configuration.do?method=applicationConfiguration">
 				<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration"/>
 			</html:link> |
-		</logic:present>
+	<%	} %>
 		<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES"/>: <bean:write name="USER_SESSION_ATTRIBUTE" property="username"/> |
 		<logic:present name="virtualHost" property="helpLink">
 			<logic:notEmpty name="virtualHost" property="helpLink">
