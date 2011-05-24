@@ -35,6 +35,7 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 public class VirtualHostBean implements Serializable {
 
     private String hostname;
+    private String supportEmailAddress;
     private MultiLanguageString applicationTitle;
     private MultiLanguageString htmlTitle;
     private MultiLanguageString applicationSubTitle;
@@ -79,6 +80,7 @@ public class VirtualHostBean implements Serializable {
 	setHelpLink(virtualHost.getHelpLink());
 	setErrorPage(virtualHost.getErrorPage());
 	setBreadCrumbsEnabled(virtualHost.getBreadCrumbsEnabled());
+	setSupportEmailAddress(virtualHost.getSupportEmailAddress());
     }
 
     public String getErrorPage() {
@@ -223,6 +225,14 @@ public class VirtualHostBean implements Serializable {
 
     public void setHtmlTitle(MultiLanguageString htmlTitle) {
         this.htmlTitle = htmlTitle;
+    }
+
+    public String getSupportEmailAddress() {
+        return supportEmailAddress;
+    }
+
+    public void setSupportEmailAddress(String supportEmailAddress) {
+        this.supportEmailAddress = supportEmailAddress;
     }
 
 }

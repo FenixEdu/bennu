@@ -98,6 +98,7 @@ public class VirtualHost extends VirtualHost_Base {
 	    virtualHostBean.setFavicon(virtualHostBean.getFavicon());
 	}
 	setBreadCrumbsEnabled(virtualHostBean.getBreadCrumbsEnabled());
+	setSupportEmailAddress(virtualHostBean.getSupportEmailAddress());
     }
 
     @Service
@@ -165,6 +166,7 @@ public class VirtualHost extends VirtualHost_Base {
 	    bean.setFavicon(bean.getFavicon());
 	}
 	setBreadCrumbsEnabled(bean.getBreadCrumbsEnabled());
+	setSupportEmailAddress(bean.getSupportEmailAddress());
     }
 
     @Override
