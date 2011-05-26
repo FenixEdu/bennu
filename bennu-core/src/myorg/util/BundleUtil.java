@@ -42,8 +42,12 @@ public class BundleUtil {
 
     public static String getFormattedStringFromResourceBundle(final String bundle, final String key, String... arguments) {
 	String resourceString = getStringFromResourceBundle(bundle, key);
-	for (int i = 0; i < arguments.length; i++) {
-	    resourceString = resourceString.replace("{" + i + "}", arguments[i]);
+	if (resourceString != null && arguments != null) {
+	    for (int i = 0; i < arguments.length; i++) {
+		final String argument = arguments[i];
+		final String relaceValue = argument == null ? "" : argument;
+		resourceString = resourceString.replace("{" + i + "}", relaceValue);
+	    }
 	}
 	return resourceString;
     }
