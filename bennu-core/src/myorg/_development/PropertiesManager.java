@@ -38,6 +38,7 @@ import org.apache.commons.lang.StringUtils;
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixframework.FenixFrameworkPlugin;
+import pt.utl.ist.fenix.tools.util.MultiProperty;
 
 /**
  * The <code>PropertiesManager</code> class is a application wide utility for 
