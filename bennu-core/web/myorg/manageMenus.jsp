@@ -70,7 +70,7 @@
 </script>
 
 	<ul id="menuDrag" style="width: 50%; list-style: none;"> 
-		<logic:iterate id="node" name="nodesToManage" indexId="nindex" type="myorg.domain.contents.Node" indexId="nodeIndex">
+		<logic:iterate id="node" name="nodesToManage" type="myorg.domain.contents.Node" indexId="nodeIndex">
 			<li id="<%= "articleNode" + nodeIndex %>" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: left; cursor: move;"></span>
 				<div>
 				 
