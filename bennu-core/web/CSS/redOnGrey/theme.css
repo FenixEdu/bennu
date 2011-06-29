@@ -255,8 +255,6 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e3e3e3', endC
 ---------------------------------------*/
 
 #header {
-background: #333;
-border-top: 3px solid #555;
 position: relative;
 -moz-border-radius-topleft: 5px;
 -moz-border-radius-topright: 5px;
