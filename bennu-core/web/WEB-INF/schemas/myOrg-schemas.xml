@@ -8,6 +8,7 @@
 		validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator" />
 	<slot name="helpLink" key="label.help.link.url" bundle="MYORG_RESOURCES"/>
 	<slot name="supportEmailAddress" key="label.supportEmailAddress" bundle="MYORG_RESOURCES"/>
+	<slot name="systemEmailAddress" key="label.systemEmailAddress" bundle="MYORG_RESOURCES"/>
 </schema>
 
 <schema name="virtualHost.application.configuration.summary" type="myorg.domain.VirtualHost" bundle="MYORG_RESOURCES">
@@ -26,6 +27,7 @@
 	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
 	<slot name="helpLink" key="label.help.link.url" bundle="MYORG_RESOURCES"/>
 	<slot name="supportEmailAddress" key="label.supportEmailAddress" bundle="MYORG_RESOURCES"/>
+	<slot name="systemEmailAddress" key="label.systemEmailAddress" bundle="MYORG_RESOURCES"/>
 	<slot name="errorPage" key="label.error.page" bundle="MYORG_RESOURCES"
 		validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
 	<slot name="googleSearchEnabled"/>

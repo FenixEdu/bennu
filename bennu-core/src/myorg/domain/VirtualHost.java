@@ -99,6 +99,8 @@ public class VirtualHost extends VirtualHost_Base {
 	}
 	setBreadCrumbsEnabled(virtualHostBean.getBreadCrumbsEnabled());
 	setSupportEmailAddress(virtualHostBean.getSupportEmailAddress());
+	setSystemEmailAddress(virtualHostBean.getSystemEmailAddress());
+	;
     }
 
     @Service
@@ -167,6 +169,7 @@ public class VirtualHost extends VirtualHost_Base {
 	}
 	setBreadCrumbsEnabled(bean.getBreadCrumbsEnabled());
 	setSupportEmailAddress(bean.getSupportEmailAddress());
+	setSystemEmailAddress(bean.getSystemEmailAddress());
     }
 
     @Override

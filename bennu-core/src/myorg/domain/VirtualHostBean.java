@@ -36,6 +36,15 @@ public class VirtualHostBean implements Serializable {
 
     private String hostname;
     private String supportEmailAddress;
+    private String systemEmailAddress;
+    public String getSystemEmailAddress() {
+        return systemEmailAddress;
+    }
+
+    public void setSystemEmailAddress(String systemEmailAddress) {
+        this.systemEmailAddress = systemEmailAddress;
+    }
+
     private MultiLanguageString applicationTitle;
     private MultiLanguageString htmlTitle;
     private MultiLanguageString applicationSubTitle;
@@ -81,6 +90,7 @@ public class VirtualHostBean implements Serializable {
 	setErrorPage(virtualHost.getErrorPage());
 	setBreadCrumbsEnabled(virtualHost.getBreadCrumbsEnabled());
 	setSupportEmailAddress(virtualHost.getSupportEmailAddress());
+	setSystemEmailAddress(virtualHost.getSystemEmailAddress());
     }
 
     public String getErrorPage() {
