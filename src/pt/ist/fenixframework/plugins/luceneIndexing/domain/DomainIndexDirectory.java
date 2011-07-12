@@ -30,4 +30,11 @@ public class DomainIndexDirectory extends DomainIndexDirectory_Base {
 	return new DomainIndexDirectory(name);
     }
 
+    public void delete() {
+	for (DomainIndexFile file : getIndexFilesSet()) {
+	    file.delete();
+	}
+	removePluginRoot();
+	deleteDomainObject();
+    }
 }

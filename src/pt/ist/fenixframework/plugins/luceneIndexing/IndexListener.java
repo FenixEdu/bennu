@@ -29,9 +29,11 @@ public class IndexListener implements CommitListener {
 	    }
 
 	    for (DomainObject domainObject : topLevelTransaction.getModifiedObjects()) {
-		if (domainObject instanceof Searchable) {
-		    for (Indexable indexableObject : ((Searchable) domainObject).getObjectsToIndex()) {
-			new IndexingRequest(indexableObject);
+		if (!topLevelTransaction.isDeleted(domainObject)) {
+		    if (domainObject instanceof Searchable) {
+			for (Indexable indexableObject : ((Searchable) domainObject).getObjectsToIndex()) {
+			    new IndexingRequest(indexableObject);
+			}
 		    }
 		}
 	    }
