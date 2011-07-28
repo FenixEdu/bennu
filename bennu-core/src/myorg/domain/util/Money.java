@@ -118,16 +118,16 @@ public class Money implements Serializable, Comparable<Money> {
 	return newMoney(getValue().divide(divisor, getScale(), RoundingMode.HALF_EVEN));
     }
 
-    public boolean isZero() {
-	return getValue().equals(BigDecimal.ZERO);
+    public boolean isPositive() {
+	return getValue().signum() == 1;
     }
 
-    public boolean isPositive() {
-	return getValue().compareTo(BigDecimal.ZERO) > 0;
+    public boolean isZero() {
+	return getValue().signum() == 0;
     }
 
     public boolean isNegative() {
-	return getValue().compareTo(BigDecimal.ZERO) < 0;
+	return getValue().signum() == -1;
     }
 
     public boolean isLessThan(final Money money) {
@@ -189,6 +189,7 @@ public class Money implements Serializable, Comparable<Money> {
 	return value;
     }
 
+    @Override
     public int compareTo(Money money) {
 	checkCurreny(money);
 	return getValue().compareTo(money.getValue());
