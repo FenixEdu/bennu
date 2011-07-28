@@ -1,4 +1,13 @@
+
+@import url("styles.css");
+
+
+@import url("new_theme_test.css");
+
+
+/*
 @import url("theme_test.css");
+*/
 
 @import url("jqTheme/ui.all.css");
 @import url("jquery.alerts.css");
