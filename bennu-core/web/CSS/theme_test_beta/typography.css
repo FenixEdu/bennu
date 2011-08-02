@@ -12,6 +12,22 @@ h1, h2, h3, h4, h5, h6, .intro {
 	-webkit-font-smoothing: antialiased;
 }
 
+h1 {
+	font-size:22px;
+}
+h2 {
+	font-size:1.8em;
+}
+h3 {
+	font-size:1.6em;
+}
+h4 {
+	font-size:1.2em;
+}
+h5 {
+	font-size:1em;
+}
+
 .intro strong {
 	font-weight:400;
 }
@@ -19,7 +35,7 @@ h1, h2, h3, h4, h5, h6, .intro {
 p {
 	color:#666;
 	font-family:'Lucida Grande', Tahoma, Arial, sans-serif;
-	font-size:0.7em;
+	font-size:12px;
 	line-height:1.3em;
 }
 

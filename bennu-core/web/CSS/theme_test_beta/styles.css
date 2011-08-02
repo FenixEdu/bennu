@@ -253,7 +253,7 @@ a:hover.login-link {
 	margin:2px 10px;
 	text-transform:uppercase;
 	text-decoration:none;
-	border-bottom:1px solid #fff;
+	border-bottom:1px solid #efefef;
 }
 
 .topmenu a:hover {
@@ -283,6 +283,7 @@ a:hover.login-link {
 }
 
 #vantagens h2 {
+	font-size:1em;
 	margin:0 0 10px 0;
 	font-weight:400;
 	padding:8px 0 1px 32px;
@@ -312,7 +313,6 @@ h2.confidencialidade {
 	font-size:0.7em;
 	letter-spacing:1px;
 }
-
 
 .vantagens-linha {
 	margin:20px 0 0;
@@ -346,6 +346,7 @@ h2.confidencialidade {
 #contactos h2 {
 	margin:0 0 10px 0;
 	font-weight:400;
+	font-size:1em;
 }
 #contactos h3 {
 	color:#888888;
@@ -503,6 +504,10 @@ div.hr {
 }
 div.hr hr {
 	display: none;
+}
+
+.bar {
+	display:none;
 }
 
 

@@ -175,7 +175,7 @@
 	
 	<div class="topmenu">
 		
-		<jsp:include page="<%= layoutContext.getMenuTop() %>"/>
+<%--		<jsp:include page="<%= layoutContext.getMenuTop() %>"/> --%>
 		
 		<jsp:include page="<%= layoutContext.getSubMenuTop() %>"/>
 		
