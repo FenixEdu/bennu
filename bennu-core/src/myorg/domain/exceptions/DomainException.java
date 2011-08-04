@@ -86,7 +86,13 @@ public class DomainException extends Error {
 	if (getBundle() == null) {
 	    return getMessage();
 	}
-	return (getArgs() != null) ? getFormattedStringFromResourceBundle() : getStringFromResourceBundle();
+	String toReturn = null;
+	try {
+	    toReturn = (getArgs() != null) ? getFormattedStringFromResourceBundle() : getStringFromResourceBundle();
+	} catch (java.util.MissingResourceException exception) {
+	    toReturn = getMessage();
+	}
+	return toReturn;
     }
 
     /*
