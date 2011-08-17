@@ -33,7 +33,7 @@ body {
 	margin-left:35px;
 }
 #conteudo {
-	margin:20px 40px;
+	margin:10px 40px;
 }
 
 
@@ -51,13 +51,15 @@ a:hover {
 }
 
 #conteudo p {
-	margin:10px 0px 15px;
+	margin:10px 0px 30px;
+	line-height:1.4em;
 }
+
 
 /* Imagem */
 
 .imagem-entrada {
-	background:#fff url(images/circles.png) 100% 0% no-repeat;
+	background:#fff url(images/circles.jpg) 100% 0% no-repeat;
 	display:block;
 	width:341px;
 	height:452px;
@@ -211,6 +213,24 @@ a:hover.login-link {
 	-webkit-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25);
 }
 
+	
+@-moz-document url-prefix() {
+   #login-form {
+		width:420px !important;
+		top:0px !important;
+	}
+	#login-form input {
+		padding:4px 6px !important;
+	}
+	#login-form .login-submit {
+		padding:3px 16px 3px !important;
+	}
+	#login-form .login-submit {
+		margin-top:18px !important;
+	}
+}
+
+	
 
 /* Top Menu */
 
@@ -311,11 +331,6 @@ h2.confidencialidade {
 	width:240px;
 	float:left;
 	margin-right:20px;
-}
-
-.vantagem p,
-#contactos p {
-	font-size:11px;
 }
 
 /* Contactos */
@@ -496,202 +511,9 @@ div.hr hr {
 }
 
 
-/* Forms */
-
-
-#conteudo input,
-#conteudo textarea {
-	padding:6px !important;
-	outline:none !important;
-	border-radius:2px !important;
-	font-size:12px !important;
-	border:1px solid #c8c8c8 !important;
-	background:#fafafa !important;
-}
-#conteudo input:hover, #conteudo input:focus,
-#conteudo textarea:hover, #conteudo textarea:focus {
-	border:1px solid #999 !important;
-	background:#fff !important;
-	-webkit-box-shadow:0px 1px 2px #e6e6e6 inset !important;
-}
-
-#conteudo input[type="submit"],
-#conteudo input[type="button"] {
-	background:-webkit-gradient(
-    	linear,
-    	0 0, 0 100%,
-    	from(#6db0cd), to(#6aaac5)
-  		) !important;
-	background:-moz-linear-gradient(#6db0cd, #6aaac5) !important;
-	font-family:'Helvetica', Arial, sans-serif;
-	font-weight:200;
-	font-size:16px !important;
-	border:1px solid #4f97b6 !important;
-	text-shadow:0px -1px 0px #588ea6;
-	color:#f1f7fa;
-	padding:6px 16px !important;
-	border-radius:18px !important;
-	-webkit-box-shadow:0px 1px 0px #82bad1 inset !important;
-}
-
-#conteudo input[type="submit"]:hover,
-#conteudo input[type="button"]:hover {
-	color:#fff !important;
-	background:-webkit-gradient(
-    	linear,
-    	0 0, 0 100%,
-    	from(#82bad1), to(#82bad1)
-  		) !important;
-	background:-moz-linear-gradient(#82bad1, #82bad1) !important;
-	cursor:pointer !important;
-}
-
-#conteudo input[type="submit"]:active,
-#conteudo input[type="button"]:active {
-	background:#5990a6 !important;
-	-webkit-box-shadow:none !important;
-}
-
-/*
-
-ToDo: Ver a possibilidade de dar margem
-
-input[type="button"]:first-of-type {
-	margin-left:210px;
-}
-*/
-
-.form th,
-.thwidth150px th,
-.formulario th {
-	text-align:right;
-	font-family:'Helvetica', Arial, sans-serif;
-	font-weight:200;
-	font-size:16px;
-	line-height:34px;
-	width:200px !important;
-}
-.form th, .form td,
-.thwidth150px th, .thwidth150px td,
-.formulario th, .formulario td,
-.tstyle0 th, .tstyle0 td {
-	border:none !important;
-}
-.form h3,
-.formulario h3 {
-	background:transparent !important;
-	border:none !important;
-}
-
-.tderror span {
-	padding:5px 12px !important;
-	margin-top:2px !important;
-	display:inline-block !important;
-	border-radius:18px !important;
-	border:1px solid rgba(194,12,32,0.1);
-}
-
-/* Tables */
-
-table {
-	font-size:14px;
-	margin:15px 0 !important;
-}
-
-table th {
-	font-size:15px;
-	padding:10px 0 !important;
-}
-
-table td {
-	padding:10px 0 !important;
-}
-
-.infobox1 h3 {
-	font-family:'Helvetica', Arial, sans-serif;
-	font-size:16px;
-	line-height:26px;
-	text-shadow:0px 1px 0px #fff;
-	margin:0px !important;
-}
-
-h3.separator {
-	margin-top:15px;
-}
-
-.col2-1, .col2-2 {
-	width:435px !important;
-}
-
-
-.gutter {
-	width:10px !important;
-	background:#fff !important;
-	display:block !important;
-}
-
-div.activities ul#main-activities {
-	padding:0px !important;
-}
-div.activities ul#main-activities li:last-of-type {
-	border-bottom:4px solid #fff;
-}
-div.activities ul#other-activities {
-	padding-top: 5px !important;
-}
-.infobox3 {
-	width:100%;
-}
-
-.infobox3 td {
-	width:50%;
-}
-
-
-
 /* Transitions */
 
-.topmenu a,
-#botao a,
-a.ainda-nao,
-a.login-link,
-#login-form input,
-.formulario input,
-.formulario textarea {
+.topmenu a, #botao a, a.ainda-nao, a.login-link, #login-form input {
 	-webkit-transition: .2s all ease;
 	-moz-transition: .2s all ease;
 }
-
-
-
-/*
-	Target: Mozilla
- 	Mission: Tame
-						*/
-
-
-@-moz-document url-prefix() {
-   #login-form {
-		width:420px !important;
-		top:0px !important;
-	}
-	#login-form input {
-		padding:4px 6px !important;
-	}
-	#login-form .login-submit {
-		padding:3px 16px 3px !important;
-	}
-	#login-form .login-submit {
-		margin-top:18px !important;
-	}
-	.tderror span {
-		margin-top:0px !important;
-	}
-}
-
-
-
-/*
-	Target: IE
- 	Mission: DESTROY!!
-						*/
