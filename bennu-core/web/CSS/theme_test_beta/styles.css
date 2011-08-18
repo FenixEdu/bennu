@@ -565,7 +565,6 @@ input[type="button"]:first-of-type {
 .form th,
 .thwidth150px th,
 .formulario th {
-	text-align:right;
 	font-family:'Helvetica', Arial, sans-serif;
 	font-weight:200;
 	font-size:16px;
