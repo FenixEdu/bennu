@@ -497,15 +497,19 @@ div.hr hr {
 }
 
 
+
+
+
+
 /* Forms */
 
 
 #conteudo input,
 #conteudo textarea {
-	padding:6px !important;
+	padding:4px !important;
 	outline:none !important;
 	border-radius:2px !important;
-	font-size:12px !important;
+	/*font-size:12px !important;*/
 	border:1px solid #c8c8c8 !important;
 	background:#fafafa !important;
 }
@@ -562,8 +566,10 @@ input[type="button"]:first-of-type {
 }
 */
 
+
+
+/*
 .form th,
-.thwidth150px th,
 .formulario th {
 	font-family:'Helvetica', Arial, sans-serif;
 	font-weight:200;
@@ -572,7 +578,6 @@ input[type="button"]:first-of-type {
 	width:200px !important;
 }
 .form th, .form td,
-.thwidth150px th, .thwidth150px td,
 .formulario th, .formulario td,
 .tstyle0 th, .tstyle0 td {
 	border:none !important;
@@ -590,77 +595,9 @@ input[type="button"]:first-of-type {
 	border-radius:18px !important;
 	border:1px solid rgba(194,12,32,0.1);
 }
-
-/* Tables */
-
-table {
-	font-size:14px;
-	margin:15px 0 !important;
-}
-
-table th {
-	font-size:15px;
-	padding:10px 0 !important;
-}
-
-table td {
-	padding:10px 0 !important;
-}
-
-.infobox1 h3 {
-	font-family:'Helvetica', Arial, sans-serif;
-	font-size:16px;
-	line-height:26px;
-	text-shadow:0px 1px 0px #fff;
-	margin:0px !important;
-}
-
-h3.separator {
-	margin-top:15px;
-}
-
-.col2-1, .col2-2 {
-	width:435px !important;
-}
+*/
 
 
-.gutter {
-	width:10px !important;
-	background:#fff !important;
-	display:block !important;
-}
-
-div.activities ul#main-activities {
-	padding:0px !important;
-}
-div.activities ul#main-activities li:last-of-type {
-	border-bottom:4px solid #fff;
-}
-div.activities ul#other-activities {
-	padding-top: 5px !important;
-}
-.infobox3 {
-	width:100%;
-}
-
-.infobox3 td {
-	width:50%;
-}
-
-
-
-/* Transitions */
-
-.topmenu a,
-#botao a,
-a.ainda-nao,
-a.login-link,
-#login-form input,
-.formulario input,
-.formulario textarea {
-	-webkit-transition: .2s all ease;
-	-moz-transition: .2s all ease;
-}
 
 
 
@@ -695,3 +632,21 @@ a.login-link,
 	Target: IE
  	Mission: DESTROY!!
 						*/
+
+
+
+
+
+
+
+
+
+
+
+#conteudo {
+font-family:'Helvetica Neue', Arial, sans-serif;
+font-size: 13px;
+}
+
+
+
