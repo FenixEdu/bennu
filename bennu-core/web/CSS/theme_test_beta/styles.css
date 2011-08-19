@@ -13,7 +13,6 @@
 /* Structure */
 body {
 	background: #efefef url(images/back.png);
-	color:#666666;
 }
 
 #wrap {
@@ -69,20 +68,27 @@ a:hover {
 /* Intro */
 
 .intro {
-	font-size:1.3em;
-	line-height:1.2em;
+	font-size:21px;
+	line-height:24px;
 	margin:30px 0 0 0;
 	font-family:'Helvetica Neue', 'Helvetica', Arial, sans-serif;
 }
 
 .intro span {
 	display:block;
-	margin-top:20px;
-	font-size:0.8em;
-	line-height:1.4em;
+	margin:20px 0;
+	font-size:16px;
+	line-height:22px;
 }
 
 /* Login */
+
+#login,
+#login-escolha,
+#hello-user,
+#hello-user p {
+	font-size:14px;
+}
 
 #login {
 	width:500px;
@@ -97,7 +103,7 @@ a:hover {
 	width:300px;
 	position:absolute;
 	top:20px;
-	right:40px;
+	right:20px;
 	z-index:2600;
 	display:none;
 }
@@ -106,7 +112,7 @@ a:hover {
 	width:401px;
 	position:absolute;
 	top:20px;
-	right:40px;
+	right:20px;
 	z-index:2400;
 	display:none;
 }
@@ -122,12 +128,11 @@ a:hover {
 #hello-user p {
 	text-align:right;
 	font-family:'Helvetica Neue', 'Helvetica', Arial, sans-serif;
-	font-size:0.9em;
 }
 
 a.ainda-nao {
 	display:inline-block;
-	margin:22px 0 0 160px;
+	margin:22px 0 0 200px;
 	color:#999999;
 	text-decoration:none;
 	border-bottom:1px solid #e0e0e0;
@@ -154,7 +159,7 @@ a:hover.login-link {
 
 #login-form label {
 	color:#888;
-	font-size:0.9em;
+	font-size:13px;
 	display:inline-block;
 	padding:0 0 2px 4px;
 }
@@ -171,7 +176,7 @@ a:hover.login-link {
 	border-radius:3px;
 	outline:none;
 	background:#fff;
-	font-size:0.9em;
+	font-size:13px;
 	color:#666;
 	display:block;
 }
@@ -218,7 +223,7 @@ a:hover.login-link {
 .topmenu {
 	width:100%;
 	margin:30px 0 0 30px;
-	font-size:0.9em;
+	font-size:14px;
 }
 
 .topmenu ul {
@@ -264,7 +269,7 @@ a:hover.login-link {
 }
 
 #vantagens h2 {
-	font-size:1em;
+	font-size:16px;
 	margin:0 0 10px 0;
 	font-weight:400;
 	padding:8px 0 1px 32px;
@@ -288,10 +293,11 @@ h2.confidencialidade {
 	background-position:0px -75px;
 }
 
-#vantagens h3 {
+#vantagens h3,
+#contactos h3 {
 	color:#888888;
 	text-transform:uppercase;
-	font-size:0.7em;
+	font-size:11px;
 	letter-spacing:1px;
 }
 
@@ -332,13 +338,7 @@ h2.confidencialidade {
 #contactos h2 {
 	margin:0 0 10px 0;
 	font-weight:400;
-	font-size:1em;
-}
-#contactos h3 {
-	color:#888888;
-	text-transform:uppercase;
-	font-size:0.7em;
-	letter-spacing:1px;
+	font-size:16px;
 }
 
 
@@ -368,8 +368,6 @@ a.botao {
 	display:block;
 	text-align:center;
 	margin:0px
-	
-	
 }
 #botao a {
 	color:#fff;
@@ -379,7 +377,7 @@ a.botao {
 }
 
 .posicao-verde {
-	margin:-20px 0 0 180px;
+	margin:-10px 0 0 180px;
 	width:220px;
 }
 
@@ -412,13 +410,6 @@ a.verde {
 	background:-moz-linear-gradient(#adc95f, #a4bf5a);
 	
 }
-#botao a.verde strong {
-	color:#f7f9ef;
-	font-weight:normal;
-	
-	position:relative;
-	z-index:1;
-}
 
 a.azul {
 	background:#66a1b9;
@@ -445,10 +436,21 @@ a.azul {
 	background:-moz-linear-gradient(#6db0cd, #6aaac5);
 	
 }
+#botao a.verde strong,
+#botao a.azul strong {
+	font-size:14px;
+	font-weight:normal;
+	position:relative;
+	z-index:1;
+}
+#botao a.verde strong {
+	color:#f7f9ef;
+	font-size:18px;
+}
+
 #botao a.azul strong {
 	color:#f1f7fa;
 	font-weight:normal;
-	
 	position:relative;
 	z-index:1;
 }
@@ -578,7 +580,6 @@ input[type="button"]:first-of-type {
 	width:200px !important;
 }
 .form th, .form td,
-.formulario th, .formulario td,
 .tstyle0 th, .tstyle0 td {
 	border:none !important;
 }
@@ -598,6 +599,63 @@ input[type="button"]:first-of-type {
 */
 
 
+/*
+
+
+
+.infobox1 h3 {
+	font-family:'Helvetica', Arial, sans-serif;
+	font-size:16px;
+	line-height:26px;
+	text-shadow:0px 1px 0px #fff;
+	margin:0px !important;
+}
+
+h3.separator {
+	margin-top:15px;
+}
+
+.col2-1, .col2-2 {
+	width:435px !important;
+}
+
+
+.gutter {
+	width:10px !important;
+	background:#fff !important;
+	display:block !important;
+}
+
+div.activities ul#main-activities {
+	padding:0px !important;
+}
+div.activities ul#main-activities li:last-of-type {
+	border-bottom:4px solid #fff;
+}
+div.activities ul#other-activities {
+	padding-top: 5px !important;
+}
+.infobox3 {
+	width:100%;
+}
+
+.infobox3 td {
+	width:50%;
+}
+
+*/
+
+
+/* Transitions */
+
+.topmenu a,
+#botao a,
+a.ainda-nao,
+a.login-link,
+#login-form input {
+	-webkit-transition: .2s all ease;
+	-moz-transition: .2s all ease;
+}
 
 
 
