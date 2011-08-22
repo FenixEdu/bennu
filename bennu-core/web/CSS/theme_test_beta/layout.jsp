@@ -200,13 +200,6 @@
 
 			<jsp:include page="<%= layoutContext.getSubMenuTop() %>" />
 
-			<!--
-		<ul>
-			<li><a href="#">Ofertas</a></li>
-			<li><a href="#">Alunos</a></li>
-			<li><a href="#">Pesquisa</a></li>
-		</ul>
-		-->
 		</div>
 
 		<div id="conteudo">
@@ -228,7 +221,6 @@
 				<bean:write name="virtualHost" property="applicationCopyright" />
 			</p>
 		</div>
-
 
 	</div>
 	<!-- wrap -->
