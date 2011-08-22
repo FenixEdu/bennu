@@ -902,7 +902,7 @@ margin: 0 !important;
 }
 div.activities ul#main-activities {
 margin: 0;
-padding: 5px 0 0 0;
+padding: 0 0 0 0;
 list-style: none;
 }
 div.activities ul#main-activities li {
@@ -922,8 +922,9 @@ display: none;
 div.activities ul#main-activities li a.help {
 margin-left: 0.4em;
 }
+
 div.activities ul#other-activities {
-margin: 0 10px 0 30px;
+margin: 10px 10px 0 30px;
 }
 div.activities p {
 margin: 10px 5px 5px 10px !important;
@@ -931,3 +932,8 @@ margin: 10px 5px 5px 10px !important;
 
 
 
+h2 span.processNumber {
+font-weight: normal;
+font-size: 14px;
+color: #888;
+}
