@@ -23,14 +23,15 @@
 	final LayoutContext layoutContext = (LayoutContext) ContextBaseAction.getContext(request);
 %>
 <head>
-<logic:iterate id="head" collection="<%= layoutContext.getHead() %>"
-	type="java.lang.String">
-	<jsp:include page="<%= head %>" />
-</logic:iterate>
-<script type="text/javascript"
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-<script type="text/javascript"
-	src="http://localhost:8080/bennu/CSS/theme_test_beta/js/script.js"></script>
+	<logic:iterate id="head" collection="<%= layoutContext.getHead() %>" type="java.lang.String">
+		<jsp:include page="<%= head %>"/>
+	</logic:iterate>
+	
+	<% final String contextPath = request.getContextPath(); %>
+	
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script type="text/javascript" src="<%= contextPath %>/CSS/theme_test_beta/js/script.js"></script>
+	
 </head>
 
 
@@ -39,12 +40,9 @@
 
 	<div id="header" class="container_12">
 
-		<img
-			src="http://localhost:8080/bennu/CSS/theme_test_beta/images/jobbank.png"
-			alt="IST Job Bank" />
-
-		<%
-		final String contextPath = request.getContextPath();
+		<img src="<%= contextPath %>/CSS/theme_test_beta/images/jobbank.png" alt="IST Job Bank" />
+	
+	<%
 		final String serverName = request.getServerName();
 		final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
 		// If no config is found don't allow login.
