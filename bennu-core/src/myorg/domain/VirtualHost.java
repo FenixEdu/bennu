@@ -36,6 +36,7 @@ import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.services.Service;
+import pt.utl.ist.fenix.tools.util.i18n.Language;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class VirtualHost extends VirtualHost_Base {
@@ -193,6 +194,23 @@ public class VirtualHost extends VirtualHost_Base {
 	final Config config = FenixWebFramework.getConfig();
 	final CasConfig casConfig = config.getCasConfig(getHostname());
 	return casConfig != null && casConfig.isCasEnabled();
+    }
+
+    public boolean supports(final Language language) {
+	final String supportedLanguages = getSupportedLanguages();
+	return supportedLanguages != null && language != null && supportedLanguages.indexOf(language.name()) >= 0;
+    }
+
+    @Service
+    public void setLanguages(final Set<Language> languages) {
+	final StringBuilder stringBuilder = new StringBuilder();
+	for (final Language language : languages) {
+	    if (stringBuilder.length() > 0) {
+		stringBuilder.append(":");
+	    }
+	    stringBuilder.append(language.name());
+	}
+	setSupportedLanguages(stringBuilder.toString());
     }
 
 }

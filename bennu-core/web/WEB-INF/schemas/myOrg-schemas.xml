@@ -1,9 +1,12 @@
-<schema name="virtualHost.application.configuration" type="myorg.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
+<schema name="virtualHost.application.configuration.headers.and.footers" type="myorg.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
 	<slot name="hostname" key="label.application.hostname" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
 	<slot name="htmlTitle" key="label.application.htmlTitle" bundle="MYORG_RESOURCES"/>
 	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="virtualHost.application.configuration.external.interactions" type="myorg.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
 	<slot name="errorPage" key="label.error.page" bundle="MYORG_RESOURCES"
 		validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator" />
 	<slot name="helpLink" key="label.help.link.url" bundle="MYORG_RESOURCES"/>

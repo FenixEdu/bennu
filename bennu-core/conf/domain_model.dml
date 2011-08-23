@@ -179,6 +179,7 @@ class VirtualHost {
 	ByteArray favicon;
 	String supportEmailAddress;
 	String systemEmailAddress;
+	String supportedLanguages;
 }
 
 class Theme {

@@ -25,6 +25,7 @@
 
 package myorg.presentationTier.actions;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +50,7 @@ import org.apache.struts.action.ActionMapping;
 
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
+import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 @Mapping(path = "/configuration")
 public class ConfigurationAction extends ContextBaseAction {
@@ -70,14 +72,29 @@ public class ConfigurationAction extends ContextBaseAction {
     }
 
     public ActionForward basicApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	    final HttpServletRequest request, final HttpServletResponse response, final String forward) throws Exception {
 	final Context context = getContext(request);
 	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
 	if (virtualHost != null) {
 	    request.setAttribute("virtualHost", virtualHost);
 	    request.setAttribute("virtualHostToConfigure", new VirtualHostBean(virtualHost));
 	}
-	return context.forward("/myorg/basicApplicationConfiguration.jsp");
+	return context.forward(forward);
+    }
+
+    public ActionForward basicApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	return basicApplicationConfiguration(mapping, form, request, response, "/myorg/basicApplicationConfiguration.jsp");
+    }
+
+    public ActionForward themeApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	return basicApplicationConfiguration(mapping, form, request, response, "/myorg/themeApplicationConfiguration.jsp");
+    }
+
+    public ActionForward languageApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	return basicApplicationConfiguration(mapping, form, request, response, "/myorg/languageApplicationConfiguration.jsp");
     }
 
     public ActionForward editBasicApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
@@ -112,6 +129,30 @@ public class ConfigurationAction extends ContextBaseAction {
 	return applicationConfiguration(mapping, form, request, response);
     }
 
+    public ActionForward editLanguageApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
+
+	final Set<Language> languages = new HashSet<Language>();
+	for (final Language language : Language.values()) {
+	    if (isLanguageChecked(request, language)) {
+		languages.add(language);
+	    }
+	}
+
+	virtualHost.setLanguages(languages);
+
+	request.setAttribute("virtualHost", virtualHost);
+	request.setAttribute("virtualHostToConfigure", new VirtualHostBean(virtualHost));
+
+	return applicationConfiguration(mapping, form, request, response);
+    }
+
+    private boolean isLanguageChecked(final HttpServletRequest request, final Language language) {
+	String attribute = request.getParameter(language.name());
+	return attribute != null && !attribute.isEmpty() && "on".equalsIgnoreCase(attribute);
+    }
+
     public ActionForward postbackBasicApplicationConfiguration(final ActionMapping mapping, final ActionForm form,
 	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final Context context = getContext(request);
@@ -120,7 +161,7 @@ public class ConfigurationAction extends ContextBaseAction {
 	RenderUtils.invalidateViewState();
 	request.setAttribute("virtualHost", virtualHost);
 	request.setAttribute("virtualHostToConfigure", bean);
-	return context.forward("/myorg/basicApplicationConfiguration.jsp");
+	return context.forward("/myorg/themeApplicationConfiguration.jsp");
     }
 
     public ActionForward manageSystemGroups(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
