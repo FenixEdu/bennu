@@ -145,6 +145,7 @@
 					:
 					<bean:write name="USER_SESSION_ATTRIBUTE" property="username" />
 					|
+					
 					<logic:present name="virtualHost" property="helpLink">
 						<logic:notEmpty name="virtualHost" property="helpLink">
 							<bean:define id="helpUrl">
@@ -163,12 +164,17 @@
 		</logic:present>
 
 
-
-
 	</div>
 	<!-- header -->
 
 
+<%--
+	<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
+		<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
+		<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" >PT</a>
+		<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>" >EN</a>
+	</logic:equal>
+--%>
 
 
 
@@ -192,12 +198,22 @@
 
 
 
+	
+	
 
 	<div id="wrap" class="container_12">
 
 		<div class="topmenu">
-			<%-- <jsp:include page="<%= layoutContext.getMenuTop() %>"/> --%>
-
+		
+		<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
+		<bean:define id="menuElements" name="context" property="menuElements"/>
+		<logic:notEmpty name="menuElements">
+			<bean:size name="menuElements" id="size"/>
+			<logic:greaterThan name="size" value="1">
+				<jsp:include page="<%= layoutContext.getMenuTop() %>"/>
+			</logic:greaterThan>
+		</logic:notEmpty>
+		
 			<jsp:include page="<%= layoutContext.getSubMenuTop() %>" />
 
 		</div>
@@ -228,3 +244,5 @@
 
 </body>
 </html:html>
+
+

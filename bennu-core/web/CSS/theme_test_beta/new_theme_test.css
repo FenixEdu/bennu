@@ -1198,7 +1198,9 @@ text-align: right;
       Tables
 ----------------------------------------*/
 
-table.thwidth150px th	{ width: 150px; }
+table.thwidth150px th	{ width: 150px !important; white-space: normal !important; }
+table.thwidth200px th	{ width: 200px !important; white-space: normal !important; }
+
 table.thnone th			{ display: none; }
 table.thtop th			{ vertical-align: top; }
 table.thmiddle th		{ vertical-align: middle; }

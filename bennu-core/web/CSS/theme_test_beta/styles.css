@@ -924,7 +924,8 @@ margin-left: 0.4em;
 }
 
 div.activities ul#other-activities {
-margin: 10px 10px 0 30px;
+margin: 0 10px 0 30px;
+padding-top: 5px;
 }
 div.activities p {
 margin: 10px 5px 5px 10px !important;
