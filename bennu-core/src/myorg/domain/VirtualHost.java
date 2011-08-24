@@ -213,4 +213,25 @@ public class VirtualHost extends VirtualHost_Base {
 	setSupportedLanguages(stringBuilder.toString());
     }
 
+    public boolean getLanguageSelectionAsMenu() {
+	final String supportedLanguages = getSupportedLanguages();
+	if (supportedLanguages != null && !supportedLanguages.isEmpty()) {
+	    final int dotCount = countDots(supportedLanguages);
+	    if (dotCount < 3) {
+		return false;
+	    }
+	}
+	return true;
+    }
+
+    private int countDots(final String supportedLanguages) {
+	int count = 0;
+	for (int i = supportedLanguages.indexOf(':'); i > 0 && i < supportedLanguages.length(); i = supportedLanguages.indexOf(':', i) + 1) {
+	    if (i >= 0) {
+		count++;
+	    }
+	}
+	return count;
+    }
+
 }
