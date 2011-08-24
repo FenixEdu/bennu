@@ -26,10 +26,12 @@
 package myorg.util;
 
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 
+import pt.ist.vaadinframework.VaadinFrameworkLogger;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
@@ -41,15 +43,22 @@ public class BundleUtil {
     }
 
     public static String getFormattedStringFromResourceBundle(final String bundle, final String key, String... arguments) {
-	String resourceString = getStringFromResourceBundle(bundle, key);
-	if (resourceString != null && arguments != null) {
-	    for (int i = 0; i < arguments.length; i++) {
-		final String argument = arguments[i];
-		final String relaceValue = argument == null ? "" : argument;
-		resourceString = resourceString.replace("{" + i + "}", relaceValue);
-	    }
+	try {
+	    String resourceString = getStringFromResourceBundle(bundle, key);
+	    if (resourceString != null && arguments != null) {
+		    for (int i = 0; i < arguments.length; i++) {
+			final String argument = arguments[i];
+			final String relaceValue = argument == null ? "" : argument;
+			resourceString = resourceString.replace("{" + i + "}", relaceValue);
+		    }
+		}
+		return resourceString;
+	}catch(MissingResourceException mre) {
+	    VaadinFrameworkLogger.getLogger().warn(mre.getMessage());
+	    return "!" + key + "!";
 	}
-	return resourceString;
+	
+	
     }
 
     public static MultiLanguageString getMultilanguageString(final String bundle, final String key) {
