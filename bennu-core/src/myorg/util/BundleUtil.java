@@ -30,13 +30,15 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
-import pt.ist.vaadinframework.VaadinFrameworkLogger;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class BundleUtil {
-
+    
+    protected static final Logger LOGGER = Logger.getLogger("myorg"); 
+    
     public static String getStringFromResourceBundle(final String bundle, final String key) {
 	final ResourceBundle resourceBundle = ResourceBundle.getBundle(bundle, Language.getLocale());
 	return resourceBundle.getString(key);
@@ -54,7 +56,7 @@ public class BundleUtil {
 		}
 		return resourceString;
 	}catch(MissingResourceException mre) {
-	    VaadinFrameworkLogger.getLogger().warn(mre.getMessage());
+	    LOGGER.warn(mre.getMessage());
 	    return "!" + key + "!";
 	}
 	
