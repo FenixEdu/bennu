@@ -40,7 +40,9 @@
 
 	<div id="header" class="container_12">
 
-		<img src="<%= contextPath %>/CSS/theme_test_beta/images/jobbank.png" alt="IST Job Bank" />
+		<a href="<%= contextPath %>" title="Job Bank">
+				<img src="<%= contextPath %>/CSS/theme_test_beta/images/jobbank.png" alt="IST Job Bank" />
+		</a>
 	
 	<%
 		final String serverName = request.getServerName();

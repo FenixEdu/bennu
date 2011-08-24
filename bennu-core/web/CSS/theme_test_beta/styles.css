@@ -30,6 +30,10 @@ body {
 }
 #header img {
 	margin-left:35px;
+
+}
+#header a img {
+	border:none;
 }
 #conteudo {
 	margin:20px 40px;
@@ -331,7 +335,8 @@ a:hover.login-link {
 	background-repeat:no-repeat;
 }
 
-#vantagens p {
+#vantagens p,
+#contactos p {
 	font-family:'Lucida Grande', Tahoma, Arial, sans-serif;
 }
 
@@ -400,6 +405,9 @@ h2.confidencialidade {
 	font-size:16px;
 }
 
+#contactos h3 {
+	margin:0 0 10px;
+}
 
 /* Footer */
 
