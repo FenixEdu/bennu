@@ -71,7 +71,12 @@
 
 
 			<div id="login">
-				<a href="#" class="ainda-nao">Ainda não tem conta?</a>
+				<div class="login-links-adicionais">
+					<a href="#" class="ainda-nao">Ainda não tem conta?</a><br />
+					<a href="#" class="esqueceu-password">Esqueceu a sua password?</a>
+				</div><!-- login-adicional -->
+				
+				
 				<div id="botao" class="posicao-azul">
 					<a href="javascript:void(0);" class="botao azul" id="botao-login"><strong>Login</strong>
 					</a>
@@ -170,17 +175,6 @@
 	<!-- header -->
 
 
-<%--
-	<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
-		<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
-		<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" >PT</a>
-		<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>" >EN</a>
-	</logic:equal>
---%>
-
-
-
-
 	<%--
 <jsp:include page="<%= layoutContext.getPageHeader() %>"/>
 
@@ -218,7 +212,18 @@
 		
 			<jsp:include page="<%= layoutContext.getSubMenuTop() %>" />
 
-		</div>
+		</div><!-- topmenu -->
+		
+		
+		<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
+			<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
+				<div id="language">
+					<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" >PT</a>
+					<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>" >EN</a>
+				</div>
+		</logic:equal>
+			
+		
 
 		<div id="conteudo">
 			<jsp:include page="<%= layoutContext.getPageOperations() %>" />
@@ -227,7 +232,7 @@
 				<jsp:include page="<%= layoutContext.getBreadCrumbs() %>" />
 			</logic:equal>
 			<jsp:include page="<%= layoutContext.getBody() %>" />
-		</div>
+		</div><!-- conteudo -->
 
 
 		<div id="footer">
@@ -238,10 +243,9 @@
 				</dt:format>
 				<bean:write name="virtualHost" property="applicationCopyright" />
 			</p>
-		</div>
+		</div><!-- footer -->
 
-	</div>
-	<!-- wrap -->
+	</div><!-- wrap -->
 
 
 </body>

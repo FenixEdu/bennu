@@ -189,12 +189,20 @@ abbr, address, cite, code {
 	font-family:'Helvetica Neue', 'Helvetica', Arial, sans-serif;
 }
 
-a.ainda-nao {
+.login-links-adicionais {
 	display:inline-block;
-	margin:22px 0 0 200px;
+	margin:14px 0 0 190px;
+}
+
+a.ainda-nao, a.esqueceu-password {
+	display:inline-block;
 	color:#999999;
 	text-decoration:none;
 	border-bottom:1px solid #e0e0e0;
+}
+
+a.esqueceu-password {
+	font-size:11px;
 }
 
 a.login-link {
@@ -205,7 +213,8 @@ a.login-link {
 	border-bottom:1px solid #e0e0e0;
 }
 
-a:hover.ainda-nao {
+a:hover.ainda-nao,
+a:hover.esqueceu-password {
 	color:#666666;
 }
 a:hover.login-link {
@@ -720,6 +729,7 @@ div.activities ul#other-activities {
 .topmenu a,
 #botao a,
 a.ainda-nao,
+a.esqueceu-password,
 a.login-link,
 #login-form input {
 	-webkit-transition: .2s all ease;
