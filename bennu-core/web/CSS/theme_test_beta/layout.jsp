@@ -41,7 +41,7 @@
 	<div id="header" class="container_12">
 
 		<a href="<%= contextPath %>" title="Job Bank">
-				<img src="<%= contextPath %>/CSS/theme_test_beta/images/jobbank.png" alt="IST Job Bank" />
+			<img src="<%= contextPath %>/CSS/theme_test_beta/images/jobbank.png" alt="IST Job Bank" />
 		</a>
 	
 	<%
@@ -98,20 +98,17 @@
 					class="login" method="post">
 					<input type="hidden" name="method" value="login" />
 					<div class="login-block">
-						<label class="login-username"><bean:message
-								key="label.login.username" bundle="MYORG_RESOURCES" />
-						</label><br /> <input type="text" name="username" size="20" />
+						<label class="login-username"><bean:message	key="label.login.email" bundle="MYORG_RESOURCES" /></label><br />
+						<input type="text" name="username" size="20" />
 					</div>
 					<div class="login-block">
-						<label class="login-password"><bean:message
-								key="label.login.password" bundle="MYORG_RESOURCES" />
-						</label><br /> <input type="password" name="password" size="20" />
+						<label class="login-password"><bean:message	key="label.login.password" bundle="MYORG_RESOURCES" /></label><br />
+						<input type="password" name="password" size="20" />
 					</div>
 					<bean:define id="loginLabel">
 						<bean:message key="label.login.submit" bundle="MYORG_RESOURCES" />
 					</bean:define>
-					<input class="login-submit" type="submit" name="Submit"
-						value="<%= loginLabel %>" />
+					<input class="login-submit" type="submit" name="Submit"	value="<%= loginLabel %>" />
 				</form>
 
 			</div>

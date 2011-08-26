@@ -962,3 +962,8 @@ color: #888;
 div.warning1 {
 margin: 15px 0;
 }
+
+.requiredMessage {
+font-size: 11px;
+color: #888;
+}
