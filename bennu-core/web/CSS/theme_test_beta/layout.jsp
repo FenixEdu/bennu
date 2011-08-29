@@ -70,12 +70,7 @@
 			<% } else { %>
 
 
-			<div id="login">
-				<div class="login-links-adicionais">
-					<a href="#" class="ainda-nao">Ainda não tem conta?</a><br />
-					<a href="#" class="esqueceu-password">Esqueceu a sua password?</a>
-				</div><!-- login-adicional -->
-				
+			<div id="login">	
 				
 				<div id="botao" class="posicao-azul">
 					<a href="javascript:void(0);" class="botao azul" id="botao-login"><strong>Login</strong>
@@ -110,6 +105,7 @@
 					</bean:define>
 					<input class="login-submit" type="submit" name="Submit"	value="<%= loginLabel %>" />
 				</form>
+				<a href="#" class="esqueceu-password"><bean:message key="label.jobBank.login.forgotPassword" /></a>
 
 			</div>
 

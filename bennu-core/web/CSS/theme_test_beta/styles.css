@@ -199,6 +199,7 @@ a.ainda-nao, a.esqueceu-password {
 	color:#999999;
 	text-decoration:none;
 	border-bottom:1px solid #e0e0e0;
+	margin-left:160px;
 }
 
 a.esqueceu-password {
@@ -249,8 +250,11 @@ a:hover.login-link {
 
 #login-form input:hover, #login-form input:focus {
 	color:#333;
-	border:1px solid #ccc;
-	-webkit-box-shadow:0 1px 3px rgba(0,0,0,.15) inset;
+	border:1px solid #6db0cd;
+	box-shadow:0 0px 2px rgba(109,176,205,.65);
+	-webkit-box-shadow:0 0px 2px rgba(109,176,205,.65);
+	-moz-box-shadow:0 0px 2px rgba(109,176,205,.65);
+	-o-box-shadow:0 0px 2px rgba(109,176,205,.65);
 }
 
 /*#login-form .login-password {
@@ -272,6 +276,8 @@ a:hover.login-link {
 	border:1px solid #66a1b9;
 	text-shadow:0px -1px 0px #588ea6;
 	-webkit-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.15);
+	-moz-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.15);
+	-o-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.15);
 }
 
 #login-form .login-submit:hover {
@@ -279,7 +285,10 @@ a:hover.login-link {
 	color:#fff;
 	opacity:0.85;
 	border:1px solid #79b8d3;
+	box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25);
 	-webkit-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25);
+	-moz-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25);
+	-o-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25);
 }
 
 
@@ -554,6 +563,110 @@ a.azul {
 	top:2px;
 }
 
+
+/* Gráficos Processo */
+
+#graficos-processo {
+	margin:40px 0 40px 160px;
+	width:720px;
+}
+
+#graficos-processo ul {
+	color:#888;
+	list-style:none;
+	background:#ccc;
+	display:inline-block;
+	overflow:hidden;
+	
+	padding:1px;
+}
+
+
+#graficos-processo li {
+	float:left;
+	padding:16px 30px;
+	position:relative;
+	background:#ddd;
+}
+
+#graficos-processo li.em-curso {
+	color:#fff;
+	background:#6db0cd;
+	padding:16px 30px 16px 55px;
+}
+
+#graficos-processo li.por-iniciar {
+	background:#efefef;
+	color:#666;
+}
+
+#graficos-processo li.completo {
+	background:#ddd !important;
+	color:#888 !important;
+}
+
+#graficos-processo li:last-of-type {
+	float:left;
+}
+
+#graficos-processo span {
+	
+}
+
+#graficos-processo li:before {
+
+	content:">";
+	position:absolute;
+	left:0px;
+}
+
+#graficos-processo li:first-of-type:before {
+	content:"";
+}
+
+#graficos-processo li.em-curso:before {
+	content:"";
+	width:0px;
+	height:0px;
+  	border-color: transparent transparent transparent #ddd;
+  	border-style: solid;
+  	border-width: 24px;
+  	position:absolute;
+	left:0px;
+	top:0px;
+	z-index:3;
+}
+
+#graficos-processo li.em-curso:after {
+	content:"";
+	width:0px;
+	height:0px;
+  	border-color: transparent transparent transparent #6db0cd;
+  	border-style: solid;
+  	border-width: 24px;
+  	position:absolute;
+	right:-48px;
+	top:0px;
+	z-index:3;
+}
+
+#graficos-processo li:first-of-type.em-curso {
+	padding:16px 30px;
+}
+
+#graficos-processo li:first-of-type.em-curso:before {
+	border:none;
+}
+
+#graficos-processo li.em-curso + li.por-iniciar {
+	padding:16px 30px 16px 55px;
+}
+
+
+
+
+
+
 /* Misc */
 
 .clearthis {
@@ -746,7 +859,7 @@ a.login-link,
 
 @-moz-document url-prefix() {
    #login-form {
-		width:420px !important;
+		width:380px !important;
 		top:0px !important;
 	}
 	#login-form input {
@@ -757,6 +870,9 @@ a.login-link,
 	}
 	#login-form .login-submit {
 		margin-top:18px !important;
+	}
+	a.esqueceu-password {
+		margin-left:146px !important;
 	}
 	.tderror span {
 		margin-top:0px !important;

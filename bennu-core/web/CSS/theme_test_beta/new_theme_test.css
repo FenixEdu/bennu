@@ -1299,19 +1299,19 @@ M O D U L E
 
 
 span.post {
-background: url(images/icon_calendar.png) 0px 0px no-repeat;
+background: url(images/calendar-blue.png) 0px 0px no-repeat;
 padding-left: 20px;
 padding-right: 20px;
 padding-bottom: 5px;
 }
 span.author {
-background: url(images/icon_user.png) 0px 0px no-repeat;
+background: url(images/user-business.png) 0px 0px no-repeat;
 padding-left: 20px;
 padding-right: 20px;
 padding-bottom: 5px;
 }
 span.comments {
-background: url(images/icon_comments.png) 0px 0px no-repeat;
+background: url(images/balloon-left.png) 0px 0px no-repeat;
 padding-left: 20px;
 padding-right: 20px;
 padding-bottom: 5px;
