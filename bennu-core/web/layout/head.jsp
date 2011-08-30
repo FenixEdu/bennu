@@ -30,7 +30,6 @@
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/screen.css" media="screen"/>
 <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/<%= theme %>/print.css" media="print"/>
 
-<link rel="stylesheet" type="text/css" href="<%=contextPath + "/VAADIN/themes/" + theme + "/styles.css"%>">
 <link rel="stylesheet" type="text/css" href="<%=contextPath + "/head.css"%>">
 
 <script src="<%= contextPath%>/javaScript/jquery.js" type="text/javascript"></script>
