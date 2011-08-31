@@ -1295,24 +1295,41 @@ M O D U L E
 
 
 span.post {
-background: url(images/calendar-blue.png) 0px 0px no-repeat;
-padding-left: 20px;
-padding-right: 20px;
-padding-bottom: 5px;
+	background: url(images/calendar-blue.png) 0px 0px no-repeat;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 5px;
 }
 span.author {
-background: url(images/user-business.png) 0px 0px no-repeat;
-padding-left: 20px;
-padding-right: 20px;
-padding-bottom: 5px;
+	background: url(images/user-business.png) 0px 0px no-repeat;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 5px;
 }
 span.comments {
-background: url(images/balloon-left.png) 0px 0px no-repeat;
-padding-left: 20px;
-padding-right: 20px;
-padding-bottom: 5px;
+	background: url(images/balloon-left.png) 0px 0px no-repeat;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 5px;
 }
-
+span.create-offer {
+	background: url(images/briefcase.png) 0px 0px no-repeat;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 5px;
+}
+span.submit-candidacy {
+	background: url(images/plus-circle.png) 0px 0px no-repeat;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 5px;
+}
+span.remove-candidacy {
+	background: url(images/minus-circle.png) 0px 0px no-repeat;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 5px;
+}
 
 
 
