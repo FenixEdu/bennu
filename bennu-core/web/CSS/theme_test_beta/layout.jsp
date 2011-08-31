@@ -105,7 +105,7 @@
 					</bean:define>
 					<input class="login-submit" type="submit" name="Submit"	value="<%= loginLabel %>" />
 				</form>
-				<a href="#" class="esqueceu-password"><bean:message key="label.jobBank.login.forgotPassword" /></a>
+				<a href="#" class="esqueceu-password"><bean:message key="label.jobBank.login.forgotPassword" bundle="JOB_BANK_RESOURCES" /></a>
 
 			</div>
 

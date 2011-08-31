@@ -738,17 +738,60 @@ div.hr hr {
 	background:-webkit-gradient(
     	linear,
     	0 0, 0 100%,
-    	from(#82bad1), to(#82bad1)
+    	from(#579fc3), to(#5599ba)
   		) !important;
-	background:-moz-linear-gradient(#82bad1, #82bad1) !important;
+	background:-moz-linear-gradient(#579fc3, #5599ba) !important;
 	cursor:pointer !important;
+	-webkit-box-shadow:0px 1px 0px #6dabc7 inset !important;
 }
 
 #conteudo input[type="submit"]:active,
 #conteudo input[type="button"]:active {
-	background:#5990a6 !important;
+	background:#3c82aa !important;
 	-webkit-box-shadow:none !important;
 }
+
+
+#conteudo input[type="submit"].cancelar {
+	margin: 5px 0 5px 5px;
+	background:-webkit-gradient(
+    	linear,
+    	0 0, 0 100%,
+    	from(#cdcdcd), to(#cacaca)
+  		) !important;
+	background:-moz-linear-gradient(#cdcdcd, #cacaca) !important;
+	font-family:'Helvetica', Arial, sans-serif;
+	border:1px solid #c0c0c0 !important;
+	text-shadow:0px -1px 0px #c2c2c2;
+	color:#f1f7fa;
+	padding:6px 16px !important;
+	border-radius:18px !important;
+	-webkit-box-shadow:0px 1px 0px #d4d4d4 inset !important;
+}
+
+#conteudo input[type="submit"].cancelar:hover {
+	color:#fff !important;
+	background:-webkit-gradient(
+    	linear,
+    	0 0, 0 100%,
+    	from(#bababa), to(#b5b5b5)
+  		) !important;
+	background:-moz-linear-gradient(#bababa, #b5b5b5) !important;
+	text-shadow:0px -1px 0px #a8a8a8;
+	cursor:pointer !important;
+	-webkit-box-shadow:0px 1px 0px #c3c3c3 inset !important;
+}
+
+#conteudo input[type="submit"].cancelar:active {
+	background:#a1a1a1 !important;
+	-webkit-box-shadow:none !important;
+}
+
+
+
+
+
+
 
 /*
 
