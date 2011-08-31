@@ -760,7 +760,7 @@ div.hr hr {
 }
 
 
-#conteudo input[type="submit"].cancelar {
+#conteudo input[type="submit"].cancel {
 	margin: 5px 0 5px 5px;
 	background:-webkit-gradient(
     	linear,
@@ -777,7 +777,7 @@ div.hr hr {
 	-webkit-box-shadow:0px 1px 0px #d4d4d4 inset !important;
 }
 
-#conteudo input[type="submit"].cancelar:hover {
+#conteudo input[type="submit"].cancel:hover {
 	color:#fff !important;
 	background:-webkit-gradient(
     	linear,
@@ -790,7 +790,7 @@ div.hr hr {
 	-webkit-box-shadow:0px 1px 0px #c3c3c3 inset !important;
 }
 
-#conteudo input[type="submit"].cancelar:active {
+#conteudo input[type="submit"].cancel:active {
 	background:#a1a1a1 !important;
 	-webkit-box-shadow:none !important;
 }
