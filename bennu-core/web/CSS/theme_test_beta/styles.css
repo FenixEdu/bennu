@@ -1135,3 +1135,10 @@ margin: 15px 0;
 font-size: 11px;
 color: #888;
 }
+
+
+
+
+.infobox .tview-vertical th { background: transparent; border-color: #eee; }
+.infobox .tview-vertical td { background: transparent; border-color: #eee; }
+
