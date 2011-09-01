@@ -578,7 +578,7 @@ a.azul {
 	display:inline-block;
 	overflow:hidden;
 	
-	padding:2px;
+	padding:1px;
 	border-radius:2px;
 }
 
@@ -668,6 +668,56 @@ a.azul {
 #graficos-processo li.em-curso + li.por-iniciar {
 	padding:16px 30px 16px 55px;
 }
+
+
+
+/* Pagination */
+
+.pagination {
+	display:block;
+	margin-top:15px;
+	color:#888;
+	font-size:11px;
+}
+.pagination ul  {
+	list-style:none;
+}
+.pagination li {
+	float:left;
+}
+.pagination span,
+.pagination a {
+	padding:7px 10px 6px 10px;
+	margin:0px 3px 0 -4px;
+	
+	border-radius:20px;
+	-webkit-border-radius:20px;
+	-moz-border-radius:20px;
+	-o-border-radius:20px;
+}
+.pagination a {
+	background:#efefef;
+	color:#888;
+	text-decoration:none;
+}
+.pagination a:hover {
+	background:#6db0cd;
+	color:#fff;
+	
+	text-shadow:0px -1px 0px #588EA6;
+	-webkit-text-shadow:0px -1px 0px #588EA6;
+	-moz-text-shadow:0px -1px 0px #588EA6;
+	-o-text-shadow:0px -1px 0px #588EA6;
+}
+.pagination .pagination-current {
+	background:#588EA6;
+	color:#fff;
+	font-weight:bold;
+}
+.pagination .pagination-total {
+	margin-left:5px;
+}
+
 
 
 
