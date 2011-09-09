@@ -27,9 +27,10 @@ package myorg.domain.exceptions;
 
 import java.util.ResourceBundle;
 
+import pt.ist.fenixframework.FFDomainException;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
-public class DomainException extends Error {
+public class DomainException extends FFDomainException {
 
     private final String key;
 

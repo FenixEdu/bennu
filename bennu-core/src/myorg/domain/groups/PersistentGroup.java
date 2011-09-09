@@ -28,9 +28,10 @@ package myorg.domain.groups;
 import java.util.Set;
 
 import myorg.domain.MyOrg;
+import myorg.domain.Presentable;
 import myorg.domain.User;
 
-public abstract class PersistentGroup extends PersistentGroup_Base {
+public abstract class PersistentGroup extends PersistentGroup_Base implements Presentable {
     
     public PersistentGroup() {
         super();
@@ -67,6 +68,11 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 	removeSystemGroupMyOrg();
 	removeMyOrg();
 	deleteDomainObject();
+    }
+    
+    @Override
+    public String getPresentationName() {
+	return getName();
     }
 
 }
