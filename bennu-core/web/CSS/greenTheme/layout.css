@@ -259,11 +259,14 @@ float: left;
 /* login form */
 
 div#header div#login {
+/*
 position: absolute;
 top: 15px;
 right: 0;
+*/
+display: inline;
 color: #fff;
-padding-right: 20px;
+/*padding-right: 20px;*/
 }
 
 div#header div#login span {

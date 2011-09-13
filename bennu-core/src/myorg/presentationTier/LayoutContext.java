@@ -38,8 +38,13 @@ public class LayoutContext extends Context {
     private String layout;
 
     private String title = "";
-    private List<String> head = new ArrayList<String>();
+    private final List<String> head = new ArrayList<String>();
     private String pageHeader = "/layout/pageHeader.jsp";
+    private String login = "/layout/login.jsp";
+    private String configurationLink = "/layout/configurationLink.jsp";
+    private String helpLink = "/layout/helpLink.jsp";
+    private String googleSearch = "/layout/googleSearch.jsp";
+    private String languageSelection = "/layout/languageSelection.jsp";
     private String sideBar = "/layout/sideBar.jsp";
     private String subMenuTop = "/layout/subMenuTop.jsp";
     private String menuTop = "/layout/menuTop.jsp";
@@ -83,14 +88,6 @@ public class LayoutContext extends Context {
 
     public void addHead(String head) {
 	this.head.add(head);
-    }
-
-    public String getPageHeader() {
-	return pageHeader;
-    }
-
-    public void setPageHeader(String pageHeader) {
-	this.pageHeader = pageHeader;
     }
 
     public String getSideBar() {
@@ -157,6 +154,54 @@ public class LayoutContext extends Context {
 
     public void setLayout(Theme theme) {
 	this.layout = "/CSS/" + theme.getName() + "/layout.jsp";
+    }
+
+    public void setLogin(String login) {
+	this.login = login;
+    }
+
+    public String getLogin() {
+	return login;
+    }
+
+    public void setConfigurationLink(String configurationLink) {
+	this.configurationLink = configurationLink;
+    }
+
+    public String getConfigurationLink() {
+	return configurationLink;
+    }
+
+    public void setHelpLink(String helpLink) {
+	this.helpLink = helpLink;
+    }
+
+    public String getHelpLink() {
+	return helpLink;
+    }
+
+    public void setGoogleSearch(String googleSearch) {
+	this.googleSearch = googleSearch;
+    }
+
+    public String getGoogleSearch() {
+	return googleSearch;
+    }
+
+    public void setLanguageSelection(String languageSelection) {
+	this.languageSelection = languageSelection;
+    }
+
+    public String getLanguageSelection() {
+	return languageSelection;
+    }
+
+    public void setPageHeader(String pageHeader) {
+	this.pageHeader = pageHeader;
+    }
+
+    public String getPageHeader() {
+	return pageHeader;
     }
 
 }
