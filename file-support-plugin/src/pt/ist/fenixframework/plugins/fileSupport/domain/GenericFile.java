@@ -1,6 +1,8 @@
 package pt.ist.fenixframework.plugins.fileSupport.domain;
 
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
@@ -10,9 +12,11 @@ import javax.activation.MimetypesFileTypeMap;
 
 import jvstm.TransactionalCommand;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
+import pt.ist.fenixframework.FFDomainException;
 import pt.ist.fenixframework.pstm.Transaction;
 
 /**
@@ -74,6 +78,46 @@ abstract public class GenericFile extends GenericFile_Base {
 		setContent(getContent());
 	    }
 	});
+    }
+
+    /**
+     * 
+     * @param algorithm
+     *            the String identifying the algorithm to use. This method uses
+     *            the {@link MessageDigest} class, thus you should take a look
+     *            at {@linkplain http
+     *            ://download.oracle.com/javase/6/docs/technotes
+     *            /guides/security/StandardNames.html#MessageDigest} for more
+     *            information
+     */
+    public byte[] getMessageDigest(String algorithm) {
+	MessageDigest messageDigest;
+	try {
+	    messageDigest = MessageDigest.getInstance(algorithm);
+	} catch (NoSuchAlgorithmException e) {
+	    throw new FFDomainException(e);
+	}
+	return messageDigest.digest(getContent());
+    }
+
+    /**
+     * Convenience method
+     * 
+     * @return the SHA-256 digest of the file content
+     */
+    public byte[] getSHA256MessageDigest() {
+	return getMessageDigest("SHA-256");
+    }
+
+    /**
+     * Convenience method for {@link #getSHA256MessageDigest()} to retrieve the
+     * content in hexadecimal
+     * 
+     * @return hexadecimal representation of the SHA256 digest
+     */
+    public String getHexSHA256MessageDigest() {
+	return Hex.encodeHexString(getSHA256MessageDigest());
+
     }
 
     public static void convertFileStorages(final FileStorage fileStorageToUpdate) {
