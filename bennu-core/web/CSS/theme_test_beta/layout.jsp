@@ -112,17 +112,6 @@
 				</html:link>
 			</div>
 
-			<%--
-			<form action="<%= contextPath %>/authenticationAction.do" class="login" method="post">
-				<input type="hidden" name="method" value="login"/>
-				<span><bean:message key="label.login.username" bundle="MYORG_RESOURCES"/>: <input type="text" name="username" size="10"/></span>
-				<span><bean:message key="label.login.password" bundle="MYORG_RESOURCES"/>: <input type="password" name="password" size="10"/></span>
-				<bean:define id="loginLabel"><bean:message key="label.login.submit" bundle="MYORG_RESOURCES"/></bean:define>
-				<input class="inputbuttonlogin" type="submit" name="Submit" value="<%= loginLabel %>"/>
-			</form>
-			--%>
-
-
 			<% } %>
 		</logic:notPresent>
 		<% } %>
@@ -136,7 +125,7 @@
 					<%
 					final User user = (User) request.getSession(false).getAttribute("USER_SESSION_ATTRIBUTE");
 					if (user.hasRole("myorg.domain.RoleType.MANAGER")) {
-				%>
+					%>
 					<!-- HAS_CONTEXT -->
 					<html:link page="/configuration.do?method=applicationConfiguration">
 						<bean:message bundle="MYORG_RESOURCES"
@@ -144,8 +133,7 @@
 					</html:link>
 					|
 					<%	} %>
-					<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES" />
-					:
+					<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES" />:
 					<bean:write name="USER_SESSION_ATTRIBUTE" property="username" />
 					|
 					
