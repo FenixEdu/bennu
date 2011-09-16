@@ -19,21 +19,21 @@
 					<div>
 						<% if (context.contains(node)) { %>
 							<% if (url.indexOf(':') > 0) { %>
-								<!-- HAS_CONTEXT --><html:link href="<%= url %>" styleClass="navlistselected">
+								<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link href="<%= url %>" styleClass="navlistselected">
 									<bean:write name="node" property="link"/>
 								</html:link>
 							<% } else { %>
-								<!-- HAS_CONTEXT --><html:link page="<%= url %>" styleClass="navlistselected">
+								<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= url %>" styleClass="navlistselected">
 									<bean:write name="node" property="link"/>
 								</html:link>
 							<% } %>
 						<% } else { %>
 							<% if (url.indexOf(':') > 0) { %>
-								<!-- HAS_CONTEXT --><html:link href="<%= url %>">
+								<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link href="<%= url %>">
 									<bean:write name="node" property="link"/>
 								</html:link>
 							<% } else { %>
-								<!-- HAS_CONTEXT --><html:link page="<%= url %>">
+								<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= url %>">
 									<bean:write name="node" property="link"/>
 								</html:link>
 							<% } %>
@@ -47,11 +47,11 @@
 								<% String childUrl = childNode.getUrl(); %>
 								<li class="navsublist">
 									<% if (context.contains(childNode)) { %>
-										<!-- HAS_CONTEXT --><html:link page="<%= childUrl %>" styleClass="navlistselected">
+										<!-- HAS_CONTEXT --><% if(childNode.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= childUrl %>" styleClass="navlistselected">
 											<bean:write name="childNode" property="link"/>
 										</html:link>
 									<% } else { %>
-										<!-- HAS_CONTEXT --><html:link page="<%= childUrl %>">
+										<!-- HAS_CONTEXT --><% if(childNode.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= childUrl %>">
 											<bean:write name="childNode" property="link"/>
 										</html:link>
 									<% } %>

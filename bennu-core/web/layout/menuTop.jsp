@@ -20,7 +20,7 @@
 			<% } %>
 					<% final String url = node.getUrl(); %>
 					<% if (url.indexOf(':') > 0) { %>
-						<!-- HAS_CONTEXT --><html:link href="<%= url %>">
+						<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link href="<%= url %>">
 							<logic:present name="node" property="link">
 								<span><bean:write name="node" property="link"/></span>
 							</logic:present>
@@ -32,7 +32,7 @@
 							</logic:lessThan>
 						</html:link>
 					<% } else { %>
-						<!-- HAS_CONTEXT --><html:link page="<%= url %>">
+						<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= url %>">
 							<logic:present name="node" property="link">
 								<span><bean:write name="node" property="link"/></span>
 							</logic:present>

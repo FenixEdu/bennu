@@ -22,11 +22,11 @@
 								<% } %>
 								<li class="navsublist">
 									<% if (childNode.getUrl().indexOf(':') > 0) { %>
-										<!-- HAS_CONTEXT --><html:link href="<%= childNode.getUrl() %>">
+										<!-- HAS_CONTEXT --><% if(childNode.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link href="<%= childNode.getUrl() %>">
 											<span><bean:write name="childNode" property="link" /></span>
 										</html:link>
 									<% } else { %>
-										<!-- HAS_CONTEXT --><html:link page="<%= childNode.getUrl() %>">
+										<!-- HAS_CONTEXT --><% if(childNode.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= childNode.getUrl() %>">
 											<span><bean:write name="childNode" property="link" /></span>
 										</html:link>
 									<% } %>

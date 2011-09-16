@@ -66,13 +66,13 @@ public class HomeAction extends ContextBaseAction {
 		final String key2 = contentCreator2.getKey();
 		return key1.compareTo(key2);
 	    }
-	    
+
 	};
 
 	private String path;
 	private String bundle;
 	private String key;
-	private String groupKey;
+	private final String groupKey;
 
 	private ContentCreator(final String line) {
 	    final String[] parts = line.split(CreateNodeActionAnnotationProcessor.FIELD_SEPERATOR);
@@ -85,21 +85,27 @@ public class HomeAction extends ContextBaseAction {
 	public String getPath() {
 	    return path;
 	}
+
 	public void setPath(String path) {
 	    this.path = path;
 	}
+
 	public String getBundle() {
 	    return bundle;
 	}
+
 	public void setBundle(String bundle) {
 	    this.bundle = bundle;
 	}
+
 	public String getKey() {
 	    return key;
 	}
+
 	public String getGroupKey() {
 	    return groupKey;
 	}
+
 	public void setKey(String key) {
 	    this.key = key;
 	}
@@ -152,8 +158,8 @@ public class HomeAction extends ContextBaseAction {
 	return context.forward("/myorg/newContent.jsp");
     }
 
-    public ActionForward previewTheme(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    public ActionForward previewTheme(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
 	final Theme theme = getDomainObject(request, "themeId");
 	request.setAttribute("theme", theme);
 

@@ -38,6 +38,7 @@ import myorg.domain.VirtualHost;
 import myorg.domain.VirtualHostBean;
 import myorg.domain.contents.INode;
 import myorg.domain.contents.Node;
+import myorg.domain.contents.NodeBean;
 import myorg.domain.groups.People;
 import myorg.domain.groups.PersistentGroup;
 import myorg.domain.util.ByteArray;
@@ -57,12 +58,12 @@ public class ConfigurationAction extends ContextBaseAction {
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+	    throws Exception {
 	final User user = UserView.getCurrentUser();
 	if (user == null || !user.hasRoleType(RoleType.MANAGER)) {
 	    throw new Error("unauthorized.access");
 	}
-        return super.execute(mapping, form, request, response);
+	return super.execute(mapping, form, request, response);
     }
 
     public ActionForward applicationConfiguration(final ActionMapping mapping, final ActionForm form,
@@ -200,6 +201,69 @@ public class ConfigurationAction extends ContextBaseAction {
 	final VirtualHostBean virtualHostBean = getRenderedObject();
 	VirtualHost.createVirtualHost(virtualHostBean);
 	return applicationConfiguration(mapping, form, request, response);
+    }
+
+    public ActionForward editNode(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
+	request.setAttribute("virtualHostToManage", virtualHost);
+
+	final Node node = getDomainObject(request, "nodeId");
+	request.setAttribute("node", node);
+
+	final String editSemantic = request.getParameter("editSemantic");
+	if (editSemantic != null) {
+	    request.setAttribute("editSemantic", editSemantic.equals("true") ? "false" : "true");
+	} else {
+	    request.setAttribute("editSemantic", "true");
+	}
+
+	final Context context = getContext(request);
+	return context.forward("/myorg/editNode.jsp");
+    }
+
+    public final ActionForward prepareCreateNode(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
+	request.setAttribute("virtualHostToManage", virtualHost);
+
+	final Node node = getDomainObject(request, "parentOfNodesToManageId");
+	request.setAttribute("parentOfNodesToManage", node);
+
+	request.setAttribute("nodeBean", new NodeBean());
+
+	final Context context = getContext(request);
+	return context.forward("/myorg/createNode.jsp");
+    }
+
+    public final ActionForward chooseTypePostBack(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
+	request.setAttribute("virtualHostToManage", virtualHost);
+
+	final Node node = getDomainObject(request, "parentOfNodesToManageId");
+	request.setAttribute("parentOfNodesToManage", node);
+
+	NodeBean nodeBean = getRenderedObject();
+	request.setAttribute("nodeTypeToCreate", nodeBean.getNodeType());
+	request.setAttribute("nodeBean", nodeBean);
+
+	final Context context = getContext(request);
+	return context.forward("/myorg/createNode.jsp");
+    }
+
+    public final ActionForward createNode(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
+	request.setAttribute("virtualHostToManage", virtualHost);
+
+	final Node parentNode = getDomainObject(request, "parentOfNodesToManageId");
+	request.setAttribute("parentOfNodesToManage", parentNode);
+
+	NodeBean nodeBean = getRenderedObject();
+	nodeBean.instantiateSpecifiedNode(virtualHost, parentNode);
+
+	return manageMenus(mapping, form, request, response);
     }
 
     public ActionForward manageMenus(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,

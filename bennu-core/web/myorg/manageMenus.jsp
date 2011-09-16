@@ -30,6 +30,10 @@
 <bean:define id="addContentUrl">/home.do?method=addContent&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="externalId"/></logic:present></bean:define>
 <!-- HAS_CONTEXT --><html:link page="<%= addContentUrl %>">
 	<bean:message bundle="MYORG_RESOURCES" key="label.virtualHost.add.feature"/>
+</html:link> | 
+<bean:define id="createNodeUrl">/configuration.do?method=prepareCreateNode&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="externalId"/></logic:present></bean:define>
+<!-- HAS_CONTEXT --><html:link page="<%= createNodeUrl %>">
+	<bean:message bundle="MYORG_RESOURCES" key="label.virtualHost.create.node"/>
 </html:link>
 
 <br/>
@@ -69,13 +73,17 @@
 	});
 </script>
 
-	<ul id="menuDrag" style="width: 50%; list-style: none;"> 
+	<ul id="menuDrag" style="width: 80%; list-style: none;"> 
 		<logic:iterate id="node" name="nodesToManage" type="myorg.domain.contents.Node" indexId="nodeIndex">
 			<li id="<%= "articleNode" + nodeIndex %>" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: left; cursor: move;"></span>
 				<div>
 				 
-				 <div style="float: right;">
-				 <bean:define id="selectNodeUrl">/configuration.do?method=manageMenus&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/>&amp;parentOfNodesToManageId=<bean:write name="node" property="externalId"/></bean:define>
+				<div style="float: right;">
+				<bean:define id="editNodeUrl">/configuration.do?method=editNode&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/>&amp;nodeId=<bean:write name="node" property="externalId"/></bean:define>
+				<!-- HAS_CONTEXT --><html:link page="<%= editNodeUrl %>">
+					<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.edit" />
+				</html:link>
+				<bean:define id="selectNodeUrl">/configuration.do?method=manageMenus&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/>&amp;parentOfNodesToManageId=<bean:write name="node" property="externalId"/></bean:define>
 				<!-- HAS_CONTEXT --><html:link page="<%= selectNodeUrl %>">
 					<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.select"/>
 				</html:link>

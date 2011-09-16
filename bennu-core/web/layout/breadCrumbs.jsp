@@ -13,7 +13,7 @@
 			<logic:greaterThan name="i" value="0">
 				>
 			</logic:greaterThan>
-			<!-- HAS_CONTEXT --><html:link page="<%= node.getUrl() %>">
+			<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= node.getUrl() %>">
 				<bean:write name="node" property="link"/>
 			</html:link>
 		</logic:iterate>

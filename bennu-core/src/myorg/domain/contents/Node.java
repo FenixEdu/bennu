@@ -53,25 +53,29 @@ public abstract class Node extends Node_Base implements INode {
     public String getUrl() {
 	final StringBuilder stringBuilder = new StringBuilder();
 	appendUrlPrefix(stringBuilder);
-	stringBuilder.append("&");
-	stringBuilder.append(ContextBaseAction.CONTEXT_PATH);
-	stringBuilder.append('=');
-	appendNodePath(stringBuilder);
+	if (!hasFunctionality()) {
+	    stringBuilder.append("&");
+	    stringBuilder.append(ContextBaseAction.CONTEXT_PATH);
+	    stringBuilder.append('=');
+	    appendNodePath(stringBuilder);
+	}
 	return stringBuilder.toString();
     }
 
     public String getUrl(final String appContext) {
 	final StringBuilder stringBuilder = new StringBuilder();
 	appendUrlPrefix(stringBuilder);
-	stringBuilder.append("&");
-	stringBuilder.append(ContextBaseAction.CONTEXT_PATH);
-	stringBuilder.append('=');
-	appendNodePath(stringBuilder);
-	if (isRedirect()) {
+	if (!hasFunctionality()) {
 	    stringBuilder.append("&");
-	    stringBuilder.append(GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME);
+	    stringBuilder.append(ContextBaseAction.CONTEXT_PATH);
 	    stringBuilder.append('=');
-	    stringBuilder.append(appendChecksum(stringBuilder.toString(), appContext));
+	    appendNodePath(stringBuilder);
+	    if (isRedirect()) {
+		stringBuilder.append("&");
+		stringBuilder.append(GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME);
+		stringBuilder.append('=');
+		stringBuilder.append(appendChecksum(stringBuilder.toString(), appContext));
+	    }
 	}
 	return stringBuilder.toString();
     }
@@ -166,6 +170,7 @@ public abstract class Node extends Node_Base implements INode {
 	return virtualHost.getOrderedTopLevelNodes();
     }
 
+    @Override
     public Set<INode> getOrderedChildren() {
 	final Set<INode> nodes = new TreeSet<INode>(COMPARATOR_BY_ORDER);
 	nodes.addAll(getChildren());
@@ -254,4 +259,32 @@ public abstract class Node extends Node_Base implements INode {
 	return false;
     }
 
+    public abstract boolean isAcceptsFunctionality();
+
+    public boolean hasFunctionality() {
+	return false;
+    }
+
+    public Node findMatchNode(String mapping, String method) {
+	if (matchesSearch(mapping, method)) {
+	    return this;
+	} else {
+	    for (Node child : getChildNodes()) {
+		Node result = child.findMatchNode(mapping, method);
+		if (result != null) {
+		    return result;
+		}
+	    }
+	    return null;
+	}
+    }
+
+    private boolean matchesSearch(String mapping, String method) {
+	if (this instanceof ActionNode) {
+	    ActionNode actionNode = (ActionNode) this;
+	    return actionNode.getPath().equals(mapping) && actionNode.getMethod().equals(method);
+	} else {
+	    return false;
+	}
+    }
 }

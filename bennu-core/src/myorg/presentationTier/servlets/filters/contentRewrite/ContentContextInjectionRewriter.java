@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import myorg.presentationTier.Context;
 import myorg.presentationTier.actions.ContextBaseAction;
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter.RequestRewriter;
 
 public class ContentContextInjectionRewriter extends RequestRewriter {
@@ -56,6 +57,11 @@ public class ContentContextInjectionRewriter extends RequestRewriter {
     private static final char[] AREA_IDENTIFIER = "<area".toCharArray();
 
     private static final int LENGTH_OF_HAS_CONTENT_PREFIX = HAS_CONTEXT_PREFIX.length();
+
+    public final static String HAS_CONTEXT_PREFIX_NO_CHECKSUM_PREFIX = HAS_CONTEXT_PREFIX
+	    + GenericChecksumRewriter.NO_CHECKSUM_PREFIX;
+
+    private static final int LENGTH_OF_HAS_CONTEXT_PREFIX_NO_CHECKSUM_PREFIX = HAS_CONTEXT_PREFIX_NO_CHECKSUM_PREFIX.length();
 
     private final String contextPath;
 
@@ -258,8 +264,10 @@ public class ContentContextInjectionRewriter extends RequestRewriter {
     }
 
     protected boolean isPrefixed(final StringBuilder source, final int indexOfTagOpen) {
-	return indexOfTagOpen >= LENGTH_OF_HAS_CONTENT_PREFIX
-		&& match(source, indexOfTagOpen - LENGTH_OF_HAS_CONTENT_PREFIX, indexOfTagOpen, HAS_CONTEXT_PREFIX);
+	return (indexOfTagOpen >= LENGTH_OF_HAS_CONTENT_PREFIX && match(source, indexOfTagOpen - LENGTH_OF_HAS_CONTENT_PREFIX,
+		indexOfTagOpen, HAS_CONTEXT_PREFIX))
+		|| (indexOfTagOpen >= LENGTH_OF_HAS_CONTEXT_PREFIX_NO_CHECKSUM_PREFIX && match(source, indexOfTagOpen
+			- LENGTH_OF_HAS_CONTEXT_PREFIX_NO_CHECKSUM_PREFIX, indexOfTagOpen, HAS_CONTEXT_PREFIX_NO_CHECKSUM_PREFIX));
     }
 
     protected boolean match(final StringBuilder source, final int iStart, int iEnd, final String string) {
