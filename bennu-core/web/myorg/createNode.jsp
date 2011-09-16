@@ -37,7 +37,7 @@
 	</logic:notPresent>
 
 	<logic:present name="nodeTypeToCreate">
-		<bean:define id="nodeTypeToCreate" name="nodeTypeToCreate" type="myorg.domain.contents.NodeBean.NodeType" />
+		<bean:define id="nodeTypeToCreate" name="nodeTypeToCreate" type="myorg.domain.contents.NodeType" />
 		<fr:edit name="nodeBean" schema="<%= "myorg.domain.contents.create.nodeBean." + nodeTypeToCreate.getName() %>" />
 	</logic:present>
 	

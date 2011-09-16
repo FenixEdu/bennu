@@ -1,25 +1,22 @@
 package myorg.domain.contents;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-import myorg.domain.VirtualHost;
 import myorg.domain.groups.PersistentGroup;
-import pt.ist.bennu.vaadin.domain.contents.VaadinNode;
 
 public class NodeBean implements Serializable {
 
-    public enum NodeType {
-	ACTION_NODE("ActionNode"), VAADIN_NODE("VaadinNode"), LINK_NODE("LinkNode");
-
-	private final String name;
-
-	private NodeType(String name) {
-	    this.name = name;
-	}
-
-	public String getName() {
-	    return this.name;
-	}
+    public static final Set<NodeType> nodeTypes = new HashSet<NodeType>();
+    
+    public static synchronized void registerNodeType(NodeType type) {
+	NodeBean.nodeTypes.add(type);
+    }
+    
+    static {
+	NodeBean.registerNodeType(new ActionNodeType());
+	NodeBean.registerNodeType(new LinkNodeType());
     }
 
     private NodeType nodeType;
@@ -104,17 +101,4 @@ public class NodeBean implements Serializable {
 	this.persistentGroup = persistentGroup;
     }
 
-    public Node instantiateSpecifiedNode(VirtualHost virtualHost, Node parentNode) {
-	switch (nodeType) {
-	case ACTION_NODE:
-	    return ActionNode.createActionNode(virtualHost, parentNode, path, method, linkBundle, linkKey, persistentGroup);
-	case VAADIN_NODE:
-	    return VaadinNode.createVaadinNode(virtualHost, parentNode, linkBundle, linkKey, argument, persistentGroup,
-		    useBennuLayout);
-	case LINK_NODE:
-	    return LinkNode.createLinkNode(virtualHost, parentNode, url, linkBundle, linkKey, persistentGroup);
-	}
-
-	return null;
-    }
 }

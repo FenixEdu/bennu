@@ -149,24 +149,13 @@
 	<slot name="linkKey" key="" />
 </schema>
 
-<schema name="myorg.domain.contents.edit.VaadinNode" type="pt.ist.bennu.vaadin.domain.contents.VaadinNode" bundle="MYORG_RESOURCES">
-	<slot name="path" key="" />
-	<slot name="method" key="" />
-	<slot name="linkBundle" key="" />
-	<slot name="linkKey" key="" />
-	<slot name="argument" key="" />
-</schema>
-
-<schema name="myorg.domain.contents.edit.VersionedPageNode" type="module.contents.domain.VersionedPageNode" bundle="MYORG_RESOURCES">
-</schema>
-
 <schema name="myorg.domain.contents.edit.LinkNode" type="myorg.domain.contents.LinkNode" bundle="MYORG_RESOURCES">
 	<slot name="url" key="" />
 	<slot name="linkBundle" key="" />
 	<slot name="linkKey" key="" />
 </schema>
 
-<schema name="myorg.domain.contents.create.nodeBean.ActionNode" type="myorg.domain.contents.NodeBean" bundle="MYORG_RESOURCES">
+<schema name="myorg.domain.contents.create.nodeBean.ActionNode" type="myorg.domain.contents.ActionNode" bundle="MYORG_RESOURCES">
 	<slot name="path" key="" />
 	<slot name="method" key="" />
 	<slot name="linkBundle" key="" />
@@ -177,23 +166,10 @@
 	</slot>
 </schema>
 
-<schema name="myorg.domain.contents.create.nodeBean.LinkNode" type="myorg.domain.contents.NodeBean" bundle="MYORG_RESOURCES">
+<schema name="myorg.domain.contents.create.nodeBean.LinkNode" type="myorg.domain.contents.LinkNode" bundle="MYORG_RESOURCES">
 	<slot name="url" key="" />
 	<slot name="linkBundle" key="" />
 	<slot name="linkKey" key="" />
-	<slot name="persistentGroup" layout="menu-select">
-		<property name="providerClass" value="myorg.presentationTier.renderers.providers.SystemGroupsProvider"/>
-		<property name="format" value="${name}"/>	 
-	</slot>
-</schema>
-
-<schema name="myorg.domain.contents.create.nodeBean.VaadinNode" type="myorg.domain.contents.NodeBean" bundle="MYORG_RESOURCES">
-	<slot name="path" key="" />
-	<slot name="method" key="" />
-	<slot name="linkBundle" key="" />
-	<slot name="linkKey" key="" />
-	<slot name="argument" key="" />
-	<slot name="useBennuLayout" key="" />
 	<slot name="persistentGroup" layout="menu-select">
 		<property name="providerClass" value="myorg.presentationTier.renderers.providers.SystemGroupsProvider"/>
 		<property name="format" value="${name}"/>	 

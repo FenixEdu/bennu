@@ -261,7 +261,7 @@ public class ConfigurationAction extends ContextBaseAction {
 	request.setAttribute("parentOfNodesToManage", parentNode);
 
 	NodeBean nodeBean = getRenderedObject();
-	nodeBean.instantiateSpecifiedNode(virtualHost, parentNode);
+	nodeBean.getNodeType().instantiateNode(virtualHost, parentNode, nodeBean);
 
 	return manageMenus(mapping, form, request, response);
     }

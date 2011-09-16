@@ -183,6 +183,11 @@ public class FunctionalityFilter implements Filter {
 	    checkedConsistency = true;
 	}
 	
+	if (!checkedConsistency) {
+	    checkConsistency();
+	    checkedConsistency = true;
+	}
+
 	if (isSemanticURL((HttpServletRequest) request)) {
 	    final String url = getSemanticURL((HttpServletRequest) request);
 	    linkComponents = obtainSemanticComponent(url);
