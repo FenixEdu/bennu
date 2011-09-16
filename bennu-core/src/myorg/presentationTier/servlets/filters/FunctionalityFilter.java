@@ -89,6 +89,7 @@ public class FunctionalityFilter implements Filter {
     private static final Map<String, FunctionalityInfo> relativeMapping = new HashMap<String, FunctionalityInfo>();
     // mapping path -> method name -> functionality
     private static final Map<String, Map<String, FunctionalityInfo>> reverseMapping = new HashMap<String, Map<String, FunctionalityInfo>>();
+    private static boolean checkedConsistency = false;
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -124,7 +125,6 @@ public class FunctionalityFilter implements Filter {
 	    actionFunctionalities.put(functionality.getMethod(), functionality);
 	}
 
-	checkConsistency();
     }
 
     private void checkConsistency() {
@@ -177,7 +177,12 @@ public class FunctionalityFilter implements Filter {
 	FunctionalityInfo functionality = null;
 	List<SemanticComponent> linkComponents = null;
 	String link = null;
-
+	
+	if (!checkedConsistency) {
+	    checkConsistency();
+	    checkedConsistency = true;
+	}
+	
 	if (isSemanticURL((HttpServletRequest) request)) {
 	    final String url = getSemanticURL((HttpServletRequest) request);
 	    linkComponents = obtainSemanticComponent(url);
