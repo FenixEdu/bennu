@@ -244,7 +244,7 @@ a:hover.login-link {
 #login-form input {
 	font-family:'Helvetica Neue', 'Helvetica', Arial, sans-serif;
 	padding:6px;
-	border:1px solid #e9e9e9;
+	border:1px solid #ccc;
 	outline:none;
 	background:#fff;
 	color:#666;
@@ -261,10 +261,10 @@ a:hover.login-link {
 	color:#333;
 	border:1px solid #6db0cd;
 	
-	box-shadow:0 0px 2px rgba(109,176,205,.65);
-	-webkit-box-shadow:0 0px 2px rgba(109,176,205,.65);
-	-moz-box-shadow:0 0px 2px rgba(109,176,205,.65);
-	-o-box-shadow:0 0px 2px rgba(109,176,205,.65);
+	box-shadow:0 0px 2px rgba(109,176,205,.65), 0 1px 1px rgba(0,0,0,.15) inset;
+	-webkit-box-shadow:0 0px 2px rgba(109,176,205,.65), 0 1px 1px rgba(0,0,0,.15) inset;
+	-moz-box-shadow:0 0px 2px rgba(109,176,205,.65), 0 1px 1px rgba(0,0,0,.15) inset;
+	-o-box-shadow:0 0px 2px rgba(109,176,205,.65), 0 1px 1px rgba(0,0,0,.15) inset;
 }
 
 #login-form .login-submit,
@@ -291,7 +291,7 @@ a:hover.login-link {
 	-moz-border-radius:3px;
 	-o-border-radius:3px;
 	
-	text-shadow:0px -1px 0px #588ea6;
+	text-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.15);
 	-webkit-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.15);
 	-moz-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.15);
 	-o-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.15);
@@ -848,7 +848,8 @@ div.hr hr {
 }
 
 #conteudo input,
-#conteudo textarea {
+#conteudo textarea,
+#login-form input {
 	box-shadow:0 1px 1px rgba(0,0,0,.15) inset;
 	-webkit-box-shadow:0 1px 1px rgba(0,0,0,.15) inset;
 	-moz-box-shadow:0 1px 1px rgba(0,0,0,.15) inset;
