@@ -1621,22 +1621,3 @@ tr.refund-invoices table th, tr.refund-invoices table td {
 background: #f0f0f0;
 color: #666 !important;
 }
-
-
-
-#language {
-	width:160px;
-	float:right;
-	position:relative;
-	z-index:3000;
-	margin-right:40px;
-	text-align:right;
-	font-size:12px;
-	top:-20px;
-}
-#language a {
-	text-decoration:none;
-	padding:2px 0;
-}
-
-

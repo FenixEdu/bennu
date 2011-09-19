@@ -231,8 +231,12 @@ a:hover.login-link {
 	display:inline-block;
 	padding:0 0 2px 4px;
 }
+#login-form span {
+	color:#888;
+}
 
-#login-form .login-block {
+#login-form .login-block,
+#login-form span {
 	display:inline-block;
 	margin-top:-19px;
 }
@@ -245,6 +249,7 @@ a:hover.login-link {
 	background:#fff;
 	color:#666;
 	display:block;
+	width:140px;
 	
 	border-radius:3px;
 	-webkit-border-radius:3px;
@@ -262,12 +267,15 @@ a:hover.login-link {
 	-o-box-shadow:0 0px 2px rgba(109,176,205,.65);
 }
 
-#login-form .login-submit {
+#login-form .login-submit,
+#login-form .inputbuttonlogin {
 	color:#f1f7fa;
 	font-weight:bold;
 	float:right;
-	padding:4px 18px 5px;
+	padding:5px 18px 5px;
 	border:1px solid #66a1b9;	
+	width:auto;
+	margin-top:-1px;
 	
 	background: #6db0cd;
 	background:-webkit-gradient(linear,	0 0, 0 100%, from(#6db0cd), to(#6aaac5));
@@ -289,7 +297,8 @@ a:hover.login-link {
 	-o-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.15);
 }
 
-#login-form .login-submit:hover {
+#login-form .login-submit:hover,
+#login-form .inputbuttonlogin:hover {
 	cursor:pointer;
 	color:#fff;
 	border:1px solid #79b8d3;
@@ -300,10 +309,10 @@ a:hover.login-link {
 	-khtml-opacity: 0.85;
 	opacity: 0.85;
 	
-	box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25);
-	-webkit-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25);
-	-moz-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25);
-	-o-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25);
+	box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25), 0 1px 1px rgba(0,0,0,.15) inset;
+	-webkit-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25), 0 1px 1px rgba(0,0,0,.15) inset;
+	-moz-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25), 0 1px 1px rgba(0,0,0,.15) inset;
+	-o-box-shadow:0px 1px 0px #79b8d3 inset, 0 1px 3px rgba(0,0,0,.25), 0 1px 1px rgba(0,0,0,.15) inset;
 }
 
 
@@ -349,7 +358,27 @@ a:hover.login-link {
     visibility: hidden;
 }
 
+/* Language */
 
+#language {
+	width:160px;
+	float:right;
+	position:relative;
+	z-index:3000;
+	margin-right:40px;
+	text-align:right;
+	font-size:12px;
+	top:-20px;
+}
+#language a {
+	text-decoration:none;
+	padding:2px 4px;
+}
+
+#language a:first-child {
+	border-right:1px solid #efefef;
+	padding-right:8px;
+}
 
 
 /* Vantagens */
@@ -609,8 +638,8 @@ a.azul {
 /* Gráficos Processo */
 
 #graficos-processo {
-	margin:40px 0 40px 150px;
-	width:720px;
+	margin:40px 0 40px 60px;
+	width:800px;
 }
 
 #graficos-processo ul {
@@ -728,7 +757,7 @@ a.azul {
 
 .pagination {
 	display:block;
-	margin-top:25px;
+	margin-top:40px;
 	color:#888;
 	font-size:11px;
 }
@@ -739,6 +768,7 @@ a.azul {
 	float:left;
 }
 .pagination span,
+.pagination b,
 .pagination a {
 	padding:7px 10px 6px 10px;
 	margin:0px 3px 0 -4px;
@@ -762,7 +792,8 @@ a.azul {
 	-moz-text-shadow:0px -1px 0px #588EA6;
 	-o-text-shadow:0px -1px 0px #588EA6;
 }
-.pagination .pagination-current {
+.pagination .pagination-current,
+.pagination b {
 	background:#588EA6;
 	color:#fff;
 	font-weight:bold;
@@ -802,8 +833,9 @@ div.hr hr {
 
 
 #conteudo input,
-#conteudo textarea {
-	padding:4px !important;
+#conteudo textarea,
+#conteudo select {
+	padding:6px !important;
 	outline:none !important;
 	/*font-size:12px !important;*/
 	border:1px solid #c8c8c8 !important;
@@ -814,15 +846,25 @@ div.hr hr {
 	-moz-border-radius:2px !important;
 	-o-border-radius:2px !important;
 }
+
+#conteudo input,
+#conteudo textarea {
+	box-shadow:0 1px 1px rgba(0,0,0,.15) inset;
+	-webkit-box-shadow:0 1px 1px rgba(0,0,0,.15) inset;
+	-moz-box-shadow:0 1px 1px rgba(0,0,0,.15) inset;
+	-o-box-shadow:0 1px 1px rgba(0,0,0,.15) inset;
+}
+
 #conteudo input:hover, #conteudo input:focus,
-#conteudo textarea:hover, #conteudo textarea:focus {
-	border:1px solid #999 !important;
+#conteudo textarea:hover, #conteudo textarea:focus,
+#conteudo select:hover, #conteudo select:focus {
 	background:#fff !important;
+	border:1px solid #6db0cd !important;
 	
-	box-shadow:0px 1px 2px #e6e6e6 inset !important;
-	-webkit-box-shadow:0px 1px 2px #e6e6e6 inset !important;
-	-moz-box-shadow:0px 1px 2px #e6e6e6 inset !important;
-	-o-box-shadow:0px 1px 2px #e6e6e6 inset !important;
+	box-shadow:0 0px 2px rgba(109,176,205,.65), 0 1px 1px rgba(0,0,0,.15) inset !important;
+	-webkit-box-shadow:0 0px 2px rgba(109,176,205,.65), 0 1px 1px rgba(0,0,0,.15) inset !important;
+	-moz-box-shadow:0 0px 2px rgba(109,176,205,.65), 0 1px 1px rgba(0,0,0,.15) inset !important;
+	-o-box-shadow:0 0px 2px rgba(109,176,205,.65), 0 1px 1px rgba(0,0,0,.15) inset !important;
 }
 
 #conteudo input[type="submit"],
@@ -964,7 +1006,10 @@ div.hr hr {
 a.ainda-nao,
 a.esqueceu-password,
 a.login-link,
-#login-form input {
+#login-form input,
+#conteudo input,
+#conteudo textarea,
+#conteudo select {
 	transition: .2s all ease;
 	-webkit-transition: .2s all ease;
 	-moz-transition: .2s all ease;
@@ -981,20 +1026,20 @@ a.login-link,
 
 @-moz-document url-prefix() {
    #login-form {
-		width:380px !important;
+		width:395px !important;
 		top:0px !important;
 	}
 	#login-form input {
-		padding:4px 6px !important;
+		padding:6px !important;
 	}
-	#login-form .login-submit {
-		padding:3px 16px 3px !important;
+	#login-form .inputbuttonlogin {
+		padding:3px 12px 3px !important;
 	}
-	#login-form .login-submit {
+	#login-form .inputbuttonlogin {
 		margin-top:18px !important;
 	}
 	a.esqueceu-password {
-		margin-left:146px !important;
+		margin-left:158px !important;
 	}
 	.tderror span {
 		margin-top:0px !important;

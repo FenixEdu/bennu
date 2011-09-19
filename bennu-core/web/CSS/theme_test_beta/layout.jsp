@@ -89,27 +89,11 @@
 
 			<div id="login-form">
 
-				<form action="<%= contextPath %>/authenticationAction.do"
-					class="login" method="post">
-					<input type="hidden" name="method" value="login" />
-					<div class="login-block">
-						<label class="login-username"><bean:message	key="label.login.email" bundle="MYORG_RESOURCES" /></label><br />
-						<input type="text" name="username" size="20" />
-					</div>
-					<div class="login-block">
-						<label class="login-password"><bean:message	key="label.login.password" bundle="MYORG_RESOURCES" /></label><br />
-						<input type="password" name="password" size="20" />
-					</div>
-					<bean:define id="loginLabel">
-						<bean:message key="label.login.submit" bundle="MYORG_RESOURCES" />
-					</bean:define>
-					<input class="login-submit" type="submit" name="Submit"	value="<%= loginLabel %>" />
-				</form>
-<%-- 				<a href="#" class="esqueceu-password"><bean:message key="label.jobBank.login.forgotPassword" bundle="JOB_BANK_RESOURCES" /></a> --%>
+				<jsp:include page="<%= layoutContext.getLogin() %>"/>
+
 				
-				<html:link page="/enterprise.do?method=prepareToPasswordRecover">
-					<bean:message bundle="JOB_BANK_RESOURCES" key="label.jobBank.login.forgotPassword" />
-				</html:link>
+					<a href="<%= contextPath %>/enterprise.do?method=prepareToPasswordRecover" class="esqueceu-password"><bean:message bundle="JOB_BANK_RESOURCES" key="label.jobBank.login.forgotPassword"/></a>
+				
 			</div>
 
 			<% } %>
@@ -122,34 +106,13 @@
 		<logic:present name="USER_SESSION_ATTRIBUTE">
 			<div id="hello-user">
 				<p>
-					<%
-					final User user = (User) request.getSession(false).getAttribute("USER_SESSION_ATTRIBUTE");
-					if (user.hasRole("myorg.domain.RoleType.MANAGER")) {
-					%>
-					<!-- HAS_CONTEXT -->
-					<html:link page="/configuration.do?method=applicationConfiguration">
-						<bean:message bundle="MYORG_RESOURCES"
-							key="label.application.configuration" />
-					</html:link>
-					|
-					<%	} %>
-					<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES" />:
-					<bean:write name="USER_SESSION_ATTRIBUTE" property="username" />
-					|
 					
-					<logic:present name="virtualHost" property="helpLink">
-						<logic:notEmpty name="virtualHost" property="helpLink">
-							<bean:define id="helpUrl">
-								<bean:write name="virtualHost" property="helpLink" />
-							</bean:define>
-							<a href="<%= helpUrl %>" target="_blank"><bean:message
-									key="label.help.link" bundle="MYORG_RESOURCES" />
-							</a> |  
-					</logic:notEmpty>
-					</logic:present>
-					<html:link action="/authenticationAction.do?method=logout">
-						<bean:message key="label.login.logout" bundle="MYORG_RESOURCES" />
-					</html:link>
+					<jsp:include page="<%= layoutContext.getConfigurationLink() %>"/>
+					
+					<jsp:include page="<%= layoutContext.getLogin() %>"/>
+					
+					<jsp:include page="<%= layoutContext.getHelpLink() %>"/>
+					
 				</p>
 			</div>
 		</logic:present>
