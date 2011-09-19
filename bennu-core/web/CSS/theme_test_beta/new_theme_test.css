@@ -927,7 +927,7 @@ vertical-align: top;
 text-align: left;
 }
 form table th {
-padding: 5px 0;
+padding: 10px 0 !important;
 padding-right: 10px !important;
 white-space: nowrap;
 }
@@ -994,6 +994,7 @@ border-top: none !important;
 border-bottom: none !important;
 border-right: none !important;
 color: #cc2200;
+padding: 10px !important;
 }
 table tr td.tderror span {
 background-color: #fff0dd;

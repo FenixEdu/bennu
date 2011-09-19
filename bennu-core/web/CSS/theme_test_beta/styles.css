@@ -831,11 +831,13 @@ div.hr hr {
 
 /* Forms */
 
+#conteudo input,
+#conteudo textarea {
+	padding:6px !important;
+}
 
 #conteudo input,
-#conteudo textarea,
-#conteudo select {
-	padding:6px !important;
+#conteudo textarea {
 	outline:none !important;
 	/*font-size:12px !important;*/
 	border:1px solid #c8c8c8 !important;
@@ -857,8 +859,7 @@ div.hr hr {
 }
 
 #conteudo input:hover, #conteudo input:focus,
-#conteudo textarea:hover, #conteudo textarea:focus,
-#conteudo select:hover, #conteudo select:focus {
+#conteudo textarea:hover, #conteudo textarea:focus {
 	background:#fff !important;
 	border:1px solid #6db0cd !important;
 	
@@ -867,6 +868,20 @@ div.hr hr {
 	-moz-box-shadow:0 0px 2px rgba(109,176,205,.65), 0 1px 1px rgba(0,0,0,.15) inset !important;
 	-o-box-shadow:0 0px 2px rgba(109,176,205,.65), 0 1px 1px rgba(0,0,0,.15) inset !important;
 }
+#conteudo input[disabled] {
+	color: #999 !important;
+	border:1px solid #c8c8c8 !important;
+	cursor: default;
+}
+#conteudo input[disabled]:hover, #conteudo input[disabled]:focus {
+	background:#fafafa !important;
+	
+	box-shadow:0 1px 1px rgba(0,0,0,.15) inset !important;
+	-webkit-box-shadow:0 1px 1px rgba(0,0,0,.15) inset !important;
+	-moz-box-shadow:0 1px 1px rgba(0,0,0,.15) inset !important;
+	-o-box-shadow:0 1px 1px rgba(0,0,0,.15) inset !important;
+}
+
 
 #conteudo input[type="submit"],
 #conteudo input[type="button"] {
@@ -1000,6 +1015,7 @@ div.hr hr {
 
 
 
+
 /* Transitions */
 
 .topmenu a,
@@ -1100,10 +1116,9 @@ table.tview-horizontal {
 table.tview-horizontal th {
 	border: 1px solid #ccc;
 	text-align: left;
-	padding: 8px 10px 0 0;
 	white-space: nowrap;
 	vertical-align: top;
-	padding: 6px 10px 6px 0;
+	padding: 10px 10px 10px 0;
 }
 table.tview-horizontal td {
 	text-align: left;
