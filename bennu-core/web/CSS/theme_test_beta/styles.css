@@ -834,6 +834,11 @@ div.hr hr {
 #conteudo input,
 #conteudo textarea {
 	padding:6px !important;
+	margin:0px;
+}
+
+#conteudo select {
+	margin:3px 0px;
 }
 
 #conteudo input,
@@ -884,7 +889,8 @@ div.hr hr {
 
 
 #conteudo input[type="submit"],
-#conteudo input[type="button"] {
+#conteudo input[type="button"],
+input#popup_ok {
 	margin: 5px 0;
 	font-family:'Helvetica', Arial, sans-serif;
 	border:1px solid #4f97b6 !important;
@@ -918,7 +924,8 @@ div.hr hr {
 }
 
 #conteudo input[type="submit"]:hover,
-#conteudo input[type="button"]:hover {
+#conteudo input[type="button"]:hover,
+input#popup_ok:hover {
 	color:#fff !important;
 	cursor:pointer !important;
 	
@@ -938,7 +945,8 @@ div.hr hr {
 }
 
 #conteudo input[type="submit"]:active,
-#conteudo input[type="button"]:active {
+#conteudo input[type="button"]:active,
+input#popup_ok:active {
 	background:#3c82aa !important;
 	
 	box-shadow:none !important;
@@ -948,7 +956,8 @@ div.hr hr {
 }
 
 
-#conteudo input[type="submit"].cancel {
+#conteudo input[type="submit"].cancel,
+input#popup_cancel {
 	margin: 5px 0 5px 5px;
 	font-family:'Helvetica', Arial, sans-serif;
 	border:1px solid #c0c0c0 !important;
@@ -980,7 +989,8 @@ div.hr hr {
 	-o-box-shadow:0px 1px 0px #d4d4d4 inset !important;
 }
 
-#conteudo input[type="submit"].cancel:hover {
+#conteudo input[type="submit"].cancel:hover,
+input#popup_cancel:hover {
 	color:#fff !important;
 	cursor:pointer !important;	
 	
@@ -1004,7 +1014,8 @@ div.hr hr {
 	-o-box-shadow:0px 1px 0px #c3c3c3 inset !important;
 }
 
-#conteudo input[type="submit"].cancel:active {
+#conteudo input[type="submit"].cancel:active,
+input#popup_cancel:active {
 	background:#a1a1a1 !important;
 	
 	box-shadow:none !important;
