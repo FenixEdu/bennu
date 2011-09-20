@@ -1013,6 +1013,17 @@ div.hr hr {
 	-o-box-shadow:none !important;
 }
 
+#conteudo label {
+	display:inline-block;
+	margin:10px 0;
+}
+#conteudo select {
+	margin-top:6px;
+}
+#conteudo [type="checkbox"] {
+	margin-top:12px;
+}
+
 
 
 
@@ -1060,6 +1071,15 @@ a.login-link,
 	}
 	.tderror span {
 		margin-top:0px !important;
+	}
+	#conteudo label {
+		margin:7px 0;
+	}
+	#conteudo select {
+		margin-top:2px;
+	}
+	#conteudo [type="checkbox"] {
+		margin-top:7px;
 	}
 }
 
