@@ -262,6 +262,10 @@ public class Email extends Email_Base {
     }
 
     public void deliver() {
+	final EmailAddressList toAddresses = getToAddresses();
+	final EmailAddressList ccAddresses = getCcAddresses();
+	final EmailAddressList bccAddresses = getBccAddresses();
+
 	final EmailMimeMessage emailMimeMessage = new EmailMimeMessage();
 	try {
 	    emailMimeMessage.send(this);
@@ -276,7 +280,8 @@ public class Email extends Email_Base {
 	    resend(validUnsentAddresses);
 	} catch (final MessagingException e) {
 	    logProblem(e);
-	    delete();
+//	    delete();
+	    retry(toAddresses, ccAddresses, bccAddresses);
 	}
 
 	
@@ -297,6 +302,13 @@ public class Email extends Email_Base {
 	    }
 	}
 	setBccAddresses(new EmailAddressList(addresses));
+    }
+
+    private void retry(final EmailAddressList toAddresses, final EmailAddressList ccAddresses,
+	    final EmailAddressList bccAddresses) {
+	setToAddresses(toAddresses);
+	setCcAddresses(ccAddresses);
+	setBccAddresses(bccAddresses);
     }
 
     private void setFailedAddresses(final Address[] recipients) {
