@@ -1,0 +1,57 @@
+package pt.ist.fenixframework.plugins.scheduler.domain;
+
+
+class SchedulerSystem {
+}
+
+class Task {
+	String ojbConcreteClass;
+	DateTime lastRun;
+}
+
+class TaskSchedule {
+	Integer minute;
+	Integer hour;
+	Integer day;
+	Integer month;
+	Integer dayofweek;
+}
+
+class TaskLog {
+	DateTime taskStart;
+	DateTime taskEnd;
+	String output;
+	Boolean successful;
+}
+
+
+relation SchedulerSystemTask {
+	SchedulerSystem playsRole schedulerSystem;
+	Task playsRole task {
+		multiplicity *;
+	}
+}
+
+relation SchedulerSystemPendingTask {
+	SchedulerSystem playsRole schedulerSystemFromPendingTask;
+	Task playsRole pendingTask;
+}
+
+relation TaskPendingTask {
+	Task playsRole previousTask;
+	Task playsRole nextTask;
+}
+
+relation TaskTaskSchedule {
+	Task playsRole task;
+	TaskSchedule playsRole taskSchedule {
+		multiplicity *;
+	}
+}
+
+relation TaskTaskLog {
+	Task playsRole task;
+	TaskLog playsRole taskLog {
+		multiplicity *;
+	}
+}
