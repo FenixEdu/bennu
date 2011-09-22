@@ -15,6 +15,7 @@ import jvstm.TransactionalCommand;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.FFDomainException;
 import pt.ist.fenixframework.pstm.Transaction;
@@ -30,6 +31,7 @@ abstract public class GenericFile extends GenericFile_Base {
 	super();
 	this.setOjbConcreteClass(getClass().getName());
 	setFileSupport(FileSupport.getInstance());
+	setCreationDate(new DateTime());
     }
 
     protected void init(String displayName, String filename, byte[] content) {
@@ -50,6 +52,8 @@ abstract public class GenericFile extends GenericFile_Base {
     }
 
     public void setContent(byte[] content) {
+	long size = (content == null) ? 0 : content.length;
+	setSize(Long.valueOf(size));
 	final FileStorage fileStorage = getFileStorage();
 	final String uniqueIdentification = fileStorage.store(StringUtils.isEmpty(getContentKey()) ? getExternalId()
 		: getContentKey(), content);
@@ -109,6 +113,10 @@ abstract public class GenericFile extends GenericFile_Base {
 	return getMessageDigest("SHA-256");
     }
 
+    public byte[] getSHA1MessageDigest() {
+	return getMessageDigest("SHA-1");
+    }
+
     /**
      * Convenience method for {@link #getSHA256MessageDigest()} to retrieve the
      * content in hexadecimal
@@ -117,6 +125,17 @@ abstract public class GenericFile extends GenericFile_Base {
      */
     public String getHexSHA256MessageDigest() {
 	return Hex.encodeHexString(getSHA256MessageDigest());
+
+    }
+
+    /**
+     * Convenience method for {@link #getSHA1MessageDigest()} to retrieve the
+     * content in hexadecimal
+     * 
+     * @return hexadecimal representation of the SHA1 digest
+     */
+    public String getHexSHA1MessageDigest() {
+	return Hex.encodeHexString(getSHA1MessageDigest());
 
     }
 
