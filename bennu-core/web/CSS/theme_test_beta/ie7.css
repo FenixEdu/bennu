@@ -1,0 +1,53 @@
+body {
+	text-align:center;
+}
+
+.top {
+	padding-bottom:50px;
+}
+
+.container_12 {
+	text-align:left;
+}
+
+header input,
+#conteudo input,
+#login-form input {
+	overflow:visible;
+}
+
+#login-form {
+	width:380px;
+	top:0px;
+}
+#login-form span {
+	margin:0px;
+}
+#login-form .inputbuttonlogin {
+	margin-top:-30px;
+	padding:4px 18px;
+}
+
+a.login-link {
+	margin-bottom:-2px;
+}
+a.esqueceu-password {
+	font-size:10px;
+	margin-left:145px;
+}
+.posicao-verde {
+	display:block;
+}
+
+
+
+
+#botao a.verde:before {
+	width:auto;
+	height:auto;
+}
+
+#botao a.verde:hover {
+	background:green;
+}
+

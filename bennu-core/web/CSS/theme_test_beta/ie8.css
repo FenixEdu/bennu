@@ -1,0 +1,37 @@
+#graficos-processo ul li.em-curso {
+	margin-right:24px;
+}
+
+#graficos-processo ul li.em-curso:before {
+	border-width: 24px;
+}
+
+#graficos-processo ul li.em-curso:after {
+	background:#efefef;
+	top:0px;
+	border-width: 24px;
+}
+
+#graficos-processo li.em-curso + li.por-iniciar:before {
+	content:"";
+	padding:16px 30px;
+}
+
+input {
+	behavior: url(pie.htc);
+}
+#conteudo input[type="checkbox"] {
+	padding: none !important;
+	margin: none !important;
+	border: none !important;
+}
+#conteudo h3.separator {
+	background:none;
+	border:none;
+}
+
+
+/* clear */
+.clearthis {
+	zoom:1;
+}
