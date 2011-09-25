@@ -4,6 +4,8 @@ import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.pstm.PersistentRoot;
 import pt.ist.fenixframework.pstm.Transaction;
@@ -135,6 +137,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 	final Task task = getPendingTask();
 	final Task next = task == null ? null : task.getNextTask();
 	setPendingTask(next);
+	task.setLastRun(new DateTime());
 	return task;
     }
 

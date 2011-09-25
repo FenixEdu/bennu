@@ -4,27 +4,28 @@ import jvstm.TransactionalCommand;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public abstract class Task extends Task_Base {
-    
+
     public Task() {
         super();
         setOjbConcreteClass(getClass().getName());
         setSchedulerSystem(SchedulerSystem.getInstance());
-        checkUnique();
     }
 
-    private void checkUnique() {
-	for (final Task otherTask : getSchedulerSystem().getTaskSet()) {
-	    if (otherTask != this && otherTask.getClass() == getClass()) {
-		throw new Error("There can only be one task of each type!");
-	    }
-	}
-    }
+//    private void checkUnique() {
+//	for (final Task otherTask : getSchedulerSystem().getTaskSet()) {
+//	    if (otherTask != this && otherTask.getClass() == getClass()) {
+//		throw new Error("There can only be one task of each type!");
+//	    }
+//	}
+//    }
 
     public void queue(final Task task) {
-	if (!hasNextTask()) {
-	    setNextTask(task);
-	} else {
-	    getNextTask().queue(task);
+	if (getClass() != task.getClass()) {
+	    if (hasNextTask()) {
+		getNextTask().queue(task);
+	    } else {
+		setNextTask(task);
+	    }
 	}
     }
 

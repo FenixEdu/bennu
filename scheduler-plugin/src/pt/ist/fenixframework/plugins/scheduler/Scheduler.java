@@ -8,10 +8,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jvstm.TransactionalCommand;
+
+import org.joda.time.DateTime;
+
 import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class Scheduler extends TimerTask {
+
+    private static final int SCHEDULER_INVOCATION_PERIOD = 20000; // (ms)
 
     public static void initialize() {
 	new Scheduler();
@@ -20,7 +25,9 @@ public class Scheduler extends TimerTask {
     private final Timer timer = new Timer(true);
 
     public Scheduler() {
-	timer.scheduleAtFixedRate(this, 25000, 20000);
+	final DateTime dt = new DateTime().withMillisOfSecond(0).withSecondOfMinute(0).plusMinutes(1);
+	System.out.println("Scheduler will run at: " + dt.toString("yyyy-MM-dd HH:mm:ss"));
+	timer.scheduleAtFixedRate(this, dt.toDate(), SCHEDULER_INVOCATION_PERIOD);
     }
 
     @Override
