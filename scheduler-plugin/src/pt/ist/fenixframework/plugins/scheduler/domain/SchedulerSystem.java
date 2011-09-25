@@ -135,9 +135,11 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     private Task popPendingTask() {
 	final Task task = getPendingTask();
-	final Task next = task == null ? null : task.getNextTask();
-	setPendingTask(next);
-	task.setLastRun(new DateTime());
+	if (task != null) {
+	    final Task next = task.getNextTask();
+	    setPendingTask(next);
+	    task.setLastRun(new DateTime());
+	}
 	return task;
     }
 
