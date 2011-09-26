@@ -27,6 +27,7 @@
 		<jsp:include page="<%= head %>"/>
 	</logic:iterate>
 	<% final String contextPath = request.getContextPath(); %>
+	
 	<!--[if IE 7]>
 	        <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/theme_test_beta/ie7.css" />
 	<![endif]-->

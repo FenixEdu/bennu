@@ -39,6 +39,21 @@ a.esqueceu-password {
 	display:block;
 }
 
+#graficos-processo {
+	font-size:11px !important;
+	width:610px !important;
+}
+
+#graficos-processo ul {
+	width:610px !important;
+}
+
+#graficos-processo li,
+#graficos-processo li.em-curso,
+#graficos-processo li.por-iniciar {
+	padding:16px 30px !important;
+}
+
 
 
 
@@ -51,3 +66,8 @@ a.esqueceu-password {
 	background:green;
 }
 
+
+/* clear */
+.clearthis {
+	zoom:1;
+}

@@ -15,7 +15,14 @@
 </title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!--[if IE 7]>
+<meta http-equiv="X-UA-Compatible" content="IE=8">
+<![endif]-->
+<!--[if IE 8]>
+<meta http-equiv="X-UA-Compatible" content="IE=8">
+<![endif]-->
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+
 <%
 	final String contextPath = request.getContextPath();
 %>
