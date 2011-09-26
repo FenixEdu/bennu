@@ -47,10 +47,11 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     private void queueTasks(final Task task) {
-	if (!hasPendingTask()) {
-	    setPendingTask(task);
-	} else {
+	if (hasPendingTask()) {
 	    getPendingTask().queue(task);
+	} else {
+	    System.out.println("Scheduler: queueing task: " + task.getClass().getName());
+	    setPendingTask(task);
 	}
     }
 
@@ -58,7 +59,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 	final DomainModel domainModel = FenixFramework.getDomainModel();
 	for (final DomainClass domainClass : domainModel.getDomainClasses()) {
 	    if (isTaskInstance(domainClass) && !existsTaskInstance(domainClass)) {
-		System.out.println("Creating task instance for: " + domainClass.getFullName());
+		System.out.println("Scheduler: creating task instance for: " + domainClass.getFullName());
 		initTask(domainClass);
 	    }
 	}
@@ -93,13 +94,13 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 		taskClass.newInstance();
 	    }
 	} catch (final ClassNotFoundException e) {
-	    System.out.println("Failed initialization of task: " + domainClass.getFullName());
+	    System.out.println("Scheduler: failed initialization of task: " + domainClass.getFullName());
 	    e.printStackTrace();
 	} catch (final InstantiationException e) {
-	    System.out.println("Failed initialization of task: " + domainClass.getFullName());
+	    System.out.println("Scheduler: failed initialization of task: " + domainClass.getFullName());
 	    e.printStackTrace();
 	} catch (final IllegalAccessException e) {
-	    System.out.println("Failed initialization of task: " + domainClass.getFullName());
+	    System.out.println("Scheduler: failed initialization of task: " + domainClass.getFullName());
 	    e.printStackTrace();
 	}
     }
@@ -136,7 +137,9 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     private Task popPendingTask() {
 	final Task task = getPendingTask();
 	if (task != null) {
+	    System.out.println("Scheduler: popping task " + task.getClass().getName());
 	    final Task next = task.getNextTask();
+	    task.setNextTask(null);
 	    setPendingTask(next);
 	    task.setLastRun(new DateTime());
 	}

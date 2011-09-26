@@ -7,6 +7,8 @@ class SchedulerSystem {
 class Task {
 	String ojbConcreteClass;
 	DateTime lastRun;
+	DateTime lastRunStart;
+	DateTime lastRunEnd;
 }
 
 class TaskSchedule {

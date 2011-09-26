@@ -1,6 +1,9 @@
 package pt.ist.fenixframework.plugins.scheduler.domain;
 
 import jvstm.TransactionalCommand;
+
+import org.joda.time.DateTime;
+
 import pt.ist.fenixframework.pstm.Transaction;
 
 public abstract class Task extends Task_Base {
@@ -24,6 +27,7 @@ public abstract class Task extends Task_Base {
 	    if (hasNextTask()) {
 		getNextTask().queue(task);
 	    } else {
+		System.out.println("Scheduler: queueing task: " + task.getClass().getName());
 		setNextTask(task);
 	    }
 	}
@@ -39,12 +43,14 @@ public abstract class Task extends Task_Base {
     }
 
     public void runPendingTask() {
+	System.out.println("Scheduler: running task: " + getClass().getName());
 	final TaskThread taskThread = new TaskThread();
 	taskThread.start();
 	try {
 	    taskThread.join();
 	} catch (final InterruptedException e) {
-	    throw new Error(e);
+	    e.printStackTrace();
+//	    throw new Error(e);
 	}
     }
 
@@ -58,7 +64,9 @@ public abstract class Task extends Task_Base {
 		Transaction.withTransaction(true, new TransactionalCommand() {
 		    @Override
 		    public void doIt() {
+//			setLastRunStart(new DateTime());
 			runTask();
+//			setLastRunEnd(new DateTime());
 		    }
 		});
 	    } finally {
