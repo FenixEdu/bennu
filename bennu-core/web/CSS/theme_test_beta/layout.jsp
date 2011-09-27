@@ -174,8 +174,8 @@
 		<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
 			<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
 				<div id="language">
-					<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" >PT</a>
-					<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>" >EN</a>
+					<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" class="pt">PT</a>
+					<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>">EN</a>
 				</div>
 		</logic:equal>
 			

@@ -10,10 +10,19 @@ body {
 	text-align:left;
 }
 
+.topmenu li {
+	border:none;
+}
+
 header input,
 #conteudo input,
 #login-form input {
 	overflow:visible;
+	position:relative;
+}
+
+form table td {
+	zoom:1;
 }
 
 #login-form {
@@ -35,6 +44,10 @@ a.esqueceu-password {
 	font-size:10px;
 	margin-left:145px;
 }
+a.pt {
+	border-right:1px solid #ccc;
+}
+
 .posicao-verde {
 	display:block;
 }
@@ -64,6 +77,13 @@ a.esqueceu-password {
 
 #botao a.verde:hover {
 	background:green;
+}
+
+#conteudo input.inputbutton {
+	background:#6DB0CD !important;
+}
+#conteudo input.cancel {
+	background:#CDCDCD !important;
 }
 
 
