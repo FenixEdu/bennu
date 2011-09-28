@@ -14,13 +14,6 @@ body {
 	border:none;
 }
 
-header input,
-#conteudo input,
-#login-form input {
-	overflow:visible;
-	position:relative;
-}
-
 form table td {
 	zoom:1;
 }
@@ -40,10 +33,12 @@ form table td {
 a.login-link {
 	margin-bottom:-2px;
 }
+
 a.esqueceu-password {
 	font-size:10px;
 	margin-left:145px;
 }
+
 a.pt {
 	border-right:1px solid #ccc;
 }

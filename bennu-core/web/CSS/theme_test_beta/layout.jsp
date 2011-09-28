@@ -5,7 +5,7 @@
 <%@page import="myorg.presentationTier.LayoutContext"%>
 <%@page import="myorg.presentationTier.actions.ContextBaseAction"%>
 
-<!--  PAGE_HEADER.JSP -->
+
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr"%>
 <%@page import="pt.ist.fenixWebFramework.FenixWebFramework"%>
 <%@page import="pt.ist.fenixWebFramework.Config.CasConfig"%>
