@@ -52,10 +52,19 @@ textarea.onpaste = function() {
 	<fr:destination name="cancel" path="/scheduler.do?method=listCustomTaskLogs"/>
 </fr:edit>
 <script>
+	
 	textareas = document.getElementsByTagName('textarea');
 	txtClassName = textareas[0];
 	txtCode = textareas[1];
+	
+	function setClassname(className) {
+		txtClassName.value = className;
+	}
+	
 	detectPaste(txtCode, function(pasteInfo) {
-		txtClassName.value = doit(pasteInfo.text);
+		setClassname(doit(pasteInfo.text));
 	});
+	
+	txtCode.onkeyup = function () { setClassname(doit(txtCode.value)); }
+	
 </script>
