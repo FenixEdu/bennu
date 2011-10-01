@@ -269,12 +269,14 @@ public class Email extends Email_Base {
 	final EmailMimeMessage emailMimeMessage = new EmailMimeMessage();
 	try {
 	    emailMimeMessage.send(this);
+	    logSend(emailMimeMessage, toAddresses, toAddresses, bccAddresses);
 	} catch (final SendFailedException e) {
 	    logProblem(e);
 	    
 	    final Address[] invalidAddresses = e.getInvalidAddresses();
 	    setFailedAddresses(invalidAddresses);
 	    final Address[] validSentAddresses = e.getValidSentAddresses();
+	    logSend(emailMimeMessage, validSentAddresses);
 	    //setConfirmedAddresses(validSentAddresses);
 	    final Address[] validUnsentAddresses = e.getValidUnsentAddresses();
 	    resend(validUnsentAddresses);
@@ -288,6 +290,20 @@ public class Email extends Email_Base {
 	if (!hasAnyRecipients()) {
 	    delete();
 	}
+    }
+
+    private void logSend(final EmailMimeMessage emailMimeMessage, final Object... os) {
+	final StringBuilder sb = new StringBuilder();
+	try {
+	    sb.append(emailMimeMessage.getMessageID());
+	} catch (final MessagingException e) {
+	}
+	sb.append(" ACK ");
+	for (final Object o : os) {
+	    sb.append(o.toString());
+	}
+	System.out.println(sb.toString());
+	
     }
 
     private void resend(final Address[] recipients) {
