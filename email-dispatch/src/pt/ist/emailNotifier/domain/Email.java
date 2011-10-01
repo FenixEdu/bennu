@@ -299,8 +299,10 @@ public class Email extends Email_Base {
 	} catch (final MessagingException e) {
 	}
 	sb.append(" ACK ");
-	for (final Object o : os) {
-	    sb.append(o.toString());
+	if (os != null) {
+	    for (final Object o : os) {
+		sb.append(o.toString());
+	    }
 	}
 	System.out.println(sb.toString());
 	
