@@ -301,7 +301,9 @@ public class Email extends Email_Base {
 	sb.append(" ACK ");
 	if (os != null) {
 	    for (final Object o : os) {
-		sb.append(o.toString());
+		if (o != null) {
+		    sb.append(o.toString());
+		}
 	    }
 	}
 	System.out.println(sb.toString());
