@@ -22,7 +22,7 @@
 	              outputFile="bennu-fb.xml"
 		      timeout="2800000" >
 		    <sourcePath path="${basedir}/src_full" />
-			<class location="${basedir}/build_full/web/WEB-INF/classes" />
+			<class location="${basedir}/build_full/WEB-INF/classes" />
 	    </findbugs>
 	  </target>
 
