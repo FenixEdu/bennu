@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="bennu" basedir="." default="build">
+<property environment="env"/>
 <property name="findbugs.home" value="${env.FINDBUGS_HOME}" />
 	
 	<taskdef resource="tools/ant/compile-tools.xml">
