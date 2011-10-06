@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="bennu" basedir="." default="build">
+<property name="findbugs.home" value="${env.FINDBUGS_HOME}" />
+	
 	<taskdef resource="tools/ant/compile-tools.xml">
 		<classpath>
 			<fileset dir="lib" includes="*.jar" />
@@ -10,6 +12,18 @@
 	<target name="generate-module-targets">
 		<gen-module-targets targetAntFile="build_modules.xml" propertiesFile="build.properties" />
 	</target>
+	
+	
+	<target name="findbugs-nocompile" description="Runs findbugs against a build_full directory that it assumes that exists">
+		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+		 <findbugs home="${findbugs.home}"
+	              output="xml"
+	              outputFile="bennu-fb.xml"
+		      timeout="2800000" >
+		    <sourcePath path="${basedir}/src_full" />
+			<class location="${basedir}/build_full/web/WEB-INF/classes" />
+	    </findbugs>
+	  </target>
 
 	<target name="clean" depends="generate-module-targets" description="Clean default installation">
 		<ant antfile="build_modules.xml" target="clean" />
