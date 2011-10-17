@@ -1,8 +1,10 @@
 package pt.ist.fenixframework.plugins.luceneIndexing;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jvstm.TransactionalCommand;
@@ -42,30 +44,31 @@ public class IndexingManager implements Runnable {
 
 	    @Override
 	    public void doIt() {
-		final Set<IndexDocument> documentsToIndex = new HashSet<IndexDocument>();
-		List<IndexingRequest> indexingRequests = LuceneSearchPluginRoot.getInstance().getIndexingRequests();
-		int size = indexingRequests.size();
+		final Map<String, IndexDocument> requestMap = new HashMap<String, IndexDocument>();
 
-		List<IndexingRequest> subList = indexingRequests.subList(0, Math
-			.min(DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT, size));
-		Iterator<IndexingRequest> requestIterator = subList.iterator();
-
-		while (requestIterator.hasNext()) {
-		    IndexingRequest request = requestIterator.next();
-		    documentsToIndex.add(request.getIndex());
-		    requestIterator.remove();
+		final LuceneSearchPluginRoot root = LuceneSearchPluginRoot.getInstance();
+		for (final IndexingRequest request : root.getIndexingRequestsSet()) {
+		    if (requestMap.size() > DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT) {
+			break;
+		    }
+		    final String indexableExternalId = request.getIndexableExternalId();
+		    if (!requestMap.containsKey(indexableExternalId)) {
+			requestMap.put(indexableExternalId, request.getIndex());
+		    }
 		    request.delete();
 		}
 
-		if (!documentsToIndex.isEmpty()) {
-		    LOGGER.info("Indexing " + documentsToIndex.size() + " documents out of " + size);
+		final int remainder = root.getIndexingRequestsSet().size();
+		if (!requestMap.isEmpty()) {
+		    final int indexed = requestMap.size();
+		    LOGGER.info("Indexing " + indexed + " documents out of " + (remainder + indexed));
 		    long t1 = System.currentTimeMillis();
-		    DomainIndexer.getInstance().indexDomainObjects(documentsToIndex);
+		    DomainIndexer.getInstance().indexDomainObjects(requestMap.values());
 		    long t2 = System.currentTimeMillis();
 		    LOGGER.info("Finished indexation. Took: " + (t2 - t1) + "ms.");
 		}
 
-		yetToIndex = size - DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT;
+		yetToIndex = remainder;
 	    }
 
 	});
