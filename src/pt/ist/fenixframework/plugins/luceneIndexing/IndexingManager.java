@@ -1,11 +1,7 @@
 package pt.ist.fenixframework.plugins.luceneIndexing;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import jvstm.TransactionalCommand;
 
@@ -33,8 +29,8 @@ public class IndexingManager implements Runnable {
 		while (indexFiles() > 0) {
 		    // keep doing it!
 		}
-	    } catch (InterruptedException e) {
-		e.printStackTrace();
+	    } catch (Throwable t) {
+		t.printStackTrace();
 	    }
 	}
     }
