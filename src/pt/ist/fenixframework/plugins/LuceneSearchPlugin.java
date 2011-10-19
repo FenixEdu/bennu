@@ -22,7 +22,9 @@ public class LuceneSearchPlugin implements FenixFrameworkPlugin {
     public void initialize() {
 	LuceneSearchPluginRoot.getInstance();
 	TopLevelTransaction.addCommitListener(new IndexListener());
-	new Thread(new IndexingManager()).start();
+	final Thread thread = new Thread(new IndexingManager());
+	thread.setDaemon(true);
+	thread.start();
     }
 
 }
