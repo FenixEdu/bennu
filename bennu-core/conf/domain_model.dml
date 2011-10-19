@@ -126,38 +126,6 @@ class groups.PeopleUserLog {
 	String executor;
 }
 
-class scheduler.Task {
-	String ojbConcreteClass;
-	DateTime lastRun;
-}
-
-class scheduler.PendingExecutionTaskQueue {
-}
-
-class scheduler.TaskConfiguration {
-	Integer minute;
-	Integer hour;
-	Integer day;
-	Integer month;
-	Integer dayofweek;
-}
-
-class scheduler.TaskLog {
-	DateTime taskStart;
-	DateTime taskEnd;
-	String output;
-	Boolean successful;
-}
-
-class scheduler.CustomTaskLog {
-    String className;
-    String contents;
-	DateTime uploaded;
-	DateTime taskStart;
-	DateTime taskEnd;
-	String output;
-}
-
 class User {
 	String username  (REQUIRED);
 	String password;
@@ -298,60 +266,6 @@ relation NodePersistentGroup {
 		multiplicity *;
 	}
 	groups.PersistentGroup playsRole accessibilityGroup;
-}
-
-relation MyOrTask {
-	MyOrg playsRole myOrg;
-	scheduler.Task playsRole tasks {
-		multiplicity *;
-	}
-}
-
-relation MyOrgPendingExecutionTaskQueue {
-	MyOrg playsRole myOrg;
-	scheduler.PendingExecutionTaskQueue playsRole pendingExecutionTaskQueue;
-}
-
-relation MyOrTaskConfiguration {
-	MyOrg playsRole myOrg;
-	scheduler.TaskConfiguration playsRole taskConfigurations {
-		multiplicity *;
-	}
-}
-
-relation MyOrTaskLog {
-	MyOrg playsRole myOrg;
-	scheduler.TaskLog playsRole taskLogs {
-		multiplicity *;
-	}
-}
-
-relation TaskPendingExecutionTaskQueue {
-	scheduler.PendingExecutionTaskQueue playsRole pendingExecutionTaskQueue;
-	scheduler.Task playsRole tasks {
-		multiplicity *;
-	}
-}
-
-relation TaskTaskConfiguration {
-	scheduler.Task playsRole task;
-	scheduler.TaskConfiguration playsRole taskConfigurations {
-		multiplicity *;
-	}
-}
-
-relation TaskTaskLog {
-	scheduler.Task playsRole task;
-	scheduler.TaskLog playsRole taskLogs {
-		multiplicity *;
-	}
-}
-
-relation MyOrgCustomTaskLog {
-	MyOrg playsRole myOrg;
-	scheduler.CustomTaskLog playsRole customTaskLog {
-		multiplicity *;
-	}
 }
 
 relation MyOrgPeopleUserLog {

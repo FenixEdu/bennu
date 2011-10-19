@@ -28,6 +28,8 @@ package myorg.presentationTier.servlets;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -44,7 +46,6 @@ import myorg.domain.Theme.ThemeType;
 import myorg.domain.groups.AnyoneGroup;
 import myorg.domain.groups.Role;
 import myorg.domain.groups.UserGroup;
-import myorg.domain.scheduler.Scheduler;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter.ChecksumPredicate;
@@ -71,7 +72,7 @@ public class StartupServlet extends HttpServlet {
 
 	initializePersistentGroups();
 
-	Scheduler.initialize();
+	initScheduler();
 
 	syncThemes();
 
@@ -151,4 +152,31 @@ public class StartupServlet extends HttpServlet {
 	});
 
     }
+
+    private void initScheduler() {
+	try {
+	    final Class clazz = Class.forName("myorg.domain.scheduler.Scheduler");
+	    final Method method = clazz.getDeclaredMethod("initialize");
+	    method.invoke(null);
+	    System.out.println("Scheduler initializeed.");
+	} catch (ClassNotFoundException ex) {
+	    // scheduler not included in deploy... keep going.
+	} catch (SecurityException e) {
+	    System.out.println("Unable to init scheduler");
+	    e.printStackTrace();
+	} catch (NoSuchMethodException e) {
+	    System.out.println("Unable to init scheduler");
+	    e.printStackTrace();
+	} catch (IllegalArgumentException e) {
+	    System.out.println("Unable to init scheduler");
+	    e.printStackTrace();
+	} catch (IllegalAccessException e) {
+	    System.out.println("Unable to init scheduler");
+	    e.printStackTrace();
+	} catch (InvocationTargetException e) {
+	    System.out.println("Unable to init scheduler");
+	    e.printStackTrace();
+	}
+    }
+
 }

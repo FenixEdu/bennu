@@ -35,4 +35,17 @@
 <div style="border-style: dotted; border-width: thin; padding: 10px;">
 	<pre><bean:write name="customTaskLog" property="output"/></pre>
 </div>
-
+<h3>
+	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.customTask.files"/>
+</h3>
+<div style="border-style: dotted; border-width: thin; padding: 10px;">
+	<ul>
+		<logic:iterate id="file" name="customTaskLog" property="genericFileSet">
+			<li>
+				<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=downloadOutputFile" paramId="fileId" paramName="file" paramProperty="externalId">
+					<bean:write name="file" property="displayName"/>
+				</html:link>
+			</li>
+		</logic:iterate>
+	</ul>
+</div>
