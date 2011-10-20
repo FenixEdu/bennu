@@ -14,9 +14,9 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 public class IndexingManager implements Runnable {
 
-    protected static final long DEFAULT_SLEEP_TIME = 60000;
+    protected static final long DEFAULT_SLEEP_TIME = 1000;
     protected static final Logger LOGGER = Logger.getLogger(IndexingManager.class.getName());
-    protected static final int DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT = 10000;
+    protected static final int DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT = 200;
 
     private int yetToIndex;
 
