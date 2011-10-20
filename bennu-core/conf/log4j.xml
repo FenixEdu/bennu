@@ -14,6 +14,11 @@
 		<appender-ref ref="ConsoleAppender"/>
 	</logger>
 
+	<logger name="pt.ist.fenixframework.plugins.luceneIndexing" additivity="false">
+		<level value="debug"/>
+		<appender-ref ref="ConsoleAppender"/>
+	</logger>
+
 	<logger name="myorg" additivity="false">
 		<level value="info"/>
 		<appender-ref ref="ConsoleAppender"/>
