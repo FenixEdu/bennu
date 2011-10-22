@@ -10,7 +10,7 @@ public class DomainIndexDirectory extends DomainIndexDirectory_Base {
 
     public DomainIndexFile getIndexFile(String name) {
 	for (DomainIndexFile file : getIndexFiles()) {
-	    if (file.getName().equals(name)) {
+	    if (file.getName().equals(name) && file.getIndexContent() != null) {
 		return file;
 	    }
 	}
