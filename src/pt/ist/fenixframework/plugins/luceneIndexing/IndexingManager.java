@@ -16,7 +16,7 @@ public class IndexingManager implements Runnable {
 
     protected static final long DEFAULT_SLEEP_TIME = 1000;
     protected static final Logger LOGGER = Logger.getLogger(IndexingManager.class.getName());
-    protected static final int DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT = 200;
+    protected static final int DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT = 199;
 
     private int yetToIndex;
 
@@ -36,38 +36,43 @@ public class IndexingManager implements Runnable {
     }
 
     private int indexFiles() {
-	Transaction.withTransaction(new TransactionalCommand() {
+	try {
+	    Transaction.withTransaction(new TransactionalCommand() {
 
-	    @Override
-	    public void doIt() {
-		final Map<String, IndexDocument> requestMap = new HashMap<String, IndexDocument>();
+		@Override
+		public void doIt() {
+		    final Map<String, IndexDocument> requestMap = new HashMap<String, IndexDocument>();
 
-		final LuceneSearchPluginRoot root = LuceneSearchPluginRoot.getInstance();
-		for (final IndexingRequest request : root.getIndexingRequestsSet()) {
-		    if (requestMap.size() > DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT) {
-			break;
+		    final LuceneSearchPluginRoot root = LuceneSearchPluginRoot.getInstance();
+		    for (final IndexingRequest request : root.getIndexingRequestsSet()) {
+			final String indexableExternalId = request.getIndexableExternalId();
+			if (requestMap.containsKey(indexableExternalId)) {
+			    request.delete();
+			} else {
+			    if (requestMap.size() < DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT) {
+				requestMap.put(indexableExternalId, request.getIndex());
+				request.delete();
+			    }
+			}
 		    }
-		    final String indexableExternalId = request.getIndexableExternalId();
-		    if (!requestMap.containsKey(indexableExternalId)) {
-			requestMap.put(indexableExternalId, request.getIndex());
+
+		    final int remainder = root.getIndexingRequestsSet().size();
+		    if (!requestMap.isEmpty()) {
+			final int indexed = requestMap.size();
+			LOGGER.info("Indexing " + indexed + " documents out of " + (remainder + indexed));
+			long t1 = System.currentTimeMillis();
+			DomainIndexer.getInstance().indexDomainObjects(requestMap.values());
+			long t2 = System.currentTimeMillis();
+			LOGGER.info("Finished indexation. Took: " + (t2 - t1) + "ms.");
 		    }
-		    request.delete();
+
+		    yetToIndex = remainder;
 		}
 
-		final int remainder = root.getIndexingRequestsSet().size();
-		if (!requestMap.isEmpty()) {
-		    final int indexed = requestMap.size();
-		    LOGGER.info("Indexing " + indexed + " documents out of " + (remainder + indexed));
-		    long t1 = System.currentTimeMillis();
-		    DomainIndexer.getInstance().indexDomainObjects(requestMap.values());
-		    long t2 = System.currentTimeMillis();
-		    LOGGER.info("Finished indexation. Took: " + (t2 - t1) + "ms.");
-		}
-
-		yetToIndex = remainder;
-	    }
-
-	});
+	    });
+	} finally {
+	    Transaction.forceFinish();
+	}
 
 	return yetToIndex;
     }
