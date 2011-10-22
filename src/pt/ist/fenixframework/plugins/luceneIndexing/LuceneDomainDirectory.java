@@ -116,7 +116,9 @@ public class LuceneDomainDirectory extends Directory {
 	Set<String> files = new HashSet<String>();
 	files.addAll(workingIndexes.keySet());
 	for (DomainIndexFile file : this.directory.getIndexFiles()) {
-	    files.add(file.getName());
+	    if (file.getIndexContent() != null) {
+		files.add(file.getName());
+	    }
 	}
 	int size = files.size();
 	int i = 0;
