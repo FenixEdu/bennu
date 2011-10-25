@@ -6,7 +6,6 @@ import java.util.List;
 
 import pt.ist.fenixframework.FenixFrameworkPlugin;
 import pt.ist.fenixframework.plugins.luceneIndexing.IndexListener;
-import pt.ist.fenixframework.plugins.luceneIndexing.IndexingManager;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.LuceneSearchPluginRoot;
 import pt.ist.fenixframework.pstm.TopLevelTransaction;
 
@@ -22,9 +21,9 @@ public class LuceneSearchPlugin implements FenixFrameworkPlugin {
     public void initialize() {
 	LuceneSearchPluginRoot.getInstance();
 	TopLevelTransaction.addCommitListener(new IndexListener());
-	final Thread thread = new Thread(new IndexingManager());
-	thread.setDaemon(true);
-	thread.start();
+	// final Thread thread = new Thread(new IndexingManager());
+	// thread.setDaemon(true);
+	// thread.start();
     }
 
 }
