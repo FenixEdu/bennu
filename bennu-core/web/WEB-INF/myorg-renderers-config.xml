@@ -573,3 +573,9 @@
 	</renderer>
 	
 	<renderer mode="input" type="myorg.domain.util.Money" class="myorg.presentationTier.renderers.MoneyInputRenderer" />
+	
+    <renderer type="java.util.Collection" layout="ajax-tabular" class="pt.ist.fenixWebFramework.renderers.ajax.AjaxTableRenderer">
+        	<property name="groupLinks" value="true"/>
+        	<property name="linkGroupSeparator" value=", "/>
+			<property name="renderCompliantTable" value="true" />        	
+    </renderer>

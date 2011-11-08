@@ -1109,4 +1109,186 @@
 
   </tag>
 
+  <tag>
+    <name>link</name>
+    <tag-class>pt.ist.fenixWebFramework.renderers.taglib.LinkFormatTag</tag-class>
+    <body-content>empty</body-content>
+	<description>
+		Used to create links inside layout tag 
+	</description>
+
+    <attribute>
+      <name>name</name>
+      <required>true</required>
+      <rtexprvalue>false</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+        Specifies the name of the link.
+      </description>
+    </attribute>
+    
+    <attribute>
+      <name>link</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+       <![CDATA[
+        <pre>
+        Specifies the url to be used in link. Example:
+       
+        	 '/myAction.do?method=myMethod&amp;oid=${oid}' -> oid will be replaced by invoking getOid in current object
+       
+        	 '/myAction.do?method=myMethod&amp;valueA=value'
+       	</pre>
+       ]]>
+      </description>
+    </attribute>
+    
+    <attribute>
+      <name>label</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+      	<![CDATA[
+        <pre>
+        Specifies the key as the link label and the name of the bundle where to search key. Examples:
+             
+             1 - label='my.key'
+             
+             2 - label='my.key,MY_BUNDLE'
+        
+        if label is empty then jsp will not compile. If bundle is empty then no bundle is set and renderers will try to find label
+        
+         </pre>
+        ]]>
+      </description>
+    </attribute>
+    
+    <attribute>
+      <name>bundle</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+        Specifies the name of the bundle to search for given key.
+      </description>
+    </attribute>
+    
+    <attribute>
+      <name>condition</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+      	<![CDATA[
+        <pre>
+        Specifies the condition used to check if link can be rendered or not. Condition must be any method of object being rendered.
+        For now, you can use condition like this:
+        	
+        	1 - 'objectMethod' : link is visible if objectMethod returns true
+        	
+        	2 - '!objectMethod' : link is visible if !objectMethod returns true
+        
+         </pre>
+        ]]>
+      </description>
+    </attribute>
+    
+    <attribute>
+      <name>order</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+        Specifies the order of link.
+      </description>
+    </attribute>
+    
+     <attribute>
+      <name>confirmation</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+      	<![CDATA[
+        <pre>
+        Specifies the key and the name of the bundle used in the confirmation message. Examples:
+        
+             1 - confirmation='my.key'
+             2 - confirmation='my.key,MY_BUNDLE'
+        
+        if confirmation is empty then is ignored. If bundle is empty then no bundle is set and renderers will try to find the key
+        </pre>
+        ]]>
+      </description>
+    </attribute>
+    
+    <attribute>
+      <name>target</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      <description>
+      	<![CDATA[
+        <pre>
+        Specifies target used in link. Accepted values: 
+        
+        	1 - _blank / blank
+        	2 - _self / self 
+        	3 - _parent / parent 
+        	4 -_top / top
+        
+        if no value specified then is ignored
+        </pre>
+        ]]>
+      </description>
+    </attribute>
+    
+    <attribute>
+    	<name>module</name>
+    	<required>false</required>
+    	<rtexprvalue>false</rtexprvalue>
+    	<type>java.lang.String</type>
+	    <description>
+	      	<![CDATA[
+	        <pre>
+	        	Set the context for this link. This context, if given, is prepended to the link.
+	        	If it is not given it will prepend the context associated with the action that generated the page.
+	        </pre>
+	        ]]>
+	    </description>
+    </attribute>
+
+    <attribute>
+    	<name>contextRelative</name>
+    	<required>false</required>
+    	<rtexprvalue>false</rtexprvalue>
+    	<type>java.lang.String</type>
+	    <description>
+	      	<![CDATA[
+	        <pre>
+	        	Set if the link is context relative.
+	        </pre>
+	        ]]>
+	    </description>
+    </attribute>
+
+    <attribute>
+    	<name>hasContext</name>
+    	<required>false</required>
+    	<rtexprvalue>false</rtexprvalue>
+    	<type>java.lang.String</type>
+	    <description>
+	      	<![CDATA[
+	        <pre>
+	        	Set if the link will have a context.
+	        </pre>
+	        ]]>
+	    </description>
+    </attribute>
+    
+  </tag>
+
 </taglib>
