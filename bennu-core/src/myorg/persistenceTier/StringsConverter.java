@@ -34,13 +34,14 @@ import pt.utl.ist.fenix.tools.util.Strings;
 
 public class StringsConverter implements FieldConversion {
 
+    @Override
     public Object javaToSql(Object arg0) throws ConversionException {
 	if (arg0 == null) {
 	    return null;
 	}
 	Strings strings = (Strings) arg0;
 	StringBuilder buffer = new StringBuilder("");
-	for (String string : strings) {
+	for (String string : strings.getUnmodifiableList()) {
 	    buffer.append(string.length());
 	    buffer.append(":");
 	    buffer.append(string);
@@ -48,6 +49,7 @@ public class StringsConverter implements FieldConversion {
 	return buffer.toString();
     }
 
+    @Override
     public Object sqlToJava(Object arg0) throws ConversionException {
 	if (arg0 == null) {
 	    return null;
