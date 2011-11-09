@@ -25,10 +25,13 @@
 
 package myorg.domain.scheduler;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Set;
 
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
+import pt.utl.ist.fenix.tools.util.excel.Spreadsheet;
 
 public abstract class WriteCustomTask extends ReadCustomTask {
 
@@ -58,6 +61,17 @@ public abstract class WriteCustomTask extends ReadCustomTask {
 	outputFile.setContent(content);
 	outputFile.setContentType(contentType);
 	outputFiles.add(outputFile);
+    }
+
+    protected void storeFileOutput(final String displayName, final String filename,
+	    final Spreadsheet spreadsheet) {
+	try {
+	    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	    spreadsheet.exportToXLSSheet(outputStream);
+	    storeFileOutput(displayName, filename, outputStream.toByteArray(), "application/vnd.ms-excel");
+	} catch (final IOException e) {
+	    throw new Error(e);
+	}
     }
 
 }
