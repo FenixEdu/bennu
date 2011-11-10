@@ -312,6 +312,8 @@
     <!--@ This layout allows a string to be edited with the password field -->
     <renderer mode="input" type="java.lang.String" layout="password" class="pt.ist.fenixWebFramework.renderers.PasswordInputRenderer"/>
     
+    <renderer mode="input" type="pt.utl.ist.fenix.tools.util.Strings" class="pt.ist.fenixWebFramework.rendererExtensions.StringsInputRenderer"/>
+    
     <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageStringInputRenderer"/>
     <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="area" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageTextInputRenderer"/>
     <renderer mode="input" type="pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString" layout="rich-text" class="pt.ist.fenixWebFramework.rendererExtensions.MultiLanguageRichTextInputRenderer"/>
