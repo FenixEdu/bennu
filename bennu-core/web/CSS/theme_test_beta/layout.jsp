@@ -5,7 +5,6 @@
 <%@page import="myorg.presentationTier.LayoutContext"%>
 <%@page import="myorg.presentationTier.actions.ContextBaseAction"%>
 
-
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr"%>
 <%@page import="pt.ist.fenixWebFramework.FenixWebFramework"%>
 <%@page import="pt.ist.fenixWebFramework.Config.CasConfig"%>
@@ -14,11 +13,7 @@
 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-
 <html:html xhtml="true">
-
-
 <%
 	final LayoutContext layoutContext = (LayoutContext) ContextBaseAction.getContext(request);
 %>
@@ -39,170 +34,127 @@
 	<![endif]-->
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-	<script type="text/javascript" src="<%= contextPath %>/CSS/theme_test_beta/js/script.js"></script>
+	<script type="text/javascript" src="<%= contextPath %>/CSS/sotis/js/script.js"></script>
 	
 </head>
-
-
 <body class="top">
 
 
-	<div id="header" class="container_12">
+	<header id="header">
+		<div class="container_12">
+			<h1>
+				<a href="<%= contextPath %>" title="Job Bank">
+					SOTIS
+				</a>
+			</h1>
+			
+			<%
+				final String serverName = request.getServerName();
+				final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
+				// If no config is found don't allow login.
+				if (casConfig == null) {
+			%>
 
-		<a href="<%= contextPath %>" title="Job Bank">
-			<img src="<%= contextPath %>/CSS/theme_test_beta/images/jobbank.png" alt="IST Job Bank" />
-		</a>
-	
-	<%
-		final String serverName = request.getServerName();
-		final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
-		// If no config is found don't allow login.
-		if (casConfig == null) {
-	%>
+				<!-- context: <%= contextPath %> - serverName: <%= serverName %> -->
 
-		<!-- context: <%= contextPath %> - serverName: <%= serverName %> -->
-
-		<%
-		} else {
-			final boolean isCasEnabled = casConfig.isCasEnabled();
-	%>
-
-		<logic:notPresent name="USER_SESSION_ATTRIBUTE">
-			<% if (isCasEnabled) {%>
-			<div class="login">
-				<% final String portString = request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort(); %>
-				<bean:define id="loginUrl"><%= FenixWebFramework.getConfig().getCasConfig(serverName).getCasLoginUrl() + "https" + "://" + request.getServerName() + contextPath %>/</bean:define>
-				<html:link href="<%= loginUrl %>">
-					<bean:message key="label.login.link" bundle="MYORG_RESOURCES" />
-				</html:link>
-			</div>
-			<% } else { %>
-
-
-			<div id="login">	
-				
-				<div id="botao" class="posicao-azul">
-					<a href="javascript:void(0);" class="botao azul" id="botao-login"><strong>Login</strong>
-					</a>
+				<%
+				} else {
+					final boolean isCasEnabled = casConfig.isCasEnabled();
+			%>
+			
+			<logic:notPresent name="USER_SESSION_ATTRIBUTE">
+				<% if (isCasEnabled) {%>
+				<div class="login">
+					<% final String portString = request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort(); %>
+					<bean:define id="loginUrl"><%= FenixWebFramework.getConfig().getCasConfig(serverName).getCasLoginUrl() + "https" + "://" + request.getServerName() + contextPath %>/</bean:define>
+					<html:link href="<%= loginUrl %>">
+						<bean:message key="label.login.link" bundle="MYORG_RESOURCES" />
+					</html:link>
 				</div>
-				<!-- botão -->
-			</div>
-			<!-- login -->
-
-			<div id="login-escolha">
-				Fazer login como <a href="javascript:void(0);" class="login-link"
-					id="login-link-empresa">Empresa</a> ou <a
-					href="javascript:void(0);" class="login-link" id="login-link-aluno">Aluno</a>
-			</div>
-			<!-- login-escolha -->
-
-			<div id="login-form">
-
-				<jsp:include page="<%= layoutContext.getLogin() %>"/>
-
-				
-					<a href="<%= contextPath %>/enterprise.do?method=prepareToPasswordRecover" class="esqueceu-password"><bean:message bundle="JOB_BANK_RESOURCES" key="label.jobBank.login.forgotPassword"/></a>
-				
-			</div>
-
-			<% } %>
-		</logic:notPresent>
-		<% } %>
+				<% } else { %>
 
 
+				<div id="login-form">
 
-
-		<logic:present name="USER_SESSION_ATTRIBUTE">
-			<div id="hello-user">
-				<p>
-					
-					<jsp:include page="<%= layoutContext.getConfigurationLink() %>"/>
-					
 					<jsp:include page="<%= layoutContext.getLogin() %>"/>
-					
-					<jsp:include page="<%= layoutContext.getHelpLink() %>"/>
-					
-				</p>
-			</div>
+
+
+						<a href="<%= contextPath %>/enterprise.do?method=prepareToPasswordRecover" class="esqueceu-password"><bean:message bundle="JOB_BANK_RESOURCES" key="label.jobBank.login.forgotPassword"/></a>
+
+				</div>
+
+				<% } %>
+			</logic:notPresent>
+			<% } %>
+			
+	
+		<logic:present name="USER_SESSION_ATTRIBUTE">	
+			<nav id="perfil">
+				
+				<ul>
+					<li><jsp:include page="<%= layoutContext.getConfigurationLink() %>"/></li>
+					<li><jsp:include page="<%= layoutContext.getLogin() %>"/></li>
+					<li><jsp:include page="<%= layoutContext.getHelpLink() %>"/></li>
+				</ul>
+			</nav>
 		</logic:present>
 
+		</div>
+	</header><!-- header -->
+	
+	<section id="content">
+		<div class="container_12">
 
-	</div>
-	<!-- header -->
+			<div class="topmenu">
+	
+			<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
+			<bean:define id="menuElements" name="context" property="menuElements"/>
+			<logic:notEmpty name="menuElements">
+				<bean:size name="menuElements" id="size"/>
+				<logic:greaterThan name="size" value="1">
+					<jsp:include page="<%= layoutContext.getMenuTop() %>"/>
+				</logic:greaterThan>
+			</logic:notEmpty>
+	
+				<jsp:include page="<%= layoutContext.getSubMenuTop() %>" />
 
-
-	<%--
-<jsp:include page="<%= layoutContext.getPageHeader() %>"/>
-
-<jsp:include page="<%= layoutContext.getMenuTop() %>"/>
-
-<jsp:include page="<%= layoutContext.getSubMenuTop() %>"/>
-
-<jsp:include page="<%= layoutContext.getPageOperations() %>"/>
-	<logic:equal name="virtualHost" property="breadCrumbsEnabled" value="true">
-		<jsp:include page="<%= layoutContext.getBreadCrumbs() %>"/>
-	</logic:equal>
-<jsp:include page="<%= layoutContext.getBody() %>"/>
-
-<jsp:include page="<%= layoutContext.getFooter() %>"/>
---%>
-
-
-
-
+			</div><!-- topmenu -->
 	
 	
-
-	<div id="wrap" class="container_12">
-
-		<div class="topmenu">
-		
-		<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
-		<bean:define id="menuElements" name="context" property="menuElements"/>
-		<logic:notEmpty name="menuElements">
-			<bean:size name="menuElements" id="size"/>
-			<logic:greaterThan name="size" value="1">
-				<jsp:include page="<%= layoutContext.getMenuTop() %>"/>
-			</logic:greaterThan>
-		</logic:notEmpty>
-		
-			<jsp:include page="<%= layoutContext.getSubMenuTop() %>" />
-
-		</div><!-- topmenu -->
-		
-		
-		<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
-			<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
-				<div id="language">
-					<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" class="pt">PT</a>
-					<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>">EN</a>
-				</div>
-		</logic:equal>
-			
-		
-
-		<div id="conteudo">
-			<jsp:include page="<%= layoutContext.getPageOperations() %>" />
-			<logic:equal name="virtualHost" property="breadCrumbsEnabled"
-				value="true">
-				<jsp:include page="<%= layoutContext.getBreadCrumbs() %>" />
+			<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
+				<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
+					<div id="language">
+						<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" class="pt">PT</a>
+						<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>">EN</a>
+					</div>
 			</logic:equal>
-			<jsp:include page="<%= layoutContext.getBody() %>" />
-		</div><!-- conteudo -->
+		
+	
 
+			<div id="conteudo">
+				<jsp:include page="<%= layoutContext.getPageOperations() %>" />
+				<logic:equal name="virtualHost" property="breadCrumbsEnabled"
+					value="true">
+					<jsp:include page="<%= layoutContext.getBreadCrumbs() %>" />
+				</logic:equal>
+				<jsp:include page="<%= layoutContext.getBody() %>" />
+			</div><!-- conteudo -->
 
-		<div id="footer">
-			<p class="copyright">
+		</div><!-- container_12 -->
+		<footer id="content-footer"></footer>
+	</section>
+	
+	<div id="footer">
+		<div class="container_12">
+			<p>
 				&copy;
 				<dt:format pattern="yyyy">
 					<dt:currentTime />
 				</dt:format>
 				<bean:write name="virtualHost" property="applicationCopyright" />
 			</p>
-		</div><!-- footer -->
-
-	</div><!-- wrap -->
-
+		</div>
+	</div><!-- footer -->
 
 </body>
 </html:html>
