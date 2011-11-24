@@ -1,0 +1,88 @@
+body {
+	text-align:center;
+}
+
+.top {
+	padding-bottom:50px;
+}
+
+.container_12 {
+	text-align:left;
+}
+
+.topmenu li {
+	border:none;
+}
+
+form table td {
+	zoom:1;
+}
+
+#login-form {
+	width:380px;
+	top:0px;
+}
+#login-form span {
+	margin:0px;
+}
+#login-form .inputbuttonlogin {
+	margin-top:-30px;
+	padding:4px 18px;
+}
+
+a.login-link {
+	margin-bottom:-2px;
+}
+
+a.esqueceu-password {
+	font-size:10px;
+	margin-left:145px;
+}
+
+a.pt {
+	border-right:1px solid #ccc;
+}
+
+.posicao-verde {
+	display:block;
+}
+
+#graficos-processo {
+	font-size:11px !important;
+	width:610px !important;
+}
+
+#graficos-processo ul {
+	width:610px !important;
+}
+
+#graficos-processo li,
+#graficos-processo li.em-curso,
+#graficos-processo li.por-iniciar {
+	padding:16px 30px !important;
+}
+
+
+
+
+#botao a.verde:before {
+	width:auto;
+	height:auto;
+}
+
+#botao a.verde:hover {
+	background:green;
+}
+
+#conteudo input.inputbutton {
+	background:#6DB0CD !important;
+}
+#conteudo input.cancel {
+	background:#CDCDCD !important;
+}
+
+
+/* clear */
+.clearthis {
+	zoom:1;
+}
