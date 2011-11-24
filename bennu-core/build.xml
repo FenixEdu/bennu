@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="bennu" basedir="." default="build">
-<property environment="env"/>
-<property name="findbugs.home" value="${env.FINDBUGS_HOME}" />
+	<property environment="env"/>
+	<property name="findbugs.home" value="${env.FINDBUGS_HOME}" />
 	
 	<taskdef resource="tools/ant/compile-tools.xml">
 		<classpath>
@@ -98,17 +98,14 @@
 		<ant antfile="build_modules.xml" target="seed" />
 	</target>
 
-	<target name="xxx" description="XXX">
-		<condition property="xxx">
-			<and>
-				<contains string="abc" substring="bc"/>
-			</and>
-		</condition>
-		<antcall target="zzTop"></antcall>
+	<target name="seed-theme" depends="generate-module-targets" description="Generate a new theme from the seed skeleton">
+		<input message="Theme Name:" addproperty="theme" />
+		<copy todir="web/CSS/${theme}">
+			<fileset dir="web/CSS/theme-seed" />
+		</copy>
+		<move file="web/CSS/${theme}/theme.properties.sample" tofile="web/CSS/${theme}/theme.properties" />
+		<replace file="web/CSS/${theme}/theme.properties">
+			<replacefilter token="@THEME_NAME@" value="${theme}" />
+		</replace>
 	</target>
-
-	<target name="zzTop" unless="xxx" description="subtask">
-		<echo>Hello World</echo>
-	</target>
-
 </project>

@@ -6,16 +6,18 @@
 
 <bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
 
-<bean:size id="ne" name="context" property="elements"/>
-<logic:greaterThan name="ne" value="1">
-	<div id="beadCrumbs">
-		<logic:iterate id="node" type="myorg.domain.contents.Node" name="context" property="elements" indexId="i">
-			<logic:greaterThan name="i" value="0">
-				>
-			</logic:greaterThan>
-			<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= node.getUrl() %>">
-				<bean:write name="node" property="link"/>
-			</html:link>
-		</logic:iterate>
-	</div>
-</logic:greaterThan>
+<logic:equal name="virtualHost" property="breadCrumbsEnabled" value="true">
+	<bean:size id="ne" name="context" property="elements"/>
+	<logic:greaterThan name="ne" value="1">
+		<div id="beadCrumbs">
+			<logic:iterate id="node" type="myorg.domain.contents.Node" name="context" property="elements" indexId="i">
+				<logic:greaterThan name="i" value="0">
+					>
+				</logic:greaterThan>
+				<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= node.getUrl() %>">
+					<bean:write name="node" property="link"/>
+				</html:link>
+			</logic:iterate>
+		</div>
+	</logic:greaterThan>
+</logic:equal>

@@ -55,6 +55,7 @@ public class StartupServlet extends HttpServlet {
 
     private static final long serialVersionUID = -7035892286820898843L;
 
+    @Override
     public void init(ServletConfig config) throws ServletException {
 	super.init(config);
 
@@ -99,26 +100,23 @@ public class StartupServlet extends HttpServlet {
 	for (File directory : files) {
 	    String themeName = directory.getName();
 	    if (!Theme.isThemeAvailable(themeName)) {
-		Properties themeProperties = loadThemePropeties(themeName);
-		ThemeType type = ThemeType.valueOf(themeProperties.getProperty("theme.type"));
-		String description = themeProperties.getProperty("theme.description");
-		String screenshotFileName = themeProperties.getProperty("theme.screenshotFileName");
-		Theme.createTheme(themeName, description, type, screenshotFileName);
+		try {
+		    Properties themeProperties = loadThemePropeties(themeName);
+		    ThemeType type = ThemeType.valueOf(themeProperties.getProperty("theme.type"));
+		    String description = themeProperties.getProperty("theme.description");
+		    String screenshotFileName = themeProperties.getProperty("theme.screenshotFileName");
+		    Theme.createTheme(themeName, description, type, screenshotFileName);
+		} catch (IOException e) {
+		    // Theme Configuration not readable, ignore.
+		}
 	    }
 	}
 
     }
 
-    private Properties loadThemePropeties(String themeName) {
-	Properties properties = null;
-	try {
-	    properties = PropertiesManager.loadPropertiesFromFile(getServletContext().getRealPath(
-		    "CSS/" + themeName + "/theme.properties"));
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    throw new Error(themeName + " could not read property file");
-	}
-	return properties;
+    private Properties loadThemePropeties(String themeName) throws IOException {
+	return PropertiesManager
+		.loadPropertiesFromFile(getServletContext().getRealPath("CSS/" + themeName + "/theme.properties"));
     }
 
     private boolean matchTheme(String name, File[] files) {

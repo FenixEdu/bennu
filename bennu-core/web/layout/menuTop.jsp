@@ -8,7 +8,7 @@
 
 
 <logic:notEmpty name="menuElements">
-	<ul>
+	<ul class="mainnav">
 	<bean:size name="menuElements" id="size"/>
 
 	<logic:iterate id="node" name="menuElements" indexId="nindex" type="myorg.domain.contents.Node">

@@ -41,9 +41,7 @@
 			
 			<jsp:include page="<%= layoutContext.getHelpLink() %>"/>
 		
-			<div id="login">
-				<jsp:include page="<%= layoutContext.getLogin() %>"/>
-			</div>
+			<jsp:include page="<%= layoutContext.getLogin() %>"/>
 		</div>
 	
 		<div id="headerforms">
