@@ -27,9 +27,6 @@
 							<logic:notPresent name="node" property="link">
 								<span><bean:write name="node"/></span>
 							</logic:notPresent>
-							<logic:lessThan name="nindex" value="<%= new Integer(size).toString() %>">
-								<div class="lic1"></div>
-							</logic:lessThan>
 						</html:link>
 					<% } else { %>
 						<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= url %>">
@@ -38,10 +35,7 @@
 							</logic:present>
 							<logic:notPresent name="node" property="link">
 								<span><bean:write name="node"/></span>
-							</logic:notPresent>
-							<logic:lessThan name="nindex" value="<%= new Integer(size).toString() %>">
-								<div class="lic1"></div>
-							</logic:lessThan>					
+							</logic:notPresent>					
 						</html:link>				
 					<% } %>
 			</li>
