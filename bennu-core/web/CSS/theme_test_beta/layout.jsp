@@ -79,7 +79,7 @@
 			<% } else { %>
 
 
-			<div id="login">	
+			<div id="login-botao">	
 				
 				<div id="botao" class="posicao-azul">
 					<a href="javascript:void(0);" class="botao azul" id="botao-login"><strong>Login</strong>
@@ -118,11 +118,12 @@
 					
 					<jsp:include page="<%= layoutContext.getConfigurationLink() %>"/>
 					
+				</p>
+				
 					<jsp:include page="<%= layoutContext.getLogin() %>"/>
 					
-					<jsp:include page="<%= layoutContext.getHelpLink() %>"/>
-					
-				</p>
+					<jsp:include page="<%= layoutContext.getHelpLink() %>"/>	
+				
 			</div>
 		</logic:present>
 
@@ -173,7 +174,7 @@
 		
 		<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
 			<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
-				<div id="language">
+				<div id="language" style="display:none;">
 					<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" class="pt">PT</a>
 					<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>">EN</a>
 				</div>

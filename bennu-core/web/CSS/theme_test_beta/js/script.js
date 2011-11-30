@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
 	$("a#botao-login").click(function () {
-	    $("div#login").fadeOut("slow");
+	    $("div#login-botao").fadeOut("slow");
 	});
 
 	$("a#botao-login").click(function () {
