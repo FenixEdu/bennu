@@ -139,10 +139,10 @@ public class VirtualHost extends VirtualHost_Base {
 	    }
 
 
-	    removeExpenditureTrackingSystem();
-	    removeExternalAccountingIntegrationSystem();
-	    removeWorkflowSystem();
-	    removeWorkingCapitalSystem();
+	    //removeExpenditureTrackingSystem();
+	    //removeExternalAccountingIntegrationSystem();
+	    //removeWorkflowSystem();
+	   // removeWorkingCapitalSystem();
 	    removeTheme();
 	    removeMyOrg();
 	    deleteDomainObject();
