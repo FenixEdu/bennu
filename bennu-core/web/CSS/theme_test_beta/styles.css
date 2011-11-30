@@ -1050,6 +1050,17 @@ div ul.autocomplete li.selected {
 	background:#fceed0;
 }
 
+/* Middle table fix */
+
+.tview-middle {
+	margin:-10px 0;
+}
+
+.tview-middle th,
+.tview-middle td {
+	border:none;
+}
+
 
 /* Transitions */
 
