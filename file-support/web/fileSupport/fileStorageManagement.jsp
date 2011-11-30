@@ -39,13 +39,13 @@
 
 <h2><bean:message key="title.fileStorageManagement.newStorage" bundle="FILE_SUPPORT_RESOURCES"/></h2>
 <div id="tabs">
-	<%= ContentContextInjectionRewriter.BLOCK_HAS_CONTEXT_PREFIX %>
+	<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.BLOCK_HAS_CONTEXT_PREFIX %>
 	<ul>
 		<li><%= GenericChecksumRewriter.NO_CHECKSUM_PREFIX %><a href="#tabs-1"><bean:message key="label.fileStorageManagement.domainStorage" bundle="FILE_SUPPORT_RESOURCES"/></a></li>
 		<li><%= GenericChecksumRewriter.NO_CHECKSUM_PREFIX %><a href="#tabs-2"><bean:message key="label.fileStorageManagement.localFileSystemStorage" bundle="FILE_SUPPORT_RESOURCES"/></a></li>
 		<li><%= GenericChecksumRewriter.NO_CHECKSUM_PREFIX %><a href="#tabs-3"><bean:message key="label.fileStorageManagement.dbStorage" bundle="FILE_SUPPORT_RESOURCES"/></a></li>
 	</ul>
-	<%= ContentContextInjectionRewriter.END_BLOCK_HAS_CONTEXT_PREFIX %>
+	<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.END_BLOCK_HAS_CONTEXT_PREFIX %>
 	
 	<div id="tabs-1">
 		<fr:form action="/fileStorageManagement.do?method=createDomainStorage">
