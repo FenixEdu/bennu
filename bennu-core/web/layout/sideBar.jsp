@@ -19,21 +19,21 @@
 					<div>
 						<% if (context.contains(node)) { %>
 							<% if (url.indexOf(':') > 0) { %>
-								<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link href="<%= url %>" styleClass="navlistselected">
+								<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link href="<%= url %>" styleClass="navlistselected">
 									<bean:write name="node" property="link"/>
 								</html:link>
 							<% } else { %>
-								<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= url %>" styleClass="navlistselected">
+								<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= url %>" styleClass="navlistselected">
 									<bean:write name="node" property="link"/>
 								</html:link>
 							<% } %>
 						<% } else { %>
 							<% if (url.indexOf(':') > 0) { %>
-								<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link href="<%= url %>">
+								<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link href="<%= url %>">
 									<bean:write name="node" property="link"/>
 								</html:link>
 							<% } else { %>
-								<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= url %>">
+								<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= url %>">
 									<bean:write name="node" property="link"/>
 								</html:link>
 							<% } %>
@@ -47,11 +47,11 @@
 								<% String childUrl = childNode.getUrl(); %>
 								<li class="navsublist">
 									<% if (context.contains(childNode)) { %>
-										<!-- HAS_CONTEXT --><% if(childNode.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= childUrl %>" styleClass="navlistselected">
+										<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><% if(childNode.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= childUrl %>" styleClass="navlistselected">
 											<bean:write name="childNode" property="link"/>
 										</html:link>
 									<% } else { %>
-										<!-- HAS_CONTEXT --><% if(childNode.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= childUrl %>">
+										<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><% if(childNode.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= childUrl %>">
 											<bean:write name="childNode" property="link"/>
 										</html:link>
 									<% } %>

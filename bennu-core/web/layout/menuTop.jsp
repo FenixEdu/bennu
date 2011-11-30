@@ -20,7 +20,7 @@
 			<% } %>
 					<% final String url = node.getUrl(); %>
 					<% if (url.indexOf(':') > 0) { %>
-						<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link href="<%= url %>">
+						<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link href="<%= url %>">
 							<logic:present name="node" property="link">
 								<span><bean:write name="node" property="link"/></span>
 							</logic:present>
@@ -29,7 +29,7 @@
 							</logic:notPresent>
 						</html:link>
 					<% } else { %>
-						<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= url %>">
+						<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= url %>">
 							<logic:present name="node" property="link">
 								<span><bean:write name="node" property="link"/></span>
 							</logic:present>

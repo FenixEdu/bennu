@@ -10,7 +10,7 @@
 	final User user = (User) request.getSession(false).getAttribute("USER_SESSION_ATTRIBUTE");
 	if (user.hasRole("myorg.domain.RoleType.MANAGER")) {
 %>
-		<!-- HAS_CONTEXT --><html:link page="/configuration.do?method=applicationConfiguration">
+		<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/configuration.do?method=applicationConfiguration">
 			<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration"/>
 		</html:link> |
 <%	} %>

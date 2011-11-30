@@ -28,11 +28,11 @@
 </logic:present>
 
 <bean:define id="addContentUrl">/home.do?method=addContent&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="externalId"/></logic:present></bean:define>
-<!-- HAS_CONTEXT --><html:link page="<%= addContentUrl %>">
+<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= addContentUrl %>">
 	<bean:message bundle="MYORG_RESOURCES" key="label.virtualHost.add.feature"/>
 </html:link> | 
 <bean:define id="createNodeUrl">/configuration.do?method=prepareCreateNode&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="externalId"/></logic:present></bean:define>
-<!-- HAS_CONTEXT --><html:link page="<%= createNodeUrl %>">
+<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= createNodeUrl %>">
 	<bean:message bundle="MYORG_RESOURCES" key="label.virtualHost.create.node"/>
 </html:link>
 
@@ -80,19 +80,19 @@
 				 
 				<div style="float: right;">
 				<bean:define id="editNodeUrl">/configuration.do?method=editNode&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/>&amp;nodeId=<bean:write name="node" property="externalId"/></bean:define>
-				<!-- HAS_CONTEXT --><html:link page="<%= editNodeUrl %>">
+				<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= editNodeUrl %>">
 					<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.edit" />
 				</html:link>
 				<bean:define id="selectNodeUrl">/configuration.do?method=manageMenus&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/>&amp;parentOfNodesToManageId=<bean:write name="node" property="externalId"/></bean:define>
-				<!-- HAS_CONTEXT --><html:link page="<%= selectNodeUrl %>">
+				<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= selectNodeUrl %>">
 					<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.select"/>
 				</html:link>
 				<bean:define id="deleteNodeUrl">/configuration.do?method=deleteNode&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/>&amp;nodeToDeleteId=<bean:write name="node" property="externalId"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="externalId"/></logic:present></bean:define>
-				<!-- HAS_CONTEXT --><html:link page="<%= deleteNodeUrl %>">
+				<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= deleteNodeUrl %>">
 					<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.delete"/>
 				</html:link>
 				<bean:define id="editNodeUrl">/configuration.do?method=editNodeAvailability&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/>&amp;nodeId=<bean:write name="node" property="externalId"/><logic:present name="parentOfNodesToManage">&amp;parentOfNodesToManageId=<bean:write name="parentOfNodesToManage" property="externalId"/></logic:present></bean:define>
-				<!-- HAS_CONTEXT --><html:link page="<%= editNodeUrl %>">
+				<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= editNodeUrl %>">
 					<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.editAvailability"/>
 				</html:link>
 				</div>

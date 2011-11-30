@@ -10,22 +10,22 @@
 
 <ul>
 	<li>
-			<!-- HAS_CONTEXT --><html:link page="/configuration.do?method=manageSystemGroups">
+			<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/configuration.do?method=manageSystemGroups">
 				<bean:message bundle="MYORG_RESOURCES" key="label.configuration.manage.system.groups"/>
 			</html:link>
 	</li>
 	<li>
-		<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewScheduler">
+		<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/scheduler.do?method=viewScheduler">
 			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.tasks.scheduleing"/>
 		</html:link>
 	</li>
 	<li>
-		<!-- HAS_CONTEXT --><html:link page="/configuration.do?method=prepareAddVirtualHost">
+		<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/configuration.do?method=prepareAddVirtualHost">
 			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.virtualHost.add"/>
 		</html:link>
 	</li>
 	<li>
-		<!--  HAS_CONTEXT --><html:link page="/configuration.do?method=viewSystemConfig">
+		<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/configuration.do?method=viewSystemConfig">
 			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.viewProperties"/>
 		</html:link>
 	</li>

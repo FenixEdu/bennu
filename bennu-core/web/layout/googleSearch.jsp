@@ -6,7 +6,7 @@
 
 <logic:equal name="virtualHost" property="googleSearchEnabled" value="true">	
 	<bean:define id="site" name="virtualHost" property="hostname"/>
-	<!-- BLOCK_HAS_CONTEXT -->
+	<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.BLOCK_HAS_CONTEXT_PREFIX %>
 	<!-- NO_CHECKSUM -->
 	<form method="get" action="http://www.google.com/search" id="globalsearch">
 		<input type="hidden" name="site" value="<%= site %>" />
@@ -17,5 +17,5 @@
 		<input type="text" id="q" name="q" value="Search..." />
 		<input class=" button" type="submit" name="Submit" value="Google" />
 	</form>
-	<!-- END_BLOCK_HAS_CONTEXT -->
+	<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.END_BLOCK_HAS_CONTEXT_PREFIX %>
 </logic:equal>

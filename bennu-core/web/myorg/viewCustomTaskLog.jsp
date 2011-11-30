@@ -42,7 +42,7 @@
 	<ul>
 		<logic:iterate id="file" name="customTaskLog" property="genericFileSet">
 			<li>
-				<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=downloadOutputFile" paramId="fileId" paramName="file" paramProperty="externalId">
+				<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/scheduler.do?method=downloadOutputFile" paramId="fileId" paramName="file" paramProperty="externalId">
 					<bean:write name="file" property="displayName"/>
 				</html:link>
 			</li>

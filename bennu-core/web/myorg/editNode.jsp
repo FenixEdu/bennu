@@ -10,10 +10,10 @@
 <bean:define id="editSemantic" name="editSemantic" />
 
 <p>
-<!-- HAS_CONTEXT --><html:link page="<%= manageMenus %>">
+<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= manageMenus %>">
 	<< <bean:message bundle="MYORG_RESOURCES" key="link.back"/>
 </html:link> | 
-<!-- HAS_CONTEXT --><html:link page="<%= switchEditMode %>">
+<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= switchEditMode %>">
 	<bean:message bundle="MYORG_RESOURCES" key="<%= "label.configuration.node.edit.semantic." + editSemantic %>"/>
 </html:link>
 </p>
@@ -81,7 +81,7 @@
 			</fr:edit>
 		</fr:form>
 		
-		<!-- HAS_CONTEXT --><html:link page="<%= manageMenus %>">
+		<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= manageMenus %>">
 			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.node.functionality.save"/>
 		</html:link>
 	</logic:equal>

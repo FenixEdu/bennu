@@ -6,7 +6,7 @@
 
 <bean:define id="manageMenus">/configuration.do?method=manageMenus&amp;virtualHostToManageId=<bean:write name="virtualHostToManage" property="externalId"/></bean:define>
 
-<!-- HAS_CONTEXT --><html:link page="<%= manageMenus %>">
+<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= manageMenus %>">
 	<bean:message bundle="MYORG_RESOURCES" key="link.back"/>
 </html:link>
 

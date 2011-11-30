@@ -46,7 +46,7 @@
 					%>
 					<logic:present name="USER_SESSION_ATTRIBUTE">
 						<div class="login">
-							<!-- HAS_CONTEXT --><html:link href="#">
+							<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link href="#">
 								<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration"/>
 							</html:link> |
 							<logic:present name="virtualHost" property="helpLink">
@@ -100,7 +100,7 @@
 								<input type="text" id="q" name="q" value="Search..." />
 								<input class=" button" type="submit" name="Submit" value="Google" />
 							</form>
-							<!-- END_BLOCK_HAS_CONTEXT -->
+							<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.END_BLOCK_HAS_CONTEXT_PREFIX %>
 						</logic:equal>
 				</td>
 			</tr>
@@ -138,19 +138,19 @@
 			<logic:equal name="theme" property="type" value="TOP">
 				<ul>
 					<li class="navsublist">
-						<!-- HAS_CONTEXT --><html:link href="#">
+						<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link href="#">
 							<span>Sub Link 1</span>
 						</html:link>
 					</li>
 					<span class="bar">|</span>
 					<li class="navsublist">
-						<!-- HAS_CONTEXT --><html:link href="#">
+						<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link href="#">
 							<span>Sub Link 2</span>
 						</html:link>
 					</li>
 					<span class="bar">|</span>
 					<li class="navsublist">
-						<!-- HAS_CONTEXT --><html:link href="#">
+						<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link href="#">
 							<span>Sub Link 3</span>
 						</html:link>
 					</li>
@@ -161,36 +161,36 @@
 					<ul>
 						<li>
 							<div>
-								<!-- HAS_CONTEXT --><html:link href="#">
+								<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link href="#">
 									Link 1
 								</html:link>
 							</div>
 						</li>
 						<li>
 							<div>
-								<!-- HAS_CONTEXT --><html:link href="#" styleClass="navlistselected">
+								<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link href="#" styleClass="navlistselected">
 									Link 2
 								</html:link>
 							</div>
 						</li>
 						<li class="navsublist">
-							<!-- HAS_CONTEXT --><html:link href="#">
+							<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link href="#">
 								Sub Link 1
 							</html:link>
 						</li>
 						<li class="navsublist">
-							<!-- HAS_CONTEXT --><html:link href="#" styleClass="navlistselected">
+							<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link href="#" styleClass="navlistselected">
 								Sub Link 2
 							</html:link>
 						</li>
 						<li class="navsublist">
-							<!-- HAS_CONTEXT --><html:link href="#">
+							<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link href="#">
 								Sub Link 3
 							</html:link>
 						</li>
 						<li>
 							<div>
-								<!-- HAS_CONTEXT --><html:link href="#">
+								<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link href="#">
 									Link 3
 								</html:link>
 							</div>

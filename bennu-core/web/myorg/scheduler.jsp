@@ -11,7 +11,7 @@
 </h2>
 
 <ul>
-	<!-- HAS_CONTEXT --><li><html:link page="/configuration.do?method=applicationConfiguration">
+	<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><li><html:link page="/configuration.do?method=applicationConfiguration">
 		<bean:message bundle="MYORG_RESOURCES" key="link.back"/>
 	</html:link></li>
 </ul>
@@ -101,7 +101,7 @@
 			<logic:iterate id="taskConfiguration" name="task" property="taskConfigurations" length="1">
 				<tr>
 					<td rowspan="<%= numberConfigurations %>">
-						<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="externalId">
+						<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="externalId">
 							<bean:write name="task" property="localizedName"/>
 						</html:link>
 					</td>
@@ -156,7 +156,7 @@
 <logic:notEmpty name="inactiveTasks">
 	<logic:iterate id="task" name="inactiveTasks">
 		<p>
-			<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="externalId">
+			<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/scheduler.do?method=viewTask" paramId="taskId" paramName="task" paramProperty="externalId">
 				<bean:write name="task" property="localizedName"/>
 			</html:link>
 		</p>

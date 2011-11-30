@@ -17,12 +17,12 @@
 	<br/>
 	&nbsp;&nbsp;
 	&nbsp;&nbsp;&nbsp;
-	<!-- HAS_CONTEXT --><html:link page="/configuration.do?method=basicApplicationConfiguration"
+	<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/configuration.do?method=basicApplicationConfiguration"
 			paramId="virtualHostId" paramName="virtualHost" paramProperty="externalId">
 		<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration.basic"/>
 	</html:link>
 	&nbsp;&nbsp;&nbsp;
-	<!-- HAS_CONTEXT --><html:link page="/configuration.do?method=themeApplicationConfiguration"
+	<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/configuration.do?method=themeApplicationConfiguration"
 			paramId="virtualHostId" paramName="virtualHost" paramProperty="externalId">
 		<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration.theme.and.logos"/>
 	</html:link>

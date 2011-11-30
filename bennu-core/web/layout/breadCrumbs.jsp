@@ -14,7 +14,7 @@
 				<logic:greaterThan name="i" value="0">
 					>
 				</logic:greaterThan>
-				<!-- HAS_CONTEXT --><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= node.getUrl() %>">
+				<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><% if(node.hasFunctionality()) { %><!-- NO_CHECKSUM --><% } %><html:link page="<%= node.getUrl() %>">
 					<bean:write name="node" property="link"/>
 				</html:link>
 			</logic:iterate>

@@ -10,7 +10,7 @@
 </h2>
 
 <ul>
-<!-- HAS_CONTEXT --><li><html:link page="/scheduler.do?method=viewScheduler">
+<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><li><html:link page="/scheduler.do?method=viewScheduler">
 	<bean:message bundle="MYORG_RESOURCES" key="link.back"/>
 </html:link></li>
 </ul>
@@ -32,7 +32,7 @@
 	</html:link></p>
 </logic:equal>
 <logic:equal name="task" property="executionPending" value="false">
-	<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=runNow" paramId="taskId" paramName="task" paramProperty="externalId">
+	<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/scheduler.do?method=runNow" paramId="taskId" paramName="task" paramProperty="externalId">
 		<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.runNow"/>
 	</html:link>
 </logic:equal>
@@ -76,7 +76,7 @@
 					<bean:write name="taskConfiguration" property="dayofweek"/>
 				</td>
 				<td>
-					<!-- HAS_CONTEXT --><html:link page="<%= "/scheduler.do?method=deleteTaskConfiguration&taskId=" + taskId %>" paramId="taskConfigurationId" paramName="taskConfiguration" paramProperty="externalId">
+					<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="<%= "/scheduler.do?method=deleteTaskConfiguration&taskId=" + taskId %>" paramId="taskConfigurationId" paramName="taskConfiguration" paramProperty="externalId">
 						<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.configuration.delete"/>
 					</html:link>
 				</td>
@@ -86,7 +86,7 @@
 </logic:notEmpty>
 
 <ul>
-	<!-- HAS_CONTEXT --><li><html:link page="/scheduler.do?method=prepareAddTaskConfiguration" paramId="taskId" paramName="task" paramProperty="externalId">
+	<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><li><html:link page="/scheduler.do?method=prepareAddTaskConfiguration" paramId="taskId" paramName="task" paramProperty="externalId">
 		<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.add.configuration"/>
 	</html:link></li>
 </ul>
@@ -117,7 +117,7 @@
 					<bean:write name="taskLog" property="successful"/>
 				</td>
 				<td>
-					<!-- HAS_CONTEXT --><html:link page="/scheduler.do?method=viewTaskLog" paramId="taskLogId" paramName="taskLog" paramProperty="externalId">
+					<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/scheduler.do?method=viewTaskLog" paramId="taskLogId" paramName="taskLog" paramProperty="externalId">
 						<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.task.log.view"/>
 					</html:link>
 				</td>
