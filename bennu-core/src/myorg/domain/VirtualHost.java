@@ -138,6 +138,11 @@ public class VirtualHost extends VirtualHost_Base {
 		node.delete();
 	    }
 
+
+	    removeExpenditureTrackingSystem();
+	    removeExternalAccountingIntegrationSystem();
+	    removeWorkflowSystem();
+	    removeWorkingCapitalSystem();
 	    removeTheme();
 	    removeMyOrg();
 	    deleteDomainObject();
