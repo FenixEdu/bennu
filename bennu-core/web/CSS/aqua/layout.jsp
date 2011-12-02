@@ -37,14 +37,14 @@
 	<script type="text/javascript" src="<%= contextPath %>/CSS/sotis/js/script.js"></script>
 	
 </head>
-<body class="top">
+<body>
 
 
 	<header id="header">
-		<div class="container_12">
+		<div class="container">
 			<h1>
-				<a href="<%= contextPath %>" title="Job Bank">
-					SOTIS
+				<a href="<%= contextPath %>" title="SOTIS">
+					<bean:write name="virtualHost" property="applicationTitle"/>
 				</a>
 			</h1>
 			
@@ -78,8 +78,7 @@
 
 					<jsp:include page="<%= layoutContext.getLogin() %>"/>
 
-
-						<a href="<%= contextPath %>/enterprise.do?method=prepareToPasswordRecover" class="esqueceu-password"><bean:message bundle="JOB_BANK_RESOURCES" key="label.jobBank.login.forgotPassword"/></a>
+						<a href="<%= contextPath %>/enterprise.do?method=prepareToPasswordRecover" class="forgot-password"><bean:message bundle="JOB_BANK_RESOURCES" key="label.jobBank.login.forgotPassword"/></a>
 
 				</div>
 
@@ -90,62 +89,58 @@
 	
 		<logic:present name="USER_SESSION_ATTRIBUTE">	
 			<nav id="perfil">
+				<p>
+					<jsp:include page="<%= layoutContext.getConfigurationLink() %>"/>
+				</p>
+					<jsp:include page="<%= layoutContext.getLogin() %>"/>
+					<jsp:include page="<%= layoutContext.getHelpLink() %>"/>
 				
-				<ul>
-					<li><jsp:include page="<%= layoutContext.getConfigurationLink() %>"/></li>
-					<li><jsp:include page="<%= layoutContext.getLogin() %>"/></li>
-					<li><jsp:include page="<%= layoutContext.getHelpLink() %>"/></li>
-				</ul>
 			</nav>
 		</logic:present>
-
-		</div>
+		
+			<nav id="tabs">			
+				<%-- <bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
+				<bean:define id="menuElements" name="context" property="menuElements"/>
+				<logic:notEmpty name="menuElements">
+					<bean:size name="menuElements" id="size"/>
+					<logic:greaterThan name="size" value="1">
+						<jsp:include page="<%= layoutContext.getMenuTop() %>"/>
+					</logic:greaterThan>
+				</logic:notEmpty>
+				--%>
+				
+				<jsp:include page="<%= layoutContext.getSubMenuTop() %>" />
+			</nav><!-- tabs -->
+		
+		</div><!-- container -->
 	</header><!-- header -->
 	
+	<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
+		<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
+			<div id="language">
+				<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" class="pt">PT</a>
+				<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>">EN</a>
+			</div>
+	</logic:equal>
+	
 	<section id="content">
-		<div class="container_12">
-
-			<div class="topmenu">
-	
-			<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
-			<bean:define id="menuElements" name="context" property="menuElements"/>
-			<logic:notEmpty name="menuElements">
-				<bean:size name="menuElements" id="size"/>
-				<logic:greaterThan name="size" value="1">
-					<jsp:include page="<%= layoutContext.getMenuTop() %>"/>
-				</logic:greaterThan>
-			</logic:notEmpty>
-	
-				<jsp:include page="<%= layoutContext.getSubMenuTop() %>" />
-
-			</div><!-- topmenu -->
-	
-	
-			<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
-				<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
-					<div id="language">
-						<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" class="pt">PT</a>
-						<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>">EN</a>
-					</div>
-			</logic:equal>
-		
-	
+		<div class="container">	
 
 			<div id="conteudo">
 				<jsp:include page="<%= layoutContext.getPageOperations() %>" />
-				<logic:equal name="virtualHost" property="breadCrumbsEnabled"
-					value="true">
+				<logic:equal name="virtualHost" property="breadCrumbsEnabled" value="true">
 					<jsp:include page="<%= layoutContext.getBreadCrumbs() %>" />
 				</logic:equal>
 				<jsp:include page="<%= layoutContext.getBody() %>" />
 			</div><!-- conteudo -->
 
 		</div><!-- container_12 -->
-		<footer id="content-footer"></footer>
-	</section>
 	
-	<div id="footer">
-		<div class="container_12">
+		<footer id="content-footer"></footer>
+	</section><!-- container_12 -->
+	
+	<footer id="footer">
+		<div class="container">
 			<p>
 				&copy;
 				<dt:format pattern="yyyy">
@@ -154,9 +149,7 @@
 				<bean:write name="virtualHost" property="applicationCopyright" />
 			</p>
 		</div>
-	</div><!-- footer -->
+	</footer><!-- footer -->
 
 </body>
 </html:html>
-
-
