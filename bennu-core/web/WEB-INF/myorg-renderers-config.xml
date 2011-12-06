@@ -368,16 +368,12 @@
           as options. The option labels are fetched from the resources using the enum name as key. -->     
     <renderer mode="input" type="java.lang.Enum" layout="radio-postback" class="pt.ist.fenixWebFramework.rendererExtensions.EnumRadioInputRendererWithPostBack"/>
 
-    <renderer mode="input" type="java.util.Date" class="pt.ist.fenixWebFramework.renderers.DateInputRenderer"/>
     <renderer mode="input" type="org.joda.time.DateTime" class="pt.ist.fenixWebFramework.rendererExtensions.DateTimeInputRenderer"/>
    
     <renderer mode="input" layout="picker" type="org.joda.time.DateTime" class="pt.ist.fenixWebFramework.rendererExtensions.DateTimeInputRendererWithPicker">
     	<property name="image" value="images/calendar.gif"/>
     </renderer>
    
-    <renderer mode="input" layout="picker" type="java.util.Date" class="pt.ist.fenixWebFramework.rendererExtensions.DateInputRendererWithPicker">
-    	<property name="image" value="images/calendar.gif"/>
-    </renderer>
 	<renderer mode="input" layout="picker" type="org.joda.time.LocalDate" class="pt.ist.fenixWebFramework.rendererExtensions.LocalDateInputRendererWithPicker">
 		<property name="image" value="images/calendar.gif"/>
 	</renderer>
