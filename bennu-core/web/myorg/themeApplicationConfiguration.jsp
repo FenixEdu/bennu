@@ -67,6 +67,29 @@
 
 	<form>
 		<h3>
+			<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration.layout"/>
+		</h3>
+	</form>
+
+	<fr:form action='<%= "/configuration.do?method=editBasicApplicationConfiguration&virtualHostId=" + vhostOID%>'>
+		<fr:edit id="virtualHostToConfigure" name="virtualHostToConfigure" visible="false"/>
+
+		<table>
+			<tr>
+				<td><bean:message key="label.application.configuration.layout" bundle="MYORG_RESOURCES"/></td>
+				<td>
+					<fr:edit name="virtualHostToConfigure" slot="layoutSubDir"/>
+				</td>
+			</tr>
+		</table>
+
+		<html:submit styleClass="inputbutton"><bean:message key="renderers.form.submit.name" bundle="RENDERER_RESOURCES"/></html:submit>
+	</fr:form>
+
+	<br/>
+
+	<form>
+		<h3>
 			<bean:message bundle="MYORG_RESOURCES" key="label.application.configuration.theme"/>
 		</h3>
 	</form>
@@ -110,6 +133,7 @@
 	<html:submit styleClass="inputbutton"><bean:message key="renderers.form.submit.name" bundle="RENDERER_RESOURCES"/></html:submit>
 	</fr:form>
 
+<%--
 	<br/>
 
 	<form>
@@ -123,5 +147,7 @@
 			width="90%" height="400" frameborder="0">
 		<p>Preview not available.</p>
 	</iframe>
+
+--%>
 
 </logic:present>

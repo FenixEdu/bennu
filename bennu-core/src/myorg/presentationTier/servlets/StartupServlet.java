@@ -43,6 +43,7 @@ import myorg.domain.MyOrg;
 import myorg.domain.RoleType;
 import myorg.domain.Theme;
 import myorg.domain.Theme.ThemeType;
+import myorg.domain.VirtualHost;
 import myorg.domain.groups.AnyoneGroup;
 import myorg.domain.groups.Role;
 import myorg.domain.groups.UserGroup;
@@ -74,6 +75,8 @@ public class StartupServlet extends HttpServlet {
 	initializePersistentGroups();
 
 	initScheduler();
+
+	initVirtualHosts();
 
 	syncThemes();
 
@@ -175,6 +178,10 @@ public class StartupServlet extends HttpServlet {
 	    System.out.println("Unable to init scheduler");
 	    e.printStackTrace();
 	}
+    }
+
+    private void initVirtualHosts() {
+	VirtualHost.init();
     }
 
 }

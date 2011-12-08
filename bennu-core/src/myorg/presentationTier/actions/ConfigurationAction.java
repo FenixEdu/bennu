@@ -104,7 +104,7 @@ public class ConfigurationAction extends ContextBaseAction {
 	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
 	virtualHost.edit(bean);
 
-	((LayoutContext) getContext(request)).setLayout(bean.getTheme());
+	((LayoutContext) getContext(request)).setThemeSubDir(bean.getTheme().getName());
 	return applicationConfiguration(mapping, form, request, response);
     }
 

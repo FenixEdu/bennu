@@ -54,6 +54,7 @@ public class VirtualHostBean implements Serializable {
     private Boolean breadCrumbsEnabled;
 
     private Theme theme;
+    private String layoutSubDir;
     private String helpLink;
     private String errorPage;
     private ByteArray logo;
@@ -86,6 +87,7 @@ public class VirtualHostBean implements Serializable {
 	setGoogleSearchEnabled(virtualHost.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(virtualHost.getLanguageSelectionEnabled());
 	setTheme(virtualHost.getTheme());
+	setLayoutSubDir(virtualHost.getLayoutSubDir());
 	setHelpLink(virtualHost.getHelpLink());
 	setErrorPage(virtualHost.getErrorPage());
 	setBreadCrumbsEnabled(virtualHost.getBreadCrumbsEnabled());
@@ -243,6 +245,14 @@ public class VirtualHostBean implements Serializable {
 
     public void setSupportEmailAddress(String supportEmailAddress) {
         this.supportEmailAddress = supportEmailAddress;
+    }
+
+    public String getLayoutSubDir() {
+        return layoutSubDir;
+    }
+
+    public void setLayoutSubDir(String layoutSubDir) {
+        this.layoutSubDir = layoutSubDir;
     }
 
 }

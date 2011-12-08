@@ -38,12 +38,10 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import myorg.domain.Theme;
 import myorg.domain.VirtualHost;
 import myorg.domain.contents.Node;
 import myorg.domain.util.ByteArray;
 import myorg.presentationTier.Context;
-import myorg.presentationTier.LayoutContext;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -160,12 +158,14 @@ public class HomeAction extends ContextBaseAction {
 
     public ActionForward previewTheme(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 	    final HttpServletResponse response) throws Exception {
-	final Theme theme = getDomainObject(request, "themeId");
+	throw new Error("This method is no longer supported.");
+/*
 	request.setAttribute("theme", theme);
 
 	final LayoutContext context = (LayoutContext) getContext(request);
 	context.setLayout("/myorg/preview/previewPage.jsp");
 	return context.forward("");
+ */
     }
 
     protected ActionForward outputImage(final HttpServletResponse response, final ByteArray byteArray) throws Exception {

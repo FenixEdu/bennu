@@ -79,6 +79,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setLanguageSelectionEnabled(Boolean.TRUE);
 	setBreadCrumbsEnabled(Boolean.TRUE);
 	setErrorPage(PropertiesManager.getProperty("errorPage"));
+	setLayoutSubDir("default");
     }
 
     public VirtualHost(final VirtualHostBean virtualHostBean) {
@@ -92,6 +93,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setLanguageSelectionEnabled(virtualHostBean.getLanguageSelectionEnabled());
 	setHelpLink(virtualHostBean.getHelpLink());
 	setErrorPage(virtualHostBean.getErrorPage());
+	setLayoutSubDir("default");
 	if (virtualHostBean.getLogo() != null) {
 	    virtualHostBean.setLogo(virtualHostBean.getLogo());
 	}
@@ -101,7 +103,6 @@ public class VirtualHost extends VirtualHost_Base {
 	setBreadCrumbsEnabled(virtualHostBean.getBreadCrumbsEnabled());
 	setSupportEmailAddress(virtualHostBean.getSupportEmailAddress());
 	setSystemEmailAddress(virtualHostBean.getSystemEmailAddress());
-	;
     }
 
     @Service
@@ -165,6 +166,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setGoogleSearchEnabled(bean.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(bean.getLanguageSelectionEnabled());
 	setTheme(bean.getTheme());
+	setLayoutSubDir(bean.getLayoutSubDir());
 	setHelpLink(bean.getHelpLink());
 	setErrorPage(bean.getErrorPage());
 	if (bean.getLogo() != null) {
@@ -237,6 +239,15 @@ public class VirtualHost extends VirtualHost_Base {
 	    }
 	}
 	return count;
+    }
+
+    @Service
+    public static void init() {
+	for (final VirtualHost virtualHost : MyOrg.getInstance().getVirtualHostsSet()) {
+	    if (virtualHost.getLayoutSubDir() == null) {
+		virtualHost.setLayoutSubDir("default");
+	    }
+	}
     }
 
 }

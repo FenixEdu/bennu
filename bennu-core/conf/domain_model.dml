@@ -148,6 +148,7 @@ class VirtualHost {
 	String supportEmailAddress;
 	String systemEmailAddress;
 	String supportedLanguages;
+	String layoutSubDir;
 }
 
 class Theme {

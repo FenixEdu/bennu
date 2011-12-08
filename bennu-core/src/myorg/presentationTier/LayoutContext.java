@@ -36,42 +36,87 @@ import org.apache.struts.action.ActionForward;
 public class LayoutContext extends Context {
 
     private String layout;
+    private String layoutSubDir;
+    private String themeSubDir;
 
     private String title = "";
     private final List<String> head = new ArrayList<String>();
-    private String pageHeader = "/layout/pageHeader.jsp";
-    private String login = "/layout/login.jsp";
-    private String configurationLink = "/layout/configurationLink.jsp";
-    private String helpLink = "/layout/helpLink.jsp";
-    private String googleSearch = "/layout/googleSearch.jsp";
-    private String languageSelection = "/layout/languageSelection.jsp";
-    private String sideBar = "/layout/sideBar.jsp";
-    private String subMenuTop = "/layout/subMenuTop.jsp";
-    private String menuTop = "/layout/menuTop.jsp";
+    private String pageHeader;
+    private String login;
+    private String configurationLink;
+    private String helpLink;
+    private String googleSearch;
+    private String languageSelection;
+    private String sideBar;
+    private String subMenuTop;
+    private String menuTop;
 
-    private String pageOperations = "/layout/blank.jsp";
-    private String breadCrumbs = "/layout/breadCrumbs.jsp";
-    private String body = "/layout/blank.jsp";
-    private String footer = "/layout/footer.jsp";
+    private String pageOperations;
+    private String breadCrumbs;
+    private String body;
+    private String footer;
+
+    protected void init() {
+	final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+	final Theme theme = virtualHost.getTheme();
+	init(virtualHost.getLayoutSubDir(), theme.getName());
+    }
+
+    protected void init(final String layoutSubDir, final String themeSubDir) {
+	this.layoutSubDir = layoutSubDir;
+	this.themeSubDir = themeSubDir;
+
+	final String layoutPrefix = "/layout/" + layoutSubDir;
+	this.layout = layoutPrefix + "/layout.jsp";
+	
+	pageHeader = layoutPrefix + "/pageHeader.jsp";
+	login = layoutPrefix + "/login.jsp";
+	configurationLink = layoutPrefix + "/configurationLink.jsp";
+	helpLink = layoutPrefix + "/helpLink.jsp";
+	googleSearch = layoutPrefix + "/googleSearch.jsp";
+	languageSelection = layoutPrefix + "/languageSelection.jsp";
+	sideBar = layoutPrefix + "/sideBar.jsp";
+	subMenuTop = layoutPrefix + "/subMenuTop.jsp";
+	menuTop = layoutPrefix + "/menuTop.jsp";
+
+	pageOperations = "/blank.jsp";
+	breadCrumbs = layoutPrefix + "/breadCrumbs.jsp";
+	body = "/blank.jsp";
+	footer = layoutPrefix + "/footer.jsp";
+
+	head.add(layoutPrefix + "/head.jsp");
+    }
+
+    {
+	init();
+    }
 
     public LayoutContext() {
 	super();
-	setLayout(VirtualHost.getVirtualHostForThread().getTheme());
-	head.add("/layout/head.jsp");
     }
 
     public LayoutContext(final String path) {
 	super(path);
-	setLayout(VirtualHost.getVirtualHostForThread().getTheme());
-	head.add("/layout/head.jsp");
+    }
+
+    public void switchLayoutAndTheme(final String layoutSubDir, final String themeSubDir) {
+	init(layoutSubDir, themeSubDir);
     }
 
     public String getLayout() {
 	return layout;
     }
 
-    public void setLayout(String layout) {
-	this.layout = layout;
+    public void setLayout(final String layoutSubDir) {
+	switchLayoutAndTheme(layoutSubDir, getThemeSubDir());
+    }
+
+    public String getThemeSubDir() {
+        return themeSubDir;
+    }
+
+    public void setThemeSubDir(final String themeSubDir) {
+	switchLayoutAndTheme(layoutSubDir, themeSubDir);
     }
 
     public String getTitle() {
@@ -150,10 +195,6 @@ public class LayoutContext extends Context {
     public ActionForward forward(final String body) {
 	setBody(body);
 	return new ActionForward(getLayout());
-    }
-
-    public void setLayout(Theme theme) {
-	this.layout = "/CSS/" + theme.getName() + "/layout.jsp";
     }
 
     public void setLogin(String login) {
