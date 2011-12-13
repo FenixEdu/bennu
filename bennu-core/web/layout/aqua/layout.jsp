@@ -43,7 +43,7 @@
 	<header id="header">
 		<div class="container">
 			<h1>
-				<a href="<%= contextPath %>" title="SOTIS">
+				<a href="<%= contextPath %>">
 					<bean:write name="virtualHost" property="applicationTitle"/>
 				</a>
 			</h1>
@@ -89,9 +89,7 @@
 
 			<div id="conteudo">
 				<jsp:include page="<%= layoutContext.getPageOperations() %>" />
-				<logic:equal name="virtualHost" property="breadCrumbsEnabled" value="true">
-					<jsp:include page="<%= layoutContext.getBreadCrumbs() %>" />
-				</logic:equal>
+				<jsp:include page="<%= layoutContext.getBreadCrumbs() %>" />
 				<jsp:include page="<%= layoutContext.getBody() %>" />
 			</div><!-- conteudo -->
 
@@ -102,13 +100,7 @@
 	
 	<footer id="footer">
 		<div class="container">
-			<p>
-				&copy;
-				<dt:format pattern="yyyy">
-					<dt:currentTime />
-				</dt:format>
-				<bean:write name="virtualHost" property="applicationCopyright" />
-			</p>
+			<jsp:include page="<%= layoutContext.getFooter() %>"/>
 		</div>
 	</footer><!-- footer -->
 
