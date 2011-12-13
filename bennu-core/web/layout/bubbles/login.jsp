@@ -1,3 +1,5 @@
+<%@page import="myorg.presentationTier.actions.ContextBaseAction"%>
+<%@page import="myorg.presentationTier.LayoutContext"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -19,13 +21,34 @@
 		final boolean isCasEnabled = casConfig.isCasEnabled();
 %>
 <logic:notPresent name="USER_SESSION_ATTRIBUTE">
-	<% if (isCasEnabled) {%>
-		<div class="login">
-			<% final String portString = (request.getServerPort() == 80 || request.getServerPort() == 443) ? "" : ":" + request.getServerPort(); %>
-			<bean:define id="loginUrl"><%= FenixWebFramework.getConfig().getCasConfig(serverName).getCasLoginUrl() + "https" + "://" + request.getServerName() + contextPath %>/</bean:define>
-			<html:link href="<%= loginUrl %>"><bean:message key="label.login.link" bundle="MYORG_RESOURCES"/></html:link>
+	<div id="login-botao">
+		<div id="botao" class="posicao-azul">
+			<a href="javascript:void(0);" class="botao azul" id="botao-login">
+				<strong>Login</strong>
+			</a>
 		</div>
-	<% } else { %>
+	</div>
+	<div id="login-escolha">
+		<bean:message key="label.login.as" bundle="MYORG_RESOURCES"/>
+		<a href="javascript:void(0);" class="login-link" id="login-link-empresa">
+			<bean:message key="label.login.company" bundle="MYORG_RESOURCES"/>
+		</a>
+		<bean:message key="label.or" bundle="MYORG_RESOURCES"/>
+		<% if (isCasEnabled) {%>
+				<div class="login">
+					<% final String portString = (request.getServerPort() == 80 || request.getServerPort() == 443) ? "" : ":" + request.getServerPort(); %>
+					<bean:define id="loginUrl"><%= FenixWebFramework.getConfig().getCasConfig(serverName).getCasLoginUrl() + "https" + "://" + request.getServerName() + contextPath %>/</bean:define>
+					<html:link href="<%= loginUrl %>">
+						<bean:message key="label.login.student" bundle="MYORG_RESOURCES"/>
+					</html:link>
+				</div>
+		<% } else { %>
+				<a href="javascript:void(0);" class="login-link" id="login-link-aluno">
+					<bean:message key="label.login.student" bundle="MYORG_RESOURCES"/>
+				</a>
+		<% } %>
+	</div>
+	<div id="login-form">
 		<form action="<%= contextPath %>/authenticationAction.do" class="login" method="post">
 			<input type="hidden" name="method" value="login"/>
 			<span><bean:message key="label.login.username" bundle="MYORG_RESOURCES"/>: <input type="text" name="username" size="10"/></span>
@@ -33,12 +56,23 @@
 			<bean:define id="loginLabel"><bean:message key="label.login.submit" bundle="MYORG_RESOURCES"/></bean:define>
 			<input class="inputbuttonlogin" type="submit" name="Submit" value="<%= loginLabel %>"/>
 		</form>
-	<% } %>
+		<a href="<%= contextPath %>/enterprise.do?method=prepareToPasswordRecover" class="esqueceu-password"><bean:message bundle="JOB_BANK_RESOURCES" key="label.jobBank.login.forgotPassword"/></a>
+	</div>
 </logic:notPresent>
 <% } %>
 
 <logic:present name="USER_SESSION_ATTRIBUTE">
-	<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES"/>: <bean:write name="USER_SESSION_ATTRIBUTE" property="username"/> |
-
-	<html:link action="/authenticationAction.do?method=logout"><bean:message key="label.login.logout" bundle="MYORG_RESOURCES"/></html:link>
+	<div id="hello-user">
+		<%
+			final LayoutContext layoutContext = (LayoutContext) ContextBaseAction.getContext(request);
+		%>
+		<p>
+			<jsp:include page="<%= layoutContext.getConfigurationLink() %>"/>
+		</p>
+		<jsp:include page="<%= layoutContext.getHelpLink() %>"/>
+		<div id="login" class="login">
+			<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES"/>: <bean:write name="USER_SESSION_ATTRIBUTE" property="username"/> |
+			<html:link action="/authenticationAction.do?method=logout"><bean:message key="label.login.logout" bundle="MYORG_RESOURCES"/></html:link>
+		</div>
+	</div>
 </logic:present>

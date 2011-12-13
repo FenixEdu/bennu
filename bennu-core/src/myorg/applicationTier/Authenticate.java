@@ -34,10 +34,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import myorg._development.PropertiesManager;
 import myorg.domain.MyOrg;
 import myorg.domain.RoleType;
 import myorg.domain.User;
 import myorg.domain.VirtualHost;
+import myorg.domain.exceptions.DomainException;
 import myorg.domain.groups.Role;
 
 import org.joda.time.DateTime;
@@ -176,9 +178,20 @@ public class Authenticate implements Serializable {
 
     @Service
     public static UserView authenticate(final String username, final String password) {
+	check(username, password);
 	final UserView userView = new UserView(username);
 	authenticate(userView);
 	return userView;
+    }
+
+    private static void check(final String username, final String password) {
+	final String check = PropertiesManager.getProperty("check.login.password");
+	if (check != null && Boolean.parseBoolean(check)) {
+	    final User user = User.findByUsername(username);
+	    if (user == null || user.getPassword() == null || !user.getPassword().equals(password)) {
+		throw new DomainException("error.authentication.failed");
+	    }
+	}
     }
 
     @Service

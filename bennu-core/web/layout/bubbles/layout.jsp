@@ -45,74 +45,19 @@
 
 <body class="top">
 
-
 	<div id="header" class="container_12">
 
-		<a href="<%= contextPath %>" title="Job Bank">
-			<img src="<%= contextPath %>/CSS/theme_test_beta/images/jobbank.png" alt="IST Job Bank" />
-		</a>
-	
-	<%
-		final String serverName = request.getServerName();
-		final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
-		// If no config is found don't allow login.
-		if (casConfig == null) {
-	%>
-
-		<!-- context: <%= contextPath %> - serverName: <%= serverName %> -->
-
-		<%
-		} else {
-			final boolean isCasEnabled = casConfig.isCasEnabled();
-	%>
-
-		<logic:notPresent name="USER_SESSION_ATTRIBUTE">
-			<div id="login-botao">	
-				
-				<div id="botao" class="posicao-azul">
-					<a href="javascript:void(0);" class="botao azul" id="botao-login"><strong>Login</strong>
-					</a>
-				</div>
-				<!-- botão -->
-			</div>
-			<!-- login -->
-
-			<div id="login-escolha">
-				Fazer login como <a href="javascript:void(0);" class="login-link"
-					id="login-link-empresa">Empresa</a> ou <a
-					href="javascript:void(0);" class="login-link" id="login-link-aluno">Aluno</a>
-			</div>
-			<!-- login-escolha -->
-
-			<div id="login-form">
-
-				<jsp:include page="<%= layoutContext.getLogin() %>"/>
-
-				
-					<a href="<%= contextPath %>/enterprise.do?method=prepareToPasswordRecover" class="esqueceu-password"><bean:message bundle="JOB_BANK_RESOURCES" key="label.jobBank.login.forgotPassword"/></a>
-				
-			</div>
-		</logic:notPresent>
-		<% } %>
-
-
-
-
-		<logic:present name="USER_SESSION_ATTRIBUTE">
-			<div id="hello-user">
-				<p>
-					
-					<jsp:include page="<%= layoutContext.getConfigurationLink() %>"/>
-					
-				</p>
-				
-					<jsp:include page="<%= layoutContext.getLogin() %>"/>
-					
-					<jsp:include page="<%= layoutContext.getHelpLink() %>"/>	
-				
-			</div>
+		<logic:present name="virtualHost" property="logo">
+	    	<bean:define id="logoUrl"><%= request.getContextPath() %>/home.do?method=logo&virtualHostId=<bean:write name="virtualHost" property="externalId"/></bean:define>
+			<html:img src='<%= logoUrl %>'/>
 		</logic:present>
+		
+		<div id="text">
+			<h1><bean:write name="virtualHost" property="applicationTitle"/></h1>
+			<p><bean:write name="virtualHost" property="applicationSubTitle"/></p>
+		</div>
 
+		<jsp:include page="<%= layoutContext.getLogin() %>"/>	
 
 	</div>
 	<!-- header -->
