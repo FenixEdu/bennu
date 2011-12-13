@@ -35,13 +35,11 @@
 		</a>
 		<bean:message key="label.or" bundle="MYORG_RESOURCES"/>
 		<% if (isCasEnabled) {%>
-				<div class="login">
-					<% final String portString = (request.getServerPort() == 80 || request.getServerPort() == 443) ? "" : ":" + request.getServerPort(); %>
-					<bean:define id="loginUrl"><%= FenixWebFramework.getConfig().getCasConfig(serverName).getCasLoginUrl() + "https" + "://" + request.getServerName() + contextPath %>/</bean:define>
-					<html:link href="<%= loginUrl %>">
-						<bean:message key="label.login.student" bundle="MYORG_RESOURCES"/>
-					</html:link>
-				</div>
+				<% final String portString = (request.getServerPort() == 80 || request.getServerPort() == 443) ? "" : ":" + request.getServerPort(); %>
+				<bean:define id="loginUrl"><%= FenixWebFramework.getConfig().getCasConfig(serverName).getCasLoginUrl() + "https" + "://" + request.getServerName() + contextPath %>/</bean:define>
+				<html:link href="<%= loginUrl %>">
+					<bean:message key="label.login.student" bundle="MYORG_RESOURCES"/>
+				</html:link>
 		<% } else { %>
 				<a href="javascript:void(0);" class="login-link" id="login-link-aluno">
 					<bean:message key="label.login.student" bundle="MYORG_RESOURCES"/>
