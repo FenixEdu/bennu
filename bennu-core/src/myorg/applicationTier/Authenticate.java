@@ -177,8 +177,10 @@ public class Authenticate implements Serializable {
     }
 
     @Service
-    public static UserView authenticate(final String username, final String password) {
-	check(username, password);
+    public static UserView authenticate(final String username, final String password, final boolean checkPassword) {
+	if (checkPassword) {
+	    check(username, password);
+	}
 	final UserView userView = new UserView(username);
 	authenticate(userView);
 	return userView;

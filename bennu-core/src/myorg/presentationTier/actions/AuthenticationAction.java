@@ -32,6 +32,7 @@ import javax.servlet.http.HttpSession;
 import myorg.applicationTier.Authenticate;
 import myorg.applicationTier.Authenticate.UserView;
 import myorg.applicationTier.AuthenticationListner;
+import myorg.domain.User;
 import myorg.domain.VirtualHost;
 import myorg.domain.scheduler.TransactionalThread;
 
@@ -51,8 +52,8 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 @Forwards( { @Forward(name = "forward", path = "/", redirect = true) })
 public class AuthenticationAction extends ContextBaseAction {
 
-    public static void login(final HttpServletRequest request, final String username, final String password) {
-	final UserView user = Authenticate.authenticate(username, password);
+    public static void login(final HttpServletRequest request, final String username, final String password, final boolean checkPassword) {
+	final UserView user = Authenticate.authenticate(username, password, checkPassword);
 	final HttpSession httpSession = request.getSession();
 	httpSession.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, user);
 
@@ -79,7 +80,7 @@ public class AuthenticationAction extends ContextBaseAction {
 	    final HttpServletResponse response) throws Exception {
 	final String username = getAttribute(request, "username");
 	final String password = getAttribute(request, "password");
-	login(request, username, password);
+	login(request, username, password, true);
 	return mapping.findForward("forward");
     }
 
