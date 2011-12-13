@@ -48,44 +48,6 @@
 				</a>
 			</h1>
 			
-			<%
-				final String serverName = request.getServerName();
-				final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
-				// If no config is found don't allow login.
-				if (casConfig == null) {
-			%>
-
-				<!-- context: <%= contextPath %> - serverName: <%= serverName %> -->
-
-				<%
-				} else {
-					final boolean isCasEnabled = casConfig.isCasEnabled();
-			%>
-			
-			<logic:notPresent name="USER_SESSION_ATTRIBUTE">
-				<% if (isCasEnabled) {%>
-				<div class="login">
-					<% final String portString = request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort(); %>
-					<bean:define id="loginUrl"><%= FenixWebFramework.getConfig().getCasConfig(serverName).getCasLoginUrl() + "https" + "://" + request.getServerName() + contextPath %>/</bean:define>
-					<html:link href="<%= loginUrl %>">
-						<bean:message key="label.login.link" bundle="MYORG_RESOURCES" />
-					</html:link>
-				</div>
-				<% } else { %>
-
-
-				<div id="login-form">
-
-					<jsp:include page="<%= layoutContext.getLogin() %>"/>
-
-						<a href="<%= contextPath %>/enterprise.do?method=prepareToPasswordRecover" class="forgot-password"><bean:message bundle="JOB_BANK_RESOURCES" key="label.jobBank.login.forgotPassword"/></a>
-
-				</div>
-
-				<% } %>
-			</logic:notPresent>
-			<% } %>
-			
 	
 		<logic:present name="USER_SESSION_ATTRIBUTE">	
 			<nav id="perfil">
@@ -99,7 +61,7 @@
 		</logic:present>
 		
 			<nav id="tabs">			
-				<%-- <bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
+				<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
 				<bean:define id="menuElements" name="context" property="menuElements"/>
 				<logic:notEmpty name="menuElements">
 					<bean:size name="menuElements" id="size"/>
@@ -107,7 +69,7 @@
 						<jsp:include page="<%= layoutContext.getMenuTop() %>"/>
 					</logic:greaterThan>
 				</logic:notEmpty>
-				--%>
+
 				
 				<jsp:include page="<%= layoutContext.getSubMenuTop() %>" />
 			</nav><!-- tabs -->
@@ -118,8 +80,7 @@
 	<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
 		<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
 			<div id="language">
-				<a href="<%= languageUrl+"?method=firstPage&locale="+Language.pt.name() %>" class="pt">PT</a>
-				<a href="<%= languageUrl+"?method=firstPage&locale="+Language.en.name() %>">EN</a>
+				<jsp:include page="<%= layoutContext.getLanguageSelection() %>"/>
 			</div>
 	</logic:equal>
 	
