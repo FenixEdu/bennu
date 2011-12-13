@@ -49,16 +49,13 @@
 			</h1>
 			
 	
-		<logic:present name="USER_SESSION_ATTRIBUTE">	
 			<nav id="perfil">
 				<p>
 					<jsp:include page="<%= layoutContext.getConfigurationLink() %>"/>
 				</p>
-					<jsp:include page="<%= layoutContext.getLogin() %>"/>
-					<jsp:include page="<%= layoutContext.getHelpLink() %>"/>
-				
+				<jsp:include page="<%= layoutContext.getLogin() %>"/>
+				<jsp:include page="<%= layoutContext.getHelpLink() %>"/>
 			</nav>
-		</logic:present>
 		
 			<nav id="tabs">			
 				<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
