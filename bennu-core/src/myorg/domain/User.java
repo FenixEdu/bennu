@@ -27,7 +27,6 @@ package myorg.domain;
 
 import java.util.Comparator;
 
-import module.jobBank.domain.JobBankSystem;
 import myorg.domain.exceptions.DomainException;
 import myorg.domain.groups.IRoleEnum;
 import myorg.domain.groups.People;
