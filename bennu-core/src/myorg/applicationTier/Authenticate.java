@@ -190,7 +190,7 @@ public class Authenticate implements Serializable {
 	final String check = PropertiesManager.getProperty("check.login.password");
 	if (check != null && Boolean.parseBoolean(check)) {
 	    final User user = User.findByUsername(username);
-	    if (user == null || user.getPassword() == null || !user.getPassword().equals(password)) {
+	    if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
 		throw new DomainException("error.authentication.failed");
 	    }
 	}

@@ -27,10 +27,13 @@ package myorg.domain;
 
 import java.util.Comparator;
 
+import module.jobBank.domain.JobBankSystem;
+import myorg.domain.exceptions.DomainException;
 import myorg.domain.groups.IRoleEnum;
 import myorg.domain.groups.People;
 import myorg.domain.groups.Role;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -121,6 +124,21 @@ public class User extends User_Base {
 	setPassword(password);
     }
 
+    @Override
+    public void setPassword(final String password) {
+	final String newHash = DigestUtils.sha512Hex(password);
+	final String oldHash = getPassword();
+	if (newHash.equals(oldHash)) {
+	    throw new DomainException("message.error.bad.old.password", DomainException.getResourceFor("resources.MyOrgResources"));
+	}
+	super.setPassword(newHash);
+    }
+
+    public boolean matchesPassword(final String password) {
+	final String hash = DigestUtils.sha512Hex(password);
+	return hash.equals(getPassword());
+    }
+
     @Service
     public static User createNewUser(final String username) {
 	return new User(username);
@@ -146,10 +164,10 @@ public class User extends User_Base {
 	return strategy.shortPresent(this);
     }
 
-	@Override
-	public String toString() {
-		return getUsername();
-	}
+    @Override
+    public String toString() {
+	return getUsername();
+    }
 
     public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
 	if (strategy != defaultStrategy) {
