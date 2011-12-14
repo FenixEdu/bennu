@@ -49,7 +49,9 @@
 
 		<logic:present name="virtualHost" property="logo">
 	    	<bean:define id="logoUrl"><%= request.getContextPath() %>/home.do?method=logo&virtualHostId=<bean:write name="virtualHost" property="externalId"/></bean:define>
-			<html:img src='<%= logoUrl %>'/>
+	    	<a href="<%= request.getContextPath() %>">
+				<html:img src='<%= logoUrl %>'/>
+	    	</a>
 		</logic:present>
 		
 		<div id="text">
