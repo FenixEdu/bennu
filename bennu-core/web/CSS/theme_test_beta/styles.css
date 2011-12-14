@@ -1287,3 +1287,10 @@ div.warning1 {
 	background: transparent; border-color: #eee;
 }
 
+.failedLoginMessage {
+	color: red;
+	float: right;
+	padding-right: 280px;
+	vertical-align: top;
+	margin-top: -5px;
+}

@@ -20,6 +20,11 @@
 	} else {
 		final boolean isCasEnabled = casConfig.isCasEnabled();
 %>
+<logic:present name="authentication.failed">
+	<span class="failedLoginMessage">
+		<bean:message key="authentication.failed" bundle="MYORG_RESOURCES"/>
+	</span>
+</logic:present>
 <logic:notPresent name="USER_SESSION_ATTRIBUTE">
 	<div id="login-botao">
 		<div id="botao" class="posicao-azul">
