@@ -128,7 +128,8 @@ public class User extends User_Base {
 	final String newHash = DigestUtils.sha512Hex(password);
 	final String oldHash = getPassword();
 	if (newHash.equals(oldHash)) {
-	    throw new DomainException("message.error.bad.old.password", DomainException.getResourceFor("resources.MyOrgResources"));
+	    throw new DomainException("message.error.bad.old.password",
+		    DomainException.getResourceFor("resources.MyorgResources"));
 	}
 	super.setPassword(newHash);
     }
