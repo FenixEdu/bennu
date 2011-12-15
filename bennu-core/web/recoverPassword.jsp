@@ -19,7 +19,7 @@
 </fr:edit>
 <script type="text/javascript">
 <!--
-	document.getElementsById("<%= "myorg.domain.User:" + ((myorg.domain.User) request.getAttribute("user")).getExternalId() + ":password" %>").value = '';
+	document.getElementById("<%= "myorg.domain.User:" + ((myorg.domain.User) request.getAttribute("user")).getExternalId() + ":password" %>").setAttribute("value", '');
 //-->
 </script>
 
