@@ -181,4 +181,9 @@ public class User extends User_Base {
 	deleteDomainObject();
     }
 
+    public PasswordRecoveryRequest createNewPasswordRecoveryRequest() {
+	super.setPassword(null);
+	return new PasswordRecoveryRequest(this);
+    }
+
 }

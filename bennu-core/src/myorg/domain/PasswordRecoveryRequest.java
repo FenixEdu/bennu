@@ -7,7 +7,7 @@ import pt.ist.fenixWebFramework.services.Service;
 
 public class PasswordRecoveryRequest extends PasswordRecoveryRequest_Base {
     
-    public PasswordRecoveryRequest(final User user) {
+    PasswordRecoveryRequest(final User user) {
         super();
         setRequested(new DateTime());
         setPrevious(user.getPasswordRecoveryRequest());
