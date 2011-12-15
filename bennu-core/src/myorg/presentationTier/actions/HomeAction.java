@@ -38,6 +38,7 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import myorg.domain.PasswordRecoveryRequest;
 import myorg.domain.VirtualHost;
 import myorg.domain.contents.Node;
 import myorg.domain.util.ByteArray;
@@ -195,6 +196,20 @@ public class HomeAction extends ContextBaseAction {
 	final VirtualHost virtualHost = getDomainObject(request, "virtualHostId");
 	final ByteArray logo = virtualHost.getLogo();
 	return outputImage(response, logo);
+    }
+
+    public final ActionForward recoverPassword(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+	    final HttpServletResponse response) throws Exception {
+	final PasswordRecoveryRequest passwordRecoveryRequest = getDomainObject(request, "passwordRecoveryRequestId");
+	if (passwordRecoveryRequest != null) {
+	    final String verificationHash = request.getParameter("verificationHash");
+	    if (passwordRecoveryRequest.consume(verificationHash)) {
+		request.setAttribute("user", passwordRecoveryRequest.getUser());
+		final Context context = getContext(request);
+		return context.forward("/recoverPassword.jsp");
+	    }
+	}
+	return firstPage(mapping, form, request, response);
     }
 
 }

@@ -132,6 +132,12 @@ class User {
 	DateTime lastLogoutDateTime;
 }
 
+class PasswordRecoveryRequest {
+	DateTime requested;
+	String verificationHash;
+	DateTime consumed;
+}
+
 class VirtualHost {
 	String hostname;
 	Boolean googleSearchEnabled;
@@ -279,4 +285,14 @@ relation MyOrgPeopleUserLog {
 relation UserSingleUserGroup {
 	groups.SingleUserGroup playsRole singleUserGroup;
 	User playsRole user;
+}
+
+relation UserPasswordRecoveryRequest {
+	User playsRole user;
+	PasswordRecoveryRequest playsRole passwordRecoveryRequest;
+}
+
+relation PasswordRecoveryRequestPasswordRecoveryRequest {
+	PasswordRecoveryRequest playsRole previous;
+	PasswordRecoveryRequest playsRole next;
 }

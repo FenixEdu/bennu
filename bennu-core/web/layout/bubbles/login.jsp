@@ -59,9 +59,7 @@
 			<bean:define id="loginLabel"><bean:message key="label.login.submit" bundle="MYORG_RESOURCES"/></bean:define>
 			<input class="inputbuttonlogin" type="submit" name="Submit" value="<%= loginLabel %>"/>
 		</form>
-		<%--
 		<a href="<%= contextPath %>/enterprise.do?method=prepareToPasswordRecover" class="esqueceu-password"><bean:message bundle="JOB_BANK_RESOURCES" key="label.jobBank.login.forgotPassword"/></a>
-		 --%>
 	</div>
 </logic:notPresent>
 <% } %>
