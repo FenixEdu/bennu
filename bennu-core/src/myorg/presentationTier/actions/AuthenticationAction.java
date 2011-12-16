@@ -126,9 +126,9 @@ public class AuthenticationAction extends ContextBaseAction {
 
 	    @Override
 	    public void transactionalRun() {
-		authenticationListner.afterLogin(userView);
 		try {
 		    VirtualHost.setVirtualHostForThread(virtualHost);
+		    authenticationListner.afterLogin(userView);
 		} finally {
 		    VirtualHost.releaseVirtualHostFromThread();
 		}
