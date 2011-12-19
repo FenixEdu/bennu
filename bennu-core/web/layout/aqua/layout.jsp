@@ -32,30 +32,29 @@
 	<!--[if IE 9]>
 	        <link rel="stylesheet" type="text/css" href="<%= contextPath %>/CSS/theme_test_beta/ie9.css" />
 	<![endif]-->
-	
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-	<script type="text/javascript" src="<%= contextPath %>/CSS/sotis/js/script.js"></script>
-	
+	<script type="text/javascript" src="<%= contextPath %>/CSS/aqua/adminbar.js"></script>
 </head>
 <body>
-
+	<jsp:include page="/layout/aqua/adminbar.jsp"/>
 
 	<header id="header">
 		<div class="container">
 			<h1>
 				<a href="<%= contextPath %>">
+					<html:img styleClass="logo" action="/home.do?method=logo" paramId="virtualHostId" paramName="virtualHost" paramProperty="externalId" />
 					<bean:write name="virtualHost" property="applicationTitle"/>
 				</a>
 			</h1>
-			
-	
+
 			<nav id="perfil">
-				<p>
-					<jsp:include page="<%= layoutContext.getConfigurationLink() %>"/>
-				</p>
-				<jsp:include page="<%= layoutContext.getLogin() %>"/>
-				<jsp:include page="<%= layoutContext.getHelpLink() %>"/>
+				<ul>
+					<li><a href="#researcher">Perfil de Investigador</a></li>
+					<li><jsp:include page="<%= layoutContext.getHelpLink() %>"/></li>
+					<li><jsp:include page="<%= layoutContext.getLogin() %>"/></li>
+				</ul>
 			</nav>
+
+			<jsp:include page="<%= layoutContext.getGoogleSearch() %>"/>
 		
 			<nav id="tabs">			
 				<bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
@@ -97,6 +96,9 @@
 	
 	<footer id="footer">
 		<div class="container">
+			<logic:present name="virtualHost" property="applicationSubTitle">
+				<div class="subtitle"><bean:write name="virtualHost" property="applicationSubTitle"/></div>
+			</logic:present>
 			<jsp:include page="<%= layoutContext.getFooter() %>"/>
 		</div>
 	</footer><!-- footer -->
