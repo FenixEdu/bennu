@@ -80,26 +80,24 @@
 			</div>
 	</logic:equal>
 	
-	<section id="content">
-		<div class="container">	
-
-			<div id="conteudo">
-				<jsp:include page="<%= layoutContext.getPageOperations() %>" />
-				<jsp:include page="<%= layoutContext.getBreadCrumbs() %>" />
-				<jsp:include page="<%= layoutContext.getBody() %>" />
-			</div><!-- conteudo -->
-
-		</div><!-- container_12 -->
-	
-		<footer id="content-footer"></footer>
-	</section><!-- container_12 -->
+	<div class="container">	
+		<section id="content">
+				<div id="conteudo">
+					<jsp:include page="<%= layoutContext.getPageOperations() %>" />
+					<jsp:include page="<%= layoutContext.getBreadCrumbs() %>" />
+					<jsp:include page="<%= layoutContext.getBody() %>" />
+				</div><!-- conteudo -->
+		</section><!-- content -->
+	</div><!-- container_12 -->
 	
 	<footer id="footer">
 		<div class="container">
-			<logic:present name="virtualHost" property="applicationSubTitle">
-				<div class="subtitle"><bean:write name="virtualHost" property="applicationSubTitle"/></div>
-			</logic:present>
-			<jsp:include page="<%= layoutContext.getFooter() %>"/>
+			<p>
+				<logic:present name="virtualHost" property="applicationSubTitle">
+					<div class="subtitle"><bean:write name="virtualHost" property="applicationSubTitle"/></div>
+				</logic:present>
+				<jsp:include page="<%= layoutContext.getFooter() %>"/>
+			</p>
 		</div>
 	</footer><!-- footer -->
 
