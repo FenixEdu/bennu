@@ -69,16 +69,17 @@
 				
 				<jsp:include page="<%= layoutContext.getSubMenuTop() %>" />
 			</nav><!-- tabs -->
-		
+			
+			<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
+				<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
+					<div id="language">
+						<jsp:include page="<%= layoutContext.getLanguageSelection() %>"/>
+					</div>
+			</logic:equal>
+			
 		</div><!-- container -->
 	</header><!-- header -->
-	
-	<logic:equal name="virtualHost" property="languageSelectionEnabled" value="true">
-		<bean:define id="languageUrl"><%= request.getContextPath() %>/home.do</bean:define>
-			<div id="language">
-				<jsp:include page="<%= layoutContext.getLanguageSelection() %>"/>
-			</div>
-	</logic:equal>
+
 	
 	<div class="container">	
 		<section id="content">
