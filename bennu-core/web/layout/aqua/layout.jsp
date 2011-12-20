@@ -94,7 +94,7 @@
 		<div class="container">
 			<p>
 				<logic:present name="virtualHost" property="applicationSubTitle">
-					<div class="subtitle"><bean:write name="virtualHost" property="applicationSubTitle"/></div>
+					<span class="subtitle"><bean:write name="virtualHost" property="applicationSubTitle"/></span>
 				</logic:present>
 				<jsp:include page="<%= layoutContext.getFooter() %>"/>
 			</p>
