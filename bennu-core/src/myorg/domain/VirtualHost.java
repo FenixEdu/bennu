@@ -79,7 +79,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setLanguageSelectionEnabled(Boolean.TRUE);
 	setBreadCrumbsEnabled(Boolean.TRUE);
 	setErrorPage(PropertiesManager.getProperty("errorPage"));
-	setLayoutSubDir("default");
+	setLayout(Layout.getLayoutByName("default"));
     }
 
     public VirtualHost(final VirtualHostBean virtualHostBean) {
@@ -93,7 +93,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setLanguageSelectionEnabled(virtualHostBean.getLanguageSelectionEnabled());
 	setHelpLink(virtualHostBean.getHelpLink());
 	setErrorPage(virtualHostBean.getErrorPage());
-	setLayoutSubDir("default");
+	setLayout(virtualHostBean.getLayout());
 	if (virtualHostBean.getLogo() != null) {
 	    virtualHostBean.setLogo(virtualHostBean.getLogo());
 	}
@@ -117,6 +117,12 @@ public class VirtualHost extends VirtualHost_Base {
     }
 
     @Override
+    public Layout getLayout() {
+	Layout layout = super.getLayout();
+	return layout != null ? layout : setAndReturnDefaultLayout();
+    }
+
+    @Override
     public boolean hasTheme() {
 	return super.getTheme() != null;
     }
@@ -126,6 +132,13 @@ public class VirtualHost extends VirtualHost_Base {
 	Theme theme = getMyOrg().getThemes().get(0);
 	setTheme(theme);
 	return theme;
+    }
+
+    @Service
+    private Layout setAndReturnDefaultLayout() {
+	Layout layout = Layout.getLayoutByName("default");
+	setLayout(layout);
+	return layout;
     }
 
     @Service
@@ -139,11 +152,10 @@ public class VirtualHost extends VirtualHost_Base {
 		node.delete();
 	    }
 
-
-	    //removeExpenditureTrackingSystem();
-	    //removeExternalAccountingIntegrationSystem();
-	    //removeWorkflowSystem();
-	   // removeWorkingCapitalSystem();
+	    // removeExpenditureTrackingSystem();
+	    // removeExternalAccountingIntegrationSystem();
+	    // removeWorkflowSystem();
+	    // removeWorkingCapitalSystem();
 	    removeTheme();
 	    removeMyOrg();
 	    deleteDomainObject();
@@ -166,7 +178,7 @@ public class VirtualHost extends VirtualHost_Base {
 	setGoogleSearchEnabled(bean.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(bean.getLanguageSelectionEnabled());
 	setTheme(bean.getTheme());
-	setLayoutSubDir(bean.getLayoutSubDir());
+	setLayout(bean.getLayout());
 	setHelpLink(bean.getHelpLink());
 	setErrorPage(bean.getErrorPage());
 	if (bean.getLogo() != null) {
@@ -233,21 +245,12 @@ public class VirtualHost extends VirtualHost_Base {
 
     private int countDots(final String supportedLanguages) {
 	int count = 0;
-	for (int i = supportedLanguages.indexOf(':'); i > 0 && i < supportedLanguages.length(); i = supportedLanguages.indexOf(':', i) + 1) {
+	for (int i = supportedLanguages.indexOf(':'); i > 0 && i < supportedLanguages.length(); i = supportedLanguages.indexOf(
+		':', i) + 1) {
 	    if (i >= 0) {
 		count++;
 	    }
 	}
 	return count;
     }
-
-    @Service
-    public static void init() {
-	for (final VirtualHost virtualHost : MyOrg.getInstance().getVirtualHostsSet()) {
-	    if (virtualHost.getLayoutSubDir() == null) {
-		virtualHost.setLayoutSubDir("default");
-	    }
-	}
-    }
-
 }

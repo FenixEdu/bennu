@@ -66,8 +66,6 @@
 
 
 	<%--
-<jsp:include page="<%= layoutContext.getPageHeader() %>"/>
-
 <jsp:include page="<%= layoutContext.getMenuTop() %>"/>
 
 <jsp:include page="<%= layoutContext.getSubMenuTop() %>"/>

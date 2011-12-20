@@ -61,6 +61,10 @@
  <slot name="name"/>
 </schema>
 
+<schema name="layout.name" type="myorg.domain.Layout">
+ <slot name="name"/>
+</schema>
+
 <schema name="application.searchUsers"
 		type="myorg.domain.SearchUsers"
 		bundle="MYORG_RESOURCES">

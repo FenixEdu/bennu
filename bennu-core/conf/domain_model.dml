@@ -154,7 +154,6 @@ class VirtualHost {
 	String supportEmailAddress;
 	String systemEmailAddress;
 	String supportedLanguages;
-	String layoutSubDir;
 }
 
 class Theme {
@@ -162,6 +161,10 @@ class Theme {
 	String description;
 	ThemeType type;
 	String screenshotFileName;
+}
+
+class Layout {
+	String name;
 }
 
 relation ThemeMyOrg {
@@ -176,6 +179,20 @@ relation VirtualHostTheme {
 		multiplicity *;
 	}
 	Theme playsRole theme;
+}
+
+relation LayoutMyOrg {
+	MyOrg playsRole myOrg;
+	Layout playsRole layout {
+		multiplicity *;
+	}
+}
+
+relation VirtualHostLayout {
+	VirtualHost playsRole virtualHosts {
+		multiplicity *;
+	}
+	Layout playsRole layout;
 }
 
 relation MyOrgUser {

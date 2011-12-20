@@ -28,7 +28,6 @@ package myorg.presentationTier;
 import java.util.ArrayList;
 import java.util.List;
 
-import myorg.domain.Theme;
 import myorg.domain.VirtualHost;
 
 import org.apache.struts.action.ActionForward;
@@ -41,7 +40,6 @@ public class LayoutContext extends Context {
 
     private String title = "";
     private final List<String> head = new ArrayList<String>();
-    private String pageHeader;
     private String login;
     private String configurationLink;
     private String helpLink;
@@ -58,8 +56,7 @@ public class LayoutContext extends Context {
 
     protected void init() {
 	final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-	final Theme theme = virtualHost.getTheme();
-	init(virtualHost.getLayoutSubDir(), theme.getName());
+	init(virtualHost.getLayout().getName(), virtualHost.getTheme().getName());
     }
 
     protected void init(final String layoutSubDir, final String themeSubDir) {
@@ -68,8 +65,7 @@ public class LayoutContext extends Context {
 
 	final String layoutPrefix = "/layout/" + layoutSubDir;
 	this.layout = layoutPrefix + "/layout.jsp";
-	
-	pageHeader = layoutPrefix + "/pageHeader.jsp";
+
 	login = layoutPrefix + "/login.jsp";
 	configurationLink = layoutPrefix + "/configurationLink.jsp";
 	helpLink = layoutPrefix + "/helpLink.jsp";
@@ -112,7 +108,7 @@ public class LayoutContext extends Context {
     }
 
     public String getThemeSubDir() {
-        return themeSubDir;
+	return themeSubDir;
     }
 
     public void setThemeSubDir(final String themeSubDir) {
@@ -236,13 +232,4 @@ public class LayoutContext extends Context {
     public String getLanguageSelection() {
 	return languageSelection;
     }
-
-    public void setPageHeader(String pageHeader) {
-	this.pageHeader = pageHeader;
-    }
-
-    public String getPageHeader() {
-	return pageHeader;
-    }
-
 }

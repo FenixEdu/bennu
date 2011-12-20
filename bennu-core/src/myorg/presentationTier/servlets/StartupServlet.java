@@ -39,11 +39,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import myorg._development.PropertiesManager;
 import myorg.applicationTier.Authenticate;
+import myorg.domain.Layout;
 import myorg.domain.MyOrg;
 import myorg.domain.RoleType;
 import myorg.domain.Theme;
 import myorg.domain.Theme.ThemeType;
-import myorg.domain.VirtualHost;
 import myorg.domain.groups.AnyoneGroup;
 import myorg.domain.groups.Role;
 import myorg.domain.groups.UserGroup;
@@ -76,12 +76,11 @@ public class StartupServlet extends HttpServlet {
 
 	initScheduler();
 
-	initVirtualHosts();
-
 	syncThemes();
 
-	registerFilterCheckSumRules();
+	syncLayouts();
 
+	registerFilterCheckSumRules();
     }
 
     private void syncThemes() {
@@ -95,7 +94,7 @@ public class StartupServlet extends HttpServlet {
 	});
 
 	for (Theme theme : MyOrg.getInstance().getThemes()) {
-	    if (!matchTheme(theme.getName(), files)) {
+	    if (!matchThemeOrLayoutName(theme.getName(), files)) {
 		Theme.deleteTheme(theme);
 	    }
 	}
@@ -114,7 +113,29 @@ public class StartupServlet extends HttpServlet {
 		}
 	    }
 	}
+    }
 
+    private void syncLayouts() {
+	File layoutsDir = new File(getServletContext().getRealPath("layout"));
+	File[] files = layoutsDir.listFiles(new FileFilter() {
+	    @Override
+	    public boolean accept(File file) {
+		return file.isDirectory();
+	    }
+	});
+
+	for (Layout layout : MyOrg.getInstance().getLayoutSet()) {
+	    if (!matchThemeOrLayoutName(layout.getName(), files)) {
+		layout.delete();
+	    }
+	}
+
+	for (File directory : files) {
+	    String name = directory.getName();
+	    if (Layout.getLayoutByName(name) == null) {
+		Layout.createLayout(name);
+	    }
+	}
     }
 
     private Properties loadThemePropeties(String themeName) throws IOException {
@@ -122,7 +143,7 @@ public class StartupServlet extends HttpServlet {
 		.loadPropertiesFromFile(getServletContext().getRealPath("CSS/" + themeName + "/theme.properties"));
     }
 
-    private boolean matchTheme(String name, File[] files) {
+    private boolean matchThemeOrLayoutName(String name, File[] files) {
 	for (File file : files) {
 	    if (file.getName().equals(name)) {
 		return true;
@@ -143,6 +164,7 @@ public class StartupServlet extends HttpServlet {
 
 	RequestChecksumFilter.registerFilterRule(new ChecksumPredicate() {
 
+	    @Override
 	    public boolean shouldFilter(HttpServletRequest httpServletRequest) {
 		return !httpServletRequest.getRequestURI().endsWith("/home.do")
 			&& !httpServletRequest.getRequestURI().endsWith("/isAlive.do")
@@ -179,9 +201,4 @@ public class StartupServlet extends HttpServlet {
 	    e.printStackTrace();
 	}
     }
-
-    private void initVirtualHosts() {
-	VirtualHost.init();
-    }
-
 }

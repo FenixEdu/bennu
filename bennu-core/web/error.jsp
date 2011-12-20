@@ -17,13 +17,40 @@
 	</head>
 
 	<body>
-			<div id="container3">
-			<div id="content">
-	
-		<div class="errorcontainer">
-			<div id="header">
-				<jsp:include page="<%= layoutContext.getPageHeader() %>"/>
+<div id="container">
+
+	<div id="header">
+		<div id="logo">
+			<logic:present name="virtualHost" property="logo">
+		    	<bean:define id="logoUrl"><%= request.getContextPath() %>/home.do?method=logo&virtualHostId=<bean:write name="virtualHost" property="externalId"/></bean:define>
+				<html:img src='<%= logoUrl %>'/>
+			</logic:present>
+		
+			<div id="text">
+				<h1><bean:write name="virtualHost" property="applicationTitle"/></h1>
+				<p><bean:write name="virtualHost" property="applicationSubTitle"/></p>
 			</div>
+		</div>
+	
+		<div class="clear"></div>
+		
+		<div id="supportnav">
+			<jsp:include page="<%= layoutContext.getConfigurationLink() %>"/>
+			
+			<jsp:include page="<%= layoutContext.getHelpLink() %>"/>
+		
+			<jsp:include page="<%= layoutContext.getLogin() %>"/>
+		</div>
+	
+		<div id="headerforms">
+			<jsp:include page="<%= layoutContext.getLanguageSelection() %>"/>
+		
+			<jsp:include page="<%= layoutContext.getGoogleSearch() %>"/>
+		</div>
+	</div>
+
+	<div id="container2">
+		<div id="container3">
 			<div class="errortxt">
 				<h2>
 					<span>
@@ -32,8 +59,17 @@
 				</h2>
 			</div>
 		</div>
-		</div>
-		</div>
-	</body>
+
+	<div id="footer">
+		<jsp:include page="<%= layoutContext.getFooter() %>"/>
+	</div>
+
+</div>
+<!-- #container2 -->
+
+</div>
+<!-- #container1 -->
+
+</body>
 
 </html:html>

@@ -37,12 +37,13 @@ public class VirtualHostBean implements Serializable {
     private String hostname;
     private String supportEmailAddress;
     private String systemEmailAddress;
+
     public String getSystemEmailAddress() {
-        return systemEmailAddress;
+	return systemEmailAddress;
     }
 
     public void setSystemEmailAddress(String systemEmailAddress) {
-        this.systemEmailAddress = systemEmailAddress;
+	this.systemEmailAddress = systemEmailAddress;
     }
 
     private MultiLanguageString applicationTitle;
@@ -54,7 +55,7 @@ public class VirtualHostBean implements Serializable {
     private Boolean breadCrumbsEnabled;
 
     private Theme theme;
-    private String layoutSubDir;
+    private Layout layout;
     private String helpLink;
     private String errorPage;
     private ByteArray logo;
@@ -87,7 +88,7 @@ public class VirtualHostBean implements Serializable {
 	setGoogleSearchEnabled(virtualHost.getGoogleSearchEnabled());
 	setLanguageSelectionEnabled(virtualHost.getLanguageSelectionEnabled());
 	setTheme(virtualHost.getTheme());
-	setLayoutSubDir(virtualHost.getLayoutSubDir());
+	setLayout(virtualHost.getLayout());
 	setHelpLink(virtualHost.getHelpLink());
 	setErrorPage(virtualHost.getErrorPage());
 	setBreadCrumbsEnabled(virtualHost.getBreadCrumbsEnabled());
@@ -232,27 +233,26 @@ public class VirtualHostBean implements Serializable {
     }
 
     public MultiLanguageString getHtmlTitle() {
-        return htmlTitle;
+	return htmlTitle;
     }
 
     public void setHtmlTitle(MultiLanguageString htmlTitle) {
-        this.htmlTitle = htmlTitle;
+	this.htmlTitle = htmlTitle;
     }
 
     public String getSupportEmailAddress() {
-        return supportEmailAddress;
+	return supportEmailAddress;
     }
 
     public void setSupportEmailAddress(String supportEmailAddress) {
-        this.supportEmailAddress = supportEmailAddress;
+	this.supportEmailAddress = supportEmailAddress;
     }
 
-    public String getLayoutSubDir() {
-        return layoutSubDir;
+    public Layout getLayout() {
+	return layout;
     }
 
-    public void setLayoutSubDir(String layoutSubDir) {
-        this.layoutSubDir = layoutSubDir;
+    public void setLayout(Layout layout) {
+	this.layout = layout;
     }
-
 }

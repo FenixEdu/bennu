@@ -78,7 +78,13 @@
 			<tr>
 				<td><bean:message key="label.application.configuration.layout" bundle="MYORG_RESOURCES"/></td>
 				<td>
-					<fr:edit name="virtualHostToConfigure" slot="layoutSubDir"/>
+					<fr:edit name="virtualHostToConfigure" slot="layout">
+						<fr:layout name="menu-select-postback">
+							<fr:property name="providerClass" value="myorg.presentationTier.renderers.providers.LayoutProvider"/>
+							<fr:property name="eachLayout" value="values"/>
+							<fr:property name="eachSchema" value="layout.name"/>
+						</fr:layout>
+					</fr:edit>
 				</td>
 			</tr>
 		</table>
