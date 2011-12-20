@@ -5,18 +5,6 @@
 <%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr" %>
 <%@page import="pt.ist.fenixWebFramework.security.User"%>
 
-<%@page import="pt.ist.vaadinframework.fragment.FragmentQuery"%>
-<%@page import="org.sotis.web.pages.management.SourceManagement"%>
-<%@page import="org.sotis.web.pages.management.StrategyConfiguration"%>
-<%@page import="org.sotis.web.pages.management.LogViewer"%>
-<%@page import="org.sotis.web.pages.management.LibraryStructureManagement"%>
-<%@page import="org.sotis.web.pages.management.EntityManagement"%>
-<%@page import="org.sotis.web.pages.management.SchemaDefinition"%>
-<%@page import="org.sotis.web.pages.library.ReferenceFormatDefinition"%>
-
-<%@page import="org.sotis.domain.core.LibrariansGroup"%>
-<%@page import="org.sotis.domain.core.Department"%>
-
 <logic:present name="USER_SESSION_ATTRIBUTE">
 <%
 	final User user = (User) request.getSession(false).getAttribute("USER_SESSION_ATTRIBUTE");
@@ -43,13 +31,13 @@ html { margin-top: 28px !important; }
 			<a href="#">Sources</a>
 			<ul class="admin-bar-sub">
 				<li>
-					<a href="<%= "#" + new FragmentQuery(SourceManagement.class).getQueryString() %>">Manage Sources</a>
+					<a href="#management/sources">Manage Sources</a>
 				</li>
 				<li>
-					<a href="<%= "#" + new FragmentQuery(StrategyConfiguration.class).getQueryString() %>">Manage Strategies</a>
+					<a href="#management/strategies">Manage Strategies</a>
 				</li>
 				<li>
-					<a href="<%= "#" + new FragmentQuery(LogViewer.class).getQueryString() %>">View Logs</a>
+					<a href="#management/logs">View Logs</a>
 				</li>
 			</ul>
 		</li>
@@ -57,16 +45,16 @@ html { margin-top: 28px !important; }
 			<a href="#">Infrastructure</a>
 			<ul class="admin-bar-sub">
 				<li>
-					<a href="<%= "#" + new FragmentQuery(LibraryStructureManagement.class).getQueryString() %>">Bibliotecários</a>
+					<a href="#management/library">Bibliotecários</a>
 				</li>
 				<li>
-					<a href="<%= "#" + new FragmentQuery(EntityManagement.class).getQueryString() %>">Pessoas</a>
+					<a href="#management/entities">Pessoas</a>
 				</li>
 				<li>
-					<a href="<%= "#" + new FragmentQuery(SchemaDefinition.class).getQueryString() %>">Schemas</a>
+					<a href="#management/schema">Schemas</a>
 				</li>
 				<li>
-					<a href="<%= "#" + new FragmentQuery(ReferenceFormatDefinition.class).getQueryString() %>">Reference Formats</a>
+					<a href="#library/referenceformat">Reference Formats</a>
 				</li>
 			</ul>
 		</li>
