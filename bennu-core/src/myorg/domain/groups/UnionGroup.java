@@ -25,28 +25,33 @@
 
 package myorg.domain.groups;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import myorg.domain.MyOrg;
 import myorg.domain.User;
+
+import org.apache.commons.collections.CollectionUtils;
+
 import pt.ist.fenixWebFramework.services.Service;
 
 public class UnionGroup extends UnionGroup_Base {
-    
+
     public UnionGroup(final PersistentGroup... persistentGroups) {
-        super();
-        for (final PersistentGroup persistentGroup : persistentGroups) {
-            addPersistentGroups(persistentGroup);
-        }
+	super();
+	for (final PersistentGroup persistentGroup : persistentGroups) {
+	    addPersistentGroups(persistentGroup);
+	}
     }
 
     public UnionGroup(final Collection<PersistentGroup> persistentGroups) {
-        super();
-        for (final PersistentGroup persistentGroup : persistentGroups) {
-            addPersistentGroups(persistentGroup);
-        }
+	super();
+	for (final PersistentGroup persistentGroup : persistentGroups) {
+	    addPersistentGroups(persistentGroup);
+	}
     }
 
     @Override
@@ -61,8 +66,7 @@ public class UnionGroup extends UnionGroup_Base {
     @Override
     public String getName() {
 	String groupName = "Union of: ";
-	for (Iterator persistentGroupIterator = getPersistentGroupsIterator(); persistentGroupIterator.hasNext();)
-	{
+	for (Iterator persistentGroupIterator = getPersistentGroupsIterator(); persistentGroupIterator.hasNext();) {
 	    PersistentGroup group = (PersistentGroup) persistentGroupIterator.next();
 	    groupName = groupName.concat(group.getName());
 	    if (persistentGroupIterator.hasNext())
@@ -84,6 +88,18 @@ public class UnionGroup extends UnionGroup_Base {
     @Service
     public static UnionGroup createUnionGroup(final PersistentGroup... persistentGroups) {
 	return new UnionGroup(persistentGroups);
+    }
+
+    public static UnionGroup getOrCreateUnionGroup(final PersistentGroup... persistentGroups) {
+	for (PersistentGroup group : MyOrg.getInstance().getPersistentGroups()) {
+	    if (group instanceof UnionGroup) {
+		UnionGroup unionGroup = (UnionGroup) group;
+		if (CollectionUtils.isEqualCollection(unionGroup.getPersistentGroups(), Arrays.asList(persistentGroups))) {
+		    return unionGroup;
+		}
+	    }
+	}
+	return UnionGroup.createUnionGroup(persistentGroups);
     }
 
 }
