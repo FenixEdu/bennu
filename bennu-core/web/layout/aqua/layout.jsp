@@ -41,14 +41,18 @@
 		<div class="container">
 			<h1>
 				<a href="<%= contextPath %>">
-					<html:img styleClass="logo" action="/home.do?method=logo" paramId="virtualHostId" paramName="virtualHost" paramProperty="externalId" />
+					<logic:present name="virtualHost" property="logo">
+						<html:img styleClass="logo" action="/home.do?method=logo" paramId="virtualHostId" paramName="virtualHost" paramProperty="externalId" />
+					</logic:present>
 					<bean:write name="virtualHost" property="applicationTitle"/>
 				</a>
 			</h1>
 
 			<nav id="perfil">
 				<ul>
-					<li><a href="#researcher">Perfil de Investigador</a></li>
+					<logic:present name="USER_SESSION_ATTRIBUTE">
+						<li><a href="#researcher">Perfil de Investigador</a></li>
+					</logic:present>
 					<li><jsp:include page="<%= layoutContext.getHelpLink() %>"/></li>
 					<li><jsp:include page="<%= layoutContext.getLogin() %>"/></li>
 				</ul>
