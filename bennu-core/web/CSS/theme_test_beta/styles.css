@@ -207,7 +207,8 @@ a.esqueceu-password {
 	font-size:11px;
 }
 
-a.login-link {
+a.login-link,
+#login-escolha a {
 	display:inline-block;
 	margin:2px ;
 	color:#588ea6;
@@ -1288,9 +1289,10 @@ div.warning1 {
 }
 
 .failedLoginMessage {
-	color: red;
-	float: right;
-	padding-right: 280px;
-	vertical-align: top;
-	margin-top: -5px;
+	color:#ef5350;
+	font-size:11px;
+	float:right;
+	padding-right:315px;
+	vertical-align:top;
+	margin-top:-6px;
 }

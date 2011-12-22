@@ -16,5 +16,9 @@ $(document).ready(function(){
 	    $("div#login-form").fadeIn("slow");
 	});
 
-
+	if($(".failedLoginMessage").length) {
+		$("div#login-botao").hide();
+		$("div#login-escolha").hide();
+		$("div#login-form").show();
+	}
 });
