@@ -56,4 +56,10 @@ public interface INode {
 
     public MultiLanguageString getLink();
 
+    public boolean isAccessible();
+
+    public String getUrl();
+
+    public boolean hasFunctionality();
+
 }
