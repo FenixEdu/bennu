@@ -73,7 +73,7 @@ public class HomeAction extends ContextBaseAction {
 	private String key;
 	private final String groupKey;
 
-	private ContentCreator(final String line) {
+	ContentCreator(final String line) {
 	    final String[] parts = line.split(CreateNodeActionAnnotationProcessor.FIELD_SEPERATOR);
 	    bundle = parts[0];
 	    groupKey = parts[1];
