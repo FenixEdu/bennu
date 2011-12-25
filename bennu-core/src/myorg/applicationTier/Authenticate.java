@@ -176,6 +176,16 @@ public class Authenticate implements Serializable {
 	}
     }
 
+    public static UserView getCurrentUserView() {
+	final UserView userView = (UserView) pt.ist.fenixWebFramework.security.UserView.getUser();
+	return userView;
+    }
+
+    public static User getCurrentUser() {
+	final UserView userView = getCurrentUserView();
+	return userView == null ? null : userView.getUser();
+    }
+
     @Service
     public static UserView authenticate(final String username, final String password, final boolean checkPassword) {
 	if (checkPassword) {
