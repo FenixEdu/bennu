@@ -1,12 +1,9 @@
-/* -----------------
+/* ---------------------------
 	
-	IST - SOTIS
+	IST - AQUA Theme for SOTIS
 	
-	----------------- */
+	--------------------------- */
 	
-	
-	/* @import url("reset.css"); */
-	/* @import url("grid.css"); */
 
 
 /* Structure */
@@ -59,6 +56,9 @@ a:hover {
 /*******************************************************************************
  * Structure
  ******************************************************************************/
+body {
+	padding:0 2%;
+}
 
 #header,
 #content,
@@ -82,18 +82,18 @@ a:hover {
 #content {
 	position:relative;
 	background:url(images/bg_creme.png);
+	padding:50px 0px 50px;
+	
+	border-radius:3px;
+	
+	box-shadow:0px 1px 4px rgba(0,0,0,0.2);
 }
 	#content .container {
-		padding:50px 0 50px;
+		padding:50px 20px 50px;
 	}
-	#content-footer {
-		width:100%;
-		height:16px;
-		position:absolute;
-		bottom:-16px;
-		background:url(images/content_shadow.png) repeat-x;
+	#content #conteudo {
+		padding:0 20px;
 	}
-
 	#perfil {
 		position:absolute;
 		top:10px;
@@ -118,6 +118,7 @@ a:hover {
 #perfil ul li,
 .topmenu ul li {
 	display:inline;
+	margin-left:8px;
 }
 
 #login,
@@ -125,108 +126,6 @@ a:hover {
 	display:inline;
 }
 
-/* Login */
-
-#login-form {
-	position:absolute;
-	top:0.75em;
-	right:0px;
-	
-	color:#f9f4ec;
-	font-size:0.8em;
-}
-
-	.forgot-password {
-		position:absolute;
-		right:0px;
-		font-size:0.75em;
-	}
-	
-#perfil a,	
-.login a,	
-a.forgot-password {
-	color:rgba(255,255,255,0.7);
-}
-#perfil a:hover,
-.login a:hover,
-a:hover.forgot-password {
-	color:rgba(255,255,255,1);
-}
-
-#login-form input {
-        border-radius:3px;
-        outline:none;
-    }
-
-    #login-form input {
-        color:#868178;
-        border:1px solid rgba(0,0,0,0.35);
-        background:#f9f4ec;
-        padding:2px 6px;
-		font-size:1em;
-        
-        box-shadow:0px 0px 1px rgba(0,0,0,0.2) inset, 0px 1px 0px rgba(255,255,255,0.25);
-    }
-    #login-form input:hover,
-    #login-form input:focus {
-        color:#615c54;
-        background:#fff;
-    }
-
-
-
-
-#login-form input.inputbuttonlogin {
-    color:rgba(255,255,255,0.8);
-    border:1px solid #7a746b;
-
-    background-color: #6db1b2;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(109, 177, 178)), to(rgb(75, 143, 145)));
-    background-image: -webkit-linear-gradient(top, rgb(109, 177, 178), rgb(75, 143, 145));
-    background-image: -moz-linear-gradient(top, rgb(109, 177, 178), rgb(75, 143, 145));
-    background-image: -o-linear-gradient(top, rgb(109, 177, 178), rgb(75, 143, 145));
-    background-image: -ms-linear-gradient(top, rgb(109, 177, 178), rgb(75, 143, 145));
-    background-image: linear-gradient(top, rgb(109, 177, 178), rgb(75, 143, 145));
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#6db1b2', EndColorStr='#4b8f91');
-
-    box-shadow:0px 1px 0px #98d3d4 inset, 0px 1px 3px rgba(0,0,0,0.25);
-
-    text-shadow:0px -1px 0px rgba(0,0,0,0.25);
-
-	color:#fff;
-    text-shadow:0px -1px 0px #43797b;
-}
-
-    #login-form input.inputbuttonlogin:hover,
-    #login-form input.inputbuttonlogin:focus {
-        color:rgba(255,255,255,1);
-
-        background-color: #8ac1c1;
-        background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(138, 193, 193)), to(rgb(111, 165, 167)));
-        background-image: -webkit-linear-gradient(top, rgb(138, 193, 193), rgb(111, 165, 167));
-        background-image: -moz-linear-gradient(top, rgb(138, 193, 193), rgb(111, 165, 167));
-        background-image: -o-linear-gradient(top, rgb(138, 193, 193), rgb(111, 165, 167));
-        background-image: -ms-linear-gradient(top, rgb(138, 193, 193), rgb(111, 165, 167));
-        background-image: linear-gradient(top, rgb(138, 193, 193), rgb(111, 165, 167));
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#8ac1c1', EndColorStr='#6fa5a7');
-
-        box-shadow:0px 1px 0px #addcdd inset, 0px 1px 3px rgba(0,0,0,0.35);
-    }
-
-    #login-form input.inputbuttonlogin:active {
-        background-color: #4b8f91;
-        background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(75, 143, 145)), to(rgb(109, 177, 178)));
-        background-image: -webkit-linear-gradient(top, rgb(75, 143, 145), rgb(109, 177, 178));
-        background-image: -moz-linear-gradient(top, rgb(75, 143, 145), rgb(109, 177, 178));
-        background-image: -o-linear-gradient(top, rgb(75, 143, 145), rgb(109, 177, 178));
-        background-image: -ms-linear-gradient(top, rgb(75, 143, 145), rgb(109, 177, 178));
-        background-image: linear-gradient(top, rgb(75, 143, 145), rgb(109, 177, 178));
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#4b8f91', EndColorStr='#6db1b2');
-
-        box-shadow:0px 1px 2px rgba(0,0,0,0.25) inset, 0px 1px 2px rgba(0,0,0,0.25);
-
-        text-shadow:0px -1px 2px rgba(0,0,0,0.25);
-    }
 
 
 
@@ -270,6 +169,22 @@ a:hover.forgot-password {
 
 /* Language */
 
+#language {
+	position:absolute;
+	z-index:5;
+	right:0;
+	top:45px;
+}
+
+/* Google Search */
+
+#globalsearch {
+	position:absolute;
+	right:40px;
+	top:45px;
+}
+
+
 /* Footer */
 
 #footer,
@@ -278,6 +193,11 @@ a:hover.forgot-password {
 	text-align:right;
 }
 
+
+/* Nav-Bar */
+#admin-bar {
+	display:none;
+}
 
 
 /* Misc */
@@ -324,12 +244,3 @@ a.login-link,
  	Mission: DESTROY!!
 						*/
 
-
-
-/* Responsive */
-
-@media only screen and (max-width:1200px) {
-	.container {
-		max-width:960px;
-	}
-}
