@@ -42,6 +42,7 @@ public class LayoutContext extends Context {
     private final List<String> head = new ArrayList<String>();
     private String login;
     private String configurationLink;
+    private String profileLink;
     private String helpLink;
     private String googleSearch;
     private String languageSelection;
@@ -68,6 +69,7 @@ public class LayoutContext extends Context {
 
 	login = layoutPrefix + "/login.jsp";
 	configurationLink = layoutPrefix + "/configurationLink.jsp";
+	profileLink = layoutPrefix + "/profileLink.jsp";
 	helpLink = layoutPrefix + "/helpLink.jsp";
 	googleSearch = layoutPrefix + "/googleSearch.jsp";
 	languageSelection = layoutPrefix + "/languageSelection.jsp";
@@ -207,6 +209,14 @@ public class LayoutContext extends Context {
 
     public String getConfigurationLink() {
 	return configurationLink;
+    }
+
+    public void setProfileLink(String profileLink) {
+	this.profileLink = profileLink;
+    }
+
+    public String getProfileLink() {
+	return profileLink;
     }
 
     public void setHelpLink(String helpLink) {

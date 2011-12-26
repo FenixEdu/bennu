@@ -33,9 +33,11 @@ import java.util.TreeSet;
 
 import myorg.applicationTier.Authenticate.UserView;
 import myorg.domain.MyOrg;
+import myorg.domain.RoleType;
 import myorg.domain.User;
 import myorg.domain.VirtualHost;
 import myorg.domain.groups.PersistentGroup;
+import myorg.domain.groups.Role;
 import myorg.presentationTier.Context;
 import myorg.presentationTier.actions.ContextBaseAction;
 import pt.ist.fenixWebFramework.services.Service;
@@ -50,6 +52,7 @@ public abstract class Node extends Node_Base implements INode {
 	setOjbConcreteClass(getClass().getName());
     }
 
+    @Override
     public String getUrl() {
 	final StringBuilder stringBuilder = new StringBuilder();
 	appendUrlPrefix(stringBuilder);
@@ -249,10 +252,21 @@ public abstract class Node extends Node_Base implements INode {
 	throw new Error("Nodes changed!");
     }
 
+    @Override
     public boolean isAccessible() {
 	final PersistentGroup persistentGroup = getAccessibilityGroup();
 	final User user = UserView.getCurrentUser();
 	return persistentGroup != null && persistentGroup.isMember(user);
+    }
+
+    @Override
+    public boolean isManager() {
+	final PersistentGroup persistentGroup = getAccessibilityGroup();
+	if (persistentGroup instanceof Role) {
+	    Role role = (Role) persistentGroup;
+	    return role.isRole(RoleType.MANAGER);
+	}
+	return false;
     }
 
     public boolean isRedirect() {
@@ -261,6 +275,7 @@ public abstract class Node extends Node_Base implements INode {
 
     public abstract boolean isAcceptsFunctionality();
 
+    @Override
     public boolean hasFunctionality() {
 	return false;
     }

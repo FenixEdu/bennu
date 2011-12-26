@@ -58,6 +58,8 @@ public interface INode {
 
     public boolean isAccessible();
 
+    public boolean isManager();
+
     public String getUrl();
 
     public boolean hasFunctionality();

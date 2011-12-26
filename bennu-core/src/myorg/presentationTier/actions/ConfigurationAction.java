@@ -36,11 +36,13 @@ import myorg.domain.RoleType;
 import myorg.domain.User;
 import myorg.domain.VirtualHost;
 import myorg.domain.VirtualHostBean;
+import myorg.domain.contents.ActionNode;
 import myorg.domain.contents.INode;
 import myorg.domain.contents.Node;
 import myorg.domain.contents.NodeBean;
 import myorg.domain.groups.People;
 import myorg.domain.groups.PersistentGroup;
+import myorg.domain.groups.Role;
 import myorg.domain.util.ByteArray;
 import myorg.presentationTier.Context;
 import myorg.presentationTier.LayoutContext;
@@ -50,11 +52,35 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
+import pt.ist.fenixWebFramework.servlets.functionalities.CreateNodeAction;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 @Mapping(path = "/configuration")
 public class ConfigurationAction extends ContextBaseAction {
+
+    @CreateNodeAction(bundle = "MYORG_RESOURCES", key = "add.node.application.configuration", groupKey = "label.application")
+    public final ActionForward createManagementNode(final ActionMapping mapping, final ActionForm form,
+	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
+
+	final Node parentOfNodes = getDomainObject(request, "parentOfNodesToManageId");
+
+	ActionNode systemSettings = ActionNode.createActionNode(virtualHost, parentOfNodes, "/configuration",
+		"applicationConfiguration", "resources.MyorgResources", "label.application.configuration",
+		Role.getRole(RoleType.MANAGER));
+
+	ActionNode.createActionNode(virtualHost, systemSettings, "/configuration", "manageSystemGroups",
+		"resources.MyorgResources", "label.configuration.manage.system.groups", Role.getRole(RoleType.MANAGER));
+
+	ActionNode.createActionNode(virtualHost, systemSettings, "/scheduler", "viewScheduler", "resources.MyorgResources",
+		"label.configuration.tasks.scheduleing", Role.getRole(RoleType.MANAGER));
+
+	ActionNode.createActionNode(virtualHost, systemSettings, "/configuration", "viewSystemConfig",
+		"resources.MyorgResources", "label.configuration.viewProperties", Role.getRole(RoleType.MANAGER));
+
+	return forwardToMuneConfiguration(request, virtualHost, parentOfNodes);
+    }
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)

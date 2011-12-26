@@ -50,9 +50,7 @@
 
 			<nav id="perfil">
 				<ul>
-					<logic:present name="USER_SESSION_ATTRIBUTE">
-						<li><a href="#researcher">Perfil de Investigador</a></li>
-					</logic:present>
+					<li><jsp:include page="<%= layoutContext.getProfileLink() %>" /></li>
 					<li><jsp:include page="<%= layoutContext.getHelpLink() %>"/></li>
 					<li><jsp:include page="<%= layoutContext.getLogin() %>"/></li>
 				</ul>
