@@ -193,29 +193,17 @@ body {
 	text-align:right;
 }
 
+
+/* Nav-Bar */
+#admin-bar {
+	/* display:none; */
+}
+
+
 /* Misc */
 
 .clearthis {
 	clear:both;
-}
-
-
-
-/* Transitions */
-
-.topmenu a,
-#botao a,
-a.ainda-nao,
-a.esqueceu-password,
-a.login-link,
-#login-form input,
-#conteudo input,
-#conteudo textarea,
-#conteudo select {
-	transition: .2s all ease;
-	-webkit-transition: .2s all ease;
-	-moz-transition: .2s all ease;
-	-o-transition: .2s all ease;
 }
 
 
