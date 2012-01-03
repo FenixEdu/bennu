@@ -126,6 +126,19 @@ body {
 	display:inline;
 }
 
+#perfil {
+    font-size:0.9em;
+    color:#fff;
+}
+    #perfil li {
+        margin-left:8px;
+    }
+    #perfil a {
+        color:rgba(255,255,255,0.6);
+    }
+    #perfil a:hover {
+        color:rgba(255,255,255,1);
+    }
 
 
 
