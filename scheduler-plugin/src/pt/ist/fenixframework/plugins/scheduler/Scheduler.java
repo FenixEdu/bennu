@@ -16,7 +16,7 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 public class Scheduler extends TimerTask {
 
-    private static final int SCHEDULER_INVOCATION_PERIOD = 20000; // (ms)
+    private static final int SCHEDULER_INVOCATION_PERIOD = 2000; // (ms)
 
     public static void initialize() {
 	new Scheduler();

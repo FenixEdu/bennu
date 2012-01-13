@@ -15,7 +15,6 @@ public class SchedulerPlugin implements FenixFrameworkPlugin {
 
     @Override
     public void initialize() {
-	Scheduler.initialize();
     }
 
 }
