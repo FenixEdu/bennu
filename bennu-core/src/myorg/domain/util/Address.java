@@ -102,10 +102,15 @@ public class Address implements Serializable {
     }
 
     public boolean equals(final Address address) {
-	return getLine1().equals(address.getLine1())
-		&& ((getLine2() == null && address.getLine2() == null) || (getLine2() != null && address.getLine2() != null && getLine2()
-			.equals(address.getLine2()))) && getPostalCode().equals(address.getPostalCode())
-		&& getLocation().equals(address.getLocation()) && getCountry().equals(address.getCountry());
+	return address != null && match(getLine1(), address.getLine1())
+		&& match(getLine2(), address.getLine2())
+		&& match(getPostalCode(), address.getPostalCode())
+		&& match(getLocation(), address.getLocation())
+		&& match(getCountry(), address.getCountry());
+    }
+
+    private boolean match(final String string1, final String string2) {
+	return (string1 == null && string2 == null) || (string1 != null && string1.equals(string2));
     }
 
     static final String CHARACTER = ":";
