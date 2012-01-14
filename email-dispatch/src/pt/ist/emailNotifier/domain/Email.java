@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -20,6 +21,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
+import javax.mail.internet.MimeMessage.RecipientType;
 
 import org.joda.time.DateTime;
 
@@ -54,6 +56,126 @@ public class Email extends Email_Base {
 	}
     }
 
+    public Email() {
+	super();
+	setEmailNotifier(EmailNotifier.getInstance());
+    }
+
+    public Email(final String fromName, final String fromAddress, final String subject, final String body, String... toAddresses) {
+	this(fromName, fromAddress, null, Arrays.asList(toAddresses), null, null, subject, body);
+    }
+
+    public Email(final String fromName, final String fromAddress, final String[] replyTos, final Collection<String> toAddresses,
+	    final Collection<String> ccAddresses, final Collection<String> bccAddresses, final String subject, final String body) {
+	this(fromName, fromAddress, replyTos, toAddresses, ccAddresses, bccAddresses, subject, body, null);
+    }
+
+    public Email(final String fromName, final String fromAddress, final String[] replyTos, final Collection<String> toAddresses,
+	    final Collection<String> ccAddresses, final Collection<String> bccAddresses, final String subject, final String body,
+	    final String htmlBody) {
+	this();
+	setFromName(fromName);
+	setFromAddress(fromAddress);
+	setReplyTos(new EmailAddressList(replyTos == null ? null : Arrays.asList(replyTos)));
+	setToAddresses(new EmailAddressList(toAddresses));
+	setCcAddresses(new EmailAddressList(ccAddresses));
+	setBccAddresses(new EmailAddressList(bccAddresses));
+	setSubject(subject);
+	setBody(body);
+	setHtmlBody(htmlBody);
+    }
+
+    public void delete() {
+	removeMessage();
+	for (final MessageTransportResult messageTransportResult : getMessageTransportResultSet()) {
+	    messageTransportResult.delete();
+	}
+	for (final MessageId messageId : getMessageIdsSet()) {
+	    messageId.delete();
+	}
+	removeEmailNotifier();
+	super.deleteDomainObject();
+    }
+
+    public String[] replyTos() {
+	return getReplyTos() == null ? null : getReplyTos().toArray();
+    }
+
+    public Collection<String> toAddresses() {
+	return getToAddresses() == null ? null : getToAddresses().toCollection();
+    }
+
+    public Collection<String> ccAddresses() {
+	return getCcAddresses() == null ? null : getCcAddresses().toCollection();
+    }
+
+    public Collection<String> bccAddresses() {
+	return getBccAddresses() == null ? null : getBccAddresses().toCollection();
+    }
+
+    private void logProblem(final String description) {
+	new MessageTransportResult(this, null, description);
+    }
+
+    private void logProblem(final MessagingException e) {
+	logProblem(e.getMessage());
+	final Exception nextException = e.getNextException();
+	if (nextException != null) {
+	    if (nextException instanceof MessagingException) {
+		logProblem((MessagingException) nextException);
+	    } else {
+		logProblem(nextException.getMessage());
+	    }
+	}
+    }
+
+    private void abort() {
+	final Collection<String> failed = new HashSet<String>();
+	final EmailAddressList failedAddresses = getFailedAddresses();
+	if (failedAddresses != null && !failedAddresses.isEmpty()) {
+	    failed.addAll(failedAddresses.toCollection());
+	}
+	final EmailAddressList toAddresses = getToAddresses();
+	if (toAddresses != null && !toAddresses.isEmpty()) {
+	    failed.addAll(toAddresses.toCollection());
+	}
+	final EmailAddressList ccAddresses = getCcAddresses();
+	if (ccAddresses != null && !ccAddresses.isEmpty()) {
+	    failed.addAll(ccAddresses.toCollection());
+	}
+	final EmailAddressList bccAddresses = getBccAddresses();
+	if (bccAddresses != null && !bccAddresses.isEmpty()) {
+	    failed.addAll(bccAddresses.toCollection());
+	}
+	final EmailAddressList emailAddressList = new EmailAddressList(failed);
+	setFailedAddresses(emailAddressList);
+
+	setToAddresses(null);
+	setCcAddresses(null);
+	setBccAddresses(null);
+    }
+
+    private void retry(final EmailAddressList toAddresses, final EmailAddressList ccAddresses,
+	    final EmailAddressList bccAddresses) {
+	setToAddresses(toAddresses);
+	setCcAddresses(ccAddresses);
+	setBccAddresses(bccAddresses);
+    }
+
+    private static String encode(final String string) {
+	try {
+	    return string == null ? "" : MimeUtility.encodeText(string);
+	} catch (final UnsupportedEncodingException e) {
+	    e.printStackTrace();
+	    return string;
+	}
+    }
+
+    protected static String constructFromString(final String fromName, String fromAddress) {
+	return (fromName == null || fromName.length() == 0) ? fromAddress : StringAppender.append(fromName, " <",
+		fromAddress, ">");
+    }
+
     private class EmailMimeMessage extends MimeMessage {
 
 	private String fenixMessageId = null;
@@ -79,7 +201,7 @@ public class Email extends Email_Base {
 	public void send(final Email email) throws MessagingException {
 	    if (email.getFromName() == null) {
 		logProblem("error.from.address.cannot.be.null");
-		delete();
+		abort();
 		return;
 	    }
 
@@ -93,7 +215,7 @@ public class Email extends Email_Base {
 			replyToAddresses[i] = new InternetAddress(encode(replyTos[i]));
 		    } catch (final AddressException e) {
 			logProblem("invalid.reply.to.address: " + replyTos[i]);
-			delete();
+			abort();
 			return;
 		    }
 		}
@@ -104,20 +226,31 @@ public class Email extends Email_Base {
 	    setReplyTo(replyToAddresses);
 
 	    final MimeMultipart mimeMultipart = new MimeMultipart();
-	    final BodyPart bodyPart = new MimeBodyPart();
-	    bodyPart.setText(email.getBody());
 
-	    mimeMultipart.addBodyPart(bodyPart);
+	    final String htmlBody = getHtmlBody();
+	    if (htmlBody != null && !htmlBody.trim().isEmpty()) {
+		final BodyPart bodyPart = new MimeBodyPart();
+		bodyPart.setContent(htmlBody, "text/html");
+		mimeMultipart.addBodyPart(bodyPart);
+	    }
+
+	    final String body = email.getBody();
+	    if (body != null && !body.trim().isEmpty()) {
+		final BodyPart bodyPart = new MimeBodyPart();
+		bodyPart.setText(body);
+		mimeMultipart.addBodyPart(bodyPart);
+	    }
+
 	    setContent(mimeMultipart);
 
 	    addRecipientsAux();
 
-	    //new MessageId(getMessage(), getMessageID());
+	    new MessageId(getEmail(), getMessageID());
 
 	    Transport.send(this);
 
-	    //final Address[] allRecipients = getAllRecipients();
-	    //setConfirmedAddresses(allRecipients);
+	    final Address[] allRecipients = getAllRecipients();
+	    setConfirmedAddresses(allRecipients);
 	}
 
 	private void addRecipientsAux() {
@@ -190,153 +323,84 @@ public class Email extends Email_Base {
 	}
     }
 
-    private static String encode(final String string) {
-	try {
-	    return string == null ? "" : MimeUtility.encodeText(string);
-	} catch (final UnsupportedEncodingException e) {
-	    e.printStackTrace();
-	    return string;
-	}
+    private Email getEmail() {
+	return this;
     }
 
-    protected static String constructFromString(final String fromName, String fromAddress) {
-	return (fromName == null || fromName.length() == 0) ? fromAddress : StringAppender.append(fromName, " <",
-		fromAddress, ">");
-    }
-
-    private void logProblem(final String description) {
-	System.out.println(getExternalId() + " - " + description);
-    }
-
-    private void logProblem(final MessagingException e) {
-	logProblem(e.getMessage());
-	final Exception nextException = e.getNextException();
-	if (nextException != null) {
-	    if (nextException instanceof MessagingException) {
-		logProblem((MessagingException) nextException);
-	    } else {
-		logProblem(nextException.getMessage());
-	    }
-	}
-    }
-
-    public Email() {
-	super();
-	setEmailNotifier(EmailNotifier.getInstance());
-    }
-
-    public Email(final String fromName, final String fromAddress, final String[] replyTos, final Collection<String> toAddresses,
-	    final Collection<String> ccAddresses, final Collection<String> bccAddresses, final String subject, final String body) {
-
-	this();
-	setFromName(fromName);
-	setFromAddress(fromAddress);
-	setReplyTos(new EmailAddressList(replyTos == null ? null : Arrays.asList(replyTos)));
-	setToAddresses(new EmailAddressList(toAddresses));
-	setCcAddresses(new EmailAddressList(ccAddresses));
-	setBccAddresses(new EmailAddressList(bccAddresses));
-	setSubject(subject);
-	setBody(body);
-    }
-
-    @Service
-    public void delete() {
-	removeEmailNotifier();
-	deleteDomainObject();
-    }
-
-    public String[] replyTos() {
-	return getReplyTos() == null ? null : getReplyTos().toArray();
-    }
-
-    public Collection<String> toAddresses() {
-	return getToAddresses() == null ? null : getToAddresses().toCollection();
-    }
-
-    public Collection<String> ccAddresses() {
-	return getCcAddresses() == null ? null : getCcAddresses().toCollection();
-    }
-
-    public Collection<String> bccAddresses() {
-	return getBccAddresses() == null ? null : getBccAddresses().toCollection();
-    }
-
-    public void deliver() {
-	final EmailAddressList toAddresses = getToAddresses();
-	final EmailAddressList ccAddresses = getCcAddresses();
-	final EmailAddressList bccAddresses = getBccAddresses();
-
-	final EmailMimeMessage emailMimeMessage = new EmailMimeMessage();
-	try {
-	    emailMimeMessage.send(this);
-	    logSend(emailMimeMessage, toAddresses, toAddresses, bccAddresses);
-	} catch (final SendFailedException e) {
-	    logProblem(e);
-	    
-	    final Address[] invalidAddresses = e.getInvalidAddresses();
-	    setFailedAddresses(invalidAddresses);
-	    final Address[] validSentAddresses = e.getValidSentAddresses();
-	    logSend(emailMimeMessage, validSentAddresses);
-	    //setConfirmedAddresses(validSentAddresses);
-	    final Address[] validUnsentAddresses = e.getValidUnsentAddresses();
-	    resend(validUnsentAddresses);
-	} catch (final MessagingException e) {
-	    logProblem(e);
-//	    delete();
-	    retry(toAddresses, ccAddresses, bccAddresses);
-	}
-
-	
-	if (!hasAnyRecipients()) {
-	    delete();
-	}
-    }
-
-    private void logSend(final EmailMimeMessage emailMimeMessage, final Object... os) {
-	final StringBuilder sb = new StringBuilder();
-	try {
-	    sb.append(emailMimeMessage.getMessageID());
-	} catch (final MessagingException e) {
-	}
-	sb.append(" ACK ");
-	if (os != null) {
-	    for (final Object o : os) {
-		if (o != null) {
-		    sb.append(o.toString());
-		}
-	    }
-	}
-	System.out.println(sb.toString());
-	
-    }
-
-    private void resend(final Address[] recipients) {
+    private void setConfirmedAddresses(final Address[] recipients) {
 	final Collection<String> addresses = new HashSet<String>();
-	final EmailAddressList bccAddresses = getBccAddresses();
-	if (bccAddresses != null && !bccAddresses.isEmpty()) {
-	    addresses.addAll(bccAddresses.toCollection());
+	final EmailAddressList confirmedAddresses = getConfirmedAddresses();
+	if (confirmedAddresses != null && !confirmedAddresses.isEmpty()) {
+	    addresses.addAll(confirmedAddresses.toCollection());
 	}
 	if (recipients != null) {
 	    for (final Address address : recipients) {
 		addresses.add(address.toString());
 	    }
 	}
-	setBccAddresses(new EmailAddressList(addresses));
-    }
-
-    private void retry(final EmailAddressList toAddresses, final EmailAddressList ccAddresses,
-	    final EmailAddressList bccAddresses) {
-	setToAddresses(toAddresses);
-	setCcAddresses(ccAddresses);
-	setBccAddresses(bccAddresses);
+	setConfirmedAddresses(new EmailAddressList(addresses));
     }
 
     private void setFailedAddresses(final Address[] recipients) {
 	final Collection<String> addresses = new HashSet<String>();
+	final EmailAddressList failedAddresses = getFailedAddresses();
+	if (failedAddresses != null && !failedAddresses.isEmpty()) {
+	    addresses.addAll(failedAddresses.toCollection());
+	}
 	if (recipients != null) {
 	    for (final Address address : recipients) {
 		addresses.add(address.toString());
-		System.out.println("Unable to send email message to: " + address);
+	    }
+	}
+	setFailedAddresses(new EmailAddressList(addresses));
+    }
+
+    private void resend(final Address[] recipients) {
+//	final Collection<String> addresses = new HashSet<String>();
+//	final EmailAddressList bccAddresses = getBccAddresses();
+//	if (bccAddresses != null && !bccAddresses.isEmpty()) {
+//	    addresses.addAll(bccAddresses.toCollection());
+//	}
+	if (recipients != null) {
+	    for (final Address address : recipients) {
+		final String[] replyTos = getReplyTos() == null ? null : getReplyTos().toArray();
+		final Email email = new Email(getFromName(), getFromAddress(), replyTos,
+			Collections.EMPTY_SET, Collections.EMPTY_SET, Collections.singleton(address.toString()), getSubject(), getBody());
+		email.setMessage(getMessage());
+		//addresses.add(address.toString());
+	    }
+	}
+//	setBccAddresses(new EmailAddressList(addresses));
+    }
+
+    public void deliver() {
+	if (hasMessage() && getMessage().getCreated().plusDays(5).isBeforeNow()) {
+	    removeEmailNotifier();
+	} else {
+	    final EmailAddressList toAddresses = getToAddresses();
+	    final EmailAddressList ccAddresses = getCcAddresses();
+	    final EmailAddressList bccAddresses = getBccAddresses();
+
+	    final EmailMimeMessage emailMimeMessage = new EmailMimeMessage();
+	    try {
+		emailMimeMessage.send(this);
+	    } catch (final SendFailedException e) {
+		logProblem(e);
+	    
+		final Address[] invalidAddresses = e.getInvalidAddresses();
+		setFailedAddresses(invalidAddresses);
+		final Address[] validSentAddresses = e.getValidSentAddresses();
+		setConfirmedAddresses(validSentAddresses);
+		final Address[] validUnsentAddresses = e.getValidUnsentAddresses();
+		resend(validUnsentAddresses);
+	    } catch (final MessagingException e) {
+		logProblem(e);
+//	    	abort();
+		retry(toAddresses, ccAddresses, bccAddresses);
+	    }
+
+	    if (!hasAnyRecipients()) {
+		removeEmailNotifier();
 	    }
 	}
     }

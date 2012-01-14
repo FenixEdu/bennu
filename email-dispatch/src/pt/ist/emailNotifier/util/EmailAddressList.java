@@ -53,4 +53,8 @@ public class EmailAddressList implements Serializable {
 	return emailAddresses == null || emailAddresses.length() == 0;
     }
 
+    public int size() {
+	return toArray().length;
+    }
+
 }
