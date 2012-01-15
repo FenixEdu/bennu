@@ -25,6 +25,7 @@
 
 package myorg.domain.groups;
 
+import java.util.Comparator;
 import java.util.Set;
 
 import myorg.domain.MyOrg;
@@ -32,7 +33,16 @@ import myorg.domain.Presentable;
 import myorg.domain.User;
 
 public abstract class PersistentGroup extends PersistentGroup_Base implements Presentable {
-    
+
+    public static final Comparator<PersistentGroup> COMPARATOR_BY_NAME = new Comparator<PersistentGroup>() {
+
+	public int compare(PersistentGroup r1, PersistentGroup r2) {
+	    final int c = r1.getName().compareTo(r2.getName());
+	    return c == 0 ? r1.getExternalId().compareTo(r2.getExternalId()) : c;
+	}
+
+    };
+
     public PersistentGroup() {
         super();
         setMyOrg(MyOrg.getInstance());
