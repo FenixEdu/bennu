@@ -1,10 +1,15 @@
 package pt.ist.emailNotifier.domain;
 
+
+external class .pt.ist.fenixframework.plugins.scheduler.domain.Task;
+
+
 valueType pt.ist.emailNotifier.util.EmailAddressList as EmailAddressList {
     externalizeWith {
         String toString();
     }
 }
+
 
 class EmailNotifier {
 }
@@ -32,6 +37,8 @@ class MessageId {
 	String id;
 	DateTime sendTime;
 }
+
+class EmailTask extends .pt.ist.fenixframework.plugins.scheduler.domain.Task { }
 
 
 relation EmailNotifierEmail {
