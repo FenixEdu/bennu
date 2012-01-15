@@ -86,7 +86,6 @@ public class Email extends Email_Base {
     }
 
     public void delete() {
-	removeMessage();
 	for (final MessageTransportResult messageTransportResult : getMessageTransportResultSet()) {
 	    messageTransportResult.delete();
 	}
@@ -366,7 +365,8 @@ public class Email extends Email_Base {
 		final String[] replyTos = getReplyTos() == null ? null : getReplyTos().toArray();
 		final Email email = new Email(getFromName(), getFromAddress(), replyTos,
 			Collections.EMPTY_SET, Collections.EMPTY_SET, Collections.singleton(address.toString()), getSubject(), getBody());
-		email.setMessage(getMessage());
+// TODO : it will be resent but we can no longer connect it to the message...
+//		email.setMessage(getMessage());
 		//addresses.add(address.toString());
 	    }
 	}
@@ -374,9 +374,9 @@ public class Email extends Email_Base {
     }
 
     public void deliver() {
-	if (hasMessage() && getMessage().getCreated().plusDays(5).isBeforeNow()) {
-	    removeEmailNotifier();
-	} else {
+//	if (hasMessage() && getMessage().getCreated().plusDays(5).isBeforeNow()) {
+//	    removeEmailNotifier();
+//	} else {
 	    final EmailAddressList toAddresses = getToAddresses();
 	    final EmailAddressList ccAddresses = getCcAddresses();
 	    final EmailAddressList bccAddresses = getBccAddresses();
@@ -402,7 +402,7 @@ public class Email extends Email_Base {
 	    if (!hasAnyRecipients()) {
 		removeEmailNotifier();
 	    }
-	}
+//	}
     }
 
     private boolean hasAnyRecipients() {
