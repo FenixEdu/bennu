@@ -79,7 +79,7 @@ relation TaskTaskConfiguration {
 	}
 }
 
-relation TaskTaskLog {
+relation DeprecatedTaskTaskLog {
 	Task playsRole task;
 	TaskLog playsRole taskLogs {
 		multiplicity *;

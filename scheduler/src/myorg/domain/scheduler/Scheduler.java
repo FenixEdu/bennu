@@ -32,7 +32,10 @@ import java.sql.Statement;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import myorg._development.PropertiesManager;
+
 import jvstm.TransactionalCommand;
+import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class Scheduler extends TimerTask {
@@ -40,6 +43,13 @@ public class Scheduler extends TimerTask {
     private static final String LOCK_VARIABLE = Scheduler.class.getName();
 
     public static void initialize() {
+	final String scheduleSystemFlag = PropertiesManager.getProperty("schedule.system");
+	if (scheduleSystemFlag == null || scheduleSystemFlag.isEmpty() || !scheduleSystemFlag.equalsIgnoreCase("active")) {
+	    SchedulerSystem.getInstance().clearAllScheduledTasks();
+	} else {
+	    pt.ist.fenixframework.plugins.scheduler.Scheduler.initialize();
+	}
+
 	try {
 	    Task.initTasks();
 	    new Scheduler();
