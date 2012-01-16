@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import pt.ist.fenixframework.FenixFrameworkPlugin;
+import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
 
 public class SchedulerPlugin implements FenixFrameworkPlugin {
 
@@ -15,6 +16,7 @@ public class SchedulerPlugin implements FenixFrameworkPlugin {
 
     @Override
     public void initialize() {
+	SchedulerSystem.getInstance();
     }
 
 }
