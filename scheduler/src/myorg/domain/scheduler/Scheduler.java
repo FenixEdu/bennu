@@ -45,7 +45,7 @@ public class Scheduler extends TimerTask {
     public static void initialize() {
 	final String scheduleSystemFlag = PropertiesManager.getProperty("schedule.system");
 	if (scheduleSystemFlag == null || scheduleSystemFlag.isEmpty() || !scheduleSystemFlag.equalsIgnoreCase("active")) {
-	    SchedulerSystem.getInstance().clearAllScheduledTasks();
+	    //SchedulerSystem.getInstance().clearAllScheduledTasks();
 	} else {
 	    pt.ist.fenixframework.plugins.scheduler.Scheduler.initialize();
 	}
