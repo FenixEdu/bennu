@@ -79,7 +79,6 @@ public class VirtualHost extends VirtualHost_Base {
 	setLanguageSelectionEnabled(Boolean.TRUE);
 	setBreadCrumbsEnabled(Boolean.TRUE);
 	setErrorPage(PropertiesManager.getProperty("errorPage"));
-	setLayout(Layout.getLayoutByName("default"));
     }
 
     public VirtualHost(final VirtualHostBean virtualHostBean) {
