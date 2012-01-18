@@ -13,7 +13,7 @@ import pt.ist.fenixframework.plugins.luceneIndexing.domain.LuceneSearchPluginRoo
 
 public class IndexingTask extends IndexingTask_Base {
     protected static final Logger LOGGER = Logger.getLogger(IndexingManager.class.getName());
-    protected static final int DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT = 1000;
+    protected static final int DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT = 20000;
 
     public IndexingTask() {
 	super();
