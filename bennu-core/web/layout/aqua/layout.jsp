@@ -40,7 +40,7 @@
 	<header id="header">
 		<div class="container">
 			<h1>
-				<a href="<%= contextPath %>">
+				<a href="<%= (request.getContextPath().equals("") ? "/" : request.getContextPath()) %>">
 					<logic:present name="virtualHost" property="logo">
 						<html:img styleClass="logo" action="/home.do?method=logo" paramId="virtualHostId" paramName="virtualHost" paramProperty="externalId" />
 					</logic:present>
