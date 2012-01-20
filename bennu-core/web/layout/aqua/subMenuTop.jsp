@@ -3,6 +3,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
+<jsp:include page="../default/subMenuTop.jsp" />
+
+
 <bean:define id="context" type="myorg.presentationTier.Context" name="_CONTEXT_"/>
 <bean:define id="menuElements" name="context" property="menuElements"/>
 

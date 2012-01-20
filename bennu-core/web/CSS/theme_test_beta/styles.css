@@ -473,6 +473,16 @@ h2.confidencialidade {
 	margin:0 0 10px;
 }
 
+#contactos a {
+	color:#666;
+	text-decoration:underline;
+}
+
+#contactos a:hover {
+	color:#588EA6;
+	text-decoration:underline;
+}
+
 /* Footer */
 
 #footer {
