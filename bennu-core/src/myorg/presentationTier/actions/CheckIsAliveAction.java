@@ -11,7 +11,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-//@Mapping(path = "/isAlive")
+import pt.ist.fenixWebFramework.struts.annotations.Mapping;
+
+@Mapping(path = "/isAlive")
 public class CheckIsAliveAction extends Action {
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
@@ -22,6 +24,7 @@ public class CheckIsAliveAction extends Action {
 	    long secs = Long.parseLong(timeout);
 	    Thread.sleep(secs * 1000);
 	}
+	response.getOutputStream().print("ok");
 	return super.execute(mapping, form, request, response);
     }
 }
