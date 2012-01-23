@@ -84,13 +84,9 @@
 
 	
 	<div class="container">	
-		<section id="content">
-				<div id="conteudo">
-					<jsp:include page="<%= layoutContext.getPageOperations() %>" />
-					<jsp:include page="<%= layoutContext.getBreadCrumbs() %>" />
-					<jsp:include page="<%= layoutContext.getBody() %>" />
-				</div><!-- conteudo -->
-		</section><!-- content -->
+		<jsp:include page="<%= layoutContext.getPageOperations() %>" />
+		<jsp:include page="<%= layoutContext.getBreadCrumbs() %>" />
+		<jsp:include page="<%= layoutContext.getBody() %>" />
 	</div><!-- container_12 -->
 	
 	<footer id="footer">
