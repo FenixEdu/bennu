@@ -50,6 +50,19 @@
 
 			<nav id="perfil">
 				<ul>
+					<li>
+						<%
+					    if (org.sotis.domain.core.EntityGroup.getInstance().isLoggedMember()) {
+						%>
+							<bean:write name="USER_SESSION_ATTRIBUTE" property="user.person.entity.signatureName"/>
+						<%
+					    } else {
+						%>
+							<bean:message key="label.login.loggedInAs" bundle="MYORG_RESOURCES"/>: <bean:write name="USER_SESSION_ATTRIBUTE" property="username"/>
+						<%
+					    }
+						%>
+					</li>
 					<li><jsp:include page="<%= layoutContext.getProfileLink() %>" /></li>
 					<li><jsp:include page="<%= layoutContext.getHelpLink() %>"/></li>
 					<li><jsp:include page="<%= layoutContext.getLogin() %>"/></li>
