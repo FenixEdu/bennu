@@ -29,13 +29,20 @@ License
 
 package myorg.domain.scheduler;
 
+import java.util.ArrayList;
+
 import jvstm.TransactionalCommand;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public abstract class TransactionalThread extends Thread {
+    public static interface ExceptionListener {
+	public void notifyException(Throwable e);
+    }
 
     private final boolean readOnly;
+
+    private ArrayList<ExceptionListener> listeners;
 
     public TransactionalThread(final boolean readOnly) {
 	this.readOnly = readOnly;
@@ -45,19 +52,40 @@ public abstract class TransactionalThread extends Thread {
 	this(false);
     }
 
+    public void addExceptionListener(ExceptionListener listener) {
+	if (listeners == null) {
+	    listeners = new ArrayList<ExceptionListener>();
+	}
+	listeners.add(listener);
+    }
+
+    public void removeExceptionListener(ExceptionListener listener) {
+	if (listeners != null) {
+	    listeners.remove(listener);
+	}
+    }
+
     @Override
     public void run() {
 	try {
 	    Transaction.withTransaction(true, new TransactionalCommand() {
 		@Override
 		public void doIt() {
-		    if (readOnly) {
-			transactionalRun();
-		    } else {
-			callService();
+		    try {
+			if (readOnly) {
+			    transactionalRun();
+			} else {
+			    callService();
+			}
+		    } catch (Throwable e) {
+			e.printStackTrace();
+			if (listeners != null) {
+			    for (ExceptionListener listener : listeners) {
+				listener.notifyException(e);
+			    }
+			}
 		    }
 		}
-
 	    });
 	} finally {
 	    Transaction.forceFinish();
@@ -72,5 +100,3 @@ public abstract class TransactionalThread extends Thread {
     }
 
 }
-
-
