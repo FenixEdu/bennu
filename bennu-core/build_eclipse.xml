@@ -23,7 +23,8 @@
         	</classpath>
             <arg value="${build.home}/WEB-INF/classes" />
             <arg value="${build.home}/WEB-INF/lib/jvstm.jar" />
-            <arg value="${build.home}/WEB-INF/lib/fenix-framework-r*.jar" />
+            <arg value="${build.home}/WEB-INF/lib/fenix-framework-remote-plugin.jar" />
+            <arg value="${build.home}/WEB-INF/lib/fenix-framework-core*.jar" />
             <arg value="${build.home}/WEB-INF/lib/fenix-web-framework-r*.jar" />
             <arg value="${build.home}/WEB-INF/lib/joda-time-1.5.2.jar" />
             <arg value="${build.home}/WEB-INF/lib/fenix-tools.jar" />

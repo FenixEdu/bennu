@@ -118,7 +118,8 @@
 			</classpath>
 			<arg value="${build.home.webinf.classes}"/>
 			<arg value="${build.home.webinf.libs}/jvstm.jar"/>
-			<arg value="${build.home.webinf.libs}/fenix-framework-r*.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-framework-remote-plugin.jar"/>
+			<arg value="${build.home.webinf.libs}/fenix-framework-core*.jar"/>
 			<arg value="${build.home.webinf.libs}/fenix-web-framework-r*.jar"/>
 			<arg value="${build.home.webinf.libs}/joda-time-1.5.2.jar"/>
 			<arg value="${build.home.webinf.libs}/fenix-tools.jar"/>
