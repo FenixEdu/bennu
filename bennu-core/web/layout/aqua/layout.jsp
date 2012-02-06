@@ -53,9 +53,9 @@
 					<logic:present name="USER_SESSION_ATTRIBUTE">
 					<li>
 						<%
-					    if (org.sotis.domain.core.EntityGroup.getInstance().isLoggedMember()) {
+					    if (org.sotis.domain.core.AuthorGroup.getInstance().isLoggedMember()) {
 						%>
-							<bean:write name="USER_SESSION_ATTRIBUTE" property="user.person.entity.signatureName"/>
+							<bean:write name="USER_SESSION_ATTRIBUTE" property="user.person.author.signatureName"/>
 						<%
 					    } else {
 						%>
