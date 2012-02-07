@@ -51,6 +51,7 @@ import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter.ChecksumPredicate;
 import pt.ist.fenixframework.FenixFrameworkInitializer;
+import pt.ist.fenixframework.pstm.Transaction;
 
 public class StartupServlet extends HttpServlet {
 
@@ -63,24 +64,32 @@ public class StartupServlet extends HttpServlet {
 	FenixWebFramework.initialize(PropertiesManager.getFenixFrameworkConfig(FenixFrameworkInitializer.CONFIG_PATHS));
 
 	try {
-	    MyOrg.initModules();
-	} catch (Throwable t) {
-	    t.printStackTrace();
-	    throw new Error(t);
+	    Transaction.begin(true);
+	    Transaction.currentFenixTransaction().setReadOnly();
+
+	    try {
+		MyOrg.initModules();
+	    } catch (Throwable t) {
+		t.printStackTrace();
+		throw new Error(t);
+	    }
+
+	    final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
+	    Authenticate.initRole(RoleType.MANAGER, managerUsernames);
+
+	    initializePersistentGroups();
+
+	    initScheduler();
+
+	    syncThemes();
+
+	    syncLayouts();
+
+	    registerFilterCheckSumRules();
+
+	} finally {
+	    Transaction.forceFinish();
 	}
-
-	final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
-	Authenticate.initRole(RoleType.MANAGER, managerUsernames);
-
-	initializePersistentGroups();
-
-	initScheduler();
-
-	syncThemes();
-
-	syncLayouts();
-
-	registerFilterCheckSumRules();
     }
 
     private void syncThemes() {
