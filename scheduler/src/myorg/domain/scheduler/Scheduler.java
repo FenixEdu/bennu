@@ -32,15 +32,13 @@ import java.sql.Statement;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import myorg._development.PropertiesManager;
-
 import jvstm.TransactionalCommand;
-import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
+import myorg._development.PropertiesManager;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class Scheduler extends TimerTask {
 
-    private static final String LOCK_VARIABLE = Scheduler.class.getName();
+    private static final String LOCK_VARIABLE = Scheduler.class.getName() + "_" + getAppDbAliasConnection();
 
     public static void initialize() {
 	final String scheduleSystemFlag = PropertiesManager.getProperty("schedule.system");
@@ -63,6 +61,12 @@ public class Scheduler extends TimerTask {
 	    e.printStackTrace();
 	    throw new Error(e);
 	}
+    }
+
+    private static String getAppDbAliasConnection() {
+	final String dbAlias = PropertiesManager.getProperty("db.alias");
+	return dbAlias == null || dbAlias.isEmpty() ?
+		"" : dbAlias;
     }
 
     private final Timer timer = new Timer(true);
