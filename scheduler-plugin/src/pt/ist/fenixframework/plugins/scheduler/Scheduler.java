@@ -11,6 +11,7 @@ import jvstm.TransactionalCommand;
 
 import org.joda.time.DateTime;
 
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
 import pt.ist.fenixframework.pstm.Transaction;
 
@@ -52,8 +53,6 @@ public class Scheduler extends TimerTask {
 	}
     }
 
-    private static final String LOCK_VARIABLE = SchedulerSystem.class.getName();
-
     private void runPendingTask() {
 	try {
 	    Transaction.withTransaction(true, new TransactionalCommand() {
@@ -76,9 +75,10 @@ public class Scheduler extends TimerTask {
 	Statement statement = null;
 	ResultSet resultSet = null;
 	try {
+	    final String lockVariable = SchedulerSystem.class.getName() + "_" + FenixFramework.getConfig().getDbAlias();
 	    try {
 		statement = connection.createStatement();
-		resultSet = statement.executeQuery("SELECT GET_LOCK('" + LOCK_VARIABLE + "', 10)");
+		resultSet = statement.executeQuery("SELECT GET_LOCK('" + lockVariable + "', 10)");
 		System.out.println("Scheduler: got scheduler lock.");
 		if (resultSet.next() && (resultSet.getInt(1) == 1)) {
 		    SchedulerSystem.runPendingTask();
@@ -87,7 +87,7 @@ public class Scheduler extends TimerTask {
 		Statement statement2 = null;
 		try {
 		    statement2 = connection.createStatement();
-		    statement2.executeUpdate("DO RELEASE_LOCK('" + LOCK_VARIABLE + "')");
+		    statement2.executeUpdate("DO RELEASE_LOCK('" + lockVariable + "')");
 		} finally {
 		    if (statement2 != null) {
 			try {
