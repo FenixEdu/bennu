@@ -17,7 +17,7 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 public class Scheduler extends TimerTask {
 
-    private static final int SCHEDULER_INVOCATION_PERIOD = 2000; // (ms)
+    private static final int SCHEDULER_INVOCATION_PERIOD = 120000; // (ms)
 
     public static void initialize() {
 	new Scheduler();
@@ -71,11 +71,17 @@ public class Scheduler extends TimerTask {
 	}
     }
 
+    private static String getAppDbAliasConnection() {
+	final String dbAlias = FenixFramework.getConfig().getDbAlias();
+	return dbAlias == null || dbAlias.isEmpty() ?
+		"" : dbAlias;
+    }
+
     private void runPendingTask(final Connection connection) throws SQLException {
 	Statement statement = null;
 	ResultSet resultSet = null;
 	try {
-	    final String lockVariable = SchedulerSystem.class.getName() + "_" + FenixFramework.getConfig().getDbAlias();
+	    final String lockVariable = SchedulerSystem.class.getName() + "_" + getAppDbAliasConnection();
 	    try {
 		statement = connection.createStatement();
 		resultSet = statement.executeQuery("SELECT GET_LOCK('" + lockVariable + "', 10)");
