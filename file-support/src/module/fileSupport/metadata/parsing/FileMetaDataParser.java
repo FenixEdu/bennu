@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
 public abstract class FileMetaDataParser {
-
     public abstract boolean isAppliableTo(GenericFile file);
 
     public void parse(GenericFile file, FileMetadata metaData) {
@@ -26,12 +25,8 @@ public abstract class FileMetaDataParser {
 	}
 
 	if (!StringUtils.isEmpty(extractedText)) {
-	    metaData.addMetaData(getPropertyName(), extractedText);
+	    metaData.addMetaData(MetadataParserChain.TEXT_CONTENT_PROPERTY, extractedText);
 	}
-    }
-
-    protected String getPropertyName() {
-	return getClass().getSimpleName() + ":extractedContent";
     }
 
     protected abstract String extract(InputStream stream);

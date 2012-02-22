@@ -4,11 +4,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import module.fileSupport.metadata.parsing.parsers.ExcelParser;
+import module.fileSupport.metadata.parsing.parsers.PDFParser;
+import module.fileSupport.metadata.parsing.parsers.PowerPointParser;
+import module.fileSupport.metadata.parsing.parsers.TextParser;
+import module.fileSupport.metadata.parsing.parsers.WordParser;
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
 public class MetadataParserChain {
+    public static final String TEXT_CONTENT_PROPERTY = "extractedContent";
 
     public static Set<FileMetaDataParser> parsers = new HashSet<FileMetaDataParser>();
+
+    static {
+	registerFileParser(new ExcelParser());
+	registerFileParser(new PDFParser());
+	registerFileParser(new PowerPointParser());
+	registerFileParser(new TextParser());
+	registerFileParser(new WordParser());
+    }
 
     public static void registerFileParser(FileMetaDataParser parser) {
 	parsers.add(parser);
