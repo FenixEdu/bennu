@@ -14,9 +14,9 @@ public class DomainIndexOutput extends IndexOutput {
     private long bufferStart;
     private int bufferLength;
 
-    private RAMIndex file;
+    private final RAMIndex file;
     private byte[] currentBuffer;
-    private LuceneDomainDirectory directory;
+    private final LuceneDomainDirectory directory;
 
     public DomainIndexOutput(RAMIndex file, LuceneDomainDirectory directory) {
 	this.file = file;
@@ -69,7 +69,7 @@ public class DomainIndexOutput extends IndexOutput {
 	bufferPosition = (int) (pos % BUFFER_SIZE);
     }
 
-    private final void switchCurrentBuffer() throws IOException {
+    private final void switchCurrentBuffer() {
 	if (currentBufferIndex == this.file.numBuffers()) {
 	    currentBuffer = this.file.addBuffer(BUFFER_SIZE).getBytes();
 	} else {

@@ -20,7 +20,7 @@ public class LuceneDomainDirectory extends Directory {
     private DomainIndexDirectory directory;
     private Map<String, RAMIndex> workingIndexes;
 
-    public LuceneDomainDirectory(DomainIndexDirectory directory) {
+    public LuceneDomainDirectory(DomainIndexDirectory directory) throws IOException {
 	setLockFactory(new SingleInstanceLockFactory());
 	this.directory = directory;
 	this.workingIndexes = new HashMap<String, RAMIndex>();
@@ -112,7 +112,7 @@ public class LuceneDomainDirectory extends Directory {
     }
 
     @Override
-    public String[] list() throws IOException {
+    public String[] listAll() throws IOException {
 	Set<String> files = new HashSet<String>();
 	files.addAll(workingIndexes.keySet());
 	for (DomainIndexFile file : this.directory.getIndexFiles()) {
@@ -139,19 +139,6 @@ public class LuceneDomainDirectory extends Directory {
     }
 
     @Override
-    public void renameFile(String oldName, String newName) throws IOException {
-	IndexFile fromFile = getFile(oldName);
-	if (fromFile == null) {
-	    throw new FileNotFoundException(oldName);
-	}
-	DomainIndexFile toFile = this.directory.getIndexFile(newName);
-	if (toFile != null) {
-	    toFile.delete();
-	}
-	fromFile.setName(newName);
-    }
-
-    @Override
     public void touchFile(String name) throws IOException {
 	IndexFile file = getFile(name);
 
@@ -174,5 +161,4 @@ public class LuceneDomainDirectory extends Directory {
     public void removeFileFromMap(RAMIndex ramIndex) {
 	workingIndexes.remove(ramIndex);
     }
-
 }

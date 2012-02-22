@@ -9,8 +9,8 @@ import pt.ist.fenixframework.plugins.luceneIndexing.domain.DomainIndexFile;
 public class DomainIndexInput extends IndexInput {
     static final int BUFFER_SIZE = 1024;
 
-    private long length;
-    private int numBuffers;
+    private final long length;
+    private final int numBuffers;
 
     private int currentBufferIndex;
 
@@ -18,9 +18,10 @@ public class DomainIndexInput extends IndexInput {
     private long bufferStart;
     private int bufferLength;
 
-    private DomainIndexFile file;
+    private final DomainIndexFile file;
 
     public DomainIndexInput(DomainIndexFile file) {
+	super(file.getName());
 	this.currentBufferIndex = -1;
 	this.length = file.getLength();
 	this.file = file;
@@ -71,11 +72,9 @@ public class DomainIndexInput extends IndexInput {
 	    // end of file reached, no more buffers left
 	    if (enforceEOF)
 		throw new IOException("Read past EOF");
-	    else {
-		// Force EOF if a read takes place at this position
-		currentBufferIndex--;
-		bufferPosition = BUFFER_SIZE;
-	    }
+	    // Force EOF if a read takes place at this position
+	    currentBufferIndex--;
+	    bufferPosition = BUFFER_SIZE;
 	} else {
 	    bufferPosition = 0;
 	    bufferStart = (long) BUFFER_SIZE * (long) currentBufferIndex;

@@ -14,7 +14,6 @@ public class DomainIndexFile extends DomainIndexFile_Base implements IndexFile {
 	super();
 	setPluginRoot(LuceneSearchPluginRoot.getInstance());
 	setLength(0L);
-
     }
 
     public void delete() {
