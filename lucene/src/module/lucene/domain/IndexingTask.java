@@ -3,16 +3,13 @@ package module.lucene.domain;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
+import pt.ist.fenixframework.plugins.LuceneSearchPlugin;
 import pt.ist.fenixframework.plugins.luceneIndexing.DomainIndexer;
-import pt.ist.fenixframework.plugins.luceneIndexing.IndexingManager;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.IndexDocument;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.IndexingRequest;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.LuceneSearchPluginRoot;
 
 public class IndexingTask extends IndexingTask_Base {
-    protected static final Logger LOGGER = Logger.getLogger(IndexingManager.class.getName());
     protected static final int DEFAULT_MAX_REQUEST_PROCESSES_PER_BEAT = 20000;
 
     public IndexingTask() {
@@ -41,11 +38,11 @@ public class IndexingTask extends IndexingTask_Base {
 	final int remainder = root.getIndexingRequestsSet().size();
 	if (!requestMap.isEmpty()) {
 	    final int indexed = requestMap.size();
-	    LOGGER.info("Indexing " + indexed + " documents out of " + (remainder + indexed));
+	    LuceneSearchPlugin.LOGGER.info("Indexing " + indexed + " documents out of " + (remainder + indexed));
 	    long t1 = System.currentTimeMillis();
 	    DomainIndexer.getInstance().indexDomainObjects(requestMap.values());
 	    long t2 = System.currentTimeMillis();
-	    LOGGER.info("Finished indexation. Took: " + (t2 - t1) + "ms.");
+	    LuceneSearchPlugin.LOGGER.info("Finished indexation. Took: " + (t2 - t1) + "ms.");
 	}
     }
 
