@@ -14,7 +14,7 @@ public class ExcelParser extends FileMetaDataParser {
 
     @Override
     public boolean isAppliableTo(GenericFile file) {
-	return file.getFilename().toLowerCase().endsWith(".ppt");
+	return file.getFilename().toLowerCase().endsWith(".xls");
     }
 
     @Override
