@@ -28,7 +28,16 @@ public class IndexListener implements CommitListener {
 	    for (DomainObject domainObject : new HashSet<DomainObject>(topLevelTransaction.getNewObjects())) {
 		if (domainObject instanceof Searchable) {
 		    for (Indexable indexableObject : ((Searchable) domainObject).getObjectsToIndex()) {
-			newIndexes.put(indexableObject, indexableObject.getDocumentToIndex());
+			switch (indexableObject.getIndexMode()) {
+			case ASYNC:
+			    new IndexingRequest(indexableObject);
+			    break;
+			case SYNC:
+			    newIndexes.put(indexableObject, indexableObject.getDocumentToIndex());
+			    break;
+			case MANUAL:
+			    break;
+			}
 		    }
 		}
 	    }
@@ -37,7 +46,16 @@ public class IndexListener implements CommitListener {
 		if (!topLevelTransaction.isDeleted(domainObject)) {
 		    if (domainObject instanceof Searchable) {
 			for (Indexable indexableObject : ((Searchable) domainObject).getObjectsToIndex()) {
-			    newIndexes.put(indexableObject, indexableObject.getDocumentToIndex());
+			    switch (indexableObject.getIndexMode()) {
+			    case ASYNC:
+				new IndexingRequest(indexableObject);
+				break;
+			    case SYNC:
+				newIndexes.put(indexableObject, indexableObject.getDocumentToIndex());
+				break;
+			    case MANUAL:
+				break;
+			    }
 			}
 		    }
 		}
