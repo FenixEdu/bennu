@@ -212,7 +212,10 @@ public class DomainIndexer {
 	}
 	try {
 	    LuceneDomainDirectory luceneDomainDirectory = DomainIndexDirectory.getIndexDirectory(name).getLuceneDomainDirectory();
-	    return isIndexed(document, luceneDomainDirectory);
+	    if (luceneDomainDirectory.getDomainIndexDirectory().hasAnyIndexFiles()) {
+		return isIndexed(document, luceneDomainDirectory);
+	    }
+	    return false;
 	} catch (CorruptIndexException e) {
 	    e.printStackTrace();
 	    throw new DomainIndexException(e);
