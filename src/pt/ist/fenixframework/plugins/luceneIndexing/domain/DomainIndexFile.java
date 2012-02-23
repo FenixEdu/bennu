@@ -1,6 +1,5 @@
 package pt.ist.fenixframework.plugins.luceneIndexing.domain;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,11 +63,11 @@ public class DomainIndexFile extends DomainIndexFile_Base implements IndexFile {
      * This means that the max size we can store is a 2Gb index file. Since
      * we're casting from long to int.
      */
-    public byte readByte(long pos) throws IOException {
+    public byte readByte(long pos) {
 	return getIndexContent()[(int) pos];
     }
 
-    public void readBytes(long pos, byte[] b, int offset, int len) throws IOException {
+    public void readBytes(long pos, byte[] b, int offset, int len) {
 	System.arraycopy(getIndexContent(), (int) pos, b, offset, len);
     }
 

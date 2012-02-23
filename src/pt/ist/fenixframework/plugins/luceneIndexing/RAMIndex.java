@@ -44,6 +44,7 @@ public class RAMIndex implements IndexFile {
 	this.domainIndexFile.setIndexContent(totalArray);
     }
 
+    @Override
     public synchronized Long getLength() {
 	return length;
     }
@@ -52,6 +53,7 @@ public class RAMIndex implements IndexFile {
 	this.length = length;
     }
 
+    @Override
     public synchronized Long getLastModified() {
 	return lastModified;
     }
@@ -61,7 +63,7 @@ public class RAMIndex implements IndexFile {
     }
 
     public final synchronized ByteArray addBuffer(int size) {
-	ByteArray buffer = newBuffer(size);
+	ByteArray buffer = new ByteArray(new byte[size]);
 	buffers.add(buffer);
 	return buffer;
     }
@@ -72,10 +74,6 @@ public class RAMIndex implements IndexFile {
 
     final synchronized int numBuffers() {
 	return buffers.size();
-    }
-
-    protected ByteArray newBuffer(int size) {
-	return new ByteArray(new byte[size]);
     }
 
     @Override
