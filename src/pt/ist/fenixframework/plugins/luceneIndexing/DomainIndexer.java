@@ -104,7 +104,7 @@ public class DomainIndexer {
 	    LuceneDomainDirectory luceneDomainDirectory = DomainIndexDirectory.getIndexDirectory(name, true)
 		    .getLuceneDomainDirectory();
 	    writer = new IndexWriter(luceneDomainDirectory, new IndexWriterConfig(VERSION, new StandardAnalyzer(VERSION))
-		    .setOpenMode(OpenMode.APPEND).setMergeScheduler(new SerialMergeScheduler()));
+		    .setOpenMode(OpenMode.CREATE_OR_APPEND).setMergeScheduler(new SerialMergeScheduler()));
 
 	    if (isIndexed(document, luceneDomainDirectory)) {
 		unindexDomainObject(document, writer);
@@ -147,7 +147,7 @@ public class DomainIndexer {
 
 		if (writer == null) {
 		    writer = new IndexWriter(luceneDomainDirectory, new IndexWriterConfig(VERSION, new StandardAnalyzer(VERSION))
-			    .setOpenMode(OpenMode.APPEND).setMergeScheduler(new SerialMergeScheduler()));
+			    .setOpenMode(OpenMode.CREATE_OR_APPEND).setMergeScheduler(new SerialMergeScheduler()));
 		    writerMap.put(className, writer);
 		}
 		if (isIndexed(document)) {
@@ -241,7 +241,7 @@ public class DomainIndexer {
 	    LuceneDomainDirectory luceneDomainDirectory = DomainIndexDirectory.getIndexDirectory(name, true)
 		    .getLuceneDomainDirectory();
 	    writer = new IndexWriter(luceneDomainDirectory, new IndexWriterConfig(VERSION, new StandardAnalyzer(VERSION))
-		    .setOpenMode(OpenMode.APPEND).setMergeScheduler(new SerialMergeScheduler()));
+		    .setOpenMode(OpenMode.CREATE_OR_APPEND).setMergeScheduler(new SerialMergeScheduler()));
 	    unindexDomainObject(document, writer);
 	} catch (CorruptIndexException e) {
 	    e.printStackTrace();
