@@ -150,7 +150,7 @@ public class DomainIndexer {
 			    .setOpenMode(OpenMode.CREATE_OR_APPEND).setMergeScheduler(new SerialMergeScheduler()));
 		    writerMap.put(className, writer);
 		}
-		if (isIndexed(document)) {
+		if (isIndexed(document, luceneDomainDirectory)) {
 		    unindexDomainObject(document, writer);
 		}
 		writer.addDocument(generateLuceneDocument(document));
@@ -212,10 +212,7 @@ public class DomainIndexer {
 	}
 	try {
 	    LuceneDomainDirectory luceneDomainDirectory = DomainIndexDirectory.getIndexDirectory(name).getLuceneDomainDirectory();
-	    if (luceneDomainDirectory.getDomainIndexDirectory().hasAnyIndexFiles()) {
-		return isIndexed(document, luceneDomainDirectory);
-	    }
-	    return false;
+	    return isIndexed(document, luceneDomainDirectory);
 	} catch (CorruptIndexException e) {
 	    e.printStackTrace();
 	    throw new DomainIndexException(e);
@@ -226,7 +223,6 @@ public class DomainIndexer {
 	    e.printStackTrace();
 	    throw new DomainIndexException(e);
 	}
-
     }
 
     private static void unindexDomainObject(IndexDocument document, IndexWriter writer) throws CorruptIndexException,

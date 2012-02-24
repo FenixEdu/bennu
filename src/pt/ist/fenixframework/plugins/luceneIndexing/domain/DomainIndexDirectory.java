@@ -2,6 +2,15 @@ package pt.ist.fenixframework.plugins.luceneIndexing.domain;
 
 import java.io.IOException;
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.SerialMergeScheduler;
+import org.apache.lucene.store.LockObtainFailedException;
+
+import pt.ist.fenixframework.plugins.luceneIndexing.DomainIndexer;
 import pt.ist.fenixframework.plugins.luceneIndexing.DomainIndexer.DomainIndexException;
 import pt.ist.fenixframework.plugins.luceneIndexing.LuceneDomainDirectory;
 
@@ -46,7 +55,23 @@ public class DomainIndexDirectory extends DomainIndexDirectory_Base {
 	    }
 	}
 	if (create) {
-	    return new DomainIndexDirectory(name);
+	    DomainIndexDirectory directory = new DomainIndexDirectory(name);
+	    try {
+		IndexWriter writer = new IndexWriter(new LuceneDomainDirectory(directory), new IndexWriterConfig(
+			DomainIndexer.VERSION, new StandardAnalyzer(DomainIndexer.VERSION)).setOpenMode(OpenMode.CREATE)
+			.setMergeScheduler(new SerialMergeScheduler()));
+		writer.close();
+	    } catch (CorruptIndexException e) {
+		e.printStackTrace();
+		throw new DomainIndexException(e);
+	    } catch (LockObtainFailedException e) {
+		e.printStackTrace();
+		throw new DomainIndexException(e);
+	    } catch (IOException e) {
+		e.printStackTrace();
+		throw new DomainIndexException(e);
+	    }
+	    return directory;
 	}
 	return null;
     }
