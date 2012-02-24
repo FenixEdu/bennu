@@ -1,0 +1,103 @@
+package pt.ist.fenixframework.plugins.fileSupport.domain;
+
+valueType pt.ist.fenixframework.util.ByteArray as ByteArray {
+    externalizeWith {
+        bytearray getBytes();
+    }
+}
+
+class GenericFile {
+	Long size;
+	DateTime creationDate;
+	String ojbConcreteClass;
+	String filename;
+	String displayName;
+	String contentType;
+	String contentKey;
+}
+
+class FileRawData {
+	String contentKey;
+	ByteArray content;
+}
+
+class LocalFileToDelete {
+	String filePath;
+}
+
+class FileStorage {
+	String ojbConcreteClass;
+	String name;
+}
+	class DomainStorage extends FileStorage{
+	}
+	class DBStorage extends FileStorage{
+		String host;
+		Integer port;
+		String dbName;
+		String tableName;
+		String username;
+		String password;
+	}
+	class LocalFileSystemStorage extends FileStorage{
+		String path;
+		Integer treeDirectoriesNameLength;
+	}	
+
+class FileStorageConfiguration {
+	String fileType;
+}
+
+class FileSupport {
+
+}
+	
+relation FileStorageFile {
+	GenericFile playsRole files {
+		multiplicity *;
+	}	
+	FileStorage playsRole storage;
+}
+
+relation FileStorageConfigurationFileStorage {
+	FileStorageConfiguration playsRole configurations{
+		multiplicity *;
+	} 
+	FileStorage playsRole storage; 
+} 
+
+relation FilePluginRootGenericFile {
+	FileSupport playsRole fileSupport;
+	GenericFile playsRole genericFiles {
+		multiplicity *;
+	}
+}
+
+relation FilePluginRootFileRawDatat {
+	FileSupport playsRole fileSupport;
+	FileRawData playsRole fileRawDatas {
+		multiplicity *;
+	}
+}
+
+relation FilePluginRootFileStorage {
+	FileSupport playsRole fileSupport;
+	FileStorage playsRole fileStorages {
+		multiplicity *;
+	}
+}
+
+relation FilePluginRootStorageConfiguration {
+	FileSupport playsRole fileSupport;
+	FileStorageConfiguration playsRole fileStorageConfigurations {
+		multiplicity *;
+	}
+}
+
+relation FilePluginRootLocalFileToDelete {
+	FileSupport playsRole fileSupport;
+	LocalFileToDelete playsRole localFilesToDelete {
+		multiplicity *;
+	}
+}
+
