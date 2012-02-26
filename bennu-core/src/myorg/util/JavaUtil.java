@@ -25,11 +25,6 @@
 package myorg.util;
 
 /**
- * @author João Antunes (joao.antunes@tagus.ist.utl.pt) - 9 de Fev de 2012 Misc
- *         utility class
- * 
- */
-/**
  * 
  * @author  João Antunes
  * 
