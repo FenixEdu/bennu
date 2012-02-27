@@ -323,7 +323,9 @@ public class DomainIndexer {
 
 		String OID = doc.get(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName());
 		T domainObject = AbstractDomainObject.<T> fromExternalId(OID);
-		domainObjects.add(domainObject);
+		if (domainObject != null) {
+		    domainObjects.add(domainObject);
+		}
 	    }
 
 	    searcher.close();
