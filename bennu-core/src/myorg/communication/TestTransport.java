@@ -94,9 +94,7 @@ public class TestTransport {
 	// Type type = test.readEnum(representationX);
 	// System.out.println(type);
 
-	MultiLanguageString mls = new MultiLanguageString();
-	mls.setContent(Language.pt, "weeee");
-	mls.setContent(Language.en, "weeeehhh");
+	MultiLanguageString mls = new MultiLanguageString().with(Language.pt, "weeee").with(Language.en, "weeeehhh");
 
 	String serializeToSend = test.serializeToSend(mls);
 	System.out.println(serializeToSend);

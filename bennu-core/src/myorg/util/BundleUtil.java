@@ -70,15 +70,15 @@ public class BundleUtil {
     }
 
     public static MultiLanguageString getMultilanguageString(final String bundle, final String key) {
-	final MultiLanguageString multiLanguageString = new MultiLanguageString();
+	MultiLanguageString multiLanguageString = new MultiLanguageString();
 	final Locale locale = Language.getLocale();
 	final ResourceBundle resourceBundle = ResourceBundle.getBundle(bundle, locale);
 	final Language language = Language.valueOf(locale.getLanguage());
 	if (resourceBundle != null && resourceBundle.containsKey(key)) {
 	    final String content = resourceBundle.getString(key);
-	    multiLanguageString.setContent(language, content);
+	    multiLanguageString = multiLanguageString.with(language, content);
 	} else {
-	    multiLanguageString.setContent(language, "???" + key + "???");
+	    multiLanguageString = multiLanguageString.with(language, "???" + key + "???");
 	}
 	return multiLanguageString;
     }
