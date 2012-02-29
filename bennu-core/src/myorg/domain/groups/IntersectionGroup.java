@@ -24,11 +24,15 @@
 */
 package myorg.domain.groups;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import myorg.domain.User;
-import myorg.util.BundleUtil;
+
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.fenixWebFramework.services.Service;
 
 /**
@@ -59,8 +63,11 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 
     @Override
     public String getName() {
-	return BundleUtil
-		.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.intersectionGroup.name");
+	List<String> names = new ArrayList<String>();
+	for (PersistentGroup group : getPersistentGroups()) {
+	    names.add("(" + group.getName() + ")");
+	}
+	return "Intersection of: ".concat(StringUtils.join(names, " AND "));
     }
 
     @Override
