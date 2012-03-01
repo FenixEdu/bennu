@@ -132,6 +132,7 @@ body {
 }
     #perfil li {
         margin-left:8px;
+		color:#F5ECDC;
     }
     #perfil a {
         color:rgba(255,255,255,0.75);
