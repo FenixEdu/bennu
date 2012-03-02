@@ -182,6 +182,13 @@ public abstract class BaseAction extends DispatchAction {
 	saveMessages(request, messages);
     }
 
+    protected void addLocalizedWarningMessage(final HttpServletRequest request, final String localizedMessage) {
+	final ActionMessages messages = getMessages(request);
+	ActionMessage actionMessage = new ActionMessage(localizedMessage, false);
+	messages.add("messageWarning", actionMessage);
+	saveMessages(request, messages);
+    }
+
     protected void addMessage(final HttpServletRequest request, final String key, final String... args) {
 	addMessage(request, "message", key, args);
     }
