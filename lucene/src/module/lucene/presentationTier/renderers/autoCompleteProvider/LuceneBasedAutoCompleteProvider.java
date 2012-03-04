@@ -1,28 +1,27 @@
 /*
  * @(#)LuceneBasedAutoCompleteProvider.java
  *
- * Copyright 2009 Instituto Superior Tecnico
- * Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
+ * Copyright 2011 Instituto Superior Tecnico
+ * Founding Authors: Pedro Santos
  * 
  *      https://fenix-ashes.ist.utl.pt/
  * 
- *   This file is part of the Bennu Web Application Infrastructure.
+ *   This file is part of the Bennu Lucene Integration Module.
  *
- *   The Bennu Web Application Infrastructure is free software: you can 
- *   redistribute it and/or modify it under the terms of the GNU Lesser General 
+ *   The Bennu Lucene Integration Module is free software: you can
+ *   redistribute it and/or modify it under the terms of the GNU Lesser General
  *   Public License as published by the Free Software Foundation, either version 
- *   3 of the License, or (at your option) any later version.*
+ *   3 of the License, or (at your option) any later version.
  *
- *   Bennu is distributed in the hope that it will be useful,
+ *   The Bennu Lucene Module is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *   GNU Lesser General Public License for more details.
  *
  *   You should have received a copy of the GNU Lesser General Public License
- *   along with Bennu. If not, see <http://www.gnu.org/licenses/>.
+ *   along with the Bennu Lucene Module. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-
 package module.lucene.presentationTier.renderers.autoCompleteProvider;
 
 import java.util.Collection;
@@ -38,6 +37,11 @@ import pt.ist.fenixframework.plugins.luceneIndexing.DomainIndexer.DefaultIndexFi
 import pt.ist.fenixframework.plugins.luceneIndexing.util.LuceneStringEscaper;
 import pt.utl.ist.fenix.tools.util.StringNormalizer;
 
+/**
+ * 
+ * @author Pedro Santos
+ * 
+ */
 public abstract class LuceneBasedAutoCompleteProvider implements AutoCompleteProvider {
 
     @Override
