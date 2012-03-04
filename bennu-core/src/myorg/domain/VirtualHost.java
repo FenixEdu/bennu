@@ -81,8 +81,8 @@ public class VirtualHost extends VirtualHost_Base {
     public VirtualHost(final MyOrg myOrg) {
 	setMyOrg(myOrg);
 	setHostname("localhost");
-	setApplicationTitle(new MultiLanguageString("MyOrg Application Title"));
-	setApplicationSubTitle(new MultiLanguageString("MyOrg Application SubTitle"));
+	setApplicationTitle(new MultiLanguageString("Bennu Application Title"));
+	setApplicationSubTitle(new MultiLanguageString("Bennu Application SubTitle"));
 	setApplicationCopyright(new MultiLanguageString("My Organization Name"));
 	setGoogleSearchEnabled(Boolean.TRUE);
 	setLanguageSelectionEnabled(Boolean.TRUE);
