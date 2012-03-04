@@ -1,28 +1,27 @@
 /*
  * @(#)SchedulerAction.java
  *
- * Copyright 2009 Instituto Superior Tecnico
- * Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
+ * Copyright 2011 Instituto Superior Tecnico
+ * Founding Authors: Luis Cruz
  * 
  *      https://fenix-ashes.ist.utl.pt/
  * 
- *   This file is part of the Bennu Web Application Infrastructure.
+ *   This file is part of the Scheduler Module.
  *
- *   The Bennu Web Application Infrastructure is free software: you can 
- *   redistribute it and/or modify it under the terms of the GNU Lesser General 
+ *   The Scheduler Module is free software: you can
+ *   redistribute it and/or modify it under the terms of the GNU Lesser General
  *   Public License as published by the Free Software Foundation, either version 
- *   3 of the License, or (at your option) any later version.*
+ *   3 of the License, or (at your option) any later version.
  *
- *   Bennu is distributed in the hope that it will be useful,
+ *   The Scheduler Module is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *   GNU Lesser General Public License for more details.
  *
  *   You should have received a copy of the GNU Lesser General Public License
- *   along with Bennu. If not, see <http://www.gnu.org/licenses/>.
+ *   along with the Scheduler Module. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-
 package myorg.presentationTier.actions;
 
 import java.io.IOException;
@@ -58,6 +57,11 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
 @Mapping(path = "/scheduler")
+/**
+ * 
+ * @author Luis Cruz
+ * 
+ */
 public class SchedulerAction extends ContextBaseAction {
 
     @Override

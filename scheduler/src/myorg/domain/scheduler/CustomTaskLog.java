@@ -1,28 +1,27 @@
 /*
  * @(#)CustomTaskLog.java
  *
- * Copyright 2009 Instituto Superior Tecnico
- * Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
+ * Copyright 2011 Instituto Superior Tecnico
+ * Founding Authors: Luis Cruz
  * 
  *      https://fenix-ashes.ist.utl.pt/
  * 
- *   This file is part of the Bennu Web Application Infrastructure.
+ *   This file is part of the Scheduler Module.
  *
- *   The Bennu Web Application Infrastructure is free software: you can 
- *   redistribute it and/or modify it under the terms of the GNU Lesser General 
+ *   The Scheduler Module is free software: you can
+ *   redistribute it and/or modify it under the terms of the GNU Lesser General
  *   Public License as published by the Free Software Foundation, either version 
- *   3 of the License, or (at your option) any later version.*
+ *   3 of the License, or (at your option) any later version.
  *
- *   Bennu is distributed in the hope that it will be useful,
+ *   The Scheduler Module is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *   GNU Lesser General Public License for more details.
  *
  *   You should have received a copy of the GNU Lesser General Public License
- *   along with Bennu. If not, see <http://www.gnu.org/licenses/>.
+ *   along with the Scheduler Module. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-
 package myorg.domain.scheduler;
 
 import java.util.Comparator;
@@ -37,6 +36,11 @@ import org.joda.time.DateTime;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
+/**
+ * 
+ * @author Luis Cruz
+ * 
+ */
 public class CustomTaskLog extends CustomTaskLog_Base {
 
     public static final Comparator<CustomTaskLog> COMPARATOR_BY_UPLOAD_TIME_AND_CLASSNAME = new Comparator<CustomTaskLog>() {
