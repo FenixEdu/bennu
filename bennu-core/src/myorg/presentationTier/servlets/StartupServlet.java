@@ -29,6 +29,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -51,6 +52,7 @@ import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumF
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter.ChecksumPredicate;
 import pt.ist.fenixframework.FenixFrameworkInitializer;
 import pt.ist.fenixframework.pstm.Transaction;
+import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 /**
  * 
@@ -67,35 +69,46 @@ public class StartupServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
 	super.init(config);
 
-	FenixWebFramework.initialize(PropertiesManager.getFenixFrameworkConfig(FenixFrameworkInitializer.CONFIG_PATHS));
-
 	try {
-	    Transaction.begin(true);
-	    Transaction.currentFenixTransaction().setReadOnly();
+	    setLocale();
+	    FenixWebFramework.initialize(PropertiesManager.getFenixFrameworkConfig(FenixFrameworkInitializer.CONFIG_PATHS));
 
 	    try {
-		MyOrg.initModules();
-	    } catch (Throwable t) {
-		t.printStackTrace();
-		throw new Error(t);
+		Transaction.begin(true);
+		Transaction.currentFenixTransaction().setReadOnly();
+
+		try {
+		    MyOrg.initModules();
+		} catch (Throwable t) {
+		    t.printStackTrace();
+		    throw new Error(t);
+		}
+
+		final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
+		Authenticate.initRole(RoleType.MANAGER, managerUsernames);
+
+		initializePersistentGroups();
+
+		initScheduler();
+
+		syncThemes();
+
+		syncLayouts();
+
+		registerFilterCheckSumRules();
+
+	    } finally {
+		Transaction.forceFinish();
 	    }
-
-	    final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
-	    Authenticate.initRole(RoleType.MANAGER, managerUsernames);
-
-	    initializePersistentGroups();
-
-	    initScheduler();
-
-	    syncThemes();
-
-	    syncLayouts();
-
-	    registerFilterCheckSumRules();
-
 	} finally {
-	    Transaction.forceFinish();
+	    Language.setLocale(null);
 	}
+    }
+
+    private void setLocale() {
+	final String language = PropertiesManager.getProperty("language");
+	final String location = PropertiesManager.getProperty("location");
+	Language.setLocale(new Locale(language, location));
     }
 
     private void syncThemes() {
