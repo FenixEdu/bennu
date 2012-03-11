@@ -136,7 +136,7 @@ public class FunctionalityFilter implements Filter {
 	}
 
 	for (String funcMapping : functionalitiesMappings.split("\n")) {
-	    if (funcMapping.startsWith("#")) {
+	    if (funcMapping.length() > 0 && funcMapping.charAt(0) == '#') {
 		continue;
 	    }
 
