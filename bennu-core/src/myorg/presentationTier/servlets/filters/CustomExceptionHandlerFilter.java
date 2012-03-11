@@ -35,7 +35,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
-import myorg.domain.VirtualHost;
 import myorg.presentationTier.servlets.filters.ExceptionHandlerFilter.CustomeHandler;
 
 /**

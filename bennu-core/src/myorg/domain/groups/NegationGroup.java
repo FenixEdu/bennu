@@ -28,7 +28,6 @@ import java.util.Set;
 
 import myorg.domain.User;
 import myorg.domain.exceptions.DomainException;
-import myorg.util.BundleUtil;
 import pt.ist.fenixWebFramework.services.Service;
 
 /**
