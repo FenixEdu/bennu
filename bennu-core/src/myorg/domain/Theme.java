@@ -57,8 +57,9 @@ public class Theme extends Theme_Base {
 
     public void delete() {
 	removeMyOrg();
-	for (; !getVirtualHosts().isEmpty(); getVirtualHosts().get(0).removeTheme())
-	    ;
+	while (!getVirtualHosts().isEmpty()) {
+	    getVirtualHosts().get(0).removeTheme();
+	}
 	deleteDomainObject();
     }
 
