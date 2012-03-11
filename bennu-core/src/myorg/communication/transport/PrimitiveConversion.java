@@ -61,17 +61,17 @@ public class PrimitiveConversion {
 
     public String serializeToSend(Object... values) {
 	StringBuilder builder = new StringBuilder();
-	builder.append("[");
+	builder.append('[');
 	int totalSize = values.length;
 
 	for (int i = 0; i < totalSize; i++) {
 	    Object object = values[i];
 	    builder.append(serializeToSend(object.getClass(), object.toString()));
 	    if (i + 1 < totalSize) {
-		builder.append(",");
+		builder.append(',');
 	    }
 	}
-	builder.append("]");
+	builder.append(']');
 	return builder.toString();
     }
 

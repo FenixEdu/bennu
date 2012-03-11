@@ -49,7 +49,7 @@ public class StringsConverter implements FieldConversion {
 	StringBuilder buffer = new StringBuilder("");
 	for (String string : strings.getUnmodifiableList()) {
 	    buffer.append(string.length());
-	    buffer.append(":");
+	    buffer.append(':');
 	    buffer.append(string);
 	}
 	return buffer.toString();

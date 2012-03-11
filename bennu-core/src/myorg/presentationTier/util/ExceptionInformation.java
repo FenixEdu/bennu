@@ -85,22 +85,22 @@ public class ExceptionInformation {
 
 	UserView userView = UserView.getCurrentUserView();
 	if (userView != null) {
-	    exceptionInfo.append(userView.getUsername()).append("\n");
+	    exceptionInfo.append(userView.getUsername()).append('\n');
 	} else {
 	    exceptionInfo.append("No user logged in, or session was lost.\n");
 	}
-	exceptionInfo.append("\n");
+	exceptionInfo.append('\n');
     }
 
     private static void mappingContextAppend(HttpServletRequest request, final StringBuilder exceptionInfo) {
-	exceptionInfo.append("[RequestURI] ").append(request.getRequestURI()).append("\n");
-	exceptionInfo.append("[RequestURL] ").append(request.getRequestURL()).append("\n");
-	exceptionInfo.append("[QueryString] ").append(request.getQueryString()).append("\n");
+	exceptionInfo.append("[RequestURI] ").append(request.getRequestURI()).append('\n');
+	exceptionInfo.append("[RequestURL] ").append(request.getRequestURL()).append('\n');
+	exceptionInfo.append("[QueryString] ").append(request.getQueryString()).append('\n');
 
 	if (request.getAttribute(ORIGINAL_MAPPING_KEY) != null) {
 	    ActionMapping mapping = (ActionMapping) request.getAttribute(ORIGINAL_MAPPING_KEY);
-	    exceptionInfo.append("[Path] ").append(mapping.getPath()).append("\n");
-	    exceptionInfo.append("[Name] ").append(mapping.getName()).append("\n");
+	    exceptionInfo.append("[Path] ").append(mapping.getPath()).append('\n');
+	    exceptionInfo.append("[Name] ").append(mapping.getName()).append('\n');
 	} else {
 	    exceptionInfo.append("[Path|Name] impossible to get (exception through UncaughtExceptionFilter)\n");
 	}
@@ -111,8 +111,8 @@ public class ExceptionInformation {
 	Enumeration<?> requestContents = request.getAttributeNames();
 	while (requestContents.hasMoreElements()) {
 	    String requestElement = requestContents.nextElement().toString();
-	    exceptionInfo.append("RequestElement:").append(requestElement).append("\n");
-	    exceptionInfo.append("RequestElement Value:").append(request.getAttribute(requestElement)).append("\n");
+	    exceptionInfo.append("RequestElement:").append(requestElement).append('\n');
+	    exceptionInfo.append("RequestElement Value:").append(request.getAttribute(requestElement)).append('\n');
 	}
     }
 
@@ -123,8 +123,8 @@ public class ExceptionInformation {
 	    Enumeration<?> sessionContents = session.getAttributeNames();
 	    while (sessionContents.hasMoreElements()) {
 		String sessionElement = sessionContents.nextElement().toString();
-		exceptionInfo.append("Element:").append(sessionElement).append("\n");
-		exceptionInfo.append("Element Value:").append(session.getAttribute(sessionElement)).append("\n");
+		exceptionInfo.append("Element:").append(sessionElement).append('\n');
+		exceptionInfo.append("Element Value:").append(session.getAttribute(sessionElement)).append('\n');
 	    }
 	}
     }
@@ -135,7 +135,7 @@ public class ExceptionInformation {
 	if (stackTrace != null) {
 	    int i = 0;
 	    while (i < stackTrace.length) {
-		exceptionInfo.append(stackTrace[i++]).append("\n");
+		exceptionInfo.append(stackTrace[i++]).append('\n');
 	    }
 	}
     }

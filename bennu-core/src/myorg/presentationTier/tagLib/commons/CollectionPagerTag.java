@@ -113,7 +113,7 @@ public class CollectionPagerTag extends TagSupport {
 	for (int i = firstVisualizedPage; i <= lastVisualizedPage; i++) {
 	    if (i != pageNumber) {
 		stringBuilder.append("&nbsp;<a href=\"").append(request.getContextPath()).append(getUrl()).append("&amp;")
-			.append(getPageNumberAttributeName()).append("=").append(Integer.toString(i)).append("\">");
+			.append(getPageNumberAttributeName()).append('=').append(Integer.toString(i)).append("\">");
 		stringBuilder.append(Integer.toString(i)).append("</a>&nbsp;");
 	    } else {
 		stringBuilder.append("&nbsp;<b>").append(Integer.toString(i)).append("</b>&nbsp;");
@@ -125,10 +125,10 @@ public class CollectionPagerTag extends TagSupport {
 	    throws JspException {
 	if (lastPage > 1 && pageNumber != lastPage) {
 	    stringBuilder.append("&nbsp;<a href=\"").append(request.getContextPath()).append(getUrl()).append("&amp;").append(
-		    getPageNumberAttributeName()).append("=").append(Integer.toString(pageNumber + 1)).append("\">");
+		    getPageNumberAttributeName()).append('=').append(Integer.toString(pageNumber + 1)).append("\">");
 	    stringBuilder.append(getMessage("label.collectionPager.next", "&gt;")).append("</a>");
 	    stringBuilder.append("&nbsp;<a href=\"").append(request.getContextPath()).append(getUrl()).append("&amp;").append(
-		    getPageNumberAttributeName()).append("=").append(Integer.toString(lastPage)).append("\">");
+		    getPageNumberAttributeName()).append('=').append(Integer.toString(lastPage)).append("\">");
 	    stringBuilder.append(getMessage("label.collectionPager.last", "&gt;&gt;")).append("</a>");
 
 	    Integer numberOfVisualizedPages = (getNumberOfVisualizedPages() != null) ? Integer
@@ -143,10 +143,10 @@ public class CollectionPagerTag extends TagSupport {
 	    throws JspException {
 	if (pageNumber > 0 && pageNumber != 1) {
 	    stringBuilder.append("<a href=\"").append(request.getContextPath()).append(getUrl()).append("&amp;").append(
-		    getPageNumberAttributeName()).append("=").append("1").append("\">");
+		    getPageNumberAttributeName()).append('=').append('1').append("\">");
 	    stringBuilder.append(getMessage("label.collectionPager.first", "&lt;&lt;")).append("</a>&nbsp;");
 	    stringBuilder.append("<a href=\"").append(request.getContextPath()).append(getUrl()).append("&amp;").append(
-		    getPageNumberAttributeName()).append("=").append(Integer.toString(pageNumber - 1)).append("\">");
+		    getPageNumberAttributeName()).append('=').append(Integer.toString(pageNumber - 1)).append("\">");
 	    stringBuilder.append(getMessage("label.collectionPager.previous", "&lt;")).append("</a>&nbsp;");
 	}
     }

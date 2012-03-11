@@ -101,9 +101,9 @@ public class DbHandler {
 	StringBuilder stringBuffer = new StringBuilder();
 	stringBuffer.append("jdbc:oracle:thin:");
 	stringBuffer.append(PropertiesManager.getProperty(dbPropertyPrefix + ".user"));
-	stringBuffer.append("/");
+	stringBuffer.append('/');
 	stringBuffer.append(PropertiesManager.getProperty(dbPropertyPrefix + ".pass"));
-	stringBuffer.append("@");
+	stringBuffer.append('@');
 	stringBuffer.append(PropertiesManager.getProperty(dbPropertyPrefix + ".alias"));
 	return stringBuffer.toString();
     }

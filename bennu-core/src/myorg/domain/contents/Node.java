@@ -64,7 +64,7 @@ public abstract class Node extends Node_Base implements INode {
 	final StringBuilder stringBuilder = new StringBuilder();
 	appendUrlPrefix(stringBuilder);
 	if (!hasFunctionality()) {
-	    stringBuilder.append("&");
+	    stringBuilder.append('&');
 	    stringBuilder.append(ContextBaseAction.CONTEXT_PATH);
 	    stringBuilder.append('=');
 	    appendNodePath(stringBuilder);
@@ -76,12 +76,12 @@ public abstract class Node extends Node_Base implements INode {
 	final StringBuilder stringBuilder = new StringBuilder();
 	appendUrlPrefix(stringBuilder);
 	if (!hasFunctionality()) {
-	    stringBuilder.append("&");
+	    stringBuilder.append('&');
 	    stringBuilder.append(ContextBaseAction.CONTEXT_PATH);
 	    stringBuilder.append('=');
 	    appendNodePath(stringBuilder);
 	    if (isRedirect()) {
-		stringBuilder.append("&");
+		stringBuilder.append('&');
 		stringBuilder.append(GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME);
 		stringBuilder.append('=');
 		stringBuilder.append(appendChecksum(stringBuilder.toString(), appContext));

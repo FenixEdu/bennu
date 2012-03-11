@@ -233,7 +233,7 @@ public class VirtualHost extends VirtualHost_Base {
 	final StringBuilder stringBuilder = new StringBuilder();
 	for (final Language language : languages) {
 	    if (stringBuilder.length() > 0) {
-		stringBuilder.append(":");
+		stringBuilder.append(':');
 	    }
 	    stringBuilder.append(language.name());
 	}

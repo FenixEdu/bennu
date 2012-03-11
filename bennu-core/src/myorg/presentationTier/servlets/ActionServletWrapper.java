@@ -148,7 +148,7 @@ public class ActionServletWrapper extends ActionServlet {
 	for (int i = 0; i < resourceBundleName.length(); i++) {
 	    final char c = resourceBundleName.charAt(i);
 	    if (i > 0 && Character.isUpperCase(c)) {
-		stringBuilder.append("_");
+		stringBuilder.append('_');
 	    }
 	    stringBuilder.append(Character.toUpperCase(c));
 	}

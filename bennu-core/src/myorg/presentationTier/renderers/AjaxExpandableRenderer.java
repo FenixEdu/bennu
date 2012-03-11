@@ -199,10 +199,10 @@ public class AjaxExpandableRenderer extends OutputRenderer {
 		while (iterator.hasNext()) {
 		    String key = iterator.next();
 		    convertedProperties.append(key);
-		    convertedProperties.append(":");
+		    convertedProperties.append(':');
 		    convertedProperties.append(propertyMap.get(key));
 		    if (iterator.hasNext()) {
-			convertedProperties.append("|");
+			convertedProperties.append('|');
 		    }
 		}
 		return convertedProperties.toString();
