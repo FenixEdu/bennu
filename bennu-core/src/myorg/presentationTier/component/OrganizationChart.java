@@ -40,21 +40,21 @@ public class OrganizationChart<T> extends ArrayList<OrganizationChartRow<T>> {
 
     public OrganizationChart(final Collection<T> elements, final int unitsPerPart) {
 	this.unitsPerPart = unitsPerPart;
-	addAllCopies(elements);
+	addAllElements(elements);
 	elementRowIndex = -1;
     }
 
     public OrganizationChart(final T element, final Collection<T> parents, final Collection<T> children, final int unitsPerPart) {
 	this.unitsPerPart = unitsPerPart;
 	if (parents != null && !parents.isEmpty()) {
-	    addAllCopies(parents);
+	    addAllElements(parents);
 	}
 	elementRowIndex = size();
 	add(new OrganizationChartRow<T>(element, unitsPerPart));
-	addAllCopies(children);
+	addAllElements(children);
     }
 
-    public void addAllCopies(final Collection<T> elements) {
+    public void addAllElements(final Collection<T> elements) {
 	if (elements != null && !elements.isEmpty()) {
 	    OrganizationChartRow<T> row = null;
 	    for (final T t : elements) {
