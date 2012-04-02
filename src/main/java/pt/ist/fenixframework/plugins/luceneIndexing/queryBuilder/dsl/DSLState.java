@@ -1,14 +1,8 @@
 package pt.ist.fenixframework.plugins.luceneIndexing.queryBuilder.dsl;
 
-import pt.ist.fenixframework.plugins.luceneIndexing.util.LuceneStringEscaper;
-
 public class DSLState {
 
     protected StringBuilder buffer;
-
-    protected static String escape(String valueToEscape) {
-	return LuceneStringEscaper.escape(valueToEscape);
-    }
 
     public boolean isEmpty() {
 	return this.buffer.length() == 0;

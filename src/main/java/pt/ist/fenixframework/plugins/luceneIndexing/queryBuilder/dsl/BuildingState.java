@@ -1,5 +1,7 @@
 package pt.ist.fenixframework.plugins.luceneIndexing.queryBuilder.dsl;
 
+import org.apache.lucene.queryParser.QueryParser;
+
 import pt.ist.fenixframework.plugins.luceneIndexing.IndexableField;
 
 public class BuildingState extends DSLState {
@@ -39,12 +41,12 @@ public class BuildingState extends DSLState {
     }
 
     public SearchState not(String term) {
-	write("NOT", null, escape(term));
+	write("NOT", null, QueryParser.escape(term));
 	return new SearchState(this);
     }
 
     public SearchState not(IndexableField field, String term) {
-	write("NOT", field, escape(term));
+	write("NOT", field, QueryParser.escape(term));
 	return new SearchState(this);
     }
 
@@ -59,12 +61,12 @@ public class BuildingState extends DSLState {
     }
 
     public SearchState matches(String value) {
-	write(null, null, escape(value));
+	write(null, null, QueryParser.escape(value));
 	return new SearchState(this);
     }
 
     public SearchState matches(IndexableField field, String value) {
-	write(null, field, escape(value));
+	write(null, field, QueryParser.escape(value));
 	return new SearchState(this);
     }
 
