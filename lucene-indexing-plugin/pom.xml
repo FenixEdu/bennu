@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>pt.ist</groupId>
-	<artifactId>fenix-framework-search-plugin</artifactId>
+	<artifactId>lucene-indexing-plugin</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Search Plugin</name>
+	<name>Lucene Indexing Plugin</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,7 +14,7 @@
 		<dml.fenix.version>1.0-SNAPSHOT</dml.fenix.version>
 		<dml.maven.plugin.version>1.0-SNAPSHOT</dml.maven.plugin.version>
 		<fenix.framework.core.version>1.0-SNAPSHOT</fenix.framework.core.version>
-		<fenix.framework.file.plugin.version>1.0-SNAPSHOT</fenix.framework.file.plugin.version>
+		<file.support.plugin.version>1.0-SNAPSHOT</file.support.plugin.version>
 	</properties>
 
 	<build>
@@ -120,8 +120,8 @@
 		</dependency>
 		<dependency>
 			<groupId>pt.ist</groupId>
-			<artifactId>fenix-framework-file-plugin</artifactId>
-			<version>${fenix.framework.file.plugin.version}</version>
+			<artifactId>file-support-plugin</artifactId>
+			<version>${file.support.plugin.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
