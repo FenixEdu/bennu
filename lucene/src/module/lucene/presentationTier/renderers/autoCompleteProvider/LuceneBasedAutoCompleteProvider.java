@@ -30,11 +30,12 @@ import java.util.Map;
 
 import myorg.presentationTier.renderers.autoCompleteProvider.AutoCompleteProvider;
 
+import org.apache.lucene.queryParser.QueryParser;
+
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.plugins.luceneIndexing.DomainIndexer;
-import pt.ist.fenixframework.plugins.luceneIndexing.IndexableField;
 import pt.ist.fenixframework.plugins.luceneIndexing.DomainIndexer.DefaultIndexFields;
-import pt.ist.fenixframework.plugins.luceneIndexing.util.LuceneStringEscaper;
+import pt.ist.fenixframework.plugins.luceneIndexing.IndexableField;
 import pt.utl.ist.fenix.tools.util.StringNormalizer;
 
 /**
@@ -59,7 +60,7 @@ public abstract class LuceneBasedAutoCompleteProvider implements AutoCompletePro
     protected abstract Class<? extends DomainObject> getSearchClass(Map<String, String> argsMap);
 
     protected String valueProcessingStrategy(String value) {
-	return StringNormalizer.normalize(LuceneStringEscaper.escape(value.trim().replaceAll("\\s\\s+", " "))).toLowerCase()
+	return StringNormalizer.normalize(QueryParser.escape(value.trim().replaceAll("\\s\\s+", " "))).toLowerCase()
 		.replaceAll(" ", " AND ")
 		+ "*";
     }
