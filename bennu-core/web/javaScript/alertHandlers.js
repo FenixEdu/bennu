@@ -23,7 +23,10 @@
 function linkConfirmationHookForm(formId, messageKey, titleKey) {
 	 var submitButton = $("#" + formId + " :submit");
 	    
-	    submitButton.attr('onclick','jConfirm('+messageKey+', '+titleKey+',function(userInput) { if (userInput) {$(#'+formId+').submit(); } return false; });return false; ');
+	 submitButton.click(function() {
+		requestConfirmationForJQueryForm(formId,messageKey,titleKey); 
+	 });
+	    //submitButton.attr('onclick','jConfirm('+messageKey+', '+titleKey+',function(userInput) { if (userInput) {$(#'+formId+').submit(); } return false; });return false; ');
 	    $("<div class=\"dinline forminline\"><form id='" +  formId + "form' action='" + 'teste' + "' method=\"post\"'></form></div>").insertBefore("#" + formId);    
 
 }
