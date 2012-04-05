@@ -10,6 +10,15 @@
         });
 }
  
+ function requestConfirmationLink(formId,messageKey,titleKey) {
+	 $.alerts.overlayOpacity= 0.4;
+	 $.alerts.overlayColor= '#333';
+	 jConfirm(messageKey, titleKey,function(userInput) {
+		  if(userInput) {
+			  location.href=$("#" + formId).attr('href'); 
+           }
+        });
+}
  function requestConfirmationForJQueryForm(form,messageKey,titleKey) {
 	 $.alerts.overlayOpacity= 0.4;
 	 $.alerts.overlayColor= '#333';
@@ -37,4 +46,13 @@ function linkConfirmationHook(linkId, messageKey, titleKey) {
         });
   $("#" + linkId).attr('href',"#");
   $("<div class=\"dinline forminline\"><form id='" +  linkId + "form' action='" + href + "' method=\"post\"'></form></div>").insertBefore("#" + linkId);
+}
+
+function linkConfirmationHookLink(linkId, messageKey, titleKey) {
+  var href = $("#" + linkId ).attr('href');
+  $("#" + linkId).click(function() {
+	  requestConfirmationLink(linkId + "link",messageKey,titleKey);
+        });
+  $("#" + linkId).attr('href',"#");
+  $("<div class=\"dinline forminline\"><a id='" +  linkId + "link' href='" + href + "'></a></div>").insertBefore("#" + linkId);
 }
