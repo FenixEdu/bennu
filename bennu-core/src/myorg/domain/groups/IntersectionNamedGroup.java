@@ -9,5 +9,10 @@ public class IntersectionNamedGroup extends IntersectionNamedGroup_Base {
 	}
 	setGroupName(groupName);
     }
-    
+
+    @Override
+    public String getName() {
+        return getGroupName();
+    }
+
 }
