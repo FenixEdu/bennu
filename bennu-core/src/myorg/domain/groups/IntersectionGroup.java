@@ -42,6 +42,9 @@ import pt.ist.fenixWebFramework.services.Service;
 */
 public class IntersectionGroup extends IntersectionGroup_Base {
 
+    protected IntersectionGroup() {
+    }
+
     public IntersectionGroup(final PersistentGroup... persistentGroups) {
 	super();
 	for (final PersistentGroup persistentGroup : persistentGroups) {

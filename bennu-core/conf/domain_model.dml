@@ -123,6 +123,10 @@ class groups.PersistentGroup {
 	class groups.IntersectionGroup extends groups.PersistentGroup {
 	}
 
+		class groups.IntersectionNamedGroup extends groups.IntersectionGroup {
+			String groupName;
+		}
+
 	class groups.NegationGroup extends groups.PersistentGroup {
 	}
 
