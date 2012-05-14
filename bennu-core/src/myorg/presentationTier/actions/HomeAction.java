@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 import myorg.domain.PasswordRecoveryRequest;
 import myorg.domain.VirtualHost;
 import myorg.domain.contents.Node;
-import myorg.domain.util.ByteArray;
+import pt.utl.ist.fenix.tools.util.ByteArray;
 import myorg.presentationTier.Context;
 
 import org.apache.struts.action.ActionForm;

@@ -42,7 +42,7 @@ import myorg.domain.contents.NodeBean;
 import myorg.domain.groups.People;
 import myorg.domain.groups.PersistentGroup;
 import myorg.domain.groups.Role;
-import myorg.domain.util.ByteArray;
+import pt.utl.ist.fenix.tools.util.ByteArray;
 import myorg.presentationTier.Context;
 import myorg.presentationTier.LayoutContext;
 

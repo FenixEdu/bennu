@@ -30,7 +30,7 @@ import java.util.TreeSet;
 
 import myorg._development.PropertiesManager;
 import myorg.domain.contents.Node;
-import myorg.domain.util.ByteArray;
+import pt.utl.ist.fenix.tools.util.ByteArray;
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixWebFramework.FenixWebFramework;

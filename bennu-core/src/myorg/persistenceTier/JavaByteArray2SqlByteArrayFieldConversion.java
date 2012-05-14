@@ -24,7 +24,7 @@
 */
 package myorg.persistenceTier;
 
-import myorg.domain.util.ByteArray;
+import pt.utl.ist.fenix.tools.util.ByteArray;
 
 import org.apache.ojb.broker.accesslayer.conversions.FieldConversion;
 

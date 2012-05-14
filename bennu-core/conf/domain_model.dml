@@ -54,7 +54,7 @@ valueType pt.utl.ist.fenix.tools.util.Strings as Strings {
     internalizeWith importFromString();
 }
 
-valueType myorg.domain.util.ByteArray as ByteArray {
+valueType pt.utl.ist.fenix.tools.util.ByteArray as ByteArray {
     externalizeWith {
         bytearray getBytes();
     }

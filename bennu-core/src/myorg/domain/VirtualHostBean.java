@@ -28,7 +28,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import myorg._development.PropertiesManager;
-import myorg.domain.util.ByteArray;
+import pt.utl.ist.fenix.tools.util.ByteArray;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 /**
