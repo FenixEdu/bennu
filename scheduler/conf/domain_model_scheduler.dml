@@ -1,7 +1,6 @@
 package myorg.domain.scheduler;
 
 
-external class .pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
 
 class Task {
