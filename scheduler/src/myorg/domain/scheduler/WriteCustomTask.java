@@ -41,7 +41,6 @@ import pt.utl.ist.fenix.tools.util.excel.Spreadsheet;
 public abstract class WriteCustomTask extends ReadCustomTask {
 
     private Set<GenericFile> outputFiles;
-    
 
     void setOutputFiles(final Set<GenericFile> outputFiles) {
 	this.outputFiles = outputFiles;
@@ -56,11 +55,11 @@ public abstract class WriteCustomTask extends ReadCustomTask {
 
     @Service
     private void callService() {
-	if (getServerName() != null) {
-	    final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(getServerName().toLowerCase());
-	}
 	try {
-	doService();
+	    if (getServerName() != null) {
+		VirtualHost.setVirtualHostForThread(getServerName().toLowerCase());
+	    }
+	    doService();
 	} finally {
 	    VirtualHost.releaseVirtualHostFromThread();
 	}
