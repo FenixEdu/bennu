@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Set;
 
+import myorg.domain.VirtualHost;
 import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 import pt.utl.ist.fenix.tools.util.excel.Spreadsheet;
@@ -40,6 +41,7 @@ import pt.utl.ist.fenix.tools.util.excel.Spreadsheet;
 public abstract class WriteCustomTask extends ReadCustomTask {
 
     private Set<GenericFile> outputFiles;
+    
 
     void setOutputFiles(final Set<GenericFile> outputFiles) {
 	this.outputFiles = outputFiles;
@@ -54,7 +56,24 @@ public abstract class WriteCustomTask extends ReadCustomTask {
 
     @Service
     private void callService() {
+	if (getServerName() != null) {
+	    final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(getServerName().toLowerCase());
+	}
+	try {
 	doService();
+	} finally {
+	    VirtualHost.releaseVirtualHostFromThread();
+	}
+    }
+
+    /**
+     * Convenience method to more easily use VirtualHosts in these tasks
+     * 
+     * @return the String with the server name of the VirtualHost to use when
+     *         executing this task
+     */
+    public String getServerName() {
+	return null;
     }
 
     protected void storeFileOutput(final String displayName, final String filename,
