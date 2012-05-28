@@ -27,6 +27,7 @@ package myorg.presentationTier.actions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -136,7 +137,7 @@ public abstract class BaseAction extends DispatchAction {
 	    final String contentType) throws IOException {
 	final OutputStream outputStream = response.getOutputStream();
 	response.setContentType(contentType);
-	response.setHeader("Content-disposition", "attachment; filename=" + filename.replace(" ", "_"));
+	response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
 	response.setContentLength(bytes.length);
 	if (bytes != null) {
 	    outputStream.write(bytes);
@@ -153,7 +154,7 @@ public abstract class BaseAction extends DispatchAction {
 	final OutputStream outputStream = response.getOutputStream();
 	try {
 	    response.setContentType(contentType);
-	    response.setHeader("Content-disposition", "attachment; filename=" + filename.replace(" ", "_"));
+	    response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
 	    int byteCount = InputStreamUtil.copyStream(stream, outputStream);
 	    response.setContentLength(byteCount);
 	    outputStream.flush();
