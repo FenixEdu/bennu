@@ -1,20 +1,20 @@
 <schema name="createDomainStorage" type="module.fileSupport.dto.DomainStorageDTO" bundle="FILE_SUPPORT_RESOURCES">
-	<slot name="name" key="label.domainStorage.name" validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator" />
+	<slot name="name" key="label.domainStorage.name" required="true" />
 </schema>
 
 <schema name="createDBStorage" type="module.fileSupport.dto.DBStorageDTO" bundle="FILE_SUPPORT_RESOURCES">
-	<slot name="name" key="label.dBStorage.name" validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
-	<slot name="host" key="label.dBStorage.host" validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
+	<slot name="name" key="label.dBStorage.name" required="true"/>
+	<slot name="host" key="label.dBStorage.host" required="true"/>
 	<slot name="port" key="label.dBStorage.port" validator="pt.ist.fenixWebFramework.renderers.validators.NumberValidator"/>
-	<slot name="dbName" key="label.dBStorage.dbName" validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
-	<slot name="tableName" key="label.dBStorage.tableName" validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
-	<slot name="username" key="label.dBStorage.username" validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
+	<slot name="dbName" key="label.dBStorage.dbName" required="true"/>
+	<slot name="tableName" key="label.dBStorage.tableName" required="true"/>
+	<slot name="username" key="label.dBStorage.username" required="true"/>
 	<slot name="password" key="label.dBStorage.password"/>
 </schema>
 
 <schema name="createLocalFileSystemStorage" type="module.fileSupport.dto.LocalFileSystemStorageDTO" bundle="FILE_SUPPORT_RESOURCES">
-	<slot name="name" key="label.localFileSystemStorage.name" validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
-	<slot name="path" key="label.localFileSystemStorage.path" validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
+	<slot name="name" key="label.localFileSystemStorage.name" required="true"/>
+	<slot name="path" key="label.localFileSystemStorage.path" required="true"/>
 	<slot name="treeDirectoriesNameLength" key="label.localFileSystemStorage.treeDirectoriesNameLength" validator="pt.ist.fenixWebFramework.renderers.validators.NumberValidator">
 		<validator class="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
 		<validator class="pt.ist.fenixWebFramework.renderers.validators.NumberValidator"/>
