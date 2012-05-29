@@ -8,7 +8,7 @@
 
 <schema name="virtualHost.application.configuration.external.interactions" type="myorg.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
 	<slot name="errorPage" key="label.error.page" bundle="MYORG_RESOURCES"
-		validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator" />
+		required="true" />
 	<slot name="helpLink" key="label.help.link.url" bundle="MYORG_RESOURCES"/>
 	<slot name="supportEmailAddress" key="label.supportEmailAddress" bundle="MYORG_RESOURCES"/>
 	<slot name="systemEmailAddress" key="label.systemEmailAddress" bundle="MYORG_RESOURCES"/>
@@ -32,7 +32,7 @@
 	<slot name="supportEmailAddress" key="label.supportEmailAddress" bundle="MYORG_RESOURCES"/>
 	<slot name="systemEmailAddress" key="label.systemEmailAddress" bundle="MYORG_RESOURCES"/>
 	<slot name="errorPage" key="label.error.page" bundle="MYORG_RESOURCES"
-		validator="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
+		required="true"/>
 	<slot name="googleSearchEnabled"/>
 	<slot name="languageSelectionEnabled"/>
 	<slot name="breadCrumbsEnabled" key="label.application.breadCrumbs" bundle="MYORG_RESOURCES"/>

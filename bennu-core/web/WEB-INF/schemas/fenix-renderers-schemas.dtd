@@ -99,11 +99,13 @@
 	schema IDREF #IMPLIED
 	key NMTOKEN #IMPLIED
 	bundle NMTOKEN #IMPLIED
+	required NMTOKEN #IMPLIED
 	validator NMTOKEN #IMPLIED
 	converter NMTOKEN #IMPLIED
 	default CDATA #IMPLIED
 	read-only NMTOKEN #IMPLIED
 	hidden NMTOKEN #IMPLIED
+	help NMTOKEN #IMPLIED
 >
 
 <!--
