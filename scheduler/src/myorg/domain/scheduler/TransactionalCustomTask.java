@@ -25,6 +25,9 @@
 package myorg.domain.scheduler;
 
 import jvstm.TransactionalCommand;
+
+import org.apache.log4j.Logger;
+
 import pt.ist.fenixframework.pstm.Transaction;
 
 /**
@@ -34,14 +37,19 @@ import pt.ist.fenixframework.pstm.Transaction;
  */
 public abstract class TransactionalCustomTask extends CustomTask implements TransactionalCommand {
 
+    private final Logger logger = Logger.getLogger(TransactionalCustomTask.class.getName());
+
     protected abstract boolean readOnly();
 
     @Override
     public void run() {
+
+	logger.info("Task " + this.getClass().getSimpleName() + " started");
 	try {
 	    Transaction.withTransaction(readOnly(), this);
 	} finally {
 	    Transaction.forceFinish();
+	    logger.info("Task " + this.getClass().getSimpleName() + " finished");
 	}
     }
 
