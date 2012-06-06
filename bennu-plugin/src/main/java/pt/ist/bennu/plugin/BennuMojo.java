@@ -5,15 +5,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.jasper.JasperException;
-import org.apache.jasper.JspC;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -62,6 +55,8 @@ public class BennuMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
+        if(mavenProject.getArtifact().getType().equals("pom"))
+            return;
 	try {
 	    String template = FileUtils.readFileToString(webFragment);
 	    int start = template.indexOf(TEMPLATE_START);
