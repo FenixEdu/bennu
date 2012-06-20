@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<%@page import="myorg._development.PropertiesManager"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -17,7 +18,7 @@
 	</logic:iterate>
 </head>
 
-<body class="top">
+<body class="<%= PropertiesManager.getProperty("dev.mode") != null && PropertiesManager.getProperty("dev.mode").equalsIgnoreCase("on") ? "top_dev" : "top"%>">
 
 <div id="container">
 
