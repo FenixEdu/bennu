@@ -9,9 +9,10 @@
 	<logic:notEmpty name="virtualHost" property="htmlTitle">
 		<bean:write name="virtualHost" property="htmlTitle"/>
 	</logic:notEmpty>
-	<logic:empty name="virtualHost" property="htmlTitle">
-		<bean:write name="virtualHost" property="applicationTitle"/>
-	</logic:empty>
+	<bean:write name="virtualHost" property="applicationTitle.content"/>
+	<logic:present name="virtualHost" property="applicationSubTitle">
+	 - <bean:write name="virtualHost" property="applicationSubTitle.content"/>
+	</logic:present>
 </title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
