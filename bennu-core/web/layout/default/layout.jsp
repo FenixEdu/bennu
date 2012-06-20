@@ -18,7 +18,7 @@
 	</logic:iterate>
 </head>
 
-<body class="<%= PropertiesManager.getProperty("dev.mode") != null && PropertiesManager.getProperty("dev.mode").equalsIgnoreCase("on") ? "top_dev" : "top"%>">
+<body class="<%= PropertiesManager.getProperty("development.mode") != null && PropertiesManager.getProperty("development.mode").equalsIgnoreCase("true") ? "top_dev" : "top"%>">
 
 <div id="container">
 

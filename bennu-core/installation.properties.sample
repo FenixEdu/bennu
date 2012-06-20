@@ -4,9 +4,9 @@
 #   configuration.properties file included in the deploy.                      #
 ################################################################################
 
-#if dev.mode property equals "on" or "ON" a hint is given to the theme to render things differently to show that we are in dev mode
+#if development.mode property equals "true" a hint is given to the theme to render things differently to show that we are in dev mode
 #if it is not defined or it is off, things will render normally
-dev.mode=on
+development.mode=true
 db.alias=//localhost:3306/myorg?useUnicode=true&amp;characterEncoding=UTF-8&amp;clobCharacterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull
 db.user=root
 db.pass=
