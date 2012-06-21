@@ -27,7 +27,6 @@ public abstract class Task extends Task_Base {
 	    if (hasNextTask()) {
 		getNextTask().queue(task);
 	    } else {
-		System.out.println("Scheduler: queueing task: " + task.getClass().getName());
 		setNextTask(task);
 	    }
 	}
@@ -43,7 +42,6 @@ public abstract class Task extends Task_Base {
     }
 
     public void runPendingTask() {
-	System.out.println("Scheduler: running task: " + getClass().getName());
 	final TaskThread taskThread = new TaskThread();
 	taskThread.start();
 	try {

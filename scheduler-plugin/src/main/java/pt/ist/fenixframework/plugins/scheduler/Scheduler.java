@@ -27,14 +27,12 @@ public class Scheduler extends TimerTask {
 
     public Scheduler() {
 	final DateTime dt = new DateTime().withMillisOfSecond(0).withSecondOfMinute(0).plusMinutes(1);
-	System.out.println("Scheduler: scheduler will run at: " + dt.toString("yyyy-MM-dd HH:mm:ss"));
 	timer.scheduleAtFixedRate(this, dt.toDate(), SCHEDULER_INVOCATION_PERIOD);
     }
 
     @Override
     public void run() {
 	try {
-	    System.out.println("Scheduler: running scheduler.");
 	    try {
 		Transaction.withTransaction(false, new TransactionalCommand() {
 		    @Override
@@ -48,8 +46,6 @@ public class Scheduler extends TimerTask {
 	    runPendingTask();
 	} catch (final Throwable t) {
 	    t.printStackTrace();
-	} finally {
-	    System.out.println("Scheduler: completed running scheduler.");
 	}
     }
 
@@ -85,7 +81,6 @@ public class Scheduler extends TimerTask {
 	    try {
 		statement = connection.createStatement();
 		resultSet = statement.executeQuery("SELECT GET_LOCK('" + lockVariable + "', 10)");
-		System.out.println("Scheduler: got scheduler lock.");
 		if (resultSet.next() && (resultSet.getInt(1) == 1)) {
 		    SchedulerSystem.runPendingTask();
 		}
@@ -119,7 +114,6 @@ public class Scheduler extends TimerTask {
 		    e.printStackTrace();
 		}
 	    }
-	    System.out.println("Scheduler: releasing scheduler lock.");
 	}
     }
 
