@@ -107,43 +107,13 @@ public class BennuMojo extends AbstractMojo {
 	} catch (IOException e) {
 	    throw new MojoExecutionException(null, e);
 	}
-
-	File embedded = new File(mavenProject.getBasedir(), ".embeddedAnnotationLog");
-	if (embedded.exists()) {
-	    embedded.renameTo(new File(mavenProject.getBasedir().getAbsolutePath() + File.separatorChar
-		    + mavenProject.getArtifactId() + File.separatorChar + ".embeddedAnnotationLog"));
-	}
-
-	File createNode = new File(mavenProject.getBasedir(), ".createNodeActionAnnotationLog");
-	if (createNode.exists()) {
-	    createNode.renameTo(new File(mavenProject.getBasedir().getAbsolutePath() + File.separatorChar
-		    + mavenProject.getArtifactId() + File.separatorChar + ".createNodeActionAnnotationLog"));
-	}
-
-	File functionalities = new File(mavenProject.getBasedir(), ".functionalitiesMappingLog");
-	if (functionalities.exists()) {
-	    functionalities.renameTo(new File(mavenProject.getBasedir().getAbsolutePath() + File.separatorChar
-		    + mavenProject.getArtifactId() + File.separatorChar + ".functionalitiesMappingLog"));
-	}
-
-	File rest = new File(mavenProject.getBasedir(), ".restAnnotationLog");
-	if (rest.exists()) {
-	    rest.renameTo(new File(mavenProject.getBasedir().getAbsolutePath() + File.separatorChar
-		    + mavenProject.getArtifactId() + File.separatorChar + ".restAnnotationLog"));
-	}
-
-	File actionAnnotations = new File(mavenProject.getBasedir(), ".actionAnnotationLog");
-	if (actionAnnotations.exists()) {
-	    actionAnnotations.renameTo(new File(mavenProject.getBasedir().getAbsolutePath() + File.separatorChar
-		    + mavenProject.getArtifactId() + File.separatorChar + ".actionAnnotationLog"));
-	}
     }
 
     public String getModuleDependenciesAsStrings(int indentation) throws MojoExecutionException {
 	StringBuilder stringBuilder = new StringBuilder();
 	String indentSpace = StringUtils.repeat(" ", indentation - 1);
 	for (Artifact artifact : mavenProject.getArtifacts()) {
-	    if (isBennuModule(artifact)) {
+	    if (isWebModule(artifact)) {
 		stringBuilder.append(indentSpace);
 		stringBuilder.append(OPEN_NAME_TAG);
 		stringBuilder.append(artifact.getArtifactId());
@@ -155,12 +125,11 @@ public class BennuMojo extends AbstractMojo {
 	return stringBuilder.toString();
     }
 
-    public boolean isBennuModule(Artifact artifact) throws MojoExecutionException {
+    public boolean isWebModule(Artifact artifact) throws MojoExecutionException {
 	if (artifact.getType().equals("pom")) {
 	    return false;
 	}
-	try {
-	    JarFile artifactJar = new JarFile(artifact.getFile());
+	try (JarFile artifactJar = new JarFile(artifact.getFile())) {
 	    JarEntry webFragmentFile = artifactJar.getJarEntry("META-INF/web-fragment.xml");
 	    return webFragmentFile != null;
 	} catch (IOException ex) {
