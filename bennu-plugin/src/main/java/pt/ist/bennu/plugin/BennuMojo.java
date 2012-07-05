@@ -43,14 +43,6 @@ public class BennuMojo extends AbstractMojo {
     private MavenProject mavenProject;
 
     /**
-     * Webapp Directory
-     * 
-     * @parameter expression="${webappDirectory}"
-     *            default-value="${basedir}/src/main/webapp"
-     */
-    private File webappDirectory;
-
-    /**
      * web-fragment.xml file
      * 
      * @parameter expression="${webFragment}"
@@ -63,23 +55,28 @@ public class BennuMojo extends AbstractMojo {
 	if (mavenProject.getArtifact().getType().equals("pom"))
 	    return;
 	try {
-	    String template = FileUtils.readFileToString(webFragment);
-	    int start = template.indexOf(TEMPLATE_START);
-	    int numSpaces = getIndentation(template, start);
-	    if (start != -1) {
-		int end = template.indexOf(TEMPLATE_END, start);
-		if (end != -1) {
-		    PrintWriter printWriter = new PrintWriter(webFragment);
-		    printWriter.append(template.substring(0, start + TEMPLATE_START.length()));
-		    printWriter.append(NEW_LINE_CHAR);
-		    printWriter.append(getModuleDependenciesAsStrings(numSpaces));
-		    printWriter.append(template.substring(end));
-		    printWriter.close();
+	    if (webFragment.exists()) {
+		String template = FileUtils.readFileToString(webFragment);
+		int start = template.indexOf(TEMPLATE_START);
+		int numSpaces = getIndentation(template, start);
+		if (start != -1) {
+		    int end = template.indexOf(TEMPLATE_END, start);
+		    if (end != -1) {
+			try (PrintWriter printWriter = new PrintWriter(webFragment)) {
+			    printWriter.append(template.substring(0, start + TEMPLATE_START.length()));
+			    printWriter.append(NEW_LINE_CHAR);
+			    printWriter.append(getModuleDependenciesAsStrings(numSpaces));
+			    printWriter.append(template.substring(end));
+			}
+		    } else {
+			throw new MojoExecutionException("Missing template end comment: " + TEMPLATE_END);
+		    }
 		} else {
-		    throw new MojoExecutionException("Missing template end comment: " + TEMPLATE_END);
+		    throw new MojoExecutionException("Missing template start comment: " + TEMPLATE_START);
 		}
 	    } else {
-		throw new MojoExecutionException("Missing template start comment: " + TEMPLATE_START);
+		throw new MojoExecutionException("File: " + webFragment.getAbsolutePath()
+			+ " not found. No depency injection could be made");
 	    }
 	} catch (IOException e) {
 	    throw new MojoExecutionException(null, e);
