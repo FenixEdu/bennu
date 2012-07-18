@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
+    <packaging>jar</packaging>
+
+    <name>${projectName}</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+    <organization>
+        <name>Instituto Superior Técnico</name>
+        <url>www.ist.utl.pt</url>
+    </organization>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>dml</groupId>
+                <artifactId>dml-maven-plugin</artifactId>
+                <version>2.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-domain</goal>
+                            <goal>post-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>pt.ist</groupId>
+                <artifactId>bennu-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>update-web-fragment</goal>
+                            <goal>post-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+						<manifestEntries>
+							<Implementation-Title>${project.name}</Implementation-Title>
+							<Implementation-Version>${project.version}</Implementation-Version>
+							<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>${project.artifactId}</artifactId>
+						</manifestEntries>
+					</archive>
+					<excludes>
+						<exclude>**/*_Base*</exclude>
+						<exclude>**/pt/ist/fenixframework/ValueTypeSerializationGenerator*</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+            <version>7.0.28</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>bennu-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-maven-repository</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-maven-repository</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <distributionManagement>
+#if($privateProject == "true" || $privateProject == "yes" || $privateProject == "y" || $privateProject == "Y" || $privateProject == "TRUE")
+        <repository>
+            <id>fenix-ashes-releases</id>
+            <url>https://fenix-ashes.ist.utl.pt/maven-private</url>
+        </repository>
+        <snapshotRepository>
+            <id>fenix-ashes-snapshots</id>
+            <url>https://fenix-ashes.ist.utl.pt/maven-private</url>
+        </snapshotRepository>
+#else
+        <repository>
+            <id>fenix-ashes-releases</id>
+            <url>https://fenix-ashes.ist.utl.pt/maven-public</url>
+        </repository>
+        <snapshotRepository>
+            <id>fenix-ashes-snapshots</id>
+            <url>https://fenix-ashes.ist.utl.pt/maven-public</url>
+        </snapshotRepository>
+#end
+    </distributionManagement>
+</project>
