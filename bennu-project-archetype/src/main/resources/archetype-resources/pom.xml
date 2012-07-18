@@ -127,50 +127,50 @@
 #if($privateProject == "true" || $privateProject == "t" || $privateProject == "yes" || $privateProject == "YES" || $privateProject == "y" || $privateProject == "Y" || $privateProject == "TRUE")
     <repositories>
         <repository>
-            <id>fenix-ashes-maven-repository</id>
-            <url>https://fenix-ashes.ist.utl.pt/maven-private</url>
+			<id>fenix-ashes-private</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-private</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>fenix-ashes-maven-repository</id>
-            <url>https://fenix-ashes.ist.utl.pt/maven-private</url>
+			<id>fenix-ashes-private</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-private</url>
         </pluginRepository>
     </pluginRepositories>
 #else
     <repositories>
-        <repository>
-            <id>fenix-ashes-maven-repository</id>
-            <url>https://fenix-ashes.ist.utl.pt/maven-public</url>
-        </repository>
+		<repository>
+			<id>fenix-ashes-maven-repository</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+		</repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>fenix-ashes-maven-repository</id>
-            <url>https://fenix-ashes.ist.utl.pt/maven-public</url>
+			<id>fenix-ashes-maven-repository</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
         </pluginRepository>
     </pluginRepositories>
 #end
 
     <distributionManagement>
 #if($privateProject == "true" || $privateProject == "t" || $privateProject == "yes" || $privateProject == "YES" || $privateProject == "y" || $privateProject == "Y" || $privateProject == "TRUE")
-        <repository>
-            <id>fenix-ashes-releases</id>
-            <url>https://fenix-ashes.ist.utl.pt/maven-private</url>
-        </repository>
-        <snapshotRepository>
-            <id>fenix-ashes-snapshots</id>
-            <url>https://fenix-ashes.ist.utl.pt/maven-private</url>
-        </snapshotRepository>
+		<repository>
+			<id>fenix-core-releases</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-core-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>fenix-core-snapshots</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-core-snapshots</url>
+		</snapshotRepository>
 #else
-        <repository>
-            <id>fenix-ashes-releases</id>
-            <url>https://fenix-ashes.ist.utl.pt/maven-public</url>
-        </repository>
-        <snapshotRepository>
-            <id>fenix-ashes-snapshots</id>
-            <url>https://fenix-ashes.ist.utl.pt/maven-public</url>
-        </snapshotRepository>
+		<repository>
+			<id>fenix-ashes-releases</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>fenix-ashes-snapshots</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-snapshots</url>
+		</snapshotRepository>
 #end
     </distributionManagement>
 </project>

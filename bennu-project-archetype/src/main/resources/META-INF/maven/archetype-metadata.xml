@@ -5,6 +5,9 @@
   <requiredProperties>
     <requiredProperty key="privateProject"/>
     <requiredProperty key="projectName"/>
+    <requiredProperty key="package">
+    <defaultValue>${groupId}.${artifactId}</defaultValue>
+    </requiredProperty>
   </requiredProperties>
   <fileSets>
     <fileSet filtered="true" packaged="true" encoding="UTF-8">
