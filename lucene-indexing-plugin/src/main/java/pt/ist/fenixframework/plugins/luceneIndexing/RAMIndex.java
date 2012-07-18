@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.DomainIndexFile;
-import pt.ist.fenixframework.util.ByteArray;
+import pt.utl.ist.fenix.tools.util.ByteArray;
 
 public class RAMIndex implements IndexFile {
 

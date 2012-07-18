@@ -5,7 +5,7 @@ import java.util.List;
 
 import pt.ist.fenixframework.plugins.luceneIndexing.IndexFile;
 import pt.ist.fenixframework.plugins.luceneIndexing.RAMIndex;
-import pt.ist.fenixframework.util.ByteArray;
+import pt.utl.ist.fenix.tools.util.ByteArray;
 
 public class DomainIndexFile extends DomainIndexFile_Base implements IndexFile {
 
