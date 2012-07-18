@@ -1,8 +1,0 @@
-class pt.ist.emailNotifier.domain.EmailDispatcher extends myorg.domain.scheduler.Task {
-}
-
-relation MyOrgEmailNotifier {
-	myorg.domain.MyOrg playsRole myOrg;
-	pt.ist.emailNotifier.domain.EmailNotifier playsRole emailNotifier;
-}
-

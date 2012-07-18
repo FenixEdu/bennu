@@ -1,6 +1,6 @@
 package pt.ist.emailNotifier.domain;
 
-import myorg.domain.MyOrg;
+import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.fenixWebFramework.services.Service;
 
 public class EmailNotifier extends EmailNotifier_Base {

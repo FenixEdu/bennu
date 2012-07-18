@@ -1,2 +1,0 @@
-name=email-module
-depends=core, scheduler
