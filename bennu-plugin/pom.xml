@@ -38,11 +38,6 @@
             <artifactId>commons-io</artifactId>
             <version>1.4</version>
         </dependency>
-        <dependency>
-            <groupId>pt.ist</groupId>
-            <artifactId>fenix-web-framework</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <repositories>

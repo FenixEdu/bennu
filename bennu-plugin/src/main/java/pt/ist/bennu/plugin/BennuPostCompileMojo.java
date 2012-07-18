@@ -1,6 +1,9 @@
 package pt.ist.bennu.plugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -11,8 +14,6 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-
-import pt.ist.fenixWebFramework.services.ServiceAnnotationInjector;
 
 /**
  * Post process compiled classes
@@ -41,8 +42,18 @@ public class BennuPostCompileMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
-	URLClassLoader loader = augmentClassLoader(getLog(), mavenProject);
-	ServiceAnnotationInjector.inject(classesDirectory, loader);
+	try (URLClassLoader loader = augmentClassLoader(getLog(), mavenProject)) {
+	    Class<?> serviceInjector = loader.loadClass("pt.ist.fenixWebFramework.services.ServiceAnnotationInjector");
+	    Method injector = serviceInjector.getMethod("inject", new Class<?>[] { File.class, ClassLoader.class });
+	    injector.invoke(null, classesDirectory, loader);
+	} catch (ClassNotFoundException e) {
+	    getLog().info("No @Service injector found in classpath, not processing.");
+	} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+		| InvocationTargetException e) {
+	    throw new MojoExecutionException(null, e);
+	} catch (IOException e) {
+	    throw new MojoExecutionException(null, e);
+	}
 
 	// TODO: checked
 	// CheckedAnnotationInjector.inject(classesDirectory, loader);
