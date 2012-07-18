@@ -4,10 +4,17 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+
+import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.FenixFrameworkPlugin;
 import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
 
-public class SchedulerPlugin implements FenixFrameworkPlugin {
+@WebListener
+public class SchedulerPlugin implements FenixFrameworkPlugin, ServletContextListener {
+    private static boolean initialized = false;
 
     @Override
     public List<URL> getDomainModel() {
@@ -15,8 +22,20 @@ public class SchedulerPlugin implements FenixFrameworkPlugin {
     }
 
     @Override
+    @Service
     public void initialize() {
-	SchedulerSystem.getInstance();
+	if (!initialized) {
+	    SchedulerSystem.getInstance();
+	    initialized = true;
+	}
     }
 
+    @Override
+    public void contextInitialized(ServletContextEvent event) {
+	initialize();
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent event) {
+    }
 }

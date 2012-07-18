@@ -10,9 +10,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<dml.maven.plugin.version>1.0-SNAPSHOT</dml.maven.plugin.version>
-		<fenix.framework.core.version>1.0-SNAPSHOT</fenix.framework.core.version>
 	</properties>
 
 	<build>
@@ -20,7 +17,7 @@
 			<plugin>
 				<groupId>dml</groupId>
 				<artifactId>dml-maven-plugin</artifactId>
-				<version>${dml.maven.plugin.version}</version>
+				<version>1.0-SNAPSHOT</version>
 				<executions>
 					<execution>
 						<goals>
@@ -30,30 +27,71 @@
 					</execution>
 				</executions>
 			</plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-jar-plugin</artifactId>
-                            <version>2.4</version>
-                            <configuration>
-                                <excludes>
-                                    <exclude>**/*_Base*</exclude>
-                                    <exclude>pt/ist/fenixframework/ValueTypeSerializationGenerator*</exclude>
-                                </excludes>
-                            </configuration>
-                        </plugin>
+			<plugin>
+				<groupId>pt.ist</groupId>
+				<artifactId>bennu-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>update-web-fragment</goal>
+							<goal>post-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+						<manifestEntries>
+							<Implementation-Title>${project.name}</Implementation-Title>
+							<Implementation-Version>${project.version}</Implementation-Version>
+							<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>${project.artifactId}</artifactId>
+						</manifestEntries>
+					</archive>
+					<excludes>
+						<exclude>**/*_Base*</exclude>
+						<exclude>**/pt/ist/fenixframework/ValueTypeSerializationGenerator*</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
 		<dependency>
+			<groupId>pt.ist</groupId>
+			<artifactId>bennu-core</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-servlet-api</artifactId>
+			<version>7.0.28</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>1.5.2</version>
-		</dependency>
-		<dependency>
-			<groupId>pt.ist</groupId>
-			<artifactId>fenix-framework-core</artifactId>
-			<version>${fenix.framework.core.version}</version>
 		</dependency>
 	</dependencies>
 
