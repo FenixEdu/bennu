@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
     <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
@@ -20,6 +21,33 @@
 
     <build>
         <plugins>
+            <plugin>
+      			<artifactId>maven-source-plugin</artifactId>
+      			<version>2.1.2</version>
+      			<executions>
+        			<execution>
+          				<id>attach-sources</id>
+          				<phase>deploy</phase>
+          				<goals>
+          					<goal>jar-no-fork</goal>
+          				</goals> 
+        			</execution>
+      			</executions>
+    		</plugin>
+    		<plugin> 
+      			<!-- explicitly define maven-deploy-plugin after other to force exec order -->
+      			<artifactId>maven-deploy-plugin</artifactId>
+      			<version>2.7</version>
+      			<executions> 
+        			<execution> 
+          				<id>deploy</id>
+         				<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals> 
+					</execution> 
+        		</executions> 
+			</plugin>
             <plugin>
                 <groupId>dml</groupId>
                 <artifactId>dml-maven-plugin</artifactId>
