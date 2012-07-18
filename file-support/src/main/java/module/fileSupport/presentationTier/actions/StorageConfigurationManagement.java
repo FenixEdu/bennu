@@ -27,7 +27,7 @@ package module.fileSupport.presentationTier.actions;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import myorg.presentationTier.actions.ContextBaseAction;
+import pt.ist.bennu.core.presentationTier.actions.ContextBaseAction;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;

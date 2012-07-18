@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import module.fileSupport.dto.DBStorageDTO;
 import module.fileSupport.dto.DomainStorageDTO;
 import module.fileSupport.dto.LocalFileSystemStorageDTO;
-import myorg.presentationTier.actions.ContextBaseAction;
+import pt.ist.bennu.core.presentationTier.actions.ContextBaseAction;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;

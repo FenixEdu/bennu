@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
-<%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr"%>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="http://fenix-ashes.ist.utl.pt/fenix-renderers" prefix="fr"%>
 
 <h2><bean:message key="title.storageConfigurationManagement" bundle="FILE_SUPPORT_RESOURCES"/></h2>
 

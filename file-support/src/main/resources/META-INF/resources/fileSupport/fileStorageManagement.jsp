@@ -1,10 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
-<%@ taglib uri="/WEB-INF/fenix-renderers.tld" prefix="fr"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="http://fenix-ashes.ist.utl.pt/fenix-renderers" prefix="fr"%>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
 
-<%@page import="myorg.presentationTier.servlets.filters.contentRewrite.ContentContextInjectionRewriter"%>
+<%@page import="pt.ist.bennu.core.presentationTier.servlets.filters.contentRewrite.ContentContextInjectionRewriter"%>
 <%@page import="pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter"%>
 
 <h2><bean:message key="title.fileStorageManagement" bundle="FILE_SUPPORT_RESOURCES"/></h2>

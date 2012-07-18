@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schemas SYSTEM "../fenix-renderers-schemas.dtd" []>
+<schemas>
 <schema name="createDomainStorage" type="module.fileSupport.dto.DomainStorageDTO" bundle="FILE_SUPPORT_RESOURCES">
 	<slot name="name" key="label.domainStorage.name" required="true" />
 </schema>
@@ -43,4 +46,4 @@
 		<property name="providerClass" value="module.fileSupport.presentationTier.renderers.providers.FileStorageProvider"/>
 		<property name="format" value="${name}"/>
 	</slot>
-</schema>
+</schema></schemas>
