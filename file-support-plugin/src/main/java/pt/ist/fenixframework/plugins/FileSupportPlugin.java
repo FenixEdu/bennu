@@ -4,11 +4,18 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+
+import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixframework.FenixFrameworkPlugin;
 import pt.ist.fenixframework.plugins.fileSupport.FileDeleterThread;
 import pt.ist.fenixframework.plugins.fileSupport.domain.FileSupport;
 
-public class FileSupportPlugin implements FenixFrameworkPlugin {
+@WebListener
+public class FileSupportPlugin implements FenixFrameworkPlugin, ServletContextListener {
+    private static boolean initialized = false;
 
     @Override
     public List<URL> getDomainModel() {
@@ -17,9 +24,22 @@ public class FileSupportPlugin implements FenixFrameworkPlugin {
     }
 
     @Override
+    @Service
     public void initialize() {
-	FileSupport.getInstance();
-	Thread thread = new Thread(new FileDeleterThread());
-	thread.start();
+	if (!initialized) {
+	    FileSupport.getInstance();
+	    Thread thread = new Thread(new FileDeleterThread());
+	    thread.start();
+	    initialized = true;
+	}
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent event) {
+	initialize();
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent event) {
     }
 }

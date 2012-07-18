@@ -1,6 +1,6 @@
 package pt.ist.fenixframework.plugins.fileSupport.domain;
 
-import pt.ist.fenixframework.util.ByteArray;
+import pt.utl.ist.fenix.tools.util.ByteArray;
 
 /**
  * 
