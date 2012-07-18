@@ -1,2 +1,0 @@
-name=lucene
-depends=core, scheduler

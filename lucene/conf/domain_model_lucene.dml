@@ -1,3 +1,0 @@
-package module.lucene.domain;
-
-class IndexingTask extends .myorg.domain.scheduler.Task;
