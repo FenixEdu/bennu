@@ -96,22 +96,36 @@
         </dependency>
     </dependencies>
 
+#if($privateProject == "true" || $privateProject == "t" || $privateProject == "yes" || $privateProject == "YES" || $privateProject == "y" || $privateProject == "Y" || $privateProject == "TRUE")
     <repositories>
         <repository>
             <id>fenix-ashes-maven-repository</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-maven-repository</url>
+            <url>https://fenix-ashes.ist.utl.pt/maven-private</url>
         </repository>
     </repositories>
-
     <pluginRepositories>
         <pluginRepository>
             <id>fenix-ashes-maven-repository</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-maven-repository</url>
+            <url>https://fenix-ashes.ist.utl.pt/maven-private</url>
         </pluginRepository>
     </pluginRepositories>
+#else
+    <repositories>
+        <repository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/maven-public</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/maven-public</url>
+        </pluginRepository>
+    </pluginRepositories>
+#end
 
     <distributionManagement>
-#if($privateProject == "true" || $privateProject == "yes" || $privateProject == "y" || $privateProject == "Y" || $privateProject == "TRUE")
+#if($privateProject == "true" || $privateProject == "t" || $privateProject == "yes" || $privateProject == "YES" || $privateProject == "y" || $privateProject == "Y" || $privateProject == "TRUE")
         <repository>
             <id>fenix-ashes-releases</id>
             <url>https://fenix-ashes.ist.utl.pt/maven-private</url>
