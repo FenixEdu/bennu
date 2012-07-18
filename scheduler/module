@@ -1,2 +1,0 @@
-name=scheduler
-depends=core,fileSupport
