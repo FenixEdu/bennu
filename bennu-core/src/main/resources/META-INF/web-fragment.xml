@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+    version="3.0">
+    <name>bennu-core</name>
+
+    <ordering>
+        <after>
+            <!-- [START OF BENNU GENERATED FRAGMENT] -->
+            <name>fenix-web-framework</name>
+            <!-- [END OF BENNU GENERATED FRAGMENT] -->
+        </after>
+        <before>
+            <others />
+        </before>
+    </ordering>
+
+    <locale-encoding-mapping-list>
+        <locale-encoding-mapping>
+            <locale>pt</locale>
+            <encoding>UTF-8</encoding>
+        </locale-encoding-mapping>
+    </locale-encoding-mapping-list>
+
+    <filter>
+        <filter-name>MultipartFilter</filter-name>
+        <filter-class>org.apache.myfaces.component.html.util.MultipartFilter</filter-class>
+        <init-param>
+            <param-name>uploadMaxFileSize</param-name>
+            <param-value>10m</param-value>
+        </init-param>
+        <init-param>
+            <param-name>uploadThresholdSize</param-name>
+            <param-value>1m</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>CharsetEncoding</filter-name>
+        <filter-class>pt.ist.fenixWebFramework.servlets.filters.CharsetEncodingFilter</filter-class>
+        <init-param>
+            <param-name>defaultCharset</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>CloseTxFilter</filter-name>
+        <filter-class>pt.ist.fenixWebFramework.servlets.filters.CloseTransactionFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CloseExternalTxFilter</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.CloseExternalTransactionFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CasAuthenticationFilter</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.CasAuthenticationFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>SetVirtualHostFilter</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.SetVirtualHostFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>SetUserViewFilter</filter-name>
+        <filter-class>pt.ist.fenixWebFramework.servlets.filters.SetUserViewFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>indexFilter</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.MyOrgRequestWrapperFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>ProfilingFilter</filter-name>
+        <filter-class>pt.ist.fenixWebFramework.servlets.filters.ProfilingFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>I18NFilter</filter-name>
+        <filter-class>pt.ist.fenixWebFramework.servlets.filters.I18NFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>ExceptionHandlerFilter</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.ExceptionHandlerFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>PathAccessControlFilter</filter-name>
+        <filter-class>pt.ist.fenixWebFramework.servlets.filters.PathAccessControlFilter</filter-class>
+        <init-param>
+            <param-name>use-request-path</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>RequestChecksumFilter</filter-name>
+        <filter-class>pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>RequestRewriteFilter</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.RequestRewriterFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>ViewStateChangedExceptionCatcher</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.ViewStateChangedExceptionCatcher</filter-class>
+    </filter>
+    <filter>
+        <filter-name>FunctionalityFilter</filter-name>
+        <filter-class>pt.ist.bennu.core.presentationTier.servlets.filters.FunctionalityFilter</filter-class>
+    </filter>
+
+    <!-- Filter Mapping -->
+    <filter-mapping>
+        <filter-name>CharsetEncoding</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>PathAccessControlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>MultipartFilter</filter-name>
+        <url-pattern>*.faces</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CloseTxFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CloseExternalTxFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SetVirtualHostFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CasAuthenticationFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ExceptionHandlerFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SetUserViewFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ExceptionHandlerFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ViewStateChangedExceptionCatcher</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>I18NFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>indexFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ProfilingFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ProfilingFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>RequestChecksumFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>RequestRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>FunctionalityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Listeners -->
+    <servlet>
+        <servlet-name>action</servlet-name>
+        <servlet-class>pt.ist.bennu.core.presentationTier.servlets.ActionServletWrapper</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>AutoCompleteServlet</servlet-name>
+        <servlet-class>pt.ist.bennu.core.presentationTier.servlets.ajax.MyorgAutoCompleteServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AutoCompleteServlet</servlet-name>
+        <url-pattern>/ajax/AutoCompleteServlet</url-pattern>
+    </servlet-mapping>
+
+
+    <context-param>
+        <param-name>org.restlet.application</param-name>
+        <param-value>pt.ist.bennu.core.presentationTier.rest.MyOrgRestApplication</param-value>
+    </context-param>
+
+    <!-- Restlet adapter -->
+    <servlet>
+        <servlet-name>RestletServlet</servlet-name>
+        <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
+    </servlet>
+
+    <!-- Catch all requests -->
+    <servlet-mapping>
+        <servlet-name>RestletServlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>120</session-timeout>
+    </session-config>
+
+</web-fragment>
