@@ -1,5 +1,6 @@
 package ${package}.presentationTier.servlets;
 
+import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
@@ -7,7 +8,7 @@ import javax.servlet.annotation.WebListener;
 public class ${projectName}Initializer implements ServletContextListener {
 
 	@Override
-	public void contextDestroyed(ServletContextEvent event) {
+	public void contextInitialized(ServletContextEvent event) {
 		
 	}
 	
