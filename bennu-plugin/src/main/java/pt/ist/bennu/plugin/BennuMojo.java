@@ -75,8 +75,7 @@ public class BennuMojo extends AbstractMojo {
 		    throw new MojoExecutionException("Missing template start comment: " + TEMPLATE_START);
 		}
 	    } else {
-		throw new MojoExecutionException("File: " + webFragment.getAbsolutePath()
-			+ " not found. No depency injection could be made");
+		getLog().info("File: " + webFragment.getAbsolutePath() + " not found. No depency injection could be made");
 	    }
 	} catch (IOException e) {
 	    throw new MojoExecutionException(null, e);
