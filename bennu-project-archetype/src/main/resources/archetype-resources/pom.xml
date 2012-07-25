@@ -3,86 +3,109 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>${groupId}</groupId>
-    <artifactId>${artifactId}</artifactId>
-    <version>${version}</version>
-    <packaging>jar</packaging>
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<version>${version}</version>
+	<packaging>jar</packaging>
 
-    <name>${projectName}</name>
+	<name>${projectName}</name>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-    <organization>
-        <name>Instituto Superior Técnico</name>
-        <url>www.ist.utl.pt</url>
-    </organization>
+	<organization>
+		<name>Instituto Superior Técnico</name>
+		<url>www.ist.utl.pt</url>
+	</organization>
 
-    <build>
-        <plugins>
-            <plugin>
-      			<artifactId>maven-source-plugin</artifactId>
-      			<version>2.1.2</version>
-      			<executions>
-        			<execution>
-          				<id>attach-sources</id>
-          				<phase>deploy</phase>
-          				<goals>
-          					<goal>jar-no-fork</goal>
-          				</goals> 
-        			</execution>
-      			</executions>
-    		</plugin>
-    		<plugin> 
-      			<!-- explicitly define maven-deploy-plugin after other to force exec order -->
-      			<artifactId>maven-deploy-plugin</artifactId>
-      			<version>2.7</version>
-      			<executions> 
-        			<execution> 
-          				<id>deploy</id>
-         				<phase>deploy</phase>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes/META-INF/resources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/webapp</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- explicitly define maven-deploy-plugin after other to force exec 
+					order -->
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>deploy</id>
+						<phase>deploy</phase>
 						<goals>
 							<goal>deploy</goal>
-						</goals> 
-					</execution> 
-        		</executions> 
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
-            <plugin>
-                <groupId>dml</groupId>
-                <artifactId>dml-maven-plugin</artifactId>
-                <version>2.0-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate-domain</goal>
-                            <goal>post-compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>pt.ist</groupId>
-                <artifactId>bennu-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>update-web-fragment</goal>
-                            <goal>post-compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
+			<plugin>
+				<groupId>dml</groupId>
+				<artifactId>dml-maven-plugin</artifactId>
+				<version>2.0-SNAPSHOT</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate-domain</goal>
+							<goal>post-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>pt.ist</groupId>
+				<artifactId>bennu-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>update-web-fragment</goal>
+							<goal>post-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -110,50 +133,55 @@
 		</plugins>
 	</build>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-servlet-api</artifactId>
-            <version>7.0.28</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>pt.ist</groupId>
-            <artifactId>bennu-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-servlet-api</artifactId>
+			<version>7.0.28</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>pt.ist</groupId>
+			<artifactId>bennu-core</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 
-#if($privateProject == "true" || $privateProject == "t" || $privateProject == "yes" || $privateProject == "YES" || $privateProject == "y" || $privateProject == "Y" || $privateProject == "TRUE")
-    <repositories>
-        <repository>
+	#if($privateProject == "true" || $privateProject == "t" ||
+	$privateProject == "yes" || $privateProject == "YES" || $privateProject
+	== "y" || $privateProject == "Y" || $privateProject == "TRUE")
+	<repositories>
+		<repository>
 			<id>fenix-ashes-private</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-private</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
 			<id>fenix-ashes-private</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-private</url>
-        </pluginRepository>
-    </pluginRepositories>
-#else
-    <repositories>
+		</pluginRepository>
+	</pluginRepositories>
+	#else
+	<repositories>
 		<repository>
 			<id>fenix-ashes-maven-repository</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
 		</repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
 			<id>fenix-ashes-maven-repository</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
-        </pluginRepository>
-    </pluginRepositories>
-#end
+		</pluginRepository>
+	</pluginRepositories>
+	#end
 
-    <distributionManagement>
-#if($privateProject == "true" || $privateProject == "t" || $privateProject == "yes" || $privateProject == "YES" || $privateProject == "y" || $privateProject == "Y" || $privateProject == "TRUE")
+	<distributionManagement>
+		#if($privateProject == "true" || $privateProject == "t" ||
+		$privateProject == "yes" || $privateProject == "YES" ||
+		$privateProject == "y" || $privateProject == "Y" || $privateProject ==
+		"TRUE")
 		<repository>
 			<id>fenix-core-releases</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-core-releases</url>
@@ -162,7 +190,7 @@
 			<id>fenix-core-snapshots</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-core-snapshots</url>
 		</snapshotRepository>
-#else
+		#else
 		<repository>
 			<id>fenix-ashes-releases</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
@@ -171,6 +199,6 @@
 			<id>fenix-ashes-snapshots</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-snapshots</url>
 		</snapshotRepository>
-#end
-    </distributionManagement>
+		#end
+	</distributionManagement>
 </project>
