@@ -17,6 +17,9 @@
       <directory>src/main/resources</directory>
     </fileSet>
     <fileSet filtered="true" encoding="UTF-8">
+      <directory>src/main/webapp</directory>
+    </fileSet>
+    <fileSet filtered="true" encoding="UTF-8">
       <directory>src/main/dml</directory>
       <includes>
         <include>**/*.dml</include>
