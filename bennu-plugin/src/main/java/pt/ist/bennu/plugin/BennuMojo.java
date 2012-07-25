@@ -54,6 +54,9 @@ public class BennuMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
 	if (mavenProject.getArtifact().getType().equals("pom"))
 	    return;
+	Resource webAppResource = new Resource();
+	webAppResource.setDirectory(mavenProject.getBasedir()+"/src/main/webapp");
+	mavenProject.addResource(webAppResource);
 	try {
 	    if (webFragment.exists()) {
 		String template = FileUtils.readFileToString(webFragment);
