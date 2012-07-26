@@ -1,0 +1,46 @@
+
+                Bennu Web Application Infrastructure
+ 
+
+  What is it? 
+  -----------
+  
+  The Bennu web application infrastructure is a base web application that 
+  allows simple development of modules that when combined produce a 
+  fully functional web application tailored to your specific needs.
+
+
+  Why?
+  ----
+
+  The objective is to reduce overhead associated with all the initial setup
+  and minimize development costs for people and organizations that require 
+  developing/maintaining multiple web applications.
+
+
+  The Latest Version
+  ------------------
+
+  Details of the latest version can be found on the fenix-ashes project web
+  site https://fenix-ashes.ist.utl.pt
+
+
+  Documentation
+  -------------
+
+  We personally feel that the best documentation of any application is its
+  source code. That being said, you can probably find some stuff on the 
+  projects web site https://fenix-ashes.ist.utl.pt
+
+
+  Licensing
+  ---------
+
+  This software is licensed under the terms you may find in the file 
+  named "LICENSE" in this directory.
+  
+
+
+  Thanks for using Bennu.
+
+                                         https://fenix-ashes.ist.utl.pt
