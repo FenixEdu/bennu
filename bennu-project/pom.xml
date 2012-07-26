@@ -22,6 +22,29 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.1.1</version>
+				<executions>
+					<execution>
+						<id>enforce-java</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>[3.0.0,)</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>[1.7.0,)</version>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.5</version>
 				<executions>
@@ -147,7 +170,7 @@
 		</dependency>
 	</dependencies>
 
-		<repositories>
+	<repositories>
 		<repository>
 			<id>fenix-ashes-maven-repository</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
@@ -159,9 +182,9 @@
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
 		</pluginRepository>
 	</pluginRepositories>
-	
+
 	<distributionManagement>
-				<repository>
+		<repository>
 			<id>fenix-ashes-releases</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
 		</repository>
@@ -169,5 +192,5 @@
 			<id>fenix-ashes-snapshots</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-snapshots</url>
 		</snapshotRepository>
-			</distributionManagement>
+	</distributionManagement>
 </project>
