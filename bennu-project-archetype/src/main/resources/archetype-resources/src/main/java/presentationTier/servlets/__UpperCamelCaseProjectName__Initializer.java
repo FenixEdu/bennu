@@ -5,7 +5,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 @WebListener
-public class ${projectName}Initializer implements ServletContextListener {
+public class ${UpperCamelCaseProjectName}Initializer implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
