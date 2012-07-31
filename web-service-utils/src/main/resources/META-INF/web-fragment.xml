@@ -9,6 +9,9 @@
             <!-- [START OF BENNU GENERATED FRAGMENT] -->
             <name>bennu-core</name>
             <name>fenix-web-framework</name>
+            <name>bennu-vaadin</name>
+            <name>lucene-indexing-plugin</name>
+            <name>file-support-plugin</name>
             <!-- [END OF BENNU GENERATED FRAGMENT] -->
         </after>
         <before>
