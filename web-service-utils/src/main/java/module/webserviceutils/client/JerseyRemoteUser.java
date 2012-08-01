@@ -1,9 +1,7 @@
-package module.organizationIst.webservices;
+package module.webserviceutils.client;
 
 import pt.ist.bennu.core.domain.User;
 
-import module.organization.domain.Person;
-import module.webserviceutils.client.JerseyClient;
 import module.webserviceutils.domain.WSURemoteSystem;
 
 public class JerseyRemoteUser {
@@ -16,8 +14,8 @@ public class JerseyRemoteUser {
 	this.client = WSURemoteSystem.getFenixJerseyClient();
     }
 
-    public Person getPerson() {
-	return user.getPerson();
+    public User getLocalUser() {
+	return user;
     }
 
     private String readRemoteMethod(String method, Object object) {
