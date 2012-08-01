@@ -2,6 +2,8 @@ package module.webserviceutils.client;
 
 import javax.ws.rs.core.MultivaluedMap;
 
+import module.webserviceutils.domain.WSURemoteHost;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.sun.jersey.api.client.Client;
@@ -9,8 +11,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-
-import module.webserviceutils.domain.WSURemoteHost;
 
 public class JerseyClient {
 
@@ -57,9 +57,13 @@ public class JerseyClient {
 	}
     }
 
-    public String get() {
+    public <T> T get(Class<T> clazz) {
 	checkForParameters();
 	return client.resource(getUri()).queryParams(params).header("__username__", host.getUsername())
-		.header("__password__", host.getPassword()).get(String.class);
+		.header("__password__", host.getPassword()).get(clazz);
+    }
+
+    public String get() {
+	return get(String.class);
     }
 }
