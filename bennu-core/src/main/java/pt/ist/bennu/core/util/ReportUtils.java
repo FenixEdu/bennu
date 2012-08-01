@@ -1,14 +1,11 @@
 package pt.ist.bennu.core.util;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.print.PrintService;
 import javax.print.attribute.PrintRequestAttributeSet;
@@ -31,39 +28,23 @@ import org.apache.commons.lang.StringUtils;
 import pt.utl.ist.fenix.tools.util.PropertiesManager;
 
 public class ReportUtils extends PropertiesManager {
-
-    static final private Map<String, JasperReport> reportsMap = new ConcurrentHashMap<String, JasperReport>();
-
-    static final private Properties properties = new Properties();
-
-    static final private String reportsPropertiesFile = "/reports.properties";
-
-    static {
+    static public boolean exportToPdfFile(String reportFileName, Map<Object, Object> parameters, ResourceBundle bundle,
+	    Collection<?> dataSource, String destination) {
 	try {
-	    loadProperties(properties, reportsPropertiesFile);
-	} catch (IOException e) {
-	    throw new RuntimeException("Unable to load properties files.", e);
-	}
-    }
-
-    static public boolean exportToPdfFile(String key, Map parameters, ResourceBundle bundle, Collection dataSource,
-	    String destination) {
-	try {
-	    final JasperPrint jasperPrint = createJasperPrint(key, parameters, bundle, dataSource);
+	    final JasperPrint jasperPrint = createJasperPrint(reportFileName, parameters, bundle, dataSource);
 	    if (jasperPrint != null) {
 		JasperExportManager.exportReportToPdfFile(jasperPrint, destination);
 		return true;
-	    } else {
-		return false;
 	    }
+	    return false;
 	} catch (JRException e) {
 	    return false;
 	}
     }
 
-    static public byte[] exportToPdfFileAsByteArray(final String key, final Map parameters, final ResourceBundle bundle,
-	    final Collection dataSource) throws JRException {
-	final JasperPrint jasperPrint = createJasperPrint(key, parameters, bundle, dataSource);
+    static public byte[] exportToPdfFileAsByteArray(final String reportFileName, final Map<Object, Object> parameters,
+	    final ResourceBundle bundle, final Collection<?> dataSource) throws JRException {
+	final JasperPrint jasperPrint = createJasperPrint(reportFileName, parameters, bundle, dataSource);
 
 	if (jasperPrint != null) {
 	    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -75,17 +56,9 @@ public class ReportUtils extends PropertiesManager {
 	return null;
     }
 
-    static private JasperPrint createJasperPrint(final String key, final Map parameters, final ResourceBundle bundle,
-	    Collection dataSource) throws JRException {
-	JasperReport report = reportsMap.get(key);
-
-	if (report == null) {
-	    final String reportFileName = properties.getProperty(key);
-	    if (reportFileName != null) {
-		report = (JasperReport) JRLoader.loadObject(ReportUtils.class.getResourceAsStream(reportFileName));
-		reportsMap.put(key, report);
-	    }
-	}
+    static private JasperPrint createJasperPrint(final String reportFileName, final Map<Object, Object> parameters,
+	    final ResourceBundle bundle, Collection<?> dataSource) throws JRException {
+	JasperReport report = (JasperReport) JRLoader.loadObject(ReportUtils.class.getResourceAsStream(reportFileName));
 
 	if (report != null) {
 	    if (parameters != null && bundle != null) {
