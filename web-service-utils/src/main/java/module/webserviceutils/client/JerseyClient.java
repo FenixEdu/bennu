@@ -2,8 +2,6 @@ package module.webserviceutils.client;
 
 import javax.ws.rs.core.MultivaluedMap;
 
-import module.webserviceutils.domain.WSURemoteHost;
-
 import org.apache.commons.lang.StringUtils;
 
 import com.sun.jersey.api.client.Client;
@@ -12,22 +10,22 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
+import module.webserviceutils.domain.WSURemoteHost;
+
 public class JerseyClient {
 
     private static String CONTEXT_URL = "jersey/services/";
 
-    private String username;// =
-			    // PropertiesManager.getProperty("jersey.username");
-    private String password;// =
-			    // PropertiesManager.getProperty("jersey.password");
-
-    private final Client client;
+    private static final Client client;
     private final MultivaluedMap params;
     private String method;
     private WSURemoteHost host;
 
-    public JerseyClient(final WSURemoteHost host) {
+    static {
 	client = Client.create();
+    }
+
+    public JerseyClient(final WSURemoteHost host) {
 	params = new MultivaluedMapImpl();
 	this.host = host;
     }
@@ -59,8 +57,15 @@ public class JerseyClient {
 
     public <T> T get(Class<T> clazz) {
 	checkForParameters();
-	return client.resource(getUri()).queryParams(params).header("__username__", host.getUsername())
-		.header("__password__", host.getPassword()).get(clazz);
+	T t;
+	try {
+	    t = client.resource(getUri()).queryParams(params).header("__username__", host.getUsername())
+		    .header("__password__", host.getPassword()).get(clazz);
+	    return t;
+	} finally {
+	    params.clear();
+	    method = StringUtils.EMPTY;
+	}
     }
 
     public String get() {

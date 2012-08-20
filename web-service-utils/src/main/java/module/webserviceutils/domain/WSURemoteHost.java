@@ -24,7 +24,6 @@ public class WSURemoteHost extends WSURemoteHost_Base {
 
     @Service
     public void delete() {
-	WSURemoteSystem.removeRemoteHost(this);
 	removeRemoteSystem();
 	deleteDomainObject();
     }

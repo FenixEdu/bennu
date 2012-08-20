@@ -1,20 +1,11 @@
 package module.webserviceutils.domain;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.fenixWebFramework.services.Service;
 
 import module.webserviceutils.client.JerseyClient;
 
 public class WSURemoteSystem extends WSURemoteSystem_Base {
-
-    private static Map<WSURemoteHost, JerseyClient> CLIENTS;
-
-    static {
-	CLIENTS = new ConcurrentHashMap<WSURemoteHost, JerseyClient>();
-    }
 
     private WSURemoteSystem() {
 	super();
@@ -46,19 +37,11 @@ public class WSURemoteSystem extends WSURemoteSystem_Base {
 	if (remoteHost == null) {
 	    return null;
 	}
-	JerseyClient jerseyClient = CLIENTS.get(remoteHost);
-	if (jerseyClient == null) {
-	    jerseyClient = new JerseyClient(remoteHost);
-	    CLIENTS.put(remoteHost, jerseyClient);
-	}
-	return jerseyClient;
+	return new JerseyClient(remoteHost);
     }
 
     public static JerseyClient getFenixJerseyClient() {
 	return getJerseyClient("fenix");
     }
 
-    public static void removeRemoteHost(WSURemoteHost remoteHost) {
-	CLIENTS.remove(remoteHost);
-    }
 }
