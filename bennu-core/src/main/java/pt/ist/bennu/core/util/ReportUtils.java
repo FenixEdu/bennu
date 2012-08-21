@@ -28,8 +28,8 @@ import org.apache.commons.lang.StringUtils;
 import pt.utl.ist.fenix.tools.util.PropertiesManager;
 
 public class ReportUtils extends PropertiesManager {
-    static public boolean exportToPdfFile(String reportFileName, Map<Object, Object> parameters, ResourceBundle bundle,
-	    Collection<?> dataSource, String destination) {
+    static public boolean exportToPdfFile(String reportFileName, Map parameters, ResourceBundle bundle, Collection<?> dataSource,
+	    String destination) {
 	try {
 	    final JasperPrint jasperPrint = createJasperPrint(reportFileName, parameters, bundle, dataSource);
 	    if (jasperPrint != null) {
@@ -42,7 +42,7 @@ public class ReportUtils extends PropertiesManager {
 	}
     }
 
-    static public byte[] exportToPdfFileAsByteArray(final String reportFileName, final Map<Object, Object> parameters,
+    static public byte[] exportToPdfFileAsByteArray(final String reportFileName, final Map parameters,
 	    final ResourceBundle bundle, final Collection<?> dataSource) throws JRException {
 	final JasperPrint jasperPrint = createJasperPrint(reportFileName, parameters, bundle, dataSource);
 
@@ -56,8 +56,8 @@ public class ReportUtils extends PropertiesManager {
 	return null;
     }
 
-    static private JasperPrint createJasperPrint(final String reportFileName, final Map<Object, Object> parameters,
-	    final ResourceBundle bundle, Collection<?> dataSource) throws JRException {
+    static private JasperPrint createJasperPrint(final String reportFileName, final Map parameters, final ResourceBundle bundle,
+	    Collection<?> dataSource) throws JRException {
 	JasperReport report = (JasperReport) JRLoader.loadObject(ReportUtils.class.getResourceAsStream(reportFileName));
 
 	if (report != null) {
