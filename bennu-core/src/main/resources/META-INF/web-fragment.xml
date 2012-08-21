@@ -222,4 +222,13 @@
         <session-timeout>120</session-timeout>
     </session-config>
 
+    <jsp-config>
+        <jsp-property-group>
+          <description>All JSPs</description>
+          <url-pattern>*.jsp</url-pattern>
+          <el-ignored>true</el-ignored>
+          <page-encoding>UTF-8</page-encoding>
+        </jsp-property-group>
+    </jsp-config>
+
 </web-fragment>
