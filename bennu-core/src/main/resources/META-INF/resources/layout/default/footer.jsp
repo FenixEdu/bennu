@@ -1,3 +1,4 @@
+<%@page isELIgnored="false"%>
 <%@page import="pt.ist.fenixWebFramework.Config.CasConfig"%>
 <%@page import="pt.ist.fenixWebFramework.FenixWebFramework"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
