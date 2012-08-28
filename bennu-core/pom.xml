@@ -142,9 +142,14 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>jasperreports</groupId>
-			<artifactId>jasperreports</artifactId>
-			<version>3.5.3</version>
+			<groupId>commons-javaflow</groupId>
+			<artifactId>commons-javaflow</artifactId>
+			<version>20060411</version>
+		</dependency>
+		<dependency>
+			<groupId>jasperreports-javaflow</groupId>
+			<artifactId>jasperreports-javaflow</artifactId>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
