@@ -177,12 +177,14 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- Listeners -->
+    <!-- Listeners 
     <servlet>
         <servlet-name>action</servlet-name>
         <servlet-class>pt.ist.bennu.core.presentationTier.servlets.ActionServletWrapper</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
+    -->
+    
     <servlet>
         <servlet-name>AutoCompleteServlet</servlet-name>
         <servlet-class>pt.ist.bennu.core.presentationTier.servlets.ajax.MyorgAutoCompleteServlet</servlet-class>
@@ -190,11 +192,12 @@
     </servlet>
 
 
-    <!-- Servlet Mapping -->
+    <!-- Servlet Mapping 
     <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
+    -->
     <servlet-mapping>
         <servlet-name>AutoCompleteServlet</servlet-name>
         <url-pattern>/ajax/AutoCompleteServlet</url-pattern>
