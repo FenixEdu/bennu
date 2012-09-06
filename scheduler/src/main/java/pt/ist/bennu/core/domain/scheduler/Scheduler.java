@@ -44,17 +44,28 @@ public class Scheduler extends TimerTask {
 
     private static final String LOCK_VARIABLE = Scheduler.class.getName() + "_" + getAppDbAliasConnection();
 
-    public static void initialize() {
+    private static volatile Scheduler instance = null;
+
+    // Public API starts here
+
+    /*
+     * The method is synchronized so no two threads will create instances of
+     * Scheduler
+     */
+    public synchronized static void initialize() {
+	if (instance != null)
+	    return;
+
 	final String scheduleSystemFlag = PropertiesManager.getProperty("schedule.system");
 	if (scheduleSystemFlag == null || scheduleSystemFlag.isEmpty() || !scheduleSystemFlag.equalsIgnoreCase("active")) {
-	    //SchedulerSystem.getInstance().clearAllScheduledTasks();
+	    // SchedulerSystem.getInstance().clearAllScheduledTasks();
 	} else {
 	    pt.ist.fenixframework.plugins.scheduler.Scheduler.initialize();
 	}
 
 	try {
 	    Task.initTasks();
-	    new Scheduler();
+	    instance = new Scheduler();
 	} catch (final ClassNotFoundException e) {
 	    e.printStackTrace();
 	    throw new Error(e);
@@ -67,6 +78,16 @@ public class Scheduler extends TimerTask {
 	}
     }
 
+    public static boolean isInitialized() {
+	return instance != null;
+    }
+
+    public static void shutdown() {
+	instance.timer.cancel();
+    }
+
+    // Internals
+
     private static String getAppDbAliasConnection() {
 	final String dbAlias = PropertiesManager.getProperty("db.alias");
 	return dbAlias == null || dbAlias.isEmpty() ?
@@ -75,7 +96,7 @@ public class Scheduler extends TimerTask {
 
     private final Timer timer = new Timer(true);
 
-    public Scheduler() {
+    private Scheduler() {
 	timer.scheduleAtFixedRate(this, 10000, 20000);
     }
 
