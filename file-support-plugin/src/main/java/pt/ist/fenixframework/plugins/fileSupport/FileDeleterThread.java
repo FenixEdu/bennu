@@ -22,7 +22,8 @@ public class FileDeleterThread implements Runnable {
 	    logger.debug("Tick!");
 	    process();
 	} catch (InterruptedException e) {
-	    e.printStackTrace();
+	    // The application is shutting down...
+	    return;
 	}
     }
 
