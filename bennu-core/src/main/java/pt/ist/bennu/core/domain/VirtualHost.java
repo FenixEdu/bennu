@@ -1,56 +1,60 @@
 /* 
-* @(#)VirtualHost.java 
-* 
-* Copyright 2009 Instituto Superior Tecnico 
-* Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes 
-*  
-*      https://fenix-ashes.ist.utl.pt/ 
-*  
-*   This file is part of the Bennu Web Application Infrastructure. 
-* 
-*   The Bennu Web Application Infrastructure is free software: you can 
-*   redistribute it and/or modify it under the terms of the GNU Lesser General 
-*   Public License as published by the Free Software Foundation, either version  
-*   3 of the License, or (at your option) any later version. 
-* 
-*   Bennu is distributed in the hope that it will be useful, 
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of 
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-*   GNU Lesser General Public License for more details. 
-* 
-*   You should have received a copy of the GNU Lesser General Public License 
-*   along with Bennu. If not, see <http://www.gnu.org/licenses/>. 
-*  
-*/
+ * @(#)VirtualHost.java 
+ * 
+ * Copyright 2009 Instituto Superior Tecnico 
+ * Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes 
+ *  
+ *      https://fenix-ashes.ist.utl.pt/ 
+ *  
+ *   This file is part of the Bennu Web Application Infrastructure. 
+ * 
+ *   The Bennu Web Application Infrastructure is free software: you can 
+ *   redistribute it and/or modify it under the terms of the GNU Lesser General 
+ *   Public License as published by the Free Software Foundation, either version  
+ *   3 of the License, or (at your option) any later version. 
+ * 
+ *   Bennu is distributed in the hope that it will be useful, 
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ *   GNU Lesser General Public License for more details. 
+ * 
+ *   You should have received a copy of the GNU Lesser General Public License 
+ *   along with Bennu. If not, see <http://www.gnu.org/licenses/>. 
+ *  
+ */
 package pt.ist.bennu.core.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.bennu.core._development.PropertiesManager;
+import pt.ist.bennu.core.domain.contents.INode;
 import pt.ist.bennu.core.domain.contents.Node;
-import pt.utl.ist.fenix.tools.util.ByteArray;
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.services.Service;
+import pt.utl.ist.fenix.tools.util.ByteArray;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 /**
  * 
- * @author  João Antunes
- * @author  João Neves
- * @author  Pedro Santos
- * @author  Sérgio Silva
- * @author  Luis Cruz
- * @author  Paulo Abrantes
+ * @author João Antunes
+ * @author João Neves
+ * @author Pedro Santos
+ * @author Sérgio Silva
+ * @author Luis Cruz
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public class VirtualHost extends VirtualHost_Base {
 
-    private static final ThreadLocal<VirtualHost> threadVirtualHost = new ThreadLocal<VirtualHost>();
+    private static final ThreadLocal<VirtualHost> threadVirtualHost = new ThreadLocal<>();
 
     public static VirtualHost getVirtualHostForThread() {
 	return threadVirtualHost.get();
@@ -171,7 +175,7 @@ public class VirtualHost extends VirtualHost_Base {
     }
 
     public SortedSet<Node> getOrderedTopLevelNodes() {
-	final SortedSet<Node> nodes = new TreeSet<Node>(Node.COMPARATOR_BY_ORDER);
+	final SortedSet<Node> nodes = new TreeSet<>(INode.COMPARATOR_BY_ORDER);
 	nodes.addAll(getTopLevelNodesSet());
 	return nodes;
     }
@@ -221,6 +225,16 @@ public class VirtualHost extends VirtualHost_Base {
 	final Config config = FenixWebFramework.getConfig();
 	final CasConfig casConfig = config.getCasConfig(getHostname());
 	return casConfig != null && casConfig.isCasEnabled();
+    }
+
+    public Set<Language> getSupportedLanguagesSet() {
+	Set<Language> languages = new HashSet<>();
+	if (StringUtils.isNotBlank(getSupportedLanguages())) {
+	    for (String code : getSupportedLanguages().split(":")) {
+		languages.add(Language.valueOf(code));
+	    }
+	}
+	return languages;
     }
 
     public boolean supports(final Language language) {
