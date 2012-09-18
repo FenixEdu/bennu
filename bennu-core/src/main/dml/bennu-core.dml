@@ -216,7 +216,9 @@ relation MyOrgUser {
 }
 
 relation MyOrgVirtualHost {
-	MyOrg playsRole myOrg;
+	MyOrg playsRole myOrg {
+		multiplicity 1..1;
+	}
 	VirtualHost playsRole virtualHosts {
 		multiplicity *;
 	}
