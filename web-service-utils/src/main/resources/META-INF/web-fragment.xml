@@ -18,19 +18,4 @@
             <others />
         </before>
     </ordering>
-
-    <servlet>
-        <servlet-name>WebServiceAPI</servlet-name>
-        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-        <init-param>
-            <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>module.webservice</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>WebServiceAPI</servlet-name>
-        <url-pattern>/webservice/*</url-pattern>
-    </servlet-mapping>
 </web-fragment>
