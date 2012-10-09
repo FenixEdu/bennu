@@ -1,3 +1,4 @@
+<%@page import="java.util.Properties"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
 <%@page import="java.util.Enumeration"%>
 <%@page import="java.util.Calendar"%>
@@ -16,10 +17,12 @@
 	</li>
 </ul>
 <%
-	final InputStream inputStream = this.getClass().getResourceAsStream("/.build.version");
+	Properties prop = new Properties();
+	final InputStream inputStream = this.getClass().getResourceAsStream("/build.properties");
+	prop.load(inputStream);
 %>
 
-BuildVersion: <%= FileUtils.readFile(inputStream).toString() %>
+BuildVersion: <%= prop.getProperty("build.timestamp").toString() %>
 
 	
 	<ul>
