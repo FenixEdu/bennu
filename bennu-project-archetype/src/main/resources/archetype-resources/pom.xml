@@ -30,5 +30,21 @@
 	<dependencies>
 		<!--  PLACE YOUR BENNU PROJECT DEPENDENCIES HERE -->
 	</dependencies>
+
+	<repositories>
+#if($privateProject == "true" || $privateProject == "t" ||
+	$privateProject == "yes" || $privateProject == "YES" || $privateProject
+	== "y" || $privateProject == "Y" || $privateProject == "TRUE")
+		<repository>
+			<id>fenix-ashes-private</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-private</url>
+		</repository>
+#else
+		<repository>
+			<id>fenix-ashes-maven-repository</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+		</repository>
+#end
+	</repositories>
 	
 </project>
