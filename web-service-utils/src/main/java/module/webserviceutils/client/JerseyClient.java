@@ -2,6 +2,8 @@ package module.webserviceutils.client;
 
 import javax.ws.rs.core.MultivaluedMap;
 
+import module.webserviceutils.domain.ClientHost;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.sun.jersey.api.client.Client;
@@ -10,8 +12,6 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
-import module.webserviceutils.domain.WSURemoteHost;
-
 public class JerseyClient {
 
     private static String CONTEXT_URL = "jersey/services/";
@@ -19,13 +19,13 @@ public class JerseyClient {
     private static final Client client;
     private final MultivaluedMap params;
     private String method;
-    private WSURemoteHost host;
+    private final ClientHost host;
 
     static {
 	client = Client.create();
     }
 
-    public JerseyClient(final WSURemoteHost host) {
+    public JerseyClient(final ClientHost host) {
 	params = new MultivaluedMapImpl();
 	this.host = host;
     }
@@ -41,7 +41,7 @@ public class JerseyClient {
     }
 
     private String getUri() {
-	String url = host.getUrl();
+	String url = host.getServerUrl();
 	if (!url.endsWith("/")) {
 	    url += "/";
 	}
@@ -55,7 +55,7 @@ public class JerseyClient {
 	}
     }
 
-    public <T> T get(Class<T> clazz) {
+    public <T> T get(final Class<T> clazz) {
 	checkForParameters();
 	T t;
 	try {

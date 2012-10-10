@@ -2,7 +2,7 @@ package module.webserviceutils.client;
 
 import pt.ist.bennu.core.domain.User;
 
-import module.webserviceutils.domain.WSURemoteSystem;
+import module.webserviceutils.domain.HostSystem;
 
 public class JerseyRemoteUser {
 
@@ -11,7 +11,7 @@ public class JerseyRemoteUser {
 
     public JerseyRemoteUser(final User user) {
 	this.user = user;
-	this.client = WSURemoteSystem.getFenixJerseyClient();
+	this.client = HostSystem.getFenixJerseyClient();
     }
 
     public User getLocalUser() {
@@ -75,14 +75,14 @@ public class JerseyRemoteUser {
     }
 
     public static String readAllUserData() {
-	return WSURemoteSystem.getFenixJerseyClient().method("readAllUserData").arg("types", "STUDENT-EMPLOYEE-TEACHER").get();
+	return HostSystem.getFenixJerseyClient().method("readAllUserData").arg("types", "STUDENT-EMPLOYEE-TEACHER").get();
     }
 
     public static String readAllUserDataForSotis() {
-	return WSURemoteSystem.getFenixJerseyClient().method("readAllUserData").get();
+	return HostSystem.getFenixJerseyClient().method("readAllUserData").get();
     }
 
     public static String readAllEmails() {
-	return WSURemoteSystem.getFenixJerseyClient().method("readAllEmails").get();
+	return HostSystem.getFenixJerseyClient().method("readAllEmails").get();
     }
 }

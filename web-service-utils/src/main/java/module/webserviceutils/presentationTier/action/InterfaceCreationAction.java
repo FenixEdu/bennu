@@ -52,10 +52,18 @@ public class InterfaceCreationAction extends ContextBaseAction {
     public final ActionForward createAnnouncmentNodes(final ActionMapping mapping, final ActionForm form,
 	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
-	final Node node = Node.fromExternalId("691489739882"); // Administrator
+	final Node node = getDomainObject(request, "parentOfNodesToManageId");
 
-	VaadinNode.createVaadinNode(virtualHost, node, "resources.WebServiceUtilsResources", "label.link.wsu.interface",
-		"WebServiceUtilsManagement", Role.getRole(RoleType.MANAGER));
+	final String WEBSERVICEUTILS_RESOURCES = "resources.WebServiceUtilsResources";
+
+	final VaadinNode hostManagementNode = VaadinNode.createVaadinNode(virtualHost, node, WEBSERVICEUTILS_RESOURCES,
+		"label.link.wsu.interface", "ClientHostManagement", Role.getRole(RoleType.MANAGER));
+
+	VaadinNode.createVaadinNode(virtualHost, hostManagementNode, WEBSERVICEUTILS_RESOURCES,
+		"label.link.host.management.client", "ClientHostManagement", Role.getRole(RoleType.MANAGER));
+
+	VaadinNode.createVaadinNode(virtualHost, hostManagementNode, WEBSERVICEUTILS_RESOURCES,
+		"label.link.host.management.server", "ServerHostManagement", Role.getRole(RoleType.MANAGER));
 
 	return forwardToMuneConfiguration(request, virtualHost, node);
     }

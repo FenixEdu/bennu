@@ -95,19 +95,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-			<version>1.1.0-ea</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>1.1.0-ea</version>
-		</dependency>
-		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
 			<artifactId>jersey-multipart</artifactId>
-			<version>1.1.0-ea</version>
+			<version>1.14</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jvnet</groupId>
@@ -123,6 +113,21 @@
 			<groupId>pt.ist</groupId>
 			<artifactId>bennu-vaadin</artifactId>
 			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
+			<version>1.14</version>
 		</dependency>
 	</dependencies>
 

@@ -1,24 +1,51 @@
 package module.webserviceutils.domain;
 
-class WSURemoteSystem {
+valueType pt.utl.ist.fenix.tools.util.Strings as Strings {
+    externalizeWith {
+        String exportAsString();
+    }
+
+    internalizeWith importFromString();
 }
 
-class WSURemoteHost {
+class HostSystem {
+}
+
+class Host {
+	String ojbConcreteClass;
 	String name (REQUIRED);
-	String url (REQUIRED);
 	String username (REQUIRED);
 	String password (REQUIRED);
-	Boolean allowInvocationAccess (REQUIRED);
+	Boolean enabled (REQUIRED);
 }
 
-relation WSURemoteSystemRemoteHost {
-	WSURemoteSystem playsRole remoteSystem;
-	WSURemoteHost playsRole remoteHosts {
+class ClientHost extends Host {
+	String serverUrl;
+}
+
+class ServerHost extends Host {
+	Strings clientAddresses;
+}
+
+relation MyOrgHostSystem {
+	.pt.ist.bennu.core.domain.MyOrg playsRole myOrg;
+	HostSystem playsRole hostSystem;
+}
+
+relation HostSystemServerHosts {
+	HostSystem playsRole serverHostSystem {
+		multiplicity 1..1;
+	}
+	ServerHost playsRole serverHosts {
 		multiplicity *;
 	}
 }
 
-relation WSUMyOrgRemoteSystem {
-	.pt.ist.bennu.core.domain.MyOrg playsRole myOrg;
-	WSURemoteSystem playsRole remoteSystem;
+relation HostSystemClientHosts {
+	HostSystem playsRole clientHostSystem {
+		multiplicity 1..1;
+	}
+	ClientHost playsRole clientHosts {
+		multiplicity *;
+	}
 }
