@@ -39,4 +39,8 @@ public abstract class Host extends Host_Base {
     }
 
     protected abstract void removeHostSystem();
+
+    public boolean isEnabled() {
+	return getEnabled() != null && getEnabled();
+    }
 }

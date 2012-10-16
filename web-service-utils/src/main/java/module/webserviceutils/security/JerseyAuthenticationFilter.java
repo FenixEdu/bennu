@@ -55,8 +55,7 @@ public class JerseyAuthenticationFilter implements Filter {
 
 	final ServerHost serverHost = HostSystem.getServerByClientAddress(remoteHostUrl);
 	if (serverHost != null && serverHost.matches(username, password)) {
-	    final Boolean enabled = serverHost.getEnabled();
-	    return enabled == null ? false : enabled;
+	    return serverHost.isEnabled();
 	}
 	return false;
     }
