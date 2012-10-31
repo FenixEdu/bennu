@@ -12,7 +12,6 @@ class HostSystem {
 }
 
 class Host {
-	String ojbConcreteClass;
 	String name (REQUIRED);
 	String username (REQUIRED);
 	String password (REQUIRED);
