@@ -9,7 +9,6 @@ valueType pt.utl.ist.fenix.tools.util.ByteArray as ByteArray {
 class GenericFile {
 	Long size;
 	DateTime creationDate;
-	String ojbConcreteClass;
 	String filename;
 	String displayName;
 	String contentType;
@@ -26,7 +25,6 @@ class LocalFileToDelete {
 }
 
 class FileStorage {
-	String ojbConcreteClass;
 	String name;
 }
 	class DomainStorage extends FileStorage{

@@ -29,7 +29,6 @@ abstract public class GenericFile extends GenericFile_Base {
 
     public GenericFile() {
 	super();
-	this.setOjbConcreteClass(getClass().getName());
 	setFileSupport(FileSupport.getInstance());
 	setCreationDate(new DateTime());
     }

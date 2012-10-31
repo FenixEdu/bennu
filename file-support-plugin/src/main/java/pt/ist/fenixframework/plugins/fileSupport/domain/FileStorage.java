@@ -11,7 +11,6 @@ abstract public class FileStorage extends FileStorage_Base {
 
     public FileStorage() {
 	super();
-	this.setOjbConcreteClass(getClass().getName());
 	setFileSupport(FileSupport.getInstance());
     }
 
