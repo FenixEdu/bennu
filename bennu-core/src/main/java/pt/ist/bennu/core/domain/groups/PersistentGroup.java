@@ -52,7 +52,6 @@ public abstract class PersistentGroup extends PersistentGroup_Base implements Pr
     public PersistentGroup() {
         super();
         setMyOrg(MyOrg.getInstance());
-        setOjbConcreteClass(getClass().getName());
     }
 
     public abstract boolean isMember(final User user);

@@ -56,7 +56,7 @@ public abstract class Node extends Node_Base implements INode {
     public Node() {
 	super();
 	setMyOrg(MyOrg.getInstance());
-	setOjbConcreteClass(getClass().getName());
+	//setOjbConcreteClass(getClass().getName());
     }
 
     @Override

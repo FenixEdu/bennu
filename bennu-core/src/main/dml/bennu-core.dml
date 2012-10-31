@@ -29,6 +29,13 @@ package pt.ist.bennu.core.domain;
 enum pt.ist.bennu.core.domain.RoleType as RoleType;
 enum pt.ist.bennu.core.domain.ThemeType as ThemeType;
 
+valueType pt.ist.bennu.core.domain.util.Money as Money {
+    externalizeWith {
+        String exportAsString();
+    }
+
+    internalizeWith importFromString();
+}
 
 valueType pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString as MultiLanguageString {
     externalizeWith {
@@ -71,7 +78,6 @@ class MyOrg {
 }
 
 class contents.Node {
-	String ojbConcreteClass;
 	Integer nodeOrder;
 }
 
@@ -89,7 +95,6 @@ class contents.Node {
 	}
 
 class groups.PersistentGroup {
-	String ojbConcreteClass;
 }
 
 	class groups.EmptyGroup extends groups.PersistentGroup {
