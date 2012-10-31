@@ -1,8 +1,6 @@
 package pt.ist.fenixframework.plugins.scheduler.domain;
 
 import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.List;
 
 import org.joda.time.DateTime;
 
@@ -12,14 +10,13 @@ import pt.ist.fenixframework.pstm.Transaction;
 import dml.DomainClass;
 import dml.DomainModel;
 
-
 public class SchedulerSystem extends SchedulerSystem_Base {
 
     private static SchedulerSystem instance = null;
 
     private SchedulerSystem() {
-        super();
-        final SchedulerSystem root = PersistentRoot.getRoot(SchedulerSystem.class.getName());
+	super();
+	final SchedulerSystem root = PersistentRoot.getRoot(SchedulerSystem.class.getName());
 	if (root != null && root != this) {
 	    throw new Error("Trying to create a 2nd instance of SchedulerSystemRoot! There can only be one!");
 	}
@@ -78,7 +75,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     private boolean existsTaskInstance(final DomainClass domainClass) {
 	final String classname = domainClass.getFullName();
 	for (final Task task : getTaskSet()) {
-	    if (task.getOjbConcreteClass().equals(classname)) {
+	    if (task.getClass().getName().equals(classname)) {
 		return true;
 	    }
 	}
