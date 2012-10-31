@@ -4,7 +4,6 @@ package pt.ist.bennu.core.domain.scheduler;
 
 
 class Task {
-	String ojbConcreteClass;
 	DateTime lastRun;
 }
 

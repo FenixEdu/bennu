@@ -82,7 +82,6 @@ public abstract class Task extends Task_Base {
 
     public Task() {
 	super();
-	setOjbConcreteClass(getClass().getName());
 	setMyOrg(MyOrg.getInstance());
     }
 
@@ -122,7 +121,7 @@ public abstract class Task extends Task_Base {
     private static boolean existsTaskInstance(final DomainClass domainClass) {
 	final String classname = domainClass.getFullName();
 	for (final Task task : MyOrg.getInstance().getTasksSet()) {
-	    if (task.getOjbConcreteClass().equals(classname)) {
+	    if (task.getClass().getName().equals(classname)) {
 		return true;
 	    }
 	}
