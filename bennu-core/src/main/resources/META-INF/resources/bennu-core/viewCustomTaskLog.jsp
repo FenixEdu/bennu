@@ -40,6 +40,7 @@
 </h3>
 <div style="border-style: dotted; border-width: thin; padding: 10px;">
 	<ul>
+	<%-- Problematic code start
 		<logic:iterate id="file" name="customTaskLog" property="genericFileSet">
 			<li>
 				<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/scheduler.do?method=downloadOutputFile" paramId="fileId" paramName="file" paramProperty="externalId">
@@ -47,5 +48,6 @@
 				</html:link>
 			</li>
 		</logic:iterate>
+	<%-- Problematic code end --%>
 	</ul>
 </div>
