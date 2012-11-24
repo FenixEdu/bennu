@@ -94,7 +94,7 @@ public class Scheduler extends TimerTask {
 			try {
 			    statement2.close();
 			} catch (final SQLException e) {
-			    e.printStackTrace();
+//			    e.printStackTrace();
 			}
 		    }
 		}
@@ -104,14 +104,14 @@ public class Scheduler extends TimerTask {
 		try {
 		    resultSet.close();
 		} catch (SQLException e) {
-		    e.printStackTrace();
+//		    e.printStackTrace();
 		}
 	    }
 	    if (statement != null) {
 		try {
 		    statement.close();
 		} catch (SQLException e) {
-		    e.printStackTrace();
+//		    e.printStackTrace();
 		}
 	    }
 	}
