@@ -201,8 +201,8 @@ public class Email extends Email_Base {
     }
 
     protected static String constructFromString(final String fromName, String fromAddress) {
-	return (fromName == null || fromName.length() == 0) ? fromAddress : StringAppender.append(fromName, " <",
-		fromAddress, ">");
+	return (fromName == null || fromName.length() == 0) ? fromAddress : 
+		StringAppender.append(fromName.replace(',', ' '), " <", fromAddress, ">");
     }
 
     private class EmailMimeMessage extends MimeMessage {
@@ -259,7 +259,7 @@ public class Email extends Email_Base {
 	    final String htmlBody = getHtmlBody();
 	    if (htmlBody != null && !htmlBody.trim().isEmpty()) {
 		final BodyPart bodyPart = new MimeBodyPart();
-		bodyPart.setContent(htmlBody, "text/html");
+		bodyPart.setContent(htmlBody, "text/html; charset='utf-8'");
 		mimeMultipart.addBodyPart(bodyPart);
 	    }
 
