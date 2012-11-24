@@ -87,9 +87,11 @@ public class Role extends Role_Base {
 	if (this.roleType == null) {
 	    try {
 		String groupName = this.getGroupName();
-		final int lastDot = groupName.lastIndexOf('.');
+		final int virtualHostPos = groupName.lastIndexOf('@');
+		final int enumNameLimit = virtualHostPos > 0 ? virtualHostPos : groupName.length();
+		final int lastDot = groupName.lastIndexOf('.', enumNameLimit);
 		final String className = groupName.substring(0, lastDot);
-		final String enumName = groupName.substring(lastDot + 1);
+		final String enumName = groupName.substring(lastDot + 1, enumNameLimit);
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Class<Enum> enumClass = (Class<Enum>) Class.forName(className);
 		@SuppressWarnings({ "rawtypes", "unchecked" })

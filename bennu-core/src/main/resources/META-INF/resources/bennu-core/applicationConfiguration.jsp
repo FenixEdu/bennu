@@ -29,6 +29,11 @@
 			<bean:message bundle="MYORG_RESOURCES" key="label.configuration.viewProperties"/>
 		</html:link>
 	</li>
+	<li>
+		<%= pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter.HAS_CONTEXT_PREFIX %><html:link page="/vaadinContext.do?method=forwardToVaadin#DomainBrowser">
+			Domain Browser
+		</html:link>
+	</li>
 </ul>
 
 <fr:view name="myOrg" property="virtualHosts" schema="virtualHost.application.configuration.summary">

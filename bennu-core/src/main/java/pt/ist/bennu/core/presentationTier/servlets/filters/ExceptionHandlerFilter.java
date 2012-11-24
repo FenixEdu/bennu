@@ -62,7 +62,6 @@ public class ExceptionHandlerFilter implements Filter {
     private static final List<CustomeHandler> customeHandlers = new ArrayList<CustomeHandler>();
 
     public static void register(final CustomeHandler customeHandler) {
-	System.out.println("Registering: " + customeHandler);
 	customeHandlers.add(customeHandler);
     }
 
