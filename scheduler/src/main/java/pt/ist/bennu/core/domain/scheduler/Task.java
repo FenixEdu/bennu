@@ -33,9 +33,16 @@ import java.util.SortedSet;
 import java.util.TimerTask;
 import java.util.TreeSet;
 
+import jvstm.TransactionalCommand;
+
+import org.joda.time.DateTime;
+
 import pt.ist.bennu.core.domain.MyOrg;
+import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.pstm.Transaction;
+import pt.utl.ist.fenix.tools.util.i18n.Language;
 import dml.DomainClass;
 import dml.DomainModel;
 
@@ -207,4 +214,93 @@ public abstract class Task extends Task_Base {
     public void stop() {
 	removePendingExecutionTaskQueue();
     }
+
+    public void runPendingTask() {
+	System.out.println("Running task: " + getClass().getName());
+	log = new StringBuilder();
+	final TaskThread taskThread = new TaskThread();
+	final DateTime start = new DateTime();
+	taskThread.start();
+	try {
+	    taskThread.join();
+	} catch (final InterruptedException e) {
+	    e.printStackTrace();
+//	    throw new Error(e);
+	}
+	final DateTime end = new DateTime();
+	final LogTaskThread logTaskThread = new LogTaskThread(start, end, taskThread.success, log.toString());
+	log = null;
+	logTaskThread.start();
+	try {
+	    logTaskThread.join();
+	} catch (InterruptedException e) {
+	    e.printStackTrace();
+	}
+	System.out.println("Completed run of task: " + getClass().getName());
+    }
+
+    private class TaskThread extends Thread {
+
+	private boolean success = false;
+
+	@Override
+	public void run() {
+	    try {
+		Transaction.withTransaction(false, new TransactionalCommand() {
+		    @Override
+		    public void doIt() {
+			try {
+			    // TODO : This needs to be placed in the apps task configuration
+			    //        and used whenever the app is launchede.
+			    VirtualHost.setVirtualHostForThread("dot.ist.utl.pt");
+			    Language.setLocale(Language.getDefaultLocale());
+			    executeTask();
+			} finally {
+			    VirtualHost.releaseVirtualHostFromThread();
+			}
+		    }
+		});
+		success = true;
+	    } finally {
+		Transaction.forceFinish();
+	    }
+	}
+
+    }
+
+    private class LogTaskThread extends Thread {
+
+	final DateTime start, end;
+	final boolean success;
+	final String log;
+	
+	public LogTaskThread(DateTime start, DateTime end, boolean success, String log) {
+	    this.start = start;
+	    this.end = end;
+	    this.success = success;
+	    this.log = log;
+	}
+
+	@Override
+	public void run() {
+	    try {
+		Transaction.withTransaction(false, new TransactionalCommand() {
+		    @Override
+		    public void doIt() {
+			final TaskLog taskLog = new TaskLog(getThis());
+			taskLog.setTaskStart(start);
+			taskLog.setTaskEnd(end);
+			taskLog.setOutput(log);
+			taskLog.setSuccessful(Boolean.valueOf(success));
+			setLastRun(start);
+			cleanupLogs(100);
+		    }
+		});
+	    } finally {
+		Transaction.forceFinish();
+	    }
+	}
+
+    }
+
 }

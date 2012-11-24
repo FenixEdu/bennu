@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
+import pt.ist.fenixframework.pstm.Transaction;
+
 import pt.ist.bennu.core.domain.MyOrg;
 
 public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base implements Queue<Task> {
@@ -59,6 +61,29 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
 	Task task = getHead();
 	removeHead();
 	return task;
+    }
+
+    public Task popPendingTaskService() {
+	Task result = null;
+	boolean committed = false;
+	try {
+	    if (jvstm.Transaction.current() != null) {
+		jvstm.Transaction.commit();
+	    }
+	    Transaction.begin();
+
+	    result = poll();
+
+	    jvstm.Transaction.checkpoint();
+	    committed = true;
+	} finally {
+	    if (!committed) {
+		Transaction.abort();
+		Transaction.begin();
+	    }
+	    Transaction.currentFenixTransaction().setReadOnly();
+	}
+	return result;
     }
 
     @Override
@@ -136,6 +161,13 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
     @Override
     public <T> T[] toArray(final T[] a) {
 	return getTasks().toArray(a);
+    }
+
+    public static void runPendingTask() {
+	final PendingExecutionTaskQueue queue = PendingExecutionTaskQueue.getPendingExecutionTaskQueue();
+	for (Task task = queue.popPendingTaskService(); task != null; task = queue.popPendingTaskService()) {
+	    task.runPendingTask();
+	}
     }
 
 }

@@ -33,6 +33,7 @@ import java.util.TimerTask;
 
 import jvstm.TransactionalCommand;
 import pt.ist.bennu.core._development.PropertiesManager;
+import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.fenixframework.pstm.Transaction;
 
 /**
@@ -103,19 +104,19 @@ public class Scheduler extends TimerTask {
     @Override
     public void run() {
 	try {
-	    Transaction.withTransaction(true, new TransactionalCommand() {
-		@Override
-		public void doIt() {
-		    final Connection connection = Transaction.getCurrentJdbcConnection();
-		    try {
-			run(connection);
-		    } catch (SQLException e) {
-			throw new Error(e);
+	    try {
+		Transaction.withTransaction(false, new TransactionalCommand() {
+		    @Override
+		    public void doIt() {
+			queueTasks();
 		    }
-		}
-	    });
-	} finally {
-	    Transaction.forceFinish();
+		});
+	    } finally {
+		Transaction.forceFinish();
+	    }
+	    runPendingTask();
+	} catch (final Throwable t) {
+	    t.printStackTrace();
 	}
     }
 
@@ -173,6 +174,84 @@ public class Scheduler extends TimerTask {
 	} catch (final InterruptedException e) {
 	    e.printStackTrace();
 	    throw new Error(e);
+	}
+    }
+
+    private void queueTasks() {
+	final PendingExecutionTaskQueue queue = PendingExecutionTaskQueue.getPendingExecutionTaskQueue();
+	for (final Task task : MyOrg.getInstance().getTasksSet()) {
+	    if (queue.contains(task)) {
+		continue;
+	    }
+	    for (final TaskConfiguration taskConfiguration : task.getTaskConfigurationsSet()) {
+		if (taskConfiguration.shouldRunNow()) {
+		    queue.offer(task);
+		    break;
+		}
+	    }
+	}
+    }
+
+    private void runPendingTask() {
+	try {
+	    Transaction.withTransaction(true, new TransactionalCommand() {
+		@Override
+		public void doIt() {
+		    final Connection connection = Transaction.getCurrentJdbcConnection();
+		    try {
+			runPendingTask(connection);
+		    } catch (SQLException e) {
+			throw new Error(e);
+		    }
+		}
+	    });
+	} finally {
+	    Transaction.forceFinish();
+	}
+    }
+
+    private void runPendingTask(Connection connection) throws SQLException {
+	Statement statement = null;
+	ResultSet resultSet = null;
+	try {
+	    try {
+		statement = connection.createStatement();
+		resultSet = statement.executeQuery("SELECT GET_LOCK('" + LOCK_VARIABLE + "', 10)");
+		if (resultSet.next() && (resultSet.getInt(1) == 1)) {
+		    PendingExecutionTaskQueue.runPendingTask();
+		}
+	    } finally {
+		if (!connection.isClosed()) {
+		    Statement statement2 = null;
+		    try {
+			statement2 = connection.createStatement();
+			statement2.executeUpdate("DO RELEASE_LOCK('" + LOCK_VARIABLE + "')");
+		    } finally {
+			if (statement2 != null) {
+			    try {
+				statement2.close();
+			    } catch (final SQLException e) {
+//			    	e.printStackTrace();
+			    }
+			}
+		    }
+		}
+	    }
+	} finally {
+	    if (resultSet != null) {
+		try {
+		    resultSet.close();
+		} catch (SQLException e) {
+//		    e.printStackTrace();
+		}
+	    }
+	    if (statement != null) {
+		try {
+		    statement.close();
+		} catch (SQLException e) {
+//		    e.printStackTrace();
+		}
+	    }
 	}
     }
 
