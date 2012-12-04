@@ -5,6 +5,7 @@ public class ClientHost extends ClientHost_Base {
     public ClientHost() {
 	super();
 	init();
+	setEnabled(Boolean.TRUE);
     }
 
     public ClientHost(final String name, final String username, final String password, final String serverUrl) {

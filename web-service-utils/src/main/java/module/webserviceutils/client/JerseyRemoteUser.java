@@ -85,4 +85,12 @@ public class JerseyRemoteUser {
     public static String readAllEmails() {
 	return HostSystem.getFenixJerseyClient().method("readAllEmails").get();
     }
+
+    public Boolean hasRemotePerson() {
+	return client.method("hasRemotePerson").get(Boolean.class);
+    }
+
+    public Boolean hasStudent() {
+	return Boolean.parseBoolean(readRemoteMethod("hasStudent", null));
+    }
 }
