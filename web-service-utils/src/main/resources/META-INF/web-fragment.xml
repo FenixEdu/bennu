@@ -18,4 +18,38 @@
             <others />
         </before>
     </ordering>
+    
+    <servlet>
+		<servlet-name>WebServiceUtilsAPI</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>pt.ist.bennu.restservices</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+			<param-value>com.sun.jersey.api.container.filter.LoggingFilter</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+			<param-value>com.sun.jersey.api.container.filter.LoggingFilter</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>WebServiceUtilsAPI</servlet-name>
+		<url-pattern>/jersey/*</url-pattern>
+	</servlet-mapping>
+	
+	<filter>
+		<filter-name>JerseyAuthFilter</filter-name>
+		<filter-class>module.webserviceutils.security.JerseyAuthenticationFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>JerseyAuthFilter</filter-name>
+		<url-pattern>/jersey/*</url-pattern>
+	</filter-mapping>
+	
 </web-fragment>

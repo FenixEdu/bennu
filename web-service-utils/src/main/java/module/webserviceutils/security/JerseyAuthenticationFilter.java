@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import module.webserviceutils.domain.HostSystem;
 import module.webserviceutils.domain.ServerHost;
+
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.bennu.core.applicationTier.Authenticate;
 import pt.ist.bennu.core.domain.User;
 
@@ -37,10 +40,14 @@ public class JerseyAuthenticationFilter implements Filter {
 	final String userToLogin = request.getHeader("__userToLogin__");
 	if (checkAccessControl(request)) {
 	    try {
-		Authenticate.authenticate(User.findByUsername(userToLogin));
+		if (!StringUtils.isEmpty(userToLogin)) {
+		    Authenticate.authenticate(User.findByUsername(userToLogin));
+		}
 		filterChain.doFilter(request, response);
 	    } finally {
-		pt.ist.fenixWebFramework.security.UserView.setUser(null);
+		if (!StringUtils.isEmpty(userToLogin)) {
+		    pt.ist.fenixWebFramework.security.UserView.setUser(null);
+		}
 	    }
 	} else {
 	    throw new ServletException("Not Authorized");

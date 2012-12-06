@@ -9,11 +9,11 @@ public abstract class Host extends Host_Base {
     }
 
     protected void init(final String name, final String username, final String password, final Boolean enabled) {
+	init();
 	setName(name);
 	setUsername(username);
 	setPassword(password);
 	setEnabled(enabled);
-	init();
     }
 
     public Host() {
@@ -41,6 +41,13 @@ public abstract class Host extends Host_Base {
     protected abstract void removeHostSystem();
 
     public boolean isEnabled() {
-	return getEnabled() != null && getEnabled();
+	return getEnabled();
     }
+
+    @Override
+    public Boolean getEnabled() {
+	final Boolean enabled = super.getEnabled();
+	return enabled != null && enabled;
+    }
+
 }

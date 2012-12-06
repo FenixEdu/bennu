@@ -107,6 +107,7 @@ public abstract class HostManagement<T extends Host> extends CustomComponent imp
 	this.hostItem = hostItem;
 	hostForm.setItemDataSource(hostItem);
 	hostForm.setVisibleItemProperties(hostProperties);
+
     }
 
     private void addNewItem() {
@@ -117,11 +118,11 @@ public abstract class HostManagement<T extends Host> extends CustomComponent imp
     @SuppressWarnings("serial")
     private Component createHostForm() {
 	hostForm = new TransactionalForm(BUNDLE_NAME);
+	hostForm.setFormFieldFactory(new DefaultFieldFactory(BUNDLE_NAME));
 	hostForm.setSizeFull();
 	hostForm.setCaption("Editar Host");
 	hostForm.setImmediate(Boolean.TRUE);
 	hostForm.setWriteThrough(Boolean.FALSE);
-	hostForm.setFormFieldFactory(new DefaultFieldFactory(BUNDLE_NAME));
 	hostForm.addButton("Submeter", new ClickListener() {
 
 	    @Override
