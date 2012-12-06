@@ -45,7 +45,7 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 public class BundleUtil {
     protected static final Logger LOGGER = Logger.getLogger(BundleUtil.class);
 
-    public static String getStringFromResourceBundle(final String bundle, final String key) {
+    public static String getStringFromResourceBundle(final String bundle, final String key) throws MissingResourceException {
 	return getStringFromResourceBundle(bundle, Language.getLocale(), key);
     }
 
