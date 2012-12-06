@@ -25,6 +25,8 @@
 package pt.ist.bennu.core.presentationTier.servlets.filters;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -44,21 +46,38 @@ import pt.ist.fenixWebFramework.servlets.filters.RequestWrapperFilter;
  */
 public class MyOrgRequestWrapperFilter extends RequestWrapperFilter {
 
+    final static Set<String> urlPiecesToExclude = new HashSet<String>();
+
+    static {
+	urlPiecesToExclude.add("vaadin");
+	urlPiecesToExclude.add("VAADIN");
+	urlPiecesToExclude.add("/jersey/");
+    }
+
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
 	    throws IOException, ServletException {
 	final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-	if (httpServletRequest.getRequestURI().contains("vaadin") || httpServletRequest.getRequestURI().contains("VAADIN")
-		|| httpServletRequest.getRequestURI().contains("/jersey/")
-	// &&
-	// httpServletRequest.getHeader("Content-Type").equals("multipart/form-data")
-	) {
+
+	if (urlMustbeSkipped(httpServletRequest)) {
+	    // &&
+	    // httpServletRequest.getHeader("Content-Type").equals("multipart/form-data")
 	    chain.doFilter(request, response);
 	} else {
 	    final ResponseWrapper responseWrapper = new ResponseWrapper((HttpServletResponse) response);
 	    super.doFilter(request, responseWrapper, chain);
 	    responseWrapper.writeRealResponse();
 	}
+    }
+
+    private boolean urlMustbeSkipped(final HttpServletRequest httpServletRequest) {
+	final String requestURI = httpServletRequest.getRequestURI();
+	for (String piece : urlPiecesToExclude) {
+	    if (requestURI.contains(piece)) {
+		return true;
+	    }
+	}
+	return false;
     }
 
 }
