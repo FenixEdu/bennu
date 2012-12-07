@@ -49,9 +49,9 @@ import javax.mail.internet.MimeMessage.RecipientType;
 
 import org.joda.time.DateTime;
 
+import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.emailNotifier.util.EmailAddressList;
 import pt.ist.fenixWebFramework.services.Service;
-import pt.utl.ist.fenix.tools.util.PropertiesManager;
 import pt.utl.ist.fenix.tools.util.StringAppender;
 
 /**
@@ -67,12 +67,11 @@ public class Email extends Email_Base {
 
     private static synchronized Session init() {
 	try {
-	    final Properties allProperties = PropertiesManager.loadProperties("/configuration.properties ");
 	    final Properties properties = new Properties();
-	    properties.put("mail.smtp.host", allProperties.get("mail.smtp.host"));
-	    properties.put("mail.smtp.name", allProperties.get("mail.smtp.name"));
-	    properties.put("mailSender.max.recipients", allProperties.get("mailSender.max.recipients"));
-	    properties.put("mailingList.host.name", allProperties.get("mailingList.host.name"));
+	    properties.put("mail.smtp.host", PropertiesManager.getProperty("mail.smtp.host"));
+	    properties.put("mail.smtp.name", PropertiesManager.getProperty("mail.smtp.name"));
+	    properties.put("mailSender.max.recipients", PropertiesManager.getProperty("mailSender.max.recipients"));
+	    properties.put("mailingList.host.name", PropertiesManager.getProperty("mailingList.host.name"));
 	    properties.put("mail.debug", "true");
 	    final Session tempSession = Session.getDefaultInstance(properties, null);
 	    for (final Entry<Object, Object> entry : tempSession.getProperties().entrySet()) {
