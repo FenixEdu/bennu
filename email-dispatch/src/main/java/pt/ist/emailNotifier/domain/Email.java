@@ -66,7 +66,6 @@ public class Email extends Email_Base {
     private static int MAX_MAIL_RECIPIENTS;
 
     private static synchronized Session init() {
-	try {
 	    final Properties properties = new Properties();
 	    properties.put("mail.smtp.host", PropertiesManager.getProperty("mail.smtp.host"));
 	    properties.put("mail.smtp.name", PropertiesManager.getProperty("mail.smtp.name"));
@@ -80,9 +79,6 @@ public class Email extends Email_Base {
 	    MAX_MAIL_RECIPIENTS = Integer.parseInt(properties.getProperty("mailSender.max.recipients"));
 	    SESSION = tempSession;
 	    return SESSION;
-	} catch (IOException e) {
-	    throw new RuntimeException(e);
-	}
     }
 
     public Email() {
