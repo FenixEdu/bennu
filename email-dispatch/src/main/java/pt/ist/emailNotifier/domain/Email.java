@@ -67,7 +67,7 @@ public class Email extends Email_Base {
 
     private static synchronized Session init() {
 	try {
-	    final Properties allProperties = PropertiesManager.loadProperties("/.build.properties");
+	    final Properties allProperties = PropertiesManager.loadProperties("/configuration.properties ");
 	    final Properties properties = new Properties();
 	    properties.put("mail.smtp.host", allProperties.get("mail.smtp.host"));
 	    properties.put("mail.smtp.name", allProperties.get("mail.smtp.name"));
