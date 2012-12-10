@@ -142,8 +142,8 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.jasperreports</groupId>
-			<artifactId>jasperreports</artifactId>
+			<groupId>jasperreports</groupId>
+			<artifactId>jasperreports-javaflow</artifactId>
 			<version>3.6.0</version>
 			<exclusions>
 				<exclusion>
