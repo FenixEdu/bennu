@@ -4,7 +4,7 @@
 
   <groupId>pt.ist</groupId>
   <artifactId>bennu-maven-plugin</artifactId>
-  <packaging>jar</packaging>
+  <packaging>maven-plugin</packaging>
   <version>1.0</version>
 
   <properties>
@@ -47,4 +47,16 @@
       <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
     </repository>
   </repositories>
+
+  <distributionManagement>
+	<repository>
+		<id>fenix-ashes-releases</id>
+		<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
+	</repository>
+	<snapshotRepository>
+		<id>fenix-ashes-snapshots</id>
+		<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-snapshots</url>
+	</snapshotRepository>
+  </distributionManagement>
+
 </project>
