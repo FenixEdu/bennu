@@ -1,26 +1,46 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <name>Bennu Maven Plugin</name>
-  <parent>
-    <groupId>pt.ist</groupId>
-    <artifactId>bennu-project</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
+
   <groupId>pt.ist</groupId>
   <artifactId>bennu-maven-plugin</artifactId>
   <packaging>jar</packaging>
   <version>1.0</version>
-  <properties/>
+
+  <properties>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<version.org.apache.maven>3.0.3</version.org.apache.maven>
+	<version.commons.io.commons.io>1.4</version.commons.io.commons.io>
+  </properties>
+
+	<build>
+		<plugins>
+		   <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>2.5.1</version>
+			<configuration>
+			    <source>1.7</source>
+			    <target>1.7</target>
+			</configuration>
+		    </plugin>
+		</plugins>
+	</build>
+
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
+      <version>${version.org.apache.maven}</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
+      <version>${version.commons.io.commons.io}</version>
     </dependency>
   </dependencies>
+
   <repositories>
     <repository>
       <id>fenix-ashes-maven-repository</id>
