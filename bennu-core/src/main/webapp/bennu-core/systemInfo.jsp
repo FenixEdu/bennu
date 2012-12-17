@@ -18,11 +18,18 @@
 </ul>
 <%
 	Properties prop = new Properties();
-	final InputStream inputStream = this.getClass().getResourceAsStream("/build.properties");
+	final InputStream inputStream = this.getClass().getResourceAsStream("/META-INF/resources/build.properties");
 	prop.load(inputStream);
 %>
 
 BuildVersion: <%= prop.getProperty("build.timestamp").toString() %>
+<logic:notEmpty name="jars">
+<ul>
+	<logic:iterate id="jar" name="jars">
+		<li><bean:write name="jar" property="name"/></li>
+	</logic:iterate>
+</ul>
+</logic:notEmpty>
 
 	
 	<ul>
