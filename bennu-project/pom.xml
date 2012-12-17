@@ -8,11 +8,11 @@
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<!-- "One POM to rule them all,                                -->
-	<!--  One POM to find them,                                    -->
-	<!--  One POM to bring them all                                -->
-	<!--  and in the darkness bind them."                          -->
-	<!--    - Anonymous Bennu Developer, The Fellowship of the POM -->
+	<!-- "One POM to rule them all, -->
+	<!-- One POM to find them, -->
+	<!-- One POM to bring them all -->
+	<!-- and in the darkness bind them." -->
+	<!-- - Anonymous Bennu Developer, The Fellowship of the POM -->
 	<name>Bennu Project</name>
 
 	<organization>
@@ -34,11 +34,12 @@
 		<skipTests>true</skipTests>
 
 		<!-- ************************************************************************************************ -->
-    		<!-- * DEPENDENCIES VERSIONS                                                                        * -->
-    		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer  * -->
-    		<!-- ************************************************************************************************ -->
+		<!-- * DEPENDENCIES VERSIONS * -->
+		<!-- * Please keep this list sorted alphabetically or you will feel the 
+			wrath of a Bennu Developer * -->
+		<!-- ************************************************************************************************ -->
 		<version.antlr.antlr>2.7.2</version.antlr.antlr>
-		<version.axis.axis>1.4</version.axis.axis>		
+		<version.axis.axis>1.4</version.axis.axis>
 		<version.cas.casclient>2.1.1</version.cas.casclient>
 		<version.com.google.guava.guava>12.0</version.com.google.guava.guava>
 		<version.com.google.gwt.gwt.user>2.3.0</version.com.google.gwt.gwt.user>
@@ -52,8 +53,8 @@
 		<version.com.sun.jersey.jersey.server>1.14</version.com.sun.jersey.jersey.server>
 		<version.com.sun.jersey.jersey.servlet>1.14</version.com.sun.jersey.jersey.servlet>
 		<version.commons.beanutils.commons.beanutils>1.6.1</version.commons.beanutils.commons.beanutils>
-        	<version.commons.codec.commons.codec>1.6</version.commons.codec.commons.codec>
-        	<version.commons.collections.commons.collections>3.2.1</version.commons.collections.commons.collections>
+		<version.commons.codec.commons.codec>1.6</version.commons.codec.commons.codec>
+		<version.commons.collections.commons.collections>3.2.1</version.commons.collections.commons.collections>
 		<version.commons.httpclient.commons.httpclient>3.1</version.commons.httpclient.commons.httpclient>
 		<version.commons.io.commons.io>2.3</version.commons.io.commons.io>
 		<version.commons.lang.commons.lang>2.6</version.commons.lang.commons.lang>
@@ -83,9 +84,10 @@
 		<version.surftheedge.mjava>1.0</version.surftheedge.mjava>
 
 		<!-- ************************************************************************************************ -->
-    		<!-- * PLUGIN VERSIONS                                                                              * -->
-    		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer  * -->
-    		<!-- ************************************************************************************************ -->
+		<!-- * PLUGIN VERSIONS * -->
+		<!-- * Please keep this list sorted alphabetically or you will feel the 
+			wrath of a Bennu Developer * -->
+		<!-- ************************************************************************************************ -->
 		<version.com.alexnederlof.jasperreports.plugin>1.5-SNAPSHOT</version.com.alexnederlof.jasperreports.plugin>
 		<version.dml.dml.maven.plugin>1.1.4</version.dml.dml.maven.plugin>
 		<version.org.apache.maven.plugins.maven.compiler.plugin>2.5.1</version.org.apache.maven.plugins.maven.compiler.plugin>
@@ -130,7 +132,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${version.org.apache.maven.plugins.maven.surefire.plugin}</version>
 				<configuration>
-				  <skipTests>${skipTests}</skipTests>
+					<skipTests>${skipTests}</skipTests>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -153,6 +155,20 @@
 										<exclude>WEB-INF/web.xml</exclude>
 									</excludes>
 								</resource>
+								<resource>
+									<directory>src/main/resources</directory>
+									<filtering>false</filtering>
+									<excludes>
+										<exclude>build.properties</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>src/main/resources</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>build.properties</include>
+									</includes>
+								</resource>
 							</resources>
 						</configuration>
 					</execution>
@@ -172,7 +188,8 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- Explicitly define maven-deploy-plugin after others that run on the same phase to force exec order -->
+			<!-- Explicitly define maven-deploy-plugin after others that run on the 
+				same phase to force exec order -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
@@ -284,11 +301,11 @@
 					<artifactId>axistools-maven-plugin</artifactId>
 					<version>${version.org.codehaus.mojo.axistools.maven.plugin}</version>
 					<executions>
-					    <execution>
-						<goals>
-						    <goal>wsdl2java</goal>
-						</goals>
-					    </execution>
+						<execution>
+							<goals>
+								<goal>wsdl2java</goal>
+							</goals>
+						</execution>
 					</executions>
 				</plugin>
 			</plugins>
@@ -521,14 +538,14 @@
 				<version>${version.informa.informa}</version>
 			</dependency>
 			<dependency>
-			    <groupId>com.javabib</groupId>
-			    <artifactId>javabib-bin</artifactId>
-			    <version>${version.com.javabib.javabib.bin}</version>
+				<groupId>com.javabib</groupId>
+				<artifactId>javabib-bin</artifactId>
+				<version>${version.com.javabib.javabib.bin}</version>
 			</dependency>
 			<dependency>
-			    <groupId>axis</groupId>
-			    <artifactId>axis</artifactId>
-			    <version>${version.axis.axis}</version>
+				<groupId>axis</groupId>
+				<artifactId>axis</artifactId>
+				<version>${version.axis.axis}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
