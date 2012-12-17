@@ -58,7 +58,7 @@
 		<version.commons.io.commons.io>2.3</version.commons.io.commons.io>
 		<version.commons.lang.commons.lang>2.6</version.commons.lang.commons.lang>
 		<version.commons.logging.commons.logging>1.1.1</version.commons.logging.commons.logging>
-		<version.informa.informa>0.6.0</version.informa.informa>
+		<version.informa.informa>1.0</version.informa.informa>
 		<version.javax.mail.mail>1.4.2</version.javax.mail.mail>
 		<version.javax.servlet.jstl>1.2</version.javax.servlet.jstl>
 		<version.javax.ws.rs.jsr311.api>1.1</version.javax.ws.rs.jsr311.api>
