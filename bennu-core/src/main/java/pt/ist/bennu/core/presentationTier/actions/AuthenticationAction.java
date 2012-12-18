@@ -30,18 +30,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.joda.time.DateTime;
+
 import pt.ist.bennu.core.applicationTier.Authenticate;
 import pt.ist.bennu.core.applicationTier.Authenticate.UserView;
 import pt.ist.bennu.core.applicationTier.AuthenticationListner;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.DomainException;
 import pt.ist.bennu.core.domain.scheduler.TransactionalThread;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.joda.time.DateTime;
-
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.filters.I18NFilter;
@@ -65,7 +64,7 @@ import pt.utl.ist.fenix.tools.util.i18n.Language;
 public class AuthenticationAction extends ContextBaseAction {
 
     public static void login(final HttpServletRequest request, final String username, final String password, final boolean checkPassword) {
-	final UserView user = Authenticate.authenticate(username, password, checkPassword);
+	final UserView user = Authenticate.authenticate(username.trim(), password, checkPassword);
 	final HttpSession httpSession = request.getSession();
 	httpSession.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, user);
 
