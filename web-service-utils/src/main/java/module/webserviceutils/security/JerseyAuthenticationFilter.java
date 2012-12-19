@@ -15,16 +15,15 @@ import module.webserviceutils.domain.HostSystem;
 import module.webserviceutils.domain.ServerHost;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import pt.ist.bennu.core.applicationTier.Authenticate;
 import pt.ist.bennu.core.domain.User;
 
 public class JerseyAuthenticationFilter implements Filter {
+    private static final Logger LOG = Logger.getLogger(JerseyAuthenticationFilter.class);
 
-    @Override
     public void destroy() {
-	// TODO Auto-generated method stub
-
     }
 
     @Override
@@ -59,12 +58,24 @@ public class JerseyAuthenticationFilter implements Filter {
 	final String password = request.getHeader("__password__");
 
 	final String remoteHostUrl = getRemoteHostUrl(request);
+	boolean accessControl = false;
 
 	final ServerHost serverHost = HostSystem.getServerByClientAddress(remoteHostUrl);
-	if (serverHost != null && serverHost.matches(username, password)) {
-	    return serverHost.isEnabled();
+	if (serverHost != null) {
+	    if (serverHost.matches(username, password)) {
+		accessControl = serverHost.isEnabled();
+		if (!accessControl) {
+		    LOG.warn(String.format("disabled server host\nrequest url: %s\nusername: %s\npassword: %s\n", remoteHostUrl,
+			    username, password));
+		}
+	    } else {
+		LOG.warn(String.format("server host doesn't match\nhost: %s\nusername: %s\npassword: %s\n", remoteHostUrl,
+			username, password));
+	    }
+	} else {
+	    LOG.warn(String.format("server host is null : %s\n", remoteHostUrl));
 	}
-	return false;
+	return accessControl;
     }
 
     @Override
