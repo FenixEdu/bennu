@@ -26,13 +26,19 @@ package pt.ist.bennu.core.presentationTier.actions;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.bennu.core.applicationTier.Authenticate.UserView;
 import pt.ist.bennu.core.domain.RoleType;
 import pt.ist.bennu.core.domain.User;
@@ -49,6 +55,7 @@ import pt.utl.ist.fenix.tools.util.ByteArray;
 import pt.ist.bennu.core.presentationTier.Context;
 import pt.ist.bennu.core.presentationTier.LayoutContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -56,6 +63,8 @@ import org.apache.struts.action.ActionMapping;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.servlets.functionalities.CreateNodeAction;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
+import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
+import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 @Mapping(path = "/configuration")
@@ -340,7 +349,30 @@ public class ConfigurationAction extends ContextBaseAction {
     }
 
     public ActionForward viewSystemConfig(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
+	    final HttpServletResponse response) throws IOException, FenixFrameworkProjectException {
+    	String propertiesLocation = "/" + PropertiesManager.getProperty("app.name") + "/project.properties";
+    	
+    	ArrayList<String> modulesList = new ArrayList<String>();
+    	for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(PropertiesManager.getProperty("app.name")) 
+	    .getArtifacts()) {
+    		modulesList.add(artifact.getName());
+    	}
+//    	Properties projectProperties = new Properties();
+//    	projectProperties.load(getClass().getResourceAsStream(propertiesLocation));
+    	
+//    	final String[] modules = projectProperties.getProperty("depends").split(",");
+    	final String[] modules = (String[]) modulesList.toArray(new String[0]);
+    	
+    	File[] listModulesFiles = new File(request.getServletContext().getRealPath("/WEB-INF/lib")).listFiles(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith("jar") && StringUtils.indexOfAny(name, modules) >= 0;
+			}
+		});
+    	
+    	List<File> modulesFileList = new ArrayList<File>(Arrays.asList(listModulesFiles));
+    			
     	File[] listFiles = new File(request.getServletContext().getRealPath("/WEB-INF/lib")).listFiles(new FilenameFilter() {
 			
 			@Override
@@ -348,8 +380,15 @@ public class ConfigurationAction extends ContextBaseAction {
 				return name.endsWith("jar");
 			}
 		});
-    	Arrays.sort(listFiles);
-    	setAttribute(request, "jars", listFiles);
+    	
+    	List<File> listFilesList = new ArrayList<File>(Arrays.asList(listFiles));
+    	listFilesList.removeAll(modulesFileList);
+    	
+    	Collections.sort(modulesFileList);
+    	Collections.sort(listFilesList);
+    	
+    	setAttribute(request, "AllOtherJars", listFilesList);
+    	setAttribute(request, "AllModuleJars", modulesFileList);
 	return getContext(request).forward("/bennu-core/systemInfo.jsp");
     }
 

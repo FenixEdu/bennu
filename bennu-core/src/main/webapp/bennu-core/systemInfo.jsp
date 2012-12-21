@@ -23,14 +23,23 @@
 %>
 
 BuildVersion: <%= prop.getProperty("build.timestamp").toString() %>
-<logic:notEmpty name="jars">
+<p>Module Jars:</p>
+<logic:notEmpty name="AllModuleJars">
 <ul>
-	<logic:iterate id="jar" name="jars">
+	<logic:iterate id="jar" name="AllModuleJars">
 		<li><bean:write name="jar" property="name"/></li>
 	</logic:iterate>
 </ul>
 </logic:notEmpty>
 
+<p>Other Jars:</p>
+<logic:notEmpty name="AllOtherJars">
+<ul>
+	<logic:iterate id="jar" name="AllOtherJars">
+		<li><bean:write name="jar" property="name"/></li>
+	</logic:iterate>
+</ul>
+</logic:notEmpty>
 	
 	<ul>
 		<li>
