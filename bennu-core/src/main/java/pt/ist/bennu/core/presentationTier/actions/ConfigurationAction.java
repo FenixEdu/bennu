@@ -26,6 +26,7 @@ package pt.ist.bennu.core.presentationTier.actions;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -347,6 +348,7 @@ public class ConfigurationAction extends ContextBaseAction {
 				return name.endsWith("jar");
 			}
 		});
+    	Arrays.sort(listFiles);
     	setAttribute(request, "jars", listFiles);
 	return getContext(request).forward("/bennu-core/systemInfo.jsp");
     }
