@@ -1,28 +1,36 @@
 package pt.ist.bennu.core.domain.groups.mutable;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.bennu.core.util.BundleUtil;
+import pt.ist.bennu.service.Service;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 
 public class PeopleGroup extends PeopleGroup_Base {
-	public PeopleGroup() {
+	protected PeopleGroup(Set<User> users) {
 		super();
+		getMemberSet().addAll(users);
 	}
 
-	public PeopleGroup(User user) {
-		this();
-		addMember(user);
-	}
+	@Override
+	public String getName() {
+		Iterable<String> names = Iterables.transform(getMemberSet(), new Function<User, String>() {
+			@Override
+			public String apply(User user) {
+				return user.getShortPresentationName();
+			}
+		});
 
-	public PeopleGroup(String name) {
-		this();
-		setName(name);
-	}
-
-	public PeopleGroup(User user, String name) {
-		this();
-		addMember(user);
-		setName(name);
+		return BundleUtil.getString("BennuResources", "label.persistent.group." + getClass().getSimpleName(), Joiner.on(", ")
+				.join(names));
 	}
 
 	@Override
@@ -36,21 +44,32 @@ public class PeopleGroup extends PeopleGroup_Base {
 	}
 
 	public PeopleGroup grant(User user) {
-		PeopleGroup group = copyAndPushHistory(this);
-		group.addMember(user);
-		return group;
+		Set<User> users = new HashSet<>(getMemberSet());
+		users.add(user);
+		return PeopleGroup.getInstance(users);
 	}
 
 	public PeopleGroup revoke(User user) {
-		PeopleGroup group = copyAndPushHistory(this);
-		group.removeMember(user);
-		return group;
+		Set<User> users = new HashSet<>(getMemberSet());
+		users.remove(user);
+		return PeopleGroup.getInstance(users);
 	}
 
-	public PeopleGroup changeMembers(Set<User> users) {
-		PeopleGroup group = copyAndPushHistory(this);
-		group.getMemberSet().clear();
-		group.getMemberSet().addAll(users);
-		return group;
+	@Service
+	public static PeopleGroup getInstance(User... users) {
+		return getInstance(new HashSet<>(Arrays.asList(users)));
+	}
+
+	@Service
+	public static PeopleGroup getInstance(Set<User> users) {
+		for (PersistentGroup group : Bennu.getInstance().getGroupsSet()) {
+			if (group instanceof PeopleGroup) {
+				PeopleGroup intersectionGroup = (PeopleGroup) group;
+				if (Iterables.elementsEqual(intersectionGroup.getMemberSet(), users)) {
+					return intersectionGroup;
+				}
+			}
+		}
+		return new PeopleGroup(users);
 	}
 }

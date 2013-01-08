@@ -1,7 +1,6 @@
 package pt.ist.bennu.core.domain.groups.mutable;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -17,17 +16,22 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 public class IntersectionGroup extends IntersectionGroup_Base {
-	protected IntersectionGroup() {
+	protected IntersectionGroup(Set<PersistentGroup> persistentGroups) {
 		super();
-	}
-
-	public IntersectionGroup(final PersistentGroup... persistentGroups) {
-		this(Arrays.asList(persistentGroups));
-	}
-
-	public IntersectionGroup(final Collection<PersistentGroup> persistentGroups) {
-		this();
 		getPersistentGroupsSet().addAll(persistentGroups);
+	}
+
+	@Override
+	public String getName() {
+		Iterable<String> names = Iterables.transform(getPersistentGroupsSet(), new Function<PersistentGroup, String>() {
+			@Override
+			public String apply(PersistentGroup group) {
+				return "(" + group.getName() + ")";
+			}
+		});
+
+		return BundleUtil.getString("BennuResources", "label.persistent.group." + getClass().getSimpleName(), Joiner.on(" AND ")
+				.join(names));
 	}
 
 	@Override
@@ -44,22 +48,6 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 	}
 
 	@Override
-	public String getName() {
-		if (getName() != null) {
-			return getName();
-		}
-		Iterable<String> names = Iterables.transform(getPersistentGroupsSet(), new Function<PersistentGroup, String>() {
-			@Override
-			public String apply(PersistentGroup group) {
-				return "(" + group.getName() + ")";
-			}
-		});
-
-		return BundleUtil.getString("BennuResources", "label.persistent.group." + getClass().getSimpleName(), Joiner.on(" AND ")
-				.join(names));
-	}
-
-	@Override
 	public boolean isMember(final User user) {
 		if (getPersistentGroupsCount() == 0) {
 			return false;
@@ -73,11 +61,16 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 	}
 
 	@Service
-	public static IntersectionGroup getOrCreateGroup(final PersistentGroup... persistentGroups) {
+	public static IntersectionGroup getInstance(final PersistentGroup... persistentGroups) {
+		return getInstance(new HashSet<>(Arrays.asList(persistentGroups)));
+	}
+
+	@Service
+	public static IntersectionGroup getInstance(Set<PersistentGroup> persistentGroups) {
 		for (PersistentGroup group : Bennu.getInstance().getGroupsSet()) {
 			if (group instanceof IntersectionGroup) {
 				IntersectionGroup intersectionGroup = (IntersectionGroup) group;
-				if (Iterables.elementsEqual(intersectionGroup.getPersistentGroups(), Arrays.asList(persistentGroups))) {
+				if (Iterables.elementsEqual(intersectionGroup.getPersistentGroups(), persistentGroups)) {
 					return intersectionGroup;
 				}
 			}

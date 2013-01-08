@@ -86,11 +86,6 @@ public class User extends User_Base {
 		return hash.equals(getPassword());
 	}
 
-	@Service
-	public static User createNewUser(final String username) {
-		return new User(username);
-	}
-
 	public String getPresentationName() {
 		return strategy.present(this);
 	}

@@ -10,7 +10,7 @@ import pt.ist.bennu.service.Service;
 public class ManagerGroup extends ManagerGroup_Base {
 	protected ManagerGroup() {
 		super();
-		setManagerGroup(new PeopleGroup(UserView.getUser()));
+		setManagerGroup(PeopleGroup.getInstance(UserView.getUser()));
 	}
 
 	@Override
@@ -21,6 +21,14 @@ public class ManagerGroup extends ManagerGroup_Base {
 	@Override
 	public boolean isMember(final User user) {
 		return getManagerGroup().isMember(user);
+	}
+
+	public void grant(User user) {
+		setManagerGroup(getManagerGroup().grant(user));
+	}
+
+	public void revoke(User user) {
+		setManagerGroup(getManagerGroup().revoke(user));
 	}
 
 	@Service

@@ -1,7 +1,6 @@
 package pt.ist.bennu.core.domain.groups.mutable;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,33 +15,13 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 public class UnionGroup extends UnionGroup_Base {
-	public UnionGroup() {
+	protected UnionGroup(Set<PersistentGroup> persistentGroups) {
 		super();
-	}
-
-	public UnionGroup(final PersistentGroup... persistentGroups) {
-		this(Arrays.asList(persistentGroups));
-	}
-
-	public UnionGroup(final Collection<PersistentGroup> persistentGroups) {
-		this();
 		getPersistentGroupsSet().addAll(persistentGroups);
 	}
 
 	@Override
-	public Set<User> getMembers() {
-		final Set<User> users = new HashSet<>();
-		for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
-			users.addAll(persistentGroup.getMembers());
-		}
-		return users;
-	}
-
-	@Override
 	public String getName() {
-		if (getName() != null) {
-			return getName();
-		}
 		Iterable<String> names = Iterables.transform(getPersistentGroupsSet(), new Function<PersistentGroup, String>() {
 			@Override
 			public String apply(PersistentGroup group) {
@@ -52,6 +31,15 @@ public class UnionGroup extends UnionGroup_Base {
 
 		return BundleUtil.getString("BennuResources", "label.persistent.group." + getClass().getSimpleName(), Joiner.on(" AND ")
 				.join(names));
+	}
+
+	@Override
+	public Set<User> getMembers() {
+		final Set<User> users = new HashSet<>();
+		for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
+			users.addAll(persistentGroup.getMembers());
+		}
+		return users;
 	}
 
 	@Override
@@ -65,11 +53,16 @@ public class UnionGroup extends UnionGroup_Base {
 	}
 
 	@Service
-	public static UnionGroup getOrCreateGroup(final PersistentGroup... persistentGroups) {
+	public static UnionGroup getInstance(final PersistentGroup... persistentGroups) {
+		return getInstance(new HashSet<>(Arrays.asList(persistentGroups)));
+	}
+
+	@Service
+	public static UnionGroup getInstance(Set<PersistentGroup> persistentGroups) {
 		for (PersistentGroup group : Bennu.getInstance().getGroupsSet()) {
 			if (group instanceof UnionGroup) {
 				UnionGroup unionGroup = (UnionGroup) group;
-				if (Iterables.elementsEqual(unionGroup.getPersistentGroups(), Arrays.asList(persistentGroups))) {
+				if (Iterables.elementsEqual(unionGroup.getPersistentGroups(), persistentGroups)) {
 					return unionGroup;
 				}
 			}

@@ -9,9 +9,14 @@ import pt.ist.bennu.core.domain.groups.PersistentGroup;
 import pt.ist.bennu.service.Service;
 
 public class NegationGroup extends NegationGroup_Base {
-	public NegationGroup(PersistentGroup persistentGroup) {
+	protected NegationGroup(PersistentGroup persistentGroup) {
 		super();
 		setPersistentGroup(persistentGroup);
+	}
+
+	@Override
+	public String getName() {
+		return "NOT " + getPersistentGroup().getName();
 	}
 
 	@Override
@@ -22,22 +27,12 @@ public class NegationGroup extends NegationGroup_Base {
 	}
 
 	@Override
-	public String getName() {
-		return "NOT " + getPersistentGroup().getName();
-	}
-
-	@Override
 	public boolean isMember(User user) {
 		return !getPersistentGroup().isMember(user);
 	}
 
 	@Service
-	public static NegationGroup createNegationGroup(final PersistentGroup persistentGroup) {
-		return new NegationGroup(persistentGroup);
-	}
-
-	@Service
-	public static NegationGroup getOrCreateGroup(final PersistentGroup persistentGroup) {
+	public static NegationGroup getInstance(final PersistentGroup persistentGroup) {
 		for (PersistentGroup group : Bennu.getInstance().getGroupsSet()) {
 			if (group instanceof NegationGroup) {
 				NegationGroup negationGroup = (NegationGroup) group;

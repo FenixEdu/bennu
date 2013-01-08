@@ -57,7 +57,6 @@ relation SystemUsers {
 /* Authorization Groups */
 
 class groups.PersistentGroup {
-	DateTime created (REQUIRED);
 }
 
 relation PersistentGroups {
@@ -65,15 +64,6 @@ relation PersistentGroups {
 		multiplicity 1..1;
 	}
 	groups.PersistentGroup playsRole groups {
-		multiplicity *;
-	}
-}
-
-relation PersistentGroupCreator {
-	User playsRole creator {
-		multiplicity 1..1;
-	}
-	groups.PersistentGroup playsRole {
 		multiplicity *;
 	}
 }
@@ -105,45 +95,20 @@ class groups.immutable.UserGroup extends groups.immutable.ImmutableGroup {
 class groups.immutable.ManagerGroup extends groups.immutable.ImmutableGroup {
 }
 
+class groups.mutable.PeopleGroup extends groups.PersistentGroup {
+}
+
 relation ManagerGroupPeople {
 	groups.immutable.ManagerGroup playsRole {
 		multiplicity 0..1;
 	}
-	groups.PersistentGroup playsRole managerGroup {
+	groups.mutable.PeopleGroup playsRole managerGroup {
 		multiplicity 1..1;
 	}
-}
-
-class groups.SingleUserGroup extends groups.PersistentGroup {
-}
-
-relation UserSingleUserGroup {
-	groups.SingleUserGroup playsRole singleUserGroup {
-		multiplicity 0..1;
-	}
-	User playsRole user {
-		multiplicity 1..1;
-	}
-}
-
-class groups.mutable.MutableGroup extends groups.PersistentGroup {
-	String name;
-}
-
-relation MutableGroupHistoric {
-	groups.mutable.MutableGroup playsRole next {
-		multiplicity 0..1;
-	}
-	groups.mutable.MutableGroup playsRole previous {
-		multiplicity 0..1;
-	}
-}
-
-class groups.mutable.PeopleGroup extends groups.mutable.MutableGroup {
 }
 
 relation PeopleGroupMembers {
-	groups.mutable.PeopleGroup playsRole peopleGroups {
+	groups.mutable.PeopleGroup playsRole {
 		multiplicity *;
 	}
 	User playsRole member {
@@ -151,38 +116,38 @@ relation PeopleGroupMembers {
 	}
 }
 
-class groups.mutable.UnionGroup extends groups.mutable.MutableGroup {
+class groups.mutable.UnionGroup extends groups.PersistentGroup {
 }
 
 relation PersistentGroupUnionGroup {
 	groups.PersistentGroup playsRole persistentGroups {
 		multiplicity 1..*;
 	}
-	groups.mutable.UnionGroup playsRole unionGroups {
+	groups.mutable.UnionGroup playsRole {
 		multiplicity *;
 	}
 }
 
-class groups.mutable.IntersectionGroup extends groups.mutable.MutableGroup {
+class groups.mutable.IntersectionGroup extends groups.PersistentGroup {
 }
 
 relation PersistentGroupIntersectionGroup {
 	groups.PersistentGroup playsRole persistentGroups {
 		multiplicity 1..*;
 	}
-	groups.mutable.IntersectionGroup playsRole intersectionGroups {
+	groups.mutable.IntersectionGroup playsRole {
 		multiplicity *;
 	}
 }
 
-class groups.mutable.NegationGroup extends groups.mutable.MutableGroup {
+class groups.mutable.NegationGroup extends groups.PersistentGroup {
 }
 
 relation PersistentGroupNegationGroup {
 	groups.PersistentGroup playsRole persistentGroup {
 		multiplicity 1..1;
 	}
-	groups.mutable.NegationGroup playsRole negationGroups {
+	groups.mutable.NegationGroup playsRole {
 		multiplicity *;
 	}
 }
