@@ -1,5 +1,5 @@
 /*
- * @(#)FenixFrameworkInitializer.java
+ * @(#)AuthenticationListner.java
  * 
  * Copyright 2011 Instituto Superior Tecnico Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
  * 
@@ -17,17 +17,20 @@
  * You should have received a copy of the GNU Lesser General Public License along with Bennu. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package pt.ist.fenixframework;
+package pt.ist.bennu.core.security;
 
-import pt.ist.bennu.core.util.ConfigurationManager;
+import java.util.HashSet;
+import java.util.Set;
+
+import pt.ist.bennu.core.domain.User;
 
 /**
  * 
  * @author Luis Cruz
  * 
  */
-public class FenixFrameworkInitializer {
-	static {
-		FenixFramework.bootStrap(ConfigurationManager.getFenixFrameworkConfig());
-	}
+public interface AuthenticationListener {
+	public static final Set<AuthenticationListener> LOGIN_LISTNERS = new HashSet<>();
+
+	public void afterLogin(final User user);
 }

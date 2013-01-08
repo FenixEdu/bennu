@@ -1,7 +1,7 @@
 /*
- * @(#)FenixFrameworkInitializer.java
+ * @(#)Bennu.java
  * 
- * Copyright 2011 Instituto Superior Tecnico Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
+ * Copyright 2009 Instituto Superior Tecnico Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
  * 
  * https://fenix-ashes.ist.utl.pt/
  * 
@@ -17,17 +17,23 @@
  * You should have received a copy of the GNU Lesser General Public License along with Bennu. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package pt.ist.fenixframework;
+package pt.ist.bennu.core.domain;
 
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.fenixframework.FenixFramework;
 
-/**
- * 
- * @author Luis Cruz
- * 
- */
-public class FenixFrameworkInitializer {
-	static {
-		FenixFramework.bootStrap(ConfigurationManager.getFenixFrameworkConfig());
+public class Bennu extends Bennu_Base {
+	public static Bennu getInstance() {
+		return FenixFramework.getRoot();
+	}
+
+	public Bennu() {
+		super();
+		checkIfIsSingleton();
+	}
+
+	private void checkIfIsSingleton() {
+		if (FenixFramework.getRoot() != null && FenixFramework.getRoot() != this) {
+			throw new Error("There can only be one! (instance of Bennu)");
+		}
 	}
 }

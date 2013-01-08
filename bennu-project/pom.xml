@@ -5,7 +5,7 @@
 
 	<groupId>pt.ist</groupId>
 	<artifactId>bennu-project</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<!-- "One POM to rule them all, -->
@@ -67,6 +67,7 @@
 		<version.joda.time.joda.time>1.5.2</version.joda.time.joda.time>
 		<version.joda.time.joda.time.jsptags>1.1.1</version.joda.time.joda.time.jsptags>
 		<version.log4j.log4j>1.2.16</version.log4j.log4j>
+        <version.slf4j.api>1.7.2</version.slf4j.api>
 		<version.jasperreports.jasperreports.javaflow>3.6.0</version.jasperreports.jasperreports.javaflow>
 		<version.org.apache.lucene.lucene.core>3.5.0</version.org.apache.lucene.lucene.core>
 		<version.org.apache.pdfbox.pdfbox>1.6.0</version.org.apache.pdfbox.pdfbox>
@@ -87,7 +88,7 @@
 		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
 		<!-- ************************************************************************************************ -->
 		<version.com.alexnederlof.jasperreports.plugin>1.5-SNAPSHOT</version.com.alexnederlof.jasperreports.plugin>
-		<version.dml.dml.maven.plugin>1.2.1</version.dml.dml.maven.plugin>
+		<version.dml.dml.maven.plugin>1.1.4</version.dml.dml.maven.plugin>
 		<version.org.apache.maven.plugins.maven.compiler.plugin>2.5.1</version.org.apache.maven.plugins.maven.compiler.plugin>
 		<version.org.apache.maven.plugins.maven.deploy.plugin>2.7</version.org.apache.maven.plugins.maven.deploy.plugin>
 		<version.org.apache.maven.plugins.maven.enforcer.plugin>1.1.1</version.org.apache.maven.plugins.maven.enforcer.plugin>
@@ -97,7 +98,7 @@
 		<version.org.apache.maven.plugins.maven.surefire.plugin>2.12.4</version.org.apache.maven.plugins.maven.surefire.plugin>
 		<version.org.apache.maven.plugins.maven.war.plugin>2.3</version.org.apache.maven.plugins.maven.war.plugin>
 		<version.org.codehaus.mojo.axistools.maven.plugin>1.4</version.org.codehaus.mojo.axistools.maven.plugin>
-		<version.pt.ist.bennu.maven.plugin>1.1-SNAPSHOT</version.pt.ist.bennu.maven.plugin>
+		<version.pt.ist.bennu.maven.plugin>1.0</version.pt.ist.bennu.maven.plugin>
 	</properties>
 
 	<build>
@@ -509,6 +510,11 @@
 				<artifactId>log4j</artifactId>
 				<version>${version.log4j.log4j}</version>
 			</dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.slf4j.api}</version>
+            </dependency>
 			<dependency>
 				<groupId>com.google</groupId>
 				<artifactId>soastation</artifactId>
