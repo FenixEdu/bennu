@@ -1,4 +1,4 @@
-package pt.ist.bennu.core.domain.groups.immutable;
+package pt.ist.bennu.core.domain.groups;
 
 import java.util.Collections;
 import java.util.Set;
@@ -10,6 +10,7 @@ import pt.ist.bennu.service.Service;
 public class UserGroup extends UserGroup_Base {
 	protected UserGroup() {
 		super();
+		setSystem(Bennu.getInstance());
 	}
 
 	@Override

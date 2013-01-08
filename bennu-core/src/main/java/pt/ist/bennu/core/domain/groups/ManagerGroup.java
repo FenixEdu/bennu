@@ -1,15 +1,16 @@
-package pt.ist.bennu.core.domain.groups.immutable;
+package pt.ist.bennu.core.domain.groups;
 
 import java.util.Set;
 
+import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.groups.mutable.PeopleGroup;
 import pt.ist.bennu.core.security.UserView;
 import pt.ist.bennu.service.Service;
 
 public class ManagerGroup extends ManagerGroup_Base {
 	protected ManagerGroup() {
 		super();
+		setSystem(Bennu.getInstance());
 		setManagerGroup(PeopleGroup.getInstance(UserView.getUser()));
 	}
 

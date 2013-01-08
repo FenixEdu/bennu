@@ -1,4 +1,4 @@
-package pt.ist.bennu.core.domain.groups.mutable;
+package pt.ist.bennu.core.domain.groups;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -6,7 +6,6 @@ import java.util.Set;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.groups.PersistentGroup;
 import pt.ist.bennu.core.util.BundleUtil;
 import pt.ist.bennu.service.Service;
 

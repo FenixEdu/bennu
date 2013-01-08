@@ -31,4 +31,14 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 	public abstract Set<User> getMembers();
 
 	public abstract boolean isMember(final User user);
+
+	@SuppressWarnings("unchecked")
+	protected static <T extends PersistentGroup> T getSystemGroup(Class<? extends T> clazz) {
+		for (final PersistentGroup group : Bennu.getInstance().getSystemGroupsSet()) {
+			if (group.getClass().isAssignableFrom(clazz)) {
+				return (T) group;
+			}
+		}
+		return null;
+	}
 }

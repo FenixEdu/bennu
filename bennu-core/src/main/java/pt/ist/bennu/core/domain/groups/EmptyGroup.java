@@ -1,14 +1,16 @@
-package pt.ist.bennu.core.domain.groups.immutable;
+package pt.ist.bennu.core.domain.groups;
 
 import java.util.Collections;
 import java.util.Set;
 
+import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
 public class EmptyGroup extends EmptyGroup_Base {
 	protected EmptyGroup() {
 		super();
+		setSystem(Bennu.getInstance());
 	}
 
 	@Override
