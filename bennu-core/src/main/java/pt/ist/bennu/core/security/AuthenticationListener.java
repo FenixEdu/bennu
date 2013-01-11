@@ -19,9 +19,6 @@
  */
 package pt.ist.bennu.core.security;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import pt.ist.bennu.core.domain.User;
 
 /**
@@ -30,7 +27,5 @@ import pt.ist.bennu.core.domain.User;
  * 
  */
 public interface AuthenticationListener {
-	public static final Set<AuthenticationListener> LOGIN_LISTNERS = new HashSet<>();
-
 	public void afterLogin(final User user);
 }

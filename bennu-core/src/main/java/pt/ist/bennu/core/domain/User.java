@@ -4,13 +4,15 @@ import java.util.Comparator;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.exceptions.DomainException;
 import pt.ist.bennu.service.Service;
 
 public class User extends User_Base {
+	private static final Logger logger = LoggerFactory.getLogger(User.class);
 
 	public interface UserPresentationStrategy {
 		public String present(User user);
@@ -101,7 +103,7 @@ public class User extends User_Base {
 
 	public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
 		if (strategy != defaultStrategy) {
-			Logger.getLogger(User.class).warn("Overriding non-default strategy");
+			logger.warn("Overriding non-default strategy");
 		}
 		strategy = newStrategy;
 	}

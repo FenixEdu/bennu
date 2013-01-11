@@ -19,6 +19,9 @@
  */
 package pt.ist.bennu.core.security;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
@@ -39,20 +42,19 @@ import pt.ist.bennu.service.Service;
 public class Authenticate {
 	private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
 
-	public static User authenticate(HttpSession session, String username, String password) {
-		User user = internalAuthenticate(username, password);
+	private static Set<AuthenticationListener> authenticationListeners;
+
+	public static User login(HttpSession session, String username, String password) {
+		User user = internalLogin(username, password);
 		session.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, new SessionUserWrapper(user));
 
-		for (AuthenticationListener listener : AuthenticationListener.LOGIN_LISTNERS) {
-			listener.afterLogin(user);
-		}
-
+		fireLoginListeners(user);
 		logger.info("Logged in user: " + user.getUsername());
 		return user;
 	}
 
 	@Service
-	private static final User internalAuthenticate(String username, String password) {
+	private static final User internalLogin(String username, String password) {
 		User user = User.findByUsername(username);
 		final String check = ConfigurationManager.getProperty("check.login.password");
 		if (check != null && Boolean.parseBoolean(check)) {
@@ -74,5 +76,26 @@ public class Authenticate {
 		}
 		UserView.setSessionUserWrapper(null);
 		session.invalidate();
+	}
+
+	public static void addAuthenticationListener(AuthenticationListener listener) {
+		if (authenticationListeners == null) {
+			authenticationListeners = new HashSet<>();
+		}
+		authenticationListeners.add(listener);
+	}
+
+	public static void removeAuthenticationListener(AuthenticationListener listener) {
+		if (authenticationListeners != null) {
+			authenticationListeners.remove(listener);
+		}
+	}
+
+	private static void fireLoginListeners(User user) {
+		if (authenticationListeners != null) {
+			for (AuthenticationListener listener : authenticationListeners) {
+				listener.afterLogin(user);
+			}
+		}
 	}
 }
