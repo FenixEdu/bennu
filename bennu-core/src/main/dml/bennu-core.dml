@@ -77,7 +77,7 @@ relation SystemGroups {
 	}
 }
 
-class groups.EmptyGroup extends groups.PersistentGroup {
+class groups.NobodyGroup extends groups.PersistentGroup {
 }
 
 class groups.AnonymousGroup extends groups.PersistentGroup {
@@ -86,22 +86,10 @@ class groups.AnonymousGroup extends groups.PersistentGroup {
 class groups.AnyoneGroup extends groups.PersistentGroup {
 }
 
-class groups.UserGroup extends groups.PersistentGroup {
-}
-
-class groups.ManagerGroup extends groups.PersistentGroup {
+class groups.LoggedGroup extends groups.PersistentGroup {
 }
 
 class groups.PeopleGroup extends groups.PersistentGroup {
-}
-
-relation ManagerGroupPeople {
-	groups.ManagerGroup playsRole {
-		multiplicity 0..1;
-	}
-	groups.PeopleGroup playsRole managerGroup {
-		multiplicity 1..1;
-	}
 }
 
 relation PeopleGroupMembers {
@@ -113,35 +101,32 @@ relation PeopleGroupMembers {
 	}
 }
 
-class groups.UnionGroup extends groups.PersistentGroup {
+class groups.CompositionGroup extends groups.PersistentGroup {
 }
 
 relation PersistentGroupUnionGroup {
-	groups.PersistentGroup playsRole persistentGroups {
+	groups.PersistentGroup playsRole children {
 		multiplicity 1..*;
 	}
-	groups.UnionGroup playsRole {
+	groups.CompositionGroup playsRole {
 		multiplicity *;
 	}
 }
 
-class groups.IntersectionGroup extends groups.PersistentGroup {
+class groups.UnionGroup extends groups.CompositionGroup {
 }
 
-relation PersistentGroupIntersectionGroup {
-	groups.PersistentGroup playsRole persistentGroups {
-		multiplicity 1..*;
-	}
-	groups.IntersectionGroup playsRole {
-		multiplicity *;
-	}
+class groups.IntersectionGroup extends groups.CompositionGroup {
+}
+
+class groups.DifferenceGroup extends groups.CompositionGroup {
 }
 
 class groups.NegationGroup extends groups.PersistentGroup {
 }
 
 relation PersistentGroupNegationGroup {
-	groups.PersistentGroup playsRole persistentGroup {
+	groups.PersistentGroup playsRole negated {
 		multiplicity 1..1;
 	}
 	groups.NegationGroup playsRole {

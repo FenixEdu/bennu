@@ -8,26 +8,26 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
 public class NegationGroup extends NegationGroup_Base {
-	protected NegationGroup(PersistentGroup persistentGroup) {
+	protected NegationGroup(PersistentGroup negated) {
 		super();
-		setPersistentGroup(persistentGroup);
+		setNegated(negated);
 	}
 
 	@Override
-	public String getName() {
-		return "NOT " + getPersistentGroup().getName();
+	public String expression() {
+		return "! " + getNegated().expression();
 	}
 
 	@Override
 	public Set<User> getMembers() {
 		Set<User> users = new HashSet<>(Bennu.getInstance().getUsersSet());
-		users.removeAll(getPersistentGroup().getMembers());
+		users.removeAll(getNegated().getMembers());
 		return users;
 	}
 
 	@Override
 	public boolean isMember(User user) {
-		return !getPersistentGroup().isMember(user);
+		return !getNegated().isMember(user);
 	}
 
 	@Service
@@ -35,7 +35,7 @@ public class NegationGroup extends NegationGroup_Base {
 		for (PersistentGroup group : Bennu.getInstance().getGroupsSet()) {
 			if (group instanceof NegationGroup) {
 				NegationGroup negationGroup = (NegationGroup) group;
-				if (negationGroup.getPersistentGroup().equals(persistentGroup)) {
+				if (negationGroup.getNegated().equals(persistentGroup)) {
 					return negationGroup;
 				}
 			}

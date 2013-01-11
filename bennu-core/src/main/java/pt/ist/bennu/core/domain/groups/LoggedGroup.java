@@ -7,30 +7,30 @@ import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
-public class AnyoneGroup extends AnyoneGroup_Base {
-	protected AnyoneGroup() {
+public class LoggedGroup extends LoggedGroup_Base {
+	protected LoggedGroup() {
 		super();
 		setSystem(Bennu.getInstance());
 	}
 
 	@Override
 	public String expression() {
-		return "anyone";
+		return "logged";
 	}
 
 	@Override
 	public Set<User> getMembers() {
-		return Collections.emptySet();
+		return Collections.unmodifiableSet(Bennu.getInstance().getUsersSet());
 	}
 
 	@Override
 	public boolean isMember(final User user) {
-		return true;
+		return user != null;
 	}
 
 	@Service
-	public static AnyoneGroup getInstance() {
-		final AnyoneGroup group = getSystemGroup(AnyoneGroup.class);
-		return group == null ? new AnyoneGroup() : group;
+	public static LoggedGroup getInstance() {
+		final LoggedGroup group = getSystemGroup(LoggedGroup.class);
+		return group == null ? new LoggedGroup() : group;
 	}
 }

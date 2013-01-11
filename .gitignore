@@ -10,3 +10,6 @@
 
 # Maven #
 target/
+
+# AntLR #
+output/

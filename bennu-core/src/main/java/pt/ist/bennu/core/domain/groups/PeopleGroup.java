@@ -6,7 +6,6 @@ import java.util.Set;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.util.BundleUtil;
 import pt.ist.bennu.service.Service;
 
 import com.google.common.base.Function;
@@ -20,16 +19,15 @@ public class PeopleGroup extends PeopleGroup_Base {
 	}
 
 	@Override
-	public String getName() {
-		Iterable<String> names = Iterables.transform(getMemberSet(), new Function<User, String>() {
+	public String expression() {
+		Iterable<String> usernames = Iterables.transform(getMemberSet(), new Function<User, String>() {
 			@Override
 			public String apply(User user) {
-				return user.getShortPresentationName();
+				return user.getUsername();
 			}
 		});
 
-		return BundleUtil.getString("BennuResources", "label.persistent.group." + getClass().getSimpleName(), Joiner.on(", ")
-				.join(names));
+		return "P(" + Joiner.on(", ").join(usernames) + ")";
 	}
 
 	@Override

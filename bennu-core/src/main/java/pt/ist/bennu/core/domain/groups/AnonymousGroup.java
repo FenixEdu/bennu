@@ -14,6 +14,11 @@ public class AnonymousGroup extends AnonymousGroup_Base {
 	}
 
 	@Override
+	public String expression() {
+		return "anonymous";
+	}
+
+	@Override
 	public Set<User> getMembers() {
 		return Collections.emptySet();
 	}

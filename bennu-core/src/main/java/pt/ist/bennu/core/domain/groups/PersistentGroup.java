@@ -1,32 +1,22 @@
 package pt.ist.bennu.core.domain.groups;
 
-import java.util.Comparator;
+import java.io.IOException;
 import java.util.Set;
+
+import org.antlr.runtime.RecognitionException;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.util.BundleUtil;
+import pt.ist.bennu.core.domain.exceptions.DomainException;
+import pt.ist.bennu.core.grouplanguage.GroupExpressionParser;
 
 public abstract class PersistentGroup extends PersistentGroup_Base {
-
-	public static final Comparator<PersistentGroup> COMPARATOR_BY_NAME = new Comparator<PersistentGroup>() {
-
-		@Override
-		public int compare(PersistentGroup r1, PersistentGroup r2) {
-			final int c = r1.getName().compareTo(r2.getName());
-			return c == 0 ? r1.getExternalId().compareTo(r2.getExternalId()) : c;
-		}
-
-	};
-
 	protected PersistentGroup() {
 		super();
 		setBennu(Bennu.getInstance());
 	}
 
-	public String getName() {
-		return BundleUtil.getString("BennuResources", "label.persistent.group." + getClass().getSimpleName());
-	}
+	public abstract String expression();
 
 	public abstract Set<User> getMembers();
 
@@ -40,5 +30,13 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 			}
 		}
 		return null;
+	}
+
+	public static PersistentGroup parse(String expression) {
+		try {
+			return GroupExpressionParser.parse(expression);
+		} catch (RecognitionException | IOException e) {
+			throw new DomainException(e, "BennuResources", "error.bennu.core.groups.parse");
+		}
 	}
 }

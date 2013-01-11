@@ -8,15 +8,15 @@ import java.util.Set;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
-public class IntersectionGroup extends IntersectionGroup_Base {
-	protected IntersectionGroup(Set<PersistentGroup> children) {
+public class DifferenceGroup extends DifferenceGroup_Base {
+	protected DifferenceGroup(Set<PersistentGroup> children) {
 		super();
 		init(children);
 	}
 
 	@Override
 	protected String operator() {
-		return "&";
+		return "-";
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 		if (iterator.hasNext()) {
 			users.addAll(iterator.next().getMembers());
 			while (iterator.hasNext()) {
-				users.retainAll(iterator.next().getMembers());
+				users.removeAll(iterator.next().getMembers());
 			}
 		}
 		return users;
@@ -34,11 +34,16 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 
 	@Override
 	public boolean isMember(final User user) {
-		if (getChildrenCount() == 0) {
+		Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
+		if (iterator.hasNext()) {
+			if (!iterator.next().isMember(user)) {
+				return false;
+			}
+		} else {
 			return false;
 		}
-		for (final PersistentGroup persistentGroup : getChildrenSet()) {
-			if (!persistentGroup.isMember(user)) {
+		while (iterator.hasNext()) {
+			if (iterator.next().isMember(user)) {
 				return false;
 			}
 		}
@@ -46,13 +51,13 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 	}
 
 	@Service
-	public static IntersectionGroup getInstance(final PersistentGroup... children) {
+	public static DifferenceGroup getInstance(final PersistentGroup... children) {
 		return getInstance(new HashSet<>(Arrays.asList(children)));
 	}
 
 	@Service
-	public static IntersectionGroup getInstance(Set<PersistentGroup> children) {
-		IntersectionGroup group = getInstance(IntersectionGroup.class, children);
-		return group != null ? group : new IntersectionGroup(children);
+	public static DifferenceGroup getInstance(Set<PersistentGroup> children) {
+		DifferenceGroup group = getInstance(DifferenceGroup.class, children);
+		return group != null ? group : new DifferenceGroup(children);
 	}
 }
