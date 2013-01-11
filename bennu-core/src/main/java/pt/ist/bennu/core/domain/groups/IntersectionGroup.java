@@ -5,8 +5,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
 public class IntersectionGroup extends IntersectionGroup_Base {
 	protected IntersectionGroup(Set<PersistentGroup> children) {
@@ -51,8 +56,13 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 	}
 
 	@Service
-	public static IntersectionGroup getInstance(Set<PersistentGroup> children) {
-		IntersectionGroup group = getInstance(IntersectionGroup.class, children);
+	public static IntersectionGroup getInstance(final Set<PersistentGroup> children) {
+		IntersectionGroup group = select(IntersectionGroup.class, new Predicate<IntersectionGroup>() {
+			@Override
+			public boolean apply(@Nullable IntersectionGroup input) {
+				return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
+			}
+		});
 		return group != null ? group : new IntersectionGroup(children);
 	}
 }

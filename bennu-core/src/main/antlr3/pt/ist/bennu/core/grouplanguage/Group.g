@@ -6,7 +6,7 @@ options {
 }
 
 tokens {
-	PEOPLE; USERNAME; EXPRESSION; ANONYMOUS; ANYONE; NOBODY; LOGGED;
+	PEOPLE; USERNAME; EXPRESSION; ANONYMOUS; ANYONE; NOBODY; LOGGED; CUSTOM;
 }
 
 @parser::header {
@@ -29,6 +29,7 @@ group
 	|	people
 	|	composition
 	|	negation
+	|	custom
 	;
 
 composition
@@ -38,6 +39,11 @@ composition
 	
 negation
 	:	'!'^ g=group
+	;
+
+custom
+	:	op=IDENTIFIER('(' arg+=IDENTIFIER (',' arg+=IDENTIFIER)* ')')?
+	->	^(CUSTOM $op $arg*)
 	;
 
 people
@@ -51,7 +57,7 @@ username
 	;
 	
 IDENTIFIER
-    :   ('a'..'z'|'A'..'Z'|'_'|'$') ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'$')*
+    :   ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'$')+
     ;
 
 WS  :   ( ' '

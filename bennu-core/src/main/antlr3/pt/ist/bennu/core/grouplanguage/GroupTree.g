@@ -24,6 +24,7 @@ group returns [Group value]
 	|	union { $value = $union.value; }
 	|	difference { $value = $difference.value; }
 	|	negation { $value = $negation.value; }
+	|	custom { $value = $custom.value; }
 	;
 
 intersection returns [Intersection value]
@@ -53,6 +54,14 @@ difference returns [Difference value]
 negation returns [Negation value]
 	:	^('!' group)
 		{ $value = new Negation($group.value); }
+	;
+
+custom returns [Custom value]
+	@init {
+		java.util.List<String> params = new java.util.ArrayList<>();
+	}
+	:	^(CUSTOM op=IDENTIFIER (arg=IDENTIFIER { params.add($arg.text); })*)
+		{ $value = new Custom($op.text, params); }
 	;
 
 people returns [People value]

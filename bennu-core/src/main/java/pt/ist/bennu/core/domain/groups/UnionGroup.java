@@ -4,8 +4,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
 public class UnionGroup extends UnionGroup_Base {
 	protected UnionGroup(Set<PersistentGroup> children) {
@@ -43,8 +48,13 @@ public class UnionGroup extends UnionGroup_Base {
 	}
 
 	@Service
-	public static UnionGroup getInstance(Set<PersistentGroup> children) {
-		UnionGroup group = getInstance(UnionGroup.class, children);
+	public static UnionGroup getInstance(final Set<PersistentGroup> children) {
+		UnionGroup group = select(UnionGroup.class, new Predicate<UnionGroup>() {
+			@Override
+			public boolean apply(@Nullable UnionGroup input) {
+				return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
+			}
+		});
 		return group != null ? group : new UnionGroup(children);
 	}
 }

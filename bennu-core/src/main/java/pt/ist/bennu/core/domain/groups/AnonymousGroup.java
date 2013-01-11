@@ -30,7 +30,7 @@ public class AnonymousGroup extends AnonymousGroup_Base {
 
 	@Service
 	public static AnonymousGroup getInstance() {
-		final AnonymousGroup group = getSystemGroup(AnonymousGroup.class);
+		final AnonymousGroup group = selectSystemGroup(AnonymousGroup.class);
 		return group == null ? new AnonymousGroup() : group;
 	}
 }

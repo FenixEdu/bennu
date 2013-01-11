@@ -5,8 +5,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 public class DifferenceGroup extends DifferenceGroup_Base {
 	protected DifferenceGroup(Set<PersistentGroup> children) {
@@ -56,8 +61,13 @@ public class DifferenceGroup extends DifferenceGroup_Base {
 	}
 
 	@Service
-	public static DifferenceGroup getInstance(Set<PersistentGroup> children) {
-		DifferenceGroup group = getInstance(DifferenceGroup.class, children);
+	public static DifferenceGroup getInstance(final Set<PersistentGroup> children) {
+		DifferenceGroup group = select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
+			@Override
+			public boolean apply(@Nullable DifferenceGroup input) {
+				return Iterables.elementsEqual(input.getChildrenSet(), children);
+			}
+		});
 		return group != null ? group : new DifferenceGroup(children);
 	}
 }

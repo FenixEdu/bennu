@@ -30,7 +30,7 @@ public class NobodyGroup extends NobodyGroup_Base {
 
 	@Service
 	public static NobodyGroup getInstance() {
-		final NobodyGroup group = getSystemGroup(NobodyGroup.class);
+		final NobodyGroup group = selectSystemGroup(NobodyGroup.class);
 		return group == null ? new NobodyGroup() : group;
 	}
 }

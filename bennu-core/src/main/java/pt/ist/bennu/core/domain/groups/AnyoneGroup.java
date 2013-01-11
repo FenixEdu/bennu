@@ -30,7 +30,7 @@ public class AnyoneGroup extends AnyoneGroup_Base {
 
 	@Service
 	public static AnyoneGroup getInstance() {
-		final AnyoneGroup group = getSystemGroup(AnyoneGroup.class);
+		final AnyoneGroup group = selectSystemGroup(AnyoneGroup.class);
 		return group == null ? new AnyoneGroup() : group;
 	}
 }

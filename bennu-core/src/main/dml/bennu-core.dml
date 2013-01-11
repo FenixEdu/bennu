@@ -125,6 +125,9 @@ class groups.DifferenceGroup extends groups.CompositionGroup {
 class groups.NegationGroup extends groups.PersistentGroup {
 }
 
+class groups.CustomGroup extends groups.PersistentGroup {
+}
+
 relation PersistentGroupNegationGroup {
 	groups.PersistentGroup playsRole negated {
 		multiplicity 1..1;

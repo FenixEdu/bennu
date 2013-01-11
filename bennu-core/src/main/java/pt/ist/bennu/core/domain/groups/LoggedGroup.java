@@ -30,7 +30,7 @@ public class LoggedGroup extends LoggedGroup_Base {
 
 	@Service
 	public static LoggedGroup getInstance() {
-		final LoggedGroup group = getSystemGroup(LoggedGroup.class);
+		final LoggedGroup group = selectSystemGroup(LoggedGroup.class);
 		return group == null ? new LoggedGroup() : group;
 	}
 }
