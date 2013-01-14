@@ -68,15 +68,6 @@ relation PersistentGroups {
 	}
 }
 
-relation SystemGroups {
-	Bennu playsRole system {
-		multiplicity 0..1;
-	}
-	groups.PersistentGroup playsRole systemGroups {
-		multiplicity *;
-	}
-}
-
 class groups.NobodyGroup extends groups.PersistentGroup {
 }
 
@@ -137,6 +128,37 @@ relation PersistentGroupNegationGroup {
 	}
 }
 
+class Authorization {
+	DateTime created (REQUIRED);
+}
+
+relation AuthorizationCreator {
+	Authorization playsRole {
+		multiplicity *;
+	}
+	User playsRole creator {
+		multiplicity 1..1;
+	}
+}
+
+relation AuthorizationGroup {
+	Authorization playsRole authorization {
+		multiplicity *;
+	}
+	groups.PersistentGroup playsRole group {
+		multiplicity 1..1;
+	}
+}
+
+relation AuthorizationHistoric {
+	Authorization playsRole previous {
+		multiplicity 0..1;
+	}
+	Authorization playsRole next {
+		multiplicity 0..1;
+	}
+}
+
 /* Password Recovery */
 class PasswordRecoveryRequest {
 	DateTime requested;
@@ -172,5 +194,16 @@ relation SystemHosts {
 	}
 	VirtualHost playsRole virtualHosts {
 		multiplicity *;
+	}
+}
+
+/* Managers */
+
+relation ManagerGroup {
+	VirtualHost playsRole virtualHosts {
+		multiplicity *;
+	}
+	Authorization playsRole managers {
+		multiplicity 1..1;
 	}
 }

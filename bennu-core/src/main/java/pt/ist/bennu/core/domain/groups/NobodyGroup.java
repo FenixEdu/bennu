@@ -3,14 +3,12 @@ package pt.ist.bennu.core.domain.groups;
 import java.util.Collections;
 import java.util.Set;
 
-import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
 public class NobodyGroup extends NobodyGroup_Base {
 	protected NobodyGroup() {
 		super();
-		setSystem(Bennu.getInstance());
 	}
 
 	@Override
@@ -30,7 +28,7 @@ public class NobodyGroup extends NobodyGroup_Base {
 
 	@Service
 	public static NobodyGroup getInstance() {
-		final NobodyGroup group = selectSystemGroup(NobodyGroup.class);
+		NobodyGroup group = select(NobodyGroup.class);
 		return group == null ? new NobodyGroup() : group;
 	}
 }

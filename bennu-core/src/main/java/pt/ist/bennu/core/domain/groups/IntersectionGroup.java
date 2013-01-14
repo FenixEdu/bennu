@@ -50,6 +50,13 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 		return true;
 	}
 
+	@Override
+	public PersistentGroup and(PersistentGroup group) {
+		Set<PersistentGroup> children = new HashSet<>(getChildrenSet());
+		children.add(group);
+		return IntersectionGroup.getInstance(children);
+	}
+
 	@Service
 	public static IntersectionGroup getInstance(final PersistentGroup... children) {
 		return getInstance(new HashSet<>(Arrays.asList(children)));

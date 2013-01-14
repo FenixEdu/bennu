@@ -4,13 +4,16 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.bennu.core.domain.Bennu;
+import javax.annotation.Nullable;
+
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 public class PeopleGroup extends PeopleGroup_Base {
 	protected PeopleGroup(Set<User> users) {
@@ -40,12 +43,14 @@ public class PeopleGroup extends PeopleGroup_Base {
 		return getMemberSet().contains(user);
 	}
 
+	@Override
 	public PeopleGroup grant(User user) {
 		Set<User> users = new HashSet<>(getMemberSet());
 		users.add(user);
 		return PeopleGroup.getInstance(users);
 	}
 
+	@Override
 	public PeopleGroup revoke(User user) {
 		Set<User> users = new HashSet<>(getMemberSet());
 		users.remove(user);
@@ -58,15 +63,13 @@ public class PeopleGroup extends PeopleGroup_Base {
 	}
 
 	@Service
-	public static PeopleGroup getInstance(Set<User> users) {
-		for (PersistentGroup group : Bennu.getInstance().getGroupsSet()) {
-			if (group instanceof PeopleGroup) {
-				PeopleGroup intersectionGroup = (PeopleGroup) group;
-				if (Iterables.elementsEqual(intersectionGroup.getMemberSet(), users)) {
-					return intersectionGroup;
-				}
+	public static PeopleGroup getInstance(final Set<User> users) {
+		PeopleGroup group = select(PeopleGroup.class, new Predicate<PeopleGroup>() {
+			@Override
+			public boolean apply(@Nullable PeopleGroup input) {
+				return Sets.symmetricDifference(input.getMemberSet(), users).isEmpty();
 			}
-		}
-		return new PeopleGroup(users);
+		});
+		return group != null ? group : new PeopleGroup(users);
 	}
 }

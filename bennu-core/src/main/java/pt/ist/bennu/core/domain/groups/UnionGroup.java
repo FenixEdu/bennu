@@ -42,6 +42,13 @@ public class UnionGroup extends UnionGroup_Base {
 		return false;
 	}
 
+	@Override
+	public PersistentGroup or(PersistentGroup group) {
+		Set<PersistentGroup> children = new HashSet<>(getChildrenSet());
+		children.add(group);
+		return UnionGroup.getInstance(children);
+	}
+
 	@Service
 	public static UnionGroup getInstance(final PersistentGroup... children) {
 		return getInstance(new HashSet<>(Arrays.asList(children)));

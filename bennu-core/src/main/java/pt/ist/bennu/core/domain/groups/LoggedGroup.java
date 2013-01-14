@@ -10,7 +10,6 @@ import pt.ist.bennu.service.Service;
 public class LoggedGroup extends LoggedGroup_Base {
 	protected LoggedGroup() {
 		super();
-		setSystem(Bennu.getInstance());
 	}
 
 	@Override
@@ -30,7 +29,7 @@ public class LoggedGroup extends LoggedGroup_Base {
 
 	@Service
 	public static LoggedGroup getInstance() {
-		final LoggedGroup group = selectSystemGroup(LoggedGroup.class);
+		LoggedGroup group = select(LoggedGroup.class);
 		return group == null ? new LoggedGroup() : group;
 	}
 }

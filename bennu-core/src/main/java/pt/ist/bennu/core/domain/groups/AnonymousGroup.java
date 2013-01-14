@@ -3,14 +3,12 @@ package pt.ist.bennu.core.domain.groups;
 import java.util.Collections;
 import java.util.Set;
 
-import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
 public class AnonymousGroup extends AnonymousGroup_Base {
 	protected AnonymousGroup() {
 		super();
-		setSystem(Bennu.getInstance());
 	}
 
 	@Override
@@ -30,7 +28,7 @@ public class AnonymousGroup extends AnonymousGroup_Base {
 
 	@Service
 	public static AnonymousGroup getInstance() {
-		final AnonymousGroup group = selectSystemGroup(AnonymousGroup.class);
+		AnonymousGroup group = select(AnonymousGroup.class);
 		return group == null ? new AnonymousGroup() : group;
 	}
 }

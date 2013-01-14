@@ -55,6 +55,13 @@ public class DifferenceGroup extends DifferenceGroup_Base {
 		return true;
 	}
 
+	@Override
+	public PersistentGroup minus(PersistentGroup group) {
+		Set<PersistentGroup> children = new HashSet<>(getChildrenSet());
+		children.add(group);
+		return DifferenceGroup.getInstance(children);
+	}
+
 	@Service
 	public static DifferenceGroup getInstance(final PersistentGroup... children) {
 		return getInstance(new HashSet<>(Arrays.asList(children)));

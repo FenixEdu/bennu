@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import pt.ist.bennu.core.domain.groups.PeopleGroup;
+import pt.ist.bennu.core.security.UserView;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 import pt.ist.bennu.service.Service;
@@ -45,6 +47,7 @@ public class VirtualHost extends VirtualHost_Base {
 	public VirtualHost() {
 		setBennu(Bennu.getInstance());
 		setHostname("localhost");
+		super.setManagers(new Authorization(PeopleGroup.getInstance(UserView.getUser())));
 		setApplicationTitle(new MultiLanguageString("Bennu Application Title"));
 		setApplicationSubTitle(new MultiLanguageString("Bennu Application SubTitle"));
 		setApplicationCopyright(new MultiLanguageString("My Organization Name"));
@@ -53,10 +56,16 @@ public class VirtualHost extends VirtualHost_Base {
 		setSystemEmailAddress("system@bennu.com");
 	}
 
+	@Override
+	public void setManagers(Authorization managers) {
+		throw new UnsupportedOperationException();
+	}
+
 	@Service
 	public void delete() {
 		if (Bennu.getInstance().getVirtualHostsSet().size() > 1) {
 			removeBennu();
+			removeManagers();
 			deleteDomainObject();
 		}
 	}

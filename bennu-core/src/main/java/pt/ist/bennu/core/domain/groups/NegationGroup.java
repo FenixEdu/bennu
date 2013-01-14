@@ -3,9 +3,13 @@ package pt.ist.bennu.core.domain.groups;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
+
+import com.google.common.base.Predicate;
 
 public class NegationGroup extends NegationGroup_Base {
 	protected NegationGroup(PersistentGroup negated) {
@@ -30,16 +34,19 @@ public class NegationGroup extends NegationGroup_Base {
 		return !getNegated().isMember(user);
 	}
 
+	@Override
+	public PersistentGroup not() {
+		return getNegated();
+	}
+
 	@Service
 	public static NegationGroup getInstance(final PersistentGroup persistentGroup) {
-		for (PersistentGroup group : Bennu.getInstance().getGroupsSet()) {
-			if (group instanceof NegationGroup) {
-				NegationGroup negationGroup = (NegationGroup) group;
-				if (negationGroup.getNegated().equals(persistentGroup)) {
-					return negationGroup;
-				}
+		NegationGroup group = select(NegationGroup.class, new Predicate<NegationGroup>() {
+			@Override
+			public boolean apply(@Nullable NegationGroup input) {
+				return input.getNegated().equals(persistentGroup);
 			}
-		}
-		return new NegationGroup(persistentGroup);
+		});
+		return group != null ? group : new NegationGroup(persistentGroup);
 	}
 }
