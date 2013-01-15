@@ -8,9 +8,8 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * This will mark methods as services. It will guarantee that it will be
- * executed within a write transaction, and that the whole write transaction is
- * atomic.
+ * This will mark methods as services. It will guarantee that it will be executed within a write transaction, and that the whole
+ * write transaction is atomic.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)

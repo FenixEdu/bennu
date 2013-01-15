@@ -19,35 +19,35 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 @SupportedAnnotationTypes({ "pt.ist.bennu.service.Service" })
 public class ServiceAnnotationProcessor extends AbstractProcessor {
 
-    static final String LOG_FILENAME = ".serviceAnnotationLog";
-    static final String FIELD_SEPERATOR = " ";
-    static final String ENTRY_SEPERATOR = "\n";
+	static final String LOG_FILENAME = ".serviceAnnotationLog";
+	static final String FIELD_SEPERATOR = " ";
+	static final String ENTRY_SEPERATOR = "\n";
 
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-	try (FileWriter fileWriter = new FileWriter(LOG_FILENAME, true)) {
-	    final Set<MethodSymbol> annotatedElements = (Set<MethodSymbol>) roundEnv.getElementsAnnotatedWith(Service.class);
+	@Override
+	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+		try (FileWriter fileWriter = new FileWriter(LOG_FILENAME, true)) {
+			final Set<MethodSymbol> annotatedElements = (Set<MethodSymbol>) roundEnv.getElementsAnnotatedWith(Service.class);
 
-	    for (final MethodSymbol methodElement : annotatedElements) {
-		final ClassSymbol classSymbol = (ClassSymbol) methodElement.getEnclosingElement();
-		String className = processClassName(classSymbol);
-		fileWriter.write(className);
-		fileWriter.write(FIELD_SEPERATOR);
-		fileWriter.write(methodElement.getSimpleName().toString());
-		fileWriter.write(ENTRY_SEPERATOR);
-	    }
-	} catch (IOException e) {
-	    throw new Error(e);
+			for (final MethodSymbol methodElement : annotatedElements) {
+				final ClassSymbol classSymbol = (ClassSymbol) methodElement.getEnclosingElement();
+				String className = processClassName(classSymbol);
+				fileWriter.write(className);
+				fileWriter.write(FIELD_SEPERATOR);
+				fileWriter.write(methodElement.getSimpleName().toString());
+				fileWriter.write(ENTRY_SEPERATOR);
+			}
+		} catch (IOException e) {
+			throw new Error(e);
+		}
+		return true;
 	}
-	return true;
-    }
 
-    private String processClassName(ClassSymbol classSymbol) {
-	Symbol symbol = classSymbol.getEnclosingElement();
-	if (symbol instanceof ClassSymbol) {
-	    return processClassName((ClassSymbol) symbol) + "$" + classSymbol.getSimpleName();
+	private String processClassName(ClassSymbol classSymbol) {
+		Symbol symbol = classSymbol.getEnclosingElement();
+		if (symbol instanceof ClassSymbol) {
+			return processClassName((ClassSymbol) symbol) + "$" + classSymbol.getSimpleName();
+		}
+		return classSymbol.getQualifiedName().toString();
 	}
-	return classSymbol.getQualifiedName().toString();
-    }
 
 }
