@@ -27,7 +27,7 @@ public class DynamicGroup extends DynamicGroup_Base {
 
 	@Override
 	public String expression() {
-		return "D(" + getName() + ")";
+		return "#" + getName();
 	}
 
 	@Override

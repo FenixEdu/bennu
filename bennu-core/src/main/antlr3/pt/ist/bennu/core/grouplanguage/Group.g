@@ -47,7 +47,7 @@ custom
 	;
 
 dynamic
-	:	'D(' name+=IDENTIFIER ')'
+	:	'#' name+=IDENTIFIER
 	->	^(DYNAMIC $name+)
 	;
 
