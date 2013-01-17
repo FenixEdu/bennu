@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.joda.time.DateTime;
+
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
@@ -41,6 +43,16 @@ public class UserGroup extends UserGroup_Base {
 	@Override
 	public boolean isMember(User user) {
 		return getMemberSet().contains(user);
+	}
+
+	@Override
+	public Set<User> getMembers(DateTime when) {
+		return getMembers();
+	}
+
+	@Override
+	public boolean isMember(User user, DateTime when) {
+		return isMember(user);
 	}
 
 	@Override

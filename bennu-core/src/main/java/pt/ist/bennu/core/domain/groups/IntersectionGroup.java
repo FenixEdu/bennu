@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.joda.time.DateTime;
+
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
@@ -44,6 +46,32 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 		}
 		for (final PersistentGroup persistentGroup : getChildrenSet()) {
 			if (!persistentGroup.isMember(user)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public Set<User> getMembers(DateTime when) {
+		final Set<User> users = new HashSet<>();
+		Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
+		if (iterator.hasNext()) {
+			users.addAll(iterator.next().getMembers(when));
+			while (iterator.hasNext()) {
+				users.retainAll(iterator.next().getMembers(when));
+			}
+		}
+		return users;
+	}
+
+	@Override
+	public boolean isMember(User user, DateTime when) {
+		if (getChildrenCount() == 0) {
+			return false;
+		}
+		for (final PersistentGroup persistentGroup : getChildrenSet()) {
+			if (!persistentGroup.isMember(user, when)) {
 				return false;
 			}
 		}

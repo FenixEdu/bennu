@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.joda.time.DateTime;
+
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
@@ -49,6 +51,37 @@ public class DifferenceGroup extends DifferenceGroup_Base {
 		}
 		while (iterator.hasNext()) {
 			if (iterator.next().isMember(user)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public Set<User> getMembers(DateTime when) {
+		final Set<User> users = new HashSet<>();
+		Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
+		if (iterator.hasNext()) {
+			users.addAll(iterator.next().getMembers(when));
+			while (iterator.hasNext()) {
+				users.removeAll(iterator.next().getMembers());
+			}
+		}
+		return users;
+	}
+
+	@Override
+	public boolean isMember(User user, DateTime when) {
+		Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
+		if (iterator.hasNext()) {
+			if (!iterator.next().isMember(user, when)) {
+				return false;
+			}
+		} else {
+			return false;
+		}
+		while (iterator.hasNext()) {
+			if (iterator.next().isMember(user, when)) {
 				return false;
 			}
 		}

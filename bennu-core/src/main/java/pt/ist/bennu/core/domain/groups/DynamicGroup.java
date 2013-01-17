@@ -40,11 +40,13 @@ public class DynamicGroup extends DynamicGroup_Base {
 		return getGroup().isMember(user);
 	}
 
+	@Override
 	public Set<User> getMembers(DateTime when) {
 		PersistentGroup group = getGroup(when);
 		return group != null ? group.getMembers() : Collections.<User> emptySet();
 	}
 
+	@Override
 	public boolean isMember(User user, DateTime when) {
 		PersistentGroup group = getGroup(when);
 		return group != null ? group.isMember(user) : false;

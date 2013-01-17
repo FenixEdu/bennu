@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import org.antlr.runtime.RecognitionException;
+import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
@@ -27,7 +28,11 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 
 	public abstract Set<User> getMembers();
 
-	public abstract boolean isMember(final User user);
+	public abstract boolean isMember(User user);
+
+	public abstract Set<User> getMembers(DateTime when);
+
+	public abstract boolean isMember(User user, DateTime when);
 
 	public PersistentGroup and(PersistentGroup group) {
 		Set<PersistentGroup> children = new HashSet<>();

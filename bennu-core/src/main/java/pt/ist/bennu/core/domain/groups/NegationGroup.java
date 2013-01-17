@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.joda.time.DateTime;
+
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
@@ -32,6 +34,18 @@ public class NegationGroup extends NegationGroup_Base {
 	@Override
 	public boolean isMember(User user) {
 		return !getNegated().isMember(user);
+	}
+
+	@Override
+	public Set<User> getMembers(DateTime when) {
+		Set<User> users = new HashSet<>(Bennu.getInstance().getUsersSet());
+		users.removeAll(getNegated().getMembers(when));
+		return users;
+	}
+
+	@Override
+	public boolean isMember(User user, DateTime when) {
+		return !getNegated().isMember(user, when);
 	}
 
 	@Override

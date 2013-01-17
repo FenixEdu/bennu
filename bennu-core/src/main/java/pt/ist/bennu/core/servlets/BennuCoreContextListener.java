@@ -25,6 +25,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import pt.ist.bennu.core.domain.Bennu;
+import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.fenixframework.FenixFrameworkInitializer;
 import pt.ist.fenixframework.pstm.PersistentRoot;
@@ -54,6 +56,9 @@ public class BennuCoreContextListener implements ServletContextListener {
 			try {
 				Transaction.begin(true);
 				Transaction.currentFenixTransaction().setReadOnly();
+				if (!Bennu.getInstance().hasAnyVirtualHosts()) {
+					new VirtualHost("localhost");
+				}
 			} finally {
 				Transaction.forceFinish();
 			}

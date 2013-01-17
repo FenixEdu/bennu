@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.joda.time.DateTime;
+
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.service.Service;
 
@@ -36,6 +38,25 @@ public class UnionGroup extends UnionGroup_Base {
 	public boolean isMember(final User user) {
 		for (final PersistentGroup persistentGroup : getChildrenSet()) {
 			if (persistentGroup.isMember(user)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public Set<User> getMembers(DateTime when) {
+		final Set<User> users = new HashSet<>();
+		for (final PersistentGroup persistentGroup : getChildrenSet()) {
+			users.addAll(persistentGroup.getMembers(when));
+		}
+		return users;
+	}
+
+	@Override
+	public boolean isMember(User user, DateTime when) {
+		for (final PersistentGroup persistentGroup : getChildrenSet()) {
+			if (persistentGroup.isMember(user, when)) {
 				return true;
 			}
 		}

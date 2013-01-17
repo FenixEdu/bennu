@@ -6,6 +6,9 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import pt.ist.bennu.core.domain.groups.DynamicGroup;
+import pt.ist.bennu.core.domain.groups.UserGroup;
+import pt.ist.bennu.core.security.UserView;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 import pt.ist.bennu.service.Service;
@@ -41,9 +44,11 @@ public class VirtualHost extends VirtualHost_Base {
 		return virtualHost;
 	}
 
-	public VirtualHost() {
+	public VirtualHost(String hostname) {
 		setBennu(Bennu.getInstance());
-		setHostname("localhost");
+		setHostname(hostname);
+		setVirtualHostForThread(this);
+		new DynamicGroup("managers", UserGroup.getInstance(UserView.getUser()));
 		setLanguages(Collections.singleton(Language.en));
 	}
 
