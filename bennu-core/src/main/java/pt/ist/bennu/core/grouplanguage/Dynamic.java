@@ -1,18 +1,18 @@
 package pt.ist.bennu.core.grouplanguage;
 
+import pt.ist.bennu.core.domain.groups.DynamicGroup;
 import pt.ist.bennu.core.domain.groups.GroupException;
-import pt.ist.bennu.core.domain.groups.NegationGroup;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
-class Negation extends Group {
-	private final Group group;
+class Dynamic extends Group {
+	private final String name;
 
-	public Negation(Group group) {
-		this.group = group;
+	public Dynamic(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public PersistentGroup group() throws GroupException {
-		return NegationGroup.getInstance(group.group());
+		return DynamicGroup.getInstance(name);
 	}
 }

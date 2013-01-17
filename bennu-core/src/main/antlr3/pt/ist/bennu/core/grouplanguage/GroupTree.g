@@ -19,12 +19,13 @@ group returns [Group value]
 	|	ANYONE { $value = new Anyone(); }
 	|	NOBODY { $value = new Nobody(); }
 	|	LOGGED { $value = new Logged(); }
-	|	people { $value = $people.value; }
+	|	users { $value = $users.value; }
 	|	intersection { $value = $intersection.value; }
 	|	union { $value = $union.value; }
 	|	difference { $value = $difference.value; }
 	|	negation { $value = $negation.value; }
 	|	custom { $value = $custom.value; }
+	|	dynamic { $value = $dynamic.value; }
 	;
 
 intersection returns [Intersection value]
@@ -64,12 +65,17 @@ custom returns [Custom value]
 		{ $value = new Custom($op.text, params); }
 	;
 
-people returns [People value]
+dynamic returns [Dynamic value]
+	:	^(DYNAMIC name=IDENTIFIER)
+		{ $value = new Dynamic($name.text); }
+	;
+
+users returns [Users value]
 	@init {
 		java.util.List<String> usernames = new java.util.ArrayList<>();
 	}
-	:	^(PEOPLE (username { usernames.add($username.value); })+)
-		{ $value = new People(usernames); }
+	:	^(USERS (username { usernames.add($username.value); })+)
+		{ $value = new Users(usernames); }
 	;
 
 username returns [String value]

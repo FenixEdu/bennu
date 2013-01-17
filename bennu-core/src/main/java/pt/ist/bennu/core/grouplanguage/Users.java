@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Set;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.groups.PeopleGroup;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.bennu.core.domain.groups.UserGroup;
 
-class People extends Group {
+class Users extends Group {
 	private final List<String> usernames;
 
-	public People(List<String> usernames) {
+	public Users(List<String> usernames) {
 		this.usernames = usernames;
 	}
 
@@ -24,6 +24,6 @@ class People extends Group {
 				users.add(user);
 			}
 		}
-		return PeopleGroup.getInstance(users);
+		return UserGroup.getInstance(users);
 	}
 }

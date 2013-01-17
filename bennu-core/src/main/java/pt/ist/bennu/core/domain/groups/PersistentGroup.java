@@ -8,8 +8,8 @@ import javax.annotation.Nonnull;
 
 import org.antlr.runtime.RecognitionException;
 
-import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.DomainException;
 import pt.ist.bennu.core.grouplanguage.GroupExpressionParser;
 
@@ -20,7 +20,7 @@ import com.google.common.collect.Iterables;
 public abstract class PersistentGroup extends PersistentGroup_Base {
 	protected PersistentGroup() {
 		super();
-		setBennu(Bennu.getInstance());
+		setHost(VirtualHost.getVirtualHostForThread());
 	}
 
 	public abstract String expression();
@@ -55,23 +55,23 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 	}
 
 	public PersistentGroup grant(User user) {
-		return UnionGroup.getInstance(this, PeopleGroup.getInstance(user));
+		return UnionGroup.getInstance(this, UserGroup.getInstance(user));
 	}
 
 	public PersistentGroup revoke(User user) {
-		return DifferenceGroup.getInstance(this, PeopleGroup.getInstance(user));
+		return DifferenceGroup.getInstance(this, UserGroup.getInstance(user));
 	}
 
 	public static PersistentGroup parse(String expression) {
 		try {
 			return GroupExpressionParser.parse(expression);
-		} catch (RecognitionException | IOException e) {
+		} catch (RecognitionException | IOException | GroupException e) {
 			throw new DomainException(e, "BennuResources", "error.bennu.core.groups.parse");
 		}
 	}
 
 	protected static <T extends PersistentGroup> T select(final @Nonnull Class<? extends T> type) {
-		return (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), Predicates.instanceOf(type)).orNull();
+		return (T) Iterables.tryFind(VirtualHost.getVirtualHostForThread().getGroupsSet(), Predicates.instanceOf(type)).orNull();
 	}
 
 	protected static <T extends PersistentGroup> T select(final @Nonnull Class<? extends T> type,
@@ -79,6 +79,6 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 		@SuppressWarnings("unchecked")
 		Predicate<? super PersistentGroup> realPredicate = Predicates.and(Predicates.instanceOf(type),
 				(Predicate<? super PersistentGroup>) predicate);
-		return (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), realPredicate).orNull();
+		return (T) Iterables.tryFind(VirtualHost.getVirtualHostForThread().getGroupsSet(), realPredicate).orNull();
 	}
 }

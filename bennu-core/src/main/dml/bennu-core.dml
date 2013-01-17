@@ -54,14 +54,29 @@ relation SystemUsers {
 	}
 }
 
+/* Virtual Hosting */
+class VirtualHost {
+	String hostname;
+	String supportedLanguages;
+}
+
+relation SystemHosts {
+	Bennu playsRole bennu {
+		multiplicity 1..1;
+	}
+	VirtualHost playsRole virtualHosts {
+		multiplicity *;
+	}
+}
+
 /* Authorization Groups */
 
 class groups.PersistentGroup {
 }
 
 relation PersistentGroups {
-	Bennu playsRole bennu {
-		multiplicity 1..1;
+	VirtualHost playsRole host {
+		multiplicity 0..1;
 	}
 	groups.PersistentGroup playsRole groups {
 		multiplicity *;
@@ -71,20 +86,20 @@ relation PersistentGroups {
 class groups.NobodyGroup extends groups.PersistentGroup {
 }
 
-class groups.AnonymousGroup extends groups.PersistentGroup {
+class groups.AnyoneGroup extends groups.PersistentGroup {
 }
 
-class groups.AnyoneGroup extends groups.PersistentGroup {
+class groups.AnonymousGroup extends groups.PersistentGroup {
 }
 
 class groups.LoggedGroup extends groups.PersistentGroup {
 }
 
-class groups.PeopleGroup extends groups.PersistentGroup {
+class groups.UserGroup extends groups.PersistentGroup {
 }
 
-relation PeopleGroupMembers {
-	groups.PeopleGroup playsRole {
+relation UserGroupMembers {
+	groups.UserGroup playsRole {
 		multiplicity *;
 	}
 	User playsRole member {
@@ -95,7 +110,7 @@ relation PeopleGroupMembers {
 class groups.CompositionGroup extends groups.PersistentGroup {
 }
 
-relation PersistentGroupUnionGroup {
+relation PersistentGroupComposition {
 	groups.PersistentGroup playsRole children {
 		multiplicity 1..*;
 	}
@@ -116,9 +131,6 @@ class groups.DifferenceGroup extends groups.CompositionGroup {
 class groups.NegationGroup extends groups.PersistentGroup {
 }
 
-class groups.CustomGroup extends groups.PersistentGroup {
-}
-
 relation PersistentGroupNegationGroup {
 	groups.PersistentGroup playsRole negated {
 		multiplicity 1..1;
@@ -128,12 +140,16 @@ relation PersistentGroupNegationGroup {
 	}
 }
 
-class Authorization {
+class groups.CustomGroup extends groups.PersistentGroup {
+}
+
+class groups.DynamicGroup extends groups.PersistentGroup {
+	String name (REQUIRED);
 	DateTime created (REQUIRED);
 }
 
-relation AuthorizationCreator {
-	Authorization playsRole {
+relation DynamicGroupCreator {
+	groups.DynamicGroup playsRole {
 		multiplicity *;
 	}
 	User playsRole creator {
@@ -141,8 +157,8 @@ relation AuthorizationCreator {
 	}
 }
 
-relation AuthorizationGroup {
-	Authorization playsRole authorization {
+relation DynamicGroupWrapper {
+	groups.DynamicGroup playsRole dynamicGroup {
 		multiplicity *;
 	}
 	groups.PersistentGroup playsRole group {
@@ -150,11 +166,11 @@ relation AuthorizationGroup {
 	}
 }
 
-relation AuthorizationHistoric {
-	Authorization playsRole previous {
+relation DynamicGroupHistoric {
+	groups.DynamicGroup playsRole previous {
 		multiplicity 0..1;
 	}
-	Authorization playsRole next {
+	groups.DynamicGroup playsRole next {
 		multiplicity 0..1;
 	}
 }
@@ -174,36 +190,4 @@ relation UserPasswordRecoveryRequest {
 relation PasswordRecoveryRequestPasswordRecoveryRequest {
 	PasswordRecoveryRequest playsRole previous;
 	PasswordRecoveryRequest playsRole next;
-}
-
-/* Virtual Hosting */
-class VirtualHost {
-	String hostname;
-	MultiLanguageString applicationTitle;
-	MultiLanguageString htmlTitle;
-	MultiLanguageString applicationSubTitle;
-	MultiLanguageString applicationCopyright;
-	String supportEmailAddress;
-	String systemEmailAddress;
-	String supportedLanguages;
-}
-
-relation SystemHosts {
-	Bennu playsRole bennu {
-		multiplicity 1..1;
-	}
-	VirtualHost playsRole virtualHosts {
-		multiplicity *;
-	}
-}
-
-/* Managers */
-
-relation ManagerGroup {
-	VirtualHost playsRole virtualHosts {
-		multiplicity *;
-	}
-	Authorization playsRole managers {
-		multiplicity 1..1;
-	}
 }

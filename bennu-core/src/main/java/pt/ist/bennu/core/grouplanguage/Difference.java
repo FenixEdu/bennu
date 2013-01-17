@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import pt.ist.bennu.core.domain.groups.DifferenceGroup;
+import pt.ist.bennu.core.domain.groups.GroupException;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
 class Difference extends Group {
@@ -15,7 +16,7 @@ class Difference extends Group {
 	}
 
 	@Override
-	public PersistentGroup group() {
+	public PersistentGroup group() throws GroupException {
 		Set<PersistentGroup> groups = new HashSet<>();
 		for (Group group : children) {
 			groups.add(group.group());

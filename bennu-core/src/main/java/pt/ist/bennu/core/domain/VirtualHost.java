@@ -6,28 +6,25 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
-import pt.ist.bennu.core.domain.groups.PeopleGroup;
-import pt.ist.bennu.core.security.UserView;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 import pt.ist.bennu.service.Service;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
-import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 public class VirtualHost extends VirtualHost_Base {
 
-	private static final ThreadLocal<VirtualHost> threadVirtualHost = new ThreadLocal<>();
+	private static final ThreadLocal<VirtualHost> current = new ThreadLocal<>();
 
 	public static VirtualHost getVirtualHostForThread() {
-		return threadVirtualHost.get();
+		return current.get();
 	}
 
 	public static void setVirtualHostForThread(final VirtualHost virtualHost) {
-		threadVirtualHost.set(virtualHost);
+		current.set(virtualHost);
 	}
 
 	public static void releaseVirtualHostFromThread() {
-		threadVirtualHost.remove();
+		current.remove();
 	}
 
 	public static VirtualHost setVirtualHostForThread(final String serverName) {
@@ -47,25 +44,13 @@ public class VirtualHost extends VirtualHost_Base {
 	public VirtualHost() {
 		setBennu(Bennu.getInstance());
 		setHostname("localhost");
-		super.setManagers(new Authorization(PeopleGroup.getInstance(UserView.getUser())));
-		setApplicationTitle(new MultiLanguageString("Bennu Application Title"));
-		setApplicationSubTitle(new MultiLanguageString("Bennu Application SubTitle"));
-		setApplicationCopyright(new MultiLanguageString("My Organization Name"));
 		setLanguages(Collections.singleton(Language.en));
-		setSupportEmailAddress("support@bennu.com");
-		setSystemEmailAddress("system@bennu.com");
-	}
-
-	@Override
-	public void setManagers(Authorization managers) {
-		throw new UnsupportedOperationException();
 	}
 
 	@Service
 	public void delete() {
 		if (Bennu.getInstance().getVirtualHostsSet().size() > 1) {
 			removeBennu();
-			removeManagers();
 			deleteDomainObject();
 		}
 	}

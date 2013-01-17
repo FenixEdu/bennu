@@ -6,7 +6,7 @@ options {
 }
 
 tokens {
-	PEOPLE; USERNAME; EXPRESSION; ANONYMOUS; ANYONE; NOBODY; LOGGED; CUSTOM;
+	USERS; USERNAME; EXPRESSION; ANONYMOUS; ANYONE; NOBODY; LOGGED; CUSTOM; DYNAMIC;
 }
 
 @parser::header {
@@ -26,16 +26,16 @@ group
 	|	'anyone' -> ANYONE
 	|	'nobody' -> NOBODY
 	|	'logged' -> LOGGED
-	|	people
+	|	users
 	|	composition
 	|	negation
 	|	custom
+	|	dynamic
 	;
 
 composition
 	:	'('! g+=group (('&'^ | '|'^ | '-'^) g+=group)+ ')'!
 	;
-
 	
 negation
 	:	'!'^ g=group
@@ -46,16 +46,21 @@ custom
 	->	^(CUSTOM $op $arg*)
 	;
 
-people
-	:	'P(' u+=username (',' u+=username)* ')'
-	->	^(PEOPLE $u+)
+dynamic
+	:	'D(' name+=IDENTIFIER ')'
+	->	^(DYNAMIC $name+)
+	;
+
+users
+	:	'U(' u+=username (',' u+=username)* ')'
+	->	^(USERS $u+)
 	;
 
 username
 	:	IDENTIFIER
 	->	^(USERNAME IDENTIFIER)
 	;
-	
+
 IDENTIFIER
     :   ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'$')+
     ;

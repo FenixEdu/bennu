@@ -9,10 +9,11 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.apache.tools.ant.filters.StringInputStream;
 
+import pt.ist.bennu.core.domain.groups.GroupException;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
 public class GroupExpressionParser {
-	public static PersistentGroup parse(String expression) throws RecognitionException, IOException {
+	public static PersistentGroup parse(String expression) throws RecognitionException, IOException, GroupException {
 		try (StringInputStream stream = new StringInputStream(expression)) {
 			ANTLRInputStream input = new ANTLRInputStream(stream);
 			GroupLexer lexer = new GroupLexer(input);

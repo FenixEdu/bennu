@@ -15,8 +15,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
-public class PeopleGroup extends PeopleGroup_Base {
-	protected PeopleGroup(Set<User> users) {
+public class UserGroup extends UserGroup_Base {
+	protected UserGroup(Set<User> users) {
 		super();
 		getMemberSet().addAll(users);
 	}
@@ -44,32 +44,32 @@ public class PeopleGroup extends PeopleGroup_Base {
 	}
 
 	@Override
-	public PeopleGroup grant(User user) {
+	public UserGroup grant(User user) {
 		Set<User> users = new HashSet<>(getMemberSet());
 		users.add(user);
-		return PeopleGroup.getInstance(users);
+		return UserGroup.getInstance(users);
 	}
 
 	@Override
-	public PeopleGroup revoke(User user) {
+	public UserGroup revoke(User user) {
 		Set<User> users = new HashSet<>(getMemberSet());
 		users.remove(user);
-		return PeopleGroup.getInstance(users);
+		return UserGroup.getInstance(users);
 	}
 
 	@Service
-	public static PeopleGroup getInstance(User... users) {
+	public static UserGroup getInstance(User... users) {
 		return getInstance(new HashSet<>(Arrays.asList(users)));
 	}
 
 	@Service
-	public static PeopleGroup getInstance(final Set<User> users) {
-		PeopleGroup group = select(PeopleGroup.class, new Predicate<PeopleGroup>() {
+	public static UserGroup getInstance(final Set<User> users) {
+		UserGroup group = select(UserGroup.class, new Predicate<UserGroup>() {
 			@Override
-			public boolean apply(@Nullable PeopleGroup input) {
+			public boolean apply(@Nullable UserGroup input) {
 				return Sets.symmetricDifference(input.getMemberSet(), users).isEmpty();
 			}
 		});
-		return group != null ? group : new PeopleGroup(users);
+		return group != null ? group : new UserGroup(users);
 	}
 }
