@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import pt.utl.ist.fenix.tools.util.i18n.Language;
+import pt.ist.bennu.core.util.Language;
 
 /**
  * 

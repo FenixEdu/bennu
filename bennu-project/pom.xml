@@ -41,6 +41,7 @@
 		<version.axis.axis>1.4</version.axis.axis>
 		<version.cas.casclient>2.1.1</version.cas.casclient>
 		<version.com.google.guava.guava>12.0</version.com.google.guava.guava>
+		<version.com.google.code.gson.gson>2.2.2</version.com.google.code.gson.gson>
 		<version.com.google.gwt.gwt.user>2.3.0</version.com.google.gwt.gwt.user>
 		<version.com.google.soastation>1.0</version.com.google.soastation>
 		<version.com.googlecode.json.simple.json.simple>1.1.1</version.com.googlecode.json.simple.json.simple>
@@ -495,6 +496,11 @@
 				<version>${version.com.google.guava.guava}</version>
 			</dependency>
 			<dependency>
+				<groupId>com.google.code.gson</groupId>
+				<artifactId>gson</artifactId>
+				<version>${version.com.google.code.gson.gson}</version>
+			</dependency>
+			<dependency>
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
 				<version>${version.joda.time.joda.time}</version>
@@ -564,11 +570,11 @@
 				<artifactId>axis</artifactId>
 				<version>${version.axis.axis}</version>
 			</dependency>
-            <dependency>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr-runtime</artifactId>
-                <version>${version.antlr.runtime}</version>
-            </dependency>
+			<dependency>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr-runtime</artifactId>
+				<version>${version.antlr.runtime}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

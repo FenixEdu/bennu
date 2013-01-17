@@ -50,13 +50,12 @@
 			<artifactId>casclient</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>pt.ist</groupId>
-			<artifactId>fenix-tools</artifactId>
-			<version>${version.pt.ist.fenix.tools}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -70,11 +69,12 @@
 			<groupId>org.restlet.jee</groupId>
 			<artifactId>org.restlet</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr-runtime</artifactId>
+		</dependency>
 	</dependencies>
+
 	<repositories>
 		<repository>
 			<id>fenix-ashes-maven-repository</id>

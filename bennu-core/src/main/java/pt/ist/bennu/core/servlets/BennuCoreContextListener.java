@@ -28,10 +28,10 @@ import javax.servlet.annotation.WebListener;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.core.util.Language;
+import pt.ist.bennu.service.Service;
 import pt.ist.fenixframework.FenixFrameworkInitializer;
 import pt.ist.fenixframework.pstm.PersistentRoot;
-import pt.ist.fenixframework.pstm.Transaction;
-import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 /**
  * 
@@ -53,17 +53,16 @@ public class BennuCoreContextListener implements ServletContextListener {
 			}
 			PersistentRoot.initRootIfNeeded(ConfigurationManager.getFenixFrameworkConfig());
 
-			try {
-				Transaction.begin(true);
-				Transaction.currentFenixTransaction().setReadOnly();
-				if (!Bennu.getInstance().hasAnyVirtualHosts()) {
-					new VirtualHost("localhost");
-				}
-			} finally {
-				Transaction.forceFinish();
-			}
+			ensureModelBootstrap();
 		} finally {
 			Language.setLocale(null);
+		}
+	}
+
+	@Service
+	private void ensureModelBootstrap() {
+		if (!Bennu.getInstance().hasAnyVirtualHosts()) {
+			new VirtualHost("localhost");
 		}
 	}
 

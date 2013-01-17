@@ -25,7 +25,7 @@ package pt.ist.bennu.core.domain;
  * 
  */
 
-valueType pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString as MultiLanguageString {
+valueType pt.ist.bennu.core.util.MultiLanguageString as MultiLanguageString {
     externalizeWith {
         String exportAsString();
     }

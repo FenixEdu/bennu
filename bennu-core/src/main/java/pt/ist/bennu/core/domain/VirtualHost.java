@@ -11,8 +11,8 @@ import pt.ist.bennu.core.domain.groups.UserGroup;
 import pt.ist.bennu.core.security.UserView;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
+import pt.ist.bennu.core.util.Language;
 import pt.ist.bennu.service.Service;
-import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 public class VirtualHost extends VirtualHost_Base {
 
