@@ -4,36 +4,30 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>pt.ist</groupId>
+		<groupId>pt.ist.bennu</groupId>
 		<artifactId>bennu-project</artifactId>
 		<version>2.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>pt.ist</groupId>
+	<groupId>pt.ist.bennu</groupId>
 	<artifactId>bennu-service</artifactId>
 	<version>2.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
-	<name>bennu-service</name>
+	<name>Bennu Framerwork Service Annotation</name>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<version.pt.ist.fenix.framework.core>1.1.4</version.pt.ist.fenix.framework.core>
 	</properties>
-
-	<organization>
-		<name>Instituto Superior Técnico</name>
-		<url>www.ist.utl.pt</url>
-	</organization>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>${version.org.apache.maven.plugins.maven.compiler.plugin}</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>${java.compilation.source.version}</source>
+					<target>${java.compilation.target.version}</target>
 					<proc>none</proc>
 				</configuration>
 			</plugin>
@@ -44,12 +38,7 @@
 		<dependency>
 			<groupId>pt.ist</groupId>
 			<artifactId>fenix-framework-core</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
+			<version>${version.pt.ist.fenix.framework.core}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun</groupId>
@@ -66,22 +55,4 @@
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
 		</repository>
 	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>fenix-ashes-maven-repository</id>
-			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
-		</pluginRepository>
-	</pluginRepositories>
-
-	<distributionManagement>
-		<repository>
-			<id>fenix-ashes-releases</id>
-			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>fenix-ashes-snapshots</id>
-			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>
