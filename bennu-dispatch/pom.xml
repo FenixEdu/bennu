@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>pt.ist.bennu</groupId>
+		<artifactId>bennu-project</artifactId>
+		<version>2.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>pt.ist.bennu</groupId>
+	<artifactId>bennu-dispatch</artifactId>
+	<version>2.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>Bennu Framework Dispatch</name>
+
+	<properties>
+		<version.pt.ist.bennu.bennu-core>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-core>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>pt.ist.bennu</groupId>
+			<artifactId>bennu-core</artifactId>
+			<version>${version.pt.ist.bennu.bennu-core}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>fenix-ashes-maven-repository</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+		</repository>
+	</repositories>
+</project>
