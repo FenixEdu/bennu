@@ -21,6 +21,7 @@ package pt.ist.bennu.core.util;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class BundleUtil {
 
 	public static String getString(final String bundle, Locale locale, final String key, String... args) {
 		try {
-			String message = getString(bundle, locale, key);
+			String message = ResourceBundle.getBundle(bundle, locale).getString(key);
 			for (int i = 0; i < args.length; i++) {
 				message = message.replaceAll("\\{" + i + "\\}", args[i] == null ? "" : args[i]);
 			}
