@@ -38,7 +38,7 @@
 	int month = currentDate.getMonthOfYear();
 		if (PropertiesManager.getProperty("development.mode") != null
 					&& PropertiesManager.getProperty("development.mode")
-							.equalsIgnoreCase("true") && (month == 11 || month == 12 || month == 1 || month == 0)  ) {
+							.equalsIgnoreCase("true") && !PropertiesManager.getProperty("development.mode.disableSnow").equalsIgnoreCase("true") && (month == 11 || month == 12 || month == 1 || month == 0)  ) {
 	%>
 	<script type="text/javascript">
 	/*
