@@ -20,4 +20,8 @@ public class UserView {
 	public static boolean hasUser() {
 		return wrapper.get() != null;
 	}
+
+	public static String getPrivateConstantForDigestCalculation() {
+		return wrapper.get() != null ? wrapper.get().getPrivateConstantForDigestCalculation() : null;
+	}
 }

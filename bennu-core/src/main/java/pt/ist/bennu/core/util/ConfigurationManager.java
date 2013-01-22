@@ -57,7 +57,7 @@ public class ConfigurationManager {
 				int i = property.indexOf(".cas.enable");
 				if (i >= 0) {
 					final String hostname = property.substring(0, i);
-					if (getBooleanProperty(property)) {
+					if (getBooleanProperty(property, false)) {
 						final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");
 						final String casLogoutUrl = getProperty(hostname + ".cas.logoutUrl");
 						final String casValidateUrl = getProperty(hostname + ".cas.ValidateUrl");
@@ -94,8 +94,8 @@ public class ConfigurationManager {
 		return properties.getProperty(key);
 	}
 
-	public static boolean getBooleanProperty(final String key) {
-		return Boolean.parseBoolean(properties.getProperty(key));
+	public static boolean getBooleanProperty(final String key, boolean defaultValue) {
+		return properties.containsKey(key) ? Boolean.parseBoolean(properties.getProperty(key)) : defaultValue;
 	}
 
 	public static Integer getIntegerProperty(final String key) {
@@ -161,7 +161,7 @@ public class ConfigurationManager {
 	}
 
 	public static boolean isFilterRequestWithDigest() {
-		return getBooleanProperty("filter.request.with.digest");
+		return getBooleanProperty("filter.request.with.digest", false);
 	}
 
 	public static String getTamperingRedirect() {
@@ -174,5 +174,9 @@ public class ConfigurationManager {
 
 	public static Locale getDefaultLocale() {
 		return new Locale(getProperty("language"), getProperty("location"), getProperty("variant"));
+	}
+
+	public static String getExceptionHandlerClassname() {
+		return getProperty("exception.handler.class");
 	}
 }
