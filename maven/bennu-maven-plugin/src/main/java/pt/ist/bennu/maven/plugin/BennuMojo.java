@@ -2,13 +2,16 @@ package pt.ist.bennu.maven.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.StringUtils;
 
 import com.google.common.base.Charsets;
@@ -78,6 +81,33 @@ public class BennuMojo extends AbstractMojo {
 			} catch (IOException e) {
 				throw new MojoExecutionException(null, e);
 			}
+
+			try {
+				List<Resource> resources = mavenProject.getResources();
+				StringBuilder messages = new StringBuilder();
+				for (Resource resource : resources) {
+					DirectoryScanner scanner = new DirectoryScanner();
+					scanner.setBasedir(resource.getDirectory());
+					scanner.setIncludes(new String[] { "resources/*.properties" });
+					scanner.scan();
+
+					for (String resourceFile : scanner.getIncludedFiles()) {
+						if (!resourceFile.contains("_")) {
+							messages.append(resourceFile.substring("resources/".length(),
+									resourceFile.length() - ".properties".length()));
+							messages.append("\n");
+						}
+					}
+				}
+				if (messages.length() != 0) {
+					String output = mavenProject.getBuild().getOutputDirectory() + File.separatorChar
+							+ mavenProject.getArtifactId() + File.separatorChar + ".messageResources";
+					Files.write(messages.toString(), new File(output), Charsets.UTF_8);
+				}
+			} catch (IOException e) {
+				throw new MojoExecutionException(null, e);
+			}
+
 		}
 	}
 
