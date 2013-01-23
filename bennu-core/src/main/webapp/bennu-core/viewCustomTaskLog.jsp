@@ -1,3 +1,4 @@
+<%@page import="pt.ist.bennu.core._development.PropertiesManager"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
@@ -38,6 +39,10 @@
 <h3>
 	<bean:message bundle="MYORG_RESOURCES" key="label.scheduler.customTask.files"/>
 </h3>
+
+<%
+String disableBuggyFileList = PropertiesManager.getProperty("scheduler.disable.buggy.fileList");
+if ( disableBuggyFileList == null || disableBuggyFileList.equalsIgnoreCase("false") && !disableBuggyFileList.equalsIgnoreCase("true")) { %>
 <div style="border-style: dotted; border-width: thin; padding: 10px;">
 	<ul>
 		<logic:iterate id="file" name="customTaskLog" property="genericFileSet">
@@ -49,3 +54,4 @@
 		</logic:iterate>
 	</ul>
 </div>
+<% } %>
