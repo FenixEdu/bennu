@@ -42,7 +42,7 @@ public class Authenticate {
 		final String check = ConfigurationManager.getProperty("check.login.password");
 		if (check != null && Boolean.parseBoolean(check)) {
 			if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
-				throw new DomainException("BennuResources", "error.authentication.failed");
+				throw new DomainException("resources.BennuResources", "error.bennu.core.authentication.failed");
 			}
 		}
 		if (user == null) {

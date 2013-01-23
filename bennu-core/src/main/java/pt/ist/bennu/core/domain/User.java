@@ -78,7 +78,7 @@ public class User extends User_Base {
 		final String newHash = DigestUtils.sha512Hex(password);
 		final String oldHash = getPassword();
 		if (newHash.equals(oldHash)) {
-			throw new DomainException("BennuResources", "message.error.bad.old.password");
+			throw new DomainException("resources.BennuResources", "error.bennu.core.bad.old.password");
 		}
 		super.setPassword(newHash);
 	}

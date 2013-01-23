@@ -71,7 +71,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 		try {
 			return GroupExpressionParser.parse(expression);
 		} catch (RecognitionException | IOException | GroupException e) {
-			throw new DomainException(e, "BennuResources", "error.bennu.core.groups.parse");
+			throw new DomainException(e, "resources.BennuResources", "error.bennu.core.groups.parse");
 		}
 	}
 
