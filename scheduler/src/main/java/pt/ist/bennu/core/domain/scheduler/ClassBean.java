@@ -56,6 +56,7 @@ import javax.tools.ToolProvider;
 
 import jvstm.TransactionalCommand;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
@@ -67,6 +68,8 @@ import pt.ist.fenixframework.pstm.Transaction;
  * 
  */
 public class ClassBean implements Serializable {
+	
+	public static final Logger LOGGER = Logger.getLogger(ClassBean.class);
 
     public static class JavaSourceFromString extends SimpleJavaFileObject {
 
@@ -251,7 +254,10 @@ public class ClassBean implements Serializable {
 	    javaFileObjects.add(javaSourceFromString);
 
 	    final CompilationTask compilationTask = javaCompiler.getTask(out, standardJavaFileManager, null, null, null, javaFileObjects);
-	    compilationTask.call();
+	    if (compilationTask.call() == false) {
+	    	LOGGER.warn(out.toString());
+	    	
+	    }
 
 	    standardJavaFileManager.close();
 	}
