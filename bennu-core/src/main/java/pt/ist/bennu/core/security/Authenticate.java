@@ -27,8 +27,8 @@ public class Authenticate {
 
 	private static Set<AuthenticationListener> authenticationListeners;
 
-	public static User login(HttpSession session, String username, String password) {
-		User user = internalLogin(username, password);
+	public static User login(HttpSession session, String username, String password, boolean checkPassword) {
+		User user = internalLogin(username, password, checkPassword);
 		session.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, new SessionUserWrapper(user));
 
 		fireLoginListeners(user);
@@ -37,10 +37,9 @@ public class Authenticate {
 	}
 
 	@Service
-	private static final User internalLogin(String username, String password) {
+	private static final User internalLogin(String username, String password, boolean checkPassword) {
 		User user = User.findByUsername(username);
-		final String check = ConfigurationManager.getProperty("check.login.password");
-		if (check != null && Boolean.parseBoolean(check)) {
+		if (checkPassword && ConfigurationManager.getBooleanProperty("check.login.password", true)) {
 			if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
 				throw new DomainException("resources.BennuResources", "error.bennu.core.authentication.failed");
 			}
