@@ -43,9 +43,8 @@ import edu.yale.its.tp.cas.client.ProxyTicketValidator;
  * 
  */
 public class CasAuthenticationFilter implements Filter {
-
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(final FilterConfig config) throws ServletException {
 	}
 
 	@Override
@@ -53,7 +52,7 @@ public class CasAuthenticationFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException {
 		final String serverName = request.getServerName();
 		final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
@@ -71,7 +70,7 @@ public class CasAuthenticationFilter implements Filter {
 				// do nothing ... the user just won't have a session
 			}
 		}
-		filterChain.doFilter(request, response);
+		chain.doFilter(request, response);
 	}
 
 	public static CASReceipt getCASReceipt(final String serverName, final String casTicket, final String requestURL)

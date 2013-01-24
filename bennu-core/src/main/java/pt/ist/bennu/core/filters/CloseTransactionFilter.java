@@ -16,7 +16,7 @@ import pt.ist.fenixframework.pstm.Transaction;
 public class CloseTransactionFilter implements Filter {
 
 	@Override
-	public void init(FilterConfig config) {
+	public void init(final FilterConfig config) throws ServletException {
 	}
 
 	@Override
@@ -24,9 +24,8 @@ public class CloseTransactionFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
-			throws IOException, ServletException {
-
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+			ServletException {
 		if (request instanceof HttpServletRequest) {
 			RequestInfo.setRequestURI(((HttpServletRequest) request).getRequestURI());
 		}

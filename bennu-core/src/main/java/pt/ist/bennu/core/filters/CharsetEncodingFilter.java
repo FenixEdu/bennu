@@ -15,8 +15,8 @@ public class CharsetEncodingFilter implements Filter {
 	private static String defaultCharset = Charset.defaultCharset().name();
 
 	@Override
-	public void init(final FilterConfig filterConfig) throws ServletException {
-		final String defaultCharset = filterConfig.getInitParameter("defaultCharset");
+	public void init(final FilterConfig config) throws ServletException {
+		final String defaultCharset = config.getInitParameter("defaultCharset");
 		if (defaultCharset != null && !defaultCharset.isEmpty() && Charset.forName(defaultCharset) != null) {
 			CharsetEncodingFilter.defaultCharset = defaultCharset;
 		}
@@ -27,7 +27,7 @@ public class CharsetEncodingFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException {
 		if (request.getCharacterEncoding() == null) {
 			request.setCharacterEncoding(defaultCharset);
@@ -35,7 +35,7 @@ public class CharsetEncodingFilter implements Filter {
 		if (response.getCharacterEncoding() == null) {
 			response.setCharacterEncoding(defaultCharset);
 		}
-		filterChain.doFilter(request, response);
+		chain.doFilter(request, response);
 	}
 
 }

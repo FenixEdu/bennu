@@ -38,9 +38,9 @@ public class SetUserViewFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-			throws IOException, ServletException {
-		SessionUserWrapper wrapper = getUserView(servletRequest);
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+			ServletException {
+		SessionUserWrapper wrapper = getUserView(request);
 		if (wrapper != null) {
 			final DateTime lastLogoutDateTime = wrapper.getLastLogoutDateTime();
 			if (lastLogoutDateTime == null || wrapper.getUserCreationDateTime().isAfter(lastLogoutDateTime)) {
@@ -52,7 +52,7 @@ public class SetUserViewFilter implements Filter {
 			UserView.setSessionUserWrapper(null);
 		}
 		try {
-			filterChain.doFilter(servletRequest, servletResponse);
+			chain.doFilter(request, response);
 		} finally {
 			UserView.setSessionUserWrapper(null);
 		}

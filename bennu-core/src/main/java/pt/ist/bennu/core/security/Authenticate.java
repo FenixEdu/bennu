@@ -9,9 +9,12 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.DomainException;
+import pt.ist.bennu.core.domain.groups.DynamicGroup;
+import pt.ist.bennu.core.domain.groups.UserGroup;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.TransactionalThread;
 import pt.ist.bennu.service.Service;
@@ -29,7 +32,13 @@ public class Authenticate {
 
 	public static User login(HttpSession session, String username, String password, boolean checkPassword) {
 		User user = internalLogin(username, password, checkPassword);
-		session.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, new SessionUserWrapper(user));
+		SessionUserWrapper userWrapper = new SessionUserWrapper(user);
+		session.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, userWrapper);
+		UserView.setSessionUserWrapper(userWrapper);
+		if (Bennu.getInstance().getUsersCount() == 1) {
+			logger.info("Bootstrapped #managers group to user: " + user.getUsername());
+			new DynamicGroup("managers", UserGroup.getInstance(user));
+		}
 
 		fireLoginListeners(user);
 		logger.info("Logged in user: " + user.getUsername());

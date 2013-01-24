@@ -26,7 +26,7 @@ public class VirtualHostFilter implements Filter {
 	private static final Logger logger = LoggerFactory.getLogger(VirtualHostFilter.class);
 
 	@Override
-	public void init(final FilterConfig filterConfig) throws ServletException {
+	public void init(final FilterConfig config) throws ServletException {
 	}
 
 	@Override
@@ -34,9 +34,9 @@ public class VirtualHostFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-			throws IOException, ServletException {
-		final String serverName = servletRequest.getServerName();
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+			ServletException {
+		final String serverName = request.getServerName();
 		try {
 			final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(serverName.toLowerCase());
 			if (logger.isDebugEnabled()) {
@@ -45,8 +45,8 @@ public class VirtualHostFilter implements Filter {
 				final String username = user == null ? null : user.getUsername();
 				logger.debug("Setting virtual host: " + hostname + " for user: " + username + " on server: " + serverName);
 			}
-			servletRequest.setAttribute("virtualHost", virtualHost);
-			filterChain.doFilter(servletRequest, servletResponse);
+			request.setAttribute("virtualHost", virtualHost);
+			chain.doFilter(request, response);
 		} finally {
 			VirtualHost.releaseVirtualHostFromThread();
 		}
