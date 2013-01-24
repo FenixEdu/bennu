@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.exceptions.DomainException;
-import pt.ist.bennu.service.Service;
 
 public class User extends User_Base {
 	private static final Logger logger = LoggerFactory.getLogger(User.class);
@@ -61,13 +60,11 @@ public class User extends User_Base {
 		return null;
 	}
 
-	@Service
 	@Override
 	public void setLastLogoutDateTime(final DateTime lastLogoutDateTime) {
 		super.setLastLogoutDateTime(lastLogoutDateTime);
 	}
 
-	@Service
 	public void generatePassword() {
 		final String password = RandomStringUtils.randomAlphanumeric(10);
 		setPassword(password);

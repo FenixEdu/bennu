@@ -30,10 +30,20 @@ public class Authenticate {
 
 	private static Set<AuthenticationListener> authenticationListeners;
 
+	@Service
 	public static User login(HttpSession session, String username, String password, boolean checkPassword) {
-		User user = internalLogin(username, password, checkPassword);
+		User user = User.findByUsername(username);
+		if (checkPassword && ConfigurationManager.getBooleanProperty("check.login.password", true)) {
+			if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
+				throw new DomainException("resources.BennuResources", "error.bennu.core.authentication.failed");
+			}
+		}
+		if (user == null) {
+			user = new User(username);
+		}
+
 		SessionUserWrapper userWrapper = new SessionUserWrapper(user);
-		session.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, userWrapper);
+		session.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, user);
 		UserView.setSessionUserWrapper(userWrapper);
 		if (Bennu.getInstance().getUsersCount() == 1) {
 			logger.info("Bootstrapped #managers group to user: " + user.getUsername());
@@ -46,20 +56,6 @@ public class Authenticate {
 	}
 
 	@Service
-	private static final User internalLogin(String username, String password, boolean checkPassword) {
-		User user = User.findByUsername(username);
-		if (checkPassword && ConfigurationManager.getBooleanProperty("check.login.password", true)) {
-			if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
-				throw new DomainException("resources.BennuResources", "error.bennu.core.authentication.failed");
-			}
-		}
-		if (user == null) {
-			user = new User(username);
-		}
-
-		return user;
-	}
-
 	public static void logout(HttpSession session) {
 		final SessionUserWrapper wrapper = (SessionUserWrapper) session.getAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE);
 		if (wrapper != null) {
