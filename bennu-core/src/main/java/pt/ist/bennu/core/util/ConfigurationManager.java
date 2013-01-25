@@ -136,9 +136,7 @@ public class ConfigurationManager {
 		}
 
 		public String getCasLoginUrl(HttpServletRequest request) {
-			String portString = (request.getServerPort() == 80 || request.getServerPort() == 443) ? "" : ":"
-					+ request.getServerPort();
-			return casLoginUrl + "https://" + request.getServerName() + portString + request.getContextPath();
+			return casLoginUrl + "https://" + request.getServerName();
 		}
 
 		public String getCasLogoutUrl() {
