@@ -41,16 +41,17 @@ public class I18NFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException {
-		HttpSession session = ((HttpServletRequest) request).getSession(true);
 		String requestLocale = request.getParameter("locale");
 		Locale locale;
 		if (requestLocale != null) {
 			String[] localeParts = requestLocale.split("_");
 			locale = localeParts.length > 1 ? new Locale(localeParts[0], localeParts[1]) : new Locale(requestLocale);
-			session.setAttribute(LOCALE_KEY, locale);
+			((HttpServletRequest) request).getSession(true).setAttribute(LOCALE_KEY, locale);
 		} else {
-			locale = (Locale) session.getAttribute(LOCALE_KEY);
-			if (locale == null) {
+			HttpSession session = ((HttpServletRequest) request).getSession();
+			if (session != null && session.getAttribute(LOCALE_KEY) != null) {
+				locale = (Locale) session.getAttribute(LOCALE_KEY);
+			} else {
 				locale = Language.getDefaultLocale();
 			}
 		}
