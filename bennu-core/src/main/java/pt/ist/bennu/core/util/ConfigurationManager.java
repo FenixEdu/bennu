@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.fenixframework.Config;
 import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
@@ -117,7 +119,7 @@ public class ConfigurationManager {
 		public CasConfig() {
 		}
 
-		public CasConfig(final String casLoginUrl, final String casLogoutUrl, final String casValidateUrl, final String serviceUrl) {
+		public CasConfig(String casLoginUrl, String casLogoutUrl, String casValidateUrl, String serviceUrl) {
 			this.casEnabled = true;
 			this.casLoginUrl = casLoginUrl;
 			this.casLogoutUrl = casLogoutUrl;
@@ -133,8 +135,10 @@ public class ConfigurationManager {
 			return casEnabled;
 		}
 
-		public String getCasLoginUrl() {
-			return casLoginUrl;
+		public String getCasLoginUrl(HttpServletRequest request) {
+			String portString = (request.getServerPort() == 80 || request.getServerPort() == 443) ? "" : ":"
+					+ request.getServerPort();
+			return casLoginUrl + "https://" + request.getServerName() + portString + request.getContextPath();
 		}
 
 		public String getCasLogoutUrl() {
@@ -145,6 +149,8 @@ public class ConfigurationManager {
 			return casValidateUrl;
 		}
 
+		protected void parameterizeLoginUrl(HttpServletRequest request) {
+		}
 	}
 
 	public static CasConfig getCasConfig(String hostname) {
