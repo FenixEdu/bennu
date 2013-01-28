@@ -13,6 +13,7 @@
     <url>http://fenix-ashes.ist.utl.pt</url>
 
     <modules>
+        <module>maven/bennu-maven-plugin</module>
         <module>bennu-project</module>
         <module>bennu-service</module>
         <module>bennu-core</module>
