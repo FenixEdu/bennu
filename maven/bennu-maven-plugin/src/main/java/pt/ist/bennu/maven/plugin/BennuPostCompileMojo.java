@@ -1,6 +1,8 @@
 package pt.ist.bennu.maven.plugin;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
@@ -52,6 +55,22 @@ public class BennuPostCompileMojo extends AbstractMojo {
 			throw new MojoExecutionException(null, e);
 		} catch (IOException e) {
 			throw new MojoExecutionException(null, e);
+		}
+
+		Properties configuration = new Properties();
+		File confFile = new File(mavenProject.getBuild().getOutputDirectory() + "/configuration.properties");
+		if (confFile.exists()) {
+			try (FileInputStream stream = new FileInputStream(confFile)) {
+				configuration.load(stream);
+				configuration.put("app.name", mavenProject.getArtifactId());
+			} catch (IOException e) {
+				throw new MojoExecutionException(null, e);
+			}
+			try (FileOutputStream stream = new FileOutputStream(confFile)) {
+				configuration.store(stream, null);
+			} catch (IOException e) {
+				throw new MojoExecutionException(null, e);
+			}
 		}
 	}
 

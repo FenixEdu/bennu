@@ -143,7 +143,7 @@
 				<version>${version.org.apache.maven.plugins.maven.resources.plugin}</version>
 				<executions>
 					<execution>
-						<id>copy-resources</id>
+						<id>copy-webapp</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>copy-resources</goal>
@@ -246,6 +246,7 @@
 						</manifestEntries>
 					</archive>
 					<excludes>
+						<exlude>configuration.properties</exlude>
 						<exclude>**/*_Base*</exclude>
 						<exclude>**/pt/ist/fenixframework/ValueTypeSerializationGenerator*</exclude>
 					</excludes>
@@ -613,6 +614,31 @@
 									<goal>update-web-fragment</goal>
 									<goal>post-compile</goal>
 								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>${version.org.apache.maven.plugins.maven.resources.plugin}</version>
+						<executions>
+							<execution>
+								<id>copy-webapp</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/webapp</directory>
+											<excludes>
+												<exclude>**/*</exclude>
+											</excludes>
+										</resource>
+									</resources>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
