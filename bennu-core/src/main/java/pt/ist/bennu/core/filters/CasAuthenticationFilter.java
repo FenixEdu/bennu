@@ -31,6 +31,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import edu.yale.its.tp.cas.client.CASAuthenticationException;
@@ -43,6 +46,8 @@ import edu.yale.its.tp.cas.client.ProxyTicketValidator;
  * 
  */
 public class CasAuthenticationFilter implements Filter {
+	private static final Logger logger = LoggerFactory.getLogger(CasAuthenticationFilter.class);
+
 	@Override
 	public void init(final FilterConfig config) throws ServletException {
 	}
@@ -59,15 +64,13 @@ public class CasAuthenticationFilter implements Filter {
 		final String ticket = httpServletRequest.getParameter("ticket");
 		if (ticket != null) {
 			Authenticate.logout(httpServletRequest.getSession());
-
-			final String requestURL = httpServletRequest.getRequestURL().toString();
+			final String requestURL = "https://" + request.getServerName();
 			try {
 				final CASReceipt receipt = getCASReceipt(serverName, ticket, requestURL);
 				final String username = receipt.getUserName();
 				Authenticate.login(httpServletRequest.getSession(), username, null, false);
 			} catch (CASAuthenticationException e) {
 				e.printStackTrace();
-				// do nothing ... the user just won't have a session
 			}
 		}
 		chain.doFilter(request, response);
@@ -83,8 +86,8 @@ public class CasAuthenticationFilter implements Filter {
 		pv.setServiceTicket(casTicket);
 		pv.setService(casServiceUrl);
 		pv.setRenew(false);
-
+		logger.debug(String.format("casValidateUrl : %s casTicket : %s casServiceUrl : %s", casValidateUrl, casTicket,
+				casServiceUrl));
 		return CASReceipt.getReceipt(pv);
 	}
-
 }
