@@ -48,7 +48,7 @@ public class I18NFilter implements Filter {
 			locale = localeParts.length > 1 ? new Locale(localeParts[0], localeParts[1]) : new Locale(requestLocale);
 			((HttpServletRequest) request).getSession(true).setAttribute(LOCALE_KEY, locale);
 		} else {
-			HttpSession session = ((HttpServletRequest) request).getSession();
+			HttpSession session = ((HttpServletRequest) request).getSession(false);
 			if (session != null && session.getAttribute(LOCALE_KEY) != null) {
 				locale = (Locale) session.getAttribute(LOCALE_KEY);
 			} else {
