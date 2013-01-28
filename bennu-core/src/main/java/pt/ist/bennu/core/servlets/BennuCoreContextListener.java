@@ -73,6 +73,7 @@ public class BennuCoreContextListener implements ServletContextListener {
 	@Service
 	private void ensureModelBootstrap() {
 		if (!Bennu.getInstance().hasAnyVirtualHosts()) {
+			logger.info("Bootstrapping bennu application");
 			new VirtualHost("localhost");
 		}
 	}
@@ -91,28 +92,22 @@ public class BennuCoreContextListener implements ServletContextListener {
 	}
 
 	private void deregisterJDBCDrivers() {
-
 		Enumeration<Driver> drivers = DriverManager.getDrivers();
-
 		while (drivers.hasMoreElements()) {
 			Driver driver = drivers.nextElement();
-
 			ClassLoader loader = driver.getClass().getClassLoader();
-
 			if (loader != null && loader.equals(this.thisClassLoader)) {
 				try {
 					DriverManager.deregisterDriver(driver);
-					System.out.println("Successfully deregistered JDBC driver " + driver);
+					logger.info("Successfully deregistered JDBC driver " + driver);
 				} catch (SQLException e) {
 					logger.warn("Failed to deregister JDBC driver " + driver + ". This may cause a potential leak.", e);
 				}
 			}
-
 		}
 	}
 
 	private void interruptThreads() {
-
 		for (Thread thread : Thread.getAllStackTraces().keySet()) {
 			if (thread == null || thread.getContextClassLoader() != thisClassLoader || thread == Thread.currentThread())
 				continue;

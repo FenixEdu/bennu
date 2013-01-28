@@ -14,6 +14,9 @@ import java.util.TreeMap;
 
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.bennu.core.domain.groups.annotation.CustomGroupArgument;
 import pt.ist.bennu.core.domain.groups.annotation.CustomGroupConstructor;
 import pt.ist.bennu.core.domain.groups.annotation.CustomGroupOperator;
@@ -22,6 +25,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 
 public abstract class CustomGroup extends CustomGroup_Base {
+	private static final Logger logger = LoggerFactory.getLogger(CustomGroup.class);
+
 	public static interface Argument<A, G extends CustomGroup> extends Serializable {
 		public A parse(String argument);
 
@@ -107,6 +112,9 @@ public abstract class CustomGroup extends CustomGroup_Base {
 		Operator<CustomGroup> operator = new Operator<>(operatorAnnotation.operator(), type, constructor, arguments);
 		operators.put(operatorAnnotation.operator(), operator);
 		types.put(type, operator);
+		if (logger.isInfoEnabled()) {
+			logger.info("Registering group language operator: " + operatorAnnotation.operator());
+		}
 	}
 
 	@SuppressWarnings("unchecked")
