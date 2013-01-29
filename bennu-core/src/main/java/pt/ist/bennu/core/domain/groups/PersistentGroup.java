@@ -91,8 +91,8 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 	protected static <T extends PersistentGroup> T select(final @Nonnull Class<? extends T> type,
 			final @Nonnull Predicate<? super T> predicate) {
 		@SuppressWarnings("unchecked")
-		Predicate<? super PersistentGroup> realPredicate = Predicates.and(Predicates.instanceOf(type),
-				(Predicate<? super PersistentGroup>) predicate);
+		Predicate<? super PersistentGroup> realPredicate =
+				Predicates.and(Predicates.instanceOf(type), (Predicate<? super PersistentGroup>) predicate);
 		return (T) Iterables.tryFind(VirtualHost.getVirtualHostForThread().getGroupsSet(), realPredicate).orNull();
 	}
 }

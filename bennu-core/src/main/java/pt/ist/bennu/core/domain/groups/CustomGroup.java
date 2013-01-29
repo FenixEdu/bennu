@@ -81,7 +81,7 @@ public abstract class CustomGroup extends CustomGroup_Base {
 			for (Argument<?, G> argument : arguments) {
 				params.add(argument.extract((G) group));
 			}
-			return params.isEmpty() ? operator : (operator + "(" + Joiner.on(", ").join(params) + ")");
+			return params.isEmpty() ? operator : operator + "(" + Joiner.on(", ").join(params) + ")";
 		}
 	}
 

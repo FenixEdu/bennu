@@ -87,8 +87,9 @@ public class ServiceAnnotationInjector {
 					if (ctMethod.getName().equals(methodName)) {
 						ctMethod.setName("_" + methodName + "_");
 
-						final CtMethod newCtMethod = new CtMethod(ctMethod.getReturnType(), methodName,
-								ctMethod.getParameterTypes(), ctMethod.getDeclaringClass());
+						final CtMethod newCtMethod =
+								new CtMethod(ctMethod.getReturnType(), methodName, ctMethod.getParameterTypes(),
+										ctMethod.getDeclaringClass());
 						newCtMethod.setModifiers(ctMethod.getModifiers());
 						final String body = getWrapperMethod(ctMethod, className, methodName);
 						newCtMethod.setBody(body);

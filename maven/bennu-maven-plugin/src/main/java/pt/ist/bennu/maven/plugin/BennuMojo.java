@@ -65,8 +65,8 @@ public class BennuMojo extends AbstractMojo {
 							output.append(NEW_LINE_CHAR);
 							fillModuleDependencies(output, getIndentation(template, start));
 							output.append(template.substring(end));
-							File metaInf = new File(mavenProject.getBuild().getOutputDirectory() + File.separatorChar
-									+ "META-INF");
+							File metaInf =
+									new File(mavenProject.getBuild().getOutputDirectory() + File.separatorChar + "META-INF");
 							metaInf.mkdirs();
 							Files.write(output.toString(), new File(metaInf, "web-fragment.xml"), Charsets.UTF_8);
 						} else {
@@ -100,8 +100,9 @@ public class BennuMojo extends AbstractMojo {
 					}
 				}
 				if (messages.length() != 0) {
-					String output = mavenProject.getBuild().getOutputDirectory() + File.separatorChar
-							+ mavenProject.getArtifactId() + File.separatorChar + ".messageResources";
+					String output =
+							mavenProject.getBuild().getOutputDirectory() + File.separatorChar + mavenProject.getArtifactId()
+									+ File.separatorChar + ".messageResources";
 					Files.write(messages.toString(), new File(output), Charsets.UTF_8);
 				}
 			} catch (IOException e) {
