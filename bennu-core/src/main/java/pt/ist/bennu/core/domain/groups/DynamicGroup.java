@@ -26,6 +26,11 @@ public class DynamicGroup extends DynamicGroup_Base {
 	}
 
 	@Override
+	public String getPresentationName() {
+		return getName() + ": (" + getGroup().getPresentationName() + ")";
+	}
+
+	@Override
 	public String expression() {
 		return "#" + getName();
 	}

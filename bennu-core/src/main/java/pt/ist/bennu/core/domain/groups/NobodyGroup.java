@@ -6,11 +6,17 @@ import java.util.Set;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.util.BundleUtil;
 import pt.ist.bennu.service.Service;
 
 public class NobodyGroup extends NobodyGroup_Base {
 	protected NobodyGroup() {
 		super();
+	}
+
+	@Override
+	public String getPresentationName() {
+		return BundleUtil.getString("resources.BennuResources", "label.bennu.group.nobody");
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.DomainException;
 import pt.ist.bennu.core.grouplanguage.GroupExpressionParser;
+import pt.ist.bennu.core.security.UserView;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -24,6 +25,8 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 		setHost(VirtualHost.getVirtualHostForThread());
 	}
 
+	public abstract String getPresentationName();
+
 	public abstract String expression();
 
 	public abstract Set<User> getMembers();
@@ -33,6 +36,12 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
 	public abstract Set<User> getMembers(DateTime when);
 
 	public abstract boolean isMember(User user, DateTime when);
+
+	public void verify() throws AuthorizationException {
+		if (!isMember(UserView.getUser())) {
+			throw AuthorizationException.unauthorized(this, UserView.getUser());
+		}
+	}
 
 	public PersistentGroup and(PersistentGroup group) {
 		Set<PersistentGroup> children = new HashSet<>();

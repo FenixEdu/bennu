@@ -16,6 +16,21 @@ public abstract class CompositionGroup extends CompositionGroup_Base {
 		getChildrenSet().addAll(children);
 	}
 
+	private class PresentationNameTransformer implements Function<PersistentGroup, String> {
+		@Override
+		@Nullable
+		public String apply(@Nullable PersistentGroup input) {
+			return input.getPresentationName();
+		}
+	}
+
+	@Override
+	public String getPresentationName() {
+		return "("
+				+ Joiner.on(" " + operator() + " ")
+						.join(Iterables.transform(getChildrenSet(), new PresentationNameTransformer())) + ")";
+	}
+
 	private class ExpressionTransformer implements Function<PersistentGroup, String> {
 		@Override
 		@Nullable

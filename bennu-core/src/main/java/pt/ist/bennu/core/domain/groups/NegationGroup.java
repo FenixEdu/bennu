@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.util.BundleUtil;
 import pt.ist.bennu.service.Service;
 
 import com.google.common.base.Predicate;
@@ -17,6 +18,11 @@ public class NegationGroup extends NegationGroup_Base {
 	protected NegationGroup(PersistentGroup negated) {
 		super();
 		setNegated(negated);
+	}
+
+	@Override
+	public String getPresentationName() {
+		return BundleUtil.getString("resources.BennuResources", "label.bennu.group.negation", getNegated().getPresentationName());
 	}
 
 	@Override

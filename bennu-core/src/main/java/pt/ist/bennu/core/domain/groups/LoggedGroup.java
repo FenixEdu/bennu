@@ -7,11 +7,17 @@ import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.util.BundleUtil;
 import pt.ist.bennu.service.Service;
 
 public class LoggedGroup extends LoggedGroup_Base {
 	protected LoggedGroup() {
 		super();
+	}
+
+	@Override
+	public String getPresentationName() {
+		return BundleUtil.getString("resources.BennuResources", "label.bennu.group.logged");
 	}
 
 	@Override

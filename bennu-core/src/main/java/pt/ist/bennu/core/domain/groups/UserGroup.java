@@ -24,6 +24,18 @@ public class UserGroup extends UserGroup_Base {
 	}
 
 	@Override
+	public String getPresentationName() {
+		Iterable<String> usernames = Iterables.transform(getMemberSet(), new Function<User, String>() {
+			@Override
+			public String apply(User user) {
+				return user.getUsername();
+			}
+		});
+
+		return Joiner.on(", ").join(usernames);
+	}
+
+	@Override
 	public String expression() {
 		Iterable<String> usernames = Iterables.transform(getMemberSet(), new Function<User, String>() {
 			@Override
