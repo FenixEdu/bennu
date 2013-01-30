@@ -1,5 +1,5 @@
 /*
- * Custom.java
+ * BennuCoreDomainException.java
  *
  * Copyright (c) 2013, Instituto Superior Técnico. All rights reserved.
  *
@@ -18,25 +18,27 @@
  * You should have received a copy of the GNU General Public License
  * along with bennu-core.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pt.ist.bennu.core.grouplanguage;
+package pt.ist.bennu.core.domain.exceptions;
 
-import java.util.List;
+/**
+ * Factory class for bennu-core expected errors.
+ */
+public class BennuCoreDomainException extends DomainException {
+	protected static final String BUNDLE = "resources.BennuResources";
 
-import pt.ist.bennu.core.domain.groups.CustomGroup;
-import pt.ist.bennu.core.domain.groups.PersistentGroup;
-
-class Custom extends Group {
-	private final String operator;
-
-	private final List<String> args;
-
-	public Custom(String operator, List<String> args) {
-		this.operator = operator;
-		this.args = args;
+	protected BennuCoreDomainException(String key, String... args) {
+		super(BUNDLE, key, args);
 	}
 
-	@Override
-	public PersistentGroup group() {
-		return CustomGroup.parse(operator, args.toArray(new String[0]));
+	protected BennuCoreDomainException(Throwable cause, String key, String... args) {
+		super(cause, BUNDLE, key, args);
+	}
+
+	public static BennuCoreDomainException authenticationFailed() {
+		return new BennuCoreDomainException("error.bennu.core.authentication.failed");
+	}
+
+	public static BennuCoreDomainException badOldPassword() {
+		return new BennuCoreDomainException("error.bennu.core.bad.old.password");
 	}
 }

@@ -1,3 +1,23 @@
+/*
+ * User.java
+ *
+ * Copyright (c) 2013, Instituto Superior Técnico. All rights reserved.
+ *
+ * This file is part of bennu-core.
+ *
+ * bennu-core is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * bennu-core is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with bennu-core.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package pt.ist.bennu.core.domain;
 
 import java.util.Comparator;
@@ -8,8 +28,11 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.domain.exceptions.DomainException;
+import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 
+/**
+ * The application end user.
+ */
 public class User extends User_Base {
 	private static final Logger logger = LoggerFactory.getLogger(User.class);
 
@@ -60,11 +83,6 @@ public class User extends User_Base {
 		return null;
 	}
 
-	@Override
-	public void setLastLogoutDateTime(final DateTime lastLogoutDateTime) {
-		super.setLastLogoutDateTime(lastLogoutDateTime);
-	}
-
 	public void generatePassword() {
 		final String password = RandomStringUtils.randomAlphanumeric(10);
 		setPassword(password);
@@ -75,7 +93,7 @@ public class User extends User_Base {
 		final String newHash = DigestUtils.sha512Hex(password);
 		final String oldHash = getPassword();
 		if (newHash.equals(oldHash)) {
-			throw new DomainException("resources.BennuResources", "error.bennu.core.bad.old.password");
+			throw BennuCoreDomainException.badOldPassword();
 		}
 		super.setPassword(newHash);
 	}

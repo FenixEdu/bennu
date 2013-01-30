@@ -1,3 +1,23 @@
+/*
+ * Authenticate.java
+ *
+ * Copyright (c) 2013, Instituto Superior Técnico. All rights reserved.
+ *
+ * This file is part of bennu-core.
+ *
+ * bennu-core is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * bennu-core is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with bennu-core.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package pt.ist.bennu.core.security;
 
 import java.util.HashSet;
@@ -12,19 +32,12 @@ import org.slf4j.LoggerFactory;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.domain.exceptions.DomainException;
+import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.domain.groups.DynamicGroup;
-import pt.ist.bennu.core.domain.groups.UserGroup;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.TransactionalThread;
 import pt.ist.bennu.service.Service;
 
-/**
- * 
- * @author Paulo Abrantes
- * @author Luis Cruz
- * @author Pedro Santos
- */
 public class Authenticate {
 	private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
 
@@ -45,7 +58,7 @@ public class Authenticate {
 		User user = User.findByUsername(username);
 		if (checkPassword && ConfigurationManager.getBooleanProperty("check.login.password", true)) {
 			if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
-				throw new DomainException("resources.BennuResources", "error.bennu.core.authentication.failed");
+				throw BennuCoreDomainException.authenticationFailed();
 			}
 		}
 		if (user == null) {
@@ -55,8 +68,8 @@ public class Authenticate {
 		SessionUserWrapper userWrapper = new SessionUserWrapper(user);
 		UserView.setSessionUserWrapper(userWrapper);
 		if (Bennu.getInstance().getUsersCount() == 1) {
+			DynamicGroup.getInstance("managers").grant(user);
 			logger.info("Bootstrapped #managers group to user: " + user.getUsername());
-			new DynamicGroup("managers", UserGroup.getInstance(user));
 		}
 
 		return userWrapper;
