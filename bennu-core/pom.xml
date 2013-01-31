@@ -42,10 +42,6 @@
 			<version>${version.pt.ist.bennu.bennu-service}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>cas</groupId>
 			<artifactId>casclient</artifactId>
 		</dependency>

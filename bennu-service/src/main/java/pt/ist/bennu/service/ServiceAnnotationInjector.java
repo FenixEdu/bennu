@@ -3,6 +3,8 @@ package pt.ist.bennu.service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -12,8 +14,12 @@ import javassist.LoaderClassPath;
 import javassist.NotFoundException;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServiceAnnotationInjector {
+
+	private static Logger LOG = LoggerFactory.getLogger(ServiceAnnotationInjector.class);
 
 	private static final String SERVICE_MANAGER_PACKAGE = ServiceManager.class.getPackage().getName();
 
@@ -24,24 +30,37 @@ public class ServiceAnnotationInjector {
 		classPool.importPackage(SERVICE_MANAGER_PACKAGE);
 		classPool.importPackage("pt.ist.fenixframework.pstm");
 
-		File file = null;
+		File annotationLogFile = null;
+
 		try {
-			file = new File(ServiceAnnotationProcessor.LOG_FILENAME);
-			if (file.exists()) {
-				final String fileContents = FileUtils.readFileToString(file);
-				final String[] lines = fileContents.split(ServiceAnnotationProcessor.ENTRY_SEPERATOR);
-				for (final String line : lines) {
-					final String[] strings = line.split(ServiceAnnotationProcessor.FIELD_SEPERATOR);
-					process(outputFolder.getAbsolutePath(), classPool, strings[0], strings[1]);
+			URL url = loader.getResource(ServiceAnnotationProcessor.LOG_FILENAME);
+			if (url != null) {
+				annotationLogFile = new File(url.toURI());
+				if (annotationLogFile.exists()) {
+					String fileContents = FileUtils.readFileToString(annotationLogFile);
+					final String[] lines = fileContents.split(ServiceAnnotationProcessor.ENTRY_SEPARATOR);
+					for (final String line : lines) {
+						final String[] tokens = line.split(ServiceAnnotationProcessor.FIELD_SEPARATOR);
+						String className = tokens[0];
+						String methodName = tokens[1];
+						LOG.debug("Injecting service code on method \"" + methodName + "\" on class\"" + className + "\"");
+						process(outputFolder.getAbsolutePath(), classPool, className, methodName);
+					}
+				} else {
+					LOG.info("No Service annotation log file was found. Skipping injection...");
 				}
+			} else {
+				LOG.info("No Service annotation log file was found. Skipping injection...");
 			}
 		} catch (FileNotFoundException e) {
 			throw new Error(e);
 		} catch (IOException e) {
 			throw new Error(e);
+		} catch (URISyntaxException e) {
+			throw new Error(e);
 		} finally {
-			if (file != null && file.exists()) {
-				file.delete();
+			if (annotationLogFile != null && annotationLogFile.exists()) {
+				annotationLogFile.delete();
 			}
 		}
 	}
@@ -87,9 +106,8 @@ public class ServiceAnnotationInjector {
 					if (ctMethod.getName().equals(methodName)) {
 						ctMethod.setName("_" + methodName + "_");
 
-						final CtMethod newCtMethod =
-								new CtMethod(ctMethod.getReturnType(), methodName, ctMethod.getParameterTypes(),
-										ctMethod.getDeclaringClass());
+						final CtMethod newCtMethod = new CtMethod(ctMethod.getReturnType(), methodName,
+								ctMethod.getParameterTypes(), ctMethod.getDeclaringClass());
 						newCtMethod.setModifiers(ctMethod.getModifiers());
 						final String body = getWrapperMethod(ctMethod, className, methodName);
 						newCtMethod.setBody(body);
