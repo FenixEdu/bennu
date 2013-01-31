@@ -1,22 +1,18 @@
 /*
  * ConfigurationManager.java
- *
+ * 
  * Copyright (c) 2013, Instituto Superior Técnico. All rights reserved.
- *
+ * 
  * This file is part of bennu-core.
- *
- * bennu-core is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * bennu-core is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with bennu-core.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * bennu-core is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * bennu-core is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with bennu-core. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package pt.ist.bennu.core.util;
 
@@ -25,13 +21,18 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.fenixframework.Config;
@@ -40,6 +41,8 @@ import pt.ist.fenixframework.project.DmlFile;
 import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
 
 public class ConfigurationManager {
+	private static final Logger logger = LoggerFactory.getLogger(ConfigurationManager.class);
+
 	private static final Properties properties = new Properties();
 
 	private static Map<String, CasConfig> casConfigByHost;
@@ -110,6 +113,27 @@ public class ConfigurationManager {
 			}
 		}
 		return urls;
+	}
+
+	/*
+	 * This method is used to initialize Jersey Servlet Container with the package name of Root Class correspondent with REST
+	 * Endpoints.
+	 */
+	public synchronized static String[] getRestRootClassPackages() {
+		final Set<String> rootClassPackages = new HashSet<String>();
+		try {
+			final List<FenixFrameworkArtifact> artifacts = FenixFrameworkArtifact.fromName(getProperty("app.name"))
+					.getArtifacts();
+			logger.info("Search for promissing rest endpoints packages:");
+			for (FenixFrameworkArtifact artifact : artifacts) {
+				final String packageName = String.format("pt.ist.bennu.%s.rest", artifact.getName().replace("-", "."));
+				logger.info("\tpackage {}", packageName);
+				rootClassPackages.add(packageName);
+			}
+		} catch (IOException | FenixFrameworkProjectException e) {
+			e.printStackTrace();
+		}
+		return rootClassPackages.toArray(new String[rootClassPackages.size()]);
 	}
 
 	public static String getProperty(final String key) {
