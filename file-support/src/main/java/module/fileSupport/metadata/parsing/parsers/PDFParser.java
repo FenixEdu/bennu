@@ -41,24 +41,24 @@ import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
  */
 public class PDFParser extends FileMetaDataParser {
 
-    @Override
-    public boolean isAppliableTo(GenericFile file) {
-	return file.getFilename().toLowerCase().endsWith(".pdf");
-    }
-
-    @Override
-    protected String extract(InputStream stream) {
-	StringWriter writer = null;
-	try {
-	    PDDocument pdfDocument = PDDocument.load(stream);
-	    writer = new StringWriter();
-	    PDFTextStripper stripper = new PDFTextStripper();
-	    stripper.writeText(pdfDocument, writer);
-	    pdfDocument.close();
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    return null;
+	@Override
+	public boolean isAppliableTo(GenericFile file) {
+		return file.getFilename().toLowerCase().endsWith(".pdf");
 	}
-	return writer.toString();
-    }
+
+	@Override
+	protected String extract(InputStream stream) {
+		StringWriter writer = null;
+		try {
+			PDDocument pdfDocument = PDDocument.load(stream);
+			writer = new StringWriter();
+			PDFTextStripper stripper = new PDFTextStripper();
+			stripper.writeText(pdfDocument, writer);
+			pdfDocument.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return writer.toString();
+	}
 }

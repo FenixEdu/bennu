@@ -40,24 +40,24 @@ import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
  */
 public class WordParser extends FileMetaDataParser {
 
-    @Override
-    public boolean isAppliableTo(GenericFile file) {
-	return file.getFilename().toLowerCase().endsWith(".doc");
-    }
-
-    @Override
-    protected String extract(InputStream stream) {
-
-	String extractedText = null;
-	try {
-	    WordExtractor extractor = new WordExtractor(stream);
-	    extractedText = extractor.getText();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    return null;
+	@Override
+	public boolean isAppliableTo(GenericFile file) {
+		return file.getFilename().toLowerCase().endsWith(".doc");
 	}
 
-	return extractedText;
+	@Override
+	protected String extract(InputStream stream) {
 
-    }
+		String extractedText = null;
+		try {
+			WordExtractor extractor = new WordExtractor(stream);
+			extractedText = extractor.getText();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return extractedText;
+
+	}
 }

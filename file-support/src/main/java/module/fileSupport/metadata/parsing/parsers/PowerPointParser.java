@@ -40,24 +40,24 @@ import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
  */
 public class PowerPointParser extends FileMetaDataParser {
 
-    @Override
-    public boolean isAppliableTo(GenericFile file) {
-	return file.getFilename().toLowerCase().endsWith(".ppt");
-    }
-
-    @Override
-    protected String extract(InputStream stream) {
-	String extractedText = null;
-	try {
-	    PowerPointExtractor extractor = new PowerPointExtractor(stream);
-	    extractedText = extractor.getText();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    return null;
+	@Override
+	public boolean isAppliableTo(GenericFile file) {
+		return file.getFilename().toLowerCase().endsWith(".ppt");
 	}
 
-	return extractedText;
+	@Override
+	protected String extract(InputStream stream) {
+		String extractedText = null;
+		try {
+			PowerPointExtractor extractor = new PowerPointExtractor(stream);
+			extractedText = extractor.getText();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 
-    }
+		return extractedText;
+
+	}
 
 }

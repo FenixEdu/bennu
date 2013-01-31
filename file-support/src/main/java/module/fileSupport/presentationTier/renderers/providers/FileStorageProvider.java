@@ -36,14 +36,14 @@ import pt.ist.fenixframework.plugins.fileSupport.domain.FileSupport;
  */
 public class FileStorageProvider implements DataProvider {
 
-    @Override
-    public Converter getConverter() {
-	return null;
-    }
+	@Override
+	public Converter getConverter() {
+		return null;
+	}
 
-    @Override
-    public Object provide(Object arg0, Object arg1) {
-	return FileSupport.getInstance().getFileStorages();
-    }
+	@Override
+	public Object provide(Object arg0, Object arg1) {
+		return FileSupport.getInstance().getFileStorages();
+	}
 
 }
