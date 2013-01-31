@@ -18,31 +18,31 @@ import pt.ist.fenixframework.pstm.TopLevelTransaction;
 
 @WebListener
 public class LuceneSearchPlugin implements FenixFrameworkPlugin, ServletContextListener {
-    public static final Logger LOGGER = Logger.getLogger(LuceneSearchPlugin.class.getName());
-    private static boolean initialized = false;
+	public static final Logger LOGGER = Logger.getLogger(LuceneSearchPlugin.class.getName());
+	private static boolean initialized = false;
 
-    @Override
-    public List<URL> getDomainModel() {
-	URL resource = getClass().getResource("/luceneSearch-plugin.dml");
-	return Collections.singletonList(resource);
-    }
-
-    @Override
-    @Service
-    public void initialize() {
-	if (!initialized) {
-	    LuceneSearchPluginRoot.getInstance();
-	    TopLevelTransaction.addCommitListener(new IndexListener());
-	    initialized = true;
+	@Override
+	public List<URL> getDomainModel() {
+		URL resource = getClass().getResource("/luceneSearch-plugin.dml");
+		return Collections.singletonList(resource);
 	}
-    }
 
-    @Override
-    public void contextInitialized(ServletContextEvent event) {
-	initialize();
-    }
+	@Override
+	@Service
+	public void initialize() {
+		if (!initialized) {
+			LuceneSearchPluginRoot.getInstance();
+			TopLevelTransaction.addCommitListener(new IndexListener());
+			initialized = true;
+		}
+	}
 
-    @Override
-    public void contextDestroyed(ServletContextEvent event) {
-    }
+	@Override
+	public void contextInitialized(ServletContextEvent event) {
+		initialize();
+	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent event) {
+	}
 }

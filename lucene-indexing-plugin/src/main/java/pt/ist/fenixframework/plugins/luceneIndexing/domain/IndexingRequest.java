@@ -5,19 +5,19 @@ import pt.ist.fenixframework.pstm.AbstractDomainObject;
 
 public class IndexingRequest extends IndexingRequest_Base {
 
-    public IndexingRequest(Indexable indexableObject) {
-	super();
-	setIndexableExternalId(((AbstractDomainObject) indexableObject).getExternalId());
-	setPluginRoot(LuceneSearchPluginRoot.getInstance());
-    }
+	public IndexingRequest(Indexable indexableObject) {
+		super();
+		setIndexableExternalId(((AbstractDomainObject) indexableObject).getExternalId());
+		setPluginRoot(LuceneSearchPluginRoot.getInstance());
+	}
 
-    public IndexDocument getIndex() {
-	AbstractDomainObject someDomainObject = AbstractDomainObject.fromExternalId(getIndexableExternalId());
-	return ((Indexable) someDomainObject).getDocumentToIndex();
-    }
+	public IndexDocument getIndex() {
+		AbstractDomainObject someDomainObject = AbstractDomainObject.fromExternalId(getIndexableExternalId());
+		return ((Indexable) someDomainObject).getDocumentToIndex();
+	}
 
-    public void delete() {
-	removePluginRoot();
-	super.deleteDomainObject();
-    }
+	public void delete() {
+		removePluginRoot();
+		super.deleteDomainObject();
+	}
 }

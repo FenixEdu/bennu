@@ -16,28 +16,28 @@ import pt.ist.fenixframework.plugins.luceneIndexing.queryBuilder.dsl.SearchState
  */
 public class Builder {
 
-    public static SearchState wildCardMatch(IndexableField field, String wildCardedValue) {
-	BuildingState queryPart = new BuildingState();
-	return queryPart.wildCardMatch(field, wildCardedValue);
-    }
+	public static SearchState wildCardMatch(IndexableField field, String wildCardedValue) {
+		BuildingState queryPart = new BuildingState();
+		return queryPart.wildCardMatch(field, wildCardedValue);
+	}
 
-    public static SearchState wildCardMatch(String wildCardedValue) {
-	BuildingState queryPart = new BuildingState();
-	return queryPart.wildCardMatch(wildCardedValue);
-    }
+	public static SearchState wildCardMatch(String wildCardedValue) {
+		BuildingState queryPart = new BuildingState();
+		return queryPart.wildCardMatch(wildCardedValue);
+	}
 
-    public static SearchState expression(DSLState part) {
-	return new SearchState(part, true);
-    }
+	public static SearchState expression(DSLState part) {
+		return new SearchState(part, true);
+	}
 
-    public static SearchState matches(String value) {
-	BuildingState queryPart = new BuildingState();
-	return queryPart.matches(value);
-    }
+	public static SearchState matches(String value) {
+		BuildingState queryPart = new BuildingState();
+		return queryPart.matches(value);
+	}
 
-    public static SearchState matches(IndexableField field, String value) {
-	BuildingState queryPart = new BuildingState();
-	return queryPart.matches(field, value);
-    }
+	public static SearchState matches(IndexableField field, String value) {
+		BuildingState queryPart = new BuildingState();
+		return queryPart.matches(field, value);
+	}
 
 }

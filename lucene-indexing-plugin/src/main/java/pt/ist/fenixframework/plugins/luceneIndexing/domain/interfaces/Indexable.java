@@ -10,11 +10,11 @@ import pt.ist.fenixframework.plugins.luceneIndexing.domain.IndexDocument;
  * @author Paulo Abrantes
  */
 public interface Indexable {
-    public static enum IndexMode {
-	MANUAL, SYNC, ASYNC;
-    }
+	public static enum IndexMode {
+		MANUAL, SYNC, ASYNC;
+	}
 
-    public IndexMode getIndexMode();
+	public IndexMode getIndexMode();
 
-    public IndexDocument getDocumentToIndex();
+	public IndexDocument getDocumentToIndex();
 }
