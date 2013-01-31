@@ -28,10 +28,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import pt.ist.bennu.core.presentationTier.renderers.autoCompleteProvider.AutoCompleteProvider;
-
 import org.apache.lucene.queryParser.QueryParser;
 
+import pt.ist.bennu.core.presentationTier.renderers.autoCompleteProvider.AutoCompleteProvider;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.plugins.luceneIndexing.DomainIndexer;
 import pt.ist.fenixframework.plugins.luceneIndexing.DomainIndexer.DefaultIndexFields;
@@ -45,24 +44,24 @@ import pt.utl.ist.fenix.tools.util.StringNormalizer;
  */
 public abstract class LuceneBasedAutoCompleteProvider implements AutoCompleteProvider {
 
-    @Override
-    public Collection getSearchResults(Map<String, String> argsMap, String value, int maxCount) {
-	Class<? extends DomainObject> domainObjectClass = getSearchClass(argsMap);
-	List<? extends DomainObject> search = DomainIndexer.getInstance().search(domainObjectClass, getSearchField(),
-		valueProcessingStrategy(value), maxCount);
-	return search;
-    }
+	@Override
+	public Collection getSearchResults(Map<String, String> argsMap, String value, int maxCount) {
+		Class<? extends DomainObject> domainObjectClass = getSearchClass(argsMap);
+		List<? extends DomainObject> search =
+				DomainIndexer.getInstance().search(domainObjectClass, getSearchField(), valueProcessingStrategy(value), maxCount);
+		return search;
+	}
 
-    protected IndexableField getSearchField() {
-	return DefaultIndexFields.DEFAULT_FIELD;
-    }
+	protected IndexableField getSearchField() {
+		return DefaultIndexFields.DEFAULT_FIELD;
+	}
 
-    protected abstract Class<? extends DomainObject> getSearchClass(Map<String, String> argsMap);
+	protected abstract Class<? extends DomainObject> getSearchClass(Map<String, String> argsMap);
 
-    protected String valueProcessingStrategy(String value) {
-	return StringNormalizer.normalize(QueryParser.escape(value.trim().replaceAll("\\s\\s+", " "))).toLowerCase()
-		.replaceAll(" ", " AND ")
-		+ "*";
-    }
+	protected String valueProcessingStrategy(String value) {
+		return StringNormalizer.normalize(QueryParser.escape(value.trim().replaceAll("\\s\\s+", " "))).toLowerCase()
+				.replaceAll(" ", " AND ")
+				+ "*";
+	}
 
 }
