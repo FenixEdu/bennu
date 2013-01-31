@@ -30,20 +30,20 @@ import pt.ist.bennu.core.domain.VirtualHost;
 
 /**
  * 
- * @author  Nuno Diegues
+ * @author Nuno Diegues
  * 
-*/
+ */
 public class LinkNodeType extends NodeType implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    @Override
-    public String getName() {
-	return "LinkNode";
-    }
+	private static final long serialVersionUID = 1L;
 
 	@Override
-    public Node instantiateNode(VirtualHost virtualHost, Node parentNode, NodeBean nodeBean) {
-	return LinkNode.createLinkNode(virtualHost, parentNode, nodeBean.getUrl(), nodeBean.getLinkBundle(),
-		nodeBean.getLinkKey(), nodeBean.getPersistentGroup());
-    }
+	public String getName() {
+		return "LinkNode";
+	}
+
+	@Override
+	public Node instantiateNode(VirtualHost virtualHost, Node parentNode, NodeBean nodeBean) {
+		return LinkNode.createLinkNode(virtualHost, parentNode, nodeBean.getUrl(), nodeBean.getLinkBundle(),
+				nodeBean.getLinkKey(), nodeBean.getPersistentGroup());
+	}
 }

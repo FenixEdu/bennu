@@ -30,19 +30,19 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 /**
  * 
- * @author  Nuno Diegues
+ * @author Nuno Diegues
  * 
-*/
+ */
 public class FunctionalitiesPathProvider implements DataProvider {
 
-    @Override
-    public Converter getConverter() {
-	return null;
-    }
+	@Override
+	public Converter getConverter() {
+		return null;
+	}
 
-    @Override
-    public Object provide(Object source, Object currentValue) {
-	return FunctionalityFilter.retrieveFunctionalityMappings().keySet();
-    }
+	@Override
+	public Object provide(Object source, Object currentValue) {
+		return FunctionalityFilter.retrieveFunctionalityMappings().keySet();
+	}
 
 }

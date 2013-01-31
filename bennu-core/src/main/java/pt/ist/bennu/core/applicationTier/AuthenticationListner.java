@@ -31,13 +31,13 @@ import pt.ist.bennu.core.applicationTier.Authenticate.UserView;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public interface AuthenticationListner {
 
-    public static final Set<AuthenticationListner> LOGIN_LISTNERS = new HashSet<AuthenticationListner>();
+	public static final Set<AuthenticationListner> LOGIN_LISTNERS = new HashSet<AuthenticationListner>();
 
-    public void afterLogin(final UserView userView);
+	public void afterLogin(final UserView userView);
 
 }

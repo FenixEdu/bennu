@@ -26,11 +26,11 @@ package pt.ist.bennu.core.domain;
 
 /**
  * 
- * @author  Luis Cruz
- * @author  Paulo Abrantes
+ * @author Luis Cruz
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public interface ModuleInitializer {
 
-    public void init(MyOrg root);
+	public void init(MyOrg root);
 }

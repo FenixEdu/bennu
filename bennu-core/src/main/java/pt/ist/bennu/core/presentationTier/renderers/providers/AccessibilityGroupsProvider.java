@@ -30,19 +30,19 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 /**
  * 
- * @author  Paulo Abrantes
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public class AccessibilityGroupsProvider implements DataProvider {
 
-    @Override
-    public Converter getConverter() {
-	return null;
-    }
+	@Override
+	public Converter getConverter() {
+		return null;
+	}
 
-    @Override
-    public Object provide(Object arg0, Object arg1) {
-	return MyOrg.getInstance().getPersistentGroups();
-    }
+	@Override
+	public Object provide(Object arg0, Object arg1) {
+		return MyOrg.getInstance().getPersistentGroups();
+	}
 
 }

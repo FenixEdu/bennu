@@ -35,21 +35,21 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 /**
  * 
- * @author  Nuno Diegues
+ * @author Nuno Diegues
  * 
-*/
+ */
 public class FunctionalitiesMethodProvider implements DataProvider {
 
-    @Override
-    public Converter getConverter() {
-	return null;
-    }
+	@Override
+	public Converter getConverter() {
+		return null;
+	}
 
-    @Override
-    public Object provide(Object source, Object currentValue) {
-	ActionNode node = (ActionNode) source;
-	Map<String, FunctionalityInfo> result = FunctionalityFilter.retrieveFunctionalityMappings().get(node.getPath());
-	return result == null ? Collections.EMPTY_SET : result.keySet();
-    }
+	@Override
+	public Object provide(Object source, Object currentValue) {
+		ActionNode node = (ActionNode) source;
+		Map<String, FunctionalityInfo> result = FunctionalityFilter.retrieveFunctionalityMappings().get(node.getPath());
+		return result == null ? Collections.EMPTY_SET : result.keySet();
+	}
 
 }

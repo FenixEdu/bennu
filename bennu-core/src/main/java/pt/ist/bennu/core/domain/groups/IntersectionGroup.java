@@ -42,59 +42,59 @@ import pt.ist.fenixWebFramework.services.Service;
  */
 public class IntersectionGroup extends IntersectionGroup_Base {
 
-    protected IntersectionGroup() {
-    }
-
-    public IntersectionGroup(final PersistentGroup... persistentGroups) {
-	super();
-	for (final PersistentGroup persistentGroup : persistentGroups) {
-	    addPersistentGroups(persistentGroup);
+	protected IntersectionGroup() {
 	}
-    }
 
-    public IntersectionGroup(final Collection<PersistentGroup> persistentGroupCollection) {
-	super();
-	for (PersistentGroup persistenGroup : persistentGroupCollection) {
-	    addPersistentGroups(persistenGroup);
+	public IntersectionGroup(final PersistentGroup... persistentGroups) {
+		super();
+		for (final PersistentGroup persistentGroup : persistentGroups) {
+			addPersistentGroups(persistentGroup);
+		}
 	}
-    }
 
-    @Override
-    public Set<User> getMembers() {
-	final Set<User> users = new HashSet<User>();
-	if (hasAnyPersistentGroups()) {
-	    users.addAll(getPersistentGroupsSet().iterator().next().getMembers());
-	    for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
-		users.retainAll(persistentGroup.getMembers());
-	    }
+	public IntersectionGroup(final Collection<PersistentGroup> persistentGroupCollection) {
+		super();
+		for (PersistentGroup persistenGroup : persistentGroupCollection) {
+			addPersistentGroups(persistenGroup);
+		}
 	}
-	return users;
-    }
 
-    @Override
-    public String getName() {
-	List<String> names = new ArrayList<String>();
-	for (PersistentGroup group : getPersistentGroups()) {
-	    names.add("(" + group.getName() + ")");
+	@Override
+	public Set<User> getMembers() {
+		final Set<User> users = new HashSet<User>();
+		if (hasAnyPersistentGroups()) {
+			users.addAll(getPersistentGroupsSet().iterator().next().getMembers());
+			for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
+				users.retainAll(persistentGroup.getMembers());
+			}
+		}
+		return users;
 	}
-	return "Intersection of: ".concat(StringUtils.join(names, " AND "));
-    }
 
-    @Override
-    public boolean isMember(final User user) {
-	if (getPersistentGroupsCount() == 0) {
-	    return false;
+	@Override
+	public String getName() {
+		List<String> names = new ArrayList<String>();
+		for (PersistentGroup group : getPersistentGroups()) {
+			names.add("(" + group.getName() + ")");
+		}
+		return "Intersection of: ".concat(StringUtils.join(names, " AND "));
 	}
-	for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
-	    if (!persistentGroup.isMember(user)) {
-		return false;
-	    }
-	}
-	return true;
-    }
 
-    @Service
-    public static IntersectionGroup createIntersectionGroup(final PersistentGroup... persistentGroups) {
-	return new IntersectionGroup(persistentGroups);
-    }
+	@Override
+	public boolean isMember(final User user) {
+		if (getPersistentGroupsCount() == 0) {
+			return false;
+		}
+		for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
+			if (!persistentGroup.isMember(user)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Service
+	public static IntersectionGroup createIntersectionGroup(final PersistentGroup... persistentGroups) {
+		return new IntersectionGroup(persistentGroups);
+	}
 }

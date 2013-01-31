@@ -34,113 +34,113 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 /**
  * 
- * @author  Nuno Diegues
- * @author  Paulo Abrantes
- * @author  Luis Cruz
+ * @author Nuno Diegues
+ * @author Paulo Abrantes
+ * @author Luis Cruz
  * 
-*/
+ */
 public class ActionNode extends ActionNode_Base {
 
-    public class InconsistentNodeFunctionality extends RuntimeException{
+	public class InconsistentNodeFunctionality extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-	public InconsistentNodeFunctionality(ActionNode node, String methodAlias) {
-	    super("In the node attempted to be created with: \n\tPath: " + node.getPath() + "\n\tMethod: " + node.getMethod()
-		    + "\n\tAlias: " + methodAlias);
-	}
-	
-    }
-    
-    public ActionNode() {
-	super();
-    }
-
-    public ActionNode(final VirtualHost virtualHost, final Node node, final String path, final String method,
-	    final String bundle, final String key, final PersistentGroup accessibilityGroup) {
-	super();
-	init(virtualHost, node, path, method, bundle, key, accessibilityGroup);
-    }
-
-    protected void init(final VirtualHost virtualHost, final Node node, final String path, final String method,
-	    final String bundle, final String key, final PersistentGroup accessibilityGroup) {
-	init(virtualHost, node, null);
-	setPath(path);
-	setMethod(method);
-	setLinkBundle(bundle);
-	setLinkKey(key);
-	setAccessibilityGroup(accessibilityGroup);
-	checkConsistencyInBranch();
-    }
-    
-    public void checkConsistencyInBranch() {
-	if(!hasFunctionality()) {
-	    return;
-	}
-	
-	final FunctionalityInfo functionality = FunctionalityFilter.getFunctionality(getPath(), getMethod());
-	Node parentNode = getParentNode();
-	if (parentNode != null) {
-	    for (Node sibling : parentNode.getChildNodes()) {
-		if (sibling != this) {
-		    FunctionalityFilter.checkForAliasConflict(functionality, sibling);
+		public InconsistentNodeFunctionality(ActionNode node, String methodAlias) {
+			super("In the node attempted to be created with: \n\tPath: " + node.getPath() + "\n\tMethod: " + node.getMethod()
+					+ "\n\tAlias: " + methodAlias);
 		}
-	    }
+
 	}
-    }
 
-    @Service
-    public static ActionNode createActionNode(final VirtualHost virtualHost, final Node node, final String path,
-	    final String method, final String bundle, final String key, final PersistentGroup accessibilityGroup) {
-	return new ActionNode(virtualHost, node, path, method, bundle, key, accessibilityGroup);
-    }
-
-    @Override
-    public Object getElement() {
-	return null;
-    }
-
-    @Override
-    public MultiLanguageString getLink() {
-	final String bundle = getLinkBundle();
-	final String key = getLinkKey();
-	try {
-	    return BundleUtil.getMultilanguageString(bundle, key);
-	} catch (java.util.MissingResourceException e) {
-	    e.printStackTrace();
-	    return new MultiLanguageString(getLinkKey());
+	public ActionNode() {
+		super();
 	}
-    }
 
-    @Override
-    protected void appendUrlPrefix(final StringBuilder stringBuilder) {
-	if (hasFunctionality()) {
-	    final Node parentNode = getParentNode();
-	    if (parentNode != null) {
-		parentNode.appendUrlPrefix(stringBuilder);
-	    }
-	    if (stringBuilder.length() == 0) {
-		// top level, whole semantic url
-		stringBuilder.append(FunctionalityFilter.getSemanticURL(getPath(), getMethod()));
-	    } else {
-		// child, just contributes with the method alias
-		stringBuilder.append(FunctionalityFilter.getMethodAlias(getPath(), getMethod()));
-	    }
-	} else {
-	    stringBuilder.append(getPath());
-	    stringBuilder.append(".do?method=");
-	    stringBuilder.append(getMethod());
+	public ActionNode(final VirtualHost virtualHost, final Node node, final String path, final String method,
+			final String bundle, final String key, final PersistentGroup accessibilityGroup) {
+		super();
+		init(virtualHost, node, path, method, bundle, key, accessibilityGroup);
 	}
-    }
 
-    @Override
-    public boolean isAcceptsFunctionality() {
-	return true;
-    }
+	protected void init(final VirtualHost virtualHost, final Node node, final String path, final String method,
+			final String bundle, final String key, final PersistentGroup accessibilityGroup) {
+		init(virtualHost, node, null);
+		setPath(path);
+		setMethod(method);
+		setLinkBundle(bundle);
+		setLinkKey(key);
+		setAccessibilityGroup(accessibilityGroup);
+		checkConsistencyInBranch();
+	}
 
-    @Override
-    public boolean hasFunctionality() {
-	return FunctionalityFilter.hasSemanticURL(getPath(), getMethod());
-    }
+	public void checkConsistencyInBranch() {
+		if (!hasFunctionality()) {
+			return;
+		}
+
+		final FunctionalityInfo functionality = FunctionalityFilter.getFunctionality(getPath(), getMethod());
+		Node parentNode = getParentNode();
+		if (parentNode != null) {
+			for (Node sibling : parentNode.getChildNodes()) {
+				if (sibling != this) {
+					FunctionalityFilter.checkForAliasConflict(functionality, sibling);
+				}
+			}
+		}
+	}
+
+	@Service
+	public static ActionNode createActionNode(final VirtualHost virtualHost, final Node node, final String path,
+			final String method, final String bundle, final String key, final PersistentGroup accessibilityGroup) {
+		return new ActionNode(virtualHost, node, path, method, bundle, key, accessibilityGroup);
+	}
+
+	@Override
+	public Object getElement() {
+		return null;
+	}
+
+	@Override
+	public MultiLanguageString getLink() {
+		final String bundle = getLinkBundle();
+		final String key = getLinkKey();
+		try {
+			return BundleUtil.getMultilanguageString(bundle, key);
+		} catch (java.util.MissingResourceException e) {
+			e.printStackTrace();
+			return new MultiLanguageString(getLinkKey());
+		}
+	}
+
+	@Override
+	protected void appendUrlPrefix(final StringBuilder stringBuilder) {
+		if (hasFunctionality()) {
+			final Node parentNode = getParentNode();
+			if (parentNode != null) {
+				parentNode.appendUrlPrefix(stringBuilder);
+			}
+			if (stringBuilder.length() == 0) {
+				// top level, whole semantic url
+				stringBuilder.append(FunctionalityFilter.getSemanticURL(getPath(), getMethod()));
+			} else {
+				// child, just contributes with the method alias
+				stringBuilder.append(FunctionalityFilter.getMethodAlias(getPath(), getMethod()));
+			}
+		} else {
+			stringBuilder.append(getPath());
+			stringBuilder.append(".do?method=");
+			stringBuilder.append(getMethod());
+		}
+	}
+
+	@Override
+	public boolean isAcceptsFunctionality() {
+		return true;
+	}
+
+	@Override
+	public boolean hasFunctionality() {
+		return FunctionalityFilter.hasSemanticURL(getPath(), getMethod());
+	}
 
 }

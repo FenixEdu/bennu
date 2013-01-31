@@ -29,42 +29,41 @@ import java.io.Serializable;
 
 /**
  * 
- * @author  Luis Cruz
- * @author  Paulo Abrantes
+ * @author Luis Cruz
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public class FileUploadBean implements Serializable {
 
+	private transient InputStream inputStream;
+	private String filename;
+	private String displayName;
 
-    private transient InputStream inputStream;
-    private String filename;
-    private String displayName;
+	public FileUploadBean() {
+	}
 
-    public FileUploadBean() {
-    }
+	public InputStream getInputStream() {
+		return inputStream;
+	}
 
-    public InputStream getInputStream() {
-	return inputStream;
-    }
+	public void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
+	}
 
-    public void setInputStream(InputStream inputStream) {
-	this.inputStream = inputStream;
-    }
+	public String getFilename() {
+		return filename;
+	}
 
-    public String getFilename() {
-	return filename;
-    }
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
 
-    public void setFilename(String filename) {
-	this.filename = filename;
-    }
+	public String getDisplayName() {
+		return displayName;
+	}
 
-    public String getDisplayName() {
-	return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-	this.displayName = displayName;
-    }
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 
 }

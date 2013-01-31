@@ -31,16 +31,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
-@Target( { TYPE })
+@Target({ TYPE })
 /**
  * 
  * @author  Luis Cruz
  * @author  Paulo Abrantes
  * 
-*/
+ */
 public @interface ClassNameBundle {
 
-    String bundle() default "";
+	String bundle() default "";
 
-    String key() default "";
+	String key() default "";
 }

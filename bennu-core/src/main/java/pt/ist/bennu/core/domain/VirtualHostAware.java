@@ -28,9 +28,9 @@ import pt.ist.fenixframework.DomainObject;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public interface VirtualHostAware extends DomainObject {
-    public boolean isConnectedToCurrentHost();
+	public boolean isConnectedToCurrentHost();
 }

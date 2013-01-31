@@ -32,81 +32,81 @@ import pt.ist.fenixframework.DomainObject;
 
 /**
  * 
- * @author  Luis Cruz
- * @author  Paulo Abrantes
+ * @author Luis Cruz
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public class VariantBean implements Serializable {
-    public static enum Type {
-	INTEGER, STRING, LOCAL_DATE, DOMAIN_OBJECT, OBJECT
-    };
+	public static enum Type {
+		INTEGER, STRING, LOCAL_DATE, DOMAIN_OBJECT, OBJECT
+	};
 
-    /**
-     * Serial version id.
-     */
-    private static final long serialVersionUID = 1L;
+	/**
+	 * Serial version id.
+	 */
+	private static final long serialVersionUID = 1L;
 
-    private Object value;
-    private Type type;
+	private Object value;
+	private Type type;
 
-    public VariantBean() {
-	value = null;
-    }
+	public VariantBean() {
+		value = null;
+	}
 
-    public Type getType() {
-	return type;
-    }
+	public Type getType() {
+		return type;
+	}
 
-    protected void setType(Type type) {
-	this.type = type;
-    }
+	protected void setType(Type type) {
+		this.type = type;
+	}
 
-    public Integer getInteger() {
-	return (Integer) (isType(Type.INTEGER) ? this.value : null);
-    }
+	public Integer getInteger() {
+		return (Integer) (isType(Type.INTEGER) ? this.value : null);
+	}
 
-    public void setInteger(Integer value) {
-	this.value = value;
-	setType(Type.INTEGER);
-    }
+	public void setInteger(Integer value) {
+		this.value = value;
+		setType(Type.INTEGER);
+	}
 
-    public String getString() {
-	return (String) (isType(Type.STRING) ? this.value : null);
-    }
+	public String getString() {
+		return (String) (isType(Type.STRING) ? this.value : null);
+	}
 
-    public void setString(String string) {
-	this.value = string;
-	setType(Type.STRING);
-    }
+	public void setString(String string) {
+		this.value = string;
+		setType(Type.STRING);
+	}
 
-    public LocalDate getLocalDate() {
-	return (LocalDate) (isType(Type.LOCAL_DATE) ? this.value : null);
-    }
+	public LocalDate getLocalDate() {
+		return (LocalDate) (isType(Type.LOCAL_DATE) ? this.value : null);
+	}
 
-    public void setLocalDate(LocalDate value) {
-	this.value = value;
-	setType(Type.LOCAL_DATE);
-    }
+	public void setLocalDate(LocalDate value) {
+		this.value = value;
+		setType(Type.LOCAL_DATE);
+	}
 
-    private boolean isType(Type type) {
-	return type.equals(this.getType());
-    }
+	private boolean isType(Type type) {
+		return type.equals(this.getType());
+	}
 
-    public void setDomainObject(DomainObject value) {
-	this.value = value;
-	setType(Type.DOMAIN_OBJECT);
-    }
+	public void setDomainObject(DomainObject value) {
+		this.value = value;
+		setType(Type.DOMAIN_OBJECT);
+	}
 
-    public <T extends DomainObject> T getDomainObject() {
-	return (T) (isType(Type.DOMAIN_OBJECT) ? this.value : null);
-    }
+	public <T extends DomainObject> T getDomainObject() {
+		return (T) (isType(Type.DOMAIN_OBJECT) ? this.value : null);
+	}
 
-    public void setObject(Object object) {
-	this.value = object;
-	setType(Type.OBJECT);
-    }
+	public void setObject(Object object) {
+		this.value = object;
+		setType(Type.OBJECT);
+	}
 
-    public Object getObject() {
-	return (isType(Type.OBJECT) ? this.value : null);
-    }
+	public Object getObject() {
+		return (isType(Type.OBJECT) ? this.value : null);
+	}
 }

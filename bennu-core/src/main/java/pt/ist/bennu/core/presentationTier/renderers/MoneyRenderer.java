@@ -33,27 +33,27 @@ import pt.ist.fenixWebFramework.renderers.layouts.Layout;
 
 /**
  * 
- * @author  Susana Fernandes
+ * @author Susana Fernandes
  * 
-*/
+ */
 public class MoneyRenderer extends OutputRenderer {
 
-    @Override
-    protected Layout getLayout(Object object, Class type) {
-	return new Layout() {
+	@Override
+	protected Layout getLayout(Object object, Class type) {
+		return new Layout() {
 
-	    @Override
-	    public HtmlComponent createComponent(Object object, Class type) {
-		Money money = (Money) object;
-		HtmlText text = new HtmlText(money.toFormatString());
-		HtmlInlineContainer container = new HtmlInlineContainer();
-		container.addChild(text);
+			@Override
+			public HtmlComponent createComponent(Object object, Class type) {
+				Money money = (Money) object;
+				HtmlText text = new HtmlText(money.toFormatString());
+				HtmlInlineContainer container = new HtmlInlineContainer();
+				container.addChild(text);
 
-		return container;
-	    }
+				return container;
+			}
 
-	};
+		};
 
-    }
+	}
 
 }

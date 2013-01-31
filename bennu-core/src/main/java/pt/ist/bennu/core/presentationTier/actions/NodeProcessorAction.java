@@ -27,32 +27,31 @@ package pt.ist.bennu.core.presentationTier.actions;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pt.ist.bennu.core.domain.contents.INode;
-import pt.ist.bennu.core.domain.contents.Node;
-import pt.ist.bennu.core.presentationTier.Context;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import pt.ist.bennu.core.domain.contents.INode;
+import pt.ist.bennu.core.domain.contents.Node;
+import pt.ist.bennu.core.presentationTier.Context;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 
-@Mapping( path="/node" )
+@Mapping(path = "/node")
 /**
  * 
  * @author  Luis Cruz
  * 
-*/
+ */
 public class NodeProcessorAction extends ContextBaseAction {
 
-    public final ActionForward viewElement(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
-	final Context context = getContext(request);
-	if (context.getElements().isEmpty()) {
-	    final INode node = Node.getFirstTopLevelNode();
-	    context.push(node);
+	public final ActionForward viewElement(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
+		final Context context = getContext(request);
+		if (context.getElements().isEmpty()) {
+			final INode node = Node.getFirstTopLevelNode();
+			context.push(node);
+		}
+		return context.forward("/page.jsp");
 	}
-	return context.forward("/page.jsp");
-    }
 
 }

@@ -33,35 +33,35 @@ import pt.ist.fenixWebFramework.services.Service;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public class EmptyGroup extends EmptyGroup_Base {
-    
-    private EmptyGroup() {
-        super();
-        setSystemGroupMyOrg(getMyOrg());
-    }
 
-    @Override
-    public Set<User> getMembers() {
-	return Collections.emptySet();
-    }
+	private EmptyGroup() {
+		super();
+		setSystemGroupMyOrg(getMyOrg());
+	}
 
-    @Override
-    public String getName() {
-	return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.emptyGroup.name");
-    }
+	@Override
+	public Set<User> getMembers() {
+		return Collections.emptySet();
+	}
 
-    @Override
-    public boolean isMember(final User user) {
-	return false;
-    }
+	@Override
+	public String getName() {
+		return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.emptyGroup.name");
+	}
 
-    @Service
-    public static EmptyGroup getInstance() {
-	final EmptyGroup emptyGroup = (EmptyGroup) PersistentGroup.getSystemGroup(EmptyGroup.class);
-	return emptyGroup == null ? new EmptyGroup() : emptyGroup;
-    }
-    
+	@Override
+	public boolean isMember(final User user) {
+		return false;
+	}
+
+	@Service
+	public static EmptyGroup getInstance() {
+		final EmptyGroup emptyGroup = (EmptyGroup) PersistentGroup.getSystemGroup(EmptyGroup.class);
+		return emptyGroup == null ? new EmptyGroup() : emptyGroup;
+	}
+
 }

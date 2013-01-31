@@ -45,70 +45,71 @@ import pt.ist.fenixWebFramework.services.Service;
  */
 public class UnionGroup extends UnionGroup_Base {
 
-    public UnionGroup() {
-	super();
-    }
-
-    public UnionGroup(final PersistentGroup... persistentGroups) {
-	super();
-	for (final PersistentGroup persistentGroup : persistentGroups) {
-	    addPersistentGroups(persistentGroup);
+	public UnionGroup() {
+		super();
 	}
-    }
 
-    public UnionGroup(final Collection<PersistentGroup> persistentGroups) {
-	super();
-	for (final PersistentGroup persistentGroup : persistentGroups) {
-	    addPersistentGroups(persistentGroup);
-	}
-    }
-
-    @Override
-    public Set<User> getMembers() {
-	final Set<User> users = new HashSet<User>();
-	for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
-	    users.addAll(persistentGroup.getMembers());
-	}
-	return users;
-    }
-
-    @Override
-    public String getName() {
-	String groupName = "Union of: ";
-	for (Iterator persistentGroupIterator = getPersistentGroupsIterator(); persistentGroupIterator.hasNext();) {
-	    PersistentGroup group = (PersistentGroup) persistentGroupIterator.next();
-	    groupName = groupName.concat(group.getName());
-	    if (persistentGroupIterator.hasNext())
-		groupName = groupName.concat(" AND ");
-	}
-	return groupName;
-    }
-
-    @Override
-    public boolean isMember(final User user) {
-	for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
-	    if (persistentGroup.isMember(user)) {
-		return true;
-	    }
-	}
-	return false;
-    }
-
-    @Service
-    public static UnionGroup createUnionGroup(final PersistentGroup... persistentGroups) {
-	return new UnionGroup(persistentGroups);
-    }
-
-    public static UnionGroup getOrCreateUnionGroup(final PersistentGroup... persistentGroups) {
-	for (PersistentGroup group : MyOrg.getInstance().getPersistentGroups()) {
-	    if (group instanceof UnionGroup) {
-		UnionGroup unionGroup = (UnionGroup) group;
-		if (CollectionUtils.isEqualCollection(unionGroup.getPersistentGroups(), Arrays.asList(persistentGroups))) {
-		    return unionGroup;
+	public UnionGroup(final PersistentGroup... persistentGroups) {
+		super();
+		for (final PersistentGroup persistentGroup : persistentGroups) {
+			addPersistentGroups(persistentGroup);
 		}
-	    }
 	}
-	return UnionGroup.createUnionGroup(persistentGroups);
-    }
+
+	public UnionGroup(final Collection<PersistentGroup> persistentGroups) {
+		super();
+		for (final PersistentGroup persistentGroup : persistentGroups) {
+			addPersistentGroups(persistentGroup);
+		}
+	}
+
+	@Override
+	public Set<User> getMembers() {
+		final Set<User> users = new HashSet<User>();
+		for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
+			users.addAll(persistentGroup.getMembers());
+		}
+		return users;
+	}
+
+	@Override
+	public String getName() {
+		String groupName = "Union of: ";
+		for (Iterator persistentGroupIterator = getPersistentGroupsIterator(); persistentGroupIterator.hasNext();) {
+			PersistentGroup group = (PersistentGroup) persistentGroupIterator.next();
+			groupName = groupName.concat(group.getName());
+			if (persistentGroupIterator.hasNext()) {
+				groupName = groupName.concat(" AND ");
+			}
+		}
+		return groupName;
+	}
+
+	@Override
+	public boolean isMember(final User user) {
+		for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
+			if (persistentGroup.isMember(user)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Service
+	public static UnionGroup createUnionGroup(final PersistentGroup... persistentGroups) {
+		return new UnionGroup(persistentGroups);
+	}
+
+	public static UnionGroup getOrCreateUnionGroup(final PersistentGroup... persistentGroups) {
+		for (PersistentGroup group : MyOrg.getInstance().getPersistentGroups()) {
+			if (group instanceof UnionGroup) {
+				UnionGroup unionGroup = (UnionGroup) group;
+				if (CollectionUtils.isEqualCollection(unionGroup.getPersistentGroups(), Arrays.asList(persistentGroups))) {
+					return unionGroup;
+				}
+			}
+		}
+		return UnionGroup.createUnionGroup(persistentGroups);
+	}
 
 }

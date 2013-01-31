@@ -26,172 +26,171 @@ package pt.ist.bennu.core.domain;
 
 import java.util.Comparator;
 
-import pt.ist.bennu.core.domain.exceptions.DomainException;
-import pt.ist.bennu.core.domain.groups.IRoleEnum;
-import pt.ist.bennu.core.domain.groups.People;
-import pt.ist.bennu.core.domain.groups.Role;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
+import pt.ist.bennu.core.domain.exceptions.DomainException;
+import pt.ist.bennu.core.domain.groups.IRoleEnum;
+import pt.ist.bennu.core.domain.groups.People;
+import pt.ist.bennu.core.domain.groups.Role;
 import pt.ist.fenixWebFramework.services.Service;
 
 /**
  * 
- * @author  João Antunes
- * @author  Anil Kassamali
- * @author  Paulo Abrantes
- * @author  Luis Cruz
- * @author  Susana Fernandes
+ * @author João Antunes
+ * @author Anil Kassamali
+ * @author Paulo Abrantes
+ * @author Luis Cruz
+ * @author Susana Fernandes
  * 
-*/
+ */
 public class User extends User_Base {
 
-    public interface UserPresentationStrategy {
-	public String present(User user);
+	public interface UserPresentationStrategy {
+		public String present(User user);
 
-	public String shortPresent(User user);
-    }
-
-    public static final UserPresentationStrategy defaultStrategy = new UserPresentationStrategy() {
-
-	@Override
-	public String present(User user) {
-	    return user.getUsername();
+		public String shortPresent(User user);
 	}
 
-	@Override
-	public String shortPresent(User user) {
-	    return user.getUsername();
-	}
+	public static final UserPresentationStrategy defaultStrategy = new UserPresentationStrategy() {
 
-    };
-
-    public static final Comparator<User> COMPARATOR_BY_NAME = new Comparator<User>() {
-
-	@Override
-	public int compare(final User user1, final User user2) {
-	    return user1.getUsername().compareTo(user2.getUsername());
-	}
-
-    };
-
-    private static UserPresentationStrategy strategy = defaultStrategy;
-
-    public User(final String username) {
-	super();
-	setUsername(username);
-	setMyOrg(MyOrg.getInstance());
-    }
-
-    public static User findByUsername(final String username) {
-	for (final User user : MyOrg.getInstance().getUserSet()) {
-	    if (user.getUsername().equalsIgnoreCase(username)) {
-		return user;
-	    }
-	}
-	return null;
-    }
-
-    public boolean hasRoleType(final RoleType roleType) {
-	for (final People people : getPeopleGroupsSet()) {
-	    if (people instanceof Role) {
-		final Role role = (Role) people;
-		if (role.isRole(roleType) && role.isMember(this)) {
-		    return true;
+		@Override
+		public String present(User user) {
+			return user.getUsername();
 		}
-	    }
-	}
-	return false;
-    }
 
-    public boolean hasRoleType(final String roleAsString) {
-	for (final People people : getPeopleGroupsSet()) {
-	    if (people instanceof Role) {
-		final Role role = (Role) people;
-		if (role.getGroupName().equals(roleAsString) && role.isMember(this)) {
-		    return true;
+		@Override
+		public String shortPresent(User user) {
+			return user.getUsername();
 		}
-	    }
+
+	};
+
+	public static final Comparator<User> COMPARATOR_BY_NAME = new Comparator<User>() {
+
+		@Override
+		public int compare(final User user1, final User user2) {
+			return user1.getUsername().compareTo(user2.getUsername());
+		}
+
+	};
+
+	private static UserPresentationStrategy strategy = defaultStrategy;
+
+	public User(final String username) {
+		super();
+		setUsername(username);
+		setMyOrg(MyOrg.getInstance());
 	}
-	return false;
-    }
 
-    @Service
-    @Override
-    public void setLastLogoutDateTime(final DateTime lastLogoutDateTime) {
-	super.setLastLogoutDateTime(lastLogoutDateTime);
-    }
-
-    @Service
-    public void generatePassword() {
-	final String password = RandomStringUtils.randomAlphanumeric(10);
-	setPassword(password);
-    }
-
-    @Override
-    public void setPassword(final String password) {
-	final String newHash = DigestUtils.sha512Hex(password);
-	final String oldHash = getPassword();
-	if (newHash.equals(oldHash)) {
-	    throw new DomainException("message.error.bad.old.password",
-		    DomainException.getResourceFor("resources.MyorgResources"));
+	public static User findByUsername(final String username) {
+		for (final User user : MyOrg.getInstance().getUserSet()) {
+			if (user.getUsername().equalsIgnoreCase(username)) {
+				return user;
+			}
+		}
+		return null;
 	}
-	super.setPassword(newHash);
-    }
 
-    public boolean matchesPassword(final String password) {
-	final String hash = DigestUtils.sha512Hex(password);
-	return hash.equals(getPassword());
-    }
-
-    @Service
-    public static User createNewUser(final String username) {
-	return new User(username);
-    }
-
-    @Service
-    public void addRoleType(final IRoleEnum roleType) {
-	final Role role = Role.getRole(roleType);
-	addPeopleGroups(role);
-    }
-
-    @Service
-    @Override
-    public void removePeopleGroups(final People peopleGroups) {
-	super.removePeopleGroups(peopleGroups);
-    }
-
-    public String getPresentationName() {
-	return strategy.present(this);
-    }
-
-    public String getShortPresentationName() {
-	return strategy.shortPresent(this);
-    }
-
-    @Override
-    public String toString() {
-	return getUsername();
-    }
-
-    public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
-	if (strategy != defaultStrategy) {
-	    Logger.getLogger(User.class).warn("Overriding non-default strategy");
+	public boolean hasRoleType(final RoleType roleType) {
+		for (final People people : getPeopleGroupsSet()) {
+			if (people instanceof Role) {
+				final Role role = (Role) people;
+				if (role.isRole(roleType) && role.isMember(this)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
-	strategy = newStrategy;
-    }
 
-    public void delete() {
-	removeMyOrg();
-	deleteDomainObject();
-    }
+	public boolean hasRoleType(final String roleAsString) {
+		for (final People people : getPeopleGroupsSet()) {
+			if (people instanceof Role) {
+				final Role role = (Role) people;
+				if (role.getGroupName().equals(roleAsString) && role.isMember(this)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
-    public PasswordRecoveryRequest createNewPasswordRecoveryRequest() {
-	super.setPassword(null);
-	return new PasswordRecoveryRequest(this);
-    }
+	@Service
+	@Override
+	public void setLastLogoutDateTime(final DateTime lastLogoutDateTime) {
+		super.setLastLogoutDateTime(lastLogoutDateTime);
+	}
+
+	@Service
+	public void generatePassword() {
+		final String password = RandomStringUtils.randomAlphanumeric(10);
+		setPassword(password);
+	}
+
+	@Override
+	public void setPassword(final String password) {
+		final String newHash = DigestUtils.sha512Hex(password);
+		final String oldHash = getPassword();
+		if (newHash.equals(oldHash)) {
+			throw new DomainException("message.error.bad.old.password",
+					DomainException.getResourceFor("resources.MyorgResources"));
+		}
+		super.setPassword(newHash);
+	}
+
+	public boolean matchesPassword(final String password) {
+		final String hash = DigestUtils.sha512Hex(password);
+		return hash.equals(getPassword());
+	}
+
+	@Service
+	public static User createNewUser(final String username) {
+		return new User(username);
+	}
+
+	@Service
+	public void addRoleType(final IRoleEnum roleType) {
+		final Role role = Role.getRole(roleType);
+		addPeopleGroups(role);
+	}
+
+	@Service
+	@Override
+	public void removePeopleGroups(final People peopleGroups) {
+		super.removePeopleGroups(peopleGroups);
+	}
+
+	public String getPresentationName() {
+		return strategy.present(this);
+	}
+
+	public String getShortPresentationName() {
+		return strategy.shortPresent(this);
+	}
+
+	@Override
+	public String toString() {
+		return getUsername();
+	}
+
+	public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
+		if (strategy != defaultStrategy) {
+			Logger.getLogger(User.class).warn("Overriding non-default strategy");
+		}
+		strategy = newStrategy;
+	}
+
+	public void delete() {
+		removeMyOrg();
+		deleteDomainObject();
+	}
+
+	public PasswordRecoveryRequest createNewPasswordRecoveryRequest() {
+		super.setPassword(null);
+		return new PasswordRecoveryRequest(this);
+	}
 
 }

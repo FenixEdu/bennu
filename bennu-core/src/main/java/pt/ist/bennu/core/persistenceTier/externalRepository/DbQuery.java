@@ -31,46 +31,46 @@ import java.sql.SQLException;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public abstract class DbQuery {
 
-    protected abstract String getQueryString();
+	protected abstract String getQueryString();
 
-    protected abstract void processResultSet(final ResultSet resultSet) throws SQLException;
+	protected abstract void processResultSet(final ResultSet resultSet) throws SQLException;
 
-    final Connection connection;
+	final Connection connection;
 
-    public DbQuery(final DbHandler dbHandler) {
-	connection = dbHandler == null ? null : dbHandler.getConnection();
-    }
-
-    public void execute() {
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
-	try {
-	    preparedStatement = connection.prepareStatement(getQueryString());
-	    resultSet = preparedStatement.executeQuery();
-	    processResultSet(resultSet);
-	} catch (final SQLException exception) {
-	    throw new Error(exception);
-	} finally {
-	    if (resultSet != null) {
-		try {
-		    resultSet.close();
-		} catch (final SQLException e) {
-		    e.printStackTrace();
-		}
-	    }
-	    if (preparedStatement != null) {
-		try {
-		    preparedStatement.close();
-		} catch (final SQLException e) {
-		    e.printStackTrace();
-		}
-	    }
+	public DbQuery(final DbHandler dbHandler) {
+		connection = dbHandler == null ? null : dbHandler.getConnection();
 	}
-    }
+
+	public void execute() {
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			preparedStatement = connection.prepareStatement(getQueryString());
+			resultSet = preparedStatement.executeQuery();
+			processResultSet(resultSet);
+		} catch (final SQLException exception) {
+			throw new Error(exception);
+		} finally {
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (final SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (final SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 }

@@ -30,79 +30,78 @@ import pt.ist.fenixWebFramework.services.Service;
 
 /**
  * 
- * @author  João Marques
- * @author  Luis Cruz
- * @author  Paulo Abrantes
+ * @author João Marques
+ * @author Luis Cruz
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public class Role extends Role_Base {
 
-    private transient IRoleEnum roleType;
+	private transient IRoleEnum roleType;
 
-    public Role(IRoleEnum roleType) {
-	super();
-	this.roleType = roleType;
-	if (find(roleType) != null) {
-	    throw new DomainException("role.already.exists", getRepresentationName(roleType));
-	}
-	setGroupName(getRepresentationName(roleType));
-	setSystemGroupMyOrg(MyOrg.getInstance());
-    }
-
-    @Service
-    public static Role createRole(IRoleEnum roleType) {
-	final Role role = find(roleType);
-	return role == null ? new Role(roleType) : role;
-    }
-
-    protected static Role find(final IRoleEnum roleType) {
-	for (final PersistentGroup group : MyOrg.getInstance().getSystemGroupsSet()) {
-	    if (group instanceof Role) {
-		final Role role = (pt.ist.bennu.core.domain.groups.Role) group;
-		if (role.isRole(roleType)) {
-		    return role;
+	public Role(IRoleEnum roleType) {
+		super();
+		this.roleType = roleType;
+		if (find(roleType) != null) {
+			throw new DomainException("role.already.exists", getRepresentationName(roleType));
 		}
-	    }
-	}
-	return null;
-    }
-
-
-    public static Role getRole(final IRoleEnum roleType) {
-	final Role role = find(roleType);
-	return role == null ? createRole(roleType) : role;
-    }
-
-    public boolean isRole(IRoleEnum roleType) {
-	final String groupName = getGroupName();
-	return roleType != null && groupName != null && groupName.equals(getRepresentationName(roleType));
-    }
-
-    private String getRepresentationName(IRoleEnum roleType) {
-	return roleType.getClass().getName() + "." + roleType.getRoleName();
-    }
-
-    @Override
-    public String getName() {
-	if (this.roleType == null) {
-	    try {
-		String groupName = this.getGroupName();
-		final int virtualHostPos = groupName.lastIndexOf('@');
-		final int enumNameLimit = virtualHostPos > 0 ? virtualHostPos : groupName.length();
-		final int lastDot = groupName.lastIndexOf('.', enumNameLimit);
-		final String className = groupName.substring(0, lastDot);
-		final String enumName = groupName.substring(lastDot + 1, enumNameLimit);
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		Class<Enum> enumClass = (Class<Enum>) Class.forName(className);
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		final Enum valueOf = Enum.valueOf(enumClass, enumName);
-		this.roleType = (IRoleEnum) valueOf;
-	    } catch (ClassNotFoundException e) {
-		throw new Error(e);
-	    }
+		setGroupName(getRepresentationName(roleType));
+		setSystemGroupMyOrg(MyOrg.getInstance());
 	}
 
-	return roleType.getLocalizedName();
-    }
+	@Service
+	public static Role createRole(IRoleEnum roleType) {
+		final Role role = find(roleType);
+		return role == null ? new Role(roleType) : role;
+	}
+
+	protected static Role find(final IRoleEnum roleType) {
+		for (final PersistentGroup group : MyOrg.getInstance().getSystemGroupsSet()) {
+			if (group instanceof Role) {
+				final Role role = (pt.ist.bennu.core.domain.groups.Role) group;
+				if (role.isRole(roleType)) {
+					return role;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static Role getRole(final IRoleEnum roleType) {
+		final Role role = find(roleType);
+		return role == null ? createRole(roleType) : role;
+	}
+
+	public boolean isRole(IRoleEnum roleType) {
+		final String groupName = getGroupName();
+		return roleType != null && groupName != null && groupName.equals(getRepresentationName(roleType));
+	}
+
+	private String getRepresentationName(IRoleEnum roleType) {
+		return roleType.getClass().getName() + "." + roleType.getRoleName();
+	}
+
+	@Override
+	public String getName() {
+		if (this.roleType == null) {
+			try {
+				String groupName = this.getGroupName();
+				final int virtualHostPos = groupName.lastIndexOf('@');
+				final int enumNameLimit = virtualHostPos > 0 ? virtualHostPos : groupName.length();
+				final int lastDot = groupName.lastIndexOf('.', enumNameLimit);
+				final String className = groupName.substring(0, lastDot);
+				final String enumName = groupName.substring(lastDot + 1, enumNameLimit);
+				@SuppressWarnings({ "rawtypes", "unchecked" })
+				Class<Enum> enumClass = (Class<Enum>) Class.forName(className);
+				@SuppressWarnings({ "rawtypes", "unchecked" })
+				final Enum valueOf = Enum.valueOf(enumClass, enumName);
+				this.roleType = (IRoleEnum) valueOf;
+			} catch (ClassNotFoundException e) {
+				throw new Error(e);
+			}
+		}
+
+		return roleType.getLocalizedName();
+	}
 
 }

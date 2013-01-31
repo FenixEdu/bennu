@@ -26,9 +26,9 @@ package pt.ist.bennu.core.domain;
 
 /**
  * 
- * @author  Sérgio Silva
+ * @author Sérgio Silva
  * 
-*/
+ */
 public interface Presentable {
-    public String getPresentationName();
+	public String getPresentationName();
 }

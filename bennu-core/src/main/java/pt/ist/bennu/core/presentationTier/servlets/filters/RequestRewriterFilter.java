@@ -43,23 +43,23 @@ import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.ResponseWrapper;
  */
 public class RequestRewriterFilter extends pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriterFilter {
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-	    throws IOException, ServletException {
+	@Override
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+			throws IOException, ServletException {
 
-	if (((HttpServletRequest) servletRequest).getRequestURI().contains("/jersey/")) {
-	    filterChain.doFilter(servletRequest, servletResponse);
-	} else {
-	    super.doFilter(servletRequest, servletResponse, filterChain);
+		if (((HttpServletRequest) servletRequest).getRequestURI().contains("/jersey/")) {
+			filterChain.doFilter(servletRequest, servletResponse);
+		} else {
+			super.doFilter(servletRequest, servletResponse, filterChain);
+		}
+
 	}
 
-    }
-
-    @Override
-    protected void writeResponse(FilterChain filterChain, HttpServletRequest httpServletRequest, ResponseWrapper responseWrapper)
-	    throws IOException, ServletException {
-	responseWrapper.writeRealResponse(new ContentContextInjectionRewriter(httpServletRequest), new GenericChecksumRewriter(
-		httpServletRequest));
-    }
+	@Override
+	protected void writeResponse(FilterChain filterChain, HttpServletRequest httpServletRequest, ResponseWrapper responseWrapper)
+			throws IOException, ServletException {
+		responseWrapper.writeRealResponse(new ContentContextInjectionRewriter(httpServletRequest), new GenericChecksumRewriter(
+				httpServletRequest));
+	}
 
 }

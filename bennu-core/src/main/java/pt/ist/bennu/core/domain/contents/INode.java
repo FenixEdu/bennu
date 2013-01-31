@@ -31,42 +31,42 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 /**
  * 
- * @author  Pedro Santos
- * @author  Luis Cruz
+ * @author Pedro Santos
+ * @author Luis Cruz
  * 
-*/
+ */
 public interface INode {
 
-    public static Comparator<INode> COMPARATOR_BY_ORDER = new Comparator<INode>() {
+	public static Comparator<INode> COMPARATOR_BY_ORDER = new Comparator<INode>() {
 
-	@Override
-	public int compare(final INode node1, final INode node2) {
-	    final int co = node1.getOrder().compareTo(node2.getOrder());
-	    return co == 0 ? node2.hashCode() - node1.hashCode() : co;
-	}
+		@Override
+		public int compare(final INode node1, final INode node2) {
+			final int co = node1.getOrder().compareTo(node2.getOrder());
+			return co == 0 ? node2.hashCode() - node1.hashCode() : co;
+		}
 
-    };
+	};
 
-    public Integer getOrder();
+	public Integer getOrder();
 
-    public INode getParent();
+	public INode getParent();
 
-    public Set<INode> getChildren();
+	public Set<INode> getChildren();
 
-    public Set<INode> getOrderedChildren();
+	public Set<INode> getOrderedChildren();
 
-    public Object getElement();
+	public Object getElement();
 
-    public String asString();
+	public String asString();
 
-    public MultiLanguageString getLink();
+	public MultiLanguageString getLink();
 
-    public boolean isAccessible();
+	public boolean isAccessible();
 
-    public boolean isManager();
+	public boolean isManager();
 
-    public String getUrl();
+	public String getUrl();
 
-    public boolean hasFunctionality();
+	public boolean hasFunctionality();
 
 }

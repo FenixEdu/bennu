@@ -24,27 +24,27 @@
 */
 package pt.ist.bennu.core.domain.groups;
 
+import org.joda.time.DateTime;
+
 import pt.ist.bennu.core.applicationTier.Authenticate.UserView;
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.bennu.core.domain.User;
 
-import org.joda.time.DateTime;
-
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public class PeopleUserLog extends PeopleUserLog_Base {
-    
-    public PeopleUserLog(final String operation, final String username, final String groupName) {
-	setMyOrg(MyOrg.getInstance());
-	setOperationDate(new DateTime());
-	final User user = UserView.getCurrentUser();
-	setExecutor(user == null ? "" : user.getUsername());
-	setOperation(operation);
-	setUsername(username);
-	setGroupName(groupName);
-    }
-    
+
+	public PeopleUserLog(final String operation, final String username, final String groupName) {
+		setMyOrg(MyOrg.getInstance());
+		setOperationDate(new DateTime());
+		final User user = UserView.getCurrentUser();
+		setExecutor(user == null ? "" : user.getUsername());
+		setOperation(operation);
+		setUsername(username);
+		setGroupName(groupName);
+	}
+
 }

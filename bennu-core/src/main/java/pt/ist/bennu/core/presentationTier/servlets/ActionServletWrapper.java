@@ -54,125 +54,125 @@ import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
  */
 public class ActionServletWrapper extends ActionServlet {
 
-    private static class ServletConfigWrapper implements ServletConfig {
+	private static class ServletConfigWrapper implements ServletConfig {
 
-	private final ServletConfig servletConfig;
+		private final ServletConfig servletConfig;
 
-	public static final Map<String, String> parameterMap = new HashMap<String, String>();
-	static {
-	    parameterMap.put("config", "/WEB-INF/conf/struts-default.xml");
-	    parameterMap.put("application", "resources.MyorgResources");
+		public static final Map<String, String> parameterMap = new HashMap<String, String>();
+		static {
+			parameterMap.put("config", "/WEB-INF/conf/struts-default.xml");
+			parameterMap.put("application", "resources.MyorgResources");
 
-	    parameterMap.put("debug", "3");
-	    parameterMap.put("detail", "3");
-	    parameterMap.put("validating", "true");
-	}
+			parameterMap.put("debug", "3");
+			parameterMap.put("detail", "3");
+			parameterMap.put("validating", "true");
+		}
 
-	public ServletConfigWrapper(final ServletConfig servletConfig) {
-	    this.servletConfig = servletConfig;
-	}
-
-	@Override
-	public String getInitParameter(final String name) {
-	    final String parameter = parameterMap.get(name);
-	    return parameter == null ? servletConfig == null ? null : servletConfig.getInitParameter(name) : parameter;
-	}
-
-	@Override
-	public Enumeration getInitParameterNames() {
-	    return new Enumeration() {
-
-		private final Enumeration enumeration = servletConfig == null ? null : servletConfig.getInitParameterNames();
-
-		private final Iterator iterator = parameterMap.keySet().iterator();
-
-		@Override
-		public boolean hasMoreElements() {
-		    return iterator.hasNext() || (enumeration != null && enumeration.hasMoreElements());
+		public ServletConfigWrapper(final ServletConfig servletConfig) {
+			this.servletConfig = servletConfig;
 		}
 
 		@Override
-		public Object nextElement() {
-		    return enumeration != null && enumeration.hasMoreElements() ? enumeration.nextElement() : iterator.next();
+		public String getInitParameter(final String name) {
+			final String parameter = parameterMap.get(name);
+			return parameter == null ? servletConfig == null ? null : servletConfig.getInitParameter(name) : parameter;
 		}
 
-	    };
+		@Override
+		public Enumeration getInitParameterNames() {
+			return new Enumeration() {
+
+				private final Enumeration enumeration = servletConfig == null ? null : servletConfig.getInitParameterNames();
+
+				private final Iterator iterator = parameterMap.keySet().iterator();
+
+				@Override
+				public boolean hasMoreElements() {
+					return iterator.hasNext() || (enumeration != null && enumeration.hasMoreElements());
+				}
+
+				@Override
+				public Object nextElement() {
+					return enumeration != null && enumeration.hasMoreElements() ? enumeration.nextElement() : iterator.next();
+				}
+
+			};
+		}
+
+		@Override
+		public ServletContext getServletContext() {
+			return servletConfig == null ? null : servletConfig.getServletContext();
+		}
+
+		@Override
+		public String getServletName() {
+			return servletConfig == null ? null : servletConfig.getServletName();
+		}
+
+	}
+
+	public static ServletConfig servletConfig = null;
+
+	@Override
+	public void init(final ServletConfig config) throws ServletException {
+		servletConfig = config;
+		final ServletConfigWrapper servletConfigWrapper = new ServletConfigWrapper(config);
+		RenderersRequestProcessorImpl.implementationClass = SimpleRenderersRequestProcessor.class;
+		super.init(servletConfigWrapper);
 	}
 
 	@Override
-	public ServletContext getServletContext() {
-	    return servletConfig == null ? null : servletConfig.getServletContext();
-	}
+	protected ModuleConfig initModuleConfig(String prefix, String paths) throws ServletException {
+		final ModuleConfig moduleConfig = super.initModuleConfig(prefix, paths);
 
-	@Override
-	public String getServletName() {
-	    return servletConfig == null ? null : servletConfig.getServletName();
-	}
-
-    }
-
-    public static ServletConfig servletConfig = null;
-
-    @Override
-    public void init(final ServletConfig config) throws ServletException {
-	servletConfig = config;
-	final ServletConfigWrapper servletConfigWrapper = new ServletConfigWrapper(config);
-	RenderersRequestProcessorImpl.implementationClass = SimpleRenderersRequestProcessor.class;
-	super.init(servletConfigWrapper);
-    }
-
-    @Override
-    protected ModuleConfig initModuleConfig(String prefix, String paths) throws ServletException {
-	final ModuleConfig moduleConfig = super.initModuleConfig(prefix, paths);
-
-	try {
-	    ClassLoader loader = Thread.currentThread().getContextClassLoader();
-	    for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(PropertiesManager.getProperty("app.name"))
-		    .getArtifacts()) {
-		try (InputStream stream = loader.getResourceAsStream(artifact.getName() + "/.messageResources")) {
-		    if (stream != null) {
-			List<String> resources = IOUtils.readLines(stream);
-			for (String resource : resources) {
-			    final String key = getMessageResourceBundleKey(resource);
-			    final String parameter = getMessageResourceBundleParameter(resource);
-			    createMessageResourcesConfig(moduleConfig, key, parameter);
-			    if (resource.equals("MyorgResources")) {
-				createMessageResourcesConfig(moduleConfig, "org.apache.struts.action.MESSAGE", parameter);
-			    }
+		try {
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(PropertiesManager.getProperty("app.name"))
+					.getArtifacts()) {
+				try (InputStream stream = loader.getResourceAsStream(artifact.getName() + "/.messageResources")) {
+					if (stream != null) {
+						List<String> resources = IOUtils.readLines(stream);
+						for (String resource : resources) {
+							final String key = getMessageResourceBundleKey(resource);
+							final String parameter = getMessageResourceBundleParameter(resource);
+							createMessageResourcesConfig(moduleConfig, key, parameter);
+							if (resource.equals("MyorgResources")) {
+								createMessageResourcesConfig(moduleConfig, "org.apache.struts.action.MESSAGE", parameter);
+							}
+						}
+					}
+				}
 			}
-		    }
+		} catch (IOException | FenixFrameworkProjectException e) {
+			throw new ServletException(e);
 		}
-	    }
-	} catch (IOException | FenixFrameworkProjectException e) {
-	    throw new ServletException(e);
+
+		return moduleConfig;
 	}
 
-	return moduleConfig;
-    }
-
-    private void createMessageResourcesConfig(final ModuleConfig moduleConfig, final String key, final String parameter) {
-	final MessageResourcesConfig messageResourcesConfig = new MessageResourcesConfig();
-	messageResourcesConfig.setFactory("org.apache.struts.util.PropertyMessageResourcesFactory");
-	messageResourcesConfig.setKey(key);
-	messageResourcesConfig.setNull(false);
-	messageResourcesConfig.setParameter(parameter);
-	moduleConfig.addMessageResourcesConfig(messageResourcesConfig);
-    }
-
-    private String getMessageResourceBundleKey(final String resource) {
-	final StringBuilder stringBuilder = new StringBuilder();
-	for (int i = 0; i < resource.length(); i++) {
-	    final char c = resource.charAt(i);
-	    if (i > 0 && Character.isUpperCase(c)) {
-		stringBuilder.append('_');
-	    }
-	    stringBuilder.append(Character.toUpperCase(c));
+	private void createMessageResourcesConfig(final ModuleConfig moduleConfig, final String key, final String parameter) {
+		final MessageResourcesConfig messageResourcesConfig = new MessageResourcesConfig();
+		messageResourcesConfig.setFactory("org.apache.struts.util.PropertyMessageResourcesFactory");
+		messageResourcesConfig.setKey(key);
+		messageResourcesConfig.setNull(false);
+		messageResourcesConfig.setParameter(parameter);
+		moduleConfig.addMessageResourcesConfig(messageResourcesConfig);
 	}
-	return stringBuilder.toString();
-    }
 
-    private String getMessageResourceBundleParameter(final String resource) {
-	return "resources." + resource;
-    }
+	private String getMessageResourceBundleKey(final String resource) {
+		final StringBuilder stringBuilder = new StringBuilder();
+		for (int i = 0; i < resource.length(); i++) {
+			final char c = resource.charAt(i);
+			if (i > 0 && Character.isUpperCase(c)) {
+				stringBuilder.append('_');
+			}
+			stringBuilder.append(Character.toUpperCase(c));
+		}
+		return stringBuilder.toString();
+	}
+
+	private String getMessageResourceBundleParameter(final String resource) {
+		return "resources." + resource;
+	}
 
 }

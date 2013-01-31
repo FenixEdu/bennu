@@ -27,226 +27,226 @@ package pt.ist.bennu.core.presentationTier;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.ist.bennu.core.domain.VirtualHost;
-
 import org.apache.struts.action.ActionForward;
+
+import pt.ist.bennu.core.domain.VirtualHost;
 
 /**
  * 
- * @author  Pedro Santos
- * @author  João Neves
- * @author  Luis Cruz
- * @author  Paulo Abrantes
+ * @author Pedro Santos
+ * @author João Neves
+ * @author Luis Cruz
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public class LayoutContext extends Context {
 
-    private String layout;
-    private String layoutSubDir;
-    private String themeSubDir;
+	private String layout;
+	private String layoutSubDir;
+	private String themeSubDir;
 
-    private String title = "";
-    private final List<String> head = new ArrayList<String>();
-    private String login;
-    private String configurationLink;
-    private String profileLink;
-    private String helpLink;
-    private String googleSearch;
-    private String languageSelection;
-    private String sideBar;
-    private String subMenuTop;
-    private String menuTop;
+	private String title = "";
+	private final List<String> head = new ArrayList<String>();
+	private String login;
+	private String configurationLink;
+	private String profileLink;
+	private String helpLink;
+	private String googleSearch;
+	private String languageSelection;
+	private String sideBar;
+	private String subMenuTop;
+	private String menuTop;
 
-    private String pageOperations;
-    private String breadCrumbs;
-    private String body;
-    private String footer;
+	private String pageOperations;
+	private String breadCrumbs;
+	private String body;
+	private String footer;
 
-    protected void init() {
-	final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-	init(virtualHost.getLayout().getName(), virtualHost.getTheme().getName());
-    }
+	protected void init() {
+		final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+		init(virtualHost.getLayout().getName(), virtualHost.getTheme().getName());
+	}
 
-    protected void init(final String layoutSubDir, final String themeSubDir) {
-	this.layoutSubDir = layoutSubDir;
-	this.themeSubDir = themeSubDir;
+	protected void init(final String layoutSubDir, final String themeSubDir) {
+		this.layoutSubDir = layoutSubDir;
+		this.themeSubDir = themeSubDir;
 
-	final String layoutPrefix = "/layout/" + layoutSubDir;
-	this.layout = layoutPrefix + "/layout.jsp";
+		final String layoutPrefix = "/layout/" + layoutSubDir;
+		this.layout = layoutPrefix + "/layout.jsp";
 
-	login = layoutPrefix + "/login.jsp";
-	configurationLink = layoutPrefix + "/configurationLink.jsp";
-	profileLink = layoutPrefix + "/profileLink.jsp";
-	helpLink = layoutPrefix + "/helpLink.jsp";
-	googleSearch = layoutPrefix + "/googleSearch.jsp";
-	languageSelection = layoutPrefix + "/languageSelection.jsp";
-	sideBar = layoutPrefix + "/sideBar.jsp";
-	subMenuTop = layoutPrefix + "/subMenuTop.jsp";
-	menuTop = layoutPrefix + "/menuTop.jsp";
+		login = layoutPrefix + "/login.jsp";
+		configurationLink = layoutPrefix + "/configurationLink.jsp";
+		profileLink = layoutPrefix + "/profileLink.jsp";
+		helpLink = layoutPrefix + "/helpLink.jsp";
+		googleSearch = layoutPrefix + "/googleSearch.jsp";
+		languageSelection = layoutPrefix + "/languageSelection.jsp";
+		sideBar = layoutPrefix + "/sideBar.jsp";
+		subMenuTop = layoutPrefix + "/subMenuTop.jsp";
+		menuTop = layoutPrefix + "/menuTop.jsp";
 
-	pageOperations = "/blank.jsp";
-	breadCrumbs = layoutPrefix + "/breadCrumbs.jsp";
-	body = "/blank.jsp";
-	footer = layoutPrefix + "/footer.jsp";
+		pageOperations = "/blank.jsp";
+		breadCrumbs = layoutPrefix + "/breadCrumbs.jsp";
+		body = "/blank.jsp";
+		footer = layoutPrefix + "/footer.jsp";
 
-	head.add(layoutPrefix + "/head.jsp");
-    }
+		head.add(layoutPrefix + "/head.jsp");
+	}
 
-    {
-	init();
-    }
+	{
+		init();
+	}
 
-    public LayoutContext() {
-	super();
-    }
+	public LayoutContext() {
+		super();
+	}
 
-    public LayoutContext(final String path) {
-	super(path);
-    }
+	public LayoutContext(final String path) {
+		super(path);
+	}
 
-    public void switchLayoutAndTheme(final String layoutSubDir, final String themeSubDir) {
-	init(layoutSubDir, themeSubDir);
-    }
+	public void switchLayoutAndTheme(final String layoutSubDir, final String themeSubDir) {
+		init(layoutSubDir, themeSubDir);
+	}
 
-    public String getLayout() {
-	return layout;
-    }
+	public String getLayout() {
+		return layout;
+	}
 
-    public void setLayout(final String layoutSubDir) {
-	switchLayoutAndTheme(layoutSubDir, getThemeSubDir());
-    }
+	public void setLayout(final String layoutSubDir) {
+		switchLayoutAndTheme(layoutSubDir, getThemeSubDir());
+	}
 
-    public String getThemeSubDir() {
-	return themeSubDir;
-    }
+	public String getThemeSubDir() {
+		return themeSubDir;
+	}
 
-    public void setThemeSubDir(final String themeSubDir) {
-	switchLayoutAndTheme(layoutSubDir, themeSubDir);
-    }
+	public void setThemeSubDir(final String themeSubDir) {
+		switchLayoutAndTheme(layoutSubDir, themeSubDir);
+	}
 
-    public String getTitle() {
-	return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-	this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public List<String> getHead() {
-	return head;
-    }
+	public List<String> getHead() {
+		return head;
+	}
 
-    public void addHead(String head) {
-	this.head.add(head);
-    }
+	public void addHead(String head) {
+		this.head.add(head);
+	}
 
-    public String getSideBar() {
-	return sideBar;
-    }
+	public String getSideBar() {
+		return sideBar;
+	}
 
-    public void setSideBar(String sideBar) {
-	this.sideBar = sideBar;
-    }
+	public void setSideBar(String sideBar) {
+		this.sideBar = sideBar;
+	}
 
-    public String getSubMenuTop() {
-	return subMenuTop;
-    }
+	public String getSubMenuTop() {
+		return subMenuTop;
+	}
 
-    public void setSubMenuTop(String subMenuTop) {
-	this.subMenuTop = subMenuTop;
-    }
+	public void setSubMenuTop(String subMenuTop) {
+		this.subMenuTop = subMenuTop;
+	}
 
-    public String getPageOperations() {
-	return pageOperations;
-    }
+	public String getPageOperations() {
+		return pageOperations;
+	}
 
-    public void setPageOperations(String pageOperations) {
-	this.pageOperations = pageOperations;
-    }
+	public void setPageOperations(String pageOperations) {
+		this.pageOperations = pageOperations;
+	}
 
-    public String getBreadCrumbs() {
-	return breadCrumbs;
-    }
+	public String getBreadCrumbs() {
+		return breadCrumbs;
+	}
 
-    public void setBreadCrumbs(String breadCrumbs) {
-	this.breadCrumbs = breadCrumbs;
-    }
+	public void setBreadCrumbs(String breadCrumbs) {
+		this.breadCrumbs = breadCrumbs;
+	}
 
-    public String getBody() {
-	return body;
-    }
+	public String getBody() {
+		return body;
+	}
 
-    public void setBody(String body) {
-	this.body = body;
-    }
+	public void setBody(String body) {
+		this.body = body;
+	}
 
-    public String getFooter() {
-	return footer;
-    }
+	public String getFooter() {
+		return footer;
+	}
 
-    public void setFooter(String footer) {
-	this.footer = footer;
-    }
+	public void setFooter(String footer) {
+		this.footer = footer;
+	}
 
-    public String getMenuTop() {
-	return menuTop;
-    }
+	public String getMenuTop() {
+		return menuTop;
+	}
 
-    public void setMenuTop(String menuTop) {
-	this.menuTop = menuTop;
-    }
+	public void setMenuTop(String menuTop) {
+		this.menuTop = menuTop;
+	}
 
-    @Override
-    public ActionForward forward(final String body) {
-	setBody(body);
-	return new ActionForward(getLayout());
-    }
+	@Override
+	public ActionForward forward(final String body) {
+		setBody(body);
+		return new ActionForward(getLayout());
+	}
 
-    public void setLogin(String login) {
-	this.login = login;
-    }
+	public void setLogin(String login) {
+		this.login = login;
+	}
 
-    public String getLogin() {
-	return login;
-    }
+	public String getLogin() {
+		return login;
+	}
 
-    public void setConfigurationLink(String configurationLink) {
-	this.configurationLink = configurationLink;
-    }
+	public void setConfigurationLink(String configurationLink) {
+		this.configurationLink = configurationLink;
+	}
 
-    public String getConfigurationLink() {
-	return configurationLink;
-    }
+	public String getConfigurationLink() {
+		return configurationLink;
+	}
 
-    public void setProfileLink(String profileLink) {
-	this.profileLink = profileLink;
-    }
+	public void setProfileLink(String profileLink) {
+		this.profileLink = profileLink;
+	}
 
-    public String getProfileLink() {
-	return profileLink;
-    }
+	public String getProfileLink() {
+		return profileLink;
+	}
 
-    public void setHelpLink(String helpLink) {
-	this.helpLink = helpLink;
-    }
+	public void setHelpLink(String helpLink) {
+		this.helpLink = helpLink;
+	}
 
-    public String getHelpLink() {
-	return helpLink;
-    }
+	public String getHelpLink() {
+		return helpLink;
+	}
 
-    public void setGoogleSearch(String googleSearch) {
-	this.googleSearch = googleSearch;
-    }
+	public void setGoogleSearch(String googleSearch) {
+		this.googleSearch = googleSearch;
+	}
 
-    public String getGoogleSearch() {
-	return googleSearch;
-    }
+	public String getGoogleSearch() {
+		return googleSearch;
+	}
 
-    public void setLanguageSelection(String languageSelection) {
-	this.languageSelection = languageSelection;
-    }
+	public void setLanguageSelection(String languageSelection) {
+		this.languageSelection = languageSelection;
+	}
 
-    public String getLanguageSelection() {
-	return languageSelection;
-    }
+	public String getLanguageSelection() {
+		return languageSelection;
+	}
 }

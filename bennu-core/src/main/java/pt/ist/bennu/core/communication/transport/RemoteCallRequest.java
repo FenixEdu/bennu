@@ -30,63 +30,63 @@ import pt.ist.bennu.core.communication.transport.converters.Type;
 
 /**
  * 
- * @author  Paulo Abrantes
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public class RemoteCallRequest implements Serializable {
 
-    private Type type;
-    private String identifier;
-    private String methodName;
-    private Class[] classes;
-    private Object[] objects;
+	private Type type;
+	private String identifier;
+	private String methodName;
+	private Class[] classes;
+	private Object[] objects;
 
-    public RemoteCallRequest(Type type, String identifier, String methodName, Class[] classes, Object[] objects) {
-	super();
-	this.type = type;
-	this.identifier = identifier;
-	this.methodName = methodName;
-	this.classes = classes;
-	this.objects = objects;
-    }
+	public RemoteCallRequest(Type type, String identifier, String methodName, Class[] classes, Object[] objects) {
+		super();
+		this.type = type;
+		this.identifier = identifier;
+		this.methodName = methodName;
+		this.classes = classes;
+		this.objects = objects;
+	}
 
-    public Type getType() {
-	return type;
-    }
+	public Type getType() {
+		return type;
+	}
 
-    public void setType(Type type) {
-	this.type = type;
-    }
+	public void setType(Type type) {
+		this.type = type;
+	}
 
-    public String getIdentifier() {
-	return identifier;
-    }
+	public String getIdentifier() {
+		return identifier;
+	}
 
-    public void setIdentifier(String identifier) {
-	this.identifier = identifier;
-    }
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 
-    public String getMethodName() {
-	return methodName;
-    }
+	public String getMethodName() {
+		return methodName;
+	}
 
-    public void setMethodName(String methodName) {
-	this.methodName = methodName;
-    }
+	public void setMethodName(String methodName) {
+		this.methodName = methodName;
+	}
 
-    public Class[] getClasses() {
-	return classes;
-    }
+	public Class[] getClasses() {
+		return classes;
+	}
 
-    public void setClasses(Class[] classes) {
-	this.classes = classes;
-    }
+	public void setClasses(Class[] classes) {
+		this.classes = classes;
+	}
 
-    public Object[] getObjects() {
-	return objects;
-    }
+	public Object[] getObjects() {
+		return objects;
+	}
 
-    public void setObjects(Object[] objects) {
-	this.objects = objects;
-    }
+	public void setObjects(Object[] objects) {
+		this.objects = objects;
+	}
 }

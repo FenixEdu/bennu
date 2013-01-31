@@ -24,37 +24,37 @@
 */
 package pt.ist.bennu.core.presentationTier.renderers.providers;
 
-import pt.ist.fenixframework.DomainModelUtil;
 import pt.ist.fenixWebFramework.renderers.DataProvider;
 import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
+import pt.ist.fenixframework.DomainModelUtil;
 
 /**
  * 
- * @author  Shezad Anavarali
- * @author  Luis Cruz
- * @author  Paulo Abrantes
+ * @author Shezad Anavarali
+ * @author Luis Cruz
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public abstract class AbstractDomainClassProvider implements DataProvider {
 
-    @Override
-    public Converter getConverter() {
-	return null;
-    }
+	@Override
+	public Converter getConverter() {
+		return null;
+	}
 
-    @Override
-    public Object provide(Object arg0, Object arg1) {
-	return DomainModelUtil.getDomainClassHierarchy(getSuperClass(), shouldContainSuperClass(),
-		shouldContainerAbstractClasses());
-    }
+	@Override
+	public Object provide(Object arg0, Object arg1) {
+		return DomainModelUtil.getDomainClassHierarchy(getSuperClass(), shouldContainSuperClass(),
+				shouldContainerAbstractClasses());
+	}
 
-    protected abstract Class getSuperClass();
+	protected abstract Class getSuperClass();
 
-    protected boolean shouldContainSuperClass() {
-	return false;
-    }
+	protected boolean shouldContainSuperClass() {
+		return false;
+	}
 
-    protected boolean shouldContainerAbstractClasses() {
-	return true;
-    }
+	protected boolean shouldContainerAbstractClasses() {
+		return true;
+	}
 }

@@ -26,20 +26,20 @@ package pt.ist.bennu.core._development;
 
 /**
  * 
- * @author  Paulo Abrantes
- * @author  Luis Cruz
+ * @author Paulo Abrantes
+ * @author Luis Cruz
  * 
-*/
+ */
 public class LogLevel {
 
-    public static boolean DEBUG = false;
+	public static boolean DEBUG = false;
 
-    public static boolean INFO = true;
+	public static boolean INFO = true;
 
-    public static boolean WARN = true;
+	public static boolean WARN = true;
 
-    public static boolean ERROR = true;
+	public static boolean ERROR = true;
 
-    public static boolean FATAL = true;
+	public static boolean FATAL = true;
 
 }

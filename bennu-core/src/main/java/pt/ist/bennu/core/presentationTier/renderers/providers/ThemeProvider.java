@@ -31,20 +31,20 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 /**
  * 
- * @author  Luis Cruz
- * @author  Paulo Abrantes
+ * @author Luis Cruz
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public class ThemeProvider implements DataProvider {
 
-    @Override
-    public Converter getConverter() {
-	return new DomainObjectKeyConverter();
-    }
+	@Override
+	public Converter getConverter() {
+		return new DomainObjectKeyConverter();
+	}
 
-    @Override
-    public Object provide(Object arg0, Object arg1) {
-	return MyOrg.getInstance().getThemes();
-    }
+	@Override
+	public Object provide(Object arg0, Object arg1) {
+		return MyOrg.getInstance().getThemes();
+	}
 
 }

@@ -31,30 +31,32 @@ import org.joda.time.LocalDate;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public class LocalDate2SqlFieldConverter implements FieldConversion {
 
-    public Object javaToSql(Object arg0) throws ConversionException {
-	LocalDate localDate = (LocalDate) arg0;
-	if (localDate != null) {
-	    final String dateString = String.format("%d-%02d-%02d", localDate.getYear(), localDate.getMonthOfYear(), localDate
-		    .getDayOfMonth());
-	    return dateString.length() != 10 ? null : dateString;
+	@Override
+	public Object javaToSql(Object arg0) throws ConversionException {
+		LocalDate localDate = (LocalDate) arg0;
+		if (localDate != null) {
+			final String dateString =
+					String.format("%d-%02d-%02d", localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
+			return dateString.length() != 10 ? null : dateString;
+		}
+		return null;
 	}
-	return null;
-    }
 
-    public Object sqlToJava(Object arg0) throws ConversionException {
-	String value = (String) arg0;
-	if (!StringUtils.isEmpty(value)) {
-	    int year = Integer.parseInt(value.substring(0, 4));
-	    int month = Integer.parseInt(value.substring(5, 7));
-	    int day = Integer.parseInt(value.substring(8, 10));
-	    return year == 0 || month == 0 || day == 0 ? null : new LocalDate(year, month, day);
+	@Override
+	public Object sqlToJava(Object arg0) throws ConversionException {
+		String value = (String) arg0;
+		if (!StringUtils.isEmpty(value)) {
+			int year = Integer.parseInt(value.substring(0, 4));
+			int month = Integer.parseInt(value.substring(5, 7));
+			int day = Integer.parseInt(value.substring(8, 10));
+			return year == 0 || month == 0 || day == 0 ? null : new LocalDate(year, month, day);
+		}
+		return null;
 	}
-	return null;
-    }
 
 }

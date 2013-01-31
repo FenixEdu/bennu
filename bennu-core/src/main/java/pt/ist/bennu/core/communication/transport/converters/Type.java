@@ -26,9 +26,9 @@ package pt.ist.bennu.core.communication.transport.converters;
 
 /**
  * 
- * @author  Paulo Abrantes
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public enum Type {
-    INSTANCE, STATIC;
+	INSTANCE, STATIC;
 }

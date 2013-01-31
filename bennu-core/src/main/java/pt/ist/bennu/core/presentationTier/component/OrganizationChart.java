@@ -34,50 +34,50 @@ import java.util.Collection;
  */
 public class OrganizationChart<T> extends ArrayList<OrganizationChartRow<T>> {
 
-    final int elementRowIndex;
+	final int elementRowIndex;
 
-    final int unitsPerPart;
+	final int unitsPerPart;
 
-    public OrganizationChart(final Collection<T> elements, final int unitsPerPart) {
-	this.unitsPerPart = unitsPerPart;
-	addAllElements(elements);
-	elementRowIndex = -1;
-    }
-
-    public OrganizationChart(final T element, final Collection<T> parents, final Collection<T> children, final int unitsPerPart) {
-	this.unitsPerPart = unitsPerPart;
-	if (parents != null && !parents.isEmpty()) {
-	    addAllElements(parents);
+	public OrganizationChart(final Collection<T> elements, final int unitsPerPart) {
+		this.unitsPerPart = unitsPerPart;
+		addAllElements(elements);
+		elementRowIndex = -1;
 	}
-	elementRowIndex = size();
-	add(new OrganizationChartRow<T>(element, unitsPerPart));
-	addAllElements(children);
-    }
 
-    public void addAllElements(final Collection<T> elements) {
-	if (elements != null && !elements.isEmpty()) {
-	    OrganizationChartRow<T> row = null;
-	    for (final T t : elements) {
-		if (row == null || row.isFull()) {
-		    row = new OrganizationChartRow<T>(t, unitsPerPart);
-		    add(row);
-		} else {
-		    row.add(t);
+	public OrganizationChart(final T element, final Collection<T> parents, final Collection<T> children, final int unitsPerPart) {
+		this.unitsPerPart = unitsPerPart;
+		if (parents != null && !parents.isEmpty()) {
+			addAllElements(parents);
 		}
-	    }
+		elementRowIndex = size();
+		add(new OrganizationChartRow<T>(element, unitsPerPart));
+		addAllElements(children);
 	}
-    }
 
-    public int getElementRowIndex() {
-	return elementRowIndex;
-    }
+	public void addAllElements(final Collection<T> elements) {
+		if (elements != null && !elements.isEmpty()) {
+			OrganizationChartRow<T> row = null;
+			for (final T t : elements) {
+				if (row == null || row.isFull()) {
+					row = new OrganizationChartRow<T>(t, unitsPerPart);
+					add(row);
+				} else {
+					row.add(t);
+				}
+			}
+		}
+	}
 
-    public T getElement() {
-	return elementRowIndex == -1 ? null : get(elementRowIndex).iterator().next();
-    }
+	public int getElementRowIndex() {
+		return elementRowIndex;
+	}
 
-    public int getUnitsPerPart() {
-	return unitsPerPart;
-    }
+	public T getElement() {
+		return elementRowIndex == -1 ? null : get(elementRowIndex).iterator().next();
+	}
+
+	public int getUnitsPerPart() {
+		return unitsPerPart;
+	}
 
 }

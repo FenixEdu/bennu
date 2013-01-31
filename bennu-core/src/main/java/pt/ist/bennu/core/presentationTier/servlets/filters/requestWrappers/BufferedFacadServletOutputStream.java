@@ -32,38 +32,38 @@ import javax.servlet.ServletOutputStream;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public class BufferedFacadServletOutputStream extends ServletOutputStream {
 
-    final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+	final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-    final OutputStream realOutputStream;
+	final OutputStream realOutputStream;
 
-    public BufferedFacadServletOutputStream(final OutputStream realOutputStream) {
-	this.realOutputStream = realOutputStream;
-    }
+	public BufferedFacadServletOutputStream(final OutputStream realOutputStream) {
+		this.realOutputStream = realOutputStream;
+	}
 
-    @Override
-    public void write(final int value) throws IOException {
-	byteArrayOutputStream.write(value);
-    }
+	@Override
+	public void write(final int value) throws IOException {
+		byteArrayOutputStream.write(value);
+	}
 
-    @Override
-    public void write(final byte[] value) throws IOException {
-	byteArrayOutputStream.write(value);
-    }
+	@Override
+	public void write(final byte[] value) throws IOException {
+		byteArrayOutputStream.write(value);
+	}
 
-    @Override
-    public void write(final byte[] value, final int off, final int len) throws IOException {
-	byteArrayOutputStream.write(value, off, len);
-    }
+	@Override
+	public void write(final byte[] value, final int off, final int len) throws IOException {
+		byteArrayOutputStream.write(value, off, len);
+	}
 
-    public void writeRealResponse() throws IOException {
-	realOutputStream.write(byteArrayOutputStream.toByteArray());
-	realOutputStream.flush();
-	realOutputStream.close();
-    }
+	public void writeRealResponse() throws IOException {
+		realOutputStream.write(byteArrayOutputStream.toByteArray());
+		realOutputStream.flush();
+		realOutputStream.close();
+	}
 
 }

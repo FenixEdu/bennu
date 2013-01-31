@@ -40,89 +40,89 @@ import dml.Role;
 
 /**
  * 
- * @author  Pedro Santos
- * @author  Paulo Abrantes
- * @author  Luis Cruz
+ * @author Pedro Santos
+ * @author Paulo Abrantes
+ * @author Luis Cruz
  * 
-*/
+ */
 public class MyOrg extends MyOrg_Base {
 
-    private static final Logger logger = Logger.getLogger(MyOrg.class.getName());
+	private static final Logger logger = Logger.getLogger(MyOrg.class.getName());
 
-    public static MyOrg getInstance() {
-	return FenixFramework.getRoot();
-    }
-
-    public MyOrg() {
-	super();
-	checkIfIsSingleton();
-	new VirtualHost(this);
-    }
-
-    private void checkIfIsSingleton() {
-	if (FenixFramework.getRoot() != null && FenixFramework.getRoot() != this) {
-	    throw new Error("There can only be one! (instance of MyOrg)");
+	public static MyOrg getInstance() {
+		return FenixFramework.getRoot();
 	}
-    }
 
-    @Service
-    public static void initModules() throws SecurityException, IllegalAccessException, InvocationTargetException,
-	    NoSuchMethodException, ClassNotFoundException {
+	public MyOrg() {
+		super();
+		checkIfIsSingleton();
+		new VirtualHost(this);
+	}
 
-	logger.info("Initiating Module System");
-	Set<DomainClass> inits = getModuleRootsFor(MyOrg.class);
-
-	MyOrg myorg = MyOrg.getInstance();
-
-	for (DomainClass classToInit : inits) {
-	    Class<ModuleInitializer> clazz = (Class<ModuleInitializer>) Class.forName(classToInit.getFullName());
-	    ModuleInitializer root = null;
-	    try {
-		root = (ModuleInitializer) clazz.getMethod("getInstance", new Class[] {}).invoke(clazz, new Object[] {});
-	    } catch (InvocationTargetException e) {
-		if (e.getCause() instanceof IllegalWriteException) {
-		    logger.debug("IllegalWrite restarting!");
-		    throw new IllegalWriteException();
-		} else {
-		    throw e;
+	private void checkIfIsSingleton() {
+		if (FenixFramework.getRoot() != null && FenixFramework.getRoot() != this) {
+			throw new Error("There can only be one! (instance of MyOrg)");
 		}
-	    }
-	    logger.info("Initiating " + clazz.getName());
-	    if (root != null) {
-		root.init(myorg);
-	    }
-	    logger.debug("Initiated " + clazz.getName());
 	}
 
-	logger.info("Finished Modules Initiation System");
-    }
+	@Service
+	public static void initModules() throws SecurityException, IllegalAccessException, InvocationTargetException,
+			NoSuchMethodException, ClassNotFoundException {
 
-    private static Set<DomainClass> getModuleRootsFor(Class<?> clazz) throws ClassNotFoundException {
-	Set<DomainClass> initializers = new TreeSet<DomainClass>(new Comparator<DomainClass>() {
+		logger.info("Initiating Module System");
+		Set<DomainClass> inits = getModuleRootsFor(MyOrg.class);
 
-	    @Override
-	    public int compare(DomainClass d1, DomainClass d2) {
-		return d1.getSourceFile().getFile().compareTo(d2.getSourceFile().getFile());
-	    }
+		MyOrg myorg = MyOrg.getInstance();
 
-	});
-	DomainClass myOrgClass = DomainModelUtil.getDomainClassFor(MyOrg.class);
-	for (Role role : myOrgClass.getRoleSlotsList()) {
-	    if (role.getMultiplicityLower() == 0 && role.getMultiplicityUpper() == 1) {
-		DomainClass otherClass = (DomainClass) role.getType();
-		if (implementsModuleRoot(otherClass)) {
-		    initializers.add(otherClass);
+		for (DomainClass classToInit : inits) {
+			Class<ModuleInitializer> clazz = (Class<ModuleInitializer>) Class.forName(classToInit.getFullName());
+			ModuleInitializer root = null;
+			try {
+				root = (ModuleInitializer) clazz.getMethod("getInstance", new Class[] {}).invoke(clazz, new Object[] {});
+			} catch (InvocationTargetException e) {
+				if (e.getCause() instanceof IllegalWriteException) {
+					logger.debug("IllegalWrite restarting!");
+					throw new IllegalWriteException();
+				} else {
+					throw e;
+				}
+			}
+			logger.info("Initiating " + clazz.getName());
+			if (root != null) {
+				root.init(myorg);
+			}
+			logger.debug("Initiated " + clazz.getName());
 		}
-	    }
 
+		logger.info("Finished Modules Initiation System");
 	}
 
-	return initializers;
-    }
+	private static Set<DomainClass> getModuleRootsFor(Class<?> clazz) throws ClassNotFoundException {
+		Set<DomainClass> initializers = new TreeSet<DomainClass>(new Comparator<DomainClass>() {
 
-    private static boolean implementsModuleRoot(DomainClass otherClass) throws ClassNotFoundException {
-	Class<?> clazz = Class.forName(otherClass.getFullName());
-	return ModuleInitializer.class.isAssignableFrom(clazz);
-    }
+			@Override
+			public int compare(DomainClass d1, DomainClass d2) {
+				return d1.getSourceFile().getFile().compareTo(d2.getSourceFile().getFile());
+			}
+
+		});
+		DomainClass myOrgClass = DomainModelUtil.getDomainClassFor(MyOrg.class);
+		for (Role role : myOrgClass.getRoleSlotsList()) {
+			if (role.getMultiplicityLower() == 0 && role.getMultiplicityUpper() == 1) {
+				DomainClass otherClass = (DomainClass) role.getType();
+				if (implementsModuleRoot(otherClass)) {
+					initializers.add(otherClass);
+				}
+			}
+
+		}
+
+		return initializers;
+	}
+
+	private static boolean implementsModuleRoot(DomainClass otherClass) throws ClassNotFoundException {
+		Class<?> clazz = Class.forName(otherClass.getFullName());
+		return ModuleInitializer.class.isAssignableFrom(clazz);
+	}
 
 }

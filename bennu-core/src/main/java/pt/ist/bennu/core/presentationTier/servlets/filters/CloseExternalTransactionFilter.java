@@ -37,25 +37,28 @@ import pt.ist.bennu.core.persistenceTier.externalRepository.DbHandler;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public class CloseExternalTransactionFilter implements Filter {
 
-    public void init(final FilterConfig filterConfig) throws ServletException {
-    }
-
-    public void destroy() {
-    }
-
-    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-	    throws IOException, ServletException {
-	try {
-	    filterChain.doFilter(servletRequest, servletResponse);
-	    DbHandler.commitAll();
-	} finally {
-	    DbHandler.rolebackAll();
+	@Override
+	public void init(final FilterConfig filterConfig) throws ServletException {
 	}
-    }
+
+	@Override
+	public void destroy() {
+	}
+
+	@Override
+	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
+			throws IOException, ServletException {
+		try {
+			filterChain.doFilter(servletRequest, servletResponse);
+			DbHandler.commitAll();
+		} finally {
+			DbHandler.rolebackAll();
+		}
+	}
 
 }

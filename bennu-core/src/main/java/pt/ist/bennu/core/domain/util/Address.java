@@ -30,124 +30,121 @@ import pt.ist.bennu.core.domain.exceptions.DomainException;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public class Address implements Serializable {
 
-    private String line1;
-    private String line2;
-    private String postalCode;
-    private String location;
-    private String country;
+	private String line1;
+	private String line2;
+	private String postalCode;
+	private String location;
+	private String country;
 
-    public Address(final String line1, final String line2, final String postalCode, final String location, final String country) {
-	setLine1(line1);
-	setLine2(line2);
-	setLocation(location);
-	setCountry(country);
-	setPostalCode(postalCode);
-    }
-
-    public String getLine1() {
-	return line1;
-    }
-
-    public String getLine2() {
-	return line2;
-    }
-
-    public String getPostalCode() {
-	return postalCode;
-    }
-
-    public String getLocation() {
-	return location;
-    }
-
-    public String getCountry() {
-	return country;
-    }
-
-    protected void setLine1(String line1) {
-	if (line1 == null || line1.isEmpty()) {
-	    throw new DomainException("error.address.line1.cannot.be.empty");
+	public Address(final String line1, final String line2, final String postalCode, final String location, final String country) {
+		setLine1(line1);
+		setLine2(line2);
+		setLocation(location);
+		setCountry(country);
+		setPostalCode(postalCode);
 	}
-	this.line1 = line1;
-    }
 
-    protected void setLine2(String line2) {
-	this.line2 = line2;
-    }
-
-    protected void setPostalCode(String postalCode) {
-	if (postalCode == null || postalCode.isEmpty()) {
-	    throw new DomainException("error.address.postalCode.cannot.be.empty");
+	public String getLine1() {
+		return line1;
 	}
-	this.postalCode = postalCode;
-    }
 
-    protected void setLocation(String location) {
-	if (location == null || location.isEmpty()) {
-	    throw new DomainException("error.address.location.cannot.be.empty");
+	public String getLine2() {
+		return line2;
 	}
-	this.location = location;
-    }
 
-    protected void setCountry(String country) {
-	if (country == null || country.isEmpty()) {
-	    throw new DomainException("error.address.country.cannot.be.empty");
+	public String getPostalCode() {
+		return postalCode;
 	}
-	this.country = country;
-    }
 
-    @Override
-    public boolean equals(Object obj) {
-	return false;
-    }
+	public String getLocation() {
+		return location;
+	}
 
-    public boolean equals(final Address address) {
-	return address != null && match(getLine1(), address.getLine1())
-		&& match(getLine2(), address.getLine2())
-		&& match(getPostalCode(), address.getPostalCode())
-		&& match(getLocation(), address.getLocation())
-		&& match(getCountry(), address.getCountry());
-    }
+	public String getCountry() {
+		return country;
+	}
 
-    private boolean match(final String string1, final String string2) {
-	return (string1 == null && string2 == null) || (string1 != null && string1.equals(string2));
-    }
+	protected void setLine1(String line1) {
+		if (line1 == null || line1.isEmpty()) {
+			throw new DomainException("error.address.line1.cannot.be.empty");
+		}
+		this.line1 = line1;
+	}
 
-    static final String CHARACTER = ":";
-    static final String SEPARATOR = CHARACTER + CHARACTER;
+	protected void setLine2(String line2) {
+		this.line2 = line2;
+	}
 
-    public String exportAsString() {
-	final StringBuilder builder = new StringBuilder();
-	builder.append(escapeFieldSeparator(getLine1()));
-	builder.append(SEPARATOR);
-	builder.append(escapeFieldSeparator(getLine2()));
-	builder.append(SEPARATOR);
-	builder.append(escapeFieldSeparator(getPostalCode()));
-	builder.append(SEPARATOR);
-	builder.append(escapeFieldSeparator(getLocation()));
-	builder.append(SEPARATOR);
-	builder.append(escapeFieldSeparator(getCountry()));
-	return builder.toString();
-    }
+	protected void setPostalCode(String postalCode) {
+		if (postalCode == null || postalCode.isEmpty()) {
+			throw new DomainException("error.address.postalCode.cannot.be.empty");
+		}
+		this.postalCode = postalCode;
+	}
 
-    private String escapeFieldSeparator(String field) {
-	return field != null ? field.replaceAll(CHARACTER, "\\\\" + CHARACTER + "\\\\") : "";
-    }
+	protected void setLocation(String location) {
+		if (location == null || location.isEmpty()) {
+			throw new DomainException("error.address.location.cannot.be.empty");
+		}
+		this.location = location;
+	}
 
-    public static Address importFromString(String string) {
-	String[] split = string.split(SEPARATOR);
-	return new Address(removeEscapeFieldSeparator(split[0]), removeEscapeFieldSeparator(split[1]),
-		removeEscapeFieldSeparator(split[2]), removeEscapeFieldSeparator(split[3]),
-		removeEscapeFieldSeparator(split[4]));
-    }
+	protected void setCountry(String country) {
+		if (country == null || country.isEmpty()) {
+			throw new DomainException("error.address.country.cannot.be.empty");
+		}
+		this.country = country;
+	}
 
-    private static String removeEscapeFieldSeparator(String field) {
-	return field != null ? field.replaceAll("\\\\" + CHARACTER + "\\\\", CHARACTER) : null;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		return false;
+	}
+
+	public boolean equals(final Address address) {
+		return address != null && match(getLine1(), address.getLine1()) && match(getLine2(), address.getLine2())
+				&& match(getPostalCode(), address.getPostalCode()) && match(getLocation(), address.getLocation())
+				&& match(getCountry(), address.getCountry());
+	}
+
+	private boolean match(final String string1, final String string2) {
+		return (string1 == null && string2 == null) || (string1 != null && string1.equals(string2));
+	}
+
+	static final String CHARACTER = ":";
+	static final String SEPARATOR = CHARACTER + CHARACTER;
+
+	public String exportAsString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append(escapeFieldSeparator(getLine1()));
+		builder.append(SEPARATOR);
+		builder.append(escapeFieldSeparator(getLine2()));
+		builder.append(SEPARATOR);
+		builder.append(escapeFieldSeparator(getPostalCode()));
+		builder.append(SEPARATOR);
+		builder.append(escapeFieldSeparator(getLocation()));
+		builder.append(SEPARATOR);
+		builder.append(escapeFieldSeparator(getCountry()));
+		return builder.toString();
+	}
+
+	private String escapeFieldSeparator(String field) {
+		return field != null ? field.replaceAll(CHARACTER, "\\\\" + CHARACTER + "\\\\") : "";
+	}
+
+	public static Address importFromString(String string) {
+		String[] split = string.split(SEPARATOR);
+		return new Address(removeEscapeFieldSeparator(split[0]), removeEscapeFieldSeparator(split[1]),
+				removeEscapeFieldSeparator(split[2]), removeEscapeFieldSeparator(split[3]), removeEscapeFieldSeparator(split[4]));
+	}
+
+	private static String removeEscapeFieldSeparator(String field) {
+		return field != null ? field.replaceAll("\\\\" + CHARACTER + "\\\\", CHARACTER) : null;
+	}
 
 }

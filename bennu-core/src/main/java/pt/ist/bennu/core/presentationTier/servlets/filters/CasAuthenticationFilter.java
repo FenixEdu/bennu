@@ -44,50 +44,53 @@ import edu.yale.its.tp.cas.client.ProxyTicketValidator;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public class CasAuthenticationFilter implements Filter {
 
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
-
-    public void destroy() {
-    }
-
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-	    throws IOException, ServletException {
-	final String serverName = servletRequest.getServerName();
-	final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-	final String ticket = httpServletRequest.getParameter("ticket");
-	if (ticket != null) {
-	    AuthenticationAction.logout(httpServletRequest);
-
-	    final String requestURL = httpServletRequest.getRequestURL().toString();
-	    try {
-		final CASReceipt receipt = getCASReceipt(serverName, ticket, requestURL);
-		final String username = receipt.getUserName();
-		AuthenticationAction.login(httpServletRequest, username, null, false);
-	    } catch (CASAuthenticationException e) {
-		e.printStackTrace();
-		// do nothing ... the user just won't have a session
-	    }
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
 	}
-	filterChain.doFilter(servletRequest, servletResponse);
-    }
 
-    public static CASReceipt getCASReceipt(final String serverName, final String casTicket, final String requestURL) throws UnsupportedEncodingException,
-	    CASAuthenticationException {
-	final String casValidateUrl = FenixWebFramework.getConfig().getCasConfig(serverName).getCasValidateUrl();
-	final String casServiceUrl = URLEncoder.encode(requestURL.replace("http://", "https://").replace(":8080", ""), "UTF-8");
+	@Override
+	public void destroy() {
+	}
 
-	ProxyTicketValidator pv = new ProxyTicketValidator();
-	pv.setCasValidateUrl(casValidateUrl);
-	pv.setServiceTicket(casTicket);
-	pv.setService(casServiceUrl);
-	pv.setRenew(false);
+	@Override
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+			throws IOException, ServletException {
+		final String serverName = servletRequest.getServerName();
+		final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+		final String ticket = httpServletRequest.getParameter("ticket");
+		if (ticket != null) {
+			AuthenticationAction.logout(httpServletRequest);
 
-	return CASReceipt.getReceipt(pv);
-    }
+			final String requestURL = httpServletRequest.getRequestURL().toString();
+			try {
+				final CASReceipt receipt = getCASReceipt(serverName, ticket, requestURL);
+				final String username = receipt.getUserName();
+				AuthenticationAction.login(httpServletRequest, username, null, false);
+			} catch (CASAuthenticationException e) {
+				e.printStackTrace();
+				// do nothing ... the user just won't have a session
+			}
+		}
+		filterChain.doFilter(servletRequest, servletResponse);
+	}
+
+	public static CASReceipt getCASReceipt(final String serverName, final String casTicket, final String requestURL)
+			throws UnsupportedEncodingException, CASAuthenticationException {
+		final String casValidateUrl = FenixWebFramework.getConfig().getCasConfig(serverName).getCasValidateUrl();
+		final String casServiceUrl = URLEncoder.encode(requestURL.replace("http://", "https://").replace(":8080", ""), "UTF-8");
+
+		ProxyTicketValidator pv = new ProxyTicketValidator();
+		pv.setCasValidateUrl(casValidateUrl);
+		pv.setServiceTicket(casTicket);
+		pv.setService(casServiceUrl);
+		pv.setRenew(false);
+
+		return CASReceipt.getReceipt(pv);
+	}
 
 }

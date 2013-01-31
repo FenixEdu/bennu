@@ -30,19 +30,19 @@ import pt.ist.fenixWebFramework.renderers.components.converters.Converter;
 
 /**
  * 
- * @author  Nuno Diegues
+ * @author Nuno Diegues
  * 
-*/
+ */
 public class NodeTypeProvider implements DataProvider {
 
-    @Override
-    public Converter getConverter() {
-	return null;
-    }
+	@Override
+	public Converter getConverter() {
+		return null;
+	}
 
-    @Override
-    public Object provide(Object source, Object currentValue) {
-	return NodeBean.nodeTypes;
-    }
+	@Override
+	public Object provide(Object source, Object currentValue) {
+		return NodeBean.nodeTypes;
+	}
 
 }

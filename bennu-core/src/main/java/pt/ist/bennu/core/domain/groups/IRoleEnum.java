@@ -26,16 +26,15 @@ package pt.ist.bennu.core.domain.groups;
 
 import pt.ist.fenixWebFramework.rendererExtensions.util.IPresentableEnum;
 
-
 /**
  * 
- * @author  João Marques
- * @author  Luis Cruz
- * @author  Paulo Abrantes
+ * @author João Marques
+ * @author Luis Cruz
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public interface IRoleEnum extends IPresentableEnum {
 
-    public String getRoleName();
+	public String getRoleName();
 
 }

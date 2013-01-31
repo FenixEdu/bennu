@@ -24,31 +24,33 @@
 */
 package pt.ist.bennu.core.persistenceTier;
 
-import pt.utl.ist.fenix.tools.util.ByteArray;
-
 import org.apache.ojb.broker.accesslayer.conversions.FieldConversion;
+
+import pt.utl.ist.fenix.tools.util.ByteArray;
 
 /**
  * 
- * @author  Paulo Abrantes
- * @author  Luis Cruz
+ * @author Paulo Abrantes
+ * @author Luis Cruz
  * 
-*/
+ */
 public class JavaByteArray2SqlByteArrayFieldConversion implements FieldConversion {
 
-    public Object javaToSql(Object source) {
-        if (source instanceof ByteArray) {
-            final ByteArray byteArray = (ByteArray) source;
-            return byteArray.getBytes();
-        }
-        return source;
-    }
+	@Override
+	public Object javaToSql(Object source) {
+		if (source instanceof ByteArray) {
+			final ByteArray byteArray = (ByteArray) source;
+			return byteArray.getBytes();
+		}
+		return source;
+	}
 
-    public Object sqlToJava(Object source) {
-        if (source instanceof byte[]) {            
-            return new ByteArray((byte[]) source);
-        }
-        return source;
-    }
+	@Override
+	public Object sqlToJava(Object source) {
+		if (source instanceof byte[]) {
+			return new ByteArray((byte[]) source);
+		}
+		return source;
+	}
 
 }

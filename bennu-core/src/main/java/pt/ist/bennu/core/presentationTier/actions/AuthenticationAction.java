@@ -51,95 +51,94 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 @Mapping(path = "/authenticationAction")
-@Forwards( {
-    @Forward(name = "redirect", path = "/", redirect = true),
-    @Forward(name = "forward", path = "/home.do?method=firstPage")
-})
+@Forwards({ @Forward(name = "redirect", path = "/", redirect = true),
+		@Forward(name = "forward", path = "/home.do?method=firstPage") })
 /**
  * 
  * @author  Paulo Abrantes
  * @author  Luis Cruz
  * 
-*/
+ */
 public class AuthenticationAction extends ContextBaseAction {
 
-    public static void login(final HttpServletRequest request, final String username, final String password, final boolean checkPassword) {
-	final UserView user = Authenticate.authenticate(username.trim(), password, checkPassword);
-	final HttpSession httpSession = request.getSession();
-	httpSession.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, user);
+	public static void login(final HttpServletRequest request, final String username, final String password,
+			final boolean checkPassword) {
+		final UserView user = Authenticate.authenticate(username.trim(), password, checkPassword);
+		final HttpSession httpSession = request.getSession();
+		httpSession.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, user);
 
-	for (final AuthenticationListner authenticationListner : AuthenticationListner.LOGIN_LISTNERS) {
-	    callLoginListner(user, authenticationListner);
-	}
-    }
-
-    public static void logout(final HttpServletRequest request) {
-	final HttpSession httpSession = request.getSession();
-	final UserView userView = (UserView) httpSession.getAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE);
-
-	if (userView != null) {
-	    userView.getUser().setLastLogoutDateTime(new DateTime());
-	}
-
-	pt.ist.fenixWebFramework.security.UserView.setUser(null);
-	httpSession.removeAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE);
-	httpSession.invalidate();
-
-    }
-
-    public final ActionForward login(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
-	final String username = getAttribute(request, "username");
-	final String password = getAttribute(request, "password");
-	final Locale locale = Language.getLocale();
-	try {
-	    login(request, username, password, true);
-	    return mapping.findForward("redirect");
-	} catch (final DomainException dex) {
-	    logout(request);
-	    request.setAttribute("authentication.failed", username);
-	    I18NFilter.setLocale(request, request.getSession(), locale);
-	    return mapping.findForward("forward");
-	}
-    }
-
-    public final ActionForward logout(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws Exception {
-	final String serverName = request.getServerName();
-	logout(request);
-	final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
-	if (casConfig != null && casConfig.isCasEnabled()) {
-	    final String url = casConfig.getCasLogoutUrl();
-	    return new ActionForward(url, true);
-	} else {
-	    return mapping.findForward("redirect");
-	}
-    }
-
-    public final ActionForward logoutEmptyPage(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-	logout(request);
-	response.getOutputStream().close();
-	return null;
-    }
-
-    private static void callLoginListner(final UserView userView, final AuthenticationListner authenticationListner) {
-	final TransactionalThread thread = new TransactionalThread() {
-
-	    final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-
-	    @Override
-	    public void transactionalRun() {
-		try {
-		    VirtualHost.setVirtualHostForThread(virtualHost);
-		    authenticationListner.afterLogin(userView);
-		} finally {
-		    VirtualHost.releaseVirtualHostFromThread();
+		for (final AuthenticationListner authenticationListner : AuthenticationListner.LOGIN_LISTNERS) {
+			callLoginListner(user, authenticationListner);
 		}
-	    }
+	}
 
-	};
-	thread.start();
-    }
+	public static void logout(final HttpServletRequest request) {
+		final HttpSession httpSession = request.getSession();
+		final UserView userView = (UserView) httpSession.getAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE);
+
+		if (userView != null) {
+			userView.getUser().setLastLogoutDateTime(new DateTime());
+		}
+
+		pt.ist.fenixWebFramework.security.UserView.setUser(null);
+		httpSession.removeAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE);
+		httpSession.invalidate();
+
+	}
+
+	public final ActionForward login(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
+		final String username = getAttribute(request, "username");
+		final String password = getAttribute(request, "password");
+		final Locale locale = Language.getLocale();
+		try {
+			login(request, username, password, true);
+			return mapping.findForward("redirect");
+		} catch (final DomainException dex) {
+			logout(request);
+			request.setAttribute("authentication.failed", username);
+			I18NFilter.setLocale(request, request.getSession(), locale);
+			return mapping.findForward("forward");
+		}
+	}
+
+	public final ActionForward logout(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
+		final String serverName = request.getServerName();
+		logout(request);
+		final CasConfig casConfig = FenixWebFramework.getConfig().getCasConfig(serverName);
+		if (casConfig != null && casConfig.isCasEnabled()) {
+			final String url = casConfig.getCasLogoutUrl();
+			return new ActionForward(url, true);
+		} else {
+			return mapping.findForward("redirect");
+		}
+	}
+
+	public final ActionForward logoutEmptyPage(final ActionMapping mapping, final ActionForm form,
+			final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		logout(request);
+		response.getOutputStream().close();
+		return null;
+	}
+
+	private static void callLoginListner(final UserView userView, final AuthenticationListner authenticationListner) {
+		final TransactionalThread thread = new TransactionalThread() {
+
+			final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+
+			@Override
+			public void transactionalRun() {
+				try {
+					VirtualHost.setVirtualHostForThread(virtualHost);
+					authenticationListner.afterLogin(userView);
+				} finally {
+					VirtualHost.releaseVirtualHostFromThread();
+				}
+			}
+
+		};
+		thread.start();
+	}
 
 }

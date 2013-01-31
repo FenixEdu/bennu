@@ -28,37 +28,37 @@ import pt.ist.fenixWebFramework.services.Service;
 
 /**
  * 
- * @author  Pedro Santos
+ * @author Pedro Santos
  * 
-*/
+ */
 public class Layout extends Layout_Base {
 
-    public Layout(String name) {
-	super();
-	setMyOrg(MyOrg.getInstance());
-	setName(name);
-    }
-
-    @Service
-    public static Layout createLayout(String name) {
-	return new Layout(name);
-    }
-
-    @Service
-    public void delete() {
-	removeMyOrg();
-	for (VirtualHost virtualHost : getVirtualHostsSet()) {
-	    removeVirtualHosts(virtualHost);
+	public Layout(String name) {
+		super();
+		setMyOrg(MyOrg.getInstance());
+		setName(name);
 	}
-	deleteDomainObject();
-    }
 
-    public static Layout getLayoutByName(String name) {
-	for (Layout layout : MyOrg.getInstance().getLayoutSet()) {
-	    if (layout.getName().equals(name)) {
-		return layout;
-	    }
+	@Service
+	public static Layout createLayout(String name) {
+		return new Layout(name);
 	}
-	return null;
-    }
+
+	@Service
+	public void delete() {
+		removeMyOrg();
+		for (VirtualHost virtualHost : getVirtualHostsSet()) {
+			removeVirtualHosts(virtualHost);
+		}
+		deleteDomainObject();
+	}
+
+	public static Layout getLayoutByName(String name) {
+		for (Layout layout : MyOrg.getInstance().getLayoutSet()) {
+			if (layout.getName().equals(name)) {
+				return layout;
+			}
+		}
+		return null;
+	}
 }

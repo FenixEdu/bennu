@@ -33,67 +33,67 @@ import pt.ist.bennu.core.domain.util.Search;
 
 /**
  * 
- * @author  Pedro Santos
- * @author  Luis Cruz
+ * @author Pedro Santos
+ * @author Luis Cruz
  * 
-*/
+ */
 public class SearchUsers extends Search<User> {
 
-    private String username;
-    private User user;
-    private RoleType roleType;
+	private String username;
+	private User user;
+	private RoleType roleType;
 
-    protected class SearchResult extends SearchResultSet<User> {
+	protected class SearchResult extends SearchResultSet<User> {
 
-	public SearchResult(final Collection<? extends User> c) {
-	    super(c);
+		public SearchResult(final Collection<? extends User> c) {
+			super(c);
+		}
+
+		@Override
+		protected boolean matchesSearchCriteria(final User user) {
+			return matchCriteria(username, user.getUsername()) && matchCriteria(roleType, user);
+		}
+
+		private boolean matchCriteria(final RoleType roleType, final User user) {
+			return roleType == null || user.hasRoleType(roleType);
+		}
+
 	}
 
 	@Override
-	protected boolean matchesSearchCriteria(final User user) {
-	    return matchCriteria(username, user.getUsername()) && matchCriteria(roleType, user);
+	public Set<User> search() {
+		final User user = getUser();
+		if (user != null) {
+			final Set<User> users = new HashSet<User>();
+			users.add(user);
+			return users;
+		}
+		final Set<User> users = username != null || roleType != null ? MyOrg.getInstance().getUserSet() : Collections.EMPTY_SET;
+		return new SearchResult(users);
 	}
 
-	private boolean matchCriteria(final RoleType roleType, final User user) {
-	    return roleType == null || user.hasRoleType(roleType);
+	public String getUsername() {
+		return username;
 	}
 
-    }
-
-    @Override
-    public Set<User> search() {
-	final User user = getUser();
-	if (user != null) {
-	    final Set<User> users = new HashSet<User>();
-	    users.add(user);
-	    return users;
+	public void setUsername(String username) {
+		this.username = username;
 	}
-	final Set<User> users = username != null || roleType != null ? MyOrg.getInstance().getUserSet() : Collections.EMPTY_SET;
-	return new SearchResult(users);
-    }
 
-    public String getUsername() {
-	return username;
-    }
+	public RoleType getRoleType() {
+		return roleType;
+	}
 
-    public void setUsername(String username) {
-	this.username = username;
-    }
+	public void setRoleType(RoleType roleType) {
+		this.roleType = roleType;
+	}
 
-    public RoleType getRoleType() {
-	return roleType;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public void setRoleType(RoleType roleType) {
-	this.roleType = roleType;
-    }
-
-    public User getUser() {
-	return user;
-    }
-
-    public void setUser(final User user) {
-	this.user = user;
-    }
+	public void setUser(final User user) {
+		this.user = user;
+	}
 
 }

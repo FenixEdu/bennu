@@ -33,36 +33,36 @@ import pt.ist.fenixWebFramework.services.Service;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public class UserGroup extends UserGroup_Base {
-    
-    private UserGroup() {
-        super();
-        final MyOrg myOrg = getMyOrg();
-        setSystemGroupMyOrg(myOrg);
-    }
 
-    @Override
-    public boolean isMember(final User user) {
-	return user != null;
-    }
+	private UserGroup() {
+		super();
+		final MyOrg myOrg = getMyOrg();
+		setSystemGroupMyOrg(myOrg);
+	}
 
-    @Service
-    public static UserGroup getInstance() {
-	final UserGroup userGroup = (UserGroup) PersistentGroup.getSystemGroup(UserGroup.class);
-	return userGroup == null ? new UserGroup() : userGroup;
-    }
+	@Override
+	public boolean isMember(final User user) {
+		return user != null;
+	}
 
-    @Override
-    public String getName() {
-	return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.userGroup.name");
-    }
+	@Service
+	public static UserGroup getInstance() {
+		final UserGroup userGroup = (UserGroup) PersistentGroup.getSystemGroup(UserGroup.class);
+		return userGroup == null ? new UserGroup() : userGroup;
+	}
 
-    @Override
-    public Set<User> getMembers() {
-	return getMyOrg().getUserSet();
-    }
+	@Override
+	public String getName() {
+		return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.userGroup.name");
+	}
+
+	@Override
+	public Set<User> getMembers() {
+		return getMyOrg().getUserSet();
+	}
 
 }

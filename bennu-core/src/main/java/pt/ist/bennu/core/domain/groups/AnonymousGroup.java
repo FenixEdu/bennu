@@ -33,36 +33,36 @@ import pt.ist.fenixWebFramework.services.Service;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public class AnonymousGroup extends AnonymousGroup_Base {
 
-    @Service
-    public static AnonymousGroup getInstance() {
-	final AnonymousGroup anonymousGroup = (AnonymousGroup) PersistentGroup.getSystemGroup(AnonymousGroup.class);
-	return anonymousGroup == null ? new AnonymousGroup() : anonymousGroup;
-    }
+	@Service
+	public static AnonymousGroup getInstance() {
+		final AnonymousGroup anonymousGroup = (AnonymousGroup) PersistentGroup.getSystemGroup(AnonymousGroup.class);
+		return anonymousGroup == null ? new AnonymousGroup() : anonymousGroup;
+	}
 
-    public AnonymousGroup() {
-        super();
-        final MyOrg myOrg = getMyOrg();
-        setSystemGroupMyOrg(myOrg);
-    }
+	public AnonymousGroup() {
+		super();
+		final MyOrg myOrg = getMyOrg();
+		setSystemGroupMyOrg(myOrg);
+	}
 
-    @Override
-    public boolean isMember(final User user) {
-	return user == null;
-    }
+	@Override
+	public boolean isMember(final User user) {
+		return user == null;
+	}
 
-    @Override
-    public Set<User> getMembers() {
-	return null;
-    }
+	@Override
+	public Set<User> getMembers() {
+		return null;
+	}
 
-    @Override
-    public String getName() {
-	return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.anonymousGroup.name");
-    }
+	@Override
+	public String getName() {
+		return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.anonymousGroup.name");
+	}
 
 }

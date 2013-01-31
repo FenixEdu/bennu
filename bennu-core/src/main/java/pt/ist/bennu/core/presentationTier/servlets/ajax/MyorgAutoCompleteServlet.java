@@ -32,25 +32,25 @@ import pt.ist.fenixWebFramework.servlets.ajax.AutoCompleteServlet;
 
 /**
  * 
- * @author  Paulo Abrantes
- * @author  Luis Cruz
+ * @author Paulo Abrantes
+ * @author Luis Cruz
  * 
-*/
+ */
 public class MyorgAutoCompleteServlet extends AutoCompleteServlet {
 
-    @Override
-    protected Collection getSearchResult(Map<String, String> argsMap, String value, int maxCount) {
-	AutoCompleteProvider provider = getProvider(argsMap.get("provider"));
-	return provider.getSearchResults(argsMap, value, maxCount);
-    }
-
-    private AutoCompleteProvider getProvider(String providerClass) {
-	try {
-	    Class provider = Class.forName(providerClass);
-	    return (AutoCompleteProvider) provider.newInstance();
-	} catch (Exception e) {
-	    throw new RuntimeException("cannot find provider " + providerClass);
+	@Override
+	protected Collection getSearchResult(Map<String, String> argsMap, String value, int maxCount) {
+		AutoCompleteProvider provider = getProvider(argsMap.get("provider"));
+		return provider.getSearchResults(argsMap, value, maxCount);
 	}
-    }
+
+	private AutoCompleteProvider getProvider(String providerClass) {
+		try {
+			Class provider = Class.forName(providerClass);
+			return (AutoCompleteProvider) provider.newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("cannot find provider " + providerClass);
+		}
+	}
 
 }

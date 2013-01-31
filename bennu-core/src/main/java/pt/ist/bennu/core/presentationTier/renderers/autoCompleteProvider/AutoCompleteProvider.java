@@ -29,11 +29,11 @@ import java.util.Map;
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public interface AutoCompleteProvider {
 
-    public Collection getSearchResults(Map<String, String> argsMap, String value, int maxCount);
+	public Collection getSearchResults(Map<String, String> argsMap, String value, int maxCount);
 
 }

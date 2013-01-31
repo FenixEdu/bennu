@@ -28,28 +28,28 @@ import java.io.Serializable;
 
 /**
  * 
- * @author  Paulo Abrantes
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public class RemoteCallReply implements Serializable {
 
-    private Object result;
+	private Object result;
 
-    public Object getResult() {
-	return result;
-    }
+	public Object getResult() {
+		return result;
+	}
 
-    public void setResult(Object result) {
-	this.result = result;
-    }
+	public void setResult(Object result) {
+		this.result = result;
+	}
 
-    public RemoteCallReply() {
-	super();
-    }
+	public RemoteCallReply() {
+		super();
+	}
 
-    public RemoteCallReply(Object result) {
-	this();
-	this.result = result;
-    }
+	public RemoteCallReply(Object result) {
+		this();
+		this.result = result;
+	}
 
 }

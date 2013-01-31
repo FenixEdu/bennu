@@ -39,57 +39,59 @@ import pt.ist.bennu.core.presentationTier.servlets.filters.ExceptionHandlerFilte
 
 /**
  * 
- * @author  Luis Cruz
+ * @author Luis Cruz
  * 
-*/
+ */
 public class CustomExceptionHandlerFilter extends CustomeHandler implements Filter {
 
-    private Class exceptionClass;
-    private String forwardPath;
+	private Class exceptionClass;
+	private String forwardPath;
 
-    @Override
-    public void init(FilterConfig arg0) throws ServletException {
-	try {
-	    exceptionClass = Class.forName(arg0.getInitParameter("exceptionClassname"));
-	} catch (ClassNotFoundException e) {
-	    throw new ServletException(e);
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {
+		try {
+			exceptionClass = Class.forName(arg0.getInitParameter("exceptionClassname"));
+		} catch (ClassNotFoundException e) {
+			throw new ServletException(e);
+		}
+		forwardPath = arg0.getInitParameter("forwardPath");
+		ExceptionHandlerFilter.register(this);
 	}
-	forwardPath = arg0.getInitParameter("forwardPath");
-	ExceptionHandlerFilter.register(this);
-    }
 
-    @Override
-    public void destroy() {
-	exceptionClass = null;
-	forwardPath = null;
-	ExceptionHandlerFilter.unregister(this);
-    }
-
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-	filterChain.doFilter(request, response);
-    }
-
-    @Override
-    public boolean isCustomizedFor(final Throwable t) {
-	if (t instanceof JspException) {
-	    final JspException j = (JspException) t;
-	    if (j.getRootCause() != null) {
-		return isCustomizedFor(j.getRootCause());
-	    }
+	@Override
+	public void destroy() {
+		exceptionClass = null;
+		forwardPath = null;
+		ExceptionHandlerFilter.unregister(this);
 	}
-	if (t instanceof ServletException) {
-	    final ServletException s = (ServletException) t;
-	    if (s.getRootCause() != null) {
-		return isCustomizedFor(s.getRootCause());
-	    }
-	}
-	return exceptionClass.isAssignableFrom(t.getClass());
-    }
 
-    @Override
-    public void handle(final HttpServletRequest httpServletRequest, final ServletResponse response) throws ServletException, IOException {
-	httpServletRequest.getRequestDispatcher(forwardPath).forward(httpServletRequest, response);
-    }
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
+			ServletException {
+		filterChain.doFilter(request, response);
+	}
+
+	@Override
+	public boolean isCustomizedFor(final Throwable t) {
+		if (t instanceof JspException) {
+			final JspException j = (JspException) t;
+			if (j.getRootCause() != null) {
+				return isCustomizedFor(j.getRootCause());
+			}
+		}
+		if (t instanceof ServletException) {
+			final ServletException s = (ServletException) t;
+			if (s.getRootCause() != null) {
+				return isCustomizedFor(s.getRootCause());
+			}
+		}
+		return exceptionClass.isAssignableFrom(t.getClass());
+	}
+
+	@Override
+	public void handle(final HttpServletRequest httpServletRequest, final ServletResponse response) throws ServletException,
+			IOException {
+		httpServletRequest.getRequestDispatcher(forwardPath).forward(httpServletRequest, response);
+	}
 
 }

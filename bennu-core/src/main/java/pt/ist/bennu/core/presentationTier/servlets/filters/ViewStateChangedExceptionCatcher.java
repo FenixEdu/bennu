@@ -39,27 +39,27 @@ import pt.ist.fenixWebFramework.renderers.components.state.EditRequest.ViewState
 
 /**
  * 
- * @author  Luis Cruz
- * @author  Paulo Abrantes
+ * @author Luis Cruz
+ * @author Paulo Abrantes
  * 
-*/
+ */
 public class ViewStateChangedExceptionCatcher implements Filter {
 
-    @Override
-    public void destroy() {
-    }
-
-    @Override
-    public void init(FilterConfig arg0) throws ServletException {
-    }
-
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
-	    ServletException {
-	try {
-	    filterChain.doFilter(request, response);
-	} catch (ViewStateUserChangedException exception) {
-	    ((HttpServletResponse) response).sendRedirect(FenixWebFramework.getConfig().getTamperingRedirect());
+	@Override
+	public void destroy() {
 	}
-    }
+
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {
+	}
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
+			ServletException {
+		try {
+			filterChain.doFilter(request, response);
+		} catch (ViewStateUserChangedException exception) {
+			((HttpServletResponse) response).sendRedirect(FenixWebFramework.getConfig().getTamperingRedirect());
+		}
+	}
 }

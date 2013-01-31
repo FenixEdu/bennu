@@ -31,32 +31,34 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 /**
  * 
- * @author  Paulo Abrantes
- * @author  Luis Cruz
+ * @author Paulo Abrantes
+ * @author Luis Cruz
  * 
-*/
+ */
 public class MultiLanguageString2SqlMultiLanguageStringConversion implements FieldConversion {
 
-    public Object javaToSql(Object source) throws ConversionException {
-	if (source instanceof MultiLanguageString) {
-	    return ((MultiLanguageString) source).exportAsString();
+	@Override
+	public Object javaToSql(Object source) throws ConversionException {
+		if (source instanceof MultiLanguageString) {
+			return ((MultiLanguageString) source).exportAsString();
+		}
+
+		return source;
 	}
 
-	return source;
-    }
+	@Override
+	public Object sqlToJava(Object source) throws ConversionException {
+		if (source == null) {
+			return null;
+		}
+		if (source.equals("")) {
+			return new MultiLanguageString();
+		}
+		if (source instanceof String) {
+			return MultiLanguageString.importFromString((String) source);
+		}
 
-    public Object sqlToJava(Object source) throws ConversionException {
-	if (source == null) {
-	    return null;
+		return null;
 	}
-	if (source.equals("")) {
-	    return new MultiLanguageString();
-	}
-	if (source instanceof String) {
-	    return MultiLanguageString.importFromString((String) source);
-	}
-
-	return null;
-    }
 
 }
