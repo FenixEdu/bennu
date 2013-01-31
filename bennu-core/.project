@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>bennu-core-old</name>
+	<name>bennu-core</name>
 	<projects/>
 	<buildSpec>
 		<buildCommand>
