@@ -6,9 +6,10 @@ import pt.ist.vaadinframework.annotation.EmbeddedComponent;
 @SuppressWarnings("serial")
 @EmbeddedComponent(path = "ClientHostManagement")
 public class ClientHostManagement extends HostManagement<ClientHost> {
-    private final static Object[] CLIENT_HOST_PROPERTIES = new Object[] { "name", "serverUrl", "username", "password", "enabled" };
+	private final static Object[] CLIENT_HOST_PROPERTIES =
+			new Object[] { "name", "serverUrl", "username", "password", "enabled" };
 
-    public ClientHostManagement() {
-	super(ClientHost.class, "clientHosts", CLIENT_HOST_PROPERTIES);
-    }
+	public ClientHostManagement() {
+		super(ClientHost.class, "clientHosts", CLIENT_HOST_PROPERTIES);
+	}
 }

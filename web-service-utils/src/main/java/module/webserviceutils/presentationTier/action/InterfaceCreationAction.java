@@ -48,23 +48,27 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
  */
 public class InterfaceCreationAction extends ContextBaseAction {
 
-    @CreateNodeAction(bundle = "WEB_SERVICE_UTILS_RESOURCES", key = "add.node.wsu.interface", groupKey = "label.module.webserviceutils")
-    public final ActionForward createAnnouncmentNodes(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-	final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
-	final Node node = getDomainObject(request, "parentOfNodesToManageId");
+	@CreateNodeAction(
+			bundle = "WEB_SERVICE_UTILS_RESOURCES",
+			key = "add.node.wsu.interface",
+			groupKey = "label.module.webserviceutils")
+	public final ActionForward createAnnouncmentNodes(final ActionMapping mapping, final ActionForm form,
+			final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
+		final Node node = getDomainObject(request, "parentOfNodesToManageId");
 
-	final String WEBSERVICEUTILS_RESOURCES = "resources.WebServiceUtilsResources";
+		final String WEBSERVICEUTILS_RESOURCES = "resources.WebServiceUtilsResources";
 
-	final VaadinNode hostManagementNode = VaadinNode.createVaadinNode(virtualHost, node, WEBSERVICEUTILS_RESOURCES,
-		"label.link.wsu.interface", "ClientHostManagement", Role.getRole(RoleType.MANAGER));
+		final VaadinNode hostManagementNode =
+				VaadinNode.createVaadinNode(virtualHost, node, WEBSERVICEUTILS_RESOURCES, "label.link.wsu.interface",
+						"ClientHostManagement", Role.getRole(RoleType.MANAGER));
 
-	VaadinNode.createVaadinNode(virtualHost, hostManagementNode, WEBSERVICEUTILS_RESOURCES,
-		"label.link.host.management.client", "ClientHostManagement", Role.getRole(RoleType.MANAGER));
+		VaadinNode.createVaadinNode(virtualHost, hostManagementNode, WEBSERVICEUTILS_RESOURCES,
+				"label.link.host.management.client", "ClientHostManagement", Role.getRole(RoleType.MANAGER));
 
-	VaadinNode.createVaadinNode(virtualHost, hostManagementNode, WEBSERVICEUTILS_RESOURCES,
-		"label.link.host.management.server", "ServerHostManagement", Role.getRole(RoleType.MANAGER));
+		VaadinNode.createVaadinNode(virtualHost, hostManagementNode, WEBSERVICEUTILS_RESOURCES,
+				"label.link.host.management.server", "ServerHostManagement", Role.getRole(RoleType.MANAGER));
 
-	return forwardToMuneConfiguration(request, virtualHost, node);
-    }
+		return forwardToMuneConfiguration(request, virtualHost, node);
+	}
 }

@@ -6,50 +6,50 @@ import pt.ist.fenixWebFramework.services.Service;
 
 public class HostSystem extends HostSystem_Base {
 
-    private HostSystem() {
-	super();
-    }
-
-    public static HostSystem getInstance() {
-	if (!MyOrg.getInstance().hasHostSystem()) {
-	    initRemoteSystem();
+	private HostSystem() {
+		super();
 	}
-	return MyOrg.getInstance().getHostSystem();
-    }
 
-    @Service
-    private static void initRemoteSystem() {
-	MyOrg.getInstance().setHostSystem(new HostSystem());
-    }
-
-    public static ClientHost getClientHost(final String name) {
-	for (final ClientHost host : getInstance().getClientHosts()) {
-	    if (host.getName().equals(name)) {
-		return host;
-	    }
+	public static HostSystem getInstance() {
+		if (!MyOrg.getInstance().hasHostSystem()) {
+			initRemoteSystem();
+		}
+		return MyOrg.getInstance().getHostSystem();
 	}
-	return null;
-    }
 
-    public static JerseyClient getJerseyClient(final String hostname) {
-	final ClientHost clientHost = getClientHost(hostname);
-	if (clientHost == null) {
-	    return null;
+	@Service
+	private static void initRemoteSystem() {
+		MyOrg.getInstance().setHostSystem(new HostSystem());
 	}
-	return new JerseyClient(clientHost);
-    }
 
-    public static JerseyClient getFenixJerseyClient() {
-	return getJerseyClient("fenix");
-    }
-
-    public static ServerHost getServerByClientAddress(final String clientAddress) {
-	for (final ServerHost serverHost : getInstance().getServerHosts()) {
-	    if (serverHost.hasClientAddress(clientAddress)) {
-		return serverHost;
-	    }
+	public static ClientHost getClientHost(final String name) {
+		for (final ClientHost host : getInstance().getClientHosts()) {
+			if (host.getName().equals(name)) {
+				return host;
+			}
+		}
+		return null;
 	}
-	return null;
-    }
+
+	public static JerseyClient getJerseyClient(final String hostname) {
+		final ClientHost clientHost = getClientHost(hostname);
+		if (clientHost == null) {
+			return null;
+		}
+		return new JerseyClient(clientHost);
+	}
+
+	public static JerseyClient getFenixJerseyClient() {
+		return getJerseyClient("fenix");
+	}
+
+	public static ServerHost getServerByClientAddress(final String clientAddress) {
+		for (final ServerHost serverHost : getInstance().getServerHosts()) {
+			if (serverHost.hasClientAddress(clientAddress)) {
+				return serverHost;
+			}
+		}
+		return null;
+	}
 
 }
