@@ -34,6 +34,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import pt.ist.bennu.core.applicationTier.Authenticate.UserView;
 import pt.ist.bennu.core.domain.RoleType;
 import pt.ist.bennu.core.domain.User;
@@ -47,11 +51,6 @@ import pt.ist.bennu.core.domain.scheduler.TaskConfigurationBean;
 import pt.ist.bennu.core.domain.scheduler.TaskLog;
 import pt.ist.bennu.core.presentationTier.Context;
 import pt.ist.bennu.core.presentationTier.CustomTaskLogAggregate;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
@@ -64,201 +63,201 @@ import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
  */
 public class SchedulerAction extends ContextBaseAction {
 
-    @Override
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
-	final User user = UserView.getCurrentUser();
-	if (user == null || !user.hasRoleType(RoleType.MANAGER)) {
-	    throw new Error("unauthorized.access");
-	}
-        return super.execute(mapping, form, request, response);
-    }
-
-    public final String SCHEDULER_URL = "/scheduler.do?method=viewScheduler";
-    public final String TASK_URL = "/scheduler.do?method=viewTask";
-
-    public ActionForward viewScheduler(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
-	final Context context = getContext(request);
-	request.setAttribute("executingTasks", PendingExecutionTaskQueue.getPendingExecutionTasks());
-	request.setAttribute("activeTasks", Task.getTasksSortedByLocalizedName(true));
-	request.setAttribute("inactiveTasks", Task.getTasksSortedByLocalizedName(false));
-	return context.forward("/bennu-core/scheduler.jsp");
-    }
-
-    public ActionForward forwardToViewScheduler(HttpServletRequest request) {
-
-	ActionForward forward = new ActionForward();
-	forward.setRedirect(true);
-	String realPath = SCHEDULER_URL + "&" + CONTEXT_PATH + "=" + getContext(request).getPath();
-	forward.setPath(realPath + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "="
-		+ GenericChecksumRewriter.calculateChecksum(request.getContextPath() + realPath));
-	return forward;
-    }
-
-    public ActionForward prepareAddTaskConfiguration(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) {
-	final Context context = getContext(request);
-	final Task task = getDomainObject(request, "taskId");
-	TaskConfigurationBean taskConfigurationBean = getRenderedObject();
-	if (taskConfigurationBean == null) {
-	    taskConfigurationBean = new TaskConfigurationBean(task);
-	}
-	request.setAttribute("taskConfigurationBean", taskConfigurationBean);
-	return context.forward("/bennu-core/addTaskConfiguration.jsp");
-    }
-
-    public ActionForward addTaskConfiguration(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) {
-	final TaskConfigurationBean taskConfigurationBean = getRenderedObject();
-	taskConfigurationBean.create();
-	return forwardToViewScheduler(request);
-    }
-
-    public ActionForward runNow(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
-	final Task task = getDomainObject(request, "taskId");
-	task.invokeNow();
-
-	return forwardToViewScheduler(request);
-    }
-
-    public ActionForward stopRunning(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
-	final Task task = getDomainObject(request, "taskId");
-	task.stop();
-
-	return forwardToViewScheduler(request);
-    }
-
-    public ActionForward viewTask(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
-	final Context context = getContext(request);
-	final Task task = getDomainObject(request, "taskId");
-	request.setAttribute("task", task);
-	return context.forward("/bennu-core/viewTask.jsp");
-    }
-
-    public ActionForward forwardToViewTask(Task task, HttpServletRequest request) {
-
-	ActionForward forward = new ActionForward();
-	forward.setRedirect(true);
-	String realPath = TASK_URL + "&" + "taskId=" + task.getExternalId() + "&" + CONTEXT_PATH + "="
-		+ getContext(request).getPath();
-	forward.setPath(realPath + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "="
-		+ GenericChecksumRewriter.calculateChecksum(request.getContextPath() + realPath));
-	return forward;
-    }
-
-    public ActionForward deleteTaskConfiguration(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) {
-	final TaskConfiguration taskConfiguration = getDomainObject(request, "taskConfigurationId");
-	Task task = taskConfiguration.getTask();
-	taskConfiguration.delete();
-	return task.getTaskConfigurationsCount() == 0 ? forwardToViewScheduler(request) : forwardToViewTask(task, request);
-    }
-
-    public ActionForward viewTaskLog(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
-	final Context context = getContext(request);
-	final TaskLog taskLog = getDomainObject(request, "taskLogId");
-	request.setAttribute("taskLog", taskLog);
-	return context.forward("/bennu-core/viewTaskLog.jsp");
-    }
-
-    public ActionForward prepareLoadAndRun(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
-	ClassBean classBean = getRenderedObject();
-	if (classBean == null) {
-	    classBean = new ClassBean();
-	}
-	request.setAttribute("classBean", classBean);
-	return forward(request, "/bennu-core/loadAndRun.jsp");
-    }
-
-    public ActionForward loadAndRun(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
-	final ClassBean classBean = getRenderedObject();
-	classBean.run();
-	request.setAttribute("classBean", classBean);
-	return redirect(request, "/scheduler.do?method=listCustomTaskLogs");
-    }
-
-    public ActionForward listCustomTaskLogs(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
-	final List<Executer> runningExecuters = ClassBean.getRunningExecuters();
-	request.setAttribute("runningExecuters", runningExecuters);
-
-	final Set<CustomTaskLogAggregate> customTaskLogAggregates = new TreeSet<CustomTaskLogAggregate>(
-		CustomTaskLogAggregate.COMPARATOR_BY_LAST_UPLOAD_DATE_AND_CLASS_NAME);
-	final Set<String> visitedClassNames = new HashSet<String>();
-	for (CustomTaskLog taskLog : CustomTaskLog.getSortedCustomTaskLogs()) {
-	    String taskClassName = taskLog.getClassName();
-	    if (taskClassName == null) {
-		taskClassName = "";
-	    }
-
-	    if (visitedClassNames.contains(taskClassName)) {
-		continue;
-	    }
-	    visitedClassNames.add(taskClassName);
-	    customTaskLogAggregates.add(new CustomTaskLogAggregate(taskClassName));
+	@Override
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		final User user = UserView.getCurrentUser();
+		if (user == null || !user.hasRoleType(RoleType.MANAGER)) {
+			throw new Error("unauthorized.access");
+		}
+		return super.execute(mapping, form, request, response);
 	}
 
-	request.setAttribute("customTaskLogAggregates", customTaskLogAggregates);
-	return forward(request, "/bennu-core/listCustomTaskLogs.jsp");
-    }
+	public final String SCHEDULER_URL = "/scheduler.do?method=viewScheduler";
+	public final String TASK_URL = "/scheduler.do?method=viewTask";
 
-    public ActionForward searchCustomTaskLogs(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) {
-	String className = getAttribute(request, "className");
-	final CustomTaskLogAggregate aggregate = new CustomTaskLogAggregate(className);
-	request.setAttribute("customTaskLogs", aggregate.getCustomTaskLogs());
-	request.setAttribute("className", className);
-	return forward(request, "/bennu-core/searchCustomTaskLogs.jsp");
-    }
+	public ActionForward viewScheduler(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) {
+		final Context context = getContext(request);
+		request.setAttribute("executingTasks", PendingExecutionTaskQueue.getPendingExecutionTasks());
+		request.setAttribute("activeTasks", Task.getTasksSortedByLocalizedName(true));
+		request.setAttribute("inactiveTasks", Task.getTasksSortedByLocalizedName(false));
+		return context.forward("/bennu-core/scheduler.jsp");
+	}
 
-    public ActionForward deleteCustomTaskLogs(final ActionMapping mapping, final ActionForm form,
-	    final HttpServletRequest request, final HttpServletResponse response) {
-	String className = getAttribute(request, "className");
-	final CustomTaskLogAggregate aggregate = new CustomTaskLogAggregate(className);
-	aggregate.deleteCustomTaskLogs();
+	public ActionForward forwardToViewScheduler(HttpServletRequest request) {
 
-	return listCustomTaskLogs(mapping, form, request, response);
-    }
+		ActionForward forward = new ActionForward();
+		forward.setRedirect(true);
+		String realPath = SCHEDULER_URL + "&" + CONTEXT_PATH + "=" + getContext(request).getPath();
+		forward.setPath(realPath + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "="
+				+ GenericChecksumRewriter.calculateChecksum(request.getContextPath() + realPath));
+		return forward;
+	}
 
-    public ActionForward viewCustomTaskLog(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
-	final CustomTaskLog customTaskLog = getDomainObject(request, "customTaskLogId");
-	request.setAttribute("customTaskLog", customTaskLog);
-	return forward(request, "/bennu-core/viewCustomTaskLog.jsp");
-    }
+	public ActionForward prepareAddTaskConfiguration(final ActionMapping mapping, final ActionForm form,
+			final HttpServletRequest request, final HttpServletResponse response) {
+		final Context context = getContext(request);
+		final Task task = getDomainObject(request, "taskId");
+		TaskConfigurationBean taskConfigurationBean = getRenderedObject();
+		if (taskConfigurationBean == null) {
+			taskConfigurationBean = new TaskConfigurationBean(task);
+		}
+		request.setAttribute("taskConfigurationBean", taskConfigurationBean);
+		return context.forward("/bennu-core/addTaskConfiguration.jsp");
+	}
 
-    public ActionForward reloadCustomTask(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) {
-	final CustomTaskLog customTaskLog = getDomainObject(request, "customTaskLogId");
+	public ActionForward addTaskConfiguration(final ActionMapping mapping, final ActionForm form,
+			final HttpServletRequest request, final HttpServletResponse response) {
+		final TaskConfigurationBean taskConfigurationBean = getRenderedObject();
+		taskConfigurationBean.create();
+		return forwardToViewScheduler(request);
+	}
 
-	ClassBean classBean = new ClassBean();
-	classBean.setClassName(customTaskLog.getClassName());
-	classBean.setContents(customTaskLog.getContents());
-	request.setAttribute("classBean", classBean);
+	public ActionForward runNow(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) {
+		final Task task = getDomainObject(request, "taskId");
+		task.invokeNow();
 
-	return forward(request, "/bennu-core/loadAndRun.jsp");
-    }
+		return forwardToViewScheduler(request);
+	}
 
-    public ActionForward downloadOutputFile(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-	    final HttpServletResponse response) throws IOException {
-	final GenericFile genericFile = getDomainObject(request, "fileId");
-	response.setContentType(genericFile.getContentType());
-	response.setHeader("Content-disposition", "attachment; filename=" + genericFile.getFilename());
+	public ActionForward stopRunning(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) {
+		final Task task = getDomainObject(request, "taskId");
+		task.stop();
 
-	final ServletOutputStream outputStream = response.getOutputStream();
+		return forwardToViewScheduler(request);
+	}
 
-	outputStream.write(genericFile.getContent());
-	outputStream.flush();
-	outputStream.close();
+	public ActionForward viewTask(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) {
+		final Context context = getContext(request);
+		final Task task = getDomainObject(request, "taskId");
+		request.setAttribute("task", task);
+		return context.forward("/bennu-core/viewTask.jsp");
+	}
 
-	return null;
-    }
+	public ActionForward forwardToViewTask(Task task, HttpServletRequest request) {
+
+		ActionForward forward = new ActionForward();
+		forward.setRedirect(true);
+		String realPath =
+				TASK_URL + "&" + "taskId=" + task.getExternalId() + "&" + CONTEXT_PATH + "=" + getContext(request).getPath();
+		forward.setPath(realPath + "&" + GenericChecksumRewriter.CHECKSUM_ATTRIBUTE_NAME + "="
+				+ GenericChecksumRewriter.calculateChecksum(request.getContextPath() + realPath));
+		return forward;
+	}
+
+	public ActionForward deleteTaskConfiguration(final ActionMapping mapping, final ActionForm form,
+			final HttpServletRequest request, final HttpServletResponse response) {
+		final TaskConfiguration taskConfiguration = getDomainObject(request, "taskConfigurationId");
+		Task task = taskConfiguration.getTask();
+		taskConfiguration.delete();
+		return task.getTaskConfigurationsCount() == 0 ? forwardToViewScheduler(request) : forwardToViewTask(task, request);
+	}
+
+	public ActionForward viewTaskLog(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) {
+		final Context context = getContext(request);
+		final TaskLog taskLog = getDomainObject(request, "taskLogId");
+		request.setAttribute("taskLog", taskLog);
+		return context.forward("/bennu-core/viewTaskLog.jsp");
+	}
+
+	public ActionForward prepareLoadAndRun(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) {
+		ClassBean classBean = getRenderedObject();
+		if (classBean == null) {
+			classBean = new ClassBean();
+		}
+		request.setAttribute("classBean", classBean);
+		return forward(request, "/bennu-core/loadAndRun.jsp");
+	}
+
+	public ActionForward loadAndRun(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) {
+		final ClassBean classBean = getRenderedObject();
+		classBean.run();
+		request.setAttribute("classBean", classBean);
+		return redirect(request, "/scheduler.do?method=listCustomTaskLogs");
+	}
+
+	public ActionForward listCustomTaskLogs(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) {
+		final List<Executer> runningExecuters = ClassBean.getRunningExecuters();
+		request.setAttribute("runningExecuters", runningExecuters);
+
+		final Set<CustomTaskLogAggregate> customTaskLogAggregates =
+				new TreeSet<CustomTaskLogAggregate>(CustomTaskLogAggregate.COMPARATOR_BY_LAST_UPLOAD_DATE_AND_CLASS_NAME);
+		final Set<String> visitedClassNames = new HashSet<String>();
+		for (CustomTaskLog taskLog : CustomTaskLog.getSortedCustomTaskLogs()) {
+			String taskClassName = taskLog.getClassName();
+			if (taskClassName == null) {
+				taskClassName = "";
+			}
+
+			if (visitedClassNames.contains(taskClassName)) {
+				continue;
+			}
+			visitedClassNames.add(taskClassName);
+			customTaskLogAggregates.add(new CustomTaskLogAggregate(taskClassName));
+		}
+
+		request.setAttribute("customTaskLogAggregates", customTaskLogAggregates);
+		return forward(request, "/bennu-core/listCustomTaskLogs.jsp");
+	}
+
+	public ActionForward searchCustomTaskLogs(final ActionMapping mapping, final ActionForm form,
+			final HttpServletRequest request, final HttpServletResponse response) {
+		String className = getAttribute(request, "className");
+		final CustomTaskLogAggregate aggregate = new CustomTaskLogAggregate(className);
+		request.setAttribute("customTaskLogs", aggregate.getCustomTaskLogs());
+		request.setAttribute("className", className);
+		return forward(request, "/bennu-core/searchCustomTaskLogs.jsp");
+	}
+
+	public ActionForward deleteCustomTaskLogs(final ActionMapping mapping, final ActionForm form,
+			final HttpServletRequest request, final HttpServletResponse response) {
+		String className = getAttribute(request, "className");
+		final CustomTaskLogAggregate aggregate = new CustomTaskLogAggregate(className);
+		aggregate.deleteCustomTaskLogs();
+
+		return listCustomTaskLogs(mapping, form, request, response);
+	}
+
+	public ActionForward viewCustomTaskLog(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) {
+		final CustomTaskLog customTaskLog = getDomainObject(request, "customTaskLogId");
+		request.setAttribute("customTaskLog", customTaskLog);
+		return forward(request, "/bennu-core/viewCustomTaskLog.jsp");
+	}
+
+	public ActionForward reloadCustomTask(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) {
+		final CustomTaskLog customTaskLog = getDomainObject(request, "customTaskLogId");
+
+		ClassBean classBean = new ClassBean();
+		classBean.setClassName(customTaskLog.getClassName());
+		classBean.setContents(customTaskLog.getContents());
+		request.setAttribute("classBean", classBean);
+
+		return forward(request, "/bennu-core/loadAndRun.jsp");
+	}
+
+	public ActionForward downloadOutputFile(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) throws IOException {
+		final GenericFile genericFile = getDomainObject(request, "fileId");
+		response.setContentType(genericFile.getContentType());
+		response.setHeader("Content-disposition", "attachment; filename=" + genericFile.getFilename());
+
+		final ServletOutputStream outputStream = response.getOutputStream();
+
+		outputStream.write(genericFile.getContent());
+		outputStream.flush();
+		outputStream.close();
+
+		return null;
+	}
 
 }

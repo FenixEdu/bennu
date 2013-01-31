@@ -29,27 +29,27 @@ import pt.ist.fenixframework.pstm.AbstractDomainObject;
 
 public class TaskLogger {
 
-    static private final int MAX_LOG_ENTRIES = 100;
-    private final String taskId;
-    private final Boolean successful;
+	static private final int MAX_LOG_ENTRIES = 100;
+	private final String taskId;
+	private final Boolean successful;
 
-    public TaskLogger(final Task task) {
-	taskId = task.getExternalId();
-	this.successful = null;
-    }
-
-    public TaskLogger(final Task task, final boolean successful) {
-	taskId = task.getExternalId();
-	this.successful = Boolean.valueOf(successful);
-    }
-
-    public void run() {
-	final Task task = AbstractDomainObject.fromExternalId(taskId);
-	if (successful == null) {
-	    task.createNewLog();
-	} else {
-	    task.updateLastLog(successful);
-	    task.cleanupLogs(MAX_LOG_ENTRIES);
+	public TaskLogger(final Task task) {
+		taskId = task.getExternalId();
+		this.successful = null;
 	}
-    }
+
+	public TaskLogger(final Task task, final boolean successful) {
+		taskId = task.getExternalId();
+		this.successful = Boolean.valueOf(successful);
+	}
+
+	public void run() {
+		final Task task = AbstractDomainObject.fromExternalId(taskId);
+		if (successful == null) {
+			task.createNewLog();
+		} else {
+			task.updateLastLog(successful);
+			task.cleanupLogs(MAX_LOG_ENTRIES);
+		}
+	}
 }

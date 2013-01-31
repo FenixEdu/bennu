@@ -27,8 +27,9 @@ package pt.ist.bennu.core.domain.scheduler;
 
 public abstract class ReadCustomTask extends TransactionalCustomTask {
 
-    protected boolean readOnly() {
-	return true;
-    }
+	@Override
+	protected boolean readOnly() {
+		return true;
+	}
 
 }

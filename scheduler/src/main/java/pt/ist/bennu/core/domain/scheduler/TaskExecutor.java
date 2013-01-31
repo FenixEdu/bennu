@@ -31,31 +31,31 @@ import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 public class TaskExecutor extends TransactionalThread {
 
-    private final String taskId;
+	private final String taskId;
 
-    private boolean successful = false;
+	private boolean successful = false;
 
-    public boolean isSuccessful() {
-	return successful;
-    }
-
-    public TaskExecutor(final Task task) {
-	taskId = task.getExternalId();
-    }
-
-    @Override
-    public void transactionalRun() {
-	try {
-	    // TODO : This needs to be placed in the apps task configuration
-	    //        and used whenever the app is launchede.
-	    VirtualHost.setVirtualHostForThread("dot.ist.utl.pt");
-	    Language.setLocale(Language.getDefaultLocale());
-	    final Task task = AbstractDomainObject.fromExternalId(taskId);
-	    task.executeTask();
-	    successful = true;
-	} finally {
-	    VirtualHost.releaseVirtualHostFromThread();
+	public boolean isSuccessful() {
+		return successful;
 	}
-    }
+
+	public TaskExecutor(final Task task) {
+		taskId = task.getExternalId();
+	}
+
+	@Override
+	public void transactionalRun() {
+		try {
+			// TODO : This needs to be placed in the apps task configuration
+			//        and used whenever the app is launchede.
+			VirtualHost.setVirtualHostForThread("dot.ist.utl.pt");
+			Language.setLocale(Language.getDefaultLocale());
+			final Task task = AbstractDomainObject.fromExternalId(taskId);
+			task.executeTask();
+			successful = true;
+		} finally {
+			VirtualHost.releaseVirtualHostFromThread();
+		}
+	}
 
 }

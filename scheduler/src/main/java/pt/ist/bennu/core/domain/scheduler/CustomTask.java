@@ -29,12 +29,12 @@ import java.io.PrintWriter;
 
 public abstract class CustomTask {
 
-    protected PrintWriter out;
+	protected PrintWriter out;
 
-    void setOut(final PrintWriter out) {
-	this.out = out;
-    }
+	void setOut(final PrintWriter out) {
+		this.out = out;
+	}
 
-    public abstract void run();
+	public abstract void run();
 
 }
