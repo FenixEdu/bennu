@@ -1,4 +1,4 @@
-package pt.ist.bennu.bennu.core.rest.serializer;
+package pt.ist.bennu.bennu.core.rest.mapper;
 
 import java.lang.reflect.Type;
 
@@ -15,6 +15,7 @@ public class UserSerializer implements JsonSerializer<User> {
 	public JsonElement serialize(User user, Type type, JsonSerializationContext ctx) {
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("id", user.getOid());
+		jsonObject.addProperty("username", user.getUsername());
 		return jsonObject;
 	}
 

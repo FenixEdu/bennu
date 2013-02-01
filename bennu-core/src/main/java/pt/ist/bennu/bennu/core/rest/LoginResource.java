@@ -12,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import pt.ist.bennu.bennu.core.rest.mapper.BennuRestError;
+import pt.ist.bennu.bennu.core.rest.mapper.RestException;
 import pt.ist.bennu.core.domain.User;
 
 @Path("/login")

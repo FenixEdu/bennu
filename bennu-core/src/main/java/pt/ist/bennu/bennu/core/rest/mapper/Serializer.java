@@ -1,4 +1,4 @@
-package pt.ist.bennu.bennu.core.rest.serializer;
+package pt.ist.bennu.bennu.core.rest.mapper;
 
 public interface Serializer {
 

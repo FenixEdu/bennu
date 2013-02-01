@@ -9,9 +9,12 @@ import javax.ws.rs.core.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.bennu.core.rest.serializer.Deserializer;
-import pt.ist.bennu.bennu.core.rest.serializer.JsonAdapter;
-import pt.ist.bennu.bennu.core.rest.serializer.Serializer;
+import pt.ist.bennu.bennu.core.rest.mapper.BennuJsonDeserializer;
+import pt.ist.bennu.bennu.core.rest.mapper.BennuJsonSerializer;
+import pt.ist.bennu.bennu.core.rest.mapper.BennuRestError;
+import pt.ist.bennu.bennu.core.rest.mapper.Deserializer;
+import pt.ist.bennu.bennu.core.rest.mapper.RestException;
+import pt.ist.bennu.bennu.core.rest.mapper.Serializer;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.security.UserView;
@@ -27,10 +30,9 @@ public abstract class AbstractResource implements Serializer, Deserializer {
 	@Context
 	HttpServletRequest request;
 
-	private static JsonAdapter adapter;
-
 	static {
-		adapter = JsonAdapter.getInstance();
+		setSerializer(new BennuJsonSerializer());
+		setDeserializer(new BennuJsonDeserializer());
 	}
 
 	protected User login(String username, String password, boolean checkPassword) {

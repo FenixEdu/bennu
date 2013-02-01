@@ -1,4 +1,4 @@
-package pt.ist.bennu.bennu.core.rest;
+package pt.ist.bennu.bennu.core.rest.mapper;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
