@@ -601,7 +601,7 @@
 						<artifactId>maven-war-plugin</artifactId>
 						<version>${version.org.apache.maven.plugins.maven.war.plugin}</version>
 						<configuration>
-							<packagingExcludes>**/web-fragment.xml</packagingExcludes>
+							<failOnMissingWebXml>false</failOnMissingWebXml>
 						</configuration>
 						<executions>
 							<execution>

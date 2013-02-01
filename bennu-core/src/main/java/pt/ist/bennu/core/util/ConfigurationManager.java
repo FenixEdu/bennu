@@ -41,174 +41,191 @@ import pt.ist.fenixframework.project.DmlFile;
 import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
 
 public class ConfigurationManager {
-    private static final Logger logger = LoggerFactory.getLogger(ConfigurationManager.class);
 
-    private static final Properties properties = new Properties();
+	private static final Logger LOG = LoggerFactory.getLogger(ConfigurationManager.class);
 
-    private static Map<String, CasConfig> casConfigByHost;
+	private static final Properties properties = new Properties();
 
-    private static Config config = null;
+	private static Map<String, CasConfig> casConfigByHost;
 
-    private static List<URL> urls = null;
+	private static Config config = null;
 
-    static {
-        try (InputStream inputStream = ConfigurationManager.class.getResourceAsStream("/configuration.properties")) {
-            if (inputStream == null) {
-                throw new Error("configuration.properties not found in classpath.");
-            }
-            properties.load(inputStream);
+	private static List<URL> urls = null;
 
-            config = new Config() {
-                {
-                    domainModelPaths = new String[0];
-                    dbAlias = getProperty("db.alias");
-                    dbUsername = getProperty("db.user");
-                    dbPassword = getProperty("db.pass");
-                    appName = getProperty("app.name");
-                    updateRepositoryStructureIfNeeded = true;
-                    rootClass = Bennu.class;
-                    errorfIfDeletingObjectNotDisconnected = true;
-                }
+	static {
+		try (InputStream inputStream = ConfigurationManager.class.getResourceAsStream("/configuration.properties")) {
+			if (inputStream == null) {
+				throw new Error("configuration.properties not found in classpath.");
+			}
+			properties.load(inputStream);
 
-                @Override
-                public List<URL> getDomainModelURLs() {
-                    return getUrls();
-                }
-            };
+			config = new Config() {
+				{
+					domainModelPaths = new String[0];
+					dbAlias = getProperty("db.alias");
+					dbUsername = getProperty("db.user");
+					dbPassword = getProperty("db.pass");
+					appName = getProperty("app.name");
+					updateRepositoryStructureIfNeeded = true;
+					rootClass = Bennu.class;
+					errorfIfDeletingObjectNotDisconnected = true;
+				}
 
-            casConfigByHost = new HashMap<>();
-            for (final Object key : properties.keySet()) {
-                final String property = (String) key;
-                int i = property.indexOf(".cas.enable");
-                if (i >= 0) {
-                    final String hostname = property.substring(0, i);
-                    if (getBooleanProperty(property, false)) {
-                        final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");
-                        final String casLogoutUrl = getProperty(hostname + ".cas.logoutUrl");
-                        final String casValidateUrl = getProperty(hostname + ".cas.ValidateUrl");
-                        final String serviceUrl = getProperty(hostname + ".cas.serviceUrl");
+				@Override
+				public List<URL> getDomainModelURLs() {
+					return getUrls();
+				}
+			};
 
-                        final CasConfig casConfig = new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
-                        casConfigByHost.put(hostname, casConfig);
-                    } else {
-                        final CasConfig casConfig = new CasConfig();
-                        casConfigByHost.put(hostname, casConfig);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new Error("configuration.properties could not be read.", e);
-        }
-    }
+			casConfigByHost = new HashMap<>();
+			for (final Object key : properties.keySet()) {
+				final String property = (String) key;
+				int i = property.indexOf(".cas.enable");
+				if (i >= 0) {
+					final String hostname = property.substring(0, i);
+					if (getBooleanProperty(property, false)) {
+						final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");
+						final String casLogoutUrl = getProperty(hostname + ".cas.logoutUrl");
+						final String casValidateUrl = getProperty(hostname + ".cas.ValidateUrl");
+						final String serviceUrl = getProperty(hostname + ".cas.serviceUrl");
 
-    public synchronized static List<URL> getUrls() {
-        if (urls == null) {
-            urls = new ArrayList<>();
-            try {
-                for (DmlFile dml : FenixFrameworkArtifact.fromName(getProperty("app.name")).getFullDmlSortedList()) {
-                    urls.add(dml.getUrl());
-                }
-            } catch (FenixFrameworkProjectException | IOException e) {
-                throw new Error(e);
-            }
-        }
-        return urls;
-    }
+						final CasConfig casConfig = new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
+						casConfigByHost.put(hostname, casConfig);
+					} else {
+						final CasConfig casConfig = new CasConfig();
+						casConfigByHost.put(hostname, casConfig);
+					}
+				}
+			}
+		} catch (IOException e) {
+			throw new Error("configuration.properties could not be read.", e);
+		}
+	}
 
-    /*
-     * This method is used to initialize Jersey Servlet Container with the package name of Root Class correspondent with REST
-     * Endpoints.
-     */
-    public synchronized static String[] getRestRootClassPackages() {
-        final Set<String> rootClassPackages = new HashSet<>();
-        try {
-            final List<FenixFrameworkArtifact> artifacts =
-                    FenixFrameworkArtifact.fromName(getProperty("app.name")).getArtifacts();
-            logger.info("Search for promissing rest endpoints packages:");
-            for (FenixFrameworkArtifact artifact : artifacts) {
-                final String packageName = String.format("pt.ist.bennu.%s.rest", artifact.getName().replace("-", "."));
-                logger.info("\tpackage {}", packageName);
-                rootClassPackages.add(packageName);
-            }
-        } catch (IOException | FenixFrameworkProjectException e) {
-            e.printStackTrace();
-        }
-        return rootClassPackages.toArray(new String[rootClassPackages.size()]);
-    }
+	public synchronized static List<URL> getUrls() {
+		if (urls == null) {
+			urls = new ArrayList<>();
+			try {
+				for (DmlFile dml : FenixFrameworkArtifact.fromName(getProperty("app.name")).getFullDmlSortedList()) {
+					urls.add(dml.getUrl());
+				}
+			} catch (FenixFrameworkProjectException | IOException e) {
+				throw new Error(e);
+			}
+		}
+		return urls;
+	}
 
-    public static String getProperty(final String key) {
-        return properties.getProperty(key);
-    }
+	/*
+	 * This method is used to initialize Jersey Servlet Container with the package name of Root Class correspondent with REST
+	 * Endpoints.
+	 */
+	public synchronized static String[] getRestRootClassPackages() {
+		final Set<String> rootClassPackages = new HashSet<String>();
+		try {
+			final List<FenixFrameworkArtifact> artifacts = FenixFrameworkArtifact.fromName(getProperty("app.name"))
+					.getArtifacts();
+			LOG.info("Search for promissing rest endpoints packages:");
+			for (FenixFrameworkArtifact artifact : artifacts) {
+				final String packageName = String.format("pt.ist.bennu.%s.rest", artifact.getName().replace("-", "."));
+				LOG.info("\tpackage {}", packageName);
+				rootClassPackages.add(packageName);
+			}
+		} catch (IOException | FenixFrameworkProjectException e) {
+			e.printStackTrace();
+		}
+		return rootClassPackages.toArray(new String[rootClassPackages.size()]);
+	}
 
-    public static boolean getBooleanProperty(final String key, boolean defaultValue) {
-        return properties.containsKey(key) ? Boolean.parseBoolean(properties.getProperty(key)) : defaultValue;
-    }
+	public static String getProperty(final String key) {
+		return properties.getProperty(key);
+	}
 
-    public static Integer getIntegerProperty(final String key) {
-        return Integer.valueOf(properties.getProperty(key));
-    }
+	public static boolean getBooleanProperty(final String key, boolean defaultValue) {
+		return properties.containsKey(key) ? Boolean.parseBoolean(properties.getProperty(key)) : defaultValue;
+	}
 
-    public static void setProperty(final String key, final String value) {
-        properties.setProperty(key, value);
-    }
+	public static Integer getIntegerProperty(final String key) {
+		return Integer.valueOf(properties.getProperty(key));
+	}
 
-    public static class CasConfig {
+	public static void setProperty(final String key, final String value) {
+		properties.setProperty(key, value);
+	}
 
-        protected boolean casEnabled = false;
-        protected String casLoginUrl = null;
-        protected String casLogoutUrl = null;
-        protected String casValidateUrl = null;
-        protected String serviceUrl = null;
+	public static class CasConfig {
 
-        public CasConfig() {
-        }
+		protected boolean casEnabled = false;
+		protected String casLoginUrl = null;
+		protected String casLogoutUrl = null;
+		protected String casValidateUrl = null;
+		protected String serviceUrl = null;
 
-        public CasConfig(String casLoginUrl, String casLogoutUrl, String casValidateUrl, String serviceUrl) {
-            this.casEnabled = true;
-            this.casLoginUrl = casLoginUrl;
-            this.casLogoutUrl = casLogoutUrl;
-            this.casValidateUrl = casValidateUrl;
-            this.serviceUrl = serviceUrl;
-        }
+		public CasConfig() {
+		}
 
-        public String getServiceUrl() {
-            return serviceUrl;
-        }
+		public CasConfig(String casLoginUrl, String casLogoutUrl, String casValidateUrl, String serviceUrl) {
+			this.casEnabled = true;
+			this.casLoginUrl = casLoginUrl;
+			this.casLogoutUrl = casLogoutUrl;
+			this.casValidateUrl = casValidateUrl;
+			this.serviceUrl = serviceUrl;
+		}
 
-        public boolean isCasEnabled() {
-            return casEnabled;
-        }
+		public String getServiceUrl() {
+			return serviceUrl;
+		}
 
-        public String getCasLoginUrl(HttpServletRequest request) {
-            return casLoginUrl + "https://" + request.getServerName();
-        }
+		public boolean isCasEnabled() {
+			return casEnabled;
+		}
 
-        public String getCasLogoutUrl() {
-            return casLogoutUrl;
-        }
+		public String getCasLoginUrl(HttpServletRequest request) {
+			return casLoginUrl + "https://" + request.getServerName();
+		}
 
-        public String getCasValidateUrl() {
-            return casValidateUrl;
-        }
+		public String getCasLogoutUrl() {
+			return casLogoutUrl;
+		}
 
-        protected void parameterizeLoginUrl(HttpServletRequest request) {
-        }
-    }
+		public String getCasValidateUrl() {
+			return casValidateUrl;
+		}
 
-    public static CasConfig getCasConfig(String hostname) {
-        for (final Entry<String, CasConfig> entry : casConfigByHost.entrySet()) {
-            if (entry.getKey().startsWith(hostname)) {
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
+		protected void parameterizeLoginUrl(HttpServletRequest request) {
+		}
+	}
 
-    public static Config getFenixFrameworkConfig() {
-        return config;
-    }
+	public static CasConfig getCasConfig(String hostname) {
+		for (final Entry<String, CasConfig> entry : casConfigByHost.entrySet()) {
+			if (entry.getKey().startsWith(hostname)) {
+				return entry.getValue();
+			}
+		}
+		return null;
+	}
 
-    public static Locale getDefaultLocale() {
-        return new Locale(getProperty("language"), getProperty("location"), getProperty("variant"));
-    }
+	public static Config getFenixFrameworkConfig() {
+		return config;
+	}
+
+	public static boolean isFilterRequestWithDigest() {
+		return getBooleanProperty("filter.request.with.digest", false);
+	}
+
+	public static String getTamperingRedirect() {
+		return getProperty("digest.tampering.url");
+	}
+
+	public static String getAppContext() {
+		return getProperty("app.context");
+	}
+
+	public static Locale getDefaultLocale() {
+		return new Locale(getProperty("language"), getProperty("location"), getProperty("variant"));
+	}
+
+	public static String getExceptionHandlerClassname() {
+		return getProperty("exception.handler.class");
+	}
 }
