@@ -1,4 +1,4 @@
-package ${package}.presentationTier.servlets;
+package ${package}.servlets;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

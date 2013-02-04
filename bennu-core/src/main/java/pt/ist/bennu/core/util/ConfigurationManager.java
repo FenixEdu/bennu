@@ -120,10 +120,10 @@ public class ConfigurationManager {
 	 * Endpoints.
 	 */
 	public synchronized static String[] getRestRootClassPackages() {
-		final Set<String> rootClassPackages = new HashSet<String>();
+		final Set<String> rootClassPackages = new HashSet<>();
 		try {
-			final List<FenixFrameworkArtifact> artifacts = FenixFrameworkArtifact.fromName(getProperty("app.name"))
-					.getArtifacts();
+			final List<FenixFrameworkArtifact> artifacts =
+					FenixFrameworkArtifact.fromName(getProperty("app.name")).getArtifacts();
 			logger.info("Search for promissing rest endpoints packages:");
 			for (FenixFrameworkArtifact artifact : artifacts) {
 				final String packageName = String.format("pt.ist.bennu.%s.rest", artifact.getName().replace("-", "."));
@@ -208,23 +208,7 @@ public class ConfigurationManager {
 		return config;
 	}
 
-	public static boolean isFilterRequestWithDigest() {
-		return getBooleanProperty("filter.request.with.digest", false);
-	}
-
-	public static String getTamperingRedirect() {
-		return getProperty("digest.tampering.url");
-	}
-
-	public static String getAppContext() {
-		return getProperty("app.context");
-	}
-
 	public static Locale getDefaultLocale() {
 		return new Locale(getProperty("language"), getProperty("location"), getProperty("variant"));
-	}
-
-	public static String getExceptionHandlerClassname() {
-		return getProperty("exception.handler.class");
 	}
 }

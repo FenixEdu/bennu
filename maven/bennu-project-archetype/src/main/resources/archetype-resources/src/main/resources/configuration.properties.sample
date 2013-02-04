@@ -1,0 +1,31 @@
+################################################################################
+# Application Configuration Properties                                         #
+# - Set properties needed at runtime, this will be included in the             #
+#   configuration.properties file included in the deploy.                      #
+################################################################################
+
+# To configure from sample replace <*> keywords.
+db.alias=//<dbhost>:3306/<dbname>?useUnicode=true&amp;characterEncoding=UTF-8&amp;clobCharacterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull
+db.user=<user>
+db.pass=<pass>
+
+# For extra goodies, turn this on (only in development mode)
+development.mode=true
+
+# Default language
+language=pt
+location=PT
+variant=
+
+# Repeat the following properties for each virtual host configuration
+<host>.cas.enable=false
+<host>.cas.loginUrl=https://login.ist.utl.pt/login?service=
+<host>.cas.ValidateUrl=https://login.ist.utl.pt/serviceValidate
+<host>.cas.logoutUrl=https://login.ist.utl.pt/logout
+
+## renderers only
+#filter.request.with.digest=true
+#digest.tampering.url=http://<host>:8080/<app>
+
+# Exception handler, default is: org.apache.struts.action.ExceptionHandler
+#exception.handler.class=
