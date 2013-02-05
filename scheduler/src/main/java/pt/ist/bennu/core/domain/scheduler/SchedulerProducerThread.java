@@ -29,20 +29,20 @@ import pt.ist.bennu.core.domain.MyOrg;
 
 public class SchedulerProducerThread extends TransactionalThread {
 
-	@Override
-	public void transactionalRun() {
-		final PendingExecutionTaskQueue queue = PendingExecutionTaskQueue.getPendingExecutionTaskQueue();
-		for (final Task task : MyOrg.getInstance().getTasksSet()) {
-			if (queue.contains(task)) {
-				continue;
-			}
-			for (final TaskConfiguration taskConfiguration : task.getTaskConfigurationsSet()) {
-				if (taskConfiguration.shouldRunNow()) {
-					queue.offer(task);
-					break;
-				}
-			}
-		}
-	}
+    @Override
+    public void transactionalRun() {
+        final PendingExecutionTaskQueue queue = PendingExecutionTaskQueue.getPendingExecutionTaskQueue();
+        for (final Task task : MyOrg.getInstance().getTasksSet()) {
+            if (queue.contains(task)) {
+                continue;
+            }
+            for (final TaskConfiguration taskConfiguration : task.getTaskConfigurationsSet()) {
+                if (taskConfiguration.shouldRunNow()) {
+                    queue.offer(task);
+                    break;
+                }
+            }
+        }
+    }
 
 }

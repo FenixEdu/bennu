@@ -31,8 +31,8 @@ package pt.ist.bennu.core.domain.scheduler;
  */
 public class CustomTaskOutputFile extends CustomTaskOutputFile_Base {
 
-	public CustomTaskOutputFile() {
-		super();
-	}
+    public CustomTaskOutputFile() {
+        super();
+    }
 
 }

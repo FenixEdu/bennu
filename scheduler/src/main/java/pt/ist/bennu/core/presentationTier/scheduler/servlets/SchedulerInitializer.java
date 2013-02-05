@@ -17,21 +17,21 @@ import pt.ist.bennu.core.domain.scheduler.Scheduler;
 @WebListener
 public class SchedulerInitializer implements ServletContextListener {
 
-	private static final Logger logger = Logger.getLogger(SchedulerInitializer.class);
+    private static final Logger logger = Logger.getLogger(SchedulerInitializer.class);
 
-	@Override
-	public void contextInitialized(ServletContextEvent sce) {
-		if (!Scheduler.isInitialized()) {
-			Scheduler.initialize();
-			logger.info("Scheduler initialized");
-		}
-	}
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        if (!Scheduler.isInitialized()) {
+            Scheduler.initialize();
+            logger.info("Scheduler initialized");
+        }
+    }
 
-	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
-		if (Scheduler.isInitialized()) {
-			Scheduler.shutdown();
-			logger.info("Shutting down Scheduler");
-		}
-	}
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        if (Scheduler.isInitialized()) {
+            Scheduler.shutdown();
+            logger.info("Shutting down Scheduler");
+        }
+    }
 }

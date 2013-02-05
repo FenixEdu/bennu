@@ -48,259 +48,259 @@ import dml.DomainModel;
 
 public abstract class Task extends Task_Base {
 
-	public static final Comparator<Task> COMPARATOR_BY_LOCALIZED_NAME = new Comparator<Task>() {
+    public static final Comparator<Task> COMPARATOR_BY_LOCALIZED_NAME = new Comparator<Task>() {
 
-		@Override
-		public int compare(final Task task1, final Task task2) {
-			final String task1Name = getTaskName(task1);
-			final String task2Name = getTaskName(task2);
-			final int c = task1Name.compareTo(task2Name);
-			return c == 0 ? task1.getExternalId().compareTo(task2.getExternalId()) : c;
-		}
+        @Override
+        public int compare(final Task task1, final Task task2) {
+            final String task1Name = getTaskName(task1);
+            final String task2Name = getTaskName(task2);
+            final int c = task1Name.compareTo(task2Name);
+            return c == 0 ? task1.getExternalId().compareTo(task2.getExternalId()) : c;
+        }
 
-		private String getTaskName(final Task task) {
-			final String taskName = task.getLocalizedName();
-			return taskName == null ? task.getExternalId() : taskName;
-		}
+        private String getTaskName(final Task task) {
+            final String taskName = task.getLocalizedName();
+            return taskName == null ? task.getExternalId() : taskName;
+        }
 
-	};
+    };
 
-	private final TimerTask timerTask = new TimerTask() {
+    private final TimerTask timerTask = new TimerTask() {
 
-		// This reference will garantee that the task instance will not be GC'ed
-		// while the
-		// TimerTask is still scheduled in the Timer.
-		private final Task task = getThis();
+        // This reference will garantee that the task instance will not be GC'ed
+        // while the
+        // TimerTask is still scheduled in the Timer.
+        private final Task task = getThis();
 
-		@Override
-		public void run() {
-			final TaskExecutor taskExecutor = new TaskExecutor(task);
-			taskExecutor.start();
-			try {
-				taskExecutor.join();
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+        @Override
+        public void run() {
+            final TaskExecutor taskExecutor = new TaskExecutor(task);
+            taskExecutor.start();
+            try {
+                taskExecutor.join();
+            } catch (final InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
-	};
+    };
 
-	private StringBuilder log = null;
+    private StringBuilder log = null;
 
-	public Task() {
-		super();
-		setMyOrg(MyOrg.getInstance());
-	}
+    public Task() {
+        super();
+        setMyOrg(MyOrg.getInstance());
+    }
 
-	private Task getThis() {
-		return this;
-	}
+    private Task getThis() {
+        return this;
+    }
 
-	@Service
-	public static void initTasks() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		final DomainModel domainModel = FenixWebFramework.getDomainModel();
-		for (final DomainClass domainClass : domainModel.getDomainClasses()) {
-			if (isTaskInstance(domainClass) && !existsTaskInstance(domainClass)) {
-				initTask(domainClass);
-			}
-		}
-	}
+    @Service
+    public static void initTasks() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        final DomainModel domainModel = FenixWebFramework.getDomainModel();
+        for (final DomainClass domainClass : domainModel.getDomainClasses()) {
+            if (isTaskInstance(domainClass) && !existsTaskInstance(domainClass)) {
+                initTask(domainClass);
+            }
+        }
+    }
 
-	public static SortedSet<Task> getTasksSortedByLocalizedName() {
-		final SortedSet<Task> tasks = new TreeSet<Task>(COMPARATOR_BY_LOCALIZED_NAME);
-		tasks.addAll(MyOrg.getInstance().getTasksSet());
-		return tasks;
-	}
+    public static SortedSet<Task> getTasksSortedByLocalizedName() {
+        final SortedSet<Task> tasks = new TreeSet<Task>(COMPARATOR_BY_LOCALIZED_NAME);
+        tasks.addAll(MyOrg.getInstance().getTasksSet());
+        return tasks;
+    }
 
-	public static SortedSet<Task> getTasksSortedByLocalizedName(boolean active) {
-		final SortedSet<Task> tasks = new TreeSet<Task>(COMPARATOR_BY_LOCALIZED_NAME);
-		for (final Task task : MyOrg.getInstance().getTasksSet()) {
-			if (active && !task.getTaskConfigurationsSet().isEmpty()) {
-				tasks.add(task);
-			}
-			if (!active && task.getTaskConfigurationsSet().isEmpty() && !task.isExecutionPending()) {
-				tasks.add(task);
-			}
-		}
-		return tasks;
-	}
+    public static SortedSet<Task> getTasksSortedByLocalizedName(boolean active) {
+        final SortedSet<Task> tasks = new TreeSet<Task>(COMPARATOR_BY_LOCALIZED_NAME);
+        for (final Task task : MyOrg.getInstance().getTasksSet()) {
+            if (active && !task.getTaskConfigurationsSet().isEmpty()) {
+                tasks.add(task);
+            }
+            if (!active && task.getTaskConfigurationsSet().isEmpty() && !task.isExecutionPending()) {
+                tasks.add(task);
+            }
+        }
+        return tasks;
+    }
 
-	private static boolean existsTaskInstance(final DomainClass domainClass) {
-		final String classname = domainClass.getFullName();
-		for (final Task task : MyOrg.getInstance().getTasksSet()) {
-			if (task.getClass().getName().equals(classname)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    private static boolean existsTaskInstance(final DomainClass domainClass) {
+        final String classname = domainClass.getFullName();
+        for (final Task task : MyOrg.getInstance().getTasksSet()) {
+            if (task.getClass().getName().equals(classname)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private static void initTask(final DomainClass domainClass) throws ClassNotFoundException, InstantiationException,
-			IllegalAccessException {
-		final Class taskClass = Class.forName(domainClass.getFullName());
-		if (!Modifier.isAbstract(taskClass.getModifiers())) {
-			taskClass.newInstance();
-		}
-	}
+    private static void initTask(final DomainClass domainClass) throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException {
+        final Class taskClass = Class.forName(domainClass.getFullName());
+        if (!Modifier.isAbstract(taskClass.getModifiers())) {
+            taskClass.newInstance();
+        }
+    }
 
-	private static boolean isTask(final DomainClass domainClass) {
-		return domainClass != null && domainClass.getFullName().equals(Task.class.getName());
-	}
+    private static boolean isTask(final DomainClass domainClass) {
+        return domainClass != null && domainClass.getFullName().equals(Task.class.getName());
+    }
 
-	private static boolean isTaskInstance(final DomainClass domainClass) {
-		if (domainClass == null || isTask(domainClass)) {
-			return false;
-		}
-		final DomainClass superclass = (DomainClass) domainClass.getSuperclass();
-		return isTask(superclass) || isTaskInstance(superclass);
-	}
+    private static boolean isTaskInstance(final DomainClass domainClass) {
+        if (domainClass == null || isTask(domainClass)) {
+            return false;
+        }
+        final DomainClass superclass = (DomainClass) domainClass.getSuperclass();
+        return isTask(superclass) || isTaskInstance(superclass);
+    }
 
-	public boolean isRepeatedOnFailure() {
-		return false;
-	}
+    public boolean isRepeatedOnFailure() {
+        return false;
+    }
 
-	public boolean isExecutionPending() {
-		return MyOrg.getInstance().getPendingExecutionTaskQueue().contains(this);
-	}
+    public boolean isExecutionPending() {
+        return MyOrg.getInstance().getPendingExecutionTaskQueue().contains(this);
+    }
 
-	public abstract String getLocalizedName();
+    public abstract String getLocalizedName();
 
-	public abstract void executeTask();
+    public abstract void executeTask();
 
-	@Service
-	public void createTaskConfiguration(final TaskConfigurationBean taskConfigurationBean) {
-		new TaskConfiguration(taskConfigurationBean);
-	}
+    @Service
+    public void createTaskConfiguration(final TaskConfigurationBean taskConfigurationBean) {
+        new TaskConfiguration(taskConfigurationBean);
+    }
 
-	protected synchronized void logInfo(String msg) {
-		if (log == null) {
-			log = new StringBuilder();
-		}
-		log.append(msg + "\n");
-	}
+    protected synchronized void logInfo(String msg) {
+        if (log == null) {
+            log = new StringBuilder();
+        }
+        log.append(msg + "\n");
+    }
 
-	public void createNewLog() {
-		final TaskLog taskLog = new TaskLog(this);
-		setLastRun(taskLog.getTaskStart());
-	}
+    public void createNewLog() {
+        final TaskLog taskLog = new TaskLog(this);
+        setLastRun(taskLog.getTaskStart());
+    }
 
-	public void updateLastLog(final Boolean successful) {
-		final TaskLog taskLog = getLastLog();
-		taskLog.update(successful, log != null ? log.toString() : null);
-		log = null;
-	}
+    public void updateLastLog(final Boolean successful) {
+        final TaskLog taskLog = getLastLog();
+        taskLog.update(successful, log != null ? log.toString() : null);
+        log = null;
+    }
 
-	private TaskLog getLastLog() {
-		return Collections.max(getTaskLogsSet(), TaskLog.COMPARATOR_BY_START);
-	}
+    private TaskLog getLastLog() {
+        return Collections.max(getTaskLogsSet(), TaskLog.COMPARATOR_BY_START);
+    }
 
-	public void cleanupLogs(int maxNumberOfLogs) {
-		ArrayList<TaskLog> logs = new ArrayList<TaskLog>(getTaskLogs());
-		int logsToRemove = logs.size() - maxNumberOfLogs;
-		if (logsToRemove > 0) {
-			Collections.sort(logs, TaskLog.COMPARATOR_BY_START);
-			for (TaskLog log : logs.subList(0, logsToRemove)) {
-				removeTaskLogs(log);
-			}
-		}
-	}
+    public void cleanupLogs(int maxNumberOfLogs) {
+        ArrayList<TaskLog> logs = new ArrayList<TaskLog>(getTaskLogs());
+        int logsToRemove = logs.size() - maxNumberOfLogs;
+        if (logsToRemove > 0) {
+            Collections.sort(logs, TaskLog.COMPARATOR_BY_START);
+            for (TaskLog log : logs.subList(0, logsToRemove)) {
+                removeTaskLogs(log);
+            }
+        }
+    }
 
-	@Service
-	public void invokeNow() {
-		MyOrg.getInstance().getPendingExecutionTaskQueue().offer(this);
-	}
+    @Service
+    public void invokeNow() {
+        MyOrg.getInstance().getPendingExecutionTaskQueue().offer(this);
+    }
 
-	@Service
-	public void stop() {
-		removePendingExecutionTaskQueue();
-	}
+    @Service
+    public void stop() {
+        removePendingExecutionTaskQueue();
+    }
 
-	public void runPendingTask() {
-		System.out.println("Running task: " + getClass().getName());
-		log = new StringBuilder();
-		final TaskThread taskThread = new TaskThread();
-		final DateTime start = new DateTime();
-		taskThread.start();
-		try {
-			taskThread.join();
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
+    public void runPendingTask() {
+        System.out.println("Running task: " + getClass().getName());
+        log = new StringBuilder();
+        final TaskThread taskThread = new TaskThread();
+        final DateTime start = new DateTime();
+        taskThread.start();
+        try {
+            taskThread.join();
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
 //	    throw new Error(e);
-		}
-		final DateTime end = new DateTime();
-		final LogTaskThread logTaskThread = new LogTaskThread(start, end, taskThread.success, log.toString());
-		log = null;
-		logTaskThread.start();
-		try {
-			logTaskThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Completed run of task: " + getClass().getName());
-	}
+        }
+        final DateTime end = new DateTime();
+        final LogTaskThread logTaskThread = new LogTaskThread(start, end, taskThread.success, log.toString());
+        log = null;
+        logTaskThread.start();
+        try {
+            logTaskThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Completed run of task: " + getClass().getName());
+    }
 
-	private class TaskThread extends Thread {
+    private class TaskThread extends Thread {
 
-		private boolean success = false;
+        private boolean success = false;
 
-		@Override
-		public void run() {
-			try {
-				Transaction.withTransaction(false, new TransactionalCommand() {
-					@Override
-					public void doIt() {
-						try {
-							// TODO : This needs to be placed in the apps task configuration
-							//        and used whenever the app is launchede.
-							VirtualHost.setVirtualHostForThread("dot.ist.utl.pt");
-							Language.setLocale(Language.getDefaultLocale());
-							executeTask();
-						} finally {
-							VirtualHost.releaseVirtualHostFromThread();
-						}
-					}
-				});
-				success = true;
-			} finally {
-				Transaction.forceFinish();
-			}
-		}
+        @Override
+        public void run() {
+            try {
+                Transaction.withTransaction(false, new TransactionalCommand() {
+                    @Override
+                    public void doIt() {
+                        try {
+                            // TODO : This needs to be placed in the apps task configuration
+                            //        and used whenever the app is launchede.
+                            VirtualHost.setVirtualHostForThread("dot.ist.utl.pt");
+                            Language.setLocale(Language.getDefaultLocale());
+                            executeTask();
+                        } finally {
+                            VirtualHost.releaseVirtualHostFromThread();
+                        }
+                    }
+                });
+                success = true;
+            } finally {
+                Transaction.forceFinish();
+            }
+        }
 
-	}
+    }
 
-	private class LogTaskThread extends Thread {
+    private class LogTaskThread extends Thread {
 
-		final DateTime start, end;
-		final boolean success;
-		final String log;
+        final DateTime start, end;
+        final boolean success;
+        final String log;
 
-		public LogTaskThread(DateTime start, DateTime end, boolean success, String log) {
-			this.start = start;
-			this.end = end;
-			this.success = success;
-			this.log = log;
-		}
+        public LogTaskThread(DateTime start, DateTime end, boolean success, String log) {
+            this.start = start;
+            this.end = end;
+            this.success = success;
+            this.log = log;
+        }
 
-		@Override
-		public void run() {
-			try {
-				Transaction.withTransaction(false, new TransactionalCommand() {
-					@Override
-					public void doIt() {
-						final TaskLog taskLog = new TaskLog(getThis());
-						taskLog.setTaskStart(start);
-						taskLog.setTaskEnd(end);
-						taskLog.setOutput(log);
-						taskLog.setSuccessful(Boolean.valueOf(success));
-						setLastRun(start);
-						cleanupLogs(100);
-					}
-				});
-			} finally {
-				Transaction.forceFinish();
-			}
-		}
+        @Override
+        public void run() {
+            try {
+                Transaction.withTransaction(false, new TransactionalCommand() {
+                    @Override
+                    public void doIt() {
+                        final TaskLog taskLog = new TaskLog(getThis());
+                        taskLog.setTaskStart(start);
+                        taskLog.setTaskEnd(end);
+                        taskLog.setOutput(log);
+                        taskLog.setSuccessful(Boolean.valueOf(success));
+                        setLastRun(start);
+                        cleanupLogs(100);
+                    }
+                });
+            } finally {
+                Transaction.forceFinish();
+            }
+        }
 
-	}
+    }
 
 }

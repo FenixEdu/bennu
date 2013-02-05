@@ -40,58 +40,58 @@ import pt.utl.ist.fenix.tools.util.excel.Spreadsheet;
  */
 public abstract class WriteCustomTask extends ReadCustomTask {
 
-	private Set<GenericFile> outputFiles;
+    private Set<GenericFile> outputFiles;
 
-	void setOutputFiles(final Set<GenericFile> outputFiles) {
-		this.outputFiles = outputFiles;
-	}
+    void setOutputFiles(final Set<GenericFile> outputFiles) {
+        this.outputFiles = outputFiles;
+    }
 
-	protected abstract void doService();
+    protected abstract void doService();
 
-	@Override
-	public final void doIt() {
-		callService();
-	}
+    @Override
+    public final void doIt() {
+        callService();
+    }
 
-	@Service
-	private void callService() {
-		try {
-			if (getServerName() != null) {
-				VirtualHost.setVirtualHostForThread(getServerName().toLowerCase());
-			}
-			doService();
-		} finally {
-			VirtualHost.releaseVirtualHostFromThread();
-		}
-	}
+    @Service
+    private void callService() {
+        try {
+            if (getServerName() != null) {
+                VirtualHost.setVirtualHostForThread(getServerName().toLowerCase());
+            }
+            doService();
+        } finally {
+            VirtualHost.releaseVirtualHostFromThread();
+        }
+    }
 
-	/**
-	 * Convenience method to more easily use VirtualHosts in these tasks
-	 * 
-	 * @return the String with the server name of the VirtualHost to use when
-	 *         executing this task
-	 */
-	public String getServerName() {
-		return null;
-	}
+    /**
+     * Convenience method to more easily use VirtualHosts in these tasks
+     * 
+     * @return the String with the server name of the VirtualHost to use when
+     *         executing this task
+     */
+    public String getServerName() {
+        return null;
+    }
 
-	protected void storeFileOutput(final String displayName, final String filename, final byte[] content, final String contentType) {
-		final CustomTaskOutputFile outputFile = new CustomTaskOutputFile();
-		outputFile.setDisplayName(displayName);
-		outputFile.setFilename(filename);
-		outputFile.setContent(content);
-		outputFile.setContentType(contentType);
-		outputFiles.add(outputFile);
-	}
+    protected void storeFileOutput(final String displayName, final String filename, final byte[] content, final String contentType) {
+        final CustomTaskOutputFile outputFile = new CustomTaskOutputFile();
+        outputFile.setDisplayName(displayName);
+        outputFile.setFilename(filename);
+        outputFile.setContent(content);
+        outputFile.setContentType(contentType);
+        outputFiles.add(outputFile);
+    }
 
-	protected void storeFileOutput(final String displayName, final String filename, final Spreadsheet spreadsheet) {
-		try {
-			final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			spreadsheet.exportToXLSSheet(outputStream);
-			storeFileOutput(displayName, filename, outputStream.toByteArray(), "application/vnd.ms-excel");
-		} catch (final IOException e) {
-			throw new Error(e);
-		}
-	}
+    protected void storeFileOutput(final String displayName, final String filename, final Spreadsheet spreadsheet) {
+        try {
+            final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            spreadsheet.exportToXLSSheet(outputStream);
+            storeFileOutput(displayName, filename, outputStream.toByteArray(), "application/vnd.ms-excel");
+        } catch (final IOException e) {
+            throw new Error(e);
+        }
+    }
 
 }
