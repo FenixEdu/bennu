@@ -8,113 +8,113 @@ import pt.utl.ist.fenix.tools.util.ByteArray;
 
 public class RAMIndex implements IndexFile {
 
-	static final int BUFFER_SIZE = 1024;
+    static final int BUFFER_SIZE = 1024;
 
-	private List<ByteArray> buffers;
-	private long length;
-	private long lastModified = System.currentTimeMillis();
-	private DomainIndexFile domainIndexFile;
-	private String name;
+    private List<ByteArray> buffers;
+    private long length;
+    private long lastModified = System.currentTimeMillis();
+    private DomainIndexFile domainIndexFile;
+    private String name;
 
-	public RAMIndex() {
-		this.buffers = new ArrayList<ByteArray>();
-	}
+    public RAMIndex() {
+        this.buffers = new ArrayList<ByteArray>();
+    }
 
-	public RAMIndex(DomainIndexFile domainIndexFile) {
-		this();
-		this.domainIndexFile = domainIndexFile;
-		this.name = domainIndexFile.getName();
-		this.length = domainIndexFile.getLength();
-		Long lastModified2 = domainIndexFile.getLastModified();
-		this.lastModified = lastModified2 != null ? lastModified2 : System.currentTimeMillis();
-		this.buffers = this.domainIndexFile.split(BUFFER_SIZE);
-	}
+    public RAMIndex(DomainIndexFile domainIndexFile) {
+        this();
+        this.domainIndexFile = domainIndexFile;
+        this.name = domainIndexFile.getName();
+        this.length = domainIndexFile.getLength();
+        Long lastModified2 = domainIndexFile.getLastModified();
+        this.lastModified = lastModified2 != null ? lastModified2 : System.currentTimeMillis();
+        this.buffers = this.domainIndexFile.split(BUFFER_SIZE);
+    }
 
-	private void dumpBuffersToDomainIndex() {
-		byte[] totalArray = new byte[BUFFER_SIZE * buffers.size()];
-		int offset = 0;
-		for (ByteArray array : buffers) {
-			byte[] bytes = array.getBytes();
-			if (bytes.length > BUFFER_SIZE) {
-				System.out.println("buffer length is greater than buffer size...WTF!");
-			}
-			System.arraycopy(bytes, 0, totalArray, offset, Math.min(bytes.length, BUFFER_SIZE));
-			offset += BUFFER_SIZE;
-		}
-		this.domainIndexFile.setIndexContent(totalArray);
-	}
+    private void dumpBuffersToDomainIndex() {
+        byte[] totalArray = new byte[BUFFER_SIZE * buffers.size()];
+        int offset = 0;
+        for (ByteArray array : buffers) {
+            byte[] bytes = array.getBytes();
+            if (bytes.length > BUFFER_SIZE) {
+                System.out.println("buffer length is greater than buffer size...WTF!");
+            }
+            System.arraycopy(bytes, 0, totalArray, offset, Math.min(bytes.length, BUFFER_SIZE));
+            offset += BUFFER_SIZE;
+        }
+        this.domainIndexFile.setIndexContent(totalArray);
+    }
 
-	@Override
-	public synchronized Long getLength() {
-		return length;
-	}
+    @Override
+    public synchronized Long getLength() {
+        return length;
+    }
 
-	public synchronized void setLength(long length) {
-		this.length = length;
-	}
+    public synchronized void setLength(long length) {
+        this.length = length;
+    }
 
-	@Override
-	public synchronized Long getLastModified() {
-		return lastModified;
-	}
+    @Override
+    public synchronized Long getLastModified() {
+        return lastModified;
+    }
 
-	public synchronized void setLastModified(long lastModified) {
-		this.lastModified = lastModified;
-	}
+    public synchronized void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
+    }
 
-	public final synchronized ByteArray addBuffer(int size) {
-		ByteArray buffer = new ByteArray(new byte[size]);
-		buffers.add(buffer);
-		return buffer;
-	}
+    public final synchronized ByteArray addBuffer(int size) {
+        ByteArray buffer = new ByteArray(new byte[size]);
+        buffers.add(buffer);
+        return buffer;
+    }
 
-	final synchronized ByteArray getBuffer(int index) {
-		return buffers.get(index);
-	}
+    final synchronized ByteArray getBuffer(int index) {
+        return buffers.get(index);
+    }
 
-	final synchronized int numBuffers() {
-		return buffers.size();
-	}
+    final synchronized int numBuffers() {
+        return buffers.size();
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public void setLastModified(Long time) {
-		this.lastModified = time;
-	}
+    @Override
+    public void setLastModified(Long time) {
+        this.lastModified = time;
+    }
 
-	@Override
-	public void setLength(Long length) {
-		this.length = length;
-	}
+    @Override
+    public void setLength(Long length) {
+        this.length = length;
+    }
 
-	@Override
-	public RAMIndex getNonPersistentIndex() {
-		return this;
-	}
+    @Override
+    public RAMIndex getNonPersistentIndex() {
+        return this;
+    }
 
-	@Override
-	public DomainIndexFile getPersistentIndex() {
-		return this.domainIndexFile;
-	}
+    @Override
+    public DomainIndexFile getPersistentIndex() {
+        return this.domainIndexFile;
+    }
 
-	@Override
-	public boolean isPersisted() {
-		return false;
-	}
+    @Override
+    public boolean isPersisted() {
+        return false;
+    }
 
-	public void persist() {
-		dumpBuffersToDomainIndex();
-		this.domainIndexFile.setName(getName());
-		this.domainIndexFile.setLastModified(getLastModified());
-		this.domainIndexFile.setLength(getLength());
-	}
+    public void persist() {
+        dumpBuffersToDomainIndex();
+        this.domainIndexFile.setName(getName());
+        this.domainIndexFile.setLastModified(getLastModified());
+        this.domainIndexFile.setLength(getLength());
+    }
 }

@@ -13,5 +13,5 @@ import java.util.Set;
  */
 public interface Searchable {
 
-	public Set<Indexable> getObjectsToIndex();
+    public Set<Indexable> getObjectsToIndex();
 }

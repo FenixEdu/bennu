@@ -14,5 +14,5 @@ package pt.ist.fenixframework.plugins.luceneIndexing;
  */
 public interface IndexableField {
 
-	public String getFieldName();
+    public String getFieldName();
 }

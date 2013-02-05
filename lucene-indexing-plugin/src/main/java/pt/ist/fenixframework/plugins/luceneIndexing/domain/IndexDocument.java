@@ -18,48 +18,48 @@ import pt.ist.fenixframework.plugins.luceneIndexing.IndexableField;
  */
 public class IndexDocument {
 
-	private Map<IndexableField, String> values;
-	private String indexId;
-	private Class<? extends DomainObject> domainObjectClass;
+    private Map<IndexableField, String> values;
+    private String indexId;
+    private Class<? extends DomainObject> domainObjectClass;
 
-	public IndexDocument(DomainObject domainObject) {
-		this.indexId = domainObject.getExternalId();
-		this.domainObjectClass = domainObject.getClass();
-		this.values = new HashMap<IndexableField, String>();
-	}
+    public IndexDocument(DomainObject domainObject) {
+        this.indexId = domainObject.getExternalId();
+        this.domainObjectClass = domainObject.getClass();
+        this.values = new HashMap<IndexableField, String>();
+    }
 
-	public void indexField(IndexableField field, String value) {
-		values.put(field, value);
-	}
+    public void indexField(IndexableField field, String value) {
+        values.put(field, value);
+    }
 
-	public Set<IndexableField> getIndexableFields() {
-		return values.keySet();
-	}
+    public Set<IndexableField> getIndexableFields() {
+        return values.keySet();
+    }
 
-	public String getValueForField(IndexableField field) {
-		return values.get(field);
-	}
+    public String getValueForField(IndexableField field) {
+        return values.get(field);
+    }
 
-	public String getIndexId() {
-		return this.indexId;
-	}
+    public String getIndexId() {
+        return this.indexId;
+    }
 
-	public Class<? extends DomainObject> getDomainObjectClass() {
-		return this.domainObjectClass;
-	}
+    public Class<? extends DomainObject> getDomainObjectClass() {
+        return this.domainObjectClass;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof IndexDocument) {
-			IndexDocument otherDocument = (IndexDocument) obj;
-			return indexId.equals(otherDocument.getIndexId());
-		}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof IndexDocument) {
+            IndexDocument otherDocument = (IndexDocument) obj;
+            return indexId.equals(otherDocument.getIndexId());
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public int hashCode() {
-		return this.indexId.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return this.indexId.hashCode();
+    }
 }
