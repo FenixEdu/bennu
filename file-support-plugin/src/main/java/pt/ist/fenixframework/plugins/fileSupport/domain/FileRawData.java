@@ -9,19 +9,19 @@ import pt.utl.ist.fenix.tools.util.ByteArray;
  */
 public class FileRawData extends FileRawData_Base {
 
-	public FileRawData() {
-		super();
-		setFileSupport(FileSupport.getInstance());
-	}
+    public FileRawData() {
+        super();
+        setFileSupport(FileSupport.getInstance());
+    }
 
-	public FileRawData(String uniqueIdentification, byte[] content) {
-		this();
-		setContent(new ByteArray(content));
-		setContentKey(uniqueIdentification);
-	}
+    public FileRawData(String uniqueIdentification, byte[] content) {
+        this();
+        setContent(new ByteArray(content));
+        setContentKey(uniqueIdentification);
+    }
 
-	public void delete() {
-		removeFileSupport();
-		deleteDomainObject();
-	}
+    public void delete() {
+        removeFileSupport();
+        deleteDomainObject();
+    }
 }

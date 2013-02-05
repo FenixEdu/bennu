@@ -9,22 +9,22 @@ import java.io.File;
  */
 public class LocalFileToDelete extends LocalFileToDelete_Base {
 
-	public LocalFileToDelete() {
-		super();
-		setFileSupport(FileSupport.getInstance());
-	}
+    public LocalFileToDelete() {
+        super();
+        setFileSupport(FileSupport.getInstance());
+    }
 
-	public LocalFileToDelete(String path) {
-		this();
-		setFilePath(path);
-	}
+    public LocalFileToDelete(String path) {
+        this();
+        setFilePath(path);
+    }
 
-	public void delete() {
-		final File existingFile = new File(getFilePath());
-		if (!existingFile.exists() || existingFile.delete()) {
-			removeFileSupport();
-			deleteDomainObject();
-		}
-	}
+    public void delete() {
+        final File existingFile = new File(getFilePath());
+        if (!existingFile.exists() || existingFile.delete()) {
+            removeFileSupport();
+            deleteDomainObject();
+        }
+    }
 
 }

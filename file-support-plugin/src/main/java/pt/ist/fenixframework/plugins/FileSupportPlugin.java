@@ -15,31 +15,31 @@ import pt.ist.fenixframework.plugins.fileSupport.domain.FileSupport;
 
 @WebListener
 public class FileSupportPlugin implements FenixFrameworkPlugin, ServletContextListener {
-	private static boolean initialized = false;
+    private static boolean initialized = false;
 
-	@Override
-	public List<URL> getDomainModel() {
-		URL resource = getClass().getResource("/file-plugin.dml");
-		return Collections.singletonList(resource);
-	}
+    @Override
+    public List<URL> getDomainModel() {
+        URL resource = getClass().getResource("/file-plugin.dml");
+        return Collections.singletonList(resource);
+    }
 
-	@Override
-	@Service
-	public void initialize() {
-		if (!initialized) {
-			FileSupport.getInstance();
-			Thread thread = new Thread(new FileDeleterThread());
-			thread.start();
-			initialized = true;
-		}
-	}
+    @Override
+    @Service
+    public void initialize() {
+        if (!initialized) {
+            FileSupport.getInstance();
+            Thread thread = new Thread(new FileDeleterThread());
+            thread.start();
+            initialized = true;
+        }
+    }
 
-	@Override
-	public void contextInitialized(ServletContextEvent event) {
-		initialize();
-	}
+    @Override
+    public void contextInitialized(ServletContextEvent event) {
+        initialize();
+    }
 
-	@Override
-	public void contextDestroyed(ServletContextEvent event) {
-	}
+    @Override
+    public void contextDestroyed(ServletContextEvent event) {
+    }
 }
