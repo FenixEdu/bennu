@@ -12,17 +12,17 @@ import pt.ist.bennu.core.domain.Bennu;
 @Path("/users")
 public class UserResource extends AbstractResource {
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllUsers() {
-		verifyAndGetRequestAuthor();
-		return Response.ok(serialize(Bennu.getInstance().getUsersSet(), "users")).build();
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllUsers() {
+        verifyAndGetRequestAuthor();
+        return Response.ok(serialize(Bennu.getInstance().getUsersSet(), "users")).build();
+    }
 
-	@GET
-	@Path("/{oid}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUser(@PathParam("oid") String externalId) {
-		return Response.ok(serializeFromExternalId(externalId)).build();
-	}
+    @GET
+    @Path("/{oid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUser(@PathParam("oid") String externalId) {
+        return Response.ok(serializeFromExternalId(externalId)).build();
+    }
 }

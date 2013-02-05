@@ -12,18 +12,18 @@ import com.google.gson.JsonSerializer;
 
 public class CasConfigContextSerializer implements JsonSerializer<CasConfigContext> {
 
-	@Override
-	public JsonElement serialize(CasConfigContext casConfigContext, Type type, JsonSerializationContext context) {
-		JsonObject jsonObject = new JsonObject();
-		CasConfig casConfig = casConfigContext.getCasConfig();
-		if (casConfig.isCasEnabled()) {
-			jsonObject.addProperty("casEnabled", true);
-			jsonObject.addProperty("loginUrl", casConfig.getCasLoginUrl(casConfigContext.getRequest()));
-			jsonObject.addProperty("logoutUrl", casConfig.getCasLogoutUrl());
-		} else {
-			jsonObject.addProperty("casEnabled", false);
-		}
-		return jsonObject;
-	}
+    @Override
+    public JsonElement serialize(CasConfigContext casConfigContext, Type type, JsonSerializationContext context) {
+        JsonObject jsonObject = new JsonObject();
+        CasConfig casConfig = casConfigContext.getCasConfig();
+        if (casConfig.isCasEnabled()) {
+            jsonObject.addProperty("casEnabled", true);
+            jsonObject.addProperty("loginUrl", casConfig.getCasLoginUrl(casConfigContext.getRequest()));
+            jsonObject.addProperty("logoutUrl", casConfig.getCasLogoutUrl());
+        } else {
+            jsonObject.addProperty("casEnabled", false);
+        }
+        return jsonObject;
+    }
 
 }

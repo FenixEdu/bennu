@@ -25,132 +25,133 @@ import pt.ist.fenixframework.pstm.AbstractDomainObject;
 
 public abstract class AbstractResource implements Serializer, Deserializer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractResource.class);
 
-	@Context
-	HttpServletRequest request;
+    @Context
+    HttpServletRequest request;
 
-	static {
-		setSerializer(new BennuJsonSerializer());
-		setDeserializer(new BennuJsonDeserializer());
-	}
+    private static JsonAdapter adapter;
 
-	protected User login(String username, String password, boolean checkPassword) {
-		return Authenticate.login(request.getSession(true), username, password, checkPassword);
-	}
+    static {
+        adapter = JsonAdapter.getInstance();
+    }
 
-	protected CasConfig getCasConfig() {
-		if (request != null) {
-			return ConfigurationManager.getCasConfig(request.getServerName());
-		} else {
-			return null;
-		}
-	}
+    protected User login(String username, String password, boolean checkPassword) {
+        return Authenticate.login(request.getSession(true), username, password, checkPassword);
+    }
 
-	protected CasConfigContext getCasConfigContext() {
-		return new CasConfigContext(getCasConfig(), request);
-	}
+    protected CasConfig getCasConfig() {
+        if (request != null) {
+            return ConfigurationManager.getCasConfig(request.getServerName());
+        } else {
+            return null;
+        }
+    }
 
-	public class CasConfigContext {
+    protected CasConfigContext getCasConfigContext() {
+        return new CasConfigContext(getCasConfig(), request);
+    }
 
-		private final CasConfig casConfig;
-		private final HttpServletRequest request;
+    public class CasConfigContext {
 
-		public CasConfigContext(CasConfig casConfig, HttpServletRequest request) {
-			this.casConfig = casConfig;
-			this.request = request;
-		}
+        private final CasConfig casConfig;
+        private final HttpServletRequest request;
 
-		public CasConfig getCasConfig() {
-			return casConfig;
-		}
+        public CasConfigContext(CasConfig casConfig, HttpServletRequest request) {
+            this.casConfig = casConfig;
+            this.request = request;
+        }
 
-		public HttpServletRequest getRequest() {
-			return request;
-		}
-	}
+        public CasConfig getCasConfig() {
+            return casConfig;
+        }
 
-	protected boolean isCasEnabled() {
-		CasConfig casConfig = getCasConfig();
-		if (casConfig != null) {
-			return casConfig.isCasEnabled();
-		} else {
-			return false;
-		}
-	}
+        public HttpServletRequest getRequest() {
+            return request;
+        }
+    }
 
-	protected <T extends DomainObject> T readDomainObject(final String externalId) {
-		boolean error = false;
-		try {
-			T obj = AbstractDomainObject.fromExternalId(externalId);
-			if (obj == null) {
-				error = true;
-			} else {
-				return obj;
-			}
-		} catch (Throwable t) {
-			error = true;
-		} finally {
-			if (error) {
-				throw new RestException(BennuRestError.RESOURCE_NOT_FOUND);
-			}
-		}
-		LOG.error("Unreachable code");
-		return null;
-	}
+    protected boolean isCasEnabled() {
+        CasConfig casConfig = getCasConfig();
+        if (casConfig != null) {
+            return casConfig.isCasEnabled();
+        } else {
+            return false;
+        }
+    }
 
-	protected User verifyAndGetRequestAuthor() {
-		User user = UserView.getUser();
-		if (user == null) {
-			throw new RestException(BennuRestError.UNAUTHORIZED);
-		} else {
-			return user;
-		}
-	}
+    protected <T extends DomainObject> T readDomainObject(final String externalId) {
+        boolean error = false;
+        try {
+            T obj = AbstractDomainObject.fromExternalId(externalId);
+            if (obj == null) {
+                error = true;
+            } else {
+                return obj;
+            }
+        } catch (Throwable t) {
+            error = true;
+        } finally {
+            if (error) {
+                throw new RestException(BennuRestError.RESOURCE_NOT_FOUND);
+            }
+        }
+        LOG.error("Unreachable code");
+        return null;
+    }
 
-	protected <T extends DomainObject> URI getURIFor(T domainObject, String relativePath) {
-		try {
-			return new URI("http", getHost(), relativePath + "/" + domainObject.getExternalId(), null);
-		} catch (URISyntaxException e) {
-			throw new RestException(BennuRestError.CANNOT_CREATE_ENTITY);
-		}
-	}
+    protected User verifyAndGetRequestAuthor() {
+        User user = UserView.getUser();
+        if (user == null) {
+            throw new RestException(BennuRestError.UNAUTHORIZED);
+        } else {
+            return user;
+        }
+    }
 
-	protected String getHost() {
-		return request.getServerName();
-	}
+    protected <T extends DomainObject> URI getURIFor(T domainObject, String relativePath) {
+        try {
+            return new URI("http", getHost(), relativePath + "/" + domainObject.getExternalId(), null);
+        } catch (URISyntaxException e) {
+            throw new RestException(BennuRestError.CANNOT_CREATE_ENTITY);
+        }
+    }
 
-	protected String serializeFromExternalId(String externalId) {
-		return adapter.serialize(readDomainObject(externalId));
-	}
+    protected String getHost() {
+        return request.getServerName();
+    }
 
-	@Override
-	public final String serialize(Object object) {
-		return adapter.serialize(object);
-	}
+    protected String serializeFromExternalId(String externalId) {
+        return adapter.serialize(readDomainObject(externalId));
+    }
 
-	@Override
-	public final String serialize(Object object, String collectionKey) {
-		return adapter.serialize(object, collectionKey);
-	}
+    @Override
+    public final String serialize(Object object) {
+        return adapter.serialize(object);
+    }
 
-	@Override
-	public <T> T deserialize(String jsonString, Class<T> type, String externalId) {
-		return adapter.deserialize(jsonString, type, externalId);
-	}
+    @Override
+    public final String serialize(Object object, String collectionKey) {
+        return adapter.serialize(object, collectionKey);
+    }
 
-	@Override
-	public <T> T deserialize(String jsonString, Class<T> type) {
-		return adapter.deserialize(jsonString, type);
-	}
+    @Override
+    public <T> T deserialize(String jsonString, Class<T> type, String externalId) {
+        return adapter.deserialize(jsonString, type, externalId);
+    }
 
-	@Override
-	public void updateObject(Object object, String jsonString, String externalId) {
-		adapter.updateObject(object, jsonString, externalId);
-	}
+    @Override
+    public <T> T deserialize(String jsonString, Class<T> type) {
+        return adapter.deserialize(jsonString, type);
+    }
 
-	public void updateObject(User user, String jsonString, String externalId) {
-		adapter.updateObject(user, jsonString, externalId);
-	}
+    @Override
+    public void updateObject(Object object, String jsonString, String externalId) {
+        adapter.updateObject(object, jsonString, externalId);
+    }
+
+    public void updateObject(User user, String jsonString, String externalId) {
+        adapter.updateObject(user, jsonString, externalId);
+    }
 
 }

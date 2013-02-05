@@ -99,21 +99,21 @@ public class UnionGroup extends UnionGroup_Base {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }
 
-	/**
-	 * Get or create instance of a {@link UnionGroup} between the requested children.
-	 * 
-	 * @param children
-	 *            the groups to make a {@link UnionGroup} on.
-	 * @return {@link UnionGroup} instance
-	 */
-	@Service
-	public static UnionGroup getInstance(final Set<PersistentGroup> children) {
-		UnionGroup group = select(UnionGroup.class, new Predicate<UnionGroup>() {
-			@Override
-			public boolean apply(@Nullable UnionGroup input) {
-				return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
-			}
-		});
-		return group != null ? group : new UnionGroup(children);
-	}
+    /**
+     * Get or create instance of a {@link UnionGroup} between the requested children.
+     * 
+     * @param children
+     *            the groups to make a {@link UnionGroup} on.
+     * @return {@link UnionGroup} instance
+     */
+    @Service
+    public static UnionGroup getInstance(final Set<PersistentGroup> children) {
+        UnionGroup group = select(UnionGroup.class, new Predicate<UnionGroup>() {
+            @Override
+            public boolean apply(@Nullable UnionGroup input) {
+                return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
+            }
+        });
+        return group != null ? group : new UnionGroup(children);
+    }
 }

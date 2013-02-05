@@ -11,10 +11,10 @@ import com.google.gson.JsonSerializer;
 
 public class DateTimeSerializer implements JsonSerializer<DateTime> {
 
-	@Override
-	public JsonElement serialize(DateTime dateTime, Type type, JsonSerializationContext context) {
-		JsonPrimitive jsonPrimite = new JsonPrimitive(dateTime.toString());
-		return jsonPrimite;
-	}
+    @Override
+    public JsonElement serialize(DateTime dateTime, Type type, JsonSerializationContext context) {
+        JsonPrimitive jsonPrimite = new JsonPrimitive(dateTime.toString());
+        return jsonPrimite;
+    }
 
 }

@@ -19,28 +19,28 @@ import pt.ist.bennu.core.domain.User;
 @Path("/login")
 public class LoginResource extends AbstractResource {
 
-	@GET
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getLoginStatus() {
-		User author = verifyAndGetRequestAuthor();
-		return Response.ok().entity(serialize(author)).build();
-	}
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response getLoginStatus() {
+        User author = verifyAndGetRequestAuthor();
+        return Response.ok().entity(serialize(author)).build();
+    }
 
-	@POST
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response login(@Context UriInfo uriInfo, @FormParam("username") String username, @FormParam("password") String password)
-			throws URISyntaxException {
-		if (!isCasEnabled()) {
-			User authenticatedUser = login(username, password, false);
-			if (authenticatedUser == null) {
-				throw new RestException(BennuRestError.UNAUTHORIZED);
-			} else {
-				return Response.seeOther(uriInfo.getBaseUriBuilder().replacePath("").build()).build();
-			}
-		} else {
-			throw new RestException(BennuRestError.UNAUTHORIZED);
-		}
+    @POST
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response login(@Context UriInfo uriInfo, @FormParam("username") String username, @FormParam("password") String password)
+            throws URISyntaxException {
+        if (!isCasEnabled()) {
+            User authenticatedUser = login(username, password, false);
+            if (authenticatedUser == null) {
+                throw new RestException(BennuRestError.UNAUTHORIZED);
+            } else {
+                return Response.seeOther(uriInfo.getBaseUriBuilder().replacePath("").build()).build();
+            }
+        } else {
+            throw new RestException(BennuRestError.UNAUTHORIZED);
+        }
 
-	}
+    }
 
 }

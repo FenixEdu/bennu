@@ -114,21 +114,21 @@ public class IntersectionGroup extends IntersectionGroup_Base {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }
 
-	/**
-	 * Get or create instance of a {@link IntersectionGroup} between the requested children.
-	 * 
-	 * @param children
-	 *            the groups to make a {@link IntersectionGroup} on.
-	 * @return singleton {@link IntersectionGroup} instance
-	 */
-	@Service
-	public static IntersectionGroup getInstance(final Set<PersistentGroup> children) {
-		IntersectionGroup group = select(IntersectionGroup.class, new Predicate<IntersectionGroup>() {
-			@Override
-			public boolean apply(@Nullable IntersectionGroup input) {
-				return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
-			}
-		});
-		return group != null ? group : new IntersectionGroup(children);
-	}
+    /**
+     * Get or create instance of a {@link IntersectionGroup} between the requested children.
+     * 
+     * @param children
+     *            the groups to make a {@link IntersectionGroup} on.
+     * @return singleton {@link IntersectionGroup} instance
+     */
+    @Service
+    public static IntersectionGroup getInstance(final Set<PersistentGroup> children) {
+        IntersectionGroup group = select(IntersectionGroup.class, new Predicate<IntersectionGroup>() {
+            @Override
+            public boolean apply(@Nullable IntersectionGroup input) {
+                return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
+            }
+        });
+        return group != null ? group : new IntersectionGroup(children);
+    }
 }

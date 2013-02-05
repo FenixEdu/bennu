@@ -6,23 +6,23 @@ import com.google.gson.JsonObject;
 
 public class RestException extends WebApplicationException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final RestError error;
+    private final RestError error;
 
-	public RestException(RestError error) {
-		this.error = error;
-	}
+    public RestException(RestError error) {
+        this.error = error;
+    }
 
-	public RestError getError() {
-		return error;
-	}
+    public RestError getError() {
+        return error;
+    }
 
-	public final String asJsonString() {
-		JsonObject jsonObject = new JsonObject();
-		jsonObject.addProperty("internalErrorCode", error.getInternalErrorCode());
-		jsonObject.addProperty("message", error.getMessage());
-		return jsonObject.toString();
-	}
+    public final String asJsonString() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("internalErrorCode", error.getInternalErrorCode());
+        jsonObject.addProperty("message", error.getMessage());
+        return jsonObject.toString();
+    }
 
 }

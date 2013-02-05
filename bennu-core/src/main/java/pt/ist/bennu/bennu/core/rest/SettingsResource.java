@@ -9,10 +9,10 @@ import javax.ws.rs.core.Response;
 @Path("/settings")
 public class SettingsResource extends AbstractResource {
 
-	@GET
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getSettings() {
-		return Response.ok().entity(serialize(getCasConfigContext())).build();
-	}
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response getSettings() {
+        return Response.ok().entity(serialize(getCasConfigContext())).build();
+    }
 
 }

@@ -13,10 +13,10 @@ import com.sun.jersey.spi.resource.Singleton;
 @Singleton
 public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 
-	@Override
-	public Response toResponse(NotFoundException exception) {
-		return Response.status(Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
-				.entity(BennuRestError.RESOURCE_NOT_FOUND.asJsonString()).build();
-	}
+    @Override
+    public Response toResponse(NotFoundException exception) {
+        return Response.status(Status.NOT_FOUND).type(MediaType.APPLICATION_JSON)
+                .entity(BennuRestError.RESOURCE_NOT_FOUND.asJsonString()).build();
+    }
 
 }

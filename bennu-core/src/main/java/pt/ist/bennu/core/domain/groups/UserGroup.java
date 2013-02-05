@@ -39,92 +39,92 @@ import com.google.common.collect.Sets;
  * @see PersistentGroup
  */
 public class UserGroup extends UserGroup_Base {
-	protected UserGroup(Set<User> users) {
-		super();
-		getMemberSet().addAll(users);
-	}
+    protected UserGroup(Set<User> users) {
+        super();
+        getMemberSet().addAll(users);
+    }
 
-	@Override
-	public String getPresentationName() {
-		Iterable<String> usernames = Iterables.transform(getMemberSet(), new Function<User, String>() {
-			@Override
-			public String apply(User user) {
-				return user.getUsername();
-			}
-		});
+    @Override
+    public String getPresentationName() {
+        Iterable<String> usernames = Iterables.transform(getMemberSet(), new Function<User, String>() {
+            @Override
+            public String apply(User user) {
+                return user.getUsername();
+            }
+        });
 
-		return Joiner.on(", ").join(usernames);
-	}
+        return Joiner.on(", ").join(usernames);
+    }
 
-	@Override
-	public String expression() {
-		Iterable<String> usernames = Iterables.transform(getMemberSet(), new Function<User, String>() {
-			@Override
-			public String apply(User user) {
-				return user.getUsername();
-			}
-		});
+    @Override
+    public String expression() {
+        Iterable<String> usernames = Iterables.transform(getMemberSet(), new Function<User, String>() {
+            @Override
+            public String apply(User user) {
+                return user.getUsername();
+            }
+        });
 
-		return "P(" + Joiner.on(", ").join(usernames) + ")";
-	}
+        return "P(" + Joiner.on(", ").join(usernames) + ")";
+    }
 
-	@Override
-	public Set<User> getMembers() {
-		return getMemberSet();
-	}
+    @Override
+    public Set<User> getMembers() {
+        return getMemberSet();
+    }
 
-	@Override
-	public boolean isMember(User user) {
-		return getMemberSet().contains(user);
-	}
+    @Override
+    public boolean isMember(User user) {
+        return getMemberSet().contains(user);
+    }
 
-	@Override
-	public Set<User> getMembers(DateTime when) {
-		return getMembers();
-	}
+    @Override
+    public Set<User> getMembers(DateTime when) {
+        return getMembers();
+    }
 
-	@Override
-	public boolean isMember(User user, DateTime when) {
-		return isMember(user);
-	}
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        return isMember(user);
+    }
 
-	@Override
-	public UserGroup grant(User user) {
-		Set<User> users = new HashSet<>(getMemberSet());
-		users.add(user);
-		return UserGroup.getInstance(users);
-	}
+    @Override
+    public UserGroup grant(User user) {
+        Set<User> users = new HashSet<>(getMemberSet());
+        users.add(user);
+        return UserGroup.getInstance(users);
+    }
 
-	@Override
-	public UserGroup revoke(User user) {
-		Set<User> users = new HashSet<>(getMemberSet());
-		users.remove(user);
-		return UserGroup.getInstance(users);
-	}
+    @Override
+    public UserGroup revoke(User user) {
+        Set<User> users = new HashSet<>(getMemberSet());
+        users.remove(user);
+        return UserGroup.getInstance(users);
+    }
 
-	/**
-	 * @see #getInstance(Set)
-	 */
-	@Service
-	public static UserGroup getInstance(User... users) {
-		return getInstance(new HashSet<>(Arrays.asList(users)));
-	}
+    /**
+     * @see #getInstance(Set)
+     */
+    @Service
+    public static UserGroup getInstance(User... users) {
+        return getInstance(new HashSet<>(Arrays.asList(users)));
+    }
 
-	/**
-	 * Get or create instance of a {@link UserGroup} for the requested users
-	 * 
-	 * @param users
-	 *            the users to be part of the group
-	 * @return {@link UserGroup} instance
-	 */
-	@Service
-	public static UserGroup getInstance(final Set<User> users) {
-		UserGroup group = select(UserGroup.class, new Predicate<UserGroup>() {
-			@Override
-			public boolean apply(@Nullable UserGroup input) {
-				return Sets.symmetricDifference(input.getMemberSet(), users).isEmpty();
-			}
-		});
-		return group != null ? group : new UserGroup(users);
-	}
+    /**
+     * Get or create instance of a {@link UserGroup} for the requested users
+     * 
+     * @param users
+     *            the users to be part of the group
+     * @return {@link UserGroup} instance
+     */
+    @Service
+    public static UserGroup getInstance(final Set<User> users) {
+        UserGroup group = select(UserGroup.class, new Predicate<UserGroup>() {
+            @Override
+            public boolean apply(@Nullable UserGroup input) {
+                return Sets.symmetricDifference(input.getMemberSet(), users).isEmpty();
+            }
+        });
+        return group != null ? group : new UserGroup(users);
+    }
 }

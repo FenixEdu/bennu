@@ -124,21 +124,21 @@ public class DifferenceGroup extends DifferenceGroup_Base {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }
 
-	/**
-	 * Get or create instance of a {@link DifferenceGroup} between the requested children.
-	 * 
-	 * @param children
-	 *            the groups to make a {@link DifferenceGroup} on.
-	 * @return singleton {@link DifferenceGroup} instance
-	 */
-	@Service
-	public static DifferenceGroup getInstance(final Set<PersistentGroup> children) {
-		DifferenceGroup group = select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
-			@Override
-			public boolean apply(@Nullable DifferenceGroup input) {
-				return Iterables.elementsEqual(input.getChildrenSet(), children);
-			}
-		});
-		return group != null ? group : new DifferenceGroup(children);
-	}
+    /**
+     * Get or create instance of a {@link DifferenceGroup} between the requested children.
+     * 
+     * @param children
+     *            the groups to make a {@link DifferenceGroup} on.
+     * @return singleton {@link DifferenceGroup} instance
+     */
+    @Service
+    public static DifferenceGroup getInstance(final Set<PersistentGroup> children) {
+        DifferenceGroup group = select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
+            @Override
+            public boolean apply(@Nullable DifferenceGroup input) {
+                return Iterables.elementsEqual(input.getChildrenSet(), children);
+            }
+        });
+        return group != null ? group : new DifferenceGroup(children);
+    }
 }

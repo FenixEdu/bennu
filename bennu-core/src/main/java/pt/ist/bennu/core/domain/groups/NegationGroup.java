@@ -80,21 +80,21 @@ public class NegationGroup extends NegationGroup_Base {
         return getNegated();
     }
 
-	/**
-	 * Get or create singleton instance of {@link NegationGroup}
-	 * 
-	 * @param persistentGroup
-	 *            the group to inverse
-	 * @return singleton {@link NegationGroup} instance
-	 */
-	@Service
-	public static NegationGroup getInstance(final PersistentGroup persistentGroup) {
-		NegationGroup group = select(NegationGroup.class, new Predicate<NegationGroup>() {
-			@Override
-			public boolean apply(@Nullable NegationGroup input) {
-				return input.getNegated().equals(persistentGroup);
-			}
-		});
-		return group != null ? group : new NegationGroup(persistentGroup);
-	}
+    /**
+     * Get or create singleton instance of {@link NegationGroup}
+     * 
+     * @param persistentGroup
+     *            the group to inverse
+     * @return singleton {@link NegationGroup} instance
+     */
+    @Service
+    public static NegationGroup getInstance(final PersistentGroup persistentGroup) {
+        NegationGroup group = select(NegationGroup.class, new Predicate<NegationGroup>() {
+            @Override
+            public boolean apply(@Nullable NegationGroup input) {
+                return input.getNegated().equals(persistentGroup);
+            }
+        });
+        return group != null ? group : new NegationGroup(persistentGroup);
+    }
 }

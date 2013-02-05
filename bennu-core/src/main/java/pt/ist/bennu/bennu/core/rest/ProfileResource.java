@@ -11,10 +11,10 @@ import pt.ist.bennu.core.domain.User;
 @Path("/profile")
 public class ProfileResource extends AbstractResource {
 
-	@GET
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getProfile() {
-		User author = verifyAndGetRequestAuthor();
-		return Response.ok().entity(serialize(author)).build();
-	}
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response getProfile() {
+        User author = verifyAndGetRequestAuthor();
+        return Response.ok().entity(serialize(author)).build();
+    }
 }

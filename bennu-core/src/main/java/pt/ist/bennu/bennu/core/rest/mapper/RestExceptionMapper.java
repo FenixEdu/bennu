@@ -11,9 +11,9 @@ import com.sun.jersey.spi.resource.Singleton;
 @Provider
 public class RestExceptionMapper implements ExceptionMapper<RestException> {
 
-	@Override
-	public Response toResponse(RestException exception) {
-		return Response.status(exception.getError().getStatus()).type(MediaType.APPLICATION_JSON)
-				.entity(exception.asJsonString()).build();
-	}
+    @Override
+    public Response toResponse(RestException exception) {
+        return Response.status(exception.getError().getStatus()).type(MediaType.APPLICATION_JSON)
+                .entity(exception.asJsonString()).build();
+    }
 }
