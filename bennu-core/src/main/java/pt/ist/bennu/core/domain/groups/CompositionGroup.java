@@ -34,41 +34,41 @@ import com.google.common.collect.Iterables;
  * @see PersistentGroup
  */
 public abstract class CompositionGroup extends CompositionGroup_Base {
-	protected CompositionGroup() {
-	}
+    protected CompositionGroup() {
+    }
 
-	protected void init(Set<PersistentGroup> children) {
-		getChildrenSet().addAll(children);
-	}
+    protected void init(Set<PersistentGroup> children) {
+        getChildrenSet().addAll(children);
+    }
 
-	private class PresentationNameTransformer implements Function<PersistentGroup, String> {
-		@Override
-		@Nullable
-		public String apply(@Nullable PersistentGroup input) {
-			return input.getPresentationName();
-		}
-	}
+    private class PresentationNameTransformer implements Function<PersistentGroup, String> {
+        @Override
+        @Nullable
+        public String apply(@Nullable PersistentGroup input) {
+            return input.getPresentationName();
+        }
+    }
 
-	@Override
-	public String getPresentationName() {
-		return "("
-				+ Joiner.on(" " + operator() + " ")
-						.join(Iterables.transform(getChildrenSet(), new PresentationNameTransformer())) + ")";
-	}
+    @Override
+    public String getPresentationName() {
+        return "("
+                + Joiner.on(" " + operator() + " ")
+                        .join(Iterables.transform(getChildrenSet(), new PresentationNameTransformer())) + ")";
+    }
 
-	private class ExpressionTransformer implements Function<PersistentGroup, String> {
-		@Override
-		@Nullable
-		public String apply(@Nullable PersistentGroup input) {
-			return input.expression();
-		}
-	}
+    private class ExpressionTransformer implements Function<PersistentGroup, String> {
+        @Override
+        @Nullable
+        public String apply(@Nullable PersistentGroup input) {
+            return input.expression();
+        }
+    }
 
-	@Override
-	public String expression() {
-		return "(" + Joiner.on(" " + operator() + " ").join(Iterables.transform(getChildrenSet(), new ExpressionTransformer()))
-				+ ")";
-	}
+    @Override
+    public String expression() {
+        return "(" + Joiner.on(" " + operator() + " ").join(Iterables.transform(getChildrenSet(), new ExpressionTransformer()))
+                + ")";
+    }
 
-	protected abstract String operator();
+    protected abstract String operator();
 }

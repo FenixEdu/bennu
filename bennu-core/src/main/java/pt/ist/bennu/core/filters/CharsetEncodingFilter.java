@@ -32,30 +32,30 @@ import javax.servlet.ServletResponse;
 
 public class CharsetEncodingFilter implements Filter {
 
-	private static String defaultCharset = Charset.defaultCharset().name();
+    private static String defaultCharset = Charset.defaultCharset().name();
 
-	@Override
-	public void init(final FilterConfig config) throws ServletException {
-		final String defaultCharset = config.getInitParameter("defaultCharset");
-		if (defaultCharset != null && !defaultCharset.isEmpty() && Charset.forName(defaultCharset) != null) {
-			CharsetEncodingFilter.defaultCharset = defaultCharset;
-		}
-	}
+    @Override
+    public void init(final FilterConfig config) throws ServletException {
+        final String defaultCharset = config.getInitParameter("defaultCharset");
+        if (defaultCharset != null && !defaultCharset.isEmpty() && Charset.forName(defaultCharset) != null) {
+            CharsetEncodingFilter.defaultCharset = defaultCharset;
+        }
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException {
-		if (request.getCharacterEncoding() == null) {
-			request.setCharacterEncoding(defaultCharset);
-		}
-		if (response.getCharacterEncoding() == null) {
-			response.setCharacterEncoding(defaultCharset);
-		}
-		chain.doFilter(request, response);
-	}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+            ServletException {
+        if (request.getCharacterEncoding() == null) {
+            request.setCharacterEncoding(defaultCharset);
+        }
+        if (response.getCharacterEncoding() == null) {
+            response.setCharacterEncoding(defaultCharset);
+        }
+        chain.doFilter(request, response);
+    }
 
 }

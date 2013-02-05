@@ -24,8 +24,8 @@ import pt.ist.bennu.core.domain.groups.NobodyGroup;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
 class Nobody extends Group {
-	@Override
-	public PersistentGroup group() {
-		return NobodyGroup.getInstance();
-	}
+    @Override
+    public PersistentGroup group() {
+        return NobodyGroup.getInstance();
+    }
 }

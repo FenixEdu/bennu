@@ -35,53 +35,53 @@ import pt.ist.bennu.service.Service;
  * @see PersistentGroup
  */
 public class NobodyGroup extends NobodyGroup_Base {
-	protected NobodyGroup() {
-		super();
-	}
+    protected NobodyGroup() {
+        super();
+    }
 
-	@Override
-	public String getPresentationName() {
-		return BundleUtil.getString("resources.BennuResources", "label.bennu.group.nobody");
-	}
+    @Override
+    public String getPresentationName() {
+        return BundleUtil.getString("resources.BennuResources", "label.bennu.group.nobody");
+    }
 
-	@Override
-	public String expression() {
-		return "nobody";
-	}
+    @Override
+    public String expression() {
+        return "nobody";
+    }
 
-	@Override
-	public Set<User> getMembers() {
-		return Collections.emptySet();
-	}
+    @Override
+    public Set<User> getMembers() {
+        return Collections.emptySet();
+    }
 
-	@Override
-	public boolean isMember(final User user) {
-		return false;
-	}
+    @Override
+    public boolean isMember(final User user) {
+        return false;
+    }
 
-	@Override
-	public Set<User> getMembers(DateTime when) {
-		return getMembers();
-	}
+    @Override
+    public Set<User> getMembers(DateTime when) {
+        return getMembers();
+    }
 
-	@Override
-	public boolean isMember(User user, DateTime when) {
-		return isMember(user);
-	}
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        return isMember(user);
+    }
 
-	@Override
-	public PersistentGroup not() {
-		return AnyoneGroup.getInstance();
-	}
+    @Override
+    public PersistentGroup not() {
+        return AnyoneGroup.getInstance();
+    }
 
-	/**
-	 * Get or create singleton instance of {@link NobodyGroup}
-	 * 
-	 * @return singleton {@link NobodyGroup} instance
-	 */
-	@Service
-	public static NobodyGroup getInstance() {
-		NobodyGroup group = select(NobodyGroup.class);
-		return group == null ? new NobodyGroup() : group;
-	}
+    /**
+     * Get or create singleton instance of {@link NobodyGroup}
+     * 
+     * @return singleton {@link NobodyGroup} instance
+     */
+    @Service
+    public static NobodyGroup getInstance() {
+        NobodyGroup group = select(NobodyGroup.class);
+        return group == null ? new NobodyGroup() : group;
+    }
 }

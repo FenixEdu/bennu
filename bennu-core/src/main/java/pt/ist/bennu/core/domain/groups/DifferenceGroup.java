@@ -41,107 +41,107 @@ import com.google.common.collect.Iterables;
  * @see PersistentGroup
  */
 public class DifferenceGroup extends DifferenceGroup_Base {
-	protected DifferenceGroup(Set<PersistentGroup> children) {
-		super();
-		init(children);
-	}
+    protected DifferenceGroup(Set<PersistentGroup> children) {
+        super();
+        init(children);
+    }
 
-	@Override
-	protected String operator() {
-		return "-";
-	}
+    @Override
+    protected String operator() {
+        return "-";
+    }
 
-	@Override
-	public Set<User> getMembers() {
-		final Set<User> users = new HashSet<>();
-		Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
-		if (iterator.hasNext()) {
-			users.addAll(iterator.next().getMembers());
-			while (iterator.hasNext()) {
-				users.removeAll(iterator.next().getMembers());
-			}
-		}
-		return users;
-	}
+    @Override
+    public Set<User> getMembers() {
+        final Set<User> users = new HashSet<>();
+        Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
+        if (iterator.hasNext()) {
+            users.addAll(iterator.next().getMembers());
+            while (iterator.hasNext()) {
+                users.removeAll(iterator.next().getMembers());
+            }
+        }
+        return users;
+    }
 
-	@Override
-	public boolean isMember(final User user) {
-		Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
-		if (iterator.hasNext()) {
-			if (!iterator.next().isMember(user)) {
-				return false;
-			}
-		} else {
-			return false;
-		}
-		while (iterator.hasNext()) {
-			if (iterator.next().isMember(user)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean isMember(final User user) {
+        Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
+        if (iterator.hasNext()) {
+            if (!iterator.next().isMember(user)) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        while (iterator.hasNext()) {
+            if (iterator.next().isMember(user)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	@Override
-	public Set<User> getMembers(DateTime when) {
-		final Set<User> users = new HashSet<>();
-		Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
-		if (iterator.hasNext()) {
-			users.addAll(iterator.next().getMembers(when));
-			while (iterator.hasNext()) {
-				users.removeAll(iterator.next().getMembers());
-			}
-		}
-		return users;
-	}
+    @Override
+    public Set<User> getMembers(DateTime when) {
+        final Set<User> users = new HashSet<>();
+        Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
+        if (iterator.hasNext()) {
+            users.addAll(iterator.next().getMembers(when));
+            while (iterator.hasNext()) {
+                users.removeAll(iterator.next().getMembers());
+            }
+        }
+        return users;
+    }
 
-	@Override
-	public boolean isMember(User user, DateTime when) {
-		Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
-		if (iterator.hasNext()) {
-			if (!iterator.next().isMember(user, when)) {
-				return false;
-			}
-		} else {
-			return false;
-		}
-		while (iterator.hasNext()) {
-			if (iterator.next().isMember(user, when)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
+        if (iterator.hasNext()) {
+            if (!iterator.next().isMember(user, when)) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        while (iterator.hasNext()) {
+            if (iterator.next().isMember(user, when)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	@Override
-	public PersistentGroup minus(PersistentGroup group) {
-		Set<PersistentGroup> children = new HashSet<>(getChildrenSet());
-		children.add(group);
-		return DifferenceGroup.getInstance(children);
-	}
+    @Override
+    public PersistentGroup minus(PersistentGroup group) {
+        Set<PersistentGroup> children = new HashSet<>(getChildrenSet());
+        children.add(group);
+        return DifferenceGroup.getInstance(children);
+    }
 
-	/**
-	 * @see #getInstance(Set)
-	 */
-	@Service
-	public static DifferenceGroup getInstance(final PersistentGroup... children) {
-		return getInstance(new HashSet<>(Arrays.asList(children)));
-	}
+    /**
+     * @see #getInstance(Set)
+     */
+    @Service
+    public static DifferenceGroup getInstance(final PersistentGroup... children) {
+        return getInstance(new HashSet<>(Arrays.asList(children)));
+    }
 
-	/**
-	 * Get or create instance of a {@link DifferenceGroup} between the requested children.
-	 * 
-	 * @param children the groups to make a {@link DifferenceGroup} on.
-	 * @return singleton {@link DifferenceGroup} instance
-	 */
-	@Service
-	public static DifferenceGroup getInstance(final Set<PersistentGroup> children) {
-		DifferenceGroup group = select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
-			@Override
-			public boolean apply(@Nullable DifferenceGroup input) {
-				return Iterables.elementsEqual(input.getChildrenSet(), children);
-			}
-		});
-		return group != null ? group : new DifferenceGroup(children);
-	}
+    /**
+     * Get or create instance of a {@link DifferenceGroup} between the requested children.
+     * 
+     * @param children the groups to make a {@link DifferenceGroup} on.
+     * @return singleton {@link DifferenceGroup} instance
+     */
+    @Service
+    public static DifferenceGroup getInstance(final Set<PersistentGroup> children) {
+        DifferenceGroup group = select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
+            @Override
+            public boolean apply(@Nullable DifferenceGroup input) {
+                return Iterables.elementsEqual(input.getChildrenSet(), children);
+            }
+        });
+        return group != null ? group : new DifferenceGroup(children);
+    }
 }

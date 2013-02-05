@@ -15,20 +15,20 @@ import com.google.gson.JsonArray;
 
 @Path("/apps")
 public class AppServer {
-	private static Set<ApplicationInfo> apps = new HashSet<>();
+    private static Set<ApplicationInfo> apps = new HashSet<>();
 
-	static void registerApp(ApplicationInfo application) {
-		apps.add(application);
-	}
+    static void registerApp(ApplicationInfo application) {
+        apps.add(application);
+    }
 
-	@GET
-	@Path("list")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listApps() {
-		JsonArray array = new JsonArray();
-		for (ApplicationInfo application : apps) {
-			array.add(application.json());
-		}
-		return Response.ok(array.toString()).build();
-	}
+    @GET
+    @Path("list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listApps() {
+        JsonArray array = new JsonArray();
+        for (ApplicationInfo application : apps) {
+            array.add(application.json());
+        }
+        return Response.ok(array.toString()).build();
+    }
 }

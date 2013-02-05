@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ METHOD })
 public @interface CustomGroupArgument {
-	int index() default 1;
+    int index() default 1;
 
-	boolean multiple() default false;
+    boolean multiple() default false;
 }

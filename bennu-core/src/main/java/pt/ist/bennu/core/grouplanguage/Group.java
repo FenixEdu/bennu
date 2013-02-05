@@ -26,5 +26,5 @@ import pt.ist.bennu.core.domain.groups.GroupException;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
 abstract class Group implements Serializable {
-	public abstract PersistentGroup group() throws GroupException;
+    public abstract PersistentGroup group() throws GroupException;
 }

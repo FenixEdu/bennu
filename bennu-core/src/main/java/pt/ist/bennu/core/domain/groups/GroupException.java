@@ -26,11 +26,11 @@ import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
  * Group handling exceptions
  */
 public class GroupException extends BennuCoreDomainException {
-	protected GroupException(Throwable cause, String key, String... args) {
-		super(cause, key, args);
-	}
+    protected GroupException(Throwable cause, String key, String... args) {
+        super(cause, key, args);
+    }
 
-	public static GroupException groupParsingError(Throwable cause) {
-		return new GroupException(cause, "error.bennu.core.groups.parse");
-	}
+    public static GroupException groupParsingError(Throwable cause) {
+        return new GroupException(cause, "error.bennu.core.groups.parse");
+    }
 }

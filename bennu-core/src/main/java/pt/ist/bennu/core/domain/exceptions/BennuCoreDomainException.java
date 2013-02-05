@@ -24,21 +24,21 @@ package pt.ist.bennu.core.domain.exceptions;
  * Factory class for bennu-core expected errors.
  */
 public class BennuCoreDomainException extends DomainException {
-	protected static final String BUNDLE = "resources.BennuResources";
+    protected static final String BUNDLE = "resources.BennuResources";
 
-	protected BennuCoreDomainException(String key, String... args) {
-		super(BUNDLE, key, args);
-	}
+    protected BennuCoreDomainException(String key, String... args) {
+        super(BUNDLE, key, args);
+    }
 
-	protected BennuCoreDomainException(Throwable cause, String key, String... args) {
-		super(cause, BUNDLE, key, args);
-	}
+    protected BennuCoreDomainException(Throwable cause, String key, String... args) {
+        super(cause, BUNDLE, key, args);
+    }
 
-	public static BennuCoreDomainException authenticationFailed() {
-		return new BennuCoreDomainException("error.bennu.core.authentication.failed");
-	}
+    public static BennuCoreDomainException authenticationFailed() {
+        return new BennuCoreDomainException("error.bennu.core.authentication.failed");
+    }
 
-	public static BennuCoreDomainException badOldPassword() {
-		return new BennuCoreDomainException("error.bennu.core.bad.old.password");
-	}
+    public static BennuCoreDomainException badOldPassword() {
+        return new BennuCoreDomainException("error.bennu.core.bad.old.password");
+    }
 }

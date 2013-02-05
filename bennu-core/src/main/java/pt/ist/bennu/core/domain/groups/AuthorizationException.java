@@ -27,19 +27,19 @@ import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
  * Group access authorization exception.
  */
 public class AuthorizationException extends BennuCoreDomainException {
-	private AuthorizationException(String key, String... args) {
-		super(key, args);
-	}
+    private AuthorizationException(String key, String... args) {
+        super(key, args);
+    }
 
-	private AuthorizationException(Throwable cause, String key, String... args) {
-		super(cause, key, args);
-	}
+    private AuthorizationException(Throwable cause, String key, String... args) {
+        super(cause, key, args);
+    }
 
-	public static AuthorizationException unauthorized(PersistentGroup group, User user) {
-		return new AuthorizationException("error.bennu.group.unauthorized", user.getUsername(), group.getPresentationName());
-	}
+    public static AuthorizationException unauthorized(PersistentGroup group, User user) {
+        return new AuthorizationException("error.bennu.group.unauthorized", user.getUsername(), group.getPresentationName());
+    }
 
-	public static AuthorizationException badAccessGroupConfiguration() {
-		return new AuthorizationException("error.bennu.group.badaccessgroupconfiguration");
-	}
+    public static AuthorizationException badAccessGroupConfiguration() {
+        return new AuthorizationException("error.bennu.group.badaccessgroupconfiguration");
+    }
 }

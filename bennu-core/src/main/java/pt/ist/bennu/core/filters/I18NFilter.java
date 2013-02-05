@@ -40,42 +40,42 @@ import pt.ist.bennu.core.util.Language;
  * @author Luis Cruz
  */
 public class I18NFilter implements Filter {
-	public static final String LOCALE_KEY = I18NFilter.class.getName() + "_LOCAL_KEY";
+    public static final String LOCALE_KEY = I18NFilter.class.getName() + "_LOCAL_KEY";
 
-	FilterConfig config;
+    FilterConfig config;
 
-	ServletContext servletContext;
+    ServletContext servletContext;
 
-	@Override
-	public void init(final FilterConfig config) throws ServletException {
-		this.config = config;
-		this.servletContext = config.getServletContext();
-	}
+    @Override
+    public void init(final FilterConfig config) throws ServletException {
+        this.config = config;
+        this.servletContext = config.getServletContext();
+    }
 
-	@Override
-	public void destroy() {
-		this.servletContext = null;
-		this.config = null;
-	}
+    @Override
+    public void destroy() {
+        this.servletContext = null;
+        this.config = null;
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException {
-		String requestLocale = request.getParameter("locale");
-		Locale locale;
-		if (requestLocale != null) {
-			String[] localeParts = requestLocale.split("_");
-			locale = localeParts.length > 1 ? new Locale(localeParts[0], localeParts[1]) : new Locale(requestLocale);
-			((HttpServletRequest) request).getSession(true).setAttribute(LOCALE_KEY, locale);
-		} else {
-			HttpSession session = ((HttpServletRequest) request).getSession(false);
-			if (session != null && session.getAttribute(LOCALE_KEY) != null) {
-				locale = (Locale) session.getAttribute(LOCALE_KEY);
-			} else {
-				locale = Language.getDefaultLocale();
-			}
-		}
-		Language.setLocale(locale);
-		chain.doFilter(request, response);
-	}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+            ServletException {
+        String requestLocale = request.getParameter("locale");
+        Locale locale;
+        if (requestLocale != null) {
+            String[] localeParts = requestLocale.split("_");
+            locale = localeParts.length > 1 ? new Locale(localeParts[0], localeParts[1]) : new Locale(requestLocale);
+            ((HttpServletRequest) request).getSession(true).setAttribute(LOCALE_KEY, locale);
+        } else {
+            HttpSession session = ((HttpServletRequest) request).getSession(false);
+            if (session != null && session.getAttribute(LOCALE_KEY) != null) {
+                locale = (Locale) session.getAttribute(LOCALE_KEY);
+            } else {
+                locale = Language.getDefaultLocale();
+            }
+        }
+        Language.setLocale(locale);
+        chain.doFilter(request, response);
+    }
 }

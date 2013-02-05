@@ -36,32 +36,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ProfilingFilter implements Filter {
-	private final Logger logger = LoggerFactory.getLogger(ProfilingFilter.class);
+    private final Logger logger = LoggerFactory.getLogger(ProfilingFilter.class);
 
-	@Override
-	public void init(final FilterConfig config) throws ServletException {
-	}
+    @Override
+    public void init(final FilterConfig config) throws ServletException {
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException {
-		if (logger.isInfoEnabled()) {
-			final long start = System.currentTimeMillis();
-			try {
-				chain.doFilter(request, response);
-			} finally {
-				log(((HttpServletRequest) request).getRequestURI(), new Duration(start, System.currentTimeMillis()));
-			}
-		} else {
-			chain.doFilter(request, response);
-		}
-	}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+            ServletException {
+        if (logger.isInfoEnabled()) {
+            final long start = System.currentTimeMillis();
+            try {
+                chain.doFilter(request, response);
+            } finally {
+                log(((HttpServletRequest) request).getRequestURI(), new Duration(start, System.currentTimeMillis()));
+            }
+        } else {
+            chain.doFilter(request, response);
+        }
+    }
 
-	private void log(String uri, Duration duration) {
-		logger.info(String.format("[%s] - %s", ISOPeriodFormat.standard().print(duration.toPeriod()), uri));
-	}
+    private void log(String uri, Duration duration) {
+        logger.info(String.format("[%s] - %s", ISOPeriodFormat.standard().print(duration.toPeriod()), uri));
+    }
 }

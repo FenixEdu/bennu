@@ -39,86 +39,86 @@ import pt.ist.bennu.core.util.TransactionalThread;
 import pt.ist.bennu.service.Service;
 
 public class Authenticate {
-	private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
+    private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
 
-	private static Set<AuthenticationListener> authenticationListeners;
+    private static Set<AuthenticationListener> authenticationListeners;
 
-	public static User login(HttpSession session, String username, String password, boolean checkPassword) {
-		SessionUserWrapper user = internalLogin(username, password, checkPassword);
-		session.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, user);
+    public static User login(HttpSession session, String username, String password, boolean checkPassword) {
+        SessionUserWrapper user = internalLogin(username, password, checkPassword);
+        session.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, user);
 
-		fireLoginListeners(user.getUser());
-		logger.info("Logged in user: " + user.getUsername());
+        fireLoginListeners(user.getUser());
+        logger.info("Logged in user: " + user.getUsername());
 
-		return user.getUser();
-	}
+        return user.getUser();
+    }
 
-	@Service
-	private static SessionUserWrapper internalLogin(String username, String password, boolean checkPassword) {
-		User user = User.findByUsername(username);
-		if (checkPassword && ConfigurationManager.getBooleanProperty("check.login.password", true)) {
-			if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
-				throw BennuCoreDomainException.authenticationFailed();
-			}
-		}
-		if (user == null) {
-			user = new User(username);
-		}
+    @Service
+    private static SessionUserWrapper internalLogin(String username, String password, boolean checkPassword) {
+        User user = User.findByUsername(username);
+        if (checkPassword && ConfigurationManager.getBooleanProperty("check.login.password", true)) {
+            if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
+                throw BennuCoreDomainException.authenticationFailed();
+            }
+        }
+        if (user == null) {
+            user = new User(username);
+        }
 
-		SessionUserWrapper userWrapper = new SessionUserWrapper(user);
-		UserView.setSessionUserWrapper(userWrapper);
-		if (Bennu.getInstance().getUsersCount() == 1) {
-			DynamicGroup.getInstance("managers").grant(user);
-			logger.info("Bootstrapped #managers group to user: " + user.getUsername());
-		}
+        SessionUserWrapper userWrapper = new SessionUserWrapper(user);
+        UserView.setSessionUserWrapper(userWrapper);
+        if (Bennu.getInstance().getUsersCount() == 1) {
+            DynamicGroup.getInstance("managers").grant(user);
+            logger.info("Bootstrapped #managers group to user: " + user.getUsername());
+        }
 
-		return userWrapper;
-	}
+        return userWrapper;
+    }
 
-	public static void logout(HttpSession session) {
-		final SessionUserWrapper wrapper = (SessionUserWrapper) session.getAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE);
-		if (wrapper != null) {
-			internalLogout(wrapper.getUser());
-		}
-		UserView.setSessionUserWrapper(null);
-		session.invalidate();
-	}
+    public static void logout(HttpSession session) {
+        final SessionUserWrapper wrapper = (SessionUserWrapper) session.getAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE);
+        if (wrapper != null) {
+            internalLogout(wrapper.getUser());
+        }
+        UserView.setSessionUserWrapper(null);
+        session.invalidate();
+    }
 
-	@Service
-	private static void internalLogout(User user) {
-		user.setLastLogoutDateTime(new DateTime());
-	}
+    @Service
+    private static void internalLogout(User user) {
+        user.setLastLogoutDateTime(new DateTime());
+    }
 
-	public static void addAuthenticationListener(AuthenticationListener listener) {
-		if (authenticationListeners == null) {
-			authenticationListeners = new HashSet<>();
-		}
-		authenticationListeners.add(listener);
-	}
+    public static void addAuthenticationListener(AuthenticationListener listener) {
+        if (authenticationListeners == null) {
+            authenticationListeners = new HashSet<>();
+        }
+        authenticationListeners.add(listener);
+    }
 
-	public static void removeAuthenticationListener(AuthenticationListener listener) {
-		if (authenticationListeners != null) {
-			authenticationListeners.remove(listener);
-		}
-	}
+    public static void removeAuthenticationListener(AuthenticationListener listener) {
+        if (authenticationListeners != null) {
+            authenticationListeners.remove(listener);
+        }
+    }
 
-	private static void fireLoginListeners(final User user) {
-		final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-		if (authenticationListeners != null) {
-			for (final AuthenticationListener listener : authenticationListeners) {
-				final TransactionalThread thread = new TransactionalThread() {
-					@Override
-					public void transactionalRun() {
-						try {
-							VirtualHost.setVirtualHostForThread(virtualHost);
-							listener.afterLogin(user);
-						} finally {
-							VirtualHost.releaseVirtualHostFromThread();
-						}
-					}
-				};
-				thread.start();
-			}
-		}
-	}
+    private static void fireLoginListeners(final User user) {
+        final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+        if (authenticationListeners != null) {
+            for (final AuthenticationListener listener : authenticationListeners) {
+                final TransactionalThread thread = new TransactionalThread() {
+                    @Override
+                    public void transactionalRun() {
+                        try {
+                            VirtualHost.setVirtualHostForThread(virtualHost);
+                            listener.afterLogin(user);
+                        } finally {
+                            VirtualHost.releaseVirtualHostFromThread();
+                        }
+                    }
+                };
+                thread.start();
+            }
+        }
+    }
 }

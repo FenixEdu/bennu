@@ -23,7 +23,7 @@ package pt.ist.fenixframework;
 import pt.ist.bennu.core.util.ConfigurationManager;
 
 public class FenixFrameworkInitializer {
-	static {
-		FenixFramework.bootStrap(ConfigurationManager.getFenixFrameworkConfig());
-	}
+    static {
+        FenixFramework.bootStrap(ConfigurationManager.getFenixFrameworkConfig());
+    }
 }

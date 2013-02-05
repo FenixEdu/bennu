@@ -26,17 +26,17 @@ import pt.ist.bennu.core.domain.groups.CustomGroup;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
 class Custom extends Group {
-	private final String operator;
+    private final String operator;
 
-	private final List<String> args;
+    private final List<String> args;
 
-	public Custom(String operator, List<String> args) {
-		this.operator = operator;
-		this.args = args;
-	}
+    public Custom(String operator, List<String> args) {
+        this.operator = operator;
+        this.args = args;
+    }
 
-	@Override
-	public PersistentGroup group() {
-		return CustomGroup.parse(operator, args.toArray(new String[0]));
-	}
+    @Override
+    public PersistentGroup group() {
+        return CustomGroup.parse(operator, args.toArray(new String[0]));
+    }
 }

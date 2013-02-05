@@ -6,8 +6,8 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 
 public class BennuJerseyRestApplication extends PackagesResourceConfig {
 
-	public BennuJerseyRestApplication() {
-		super(ConfigurationManager.getRestRootClassPackages());
-	}
+    public BennuJerseyRestApplication() {
+        super(ConfigurationManager.getRestRootClassPackages());
+    }
 
 }

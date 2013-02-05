@@ -35,29 +35,29 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 public class CloseTransactionFilter implements Filter {
 
-	@Override
-	public void init(final FilterConfig config) throws ServletException {
-	}
+    @Override
+    public void init(final FilterConfig config) throws ServletException {
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException {
-		if (request instanceof HttpServletRequest) {
-			RequestInfo.setRequestURI(((HttpServletRequest) request).getRequestURI());
-		}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+            ServletException {
+        if (request instanceof HttpServletRequest) {
+            RequestInfo.setRequestURI(((HttpServletRequest) request).getRequestURI());
+        }
 
-		try {
-			Transaction.begin(true);
-			Transaction.currentFenixTransaction().setReadOnly();
-			chain.doFilter(request, response);
-		} finally {
-			Transaction.forceFinish();
-			RequestInfo.clear();
-		}
-	}
+        try {
+            Transaction.begin(true);
+            Transaction.currentFenixTransaction().setReadOnly();
+            chain.doFilter(request, response);
+        } finally {
+            Transaction.forceFinish();
+            RequestInfo.clear();
+        }
+    }
 
 }

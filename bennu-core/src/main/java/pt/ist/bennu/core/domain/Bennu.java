@@ -28,18 +28,18 @@ import pt.ist.fenixframework.FenixFramework;
  * @see VirtualHost
  */
 public class Bennu extends Bennu_Base {
-	public static Bennu getInstance() {
-		return FenixFramework.getRoot();
-	}
+    public static Bennu getInstance() {
+        return FenixFramework.getRoot();
+    }
 
-	public Bennu() {
-		super();
-		checkIfIsSingleton();
-	}
+    public Bennu() {
+        super();
+        checkIfIsSingleton();
+    }
 
-	private void checkIfIsSingleton() {
-		if (FenixFramework.getRoot() != null && FenixFramework.getRoot() != this) {
-			throw new Error("There can only be one! (instance of Bennu)");
-		}
-	}
+    private void checkIfIsSingleton() {
+        if (FenixFramework.getRoot() != null && FenixFramework.getRoot() != this) {
+            throw new Error("There can only be one! (instance of Bennu)");
+        }
+    }
 }

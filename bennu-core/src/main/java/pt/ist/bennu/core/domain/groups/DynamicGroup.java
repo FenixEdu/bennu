@@ -45,125 +45,125 @@ import com.google.common.base.Predicate;
  * @see PersistentGroup
  */
 public final class DynamicGroup extends DynamicGroup_Base {
-	protected DynamicGroup() {
-		super();
-	}
+    protected DynamicGroup() {
+        super();
+    }
 
-	protected DynamicGroup(String name, PersistentGroup group) {
-		this();
-		setName(name);
-		setCreated(new DateTime());
-		setCreator(UserView.getUser());
-		setGroup(group);
-	}
+    protected DynamicGroup(String name, PersistentGroup group) {
+        this();
+        setName(name);
+        setCreated(new DateTime());
+        setCreator(UserView.getUser());
+        setGroup(group);
+    }
 
-	@Override
-	public String getPresentationName() {
-		return getName() + ": (" + getGroup().getPresentationName() + ")";
-	}
+    @Override
+    public String getPresentationName() {
+        return getName() + ": (" + getGroup().getPresentationName() + ")";
+    }
 
-	@Override
-	public String expression() {
-		return "#" + getName();
-	}
+    @Override
+    public String expression() {
+        return "#" + getName();
+    }
 
-	@Override
-	public Set<User> getMembers() {
-		return getGroup().getMembers();
-	}
+    @Override
+    public Set<User> getMembers() {
+        return getGroup().getMembers();
+    }
 
-	@Override
-	public boolean isMember(User user) {
-		return getGroup().isMember(user);
-	}
+    @Override
+    public boolean isMember(User user) {
+        return getGroup().isMember(user);
+    }
 
-	@Override
-	public Set<User> getMembers(DateTime when) {
-		PersistentGroup group = getGroup(when);
-		return group != null ? group.getMembers() : Collections.<User> emptySet();
-	}
+    @Override
+    public Set<User> getMembers(DateTime when) {
+        PersistentGroup group = getGroup(when);
+        return group != null ? group.getMembers() : Collections.<User> emptySet();
+    }
 
-	@Override
-	public boolean isMember(User user, DateTime when) {
-		PersistentGroup group = getGroup(when);
-		return group != null ? group.isMember(user) : false;
-	}
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        PersistentGroup group = getGroup(when);
+        return group != null ? group.isMember(user) : false;
+    }
 
-	public PersistentGroup getGroup(DateTime when) {
-		if (when.isAfter(getCreated())) {
-			return getGroup();
-		}
-		if (hasPrevious()) {
-			return getPrevious().getGroup(when);
-		}
-		return null;
-	}
+    public PersistentGroup getGroup(DateTime when) {
+        if (when.isAfter(getCreated())) {
+            return getGroup();
+        }
+        if (hasPrevious()) {
+            return getPrevious().getGroup(when);
+        }
+        return null;
+    }
 
-	private void pushHistory() {
-		DynamicGroup old = new DynamicGroup();
-		old.removeHost();
-		old.setName(getName());
-		old.setCreated(getCreated());
-		old.setCreator(getCreator());
-		old.setGroup(getGroup());
-		old.setNext(this);
-		setCreated(new DateTime());
-		setCreator(UserView.getUser());
-	}
+    private void pushHistory() {
+        DynamicGroup old = new DynamicGroup();
+        old.removeHost();
+        old.setName(getName());
+        old.setCreated(getCreated());
+        old.setCreator(getCreator());
+        old.setGroup(getGroup());
+        old.setNext(this);
+        setCreated(new DateTime());
+        setCreator(UserView.getUser());
+    }
 
-	public DynamicGroup rename(String name) {
-		pushHistory();
-		setName(name);
-		return this;
-	}
+    public DynamicGroup rename(String name) {
+        pushHistory();
+        setName(name);
+        return this;
+    }
 
-	public DynamicGroup changeGroup(PersistentGroup group) {
-		pushHistory();
-		setGroup(group);
-		return this;
-	}
+    public DynamicGroup changeGroup(PersistentGroup group) {
+        pushHistory();
+        setGroup(group);
+        return this;
+    }
 
-	@Override
-	public PersistentGroup and(PersistentGroup group) {
-		return changeGroup(getGroup().and(group));
-	}
+    @Override
+    public PersistentGroup and(PersistentGroup group) {
+        return changeGroup(getGroup().and(group));
+    }
 
-	@Override
-	public PersistentGroup or(PersistentGroup group) {
-		return changeGroup(getGroup().or(group));
-	}
+    @Override
+    public PersistentGroup or(PersistentGroup group) {
+        return changeGroup(getGroup().or(group));
+    }
 
-	@Override
-	public PersistentGroup minus(PersistentGroup group) {
-		return changeGroup(getGroup().minus(group));
-	}
+    @Override
+    public PersistentGroup minus(PersistentGroup group) {
+        return changeGroup(getGroup().minus(group));
+    }
 
-	@Override
-	public PersistentGroup not() {
-		return changeGroup(getGroup().not());
-	}
+    @Override
+    public PersistentGroup not() {
+        return changeGroup(getGroup().not());
+    }
 
-	@Override
-	public PersistentGroup grant(User user) {
-		return changeGroup(getGroup().grant(user));
-	}
+    @Override
+    public PersistentGroup grant(User user) {
+        return changeGroup(getGroup().grant(user));
+    }
 
-	@Override
-	public PersistentGroup revoke(User user) {
-		return changeGroup(getGroup().revoke(user));
-	}
+    @Override
+    public PersistentGroup revoke(User user) {
+        return changeGroup(getGroup().revoke(user));
+    }
 
-	@Service
-	public static PersistentGroup getInstance(final String name) throws GroupException {
-		DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
-			@Override
-			public boolean apply(@Nullable DynamicGroup input) {
-				return input.getName().equals(name);
-			}
-		});
-		if (group != null) {
-			return group;
-		}
-		return new DynamicGroup(name, NobodyGroup.getInstance());
-	}
+    @Service
+    public static PersistentGroup getInstance(final String name) throws GroupException {
+        DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
+            @Override
+            public boolean apply(@Nullable DynamicGroup input) {
+                return input.getName().equals(name);
+            }
+        });
+        if (group != null) {
+            return group;
+        }
+        return new DynamicGroup(name, NobodyGroup.getInstance());
+    }
 }

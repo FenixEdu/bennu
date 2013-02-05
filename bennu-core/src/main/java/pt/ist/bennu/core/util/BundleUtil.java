@@ -30,31 +30,31 @@ import org.slf4j.LoggerFactory;
 import pt.ist.bennu.core.domain.VirtualHost;
 
 public class BundleUtil {
-	private static final Logger logger = LoggerFactory.getLogger(BundleUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(BundleUtil.class);
 
-	public static String getString(final String bundle, final String key, String... args) {
-		return getString(bundle, Language.getLocale(), key, args);
-	}
+    public static String getString(final String bundle, final String key, String... args) {
+        return getString(bundle, Language.getLocale(), key, args);
+    }
 
-	public static String getString(final String bundle, Locale locale, final String key, String... args) {
-		try {
-			String message = ResourceBundle.getBundle(bundle, locale).getString(key);
-			for (int i = 0; i < args.length; i++) {
-				message = message.replaceAll("\\{" + i + "\\}", args[i] == null ? "" : args[i]);
-			}
-			return message;
-		} catch (MissingResourceException e) {
-			logger.warn(e.getMessage());
-			return '!' + key + '!';
-		}
-	}
+    public static String getString(final String bundle, Locale locale, final String key, String... args) {
+        try {
+            String message = ResourceBundle.getBundle(bundle, locale).getString(key);
+            for (int i = 0; i < args.length; i++) {
+                message = message.replaceAll("\\{" + i + "\\}", args[i] == null ? "" : args[i]);
+            }
+            return message;
+        } catch (MissingResourceException e) {
+            logger.warn(e.getMessage());
+            return '!' + key + '!';
+        }
+    }
 
-	public static MultiLanguageString getMultilanguageString(final String bundle, final String key, String... args) {
-		MultiLanguageString mls = new MultiLanguageString();
-		for (Language language : VirtualHost.getVirtualHostForThread().getSupportedLanguagesSet()) {
-			String message = getString(bundle, new Locale(language.name()), key, args);
-			mls = mls.with(language, message);
-		}
-		return mls;
-	}
+    public static MultiLanguageString getMultilanguageString(final String bundle, final String key, String... args) {
+        MultiLanguageString mls = new MultiLanguageString();
+        for (Language language : VirtualHost.getVirtualHostForThread().getSupportedLanguagesSet()) {
+            String message = getString(bundle, new Locale(language.name()), key, args);
+            mls = mls.with(language, message);
+        }
+        return mls;
+    }
 }

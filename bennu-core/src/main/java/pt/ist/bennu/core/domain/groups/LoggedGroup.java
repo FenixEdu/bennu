@@ -36,53 +36,53 @@ import pt.ist.bennu.service.Service;
  * @see PersistentGroup
  */
 public class LoggedGroup extends LoggedGroup_Base {
-	protected LoggedGroup() {
-		super();
-	}
+    protected LoggedGroup() {
+        super();
+    }
 
-	@Override
-	public String getPresentationName() {
-		return BundleUtil.getString("resources.BennuResources", "label.bennu.group.logged");
-	}
+    @Override
+    public String getPresentationName() {
+        return BundleUtil.getString("resources.BennuResources", "label.bennu.group.logged");
+    }
 
-	@Override
-	public String expression() {
-		return "logged";
-	}
+    @Override
+    public String expression() {
+        return "logged";
+    }
 
-	@Override
-	public Set<User> getMembers() {
-		return Collections.unmodifiableSet(Bennu.getInstance().getUsersSet());
-	}
+    @Override
+    public Set<User> getMembers() {
+        return Collections.unmodifiableSet(Bennu.getInstance().getUsersSet());
+    }
 
-	@Override
-	public boolean isMember(final User user) {
-		return user != null;
-	}
+    @Override
+    public boolean isMember(final User user) {
+        return user != null;
+    }
 
-	@Override
-	public Set<User> getMembers(DateTime when) {
-		return getMembers();
-	}
+    @Override
+    public Set<User> getMembers(DateTime when) {
+        return getMembers();
+    }
 
-	@Override
-	public boolean isMember(User user, DateTime when) {
-		return isMember(user);
-	}
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        return isMember(user);
+    }
 
-	@Override
-	public PersistentGroup not() {
-		return AnonymousGroup.getInstance();
-	}
+    @Override
+    public PersistentGroup not() {
+        return AnonymousGroup.getInstance();
+    }
 
-	/**
-	 * Get or create singleton instance of {@link LoggedGroup}
-	 * 
-	 * @return singleton {@link LoggedGroup} instance
-	 */
-	@Service
-	public static LoggedGroup getInstance() {
-		LoggedGroup group = select(LoggedGroup.class);
-		return group == null ? new LoggedGroup() : group;
-	}
+    /**
+     * Get or create singleton instance of {@link LoggedGroup}
+     * 
+     * @return singleton {@link LoggedGroup} instance
+     */
+    @Service
+    public static LoggedGroup getInstance() {
+        LoggedGroup group = select(LoggedGroup.class);
+        return group == null ? new LoggedGroup() : group;
+    }
 }

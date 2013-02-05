@@ -34,97 +34,97 @@ import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
  * The application end user.
  */
 public class User extends User_Base {
-	private static final Logger logger = LoggerFactory.getLogger(User.class);
+    private static final Logger logger = LoggerFactory.getLogger(User.class);
 
-	public interface UserPresentationStrategy {
-		public String present(User user);
+    public interface UserPresentationStrategy {
+        public String present(User user);
 
-		public String shortPresent(User user);
-	}
+        public String shortPresent(User user);
+    }
 
-	public static final UserPresentationStrategy defaultStrategy = new UserPresentationStrategy() {
+    public static final UserPresentationStrategy defaultStrategy = new UserPresentationStrategy() {
 
-		@Override
-		public String present(User user) {
-			return user.getUsername();
-		}
+        @Override
+        public String present(User user) {
+            return user.getUsername();
+        }
 
-		@Override
-		public String shortPresent(User user) {
-			return user.getUsername();
-		}
+        @Override
+        public String shortPresent(User user) {
+            return user.getUsername();
+        }
 
-	};
+    };
 
-	public static final Comparator<User> COMPARATOR_BY_NAME = new Comparator<User>() {
+    public static final Comparator<User> COMPARATOR_BY_NAME = new Comparator<User>() {
 
-		@Override
-		public int compare(final User user1, final User user2) {
-			return user1.getUsername().compareTo(user2.getUsername());
-		}
+        @Override
+        public int compare(final User user1, final User user2) {
+            return user1.getUsername().compareTo(user2.getUsername());
+        }
 
-	};
+    };
 
-	private static UserPresentationStrategy strategy = defaultStrategy;
+    private static UserPresentationStrategy strategy = defaultStrategy;
 
-	public User(final String username) {
-		super();
-		setUsername(username);
-		setBennu(Bennu.getInstance());
-		setCreated(new DateTime());
-	}
+    public User(final String username) {
+        super();
+        setUsername(username);
+        setBennu(Bennu.getInstance());
+        setCreated(new DateTime());
+    }
 
-	public static User findByUsername(final String username) {
-		for (final User user : Bennu.getInstance().getUsersSet()) {
-			if (user.getUsername().equalsIgnoreCase(username)) {
-				return user;
-			}
-		}
-		return null;
-	}
+    public static User findByUsername(final String username) {
+        for (final User user : Bennu.getInstance().getUsersSet()) {
+            if (user.getUsername().equalsIgnoreCase(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
 
-	public void generatePassword() {
-		final String password = RandomStringUtils.randomAlphanumeric(10);
-		setPassword(password);
-	}
+    public void generatePassword() {
+        final String password = RandomStringUtils.randomAlphanumeric(10);
+        setPassword(password);
+    }
 
-	@Override
-	public void setPassword(final String password) {
-		final String newHash = DigestUtils.sha512Hex(password);
-		final String oldHash = getPassword();
-		if (newHash.equals(oldHash)) {
-			throw BennuCoreDomainException.badOldPassword();
-		}
-		super.setPassword(newHash);
-	}
+    @Override
+    public void setPassword(final String password) {
+        final String newHash = DigestUtils.sha512Hex(password);
+        final String oldHash = getPassword();
+        if (newHash.equals(oldHash)) {
+            throw BennuCoreDomainException.badOldPassword();
+        }
+        super.setPassword(newHash);
+    }
 
-	public boolean matchesPassword(final String password) {
-		final String hash = DigestUtils.sha512Hex(password);
-		return hash.equals(getPassword());
-	}
+    public boolean matchesPassword(final String password) {
+        final String hash = DigestUtils.sha512Hex(password);
+        return hash.equals(getPassword());
+    }
 
-	public String getPresentationName() {
-		return strategy.present(this);
-	}
+    public String getPresentationName() {
+        return strategy.present(this);
+    }
 
-	public String getShortPresentationName() {
-		return strategy.shortPresent(this);
-	}
+    public String getShortPresentationName() {
+        return strategy.shortPresent(this);
+    }
 
-	@Override
-	public String toString() {
-		return getUsername();
-	}
+    @Override
+    public String toString() {
+        return getUsername();
+    }
 
-	public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
-		if (strategy != defaultStrategy) {
-			logger.warn("Overriding non-default strategy");
-		}
-		strategy = newStrategy;
-	}
+    public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
+        if (strategy != defaultStrategy) {
+            logger.warn("Overriding non-default strategy");
+        }
+        strategy = newStrategy;
+    }
 
-	public PasswordRecoveryRequest createNewPasswordRecoveryRequest() {
-		super.setPassword(null);
-		return new PasswordRecoveryRequest(this);
-	}
+    public PasswordRecoveryRequest createNewPasswordRecoveryRequest() {
+        super.setPassword(null);
+        return new PasswordRecoveryRequest(this);
+    }
 }

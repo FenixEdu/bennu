@@ -1,9 +1,9 @@
 package pt.ist.bennu.core.domain.groups;
 
 public class LoggedGroup extends LoggedGroup_Base {
-    
-    public  LoggedGroup() {
+
+    public LoggedGroup() {
         super();
     }
-    
+
 }

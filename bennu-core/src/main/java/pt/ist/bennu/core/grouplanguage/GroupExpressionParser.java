@@ -33,17 +33,17 @@ import pt.ist.bennu.core.domain.groups.GroupException;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
 public class GroupExpressionParser {
-	public static PersistentGroup parse(String expression) throws RecognitionException, IOException, GroupException {
-		try (StringInputStream stream = new StringInputStream(expression)) {
-			ANTLRInputStream input = new ANTLRInputStream(stream);
-			GroupLexer lexer = new GroupLexer(input);
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			GroupParser parser = new GroupParser(tokens);
-			CommonTree tree = (CommonTree) parser.definition().getTree();
+    public static PersistentGroup parse(String expression) throws RecognitionException, IOException, GroupException {
+        try (StringInputStream stream = new StringInputStream(expression)) {
+            ANTLRInputStream input = new ANTLRInputStream(stream);
+            GroupLexer lexer = new GroupLexer(input);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            GroupParser parser = new GroupParser(tokens);
+            CommonTree tree = (CommonTree) parser.definition().getTree();
 
-			CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
-			GroupTree evaluator = new GroupTree(nodes);
-			return evaluator.definition().value.group();
-		}
-	}
+            CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
+            GroupTree evaluator = new GroupTree(nodes);
+            return evaluator.definition().value.group();
+        }
+    }
 }

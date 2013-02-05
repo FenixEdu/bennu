@@ -10,15 +10,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ TYPE, METHOD })
 public @interface Functionality {
-	Class<?> app();
+    Class<?> app();
 
-	String path();
+    String path();
 
-	String bundle();
+    String bundle();
 
-	String title();
+    String title();
 
-	String description();
+    String description();
 
-	String group() default "anyone";
+    String group() default "anyone";
 }

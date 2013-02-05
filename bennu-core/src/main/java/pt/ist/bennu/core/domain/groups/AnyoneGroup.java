@@ -35,53 +35,53 @@ import pt.ist.bennu.service.Service;
  * @see PersistentGroup
  */
 public class AnyoneGroup extends AnyoneGroup_Base {
-	protected AnyoneGroup() {
-		super();
-	}
+    protected AnyoneGroup() {
+        super();
+    }
 
-	@Override
-	public String getPresentationName() {
-		return BundleUtil.getString("resources.BennuResources", "label.bennu.group.anyone");
-	}
+    @Override
+    public String getPresentationName() {
+        return BundleUtil.getString("resources.BennuResources", "label.bennu.group.anyone");
+    }
 
-	@Override
-	public String expression() {
-		return "anyone";
-	}
+    @Override
+    public String expression() {
+        return "anyone";
+    }
 
-	@Override
-	public Set<User> getMembers() {
-		return Collections.emptySet();
-	}
+    @Override
+    public Set<User> getMembers() {
+        return Collections.emptySet();
+    }
 
-	@Override
-	public boolean isMember(final User user) {
-		return true;
-	}
+    @Override
+    public boolean isMember(final User user) {
+        return true;
+    }
 
-	@Override
-	public Set<User> getMembers(DateTime when) {
-		return getMembers();
-	}
+    @Override
+    public Set<User> getMembers(DateTime when) {
+        return getMembers();
+    }
 
-	@Override
-	public boolean isMember(User user, DateTime when) {
-		return isMember(user);
-	}
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        return isMember(user);
+    }
 
-	@Override
-	public PersistentGroup not() {
-		return NobodyGroup.getInstance();
-	}
+    @Override
+    public PersistentGroup not() {
+        return NobodyGroup.getInstance();
+    }
 
-	/**
-	 * Get or create singleton instance of {@link AnyoneGroup}
-	 * 
-	 * @return singleton {@link AnyoneGroup} instance
-	 */
-	@Service
-	public static AnyoneGroup getInstance() {
-		AnyoneGroup group = select(AnyoneGroup.class);
-		return group == null ? new AnyoneGroup() : group;
-	}
+    /**
+     * Get or create singleton instance of {@link AnyoneGroup}
+     * 
+     * @return singleton {@link AnyoneGroup} instance
+     */
+    @Service
+    public static AnyoneGroup getInstance() {
+        AnyoneGroup group = select(AnyoneGroup.class);
+        return group == null ? new AnyoneGroup() : group;
+    }
 }

@@ -29,5 +29,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ TYPE })
 public @interface CustomGroupOperator {
-	String value();
+    String value();
 }

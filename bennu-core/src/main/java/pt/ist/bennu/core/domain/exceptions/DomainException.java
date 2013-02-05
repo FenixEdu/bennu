@@ -33,28 +33,28 @@ import pt.ist.bennu.core.util.BundleUtil;
  * </p>
  */
 public class DomainException extends RuntimeException {
-	private final String key;
+    private final String key;
 
-	private final String[] args;
+    private final String[] args;
 
-	private final String bundle;
+    private final String bundle;
 
-	public DomainException(String bundle, String key, String... args) {
-		super(key);
-		this.bundle = bundle;
-		this.key = key;
-		this.args = args;
-	}
+    public DomainException(String bundle, String key, String... args) {
+        super(key);
+        this.bundle = bundle;
+        this.key = key;
+        this.args = args;
+    }
 
-	public DomainException(Throwable cause, String bundle, String key, String... args) {
-		super(cause);
-		this.bundle = bundle;
-		this.key = key;
-		this.args = args;
-	}
+    public DomainException(Throwable cause, String bundle, String key, String... args) {
+        super(cause);
+        this.bundle = bundle;
+        this.key = key;
+        this.args = args;
+    }
 
-	@Override
-	public String getLocalizedMessage() {
-		return BundleUtil.getString(bundle, key, args);
-	}
+    @Override
+    public String getLocalizedMessage() {
+        return BundleUtil.getString(bundle, key, args);
+    }
 }

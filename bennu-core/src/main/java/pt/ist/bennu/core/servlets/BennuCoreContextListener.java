@@ -50,74 +50,74 @@ import pt.ist.fenixframework.pstm.PersistentRoot;
  */
 @WebListener
 public class BennuCoreContextListener implements ServletContextListener {
-	private static final Logger logger = LoggerFactory.getLogger(BennuCoreContextListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(BennuCoreContextListener.class);
 
-	private ClassLoader thisClassLoader;
+    private ClassLoader thisClassLoader;
 
-	@Override
-	public void contextInitialized(ServletContextEvent event) {
-		try {
-			Language.setDefaultLocale(ConfigurationManager.getDefaultLocale());
-			setLocale();
-			try {
-				Class.forName(FenixFrameworkInitializer.class.getName());
-			} catch (ClassNotFoundException e) {
-			}
-			PersistentRoot.initRootIfNeeded(ConfigurationManager.getFenixFrameworkConfig());
+    @Override
+    public void contextInitialized(ServletContextEvent event) {
+        try {
+            Language.setDefaultLocale(ConfigurationManager.getDefaultLocale());
+            setLocale();
+            try {
+                Class.forName(FenixFrameworkInitializer.class.getName());
+            } catch (ClassNotFoundException e) {
+            }
+            PersistentRoot.initRootIfNeeded(ConfigurationManager.getFenixFrameworkConfig());
 
-			ensureModelBootstrap();
-		} finally {
-			Language.setLocale(null);
-		}
-	}
+            ensureModelBootstrap();
+        } finally {
+            Language.setLocale(null);
+        }
+    }
 
-	@Service
-	private void ensureModelBootstrap() {
-		if (!Bennu.getInstance().hasAnyVirtualHosts()) {
-			logger.info("Bootstrapping bennu application");
-			new VirtualHost("localhost");
-		}
-	}
+    @Service
+    private void ensureModelBootstrap() {
+        if (!Bennu.getInstance().hasAnyVirtualHosts()) {
+            logger.info("Bootstrapping bennu application");
+            new VirtualHost("localhost");
+        }
+    }
 
-	@Override
-	public void contextDestroyed(ServletContextEvent event) {
-		this.thisClassLoader = this.getClass().getClassLoader();
-		interruptThreads();
-		deregisterJDBCDrivers();
-	}
+    @Override
+    public void contextDestroyed(ServletContextEvent event) {
+        this.thisClassLoader = this.getClass().getClassLoader();
+        interruptThreads();
+        deregisterJDBCDrivers();
+    }
 
-	private void setLocale() {
-		final String language = ConfigurationManager.getProperty("language");
-		final String location = ConfigurationManager.getProperty("location");
-		Language.setLocale(new Locale(language, location));
-	}
+    private void setLocale() {
+        final String language = ConfigurationManager.getProperty("language");
+        final String location = ConfigurationManager.getProperty("location");
+        Language.setLocale(new Locale(language, location));
+    }
 
-	private void deregisterJDBCDrivers() {
-		Enumeration<Driver> drivers = DriverManager.getDrivers();
-		while (drivers.hasMoreElements()) {
-			Driver driver = drivers.nextElement();
-			ClassLoader loader = driver.getClass().getClassLoader();
-			if (loader != null && loader.equals(this.thisClassLoader)) {
-				try {
-					DriverManager.deregisterDriver(driver);
-					logger.info("Successfully deregistered JDBC driver " + driver);
-				} catch (SQLException e) {
-					logger.warn("Failed to deregister JDBC driver " + driver + ". This may cause a potential leak.", e);
-				}
-			}
-		}
-	}
+    private void deregisterJDBCDrivers() {
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            Driver driver = drivers.nextElement();
+            ClassLoader loader = driver.getClass().getClassLoader();
+            if (loader != null && loader.equals(this.thisClassLoader)) {
+                try {
+                    DriverManager.deregisterDriver(driver);
+                    logger.info("Successfully deregistered JDBC driver " + driver);
+                } catch (SQLException e) {
+                    logger.warn("Failed to deregister JDBC driver " + driver + ". This may cause a potential leak.", e);
+                }
+            }
+        }
+    }
 
-	private void interruptThreads() {
-		for (Thread thread : Thread.getAllStackTraces().keySet()) {
-			if (thread == null || thread.getContextClassLoader() != thisClassLoader || thread == Thread.currentThread()) {
-				continue;
-			}
+    private void interruptThreads() {
+        for (Thread thread : Thread.getAllStackTraces().keySet()) {
+            if (thread == null || thread.getContextClassLoader() != thisClassLoader || thread == Thread.currentThread()) {
+                continue;
+            }
 
-			if (thread.isAlive()) {
-				System.out.println("Killing initiated thread: " + thread + " of class " + thread.getClass());
-				thread.interrupt();
-			}
-		}
-	}
+            if (thread.isAlive()) {
+                System.out.println("Killing initiated thread: " + thread + " of class " + thread.getClass());
+                thread.interrupt();
+            }
+        }
+    }
 }
