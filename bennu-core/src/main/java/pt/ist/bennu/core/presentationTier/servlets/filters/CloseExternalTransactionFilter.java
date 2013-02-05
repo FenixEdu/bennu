@@ -42,23 +42,23 @@ import pt.ist.bennu.core.persistenceTier.externalRepository.DbHandler;
  */
 public class CloseExternalTransactionFilter implements Filter {
 
-	@Override
-	public void init(final FilterConfig filterConfig) throws ServletException {
-	}
+    @Override
+    public void init(final FilterConfig filterConfig) throws ServletException {
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
-	@Override
-	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-			throws IOException, ServletException {
-		try {
-			filterChain.doFilter(servletRequest, servletResponse);
-			DbHandler.commitAll();
-		} finally {
-			DbHandler.rolebackAll();
-		}
-	}
+    @Override
+    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
+            throws IOException, ServletException {
+        try {
+            filterChain.doFilter(servletRequest, servletResponse);
+            DbHandler.commitAll();
+        } finally {
+            DbHandler.rolebackAll();
+        }
+    }
 
 }

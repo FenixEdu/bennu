@@ -42,105 +42,105 @@ import pt.ist.bennu.core.domain.contents.Node;
  */
 public abstract class Context {
 
-	public static final String PATH_PART_SEPERATOR = ",";
+    public static final String PATH_PART_SEPERATOR = ",";
 
-	private Stack<INode> elements = new Stack<INode>();
+    private Stack<INode> elements = new Stack<INode>();
 
-	public Context() {
-	}
+    public Context() {
+    }
 
-	public Context(final String path) {
-		this();
-		setElements(path);
-	}
+    public Context(final String path) {
+        this();
+        setElements(path);
+    }
 
-	public boolean contains(Node node) {
-		for (INode nodeInStack : elements) {
-			if (nodeInStack == node) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public boolean contains(Node node) {
+        for (INode nodeInStack : elements) {
+            if (nodeInStack == node) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public void setElements(final String path) {
-		if (path == null || path.isEmpty()) {
-			elements.clear();
-		} else {
-			for (final String pathPart : path.split(PATH_PART_SEPERATOR)) {
-				final INode node = Node.fromString(pathPart);
-				elements.add(node);
-			}
-		}
-	}
+    public void setElements(final String path) {
+        if (path == null || path.isEmpty()) {
+            elements.clear();
+        } else {
+            for (final String pathPart : path.split(PATH_PART_SEPERATOR)) {
+                final INode node = Node.fromString(pathPart);
+                elements.add(node);
+            }
+        }
+    }
 
-	public List<INode> getElements() {
-		return elements;
-	}
+    public List<INode> getElements() {
+        return elements;
+    }
 
-	public Collection<INode> getMenuElements() {
-		final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-		return (Collection) virtualHost.getOrderedTopLevelNodes();
-	}
+    public Collection<INode> getMenuElements() {
+        final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
+        return (Collection) virtualHost.getOrderedTopLevelNodes();
+    }
 
-	public String getPath() {
-		final StringBuilder stringBuilder = new StringBuilder();
-		for (final INode node : elements) {
-			if (node != null) {
-				if (stringBuilder.length() > 0) {
-					stringBuilder.append(PATH_PART_SEPERATOR);
-				}
-				stringBuilder.append(node.asString());
-			}
-		}
-		return stringBuilder.toString();
-	}
+    public String getPath() {
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (final INode node : elements) {
+            if (node != null) {
+                if (stringBuilder.length() > 0) {
+                    stringBuilder.append(PATH_PART_SEPERATOR);
+                }
+                stringBuilder.append(node.asString());
+            }
+        }
+        return stringBuilder.toString();
+    }
 
-	public String getPrefixPath() {
-		final StringBuilder stringBuilder = new StringBuilder();
-		int i = 0;
-		for (final INode node : elements) {
-			if (++i < elements.size()) {
-				if (stringBuilder.length() > 0) {
-					stringBuilder.append(PATH_PART_SEPERATOR);
-				}
-				stringBuilder.append(node.asString());
-			}
-		}
-		if (stringBuilder.length() > 0) {
-			stringBuilder.append(PATH_PART_SEPERATOR);
-		}
-		return stringBuilder.toString();
-	}
+    public String getPrefixPath() {
+        final StringBuilder stringBuilder = new StringBuilder();
+        int i = 0;
+        for (final INode node : elements) {
+            if (++i < elements.size()) {
+                if (stringBuilder.length() > 0) {
+                    stringBuilder.append(PATH_PART_SEPERATOR);
+                }
+                stringBuilder.append(node.asString());
+            }
+        }
+        if (stringBuilder.length() > 0) {
+            stringBuilder.append(PATH_PART_SEPERATOR);
+        }
+        return stringBuilder.toString();
+    }
 
-	public void push(final INode node) {
-		elements.push(node);
-	}
+    public void push(final INode node) {
+        elements.push(node);
+    }
 
-	public void pop() {
-		if (!elements.isEmpty()) {
-			elements.pop();
-		}
-	}
+    public void pop() {
+        if (!elements.isEmpty()) {
+            elements.pop();
+        }
+    }
 
-	public void pop(final INode node) {
-		final int nodeIndex = elements.indexOf(node);
-		if (nodeIndex >= 0) {
-			for (int i = elements.size() - 1; i >= nodeIndex; i--) {
-				elements.pop();
-			}
-		}
-	}
+    public void pop(final INode node) {
+        final int nodeIndex = elements.indexOf(node);
+        if (nodeIndex >= 0) {
+            for (int i = elements.size() - 1; i >= nodeIndex; i--) {
+                elements.pop();
+            }
+        }
+    }
 
-	public INode getSelectedNode() {
-		return elements.isEmpty() ? null : elements.peek();
-	}
+    public INode getSelectedNode() {
+        return elements.isEmpty() ? null : elements.peek();
+    }
 
-	public INode getParentNode() {
-		final int s = elements.size();
-		return s > 1 ? elements.get(s - 2) : null;
-	}
+    public INode getParentNode() {
+        final int s = elements.size();
+        return s > 1 ? elements.get(s - 2) : null;
+    }
 
-	public abstract ActionForward forward(final String forward);
+    public abstract ActionForward forward(final String forward);
 
 }

@@ -40,40 +40,40 @@ import pt.ist.fenixframework.DomainObject;
  */
 public abstract class Search<T> implements Serializable {
 
-	protected abstract class SearchResultSet<T> extends HashSet<T> {
+    protected abstract class SearchResultSet<T> extends HashSet<T> {
 
-		public SearchResultSet(Collection<? extends T> c) {
-			super(c);
-		}
+        public SearchResultSet(Collection<? extends T> c) {
+            super(c);
+        }
 
-		@Override
-		public boolean add(final T t) {
-			return matchesSearchCriteria(t) && super.add(t);
-		}
+        @Override
+        public boolean add(final T t) {
+            return matchesSearchCriteria(t) && super.add(t);
+        }
 
-		protected abstract boolean matchesSearchCriteria(final T t);
+        protected abstract boolean matchesSearchCriteria(final T t);
 
-		protected boolean matchCriteria(final String criteria, final String value) {
-			return criteria == null || criteria.length() == 0 || criteria.equals(value);
-		}
+        protected boolean matchCriteria(final String criteria, final String value) {
+            return criteria == null || criteria.length() == 0 || criteria.equals(value);
+        }
 
-		protected boolean matchCriteria(final DomainObject criteria, final DomainObject value) {
-			return criteria == null || criteria == value;
-		}
-	}
+        protected boolean matchCriteria(final DomainObject criteria, final DomainObject value) {
+            return criteria == null || criteria == value;
+        }
+    }
 
-	public abstract Set<T> search();
+    public abstract Set<T> search();
 
-	public Set<T> getResult() {
-		return search();
-	}
+    public Set<T> getResult() {
+        return search();
+    }
 
-	@Service
-	public void persistSearch(String name) {
-		persist(name);
-	}
+    @Service
+    public void persistSearch(String name) {
+        persist(name);
+    }
 
-	protected void persist(String name) {
-	}
+    protected void persist(String name) {
+    }
 
 }

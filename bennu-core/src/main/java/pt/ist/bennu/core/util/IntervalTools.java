@@ -22,116 +22,116 @@ import org.joda.time.LocalDate;
  */
 public class IntervalTools {
 
-	public static Interval getInterval(DateTime startDate, DateTime endDate) {
-		long start = startDate == null ? Long.MIN_VALUE : startDate.getMillis();
-		long end = endDate == null ? Long.MAX_VALUE : endDate.getMillis();
+    public static Interval getInterval(DateTime startDate, DateTime endDate) {
+        long start = startDate == null ? Long.MIN_VALUE : startDate.getMillis();
+        long end = endDate == null ? Long.MAX_VALUE : endDate.getMillis();
 
-		return new Interval(start, end);
-	}
+        return new Interval(start, end);
+    }
 
-	public static Interval getInterval(LocalDate startDate, LocalDate endDate) {
-		long start = startDate == null ? Long.MIN_VALUE : startDate.toDateMidnight().getMillis();
-		long end = endDate == null ? Long.MAX_VALUE : endDate.toDateMidnight().getMillis();
+    public static Interval getInterval(LocalDate startDate, LocalDate endDate) {
+        long start = startDate == null ? Long.MIN_VALUE : startDate.toDateMidnight().getMillis();
+        long end = endDate == null ? Long.MAX_VALUE : endDate.toDateMidnight().getMillis();
 
-		return new Interval(start, end);
-	}
+        return new Interval(start, end);
+    }
 
-	public static Interval getInterval(Date startDate, Date endDate) {
-		long start = startDate == null ? Long.MIN_VALUE : startDate.getTime();
-		long end = endDate == null ? Long.MAX_VALUE : endDate.getTime();
+    public static Interval getInterval(Date startDate, Date endDate) {
+        long start = startDate == null ? Long.MIN_VALUE : startDate.getTime();
+        long end = endDate == null ? Long.MAX_VALUE : endDate.getTime();
 
-		return new Interval(start, end);
-	}
+        return new Interval(start, end);
+    }
 
-	public static LocalDate getStartLocalDate(Interval interval) {
-		long startTime = interval.getStartMillis();
-		return startTime == Long.MIN_VALUE ? null : new LocalDate(startTime);
-	}
+    public static LocalDate getStartLocalDate(Interval interval) {
+        long startTime = interval.getStartMillis();
+        return startTime == Long.MIN_VALUE ? null : new LocalDate(startTime);
+    }
 
-	public static LocalDate getEndLocalDate(Interval interval) {
-		long endTime = interval.getEndMillis();
-		return endTime == Long.MAX_VALUE ? null : new LocalDate(endTime);
-	}
+    public static LocalDate getEndLocalDate(Interval interval) {
+        long endTime = interval.getEndMillis();
+        return endTime == Long.MAX_VALUE ? null : new LocalDate(endTime);
+    }
 
-	public static DateTime getStartDateTime(Interval interval) {
-		long startTime = interval.getStartMillis();
-		return startTime == Long.MIN_VALUE ? null : new DateTime(startTime);
-	}
+    public static DateTime getStartDateTime(Interval interval) {
+        long startTime = interval.getStartMillis();
+        return startTime == Long.MIN_VALUE ? null : new DateTime(startTime);
+    }
 
-	public static DateTime getEndDateTime(Interval interval) {
-		long endTime = interval.getEndMillis();
-		return endTime == Long.MAX_VALUE ? null : new DateTime(endTime);
-	}
+    public static DateTime getEndDateTime(Interval interval) {
+        long endTime = interval.getEndMillis();
+        return endTime == Long.MAX_VALUE ? null : new DateTime(endTime);
+    }
 
-	public static Interval intervalWithStart(Interval originalInterval, LocalDate day) {
-		long millis = day == null ? Long.MIN_VALUE : day.toDateMidnight().getMillis();
-		return new Interval(millis, originalInterval.getEndMillis());
-	}
+    public static Interval intervalWithStart(Interval originalInterval, LocalDate day) {
+        long millis = day == null ? Long.MIN_VALUE : day.toDateMidnight().getMillis();
+        return new Interval(millis, originalInterval.getEndMillis());
+    }
 
-	public static Interval intervalWithEnd(Interval originalInterval, LocalDate day) {
-		long millis = day == null ? Long.MAX_VALUE : day.toDateMidnight().getMillis();
-		return new Interval(originalInterval.getStartMillis(), millis);
-	}
+    public static Interval intervalWithEnd(Interval originalInterval, LocalDate day) {
+        long millis = day == null ? Long.MAX_VALUE : day.toDateMidnight().getMillis();
+        return new Interval(originalInterval.getStartMillis(), millis);
+    }
 
-	public static Interval intervalWithStart(Interval interval, Date date) {
-		long millis = date == null ? Long.MIN_VALUE : date.getTime();
-		return new Interval(millis, interval.getEndMillis());
-	}
+    public static Interval intervalWithStart(Interval interval, Date date) {
+        long millis = date == null ? Long.MIN_VALUE : date.getTime();
+        return new Interval(millis, interval.getEndMillis());
+    }
 
-	public static Interval intervalWithEnd(Interval interval, Date date) {
-		long millis = date == null ? Long.MAX_VALUE : date.getTime();
-		return new Interval(interval.getStartMillis(), millis);
-	}
+    public static Interval intervalWithEnd(Interval interval, Date date) {
+        long millis = date == null ? Long.MAX_VALUE : date.getTime();
+        return new Interval(interval.getStartMillis(), millis);
+    }
 
-	public static Comparator<Interval> COMPARATOR_BY_START_DATE = new Comparator<Interval>() {
+    public static Comparator<Interval> COMPARATOR_BY_START_DATE = new Comparator<Interval>() {
 
-		@Override
-		public int compare(Interval i0, Interval i1) {
-			return i0.getStart().compareTo(i1.getStart());
-		}
+        @Override
+        public int compare(Interval i0, Interval i1) {
+            return i0.getStart().compareTo(i1.getStart());
+        }
 
-	};
+    };
 
-	public static Comparator<Interval> COMPARATOR_BY_END_DATE = new Comparator<Interval>() {
+    public static Comparator<Interval> COMPARATOR_BY_END_DATE = new Comparator<Interval>() {
 
-		@Override
-		public int compare(Interval i0, Interval i1) {
-			return i0.getEnd().compareTo(i1.getEnd());
-		}
+        @Override
+        public int compare(Interval i0, Interval i1) {
+            return i0.getEnd().compareTo(i1.getEnd());
+        }
 
-	};
+    };
 
-	public static Comparator<Interval> COMPARATOR_BY_DURATION = new Comparator<Interval>() {
+    public static Comparator<Interval> COMPARATOR_BY_DURATION = new Comparator<Interval>() {
 
-		@Override
-		public int compare(Interval o1, Interval o2) {
-			return o1.toDuration().compareTo(o2.toDuration());
-		}
+        @Override
+        public int compare(Interval o1, Interval o2) {
+            return o1.toDuration().compareTo(o2.toDuration());
+        }
 
-	};
+    };
 
-	/*
-	 * Serialization
-	 */
+    /*
+     * Serialization
+     */
 
-	private static String NULL_STR = "NULL";
+    private static String NULL_STR = "NULL";
 
-	public static String intervalSerialize(final Interval interval) {
+    public static String intervalSerialize(final Interval interval) {
 
-		DateTime begin = getStartDateTime(interval);
-		DateTime end = getEndDateTime(interval);
+        DateTime begin = getStartDateTime(interval);
+        DateTime end = getEndDateTime(interval);
 
-		return (begin == null ? NULL_STR : begin.toString()) + "/" + (end == null ? NULL_STR : end.toString());
-	}
+        return (begin == null ? NULL_STR : begin.toString()) + "/" + (end == null ? NULL_STR : end.toString());
+    }
 
-	public static Interval intervalDeserialize(final String string) {
-		if (!string.isEmpty()) {
-			String[] parts = string.split("/");
-			DateTime start = parts[0].equals(NULL_STR) ? null : new DateTime(parts[0]);
-			DateTime end = parts[1].equals(NULL_STR) ? null : new DateTime(parts[1]);
-			return getInterval(start, end);
-		}
-		return null;
-	}
+    public static Interval intervalDeserialize(final String string) {
+        if (!string.isEmpty()) {
+            String[] parts = string.split("/");
+            DateTime start = parts[0].equals(NULL_STR) ? null : new DateTime(parts[0]);
+            DateTime end = parts[1].equals(NULL_STR) ? null : new DateTime(parts[1]);
+            return getInterval(start, end);
+        }
+        return null;
+    }
 
 }

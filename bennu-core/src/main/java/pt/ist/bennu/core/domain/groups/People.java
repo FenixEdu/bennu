@@ -37,51 +37,51 @@ import dml.runtime.RelationAdapter;
  */
 public abstract class People extends People_Base {
 
-	public static class PeopleUserListener extends RelationAdapter<User, People> {
+    public static class PeopleUserListener extends RelationAdapter<User, People> {
 
-		@Override
-		public void afterAdd(final User user, final People people) {
-			super.afterAdd(user, people);
-			if (user == null || people == null || !user.hasPeopleGroups(people)) {
-				new PeopleUserLog("Add", user == null ? "" : user.getUsername(), people == null ? "" : people.getName());
-			}
-		}
+        @Override
+        public void afterAdd(final User user, final People people) {
+            super.afterAdd(user, people);
+            if (user == null || people == null || !user.hasPeopleGroups(people)) {
+                new PeopleUserLog("Add", user == null ? "" : user.getUsername(), people == null ? "" : people.getName());
+            }
+        }
 
-		@Override
-		public void afterRemove(final User user, final People people) {
-			new PeopleUserLog("Remove", user == null ? "" : user.getUsername(), people == null ? "" : people.getName());
-			super.afterRemove(user, people);
-		}
+        @Override
+        public void afterRemove(final User user, final People people) {
+            new PeopleUserLog("Remove", user == null ? "" : user.getUsername(), people == null ? "" : people.getName());
+            super.afterRemove(user, people);
+        }
 
-	}
+    }
 
-	static {
-		User.UserPeople.addListener(new PeopleUserListener());
-	}
+    static {
+        User.UserPeople.addListener(new PeopleUserListener());
+    }
 
-	public People() {
-		super();
-	}
+    public People() {
+        super();
+    }
 
-	@Override
-	public Set<User> getMembers() {
-		return getUsersSet();
-	}
+    @Override
+    public Set<User> getMembers() {
+        return getUsersSet();
+    }
 
-	@Override
-	public void delete() {
-		getUsersSet().clear();
-		super.delete();
-	}
+    @Override
+    public void delete() {
+        getUsersSet().clear();
+        super.delete();
+    }
 
-	@Service
-	public void removeMember(final User user) {
-		removeUsers(user);
-	}
+    @Service
+    public void removeMember(final User user) {
+        removeUsers(user);
+    }
 
-	@Service
-	public void addMember(final User user) {
-		addUsers(user);
-	}
+    @Service
+    public void addMember(final User user) {
+        addUsers(user);
+    }
 
 }

@@ -47,33 +47,33 @@ import pt.ist.bennu.core.domain.VirtualHost;
  */
 public class SetVirtualHostFilter implements Filter {
 
-	private static final Logger logger = Logger.getLogger(SetVirtualHostFilter.class.getName());
+    private static final Logger logger = Logger.getLogger(SetVirtualHostFilter.class.getName());
 
-	@Override
-	public void init(final FilterConfig filterConfig) throws ServletException {
-	}
+    @Override
+    public void init(final FilterConfig filterConfig) throws ServletException {
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
-	@Override
-	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
-			throws IOException, ServletException {
-		final String serverName = servletRequest.getServerName();
-		try {
-			final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(serverName.toLowerCase());
-			if (logger.isDebugEnabled()) {
-				final String hostname = virtualHost == null ? null : virtualHost.getHostname();
-				final User user = UserView.getCurrentUser();
-				final String username = user == null ? null : user.getUsername();
-				logger.debug("Setting virtual host: " + hostname + " for user: " + username + " on server: " + serverName);
-			}
-			servletRequest.setAttribute("virtualHost", virtualHost);
-			filterChain.doFilter(servletRequest, servletResponse);
-		} finally {
-			VirtualHost.releaseVirtualHostFromThread();
-		}
-	}
+    @Override
+    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
+            throws IOException, ServletException {
+        final String serverName = servletRequest.getServerName();
+        try {
+            final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(serverName.toLowerCase());
+            if (logger.isDebugEnabled()) {
+                final String hostname = virtualHost == null ? null : virtualHost.getHostname();
+                final User user = UserView.getCurrentUser();
+                final String username = user == null ? null : user.getUsername();
+                logger.debug("Setting virtual host: " + hostname + " for user: " + username + " on server: " + serverName);
+            }
+            servletRequest.setAttribute("virtualHost", virtualHost);
+            filterChain.doFilter(servletRequest, servletResponse);
+        } finally {
+            VirtualHost.releaseVirtualHostFromThread();
+        }
+    }
 
 }

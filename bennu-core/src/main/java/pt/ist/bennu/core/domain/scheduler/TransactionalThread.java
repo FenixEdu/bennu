@@ -37,67 +37,67 @@ import pt.ist.fenixframework.pstm.Transaction;
  * 
  */
 public abstract class TransactionalThread extends Thread {
-	public static interface ExceptionListener {
-		public void notifyException(Throwable e);
-	}
+    public static interface ExceptionListener {
+        public void notifyException(Throwable e);
+    }
 
-	private final boolean readOnly;
+    private final boolean readOnly;
 
-	private ArrayList<ExceptionListener> listeners;
+    private ArrayList<ExceptionListener> listeners;
 
-	public TransactionalThread(final boolean readOnly) {
-		this.readOnly = readOnly;
-	}
+    public TransactionalThread(final boolean readOnly) {
+        this.readOnly = readOnly;
+    }
 
-	public TransactionalThread() {
-		this(false);
-	}
+    public TransactionalThread() {
+        this(false);
+    }
 
-	public void addExceptionListener(ExceptionListener listener) {
-		if (listeners == null) {
-			listeners = new ArrayList<ExceptionListener>();
-		}
-		listeners.add(listener);
-	}
+    public void addExceptionListener(ExceptionListener listener) {
+        if (listeners == null) {
+            listeners = new ArrayList<ExceptionListener>();
+        }
+        listeners.add(listener);
+    }
 
-	public void removeExceptionListener(ExceptionListener listener) {
-		if (listeners != null) {
-			listeners.remove(listener);
-		}
-	}
+    public void removeExceptionListener(ExceptionListener listener) {
+        if (listeners != null) {
+            listeners.remove(listener);
+        }
+    }
 
-	@Override
-	public void run() {
-		try {
-			Transaction.withTransaction(true, new TransactionalCommand() {
-				@Override
-				public void doIt() {
-					try {
-						if (readOnly) {
-							transactionalRun();
-						} else {
-							callService();
-						}
-					} catch (Throwable e) {
-						e.printStackTrace();
-						if (listeners != null) {
-							for (ExceptionListener listener : listeners) {
-								listener.notifyException(e);
-							}
-						}
-					}
-				}
-			});
-		} finally {
-			Transaction.forceFinish();
-		}
-	}
+    @Override
+    public void run() {
+        try {
+            Transaction.withTransaction(true, new TransactionalCommand() {
+                @Override
+                public void doIt() {
+                    try {
+                        if (readOnly) {
+                            transactionalRun();
+                        } else {
+                            callService();
+                        }
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                        if (listeners != null) {
+                            for (ExceptionListener listener : listeners) {
+                                listener.notifyException(e);
+                            }
+                        }
+                    }
+                }
+            });
+        } finally {
+            Transaction.forceFinish();
+        }
+    }
 
-	public abstract void transactionalRun();
+    public abstract void transactionalRun();
 
-	@Service
-	private void callService() {
-		transactionalRun();
-	}
+    @Service
+    private void callService() {
+        transactionalRun();
+    }
 
 }

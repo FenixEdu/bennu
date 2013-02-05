@@ -37,97 +37,97 @@ import pt.ist.bennu.core.domain.groups.PersistentGroup;
  */
 public class NodeBean implements Serializable {
 
-	public static final Set<NodeType> nodeTypes = new HashSet<NodeType>();
+    public static final Set<NodeType> nodeTypes = new HashSet<NodeType>();
 
-	public static synchronized void registerNodeType(NodeType type) {
-		NodeBean.nodeTypes.add(type);
-	}
+    public static synchronized void registerNodeType(NodeType type) {
+        NodeBean.nodeTypes.add(type);
+    }
 
-	static {
-		NodeBean.registerNodeType(new ActionNodeType());
-		NodeBean.registerNodeType(new LinkNodeType());
-	}
+    static {
+        NodeBean.registerNodeType(new ActionNodeType());
+        NodeBean.registerNodeType(new LinkNodeType());
+    }
 
-	private NodeType nodeType;
-	private String path;
-	private String method;
-	private String linkBundle;
-	private String linkKey;
-	private String url;
-	private String argument;
-	private boolean useBennuLayout = true;
-	private PersistentGroup persistentGroup;
+    private NodeType nodeType;
+    private String path;
+    private String method;
+    private String linkBundle;
+    private String linkKey;
+    private String url;
+    private String argument;
+    private boolean useBennuLayout = true;
+    private PersistentGroup persistentGroup;
 
-	public String getPath() {
-		return path;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-	public String getMethod() {
-		return method;
-	}
+    public String getMethod() {
+        return method;
+    }
 
-	public void setMethod(String method) {
-		this.method = method;
-	}
+    public void setMethod(String method) {
+        this.method = method;
+    }
 
-	public String getLinkBundle() {
-		return linkBundle;
-	}
+    public String getLinkBundle() {
+        return linkBundle;
+    }
 
-	public void setLinkBundle(String linkBundle) {
-		this.linkBundle = linkBundle;
-	}
+    public void setLinkBundle(String linkBundle) {
+        this.linkBundle = linkBundle;
+    }
 
-	public String getLinkKey() {
-		return linkKey;
-	}
+    public String getLinkKey() {
+        return linkKey;
+    }
 
-	public void setLinkKey(String linkKey) {
-		this.linkKey = linkKey;
-	}
+    public void setLinkKey(String linkKey) {
+        this.linkKey = linkKey;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public String getArgument() {
-		return argument;
-	}
+    public String getArgument() {
+        return argument;
+    }
 
-	public void setArgument(String argument) {
-		this.argument = argument;
-	}
+    public void setArgument(String argument) {
+        this.argument = argument;
+    }
 
-	public NodeType getNodeType() {
-		return nodeType;
-	}
+    public NodeType getNodeType() {
+        return nodeType;
+    }
 
-	public void setNodeType(NodeType nodeType) {
-		this.nodeType = nodeType;
-	}
+    public void setNodeType(NodeType nodeType) {
+        this.nodeType = nodeType;
+    }
 
-	public boolean isUseBennuLayout() {
-		return useBennuLayout;
-	}
+    public boolean isUseBennuLayout() {
+        return useBennuLayout;
+    }
 
-	public void setUseBennuLayout(boolean useBennuLayout) {
-		this.useBennuLayout = useBennuLayout;
-	}
+    public void setUseBennuLayout(boolean useBennuLayout) {
+        this.useBennuLayout = useBennuLayout;
+    }
 
-	public PersistentGroup getPersistentGroup() {
-		return persistentGroup;
-	}
+    public PersistentGroup getPersistentGroup() {
+        return persistentGroup;
+    }
 
-	public void setPersistentGroup(PersistentGroup persistentGroup) {
-		this.persistentGroup = persistentGroup;
-	}
+    public void setPersistentGroup(PersistentGroup persistentGroup) {
+        this.persistentGroup = persistentGroup;
+    }
 
 }

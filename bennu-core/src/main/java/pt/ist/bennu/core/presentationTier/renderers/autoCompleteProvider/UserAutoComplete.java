@@ -41,27 +41,27 @@ import pt.utl.ist.fenix.tools.util.StringNormalizer;
  */
 public class UserAutoComplete implements AutoCompleteProvider {
 
-	@Override
-	public Collection getSearchResults(Map<String, String> argsMap, String value, int maxCount) {
-		Set<User> users = new HashSet<User>();
-		String[] values = StringNormalizer.normalize(value).toLowerCase().split(" ");
-		for (User user : MyOrg.getInstance().getUserSet()) {
-			final String normalizedUser = StringNormalizer.normalize(user.getPresentationName()).toLowerCase();
+    @Override
+    public Collection getSearchResults(Map<String, String> argsMap, String value, int maxCount) {
+        Set<User> users = new HashSet<User>();
+        String[] values = StringNormalizer.normalize(value).toLowerCase().split(" ");
+        for (User user : MyOrg.getInstance().getUserSet()) {
+            final String normalizedUser = StringNormalizer.normalize(user.getPresentationName()).toLowerCase();
 
-			if (hasMatch(values, normalizedUser)) {
-				users.add(user);
-			}
-		}
-		return users;
-	}
+            if (hasMatch(values, normalizedUser)) {
+                users.add(user);
+            }
+        }
+        return users;
+    }
 
-	private boolean hasMatch(String[] input, String personNameParts) {
-		for (final String namePart : input) {
-			if (personNameParts.indexOf(namePart) == -1) {
-				return false;
-			}
-		}
-		return true;
-	}
+    private boolean hasMatch(String[] input, String personNameParts) {
+        for (final String namePart : input) {
+            if (personNameParts.indexOf(namePart) == -1) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

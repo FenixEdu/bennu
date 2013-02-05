@@ -34,34 +34,34 @@ import java.util.Map;
  * 
  */
 public class MultiCounter<T> {
-	T countableObject;
-	Map<String, Counter<T>> counters;
-	final boolean holdElements;
+    T countableObject;
+    Map<String, Counter<T>> counters;
+    final boolean holdElements;
 
-	public MultiCounter(T countableObject, final boolean holdElements, String... counterNames) {
-		this.countableObject = countableObject;
-		this.holdElements = holdElements;
-		counters = new HashMap<String, Counter<T>>();
-		for (String name : counterNames) {
-			counters.put(name, new Counter<T>(countableObject));
-		}
-	}
+    public MultiCounter(T countableObject, final boolean holdElements, String... counterNames) {
+        this.countableObject = countableObject;
+        this.holdElements = holdElements;
+        counters = new HashMap<String, Counter<T>>();
+        for (String name : counterNames) {
+            counters.put(name, new Counter<T>(countableObject));
+        }
+    }
 
-	public T getCountableObject() {
-		return this.countableObject;
-	}
+    public T getCountableObject() {
+        return this.countableObject;
+    }
 
-	public Counter<T> getCounter(String counterName) {
-		return counters.get(counterName);
-	}
+    public Counter<T> getCounter(String counterName) {
+        return counters.get(counterName);
+    }
 
-	public void increment(final String counterName, final Object object) {
-		final Counter<T> counter = getCounter(counterName);
-		if (holdElements) {
-			counter.increment(object);
-		} else {
-			counter.increment();
-		}
-	}
+    public void increment(final String counterName, final Object object) {
+        final Counter<T> counter = getCounter(counterName);
+        if (holdElements) {
+            counter.increment(object);
+        } else {
+            counter.increment();
+        }
+    }
 
 }

@@ -38,28 +38,28 @@ import pt.ist.fenixWebFramework.services.Service;
  */
 public class NegationGroup extends NegationGroup_Base {
 
-	public NegationGroup(PersistentGroup persistentGroup) {
-		super();
-		setPersistentGroup(persistentGroup);
-	}
+    public NegationGroup(PersistentGroup persistentGroup) {
+        super();
+        setPersistentGroup(persistentGroup);
+    }
 
-	@Override
-	public Set<User> getMembers() {
-		throw new DomainException();
-	}
+    @Override
+    public Set<User> getMembers() {
+        throw new DomainException();
+    }
 
-	@Override
-	public String getName() {
-		return ("NOT " + getPersistentGroup().getName());
-	}
+    @Override
+    public String getName() {
+        return ("NOT " + getPersistentGroup().getName());
+    }
 
-	@Override
-	public boolean isMember(User user) {
-		return !getPersistentGroup().isMember(user);
-	}
+    @Override
+    public boolean isMember(User user) {
+        return !getPersistentGroup().isMember(user);
+    }
 
-	@Service
-	public static NegationGroup createNegationGroup(final PersistentGroup persistentGroup) {
-		return new NegationGroup(persistentGroup);
-	}
+    @Service
+    public static NegationGroup createNegationGroup(final PersistentGroup persistentGroup) {
+        return new NegationGroup(persistentGroup);
+    }
 }

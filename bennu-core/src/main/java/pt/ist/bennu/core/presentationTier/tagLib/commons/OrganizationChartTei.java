@@ -35,16 +35,16 @@ import javax.servlet.jsp.tagext.VariableInfo;
  */
 public class OrganizationChartTei extends TagExtraInfo {
 
-	@Override
-	public VariableInfo[] getVariableInfo(TagData data) {
+    @Override
+    public VariableInfo[] getVariableInfo(TagData data) {
 
-		String type = (String) data.getAttribute("type");
-		if (type == null) {
-			type = "java.lang.Object";
-		}
+        String type = (String) data.getAttribute("type");
+        if (type == null) {
+            type = "java.lang.Object";
+        }
 
-		return new VariableInfo[] { new VariableInfo(data.getAttributeString("id"), type, true, VariableInfo.NESTED) };
+        return new VariableInfo[] { new VariableInfo(data.getAttributeString("id"), type, true, VariableInfo.NESTED) };
 
-	}
+    }
 
 }

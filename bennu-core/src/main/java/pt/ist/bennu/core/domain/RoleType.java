@@ -36,25 +36,25 @@ import pt.ist.bennu.core.util.BundleUtil;
  */
 public enum RoleType implements IRoleEnum {
 
-	MANAGER, USER_MANAGER;
+    MANAGER, USER_MANAGER;
 
-	public String getPresentationName() {
-		return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.roleType.name."
-				+ name());
-	}
+    public String getPresentationName() {
+        return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.roleType.name."
+                + name());
+    }
 
-	public String getName() {
-		return name();
-	}
+    public String getName() {
+        return name();
+    }
 
-	@Override
-	public String getRoleName() {
-		return this.getName();
-	}
+    @Override
+    public String getRoleName() {
+        return this.getName();
+    }
 
-	@Override
-	public String getLocalizedName() {
-		return this.getPresentationName();
-	}
+    @Override
+    public String getLocalizedName() {
+        return this.getPresentationName();
+    }
 
 }

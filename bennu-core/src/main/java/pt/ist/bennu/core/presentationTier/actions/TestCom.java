@@ -52,66 +52,66 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
  */
 public class TestCom extends BaseAction {
 
-	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		final User user = UserView.getCurrentUser();
-		if (user == null || !user.hasRoleType(RoleType.MANAGER)) {
-			throw new Error("unauthorized.access");
-		}
-		return super.execute(mapping, form, request, response);
-	}
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        final User user = UserView.getCurrentUser();
+        if (user == null || !user.hasRoleType(RoleType.MANAGER)) {
+            throw new Error("unauthorized.access");
+        }
+        return super.execute(mapping, form, request, response);
+    }
 
-	private static PrimiviteWithEnumConverter enumConverter = new PrimiviteWithEnumConverter();
+    private static PrimiviteWithEnumConverter enumConverter = new PrimiviteWithEnumConverter();
 
-	public ActionForward invokeMethod(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-			final HttpServletResponse response) throws ClassNotFoundException, IOException {
+    public ActionForward invokeMethod(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws ClassNotFoundException, IOException {
 
-		String objectId = request.getParameter("id");
-		String methodName = request.getParameter("methodName");
-		Object[] objects = getObjects(request.getParameter("objectRepresentation"));
-		Class[] classes = getClasses(request.getParameter("classesRepresentation"));
+        String objectId = request.getParameter("id");
+        String methodName = request.getParameter("methodName");
+        Object[] objects = getObjects(request.getParameter("objectRepresentation"));
+        Class[] classes = getClasses(request.getParameter("classesRepresentation"));
 
-		RemoteCallRequest remoteRequest = new RemoteCallRequest(Type.INSTANCE, objectId, methodName, classes, objects);
-		RemoteCallReply reply = new RemoteCallReply();
-		RemoteCallProcessor.process(remoteRequest, reply);
+        RemoteCallRequest remoteRequest = new RemoteCallRequest(Type.INSTANCE, objectId, methodName, classes, objects);
+        RemoteCallReply reply = new RemoteCallReply();
+        RemoteCallProcessor.process(remoteRequest, reply);
 
-		response.getOutputStream().write(enumConverter.serializeToSend(reply.getResult()).getBytes());
+        response.getOutputStream().write(enumConverter.serializeToSend(reply.getResult()).getBytes());
 
-		return null;
-	}
+        return null;
+    }
 
-	public ActionForward invokeStatic(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-			final HttpServletResponse response) throws ClassNotFoundException, IOException {
-		String className = request.getParameter("className");
-		String methodName = request.getParameter("methodName");
-		Object[] objects = getObjects(request.getParameter("objectRepresentation"));
-		Class[] classes = getClasses(request.getParameter("classesRepresentation"));
+    public ActionForward invokeStatic(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws ClassNotFoundException, IOException {
+        String className = request.getParameter("className");
+        String methodName = request.getParameter("methodName");
+        Object[] objects = getObjects(request.getParameter("objectRepresentation"));
+        Class[] classes = getClasses(request.getParameter("classesRepresentation"));
 
-		RemoteCallRequest remoteRequest = new RemoteCallRequest(Type.STATIC, className, methodName, classes, objects);
-		RemoteCallReply reply = new RemoteCallReply();
-		RemoteCallProcessor.process(remoteRequest, reply);
+        RemoteCallRequest remoteRequest = new RemoteCallRequest(Type.STATIC, className, methodName, classes, objects);
+        RemoteCallReply reply = new RemoteCallReply();
+        RemoteCallProcessor.process(remoteRequest, reply);
 
-		response.getOutputStream().write(enumConverter.serializeToSend(reply.getResult()).getBytes());
+        response.getOutputStream().write(enumConverter.serializeToSend(reply.getResult()).getBytes());
 
-		return null;
-	}
+        return null;
+    }
 
-	private Object[] getObjects(String representation) {
-		return enumConverter.readMultipleObjects(representation);
-	}
+    private Object[] getObjects(String representation) {
+        return enumConverter.readMultipleObjects(representation);
+    }
 
-	private Class[] getClasses(String representation) throws ClassNotFoundException {
+    private Class[] getClasses(String representation) throws ClassNotFoundException {
 
-		String[] classNames = enumConverter.readMultipleObjects(String.class, representation);
-		if (classNames.length == 0) {
-			return new Class[] {};
-		}
-		Class[] classes = new Class[classNames.length];
-		for (int i = 0; i < classNames.length; i++) {
-			classes[i] = Class.forName(classNames[i]);
-		}
+        String[] classNames = enumConverter.readMultipleObjects(String.class, representation);
+        if (classNames.length == 0) {
+            return new Class[] {};
+        }
+        Class[] classes = new Class[classNames.length];
+        for (int i = 0; i < classNames.length; i++) {
+            classes[i] = Class.forName(classNames[i]);
+        }
 
-		return classes;
-	}
+        return classes;
+    }
 }

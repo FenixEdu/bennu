@@ -32,5 +32,5 @@ package pt.ist.bennu.core.domain;
  */
 public interface ModuleInitializer {
 
-	public void init(MyOrg root);
+    public void init(MyOrg root);
 }

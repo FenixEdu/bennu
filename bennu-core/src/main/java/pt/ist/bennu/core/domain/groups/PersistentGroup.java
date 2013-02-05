@@ -40,55 +40,55 @@ import pt.ist.bennu.core.domain.User;
  */
 public abstract class PersistentGroup extends PersistentGroup_Base implements Presentable {
 
-	public static final Comparator<PersistentGroup> COMPARATOR_BY_NAME = new Comparator<PersistentGroup>() {
+    public static final Comparator<PersistentGroup> COMPARATOR_BY_NAME = new Comparator<PersistentGroup>() {
 
-		@Override
-		public int compare(PersistentGroup r1, PersistentGroup r2) {
-			final int c = r1.getName().compareTo(r2.getName());
-			return c == 0 ? r1.getExternalId().compareTo(r2.getExternalId()) : c;
-		}
+        @Override
+        public int compare(PersistentGroup r1, PersistentGroup r2) {
+            final int c = r1.getName().compareTo(r2.getName());
+            return c == 0 ? r1.getExternalId().compareTo(r2.getExternalId()) : c;
+        }
 
-	};
+    };
 
-	public PersistentGroup() {
-		super();
-		setMyOrg(MyOrg.getInstance());
-	}
+    public PersistentGroup() {
+        super();
+        setMyOrg(MyOrg.getInstance());
+    }
 
-	public abstract boolean isMember(final User user);
+    public abstract boolean isMember(final User user);
 
-	public abstract String getName();
+    public abstract String getName();
 
-	public abstract Set<User> getMembers();
+    public abstract Set<User> getMembers();
 
-	protected static PersistentGroup getInstance(final Class clazz) {
-		for (final PersistentGroup persistentGroup : MyOrg.getInstance().getPersistentGroupsSet()) {
-			if (persistentGroup.getClass().isAssignableFrom(clazz)) {
-				return persistentGroup;
-			}
-		}
-		return null;
-	}
+    protected static PersistentGroup getInstance(final Class clazz) {
+        for (final PersistentGroup persistentGroup : MyOrg.getInstance().getPersistentGroupsSet()) {
+            if (persistentGroup.getClass().isAssignableFrom(clazz)) {
+                return persistentGroup;
+            }
+        }
+        return null;
+    }
 
-	protected static PersistentGroup getSystemGroup(final Class clazz) {
-		for (final PersistentGroup persistentGroup : MyOrg.getInstance().getSystemGroupsSet()) {
-			if (persistentGroup.getClass().isAssignableFrom(clazz)) {
-				return persistentGroup;
-			}
-		}
-		return null;
-	}
+    protected static PersistentGroup getSystemGroup(final Class clazz) {
+        for (final PersistentGroup persistentGroup : MyOrg.getInstance().getSystemGroupsSet()) {
+            if (persistentGroup.getClass().isAssignableFrom(clazz)) {
+                return persistentGroup;
+            }
+        }
+        return null;
+    }
 
-	public void delete() {
-		removeGroupOwner();
-		removeSystemGroupMyOrg();
-		removeMyOrg();
-		deleteDomainObject();
-	}
+    public void delete() {
+        removeGroupOwner();
+        removeSystemGroupMyOrg();
+        removeMyOrg();
+        deleteDomainObject();
+    }
 
-	@Override
-	public String getPresentationName() {
-		return getName();
-	}
+    @Override
+    public String getPresentationName() {
+        return getName();
+    }
 
 }

@@ -30,5 +30,5 @@ package pt.ist.bennu.core.domain;
  * 
  */
 public interface Presentable {
-	public String getPresentationName();
+    public String getPresentationName();
 }

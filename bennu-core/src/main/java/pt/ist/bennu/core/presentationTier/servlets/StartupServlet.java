@@ -66,170 +66,170 @@ import pt.utl.ist.fenix.tools.util.i18n.Language;
 @WebListener
 public class StartupServlet implements ServletContextListener {
 
-	private static final long serialVersionUID = -7035892286820898843L;
+    private static final long serialVersionUID = -7035892286820898843L;
 
-	@Override
-	public void contextInitialized(ServletContextEvent event) {
-		try {
-			setLocale();
-			try {
-				Class.forName(FenixFrameworkInitializer.class.getName());
-			} catch (ClassNotFoundException e) {
-			}
-			FenixWebFramework.initialize(PropertiesManager.getFenixFrameworkConfig());
+    @Override
+    public void contextInitialized(ServletContextEvent event) {
+        try {
+            setLocale();
+            try {
+                Class.forName(FenixFrameworkInitializer.class.getName());
+            } catch (ClassNotFoundException e) {
+            }
+            FenixWebFramework.initialize(PropertiesManager.getFenixFrameworkConfig());
 
-			try {
-				Transaction.begin(true);
-				Transaction.currentFenixTransaction().setReadOnly();
+            try {
+                Transaction.begin(true);
+                Transaction.currentFenixTransaction().setReadOnly();
 
-				try {
-					MyOrg.initModules();
-				} catch (Throwable t) {
-					t.printStackTrace();
-					throw new Error(t);
-				}
+                try {
+                    MyOrg.initModules();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                    throw new Error(t);
+                }
 
-				final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
-				Authenticate.initRole(RoleType.MANAGER, managerUsernames);
+                final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
+                Authenticate.initRole(RoleType.MANAGER, managerUsernames);
 
-				initializePersistentGroups();
+                initializePersistentGroups();
 
-				initScheduler();
+                initScheduler();
 
-				syncThemes(event.getServletContext());
+                syncThemes(event.getServletContext());
 
-				syncLayouts(event.getServletContext());
+                syncLayouts(event.getServletContext());
 
-				registerFilterCheckSumRules();
+                registerFilterCheckSumRules();
 
-			} finally {
-				Transaction.forceFinish();
-			}
-		} finally {
-			Language.setLocale(null);
-		}
-	}
+            } finally {
+                Transaction.forceFinish();
+            }
+        } finally {
+            Language.setLocale(null);
+        }
+    }
 
-	@Override
-	public void contextDestroyed(ServletContextEvent event) {
-	}
+    @Override
+    public void contextDestroyed(ServletContextEvent event) {
+    }
 
-	private void setLocale() {
-		final String language = PropertiesManager.getProperty("language");
-		final String location = PropertiesManager.getProperty("location");
-		Language.setLocale(new Locale(language, location));
-	}
+    private void setLocale() {
+        final String language = PropertiesManager.getProperty("language");
+        final String location = PropertiesManager.getProperty("location");
+        Language.setLocale(new Locale(language, location));
+    }
 
-	private void syncThemes(ServletContext context) {
-		Set<String> themeFolders = context.getResourcePaths("/CSS/");
+    private void syncThemes(ServletContext context) {
+        Set<String> themeFolders = context.getResourcePaths("/CSS/");
 
-		Set<String> themeNames = new HashSet<>();
-		for (String folder : themeFolders) {
-			themeNames.add(folder.substring("/CSS/".length(), folder.length() - 1));
-		}
+        Set<String> themeNames = new HashSet<>();
+        for (String folder : themeFolders) {
+            themeNames.add(folder.substring("/CSS/".length(), folder.length() - 1));
+        }
 
-		for (Theme theme : MyOrg.getInstance().getThemes()) {
-			if (!matchThemeOrLayoutName(theme.getName(), themeNames)) {
-				Theme.deleteTheme(theme);
-			}
-		}
+        for (Theme theme : MyOrg.getInstance().getThemes()) {
+            if (!matchThemeOrLayoutName(theme.getName(), themeNames)) {
+                Theme.deleteTheme(theme);
+            }
+        }
 
-		for (String themeName : themeNames) {
-			if (!Theme.isThemeAvailable(themeName)) {
-				try {
-					Properties themeProperties = new Properties();
-					InputStream resource = context.getResourceAsStream("CSS/" + themeName + "/theme.properties");
-					if (resource != null) {
-						themeProperties.load(resource);
-						ThemeType type = ThemeType.valueOf(themeProperties.getProperty("theme.type"));
-						String description = themeProperties.getProperty("theme.description");
-						String screenshotFileName = themeProperties.getProperty("theme.screenshotFileName");
-						Theme.createTheme(themeName, description, type, screenshotFileName);
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+        for (String themeName : themeNames) {
+            if (!Theme.isThemeAvailable(themeName)) {
+                try {
+                    Properties themeProperties = new Properties();
+                    InputStream resource = context.getResourceAsStream("CSS/" + themeName + "/theme.properties");
+                    if (resource != null) {
+                        themeProperties.load(resource);
+                        ThemeType type = ThemeType.valueOf(themeProperties.getProperty("theme.type"));
+                        String description = themeProperties.getProperty("theme.description");
+                        String screenshotFileName = themeProperties.getProperty("theme.screenshotFileName");
+                        Theme.createTheme(themeName, description, type, screenshotFileName);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
-	private void syncLayouts(ServletContext context) {
-		Set<String> layoutFolders = context.getResourcePaths("/layout/");
+    private void syncLayouts(ServletContext context) {
+        Set<String> layoutFolders = context.getResourcePaths("/layout/");
 
-		Set<String> layoutNames = new HashSet<>();
-		for (String folder : layoutFolders) {
-			layoutNames.add(folder.substring("/layout/".length(), folder.length() - 1));
-		}
+        Set<String> layoutNames = new HashSet<>();
+        for (String folder : layoutFolders) {
+            layoutNames.add(folder.substring("/layout/".length(), folder.length() - 1));
+        }
 
-		for (Layout layout : MyOrg.getInstance().getLayoutSet()) {
-			if (!matchThemeOrLayoutName(layout.getName(), layoutNames)) {
-				layout.delete();
-			}
-		}
+        for (Layout layout : MyOrg.getInstance().getLayoutSet()) {
+            if (!matchThemeOrLayoutName(layout.getName(), layoutNames)) {
+                layout.delete();
+            }
+        }
 
-		for (String layoutName : layoutNames) {
-			if (Layout.getLayoutByName(layoutName) == null) {
-				Layout.createLayout(layoutName);
-			}
-		}
-	}
+        for (String layoutName : layoutNames) {
+            if (Layout.getLayoutByName(layoutName) == null) {
+                Layout.createLayout(layoutName);
+            }
+        }
+    }
 
-	private boolean matchThemeOrLayoutName(String name, Set<String> themeFolders) {
-		for (String file : themeFolders) {
-			if (file.equals(name)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    private boolean matchThemeOrLayoutName(String name, Set<String> themeFolders) {
+        for (String file : themeFolders) {
+            if (file.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private void initializePersistentGroups() {
-		UserGroup.getInstance();
-		AnyoneGroup.getInstance();
-		for (final RoleType roleType : RoleType.values()) {
-			Role.getRole(roleType);
-		}
-	}
+    private void initializePersistentGroups() {
+        UserGroup.getInstance();
+        AnyoneGroup.getInstance();
+        for (final RoleType roleType : RoleType.values()) {
+            Role.getRole(roleType);
+        }
+    }
 
-	private void registerFilterCheckSumRules() {
+    private void registerFilterCheckSumRules() {
 
-		RequestChecksumFilter.registerFilterRule(new ChecksumPredicate() {
+        RequestChecksumFilter.registerFilterRule(new ChecksumPredicate() {
 
-			@Override
-			public boolean shouldFilter(HttpServletRequest httpServletRequest) {
-				return !httpServletRequest.getRequestURI().endsWith("/home.do")
-						&& !httpServletRequest.getRequestURI().endsWith("/isAlive.do")
-						&& !(httpServletRequest.getRequestURI().endsWith("/authenticationAction.do")
-								&& httpServletRequest.getQueryString() != null && httpServletRequest.getQueryString().contains(
-								"method=logoutEmptyPage"));
-			}
-		});
+            @Override
+            public boolean shouldFilter(HttpServletRequest httpServletRequest) {
+                return !httpServletRequest.getRequestURI().endsWith("/home.do")
+                        && !httpServletRequest.getRequestURI().endsWith("/isAlive.do")
+                        && !(httpServletRequest.getRequestURI().endsWith("/authenticationAction.do")
+                                && httpServletRequest.getQueryString() != null && httpServletRequest.getQueryString().contains(
+                                "method=logoutEmptyPage"));
+            }
+        });
 
-	}
+    }
 
-	private void initScheduler() {
-		try {
-			final Class clazz = Class.forName("pt.ist.bennu.core.domain.scheduler.Scheduler");
-			final Method method = clazz.getDeclaredMethod("initialize");
-			method.invoke(null);
-			System.out.println("Scheduler initializeed.");
-		} catch (ClassNotFoundException ex) {
-			// scheduler not included in deploy... keep going.
-		} catch (SecurityException e) {
-			System.out.println("Unable to init scheduler");
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			System.out.println("Unable to init scheduler");
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			System.out.println("Unable to init scheduler");
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			System.out.println("Unable to init scheduler");
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			System.out.println("Unable to init scheduler");
-			e.printStackTrace();
-		}
-	}
+    private void initScheduler() {
+        try {
+            final Class clazz = Class.forName("pt.ist.bennu.core.domain.scheduler.Scheduler");
+            final Method method = clazz.getDeclaredMethod("initialize");
+            method.invoke(null);
+            System.out.println("Scheduler initializeed.");
+        } catch (ClassNotFoundException ex) {
+            // scheduler not included in deploy... keep going.
+        } catch (SecurityException e) {
+            System.out.println("Unable to init scheduler");
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            System.out.println("Unable to init scheduler");
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Unable to init scheduler");
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            System.out.println("Unable to init scheduler");
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            System.out.println("Unable to init scheduler");
+            e.printStackTrace();
+        }
+    }
 }

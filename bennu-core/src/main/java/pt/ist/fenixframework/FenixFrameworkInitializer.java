@@ -33,7 +33,7 @@ import pt.ist.fenixWebFramework.FenixWebFramework;
  * 
  */
 public class FenixFrameworkInitializer {
-	static {
-		FenixWebFramework.bootStrap(PropertiesManager.getFenixFrameworkConfig());
-	}
+    static {
+        FenixWebFramework.bootStrap(PropertiesManager.getFenixFrameworkConfig());
+    }
 }

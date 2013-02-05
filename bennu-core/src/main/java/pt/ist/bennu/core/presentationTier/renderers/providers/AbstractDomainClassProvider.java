@@ -37,24 +37,24 @@ import pt.ist.fenixframework.DomainModelUtil;
  */
 public abstract class AbstractDomainClassProvider implements DataProvider {
 
-	@Override
-	public Converter getConverter() {
-		return null;
-	}
+    @Override
+    public Converter getConverter() {
+        return null;
+    }
 
-	@Override
-	public Object provide(Object arg0, Object arg1) {
-		return DomainModelUtil.getDomainClassHierarchy(getSuperClass(), shouldContainSuperClass(),
-				shouldContainerAbstractClasses());
-	}
+    @Override
+    public Object provide(Object arg0, Object arg1) {
+        return DomainModelUtil.getDomainClassHierarchy(getSuperClass(), shouldContainSuperClass(),
+                shouldContainerAbstractClasses());
+    }
 
-	protected abstract Class getSuperClass();
+    protected abstract Class getSuperClass();
 
-	protected boolean shouldContainSuperClass() {
-		return false;
-	}
+    protected boolean shouldContainSuperClass() {
+        return false;
+    }
 
-	protected boolean shouldContainerAbstractClasses() {
-		return true;
-	}
+    protected boolean shouldContainerAbstractClasses() {
+        return true;
+    }
 }

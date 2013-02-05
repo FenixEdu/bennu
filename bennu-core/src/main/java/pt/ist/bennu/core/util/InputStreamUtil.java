@@ -39,48 +39,48 @@ import pt.utl.ist.fenix.tools.util.FileUtils;
  */
 public class InputStreamUtil {
 
-	public static final int DEFAULT_BUFFER_SIZE = 1024;
+    public static final int DEFAULT_BUFFER_SIZE = 1024;
 
-	public static byte[] consumeInputStream(final InputStream inputStream) {
-		byte[] result = null;
-		if (inputStream != null) {
-			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			try {
-				try {
-					FileUtils.copy(inputStream, byteArrayOutputStream);
-					byteArrayOutputStream.flush();
-					result = byteArrayOutputStream.toByteArray();
-					byteArrayOutputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} finally {
-				try {
-					inputStream.close();
-					byteArrayOutputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return result;
-	}
+    public static byte[] consumeInputStream(final InputStream inputStream) {
+        byte[] result = null;
+        if (inputStream != null) {
+            final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            try {
+                try {
+                    FileUtils.copy(inputStream, byteArrayOutputStream);
+                    byteArrayOutputStream.flush();
+                    result = byteArrayOutputStream.toByteArray();
+                    byteArrayOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } finally {
+                try {
+                    inputStream.close();
+                    byteArrayOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
 
-	public static int copyStream(InputStream source, OutputStream target) throws IOException {
-		return copyStream(source, target, DEFAULT_BUFFER_SIZE);
-	}
+    public static int copyStream(InputStream source, OutputStream target) throws IOException {
+        return copyStream(source, target, DEFAULT_BUFFER_SIZE);
+    }
 
-	public static int copyStream(InputStream source, OutputStream target, int bufferSize) throws IOException {
+    public static int copyStream(InputStream source, OutputStream target, int bufferSize) throws IOException {
 
-		int countBytesRead = -1;
-		int totalBytes = 0;
-		byte[] bufferCopy = new byte[bufferSize];
-		while ((countBytesRead = source.read(bufferCopy)) != -1) {
-			target.write(bufferCopy, 0, countBytesRead);
-			totalBytes += countBytesRead;
-		}
+        int countBytesRead = -1;
+        int totalBytes = 0;
+        byte[] bufferCopy = new byte[bufferSize];
+        while ((countBytesRead = source.read(bufferCopy)) != -1) {
+            target.write(bufferCopy, 0, countBytesRead);
+            totalBytes += countBytesRead;
+        }
 
-		target.flush();
-		return totalBytes;
-	}
+        target.flush();
+        return totalBytes;
+    }
 }

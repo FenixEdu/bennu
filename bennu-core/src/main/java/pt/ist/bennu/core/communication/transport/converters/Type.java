@@ -30,5 +30,5 @@ package pt.ist.bennu.core.communication.transport.converters;
  * 
  */
 public enum Type {
-	INSTANCE, STATIC;
+    INSTANCE, STATIC;
 }

@@ -43,16 +43,16 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
  * 
  */
 public class CheckIsAliveAction extends Action {
-	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		MyOrg.getInstance();
-		String timeout = request.getParameter("timeout");
-		if (!StringUtils.isEmpty(timeout)) {
-			long secs = Long.parseLong(timeout);
-			Thread.sleep(secs * 1000);
-		}
-		response.getOutputStream().print("ok");
-		return super.execute(mapping, form, request, response);
-	}
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        MyOrg.getInstance();
+        String timeout = request.getParameter("timeout");
+        if (!StringUtils.isEmpty(timeout)) {
+            long secs = Long.parseLong(timeout);
+            Thread.sleep(secs * 1000);
+        }
+        response.getOutputStream().print("ok");
+        return super.execute(mapping, form, request, response);
+    }
 }

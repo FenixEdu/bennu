@@ -39,61 +39,61 @@ import pt.ist.bennu.core.domain.util.Search;
  */
 public class SearchUsers extends Search<User> {
 
-	private String username;
-	private User user;
-	private RoleType roleType;
+    private String username;
+    private User user;
+    private RoleType roleType;
 
-	protected class SearchResult extends SearchResultSet<User> {
+    protected class SearchResult extends SearchResultSet<User> {
 
-		public SearchResult(final Collection<? extends User> c) {
-			super(c);
-		}
+        public SearchResult(final Collection<? extends User> c) {
+            super(c);
+        }
 
-		@Override
-		protected boolean matchesSearchCriteria(final User user) {
-			return matchCriteria(username, user.getUsername()) && matchCriteria(roleType, user);
-		}
+        @Override
+        protected boolean matchesSearchCriteria(final User user) {
+            return matchCriteria(username, user.getUsername()) && matchCriteria(roleType, user);
+        }
 
-		private boolean matchCriteria(final RoleType roleType, final User user) {
-			return roleType == null || user.hasRoleType(roleType);
-		}
+        private boolean matchCriteria(final RoleType roleType, final User user) {
+            return roleType == null || user.hasRoleType(roleType);
+        }
 
-	}
+    }
 
-	@Override
-	public Set<User> search() {
-		final User user = getUser();
-		if (user != null) {
-			final Set<User> users = new HashSet<User>();
-			users.add(user);
-			return users;
-		}
-		final Set<User> users = username != null || roleType != null ? MyOrg.getInstance().getUserSet() : Collections.EMPTY_SET;
-		return new SearchResult(users);
-	}
+    @Override
+    public Set<User> search() {
+        final User user = getUser();
+        if (user != null) {
+            final Set<User> users = new HashSet<User>();
+            users.add(user);
+            return users;
+        }
+        final Set<User> users = username != null || roleType != null ? MyOrg.getInstance().getUserSet() : Collections.EMPTY_SET;
+        return new SearchResult(users);
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public RoleType getRoleType() {
-		return roleType;
-	}
+    public RoleType getRoleType() {
+        return roleType;
+    }
 
-	public void setRoleType(RoleType roleType) {
-		this.roleType = roleType;
-	}
+    public void setRoleType(RoleType roleType) {
+        this.roleType = roleType;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public void setUser(final User user) {
-		this.user = user;
-	}
+    public void setUser(final User user) {
+        this.user = user;
+    }
 
 }

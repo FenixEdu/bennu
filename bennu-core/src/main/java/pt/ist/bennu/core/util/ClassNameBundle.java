@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
  */
 public @interface ClassNameBundle {
 
-	String bundle() default "";
+    String bundle() default "";
 
-	String key() default "";
+    String key() default "";
 }

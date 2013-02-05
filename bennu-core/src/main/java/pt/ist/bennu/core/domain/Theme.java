@@ -34,57 +34,57 @@ import pt.ist.fenixWebFramework.services.Service;
  */
 public class Theme extends Theme_Base {
 
-	public Theme(String name, ThemeType type) {
-		super();
-		setMyOrg(MyOrg.getInstance());
-		setName(name);
-		setType(type);
-	}
+    public Theme(String name, ThemeType type) {
+        super();
+        setMyOrg(MyOrg.getInstance());
+        setName(name);
+        setType(type);
+    }
 
-	public Theme(String name, String description, ThemeType type) {
-		this(name, type);
-		setDescription(description);
-	}
+    public Theme(String name, String description, ThemeType type) {
+        this(name, type);
+        setDescription(description);
+    }
 
-	public Theme(String name, String description, ThemeType type, String screenshotFileName) {
-		this(name, description, type);
-		setScreenshotFileName(screenshotFileName);
-	}
+    public Theme(String name, String description, ThemeType type, String screenshotFileName) {
+        this(name, description, type);
+        setScreenshotFileName(screenshotFileName);
+    }
 
-	public void delete() {
-		removeMyOrg();
-		while (!getVirtualHosts().isEmpty()) {
-			getVirtualHosts().get(0).removeTheme();
-		}
-		deleteDomainObject();
-	}
+    public void delete() {
+        removeMyOrg();
+        while (!getVirtualHosts().isEmpty()) {
+            getVirtualHosts().get(0).removeTheme();
+        }
+        deleteDomainObject();
+    }
 
-	public static Theme getThemeByName(String name) {
-		for (Theme theme : MyOrg.getInstance().getThemes()) {
-			if (theme.getName().equals(name)) {
-				return theme;
-			}
-		}
-		return null;
-	}
+    public static Theme getThemeByName(String name) {
+        for (Theme theme : MyOrg.getInstance().getThemes()) {
+            if (theme.getName().equals(name)) {
+                return theme;
+            }
+        }
+        return null;
+    }
 
-	public static boolean isThemeAvailable(String name) {
-		return getThemeByName(name) != null;
-	}
+    public static boolean isThemeAvailable(String name) {
+        return getThemeByName(name) != null;
+    }
 
-	@Override
-	public String getScreenshotFileName() {
-		String screenshotName = super.getScreenshotFileName();
-		return screenshotName != null ? screenshotName : getName() + ".jpg";
-	}
+    @Override
+    public String getScreenshotFileName() {
+        String screenshotName = super.getScreenshotFileName();
+        return screenshotName != null ? screenshotName : getName() + ".jpg";
+    }
 
-	@Service
-	public static Theme createTheme(String themeName, String description, ThemeType type, String screenshotFileName) {
-		return new Theme(themeName, description, type, screenshotFileName);
-	}
+    @Service
+    public static Theme createTheme(String themeName, String description, ThemeType type, String screenshotFileName) {
+        return new Theme(themeName, description, type, screenshotFileName);
+    }
 
-	@Service
-	public static void deleteTheme(Theme theme) {
-		theme.delete();
-	}
+    @Service
+    public static void deleteTheme(Theme theme) {
+        theme.delete();
+    }
 }

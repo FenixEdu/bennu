@@ -36,21 +36,21 @@ import pt.utl.ist.fenix.tools.util.ByteArray;
  */
 public class JavaByteArray2SqlByteArrayFieldConversion implements FieldConversion {
 
-	@Override
-	public Object javaToSql(Object source) {
-		if (source instanceof ByteArray) {
-			final ByteArray byteArray = (ByteArray) source;
-			return byteArray.getBytes();
-		}
-		return source;
-	}
+    @Override
+    public Object javaToSql(Object source) {
+        if (source instanceof ByteArray) {
+            final ByteArray byteArray = (ByteArray) source;
+            return byteArray.getBytes();
+        }
+        return source;
+    }
 
-	@Override
-	public Object sqlToJava(Object source) {
-		if (source instanceof byte[]) {
-			return new ByteArray((byte[]) source);
-		}
-		return source;
-	}
+    @Override
+    public Object sqlToJava(Object source) {
+        if (source instanceof byte[]) {
+            return new ByteArray((byte[]) source);
+        }
+        return source;
+    }
 
 }

@@ -35,18 +35,18 @@ import java.io.Serializable;
  */
 public class ByteArray implements Serializable {
 
-	private byte[] bytes;
+    private byte[] bytes;
 
-	public ByteArray(byte[] value) {
-		this.bytes = value;
-	}
+    public ByteArray(byte[] value) {
+        this.bytes = value;
+    }
 
-	public byte[] getBytes() {
-		return bytes;
-	}
+    public byte[] getBytes() {
+        return bytes;
+    }
 
-	public void setBytes(byte[] bytes) {
-		this.bytes = bytes;
-	}
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
+    }
 
 }

@@ -44,14 +44,14 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
  */
 public class NodeProcessorAction extends ContextBaseAction {
 
-	public final ActionForward viewElement(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-			final HttpServletResponse response) throws Exception {
-		final Context context = getContext(request);
-		if (context.getElements().isEmpty()) {
-			final INode node = Node.getFirstTopLevelNode();
-			context.push(node);
-		}
-		return context.forward("/page.jsp");
-	}
+    public final ActionForward viewElement(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
+        final Context context = getContext(request);
+        if (context.getElements().isEmpty()) {
+            final INode node = Node.getFirstTopLevelNode();
+            context.push(node);
+        }
+        return context.forward("/page.jsp");
+    }
 
 }

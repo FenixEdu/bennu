@@ -37,14 +37,14 @@ import pt.ist.bennu.core.domain.User;
  */
 public class PeopleUserLog extends PeopleUserLog_Base {
 
-	public PeopleUserLog(final String operation, final String username, final String groupName) {
-		setMyOrg(MyOrg.getInstance());
-		setOperationDate(new DateTime());
-		final User user = UserView.getCurrentUser();
-		setExecutor(user == null ? "" : user.getUsername());
-		setOperation(operation);
-		setUsername(username);
-		setGroupName(groupName);
-	}
+    public PeopleUserLog(final String operation, final String username, final String groupName) {
+        setMyOrg(MyOrg.getInstance());
+        setOperationDate(new DateTime());
+        final User user = UserView.getCurrentUser();
+        setExecutor(user == null ? "" : user.getUsername());
+        setOperation(operation);
+        setUsername(username);
+        setGroupName(groupName);
+    }
 
 }

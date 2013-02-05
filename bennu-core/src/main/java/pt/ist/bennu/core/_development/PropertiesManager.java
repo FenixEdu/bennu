@@ -59,103 +59,103 @@ import pt.utl.ist.fenix.tools.util.MultiProperty;
  */
 public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesManager {
 
-	private static final Properties properties = new MultiProperty();
+    private static final Properties properties = new MultiProperty();
 
-	private static Config config = null;
+    private static Config config = null;
 
-	private static List<URL> urls = null;
+    private static List<URL> urls = null;
 
-	static {
-		try {
-			loadProperties(properties, "/configuration.properties");
-			final Map<String, CasConfig> casConfigMap = new HashMap<String, CasConfig>();
-			for (final Object key : properties.keySet()) {
-				final String property = (String) key;
-				int i = property.indexOf(".cas.enable");
-				if (i >= 0) {
-					final String hostname = property.substring(0, i);
-					if (getBooleanProperty(property)) {
-						final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");
-						final String casLogoutUrl = getProperty(hostname + ".cas.logoutUrl");
-						final String casValidateUrl = getProperty(hostname + ".cas.ValidateUrl");
-						final String serviceUrl = getProperty(hostname + ".cas.serviceUrl");
+    static {
+        try {
+            loadProperties(properties, "/configuration.properties");
+            final Map<String, CasConfig> casConfigMap = new HashMap<String, CasConfig>();
+            for (final Object key : properties.keySet()) {
+                final String property = (String) key;
+                int i = property.indexOf(".cas.enable");
+                if (i >= 0) {
+                    final String hostname = property.substring(0, i);
+                    if (getBooleanProperty(property)) {
+                        final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");
+                        final String casLogoutUrl = getProperty(hostname + ".cas.logoutUrl");
+                        final String casValidateUrl = getProperty(hostname + ".cas.ValidateUrl");
+                        final String serviceUrl = getProperty(hostname + ".cas.serviceUrl");
 
-						final CasConfig casConfig = new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
-						casConfigMap.put(hostname, casConfig);
-					} else {
-						final CasConfig casConfig = new CasConfig();
-						casConfigMap.put(hostname, casConfig);
-					}
-				}
-			}
+                        final CasConfig casConfig = new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
+                        casConfigMap.put(hostname, casConfig);
+                    } else {
+                        final CasConfig casConfig = new CasConfig();
+                        casConfigMap.put(hostname, casConfig);
+                    }
+                }
+            }
 
-			config = new Config() {
-				{
-					domainModelPaths = new String[0];
-					dbAlias = getProperty("db.alias");
-					dbUsername = getProperty("db.user");
-					dbPassword = getProperty("db.pass");
-					appName = getProperty("app.name");
-					appContext = getProperty("app.context");
-					filterRequestWithDigest = getBooleanProperty("filter.request.with.digest");
-					tamperingRedirect = getProperty("digest.tampering.url");
-					errorIfChangingDeletedObject = getBooleanProperty("error.if.changing.deleted.object");
-					defaultLanguage = getProperty("language");
-					defaultLocation = getProperty("location");
-					defaultVariant = getProperty("variant");
-					updateRepositoryStructureIfNeeded = true;
-					casConfigByHost = Collections.unmodifiableMap(casConfigMap);
-					rootClass = MyOrg.class;
-					javascriptValidationEnabled = true;
-					errorfIfDeletingObjectNotDisconnected = true;
-					plugins = new FenixFrameworkPlugin[0];
-				}
+            config = new Config() {
+                {
+                    domainModelPaths = new String[0];
+                    dbAlias = getProperty("db.alias");
+                    dbUsername = getProperty("db.user");
+                    dbPassword = getProperty("db.pass");
+                    appName = getProperty("app.name");
+                    appContext = getProperty("app.context");
+                    filterRequestWithDigest = getBooleanProperty("filter.request.with.digest");
+                    tamperingRedirect = getProperty("digest.tampering.url");
+                    errorIfChangingDeletedObject = getBooleanProperty("error.if.changing.deleted.object");
+                    defaultLanguage = getProperty("language");
+                    defaultLocation = getProperty("location");
+                    defaultVariant = getProperty("variant");
+                    updateRepositoryStructureIfNeeded = true;
+                    casConfigByHost = Collections.unmodifiableMap(casConfigMap);
+                    rootClass = MyOrg.class;
+                    javascriptValidationEnabled = true;
+                    errorfIfDeletingObjectNotDisconnected = true;
+                    plugins = new FenixFrameworkPlugin[0];
+                }
 
-				@Override
-				public List<URL> getDomainModelURLs() {
-					return getUrls();
-				}
-			};
-		} catch (IOException e) {
-			throw new RuntimeException("Unable to load properties files.", e);
-		}
-	}
+                @Override
+                public List<URL> getDomainModelURLs() {
+                    return getUrls();
+                }
+            };
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to load properties files.", e);
+        }
+    }
 
-	public synchronized static List<URL> getUrls() {
-		if (urls == null) {
-			urls = new ArrayList<>();
-			try {
-				URL remote = Thread.currentThread().getContextClassLoader().getResource("remote.dml");
-				for (DmlFile dml : FenixFrameworkArtifact.fromName(getProperty("app.name")).getFullDmlSortedList()) {
-					urls.add(dml.getUrl());
-					if (remote != null && dml.getUrl().toExternalForm().endsWith("remote-plugin.dml")) {
-						urls.add(remote);
-					}
-				}
-			} catch (FenixFrameworkProjectException | IOException e) {
-				throw new Error(e);
-			}
-		}
-		return urls;
-	}
+    public synchronized static List<URL> getUrls() {
+        if (urls == null) {
+            urls = new ArrayList<>();
+            try {
+                URL remote = Thread.currentThread().getContextClassLoader().getResource("remote.dml");
+                for (DmlFile dml : FenixFrameworkArtifact.fromName(getProperty("app.name")).getFullDmlSortedList()) {
+                    urls.add(dml.getUrl());
+                    if (remote != null && dml.getUrl().toExternalForm().endsWith("remote-plugin.dml")) {
+                        urls.add(remote);
+                    }
+                }
+            } catch (FenixFrameworkProjectException | IOException e) {
+                throw new Error(e);
+            }
+        }
+        return urls;
+    }
 
-	public static String getProperty(final String key) {
-		return properties.getProperty(key);
-	}
+    public static String getProperty(final String key) {
+        return properties.getProperty(key);
+    }
 
-	public static boolean getBooleanProperty(final String key) {
-		return Boolean.parseBoolean(properties.getProperty(key));
-	}
+    public static boolean getBooleanProperty(final String key) {
+        return Boolean.parseBoolean(properties.getProperty(key));
+    }
 
-	public static Integer getIntegerProperty(final String key) {
-		return Integer.valueOf(properties.getProperty(key));
-	}
+    public static Integer getIntegerProperty(final String key) {
+        return Integer.valueOf(properties.getProperty(key));
+    }
 
-	public static void setProperty(final String key, final String value) {
-		properties.setProperty(key, value);
-	}
+    public static void setProperty(final String key, final String value) {
+        properties.setProperty(key, value);
+    }
 
-	public static Config getFenixFrameworkConfig() {
-		return config;
-	}
+    public static Config getFenixFrameworkConfig() {
+        return config;
+    }
 }

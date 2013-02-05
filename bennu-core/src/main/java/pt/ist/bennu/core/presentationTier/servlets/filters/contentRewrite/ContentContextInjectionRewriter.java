@@ -39,20 +39,20 @@ import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestRewriter;
  */
 public class ContentContextInjectionRewriter extends RequestRewriter {
 
-	public static final String CONTEXT_ATTRIBUTE_NAME = ContextBaseAction.CONTEXT_PATH;
+    public static final String CONTEXT_ATTRIBUTE_NAME = ContextBaseAction.CONTEXT_PATH;
 
-	public ContentContextInjectionRewriter(final HttpServletRequest httpServletRequest) {
-		super(httpServletRequest);
-	}
+    public ContentContextInjectionRewriter(final HttpServletRequest httpServletRequest) {
+        super(httpServletRequest);
+    }
 
-	@Override
-	protected String getContextPath(final HttpServletRequest httpServletRequest) {
-		final Context context = ContextBaseAction.getContext(httpServletRequest);
-		return context == null ? null : context.getPath();
-	}
+    @Override
+    protected String getContextPath(final HttpServletRequest httpServletRequest) {
+        final Context context = ContextBaseAction.getContext(httpServletRequest);
+        return context == null ? null : context.getPath();
+    }
 
-	@Override
-	protected String getContextAttributeName() {
-		return CONTEXT_ATTRIBUTE_NAME;
-	}
+    @Override
+    protected String getContextAttributeName() {
+        return CONTEXT_ATTRIBUTE_NAME;
+    }
 }

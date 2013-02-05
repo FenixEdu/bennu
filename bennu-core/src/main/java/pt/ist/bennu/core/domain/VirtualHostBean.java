@@ -41,225 +41,225 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
  */
 public class VirtualHostBean implements Serializable {
 
-	private String hostname;
-	private String supportEmailAddress;
-	private String systemEmailAddress;
+    private String hostname;
+    private String supportEmailAddress;
+    private String systemEmailAddress;
 
-	public String getSystemEmailAddress() {
-		return systemEmailAddress;
-	}
+    public String getSystemEmailAddress() {
+        return systemEmailAddress;
+    }
 
-	public void setSystemEmailAddress(String systemEmailAddress) {
-		this.systemEmailAddress = systemEmailAddress;
-	}
+    public void setSystemEmailAddress(String systemEmailAddress) {
+        this.systemEmailAddress = systemEmailAddress;
+    }
 
-	private MultiLanguageString applicationTitle;
-	private MultiLanguageString htmlTitle;
-	private MultiLanguageString applicationSubTitle;
-	private MultiLanguageString applicationCopyright;
-	private Boolean googleSearchEnabled;
-	private Boolean languageSelectionEnabled;
-	private Boolean breadCrumbsEnabled;
+    private MultiLanguageString applicationTitle;
+    private MultiLanguageString htmlTitle;
+    private MultiLanguageString applicationSubTitle;
+    private MultiLanguageString applicationCopyright;
+    private Boolean googleSearchEnabled;
+    private Boolean languageSelectionEnabled;
+    private Boolean breadCrumbsEnabled;
 
-	private Theme theme;
-	private Layout layout;
-	private String helpLink;
-	private String errorPage;
-	private ByteArray logo;
-	private transient InputStream logoInputStream;
-	private String logoFilename;
-	private String logoDisplayName;
-	private ByteArray favicon;
-	private transient InputStream faviconInputStream;
-	private String faviconFilename;
-	private String faviconDisplayName;
+    private Theme theme;
+    private Layout layout;
+    private String helpLink;
+    private String errorPage;
+    private ByteArray logo;
+    private transient InputStream logoInputStream;
+    private String logoFilename;
+    private String logoDisplayName;
+    private ByteArray favicon;
+    private transient InputStream faviconInputStream;
+    private String faviconFilename;
+    private String faviconDisplayName;
 
-	public String getHelpLink() {
-		return helpLink;
-	}
+    public String getHelpLink() {
+        return helpLink;
+    }
 
-	public void setHelpLink(String helpLink) {
-		this.helpLink = helpLink;
-	}
+    public void setHelpLink(String helpLink) {
+        this.helpLink = helpLink;
+    }
 
-	public VirtualHostBean() {
-		setErrorPage(PropertiesManager.getProperty("errorPage"));
-	}
+    public VirtualHostBean() {
+        setErrorPage(PropertiesManager.getProperty("errorPage"));
+    }
 
-	public VirtualHostBean(VirtualHost virtualHost) {
-		setHostname(virtualHost.getHostname());
-		setApplicationTitle(virtualHost.getApplicationTitle());
-		setApplicationSubTitle(virtualHost.getApplicationSubTitle());
-		setHtmlTitle(virtualHost.getHtmlTitle());
-		setApplicationCopyright(virtualHost.getApplicationCopyright());
-		setGoogleSearchEnabled(virtualHost.getGoogleSearchEnabled());
-		setLanguageSelectionEnabled(virtualHost.getLanguageSelectionEnabled());
-		setTheme(virtualHost.getTheme());
-		setLayout(virtualHost.getLayout());
-		setHelpLink(virtualHost.getHelpLink());
-		setErrorPage(virtualHost.getErrorPage());
-		setBreadCrumbsEnabled(virtualHost.getBreadCrumbsEnabled());
-		setSupportEmailAddress(virtualHost.getSupportEmailAddress());
-		setSystemEmailAddress(virtualHost.getSystemEmailAddress());
-	}
+    public VirtualHostBean(VirtualHost virtualHost) {
+        setHostname(virtualHost.getHostname());
+        setApplicationTitle(virtualHost.getApplicationTitle());
+        setApplicationSubTitle(virtualHost.getApplicationSubTitle());
+        setHtmlTitle(virtualHost.getHtmlTitle());
+        setApplicationCopyright(virtualHost.getApplicationCopyright());
+        setGoogleSearchEnabled(virtualHost.getGoogleSearchEnabled());
+        setLanguageSelectionEnabled(virtualHost.getLanguageSelectionEnabled());
+        setTheme(virtualHost.getTheme());
+        setLayout(virtualHost.getLayout());
+        setHelpLink(virtualHost.getHelpLink());
+        setErrorPage(virtualHost.getErrorPage());
+        setBreadCrumbsEnabled(virtualHost.getBreadCrumbsEnabled());
+        setSupportEmailAddress(virtualHost.getSupportEmailAddress());
+        setSystemEmailAddress(virtualHost.getSystemEmailAddress());
+    }
 
-	public String getErrorPage() {
-		return errorPage;
-	}
+    public String getErrorPage() {
+        return errorPage;
+    }
 
-	public void setErrorPage(String errorPage) {
-		this.errorPage = errorPage;
-	}
+    public void setErrorPage(String errorPage) {
+        this.errorPage = errorPage;
+    }
 
-	public Boolean getGoogleSearchEnabled() {
-		return googleSearchEnabled;
-	}
+    public Boolean getGoogleSearchEnabled() {
+        return googleSearchEnabled;
+    }
 
-	public void setGoogleSearchEnabled(Boolean googleSearchEnabled) {
-		this.googleSearchEnabled = googleSearchEnabled;
-	}
+    public void setGoogleSearchEnabled(Boolean googleSearchEnabled) {
+        this.googleSearchEnabled = googleSearchEnabled;
+    }
 
-	public Boolean getLanguageSelectionEnabled() {
-		return languageSelectionEnabled;
-	}
+    public Boolean getLanguageSelectionEnabled() {
+        return languageSelectionEnabled;
+    }
 
-	public void setLanguageSelectionEnabled(Boolean languageSelectionEnabled) {
-		this.languageSelectionEnabled = languageSelectionEnabled;
-	}
+    public void setLanguageSelectionEnabled(Boolean languageSelectionEnabled) {
+        this.languageSelectionEnabled = languageSelectionEnabled;
+    }
 
-	public String getHostname() {
-		return hostname;
-	}
+    public String getHostname() {
+        return hostname;
+    }
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
-	}
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
 
-	public MultiLanguageString getApplicationTitle() {
-		return applicationTitle;
-	}
+    public MultiLanguageString getApplicationTitle() {
+        return applicationTitle;
+    }
 
-	public void setApplicationTitle(MultiLanguageString applicationTitle) {
-		this.applicationTitle = applicationTitle;
-	}
+    public void setApplicationTitle(MultiLanguageString applicationTitle) {
+        this.applicationTitle = applicationTitle;
+    }
 
-	public MultiLanguageString getApplicationSubTitle() {
-		return applicationSubTitle;
-	}
+    public MultiLanguageString getApplicationSubTitle() {
+        return applicationSubTitle;
+    }
 
-	public void setApplicationSubTitle(MultiLanguageString applicationSubTitle) {
-		this.applicationSubTitle = applicationSubTitle;
-	}
+    public void setApplicationSubTitle(MultiLanguageString applicationSubTitle) {
+        this.applicationSubTitle = applicationSubTitle;
+    }
 
-	public MultiLanguageString getApplicationCopyright() {
-		return applicationCopyright;
-	}
+    public MultiLanguageString getApplicationCopyright() {
+        return applicationCopyright;
+    }
 
-	public void setApplicationCopyright(MultiLanguageString applicationCopyright) {
-		this.applicationCopyright = applicationCopyright;
-	}
+    public void setApplicationCopyright(MultiLanguageString applicationCopyright) {
+        this.applicationCopyright = applicationCopyright;
+    }
 
-	public void setTheme(Theme theme) {
-		this.theme = theme;
-	}
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
 
-	public Theme getTheme() {
-		return theme;
-	}
+    public Theme getTheme() {
+        return theme;
+    }
 
-	public ByteArray getLogo() {
-		return logo;
-	}
+    public ByteArray getLogo() {
+        return logo;
+    }
 
-	public void setLogo(ByteArray logo) {
-		this.logo = logo;
-	}
+    public void setLogo(ByteArray logo) {
+        this.logo = logo;
+    }
 
-	public ByteArray getFavicon() {
-		return favicon;
-	}
+    public ByteArray getFavicon() {
+        return favicon;
+    }
 
-	public void setFavicon(ByteArray favicon) {
-		this.favicon = favicon;
-	}
+    public void setFavicon(ByteArray favicon) {
+        this.favicon = favicon;
+    }
 
-	public InputStream getLogoInputStream() {
-		return logoInputStream;
-	}
+    public InputStream getLogoInputStream() {
+        return logoInputStream;
+    }
 
-	public void setLogoInputStream(InputStream logoInputStream) {
-		this.logoInputStream = logoInputStream;
-	}
+    public void setLogoInputStream(InputStream logoInputStream) {
+        this.logoInputStream = logoInputStream;
+    }
 
-	public String getLogoFilename() {
-		return logoFilename;
-	}
+    public String getLogoFilename() {
+        return logoFilename;
+    }
 
-	public void setLogoFilename(String logoFilename) {
-		this.logoFilename = logoFilename;
-	}
+    public void setLogoFilename(String logoFilename) {
+        this.logoFilename = logoFilename;
+    }
 
-	public String getLogoDisplayName() {
-		return logoDisplayName;
-	}
+    public String getLogoDisplayName() {
+        return logoDisplayName;
+    }
 
-	public void setLogoDisplayName(String logoDisplayName) {
-		this.logoDisplayName = logoDisplayName;
-	}
+    public void setLogoDisplayName(String logoDisplayName) {
+        this.logoDisplayName = logoDisplayName;
+    }
 
-	public InputStream getFaviconInputStream() {
-		return faviconInputStream;
-	}
+    public InputStream getFaviconInputStream() {
+        return faviconInputStream;
+    }
 
-	public void setFaviconInputStream(InputStream faviconInputStream) {
-		this.faviconInputStream = faviconInputStream;
-	}
+    public void setFaviconInputStream(InputStream faviconInputStream) {
+        this.faviconInputStream = faviconInputStream;
+    }
 
-	public String getFaviconFilename() {
-		return faviconFilename;
-	}
+    public String getFaviconFilename() {
+        return faviconFilename;
+    }
 
-	public void setFaviconFilename(String faviconFilename) {
-		this.faviconFilename = faviconFilename;
-	}
+    public void setFaviconFilename(String faviconFilename) {
+        this.faviconFilename = faviconFilename;
+    }
 
-	public String getFaviconDisplayName() {
-		return faviconDisplayName;
-	}
+    public String getFaviconDisplayName() {
+        return faviconDisplayName;
+    }
 
-	public void setFaviconDisplayName(String faviconDisplayName) {
-		this.faviconDisplayName = faviconDisplayName;
-	}
+    public void setFaviconDisplayName(String faviconDisplayName) {
+        this.faviconDisplayName = faviconDisplayName;
+    }
 
-	public Boolean getBreadCrumbsEnabled() {
-		return breadCrumbsEnabled;
-	}
+    public Boolean getBreadCrumbsEnabled() {
+        return breadCrumbsEnabled;
+    }
 
-	public void setBreadCrumbsEnabled(Boolean breadCrumbsEnabled) {
-		this.breadCrumbsEnabled = breadCrumbsEnabled;
-	}
+    public void setBreadCrumbsEnabled(Boolean breadCrumbsEnabled) {
+        this.breadCrumbsEnabled = breadCrumbsEnabled;
+    }
 
-	public MultiLanguageString getHtmlTitle() {
-		return htmlTitle;
-	}
+    public MultiLanguageString getHtmlTitle() {
+        return htmlTitle;
+    }
 
-	public void setHtmlTitle(MultiLanguageString htmlTitle) {
-		this.htmlTitle = htmlTitle;
-	}
+    public void setHtmlTitle(MultiLanguageString htmlTitle) {
+        this.htmlTitle = htmlTitle;
+    }
 
-	public String getSupportEmailAddress() {
-		return supportEmailAddress;
-	}
+    public String getSupportEmailAddress() {
+        return supportEmailAddress;
+    }
 
-	public void setSupportEmailAddress(String supportEmailAddress) {
-		this.supportEmailAddress = supportEmailAddress;
-	}
+    public void setSupportEmailAddress(String supportEmailAddress) {
+        this.supportEmailAddress = supportEmailAddress;
+    }
 
-	public Layout getLayout() {
-		return layout;
-	}
+    public Layout getLayout() {
+        return layout;
+    }
 
-	public void setLayout(Layout layout) {
-		this.layout = layout;
-	}
+    public void setLayout(Layout layout) {
+        this.layout = layout;
+    }
 }

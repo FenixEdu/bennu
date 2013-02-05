@@ -50,63 +50,63 @@ import pt.ist.bennu.core.presentationTier.util.ExceptionInformation;
  */
 public class ExceptionHandlerFilter implements Filter {
 
-	public static abstract class CustomeHandler {
+    public static abstract class CustomeHandler {
 
-		public abstract boolean isCustomizedFor(final Throwable t);
+        public abstract boolean isCustomizedFor(final Throwable t);
 
-		public abstract void handle(final HttpServletRequest httpServletRequest, final ServletResponse response)
-				throws ServletException, IOException;
+        public abstract void handle(final HttpServletRequest httpServletRequest, final ServletResponse response)
+                throws ServletException, IOException;
 
-	}
+    }
 
-	private static final List<CustomeHandler> customeHandlers = new ArrayList<CustomeHandler>();
+    private static final List<CustomeHandler> customeHandlers = new ArrayList<CustomeHandler>();
 
-	public static void register(final CustomeHandler customeHandler) {
-		customeHandlers.add(customeHandler);
-	}
+    public static void register(final CustomeHandler customeHandler) {
+        customeHandlers.add(customeHandler);
+    }
 
-	public static void unregister(final CustomeHandler customeHandler) {
-		customeHandlers.remove(customeHandler);
-	}
+    public static void unregister(final CustomeHandler customeHandler) {
+        customeHandlers.remove(customeHandler);
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
-	@Override
-	public void init(FilterConfig arg0) throws ServletException {
-	}
+    @Override
+    public void init(FilterConfig arg0) throws ServletException {
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
-			ServletException {
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		try {
-			filterChain.doFilter(request, response);
-		} catch (final Throwable t) {
-			for (final CustomeHandler customeHandler : customeHandlers) {
-				if (customeHandler.isCustomizedFor(t)) {
-					customeHandler.handle(httpServletRequest, response);
-					return;
-				}
-				printTraceInformation(t);
-			}
-			request.setAttribute("exceptionInfo",
-					ExceptionInformation.buildUncaughtExceptionInfo((HttpServletRequest) request, t));
-			httpServletRequest.getRequestDispatcher(VirtualHost.getVirtualHostForThread().getErrorPage()).forward(request,
-					response);
-		}
-	}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
+            ServletException {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        try {
+            filterChain.doFilter(request, response);
+        } catch (final Throwable t) {
+            for (final CustomeHandler customeHandler : customeHandlers) {
+                if (customeHandler.isCustomizedFor(t)) {
+                    customeHandler.handle(httpServletRequest, response);
+                    return;
+                }
+                printTraceInformation(t);
+            }
+            request.setAttribute("exceptionInfo",
+                    ExceptionInformation.buildUncaughtExceptionInfo((HttpServletRequest) request, t));
+            httpServletRequest.getRequestDispatcher(VirtualHost.getVirtualHostForThread().getErrorPage()).forward(request,
+                    response);
+        }
+    }
 
-	private void printTraceInformation(final Throwable t) {
-		if (t instanceof ServletException) {
-			final ServletException servletException = (ServletException) t;
-			if (servletException.getRootCause() != null) {
-				servletException.getRootCause().printStackTrace();
-				return;
-			}
-		}
-		t.printStackTrace();
-	}
+    private void printTraceInformation(final Throwable t) {
+        if (t instanceof ServletException) {
+            final ServletException servletException = (ServletException) t;
+            if (servletException.getRootCause() != null) {
+                servletException.getRootCause().printStackTrace();
+                return;
+            }
+        }
+        t.printStackTrace();
+    }
 
 }

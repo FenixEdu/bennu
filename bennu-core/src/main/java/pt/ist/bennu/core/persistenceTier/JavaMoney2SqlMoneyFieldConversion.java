@@ -36,22 +36,22 @@ import pt.ist.bennu.core.domain.util.Money;
  */
 public class JavaMoney2SqlMoneyFieldConversion implements FieldConversion {
 
-	@Override
-	public Object javaToSql(Object source) {
-		if (source instanceof Money) {
-			final Money money = (Money) source;
-			return money.serialize();
-		}
-		return source;
-	}
+    @Override
+    public Object javaToSql(Object source) {
+        if (source instanceof Money) {
+            final Money money = (Money) source;
+            return money.serialize();
+        }
+        return source;
+    }
 
-	@Override
-	public Object sqlToJava(Object source) {
-		if (source instanceof String) {
-			final String string = (String) source;
-			return Money.deserialize(string);
-		}
-		return source;
-	}
+    @Override
+    public Object sqlToJava(Object source) {
+        if (source instanceof String) {
+            final String string = (String) source;
+            return Money.deserialize(string);
+        }
+        return source;
+    }
 
 }

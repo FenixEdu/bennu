@@ -35,6 +35,6 @@ import pt.ist.fenixWebFramework.rendererExtensions.util.IPresentableEnum;
  */
 public interface IRoleEnum extends IPresentableEnum {
 
-	public String getRoleName();
+    public String getRoleName();
 
 }

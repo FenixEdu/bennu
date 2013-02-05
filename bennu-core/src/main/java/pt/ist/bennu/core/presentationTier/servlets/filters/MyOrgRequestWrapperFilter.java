@@ -46,38 +46,38 @@ import pt.ist.fenixWebFramework.servlets.filters.RequestWrapperFilter;
  */
 public class MyOrgRequestWrapperFilter extends RequestWrapperFilter {
 
-	final static Set<String> urlPiecesToExclude = new HashSet<String>();
+    final static Set<String> urlPiecesToExclude = new HashSet<String>();
 
-	static {
-		urlPiecesToExclude.add("vaadin");
-		urlPiecesToExclude.add("VAADIN");
-		urlPiecesToExclude.add("/jersey/");
-	}
+    static {
+        urlPiecesToExclude.add("vaadin");
+        urlPiecesToExclude.add("VAADIN");
+        urlPiecesToExclude.add("/jersey/");
+    }
 
-	@Override
-	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
-			throws IOException, ServletException {
-		final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+    @Override
+    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
+            throws IOException, ServletException {
+        final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-		if (urlMustbeSkipped(httpServletRequest)) {
-			// &&
-			// httpServletRequest.getHeader("Content-Type").equals("multipart/form-data")
-			chain.doFilter(request, response);
-		} else {
-			final ResponseWrapper responseWrapper = new ResponseWrapper((HttpServletResponse) response);
-			super.doFilter(request, responseWrapper, chain);
-			responseWrapper.writeRealResponse();
-		}
-	}
+        if (urlMustbeSkipped(httpServletRequest)) {
+            // &&
+            // httpServletRequest.getHeader("Content-Type").equals("multipart/form-data")
+            chain.doFilter(request, response);
+        } else {
+            final ResponseWrapper responseWrapper = new ResponseWrapper((HttpServletResponse) response);
+            super.doFilter(request, responseWrapper, chain);
+            responseWrapper.writeRealResponse();
+        }
+    }
 
-	private boolean urlMustbeSkipped(final HttpServletRequest httpServletRequest) {
-		final String requestURI = httpServletRequest.getRequestURI();
-		for (String piece : urlPiecesToExclude) {
-			if (requestURI.contains(piece)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    private boolean urlMustbeSkipped(final HttpServletRequest httpServletRequest) {
+        final String requestURI = httpServletRequest.getRequestURI();
+        for (String piece : urlPiecesToExclude) {
+            if (requestURI.contains(piece)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
