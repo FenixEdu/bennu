@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.bennu.core.rest.serializer.Deserializer;
-import pt.ist.bennu.bennu.core.rest.serializer.JsonSerializer;
+import pt.ist.bennu.bennu.core.rest.serializer.JsonAdapter;
 import pt.ist.bennu.bennu.core.rest.serializer.Serializer;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.security.Authenticate;
@@ -20,20 +20,18 @@ import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 
-public abstract class AbstractResource {
+public abstract class AbstractResource implements Serializer, Deserializer {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractResource.class);
 
-	private static Serializer SERIALIZER;
-	private static Deserializer DESERIALIZER;
-
-	static {
-		setSerializer(new JsonSerializer());
-
-	}
-
 	@Context
 	HttpServletRequest request;
+
+	private static JsonAdapter adapter;
+
+	static {
+		adapter = JsonAdapter.getInstance();
+	}
 
 	protected User login(String username, String password, boolean checkPassword) {
 		return Authenticate.login(request.getSession(true), username, password, checkPassword);
@@ -108,36 +106,6 @@ public abstract class AbstractResource {
 		}
 	}
 
-	protected static void setSerializer(Serializer serializer) {
-		serializer.setDelegate(SERIALIZER);
-		SERIALIZER = serializer;
-	}
-
-	protected static void setDeserializer(Deserializer delegate) {
-		delegate.setDelegate(DESERIALIZER);
-		DESERIALIZER = delegate;
-	}
-
-	protected String serialize(Object object) {
-		return SERIALIZER.serialize(object);
-	}
-
-	protected String serialize(Object object, String collectionKey) {
-		return SERIALIZER.serialize(object, collectionKey);
-	}
-
-	protected String serializeFromExternalId(String externalId) {
-		return SERIALIZER.serialize(readDomainObject(externalId));
-	}
-
-	protected <T> T deserialize(String jsonString, Class<T> type) {
-		return DESERIALIZER.deserialize(jsonString, type);
-	}
-
-	protected <T> T deserialize(String jsonString, Class<T> type, String externalId) {
-		return DESERIALIZER.deserialize(jsonString, type, externalId);
-	}
-
 	protected <T extends DomainObject> URI getURIFor(T domainObject, String relativePath) {
 		try {
 			return new URI("http", getHost(), relativePath + "/" + domainObject.getExternalId(), null);
@@ -148,6 +116,39 @@ public abstract class AbstractResource {
 
 	protected String getHost() {
 		return request.getServerName();
+	}
+
+	protected String serializeFromExternalId(String externalId) {
+		return adapter.serialize(readDomainObject(externalId));
+	}
+
+	@Override
+	public final String serialize(Object object) {
+		return adapter.serialize(object);
+	}
+
+	@Override
+	public final String serialize(Object object, String collectionKey) {
+		return adapter.serialize(object, collectionKey);
+	}
+
+	@Override
+	public <T> T deserialize(String jsonString, Class<T> type, String externalId) {
+		return adapter.deserialize(jsonString, type, externalId);
+	}
+
+	@Override
+	public <T> T deserialize(String jsonString, Class<T> type) {
+		return adapter.deserialize(jsonString, type);
+	}
+
+	@Override
+	public void updateObject(Object object, String jsonString, String externalId) {
+		adapter.updateObject(object, jsonString, externalId);
+	}
+
+	public void updateObject(User user, String jsonString, String externalId) {
+		adapter.updateObject(user, jsonString, externalId);
 	}
 
 }

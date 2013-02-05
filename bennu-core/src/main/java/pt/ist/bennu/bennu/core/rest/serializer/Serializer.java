@@ -6,6 +6,4 @@ public interface Serializer {
 
 	public String serialize(Object object, String collectionKey);
 
-	public void setDelegate(Serializer delegate);
-
 }
