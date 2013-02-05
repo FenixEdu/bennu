@@ -31,64 +31,64 @@ package module.fileSupport.dto;
  */
 public class DBStorageDTO extends FileStorageDTO {
 
-	String host;
+    String host;
 
-	Integer port;
+    Integer port;
 
-	String dbName;
+    String dbName;
 
-	String tableName;
+    String tableName;
 
-	String username;
+    String username;
 
-	String password;
+    String password;
 
-	public String getHost() {
-		return host;
-	}
+    public String getHost() {
+        return host;
+    }
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-	public Integer getPort() {
-		return port;
-	}
+    public Integer getPort() {
+        return port;
+    }
 
-	public void setPort(Integer port) {
-		this.port = port;
-	}
+    public void setPort(Integer port) {
+        this.port = port;
+    }
 
-	public String getDbName() {
-		return dbName;
-	}
+    public String getDbName() {
+        return dbName;
+    }
 
-	public void setDbName(String dbName) {
-		this.dbName = dbName;
-	}
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getTableName() {
-		return tableName;
-	}
+    public String getTableName() {
+        return tableName;
+    }
 
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 
 }

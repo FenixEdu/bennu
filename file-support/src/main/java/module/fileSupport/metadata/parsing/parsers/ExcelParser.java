@@ -42,24 +42,24 @@ import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
  */
 public class ExcelParser extends FileMetaDataParser {
 
-	@Override
-	public boolean isAppliableTo(GenericFile file) {
-		return file.getFilename().toLowerCase().endsWith(".xls");
-	}
+    @Override
+    public boolean isAppliableTo(GenericFile file) {
+        return file.getFilename().toLowerCase().endsWith(".xls");
+    }
 
-	@Override
-	protected String extract(InputStream stream) {
-		String extractedText = null;
-		try {
-			ExcelExtractor extractor = new ExcelExtractor(new HSSFWorkbook(stream));
-			extractedText = extractor.getText();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+    @Override
+    protected String extract(InputStream stream) {
+        String extractedText = null;
+        try {
+            ExcelExtractor extractor = new ExcelExtractor(new HSSFWorkbook(stream));
+            extractedText = extractor.getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
 
-		return extractedText;
+        return extractedText;
 
-	}
+    }
 
 }

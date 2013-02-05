@@ -49,24 +49,22 @@ import pt.ist.fenixWebFramework.struts.annotations.Mapping;
 @Mapping(path = "/fileSupportNodeCreation")
 public class FileSupportNodeCreation extends ContextBaseAction {
 
-	@CreateNodeAction(
-			bundle = "FILE_SUPPORT_RESOURCES",
-			key = "add.node.fileSupport.management",
-			groupKey = "label.module.fileSupport")
-	public final ActionForward createWorkflowNode(final ActionMapping mapping, final ActionForm form,
-			final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-		final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
-		final Node node = getDomainObject(request, "parentOfNodesToManageId");
+    @CreateNodeAction(bundle = "FILE_SUPPORT_RESOURCES", key = "add.node.fileSupport.management",
+            groupKey = "label.module.fileSupport")
+    public final ActionForward createWorkflowNode(final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+        final VirtualHost virtualHost = getDomainObject(request, "virtualHostToManageId");
+        final Node node = getDomainObject(request, "parentOfNodesToManageId");
 
 //	final Node homeNode = ActionNode.createActionNode(virtualHost, node, "/fileStorageManagement", "prepare", "resources.FileSupportResources",
 //		"link.sideBar.fileSupport.fileStorageManagement", Role.getRole(RoleType.MANAGER));
-		ActionNode.createActionNode(virtualHost, node, "/fileStorageManagement", "prepare", "resources.FileSupportResources",
-				"link.sideBar.fileSupport.fileStorageManagement", Role.getRole(RoleType.MANAGER));
-		ActionNode.createActionNode(virtualHost, node, "/storageConfigurationManagement", "prepare",
-				"resources.FileSupportResources", "link.sideBar.fileSupport.storageConfigurationManagement",
-				Role.getRole(RoleType.MANAGER));
+        ActionNode.createActionNode(virtualHost, node, "/fileStorageManagement", "prepare", "resources.FileSupportResources",
+                "link.sideBar.fileSupport.fileStorageManagement", Role.getRole(RoleType.MANAGER));
+        ActionNode.createActionNode(virtualHost, node, "/storageConfigurationManagement", "prepare",
+                "resources.FileSupportResources", "link.sideBar.fileSupport.storageConfigurationManagement",
+                Role.getRole(RoleType.MANAGER));
 
-		return forwardToMuneConfiguration(request, virtualHost, node);
-	}
+        return forwardToMuneConfiguration(request, virtualHost, node);
+    }
 
 }

@@ -38,28 +38,28 @@ import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
  */
 public class TextParser extends FileMetaDataParser {
 
-	@Override
-	public boolean isAppliableTo(GenericFile file) {
-		return file.getFilename().toLowerCase().endsWith(".txt");
-	}
+    @Override
+    public boolean isAppliableTo(GenericFile file) {
+        return file.getFilename().toLowerCase().endsWith(".txt");
+    }
 
-	@Override
-	protected String extract(InputStream stream) {
-		StringBuilder text = new StringBuilder();
+    @Override
+    protected String extract(InputStream stream) {
+        StringBuilder text = new StringBuilder();
 
-		try {
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-			String line = bufferedReader.readLine();
-			while (line != null) {
-				text.append(line);
-				text.append(" ");
-				line = bufferedReader.readLine();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                text.append(line);
+                text.append(" ");
+                line = bufferedReader.readLine();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
-		return text.toString();
-	}
+        return text.toString();
+    }
 }

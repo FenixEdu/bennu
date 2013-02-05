@@ -48,19 +48,19 @@ import pt.ist.fenixframework.plugins.fileSupport.domain.FileSupport;
 @Mapping(path = "/storageConfigurationManagement")
 public class StorageConfigurationManagement extends ContextBaseAction {
 
-	public ActionForward prepare(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-			final HttpServletResponse response) {
+    public ActionForward prepare(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) {
 
-		RenderUtils.invalidateViewState();
-		createMissingConfigurations();
-		request.setAttribute("storageConfigurations", FileSupport.getInstance().getFileStorageConfigurations());
+        RenderUtils.invalidateViewState();
+        createMissingConfigurations();
+        request.setAttribute("storageConfigurations", FileSupport.getInstance().getFileStorageConfigurations());
 
-		return forward(request, "/fileSupport/storageConfigurationManagement.jsp");
-	}
+        return forward(request, "/fileSupport/storageConfigurationManagement.jsp");
+    }
 
-	@Service
-	private void createMissingConfigurations() {
-		FileStorageConfiguration.createMissingStorageConfigurations();
-	}
+    @Service
+    private void createMissingConfigurations() {
+        FileStorageConfiguration.createMissingStorageConfigurations();
+    }
 
 }
