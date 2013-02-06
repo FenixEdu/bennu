@@ -33,6 +33,13 @@ valueType pt.ist.bennu.core.util.MultiLanguageString as MultiLanguageString {
     internalizeWith importFromString();
 }
 
+valueType java.lang.Class as Class {
+	externalizeWith {
+		String getName();
+	}
+	internalizeWith pt.ist.bennu.core.util.ClassInternalizer.internalize();
+}
+
 class Bennu {
 }
 

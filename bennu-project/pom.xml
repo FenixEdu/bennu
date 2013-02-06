@@ -8,11 +8,11 @@
 	<version>2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<!-- "One POM to rule them all,								-->
-	<!-- One POM to find them,									-->
-	<!-- One POM to bring them all								-->
-	<!-- and in the darkness bind them."						-->
-	<!-- - Anonymous Bennu Developer, The Fellowship of the POM	-->
+	<!-- "One POM to rule them all, -->
+	<!-- One POM to find them, -->
+	<!-- One POM to bring them all -->
+	<!-- and in the darkness bind them." -->
+	<!-- - Anonymous Bennu Developer, The Fellowship of the POM -->
 	<name>Bennu Project</name>
 
 	<organization>
@@ -34,8 +34,8 @@
 		<skipTests>false</skipTests>
 
 		<!-- ************************************************************************************************ -->
-		<!-- * DEPENDENCIES VERSIONS 																		* -->
-		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer  * -->
+		<!-- * DEPENDENCIES VERSIONS * -->
+		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
 		<!-- ************************************************************************************************ -->
 		<version.antlr.antlr>2.7.2</version.antlr.antlr>
 		<version.org.antlr.antlr.runtime>3.4</version.org.antlr.antlr.runtime>
@@ -61,6 +61,7 @@
 		<version.commons.lang.commons.lang>2.6</version.commons.lang.commons.lang>
 		<version.commons.logging.commons.logging>1.1.1</version.commons.logging.commons.logging>
 		<version.informa.informa>1.0</version.informa.informa>
+		<version.javax.activation.activation>1.1.1</version.javax.activation.activation>
 		<version.javax.mail.mail>1.4.2</version.javax.mail.mail>
 		<version.javax.servlet.jstl>1.2</version.javax.servlet.jstl>
 		<version.javax.ws.rs.jsr311.api>1.1</version.javax.ws.rs.jsr311.api>
@@ -70,7 +71,7 @@
 		<version.joda.time.joda.time.jsptags>1.1.1</version.joda.time.joda.time.jsptags>
 		<version.jasperreports.jasperreports.javaflow>3.6.0</version.jasperreports.jasperreports.javaflow>
 		<version.log4j.log4j>1.2.16</version.log4j.log4j>
-		<version.org.apache.lucene.lucene.core>3.5.0</version.org.apache.lucene.lucene.core>
+		<version.org.apache.lucene.lucene.core>3.6.1</version.org.apache.lucene.lucene.core>
 		<version.org.apache.pdfbox.pdfbox>1.6.0</version.org.apache.pdfbox.pdfbox>
 		<version.org.apache.poi.poi>3.5-beta5</version.org.apache.poi.poi>
 		<version.org.apache.poi.poi.contrib>3.5-beta5</version.org.apache.poi.poi.contrib>
@@ -87,8 +88,8 @@
 		<version.surftheedge.mjava>1.0</version.surftheedge.mjava>
 
 		<!-- ************************************************************************************************ -->
-		<!-- * PLUGIN VERSIONS																				* -->
-		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer  * -->
+		<!-- * PLUGIN VERSIONS * -->
+		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
 		<!-- ************************************************************************************************ -->
 		<version.com.alexnederlof.jasperreports.plugin>1.5-SNAPSHOT</version.com.alexnederlof.jasperreports.plugin>
 		<version.dml.dml.maven.plugin>1.1.4</version.dml.dml.maven.plugin>
@@ -177,8 +178,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- Explicitly define maven-deploy-plugin after others that run on the 
-				same phase to force exec order -->
+			<!-- Explicitly define maven-deploy-plugin after others that run on the same phase to force exec order -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
@@ -573,6 +573,11 @@
 				<groupId>org.antlr</groupId>
 				<artifactId>antlr-runtime</artifactId>
 				<version>${version.org.antlr.antlr.runtime}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.activation</groupId>
+				<artifactId>activation</artifactId>
+				<version>${version.javax.activation.activation}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

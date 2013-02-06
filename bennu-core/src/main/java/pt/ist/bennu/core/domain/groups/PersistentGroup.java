@@ -131,8 +131,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
     /**
      * Intersect with given group. Returns the resulting group without changing {@code this} or the argument.
      * 
-     * @param group
-     *            group to intersect with
+     * @param group group to intersect with
      * @return group resulting of the intersection between '{@code this}' and '{@code group}'
      */
     public PersistentGroup and(PersistentGroup group) {
