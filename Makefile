@@ -5,7 +5,7 @@ bennu-maven-plugin:
 	@echo Installing Bennu Maven Plugin...
 	@cd maven/bennu-maven-plugin/
 	@mvn clean install -q
-	@cd ../..
+	@cd ../../
 
 bennu-project:
 	@echo Installing Bennu Project...

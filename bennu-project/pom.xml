@@ -30,8 +30,8 @@
 		<requireMavenVersion.regex>[3.0.0,)</requireMavenVersion.regex>
 		<requireJavaVersion.regex>[1.7.0,)</requireJavaVersion.regex>
 
-		<!-- IT'S SAD, BUT... -->
-		<skipTests>true</skipTests>
+		<!-- IT'S NOT SAD, WE HAVE TESTS !!! :-D -->
+		<skipTests>false</skipTests>
 
 		<!-- ************************************************************************************************ -->
 		<!-- * DEPENDENCIES VERSIONS 																		* -->

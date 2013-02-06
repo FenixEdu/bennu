@@ -22,6 +22,10 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import pt.ist.bennu.core.domain.groups.AnonymousGroup;
+import pt.ist.bennu.core.domain.groups.AnyoneGroup;
+import pt.ist.bennu.core.domain.groups.LoggedGroup;
+import pt.ist.bennu.core.domain.groups.NobodyGroup;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 import pt.ist.bennu.core.util.Language;
@@ -62,6 +66,14 @@ public class VirtualHost extends VirtualHost_Base {
         setHostname(hostname);
         setVirtualHostForThread(this);
         setLanguages(Collections.singleton(Language.en));
+        initializeGroups();
+    }
+
+    private void initializeGroups() {
+        AnyoneGroup.getInstance();
+        LoggedGroup.getInstance();
+        AnonymousGroup.getInstance();
+        NobodyGroup.getInstance();
     }
 
     @Service

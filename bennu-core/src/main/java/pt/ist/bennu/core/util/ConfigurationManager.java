@@ -31,10 +31,12 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
+import pt.ist.bennu.core.util.rest.RestHost;
 import pt.ist.fenixframework.Config;
 import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
 import pt.ist.fenixframework.project.DmlFile;
@@ -51,6 +53,10 @@ public class ConfigurationManager {
     private static Config config = null;
 
     private static List<URL> urls = null;
+
+    private static Map<String, RestHost> serverHosts;
+
+    private static String thisServerRestSecret;
 
     static {
         try (InputStream inputStream = ConfigurationManager.class.getResourceAsStream("/configuration.properties")) {
@@ -78,28 +84,63 @@ public class ConfigurationManager {
             };
 
             casConfigByHost = new HashMap<>();
+            serverHosts = new HashMap<>();
             for (final Object key : properties.keySet()) {
                 final String property = (String) key;
-                int i = property.indexOf(".cas.enable");
-                if (i >= 0) {
-                    final String hostname = property.substring(0, i);
-                    if (getBooleanProperty(property, false)) {
-                        final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");
-                        final String casLogoutUrl = getProperty(hostname + ".cas.logoutUrl");
-                        final String casValidateUrl = getProperty(hostname + ".cas.ValidateUrl");
-                        final String serviceUrl = getProperty(hostname + ".cas.serviceUrl");
-
-                        final CasConfig casConfig = new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
-                        casConfigByHost.put(hostname, casConfig);
-                    } else {
-                        final CasConfig casConfig = new CasConfig();
-                        casConfigByHost.put(hostname, casConfig);
-                    }
-                }
+                initializeCasConfig(property);
+                initializeRestServerHosts(property);
             }
+
+            initializeThisServerRestSecret();
+
         } catch (IOException e) {
             throw new Error("configuration.properties could not be read.", e);
         }
+    }
+
+    public static void initializeCasConfig(final String property) {
+        int i = property.indexOf(".cas.enable");
+        if (i >= 0) {
+            final String hostname = property.substring(0, i);
+            if (getBooleanProperty(property, false)) {
+                final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");
+                final String casLogoutUrl = getProperty(hostname + ".cas.logoutUrl");
+                final String casValidateUrl = getProperty(hostname + ".cas.ValidateUrl");
+                final String serviceUrl = getProperty(hostname + ".cas.serviceUrl");
+
+                final CasConfig casConfig = new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
+                casConfigByHost.put(hostname, casConfig);
+            } else {
+                final CasConfig casConfig = new CasConfig();
+                casConfigByHost.put(hostname, casConfig);
+            }
+        }
+    }
+
+    private static void initializeThisServerRestSecret() {
+        thisServerRestSecret = getProperty("rest.secret");
+        if (!StringUtils.isBlank(thisServerRestSecret)) {
+            logger.info("loading rest.secret");
+        }
+    }
+
+    private static void initializeRestServerHosts(String property) {
+        final int i = property.indexOf(".rest.url");
+        if (i >= 0) {
+            final String hostKey = property.substring(0, i);
+            final String hostUrl = getProperty(property);
+            final String hostSecret = getProperty(hostKey + ".rest.secret");
+            logger.info("add Jersey host {} {}", hostKey, hostUrl);
+            serverHosts.put(hostKey, new RestHost(hostUrl, hostSecret));
+        }
+    }
+
+    public static RestHost getHost(String hostKey) {
+        return serverHosts.get(hostKey);
+    }
+
+    public static String getThisServerSecret() {
+        return thisServerRestSecret;
     }
 
     public synchronized static List<URL> getUrls() {
@@ -225,7 +266,4 @@ public class ConfigurationManager {
         return new Locale(getProperty("language"), getProperty("location"), getProperty("variant"));
     }
 
-    public static String getExceptionHandlerClassname() {
-        return getProperty("exception.handler.class");
-    }
 }

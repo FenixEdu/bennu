@@ -1,0 +1,25 @@
+#!/bin/bash
+echo Installing Bennu Maven Plugin...
+cd maven/bennu-maven-plugin/
+mvn clean install -q
+cd ../../
+
+echo Installing Bennu Project...
+cd bennu-project
+mvn clean install -q
+cd ..
+
+echo Installing Bennu Service Annotation...
+cd bennu-service
+mvn clean install -q
+cd ..
+
+echo Installing Bennu Core...
+cd bennu-core
+mvn clean install -q
+cd ..
+
+echo Installing Bennu Dispatch...
+cd bennu-dispatch
+mvn clean install -q
+cd ..

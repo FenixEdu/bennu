@@ -23,6 +23,15 @@ variant=
 <host>.cas.ValidateUrl=https://login.ist.utl.pt/serviceValidate
 <host>.cas.logoutUrl=https://login.ist.utl.pt/logout
 
+
+# Repeat the following properties for each rest server
+<hostKey>.rest.url=
+<hostKey>.rest.secret=
+
+# If this installation is itself a rest server define the following secret
+# Client application must use this secret when connection to this rest server
+rest.secret=
+
 ## renderers only
 #filter.request.with.digest=true
 #digest.tampering.url=http://<host>:8080/<app>

@@ -26,7 +26,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CharsetEncodingFilter implements Filter {
+
+    Logger logger = LoggerFactory.getLogger(CharsetEncodingFilter.class);
 
     private static String defaultCharset = Charset.defaultCharset().name();
 
@@ -36,6 +41,7 @@ public class CharsetEncodingFilter implements Filter {
         if (defaultCharset != null && !defaultCharset.isEmpty() && Charset.forName(defaultCharset) != null) {
             CharsetEncodingFilter.defaultCharset = defaultCharset;
         }
+        logger.trace("Charset : {}", defaultCharset);
     }
 
     @Override

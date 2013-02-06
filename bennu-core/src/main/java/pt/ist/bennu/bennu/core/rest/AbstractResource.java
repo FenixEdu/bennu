@@ -16,6 +16,7 @@ import pt.ist.bennu.bennu.core.rest.mapper.Deserializer;
 import pt.ist.bennu.bennu.core.rest.mapper.RestException;
 import pt.ist.bennu.bennu.core.rest.mapper.Serializer;
 import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.domain.groups.PersistentGroup;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.security.UserView;
 import pt.ist.bennu.core.util.ConfigurationManager;
@@ -100,13 +101,17 @@ public abstract class AbstractResource implements Serializer, Deserializer {
         return null;
     }
 
-    protected User verifyAndGetRequestAuthor() {
-        User user = UserView.getUser();
-        if (user == null) {
-            throw new RestException(BennuRestError.UNAUTHORIZED);
-        } else {
+    protected User accessControl(String accessExpression) {
+        final PersistentGroup group = PersistentGroup.parse(accessExpression);
+        final User user = UserView.getUser();
+        if (group.isMember(user)) {
             return user;
         }
+        throw new RestException(BennuRestError.UNAUTHORIZED);
+    }
+
+    protected User verifyAndGetRequestAuthor() {
+        return accessControl("logged");
     }
 
     protected <T extends DomainObject> URI getURIFor(T domainObject, String relativePath) {
