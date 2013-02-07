@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.annotation.Nullable;
 
@@ -114,9 +115,9 @@ public abstract class CustomGroup extends CustomGroup_Base {
 
         private final Constructor<G> constructor;
 
-        private final Argument<?, G>[] arguments;
+        private final List<Argument<?, G>> arguments;
 
-        public Operator(String operator, Class<? extends G> type, Constructor<G> constructor, Argument<?, G>[] arguments) {
+        public Operator(String operator, Class<? extends G> type, Constructor<G> constructor, List<Argument<?, G>> arguments) {
             this.operator = operator;
             this.type = type;
             this.arguments = arguments;
@@ -130,14 +131,14 @@ public abstract class CustomGroup extends CustomGroup_Base {
         public G parse(String[] parameters) {
             final Object[] parsed = new Object[parameters.length];
             for (int i = 0; i < parameters.length; i++) {
-                parsed[i] = this.arguments[i].parse(parameters[i]);
+                parsed[i] = this.arguments.get(i).parse(parameters[i]);
             }
             G group = select(type, new Predicate<G>() {
                 @Override
                 public boolean apply(@Nullable G input) {
-                    Object[] extracted = new Object[arguments.length];
-                    for (int i = 0; i < arguments.length; i++) {
-                        extracted[i] = arguments[i].extract(input);
+                    Object[] extracted = new Object[arguments.size()];
+                    for (int i = 0; i < arguments.size(); i++) {
+                        extracted[i] = arguments.get(i).extract(input);
                     }
                     return Arrays.equals(parsed, extracted);
                 }
@@ -182,7 +183,7 @@ public abstract class CustomGroup extends CustomGroup_Base {
     public static void registerOperator(Class<? extends CustomGroup> type) {
         CustomGroupOperator operatorAnnotation = type.getAnnotation(CustomGroupOperator.class);
         Constructor<CustomGroup> constructor = findConstructor(type);
-        Argument<?, CustomGroup>[] arguments = findArguments(type);
+        List<Argument<?, CustomGroup>> arguments = findArguments(type);
         Operator<CustomGroup> operator = new Operator<>(operatorAnnotation.value(), type, constructor, arguments);
         operators.put(operatorAnnotation.value(), operator);
         types.put(type, operator);
@@ -202,7 +203,7 @@ public abstract class CustomGroup extends CustomGroup_Base {
         throw new Error("CustomGroup: " + type.getName() + " does not have a proper constructor");
     }
 
-    private static Argument<?, CustomGroup>[] findArguments(Class<? extends CustomGroup> type) {
+    private static List<Argument<?, CustomGroup>> findArguments(Class<? extends CustomGroup> type) {
         try {
             SortedMap<Integer, Argument<?, CustomGroup>> arguments = new TreeMap<>();
             for (Method method : type.getMethods()) {
@@ -211,7 +212,7 @@ public abstract class CustomGroup extends CustomGroup_Base {
                     arguments.put(annotation.index(), (Argument<?, CustomGroup>) method.invoke(null));
                 }
             }
-            return (Argument<?, CustomGroup>[]) arguments.values().toArray();
+            return new Vector<>(arguments.values());
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new Error("CustomGroup: " + type.getName() + " failed to access it's arguments");
         }
