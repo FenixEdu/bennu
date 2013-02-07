@@ -127,7 +127,7 @@ public class ServiceManager {
 
     public static void exitService() {
         Boolean inside = isInServiceVar.get();
-        if (inside == null) {
+        if (inside != null) {
             isInServiceVar.remove();
         }
     }
