@@ -1,5 +1,5 @@
 /*
- * CustomGroupAnnotationInitializer.java
+ * BennuCoreAnnotationInitializer.java
  * 
  * Copyright (c) 2013, Instituto Superior Técnico. All rights reserved.
  * 
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with bennu-core. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package pt.ist.bennu.core.domain.groups.annotation;
+package pt.ist.bennu.core.annotation;
 
 import java.util.Set;
 
@@ -22,17 +22,31 @@ import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.HandlesTypes;
+import javax.ws.rs.Path;
+import javax.ws.rs.ext.Provider;
 
 import pt.ist.bennu.core.domain.groups.CustomGroup;
+import pt.ist.bennu.core.servlets.BennuJerseyRestApplication;
 
-@HandlesTypes({ CustomGroupOperator.class })
-public class CustomGroupAnnotationInitializer implements ServletContainerInitializer {
+@HandlesTypes({ CustomGroupOperator.class, Path.class, Provider.class })
+public class BennuCoreAnnotationInitializer implements ServletContainerInitializer {
     @Override
     @SuppressWarnings("unchecked")
     public void onStartup(Set<Class<?>> classes, ServletContext ctx) throws ServletException {
         if (classes != null) {
             for (Class<?> type : classes) {
-                CustomGroup.registerOperator((Class<? extends CustomGroup>) type);
+                CustomGroupOperator operator = type.getAnnotation(CustomGroupOperator.class);
+                if (operator != null) {
+                    CustomGroup.registerOperator((Class<? extends CustomGroup>) type);
+                }
+                Path restEndpoint = type.getAnnotation(Path.class);
+                if (restEndpoint != null) {
+                    BennuJerseyRestApplication.registerEndpoint(type);
+                }
+                Provider restProvider = type.getAnnotation(Provider.class);
+                if (restProvider != null) {
+                    BennuJerseyRestApplication.registerEndpoint(type);
+                }
             }
         }
     }

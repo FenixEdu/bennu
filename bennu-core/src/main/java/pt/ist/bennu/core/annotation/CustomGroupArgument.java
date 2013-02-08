@@ -1,5 +1,5 @@
 /*
- * CustomGroupOperator.java
+ * CustomGroupArgument.java
  * 
  * Copyright (c) 2013, Instituto Superior Técnico. All rights reserved.
  * 
@@ -14,16 +14,18 @@
  * You should have received a copy of the GNU General Public License along with bennu-core. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package pt.ist.bennu.core.domain.groups.annotation;
+package pt.ist.bennu.core.annotation;
 
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.METHOD;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ TYPE })
-public @interface CustomGroupOperator {
-    String value();
+@Target({ METHOD })
+public @interface CustomGroupArgument {
+    int index() default 1;
+
+    boolean multiple() default false;
 }

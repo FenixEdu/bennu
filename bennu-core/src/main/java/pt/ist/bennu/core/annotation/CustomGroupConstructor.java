@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with bennu-core. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package pt.ist.bennu.core.domain.groups.annotation;
+package pt.ist.bennu.core.annotation;
 
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 

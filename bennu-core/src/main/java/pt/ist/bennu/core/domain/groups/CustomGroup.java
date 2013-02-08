@@ -34,9 +34,9 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.domain.groups.annotation.CustomGroupArgument;
-import pt.ist.bennu.core.domain.groups.annotation.CustomGroupConstructor;
-import pt.ist.bennu.core.domain.groups.annotation.CustomGroupOperator;
+import pt.ist.bennu.core.annotation.CustomGroupArgument;
+import pt.ist.bennu.core.annotation.CustomGroupConstructor;
+import pt.ist.bennu.core.annotation.CustomGroupOperator;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
