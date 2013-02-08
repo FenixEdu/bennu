@@ -12,9 +12,8 @@ import org.slf4j.LoggerFactory;
 import pt.ist.bennu.bennu.core.rest.mapper.BennuJsonDeserializer;
 import pt.ist.bennu.bennu.core.rest.mapper.BennuJsonSerializer;
 import pt.ist.bennu.bennu.core.rest.mapper.BennuRestError;
-import pt.ist.bennu.bennu.core.rest.mapper.Deserializer;
 import pt.ist.bennu.bennu.core.rest.mapper.RestException;
-import pt.ist.bennu.bennu.core.rest.mapper.Serializer;
+import pt.ist.bennu.bennu.core.rest.serializer.JsonAwareResource;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 import pt.ist.bennu.core.security.Authenticate;
@@ -24,18 +23,12 @@ import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 
-public abstract class AbstractResource implements Serializer, Deserializer {
+public abstract class BennuRestResource extends JsonAwareResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BennuRestResource.class);
 
     @Context
     HttpServletRequest request;
-
-    private static JsonAdapter adapter;
-
-    static {
-        adapter = JsonAdapter.getInstance();
-    }
 
     protected User login(String username, String password, boolean checkPassword) {
         return Authenticate.login(request.getSession(true), username, password, checkPassword);
@@ -101,13 +94,17 @@ public abstract class AbstractResource implements Serializer, Deserializer {
         return null;
     }
 
-    protected User accessControl(String accessExpression) {
-        final PersistentGroup group = PersistentGroup.parse(accessExpression);
+    protected User accessControl(PersistentGroup persistentGroup) {
         final User user = UserView.getUser();
-        if (group.isMember(user)) {
+        if (persistentGroup.isMember(user)) {
             return user;
         }
         throw new RestException(BennuRestError.UNAUTHORIZED);
+    }
+
+    protected User accessControl(String accessExpression) {
+        final PersistentGroup persistentGroup = PersistentGroup.parse(accessExpression);
+        return accessControl(persistentGroup);
     }
 
     protected User verifyAndGetRequestAuthor() {
@@ -124,39 +121,6 @@ public abstract class AbstractResource implements Serializer, Deserializer {
 
     protected String getHost() {
         return request.getServerName();
-    }
-
-    protected String serializeFromExternalId(String externalId) {
-        return adapter.serialize(readDomainObject(externalId));
-    }
-
-    @Override
-    public final String serialize(Object object) {
-        return adapter.serialize(object);
-    }
-
-    @Override
-    public final String serialize(Object object, String collectionKey) {
-        return adapter.serialize(object, collectionKey);
-    }
-
-    @Override
-    public <T> T deserialize(String jsonString, Class<T> type, String externalId) {
-        return adapter.deserialize(jsonString, type, externalId);
-    }
-
-    @Override
-    public <T> T deserialize(String jsonString, Class<T> type) {
-        return adapter.deserialize(jsonString, type);
-    }
-
-    @Override
-    public void updateObject(Object object, String jsonString, String externalId) {
-        adapter.updateObject(object, jsonString, externalId);
-    }
-
-    public void updateObject(User user, String jsonString, String externalId) {
-        adapter.updateObject(user, jsonString, externalId);
     }
 
 }

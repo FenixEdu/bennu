@@ -1,19 +1,17 @@
 package pt.ist.bennu.bennu.core.rest.mapper;
 
-import java.lang.reflect.Type;
-
-import pt.ist.bennu.bennu.core.rest.AbstractResource.CasConfigContext;
+import pt.ist.bennu.bennu.core.rest.BennuRestResource.CasConfigContext;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
+import pt.ist.bennu.json.JsonBuilder;
+import pt.ist.bennu.json.JsonViewer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 
-public class CasConfigContextSerializer implements JsonSerializer<CasConfigContext> {
+public class CasConfigContextSerializer implements JsonViewer<CasConfigContext> {
 
     @Override
-    public JsonElement serialize(CasConfigContext casConfigContext, Type type, JsonSerializationContext context) {
+    public JsonElement view(CasConfigContext casConfigContext, JsonBuilder context) {
         JsonObject jsonObject = new JsonObject();
         CasConfig casConfig = casConfigContext.getCasConfig();
         if (casConfig.isCasEnabled()) {

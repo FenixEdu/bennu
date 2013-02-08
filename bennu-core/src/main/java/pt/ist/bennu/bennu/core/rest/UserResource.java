@@ -10,19 +10,19 @@ import javax.ws.rs.core.Response;
 import pt.ist.bennu.core.domain.Bennu;
 
 @Path("/users")
-public class UserResource extends AbstractResource {
+public class UserResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers() {
         verifyAndGetRequestAuthor();
-        return Response.ok(serialize(Bennu.getInstance().getUsersSet(), "users")).build();
+        return Response.ok(view(Bennu.getInstance().getUsersSet(), "users")).build();
     }
 
     @GET
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("oid") String externalId) {
-        return Response.ok(serializeFromExternalId(externalId)).build();
+        return Response.ok(view(readDomainObject(externalId))).build();
     }
 }

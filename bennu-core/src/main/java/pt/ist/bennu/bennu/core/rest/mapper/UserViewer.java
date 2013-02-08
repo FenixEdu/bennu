@@ -1,20 +1,18 @@
 package pt.ist.bennu.bennu.core.rest.mapper;
 
-import java.lang.reflect.Type;
-
 import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.json.JsonBuilder;
+import pt.ist.bennu.json.JsonViewer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 
-public class UserSerializer implements JsonSerializer<User> {
+public class UserViewer implements JsonViewer<User> {
 
     @Override
-    public JsonElement serialize(User user, Type type, JsonSerializationContext ctx) {
+    public JsonElement view(User user, JsonBuilder context) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("id", user.getOid());
+        jsonObject.addProperty("id", user.getExternalId());
         jsonObject.addProperty("username", user.getUsername());
         return jsonObject;
     }

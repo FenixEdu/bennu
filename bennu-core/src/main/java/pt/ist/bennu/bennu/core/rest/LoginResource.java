@@ -17,13 +17,13 @@ import pt.ist.bennu.bennu.core.rest.mapper.RestException;
 import pt.ist.bennu.core.domain.User;
 
 @Path("/login")
-public class LoginResource extends AbstractResource {
+public class LoginResource extends BennuRestResource {
 
     @GET
     @Produces({ MediaType.APPLICATION_JSON })
     public Response getLoginStatus() {
         User author = verifyAndGetRequestAuthor();
-        return Response.ok().entity(serialize(author)).build();
+        return Response.ok().entity(view(author)).build();
     }
 
     @POST

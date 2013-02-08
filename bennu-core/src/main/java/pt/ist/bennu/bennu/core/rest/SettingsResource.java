@@ -7,12 +7,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/settings")
-public class SettingsResource extends AbstractResource {
+public class SettingsResource extends BennuRestResource {
 
     @GET
     @Produces({ MediaType.APPLICATION_JSON })
     public Response getSettings() {
-        return Response.ok().entity(serialize(getCasConfigContext())).build();
+        return Response.ok().entity(view(getCasConfigContext())).build();
     }
 
 }
