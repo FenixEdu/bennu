@@ -1,4 +1,11 @@
 #!/bin/bash
+
+
+echo Installing Bennu Json...
+cd bennu-json
+mvn clean install -q
+cd ..
+
 echo Installing Bennu Maven Plugin...
 cd maven/bennu-maven-plugin/
 mvn clean install -q
@@ -24,6 +31,4 @@ cd bennu-dispatch
 mvn clean install -q
 cd ..
 
-cd bennu-json
-mvn clean install -q
-cd ..
+
