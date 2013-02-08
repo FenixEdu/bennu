@@ -18,6 +18,11 @@ public class TestJsonSerialization {
 
     private static User user;
     private static JsonBuilder jsonRegistry;
+    private static JsonParser parser;
+
+    private static JsonObject parse(String jsonData) {
+        return (JsonObject) parser.parse(jsonData);
+    }
 
     @BeforeClass
     public static void cenas() {
@@ -25,6 +30,7 @@ public class TestJsonSerialization {
         user = new User("test", "testpwd", "1");
         jsonRegistry = new JsonBuilder();
         jsonRegistry.setDefault(User.class, UserAdapter.class);
+        parser = new JsonParser();
     }
 
     @Test
@@ -36,7 +42,7 @@ public class TestJsonSerialization {
     @Test
     public void testCreation() {
         String jsonString = "{\"name\":\"test_creation\",\"password\":\"pass_creation\",\"number\":\"2\"}";
-        final User userCreated = jsonRegistry.create(jsonString, User.class);
+        final User userCreated = jsonRegistry.create(parse(jsonString), User.class);
         Assert.assertEquals("test_creation", userCreated.getName());
         Assert.assertEquals("pass_creation", userCreated.getPassword());
         Assert.assertEquals("2", userCreated.getNumber());
@@ -45,7 +51,7 @@ public class TestJsonSerialization {
     @Test
     public void testUpdate() {
         String jsonString = "{\"name\":\"test_update\",\"password\":\"pass_update\",\"number\":\"3\"}";
-        jsonRegistry.update(jsonString, user);
+        jsonRegistry.update(parse(jsonString), user);
         Assert.assertEquals("test_update", user.getName());
         Assert.assertEquals("pass_update", user.getPassword());
         Assert.assertEquals("3", user.getNumber());
@@ -60,7 +66,7 @@ public class TestJsonSerialization {
     @Test
     public void testCustomCreation() {
         String jsonData = "{\"name\":\"test_custom_creation\",\"password\":\"pass_custom_creation\",\"number\":\"4\"}";
-        final User createdUser = jsonRegistry.create(jsonData, User.class, UserSpecificCreator.class);
+        final User createdUser = jsonRegistry.create(parse(jsonData), User.class, UserSpecificCreator.class);
         Assert.assertEquals("test_custom_creation", createdUser.getName());
         Assert.assertEquals("cGFzc19jdXN0b21fY3JlYXRpb24=", createdUser.getPassword());
         Assert.assertEquals("4", createdUser.getNumber());

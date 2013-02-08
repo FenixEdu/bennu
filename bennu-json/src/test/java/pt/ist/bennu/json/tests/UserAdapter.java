@@ -5,15 +5,11 @@ import pt.ist.bennu.json.JsonBuilder;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class UserAdapter implements JsonAdapter<User> {
 
-    private static final JsonParser JSON_PARSER = new JsonParser();
-
     @Override
-    public User create(String jsonData, JsonBuilder ctx) {
-        final JsonObject jsonObject = JSON_PARSER.parse(jsonData).getAsJsonObject();
+    public User create(JsonObject jsonObject, JsonBuilder ctx) {
         final String name = jsonObject.get("name").getAsString();
         final String password = jsonObject.get("password").getAsString();
         final String number = jsonObject.get("number").getAsString();
@@ -21,8 +17,7 @@ public class UserAdapter implements JsonAdapter<User> {
     }
 
     @Override
-    public User update(String jsonData, User obj, JsonBuilder ctx) {
-        final JsonObject jsonObject = JSON_PARSER.parse(jsonData).getAsJsonObject();
+    public User update(JsonObject jsonObject, User obj, JsonBuilder ctx) {
         final String name = jsonObject.get("name").getAsString();
         final String password = jsonObject.get("password").getAsString();
         final String number = jsonObject.get("number").getAsString();

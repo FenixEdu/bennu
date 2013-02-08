@@ -13,6 +13,7 @@ import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.json.JsonCreator;
 import pt.ist.bennu.json.JsonUpdater;
 import pt.ist.bennu.json.JsonViewer;
+import pt.ist.bennu.service.Service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -21,8 +22,9 @@ import com.google.gson.JsonParser;
 public class JsonAwareResource {
 
     private static final JsonBuilder builder;
-
+    private static final JsonParser parser;
     static {
+        parser = new JsonParser();
         builder = new JsonBuilder();
         builder.setDefault(User.class, UserViewer.class);
         builder.setDefault(CasConfigContext.class, CasConfigContextSerializer.class);
@@ -56,24 +58,26 @@ public class JsonAwareResource {
     }
 
     public <T> T create(String jsonData, Class<T> clazz) {
-        return builder.create(jsonData, clazz);
+        return create(jsonData, clazz, null);
     }
 
+    @Service
     public <T> T create(String jsonData, Class<T> clazz, Class<? extends JsonCreator<? extends T>> jsonCreatorClass) {
-        return builder.create(jsonData, clazz, jsonCreatorClass);
+        return builder.create(parse(jsonData), clazz, jsonCreatorClass);
     }
 
     public <T> T update(String jsonData, T object) {
-        return builder.update(jsonData, object);
+        return update(jsonData, object, null);
     }
 
+    @Service
     public <T> T update(String jsonData, T object, Class<? extends JsonUpdater<? extends T>> jsonUpdaterClass) {
-        return builder.update(jsonData, object, jsonUpdaterClass);
+        return builder.update(parse(jsonData), object, jsonUpdaterClass);
     }
 
-    private JsonObject parseJsonObject(String jsonString) {
+    private JsonObject parse(String jsonString) {
         try {
-            return new JsonParser().parse(jsonString).getAsJsonObject();
+            return parser.parse(jsonString).getAsJsonObject();
         } catch (JsonParseException e) {
             throw new RestException(BennuRestError.BAD_REQUEST);
         } catch (IllegalStateException e) {
