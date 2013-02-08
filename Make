@@ -23,3 +23,7 @@ echo Installing Bennu Dispatch...
 cd bennu-dispatch
 mvn clean install -q
 cd ..
+
+cd bennu-json
+mvn clean install -q
+cd ..
