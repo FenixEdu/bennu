@@ -21,22 +21,22 @@ import com.google.gson.JsonParser;
 
 public class JsonAwareResource {
 
-    private static final JsonBuilder builder;
-    private static final JsonParser parser;
+    private static final JsonBuilder BUILDER;
+    private static final JsonParser PARSER;
     static {
-        parser = new JsonParser();
-        builder = new JsonBuilder();
-        builder.setDefault(User.class, UserViewer.class);
-        builder.setDefault(CasConfigContext.class, CasConfigContextSerializer.class);
-        builder.setDefault(DateTime.class, DateTimeViewer.class);
+        PARSER = new JsonParser();
+        BUILDER = new JsonBuilder();
+        BUILDER.setDefault(User.class, UserViewer.class);
+        BUILDER.setDefault(CasConfigContext.class, CasConfigContextSerializer.class);
+        BUILDER.setDefault(DateTime.class, DateTimeViewer.class);
     }
 
     public static final JsonBuilder getBuilder() {
-        return builder;
+        return BUILDER;
     }
 
     public static final void setDefault(Class<?> objectClass, Class<?> registeeClass) {
-        builder.setDefault(objectClass, registeeClass);
+        BUILDER.setDefault(objectClass, registeeClass);
     }
 
     public final String view(Object object) {
@@ -44,7 +44,7 @@ public class JsonAwareResource {
     }
 
     public final String view(Object object, Class<? extends JsonViewer<?>> viewerClass) {
-        return builder.view(object, viewerClass).toString();
+        return BUILDER.view(object, viewerClass).toString();
     }
 
     public final String view(Object object, String collectionKey) {
@@ -53,7 +53,7 @@ public class JsonAwareResource {
 
     public final String view(Object object, String collectionKey, Class<? extends JsonViewer<?>> viewerClass) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add(collectionKey, builder.view(object, viewerClass));
+        jsonObject.add(collectionKey, BUILDER.view(object, viewerClass));
         return jsonObject.toString();
     }
 
@@ -61,9 +61,13 @@ public class JsonAwareResource {
         return create(jsonData, clazz, null);
     }
 
-    @Service
     public <T> T create(String jsonData, Class<T> clazz, Class<? extends JsonCreator<? extends T>> jsonCreatorClass) {
-        return builder.create(parse(jsonData), clazz, jsonCreatorClass);
+        return (T) innerCreate(jsonData, clazz, jsonCreatorClass);
+    }
+
+    @Service
+    private Object innerCreate(String jsonData, Class<?> clazz, Class<? extends JsonCreator<?>> jsonCreatorClass) {
+        return BUILDER.create(parse(jsonData), clazz, jsonCreatorClass);
     }
 
     public <T> T update(String jsonData, T object) {
@@ -71,13 +75,17 @@ public class JsonAwareResource {
     }
 
     @Service
+    private Object innerUpdate(String jsonData, Object object, Class<? extends JsonUpdater<?>> jsonUpdaterClass) {
+        return BUILDER.update(parse(jsonData), object, jsonUpdaterClass);
+    }
+
     public <T> T update(String jsonData, T object, Class<? extends JsonUpdater<? extends T>> jsonUpdaterClass) {
-        return builder.update(parse(jsonData), object, jsonUpdaterClass);
+        return (T) innerUpdate(jsonData, object, jsonUpdaterClass);
     }
 
     private JsonObject parse(String jsonString) {
         try {
-            return parser.parse(jsonString).getAsJsonObject();
+            return PARSER.parse(jsonString).getAsJsonObject();
         } catch (JsonParseException e) {
             throw new RestException(BennuRestError.BAD_REQUEST);
         } catch (IllegalStateException e) {
