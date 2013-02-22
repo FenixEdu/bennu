@@ -1,0 +1,2723 @@
+{
+    "hosts": [
+        {
+            "supportEmailAddress": "dsi@ist.utl.pt",
+            "subtitle": {
+                "pt": "Reposit\u00f3rio de Institucional do IST"
+            },
+            "copyright": {
+                "pt": "Instituto Superior T\u00e9cnico"
+            },
+            "title": {
+                "pt": "Documentos"
+            },
+            "systemEmailAddress": "noreply@ist.utl.pt",
+            "hostname": "docs.ist.utl.pt",
+            "apps": [
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783265#DocumentHome",
+                    "description": {
+                        "en": "Documents",
+                        "pt": "Documentos"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783265#DocumentHome",
+                            "description": {
+                                "en": "Documents",
+                                "pt": "Documentos"
+                            },
+                            "title": {
+                                "en": "Documents",
+                                "pt": "Documentos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783265,6597069784266#WebdavHome",
+                            "description": {
+                                "en": "WebDav",
+                                "pt": "WebDav"
+                            },
+                            "title": {
+                                "en": "WebDav",
+                                "pt": "WebDav"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783265,6597069784065#LoadWorkSheetFiles",
+                            "description": {
+                                "en": "Work Sheets",
+                                "pt": "Verbetes"
+                            },
+                            "title": {
+                                "en": "Work Sheets",
+                                "pt": "Verbetes"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783265,6597069783270#ManageMetadataTemplates",
+                            "description": {
+                                "en": "Template Management",
+                                "pt": "Gest\u00e3o de Templates"
+                            },
+                            "title": {
+                                "en": "Template Management",
+                                "pt": "Gest\u00e3o de Templates"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783265,6597069783269#DocumentSearch",
+                            "description": {
+                                "en": "Search",
+                                "pt": "Procurar"
+                            },
+                            "title": {
+                                "en": "Search",
+                                "pt": "Procurar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783265,6597069783268#LogPage",
+                            "description": {
+                                "en": "See Logs",
+                                "pt": "Ver Logs"
+                            },
+                            "title": {
+                                "en": "See Logs",
+                                "pt": "Ver Logs"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783265,6597069783267#DocumentBrowse",
+                            "description": {
+                                "en": "Browse",
+                                "pt": "Navegar"
+                            },
+                            "title": {
+                                "en": "Browse",
+                                "pt": "Navegar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783265,6597069783266#DocumentHome",
+                            "description": {
+                                "en": "Home",
+                                "pt": "In\u00edcio"
+                            },
+                            "title": {
+                                "en": "Home",
+                                "pt": "In\u00edcio"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Documents",
+                        "pt": "Documentos"
+                    }
+                },
+                {
+                    "accessExpression": "Administradores de Sistema",
+                    "path": "/fileStorageManagement.do?method=prepare&_CONTEXT_PATH_=335007465704",
+                    "description": {
+                        "en": "File Storage Management",
+                        "pt": "Gest\u00e3o de Reposit\u00f3rios de Ficheiros"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/fileStorageManagement.do?method=prepare&_CONTEXT_PATH_=335007465704",
+                            "description": {
+                                "en": "File Storage Management",
+                                "pt": "Gest\u00e3o de Reposit\u00f3rios de Ficheiros"
+                            },
+                            "title": {
+                                "en": "File Storage Management",
+                                "pt": "Gest\u00e3o de Reposit\u00f3rios de Ficheiros"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "File Storage Management",
+                        "pt": "Gest\u00e3o de Reposit\u00f3rios de Ficheiros"
+                    }
+                },
+                {
+                    "accessExpression": "Administradores de Sistema",
+                    "path": "/storageConfigurationManagement.do?method=prepare&_CONTEXT_PATH_=335007465705",
+                    "description": {
+                        "en": "File Types Management",
+                        "pt": "Gest\u00e3o de Tipos de Ficheiros"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/storageConfigurationManagement.do?method=prepare&_CONTEXT_PATH_=335007465705",
+                            "description": {
+                                "en": "File Types Management",
+                                "pt": "Gest\u00e3o de Tipos de Ficheiros"
+                            },
+                            "title": {
+                                "en": "File Types Management",
+                                "pt": "Gest\u00e3o de Tipos de Ficheiros"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "File Types Management",
+                        "pt": "Gest\u00e3o de Tipos de Ficheiros"
+                    }
+                }
+            ],
+            "theme": {
+                "description": "Default layout not much to say about this one.",
+                "screenshot": "default.jpg",
+                "name": "default"
+            },
+            "logo": "iVBORw0KGgoAAAANSUhEUgAAACsAAAA2CAYAAABeFWCFAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3AoXFBgDLmvDPAAAIABJREFUaAUBfiSB2wH///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAQEB/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8BAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAsAAAAPEAAAAAAAAAAAAAAC8AAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAAcAAAAAAAAABgAAAA/wAAAP8AAACfAAAAAAAAACAAAADPAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/////AAD///8AAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAHAAAAAAAAAAAAAAAL8AAAD/AAAA/wAAAP8AAAAAAAAAAAAAABAAAADfAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP////8AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAALAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACfAAAAgQAAACAAAABwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAACvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEAAAABAAAAAQAAAEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXwAAAL8AAAAAAAAAAAAAAAAAAABgAAAAvwAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAIAAAAAAAAAAAAAAAAAAAACAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAIAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAAAAAAAgAAAAAAAADQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwQAAAAACAAAAAAAAANEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQAAAAAAQAAAAAAAAAsAAAAJ8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAP///wAAAAAAAAAAvwAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAC/AAAAAAAAAAAAAAAAAAAAvwAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAACvAAAAAP///wACAAAAAAAAAAAAAAChAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALEAAAAAAAAAAAIAAAAAAAAAAAAAALAAAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAoAAAAAAAAAAAAgAAAAAAAAAAAAAA8AAAAJEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAAAAARAAAAEQAAALAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAEAAAAO8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAAUAAAAAAAAAAAAAAAQAAAAP8AAAD/AAAA/wAAAL8AAAAAAAAAAAAAAAAAAADvAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADfAAAAAAAAAAAAAAAA////AAIAAAAAAAAAAAAAAAAAAADwAAAAgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEAAAAAAAAAAAAAAAAAAAAAAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAvwAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAO8AAAAwAAAAAAAAABAAAAD/AAAA/wAAAP8AAACPAAAAAAAAABAAAADPAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAC/AAAAAAAAAAAAAAAAAAAAAP///wAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA7wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAO8AAABgAAAAEAAAAGAAAAC/AAAArwAAACAAAABQAAAAzwAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA7wAAACAAAAAAAAAAAAAAAAAAAAAA////AAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAAzwAAAL8AAAC/AAAA7wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAABQAAAAAAAAAAAAAAAAAAAAAAAAAAD///8AAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACfAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///wAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACvAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAJ8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAADPAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAACvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8AAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAADPAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAAvwAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///wAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAADPAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAJ8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACfAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAACfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8AAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///wAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADrwZdwAAAEiUlEQVQAAAAAAABAAAAA7wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA3wAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAArwAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAK8AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8AAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAAAAO8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAN8AAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///wAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAJ8AAAD/AAAA/wAAAP8AAACAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAACAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8AAf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALtcNnoWSC/sAAAAAElFTkSuQmCC",
+            "googleSearchEnabled": false
+        },
+        {
+            "supportEmailAddress": "",
+            "subtitle": {
+                "pt": "Aplica\u00e7\u00f5es Centrais da ADIST"
+            },
+            "copyright": {
+                "pt": "Associa\u00e7\u00e3o para o Desenvolvimento do IST"
+            },
+            "title": {
+                "pt": ".ADIST"
+            },
+            "systemEmailAddress": "noreply@adist.pt",
+            "hostname": "dot.adist.ist.utl.pt",
+            "apps": [
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/dashBoard.do?method=viewDigest&_CONTEXT_PATH_=335007463297",
+                    "description": {
+                        "en": "Resume",
+                        "pt": "Resumo"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/dashBoard.do?method=viewDigest&_CONTEXT_PATH_=335007463297",
+                            "description": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            },
+                            "title": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Resume",
+                        "pt": "Resumo"
+                    }
+                },
+                {
+                    "accessExpression": "Administradores de Sistema",
+                    "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489748866",
+                    "description": {
+                        "pt": "Administrador"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489748866",
+                            "description": {
+                                "pt": "Administrador"
+                            },
+                            "title": {
+                                "pt": "Administrador"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/expenditureConfiguration.do?method=viewConfiguration&_CONTEXT_PATH_=691489748866,335007463307",
+                            "description": {
+                                "en": "Acquisitions Configuration",
+                                "pt": "Configura\u00e7\u00e3o Aquisi\u00e7\u00f5es"
+                            },
+                            "title": {
+                                "en": "Acquisitions Configuration",
+                                "pt": "Configura\u00e7\u00e3o Aquisi\u00e7\u00f5es"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/workingCapital.do?method=configuration&_CONTEXT_PATH_=691489748866,335007463306",
+                            "description": {
+                                "en": "Configure Working Capitals",
+                                "pt": "Configurar Fundos de Maneio"
+                            },
+                            "title": {
+                                "en": "Configure Working Capitals",
+                                "pt": "Configurar Fundos de Maneio"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/workflowConfiguration.do?method=viewConfiguration&_CONTEXT_PATH_=691489748866,335007463305",
+                            "description": {
+                                "en": "Configure Workflow",
+                                "pt": "Configurar Workflow"
+                            },
+                            "title": {
+                                "en": "Configure Workflow",
+                                "pt": "Configurar Workflow"
+                            }
+                        },
+                        {
+                            "accessExpression": "Qualquer Pessoa",
+                            "path": "/workflowQueueManagement.do?method=manageQueues&_CONTEXT_PATH_=691489748866,335007463304",
+                            "description": {
+                                "en": "Queue Management",
+                                "pt": "Gest\u00e3o de filas"
+                            },
+                            "title": {
+                                "en": "Queue Management",
+                                "pt": "Gest\u00e3o de filas"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/processSelectionNodeConfiguration.do?method=manageNodeSelection&_CONTEXT_PATH_=691489748866,335007463303",
+                            "description": {
+                                "en": "Node Selection Configuration",
+                                "pt": "Gest\u00e3o de conte\u00fados iniciais do processo"
+                            },
+                            "title": {
+                                "en": "Node Selection Configuration",
+                                "pt": "Gest\u00e3o de conte\u00fados iniciais do processo"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/storageConfigurationManagement.do?method=prepare&_CONTEXT_PATH_=691489748866,335007463301",
+                            "description": {
+                                "en": "File Types Management",
+                                "pt": "Gest\u00e3o de Tipos de Ficheiros"
+                            },
+                            "title": {
+                                "en": "File Types Management",
+                                "pt": "Gest\u00e3o de Tipos de Ficheiros"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/fileStorageManagement.do?method=prepare&_CONTEXT_PATH_=691489748866,335007463300",
+                            "description": {
+                                "en": "File Storage Management",
+                                "pt": "Gest\u00e3o de Reposit\u00f3rios de Ficheiros"
+                            },
+                            "title": {
+                                "en": "File Storage Management",
+                                "pt": "Gest\u00e3o de Reposit\u00f3rios de Ficheiros"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/organizationModel.do?method=viewModels&_CONTEXT_PATH_=691489748866,335007463299",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "pt": "Administrador"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/search.do?method=search&_CONTEXT_PATH_=335007463308",
+                    "description": {
+                        "en": "Acquisitions",
+                        "pt": "Aquisi\u00e7\u00f5es"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/search.do?method=search&_CONTEXT_PATH_=335007463308",
+                            "description": {
+                                "en": "Acquisitions",
+                                "pt": "Aquisi\u00e7\u00f5es"
+                            },
+                            "title": {
+                                "en": "Acquisitions",
+                                "pt": "Aquisi\u00e7\u00f5es"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=manageSuppliers&_CONTEXT_PATH_=335007463308,335007463315",
+                            "description": {
+                                "en": "Suppliers",
+                                "pt": "Fornecedores"
+                            },
+                            "title": {
+                                "en": "Suppliers",
+                                "pt": "Fornecedores"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=searchUsers&_CONTEXT_PATH_=335007463308,335007463314",
+                            "description": {
+                                "en": "Users",
+                                "pt": "Utilizadores"
+                            },
+                            "title": {
+                                "en": "Users",
+                                "pt": "Utilizadores"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=viewOrganization&_CONTEXT_PATH_=335007463308,335007463313",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Unidades"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Unidades"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administrador da Contabilidade (GIAF)",
+                            "path": "/acquisitionProcess.do?method=checkFundAllocations&_CONTEXT_PATH_=335007463308,335007463312",
+                            "description": {
+                                "en": "Fund Allocations",
+                                "pt": "Cabimentos"
+                            },
+                            "title": {
+                                "en": "Fund Allocations",
+                                "pt": "Cabimentos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Central de Compras",
+                            "path": "/wizard.do?method=afterTheFactOperationsWizard&_CONTEXT_PATH_=335007463308,335007463311",
+                            "description": {
+                                "en": "Register",
+                                "pt": "Registar"
+                            },
+                            "title": {
+                                "en": "Register",
+                                "pt": "Registar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/search.do?method=search&_CONTEXT_PATH_=335007463308,335007463310",
+                            "description": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            },
+                            "title": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/wizard.do?method=newAcquisitionWizard&_CONTEXT_PATH_=335007463308,335007463309",
+                            "description": {
+                                "en": "New",
+                                "pt": "Nova Aquisi\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "New",
+                                "pt": "Nova Aquisi\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Acquisitions",
+                        "pt": "Aquisi\u00e7\u00f5es"
+                    }
+                },
+                {
+                    "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                    "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007463316",
+                    "description": {
+                        "en": "Statistics",
+                        "pt": "Estat\u00edsticas"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                            "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007463316",
+                            "description": {
+                                "en": "Statistics",
+                                "pt": "Estat\u00edsticas"
+                            },
+                            "title": {
+                                "en": "Statistics",
+                                "pt": "Estat\u00edsticas"
+                            }
+                        },
+                        {
+                            "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                            "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007463316,335007463319",
+                            "description": {
+                                "en": "Reports",
+                                "pt": "Listagens"
+                            },
+                            "title": {
+                                "en": "Reports",
+                                "pt": "Listagens"
+                            }
+                        },
+                        {
+                            "accessExpression": "Observador de Estat\u00edsticas",
+                            "path": "/statistics.do?method=showRefundProcessStatistics&_CONTEXT_PATH_=335007463316,335007463318",
+                            "description": {
+                                "en": "Refunds",
+                                "pt": "Reembolsos"
+                            },
+                            "title": {
+                                "en": "Refunds",
+                                "pt": "Reembolsos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Observador de Estat\u00edsticas",
+                            "path": "/statistics.do?method=showSimplifiedProcessStatistics&_CONTEXT_PATH_=335007463316,335007463317",
+                            "description": {
+                                "en": "Simplified Regiem",
+                                "pt": "Regime Simplificado"
+                            },
+                            "title": {
+                                "en": "Simplified Regiem",
+                                "pt": "Regime Simplificado"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Statistics",
+                        "pt": "Estat\u00edsticas"
+                    }
+                },
+                {
+                    "accessExpression": "Qualquer Pessoa",
+                    "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489748892",
+                    "description": {
+                        "pt": "Avisos"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Qualquer Pessoa",
+                            "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489748892",
+                            "description": {
+                                "pt": "Avisos"
+                            },
+                            "title": {
+                                "pt": "Avisos"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "pt": "Avisos"
+                    }
+                },
+                {
+                    "accessExpression": "Utilizadores com possibilidade de envio mensagens",
+                    "path": "/messagingAction.do?method=listSenders&_CONTEXT_PATH_=335007464297",
+                    "description": {
+                        "en": "Communication",
+                        "pt": "Comunica\u00e7\u00e3o"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Utilizadores com possibilidade de envio mensagens",
+                            "path": "/messagingAction.do?method=listSenders&_CONTEXT_PATH_=335007464297",
+                            "description": {
+                                "en": "Communication",
+                                "pt": "Comunica\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Communication",
+                                "pt": "Comunica\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Communication",
+                        "pt": "Comunica\u00e7\u00e3o"
+                    }
+                }
+            ],
+            "theme": {
+                "description": "Green Header on Grey Background",
+                "screenshot": "noShot.jpg",
+                "name": "greenOnGrey"
+            },
+            "googleSearchEnabled": false
+        },
+        {
+            "supportEmailAddress": "",
+            "subtitle": {
+                "pt": "Aplica\u00e7\u00f5es Centrais do IST-ID"
+            },
+            "copyright": {
+                "pt": "Instituto Superior T\u00e9cnico - ID"
+            },
+            "title": {
+                "pt": ".IST-ID"
+            },
+            "systemEmailAddress": "noreply@ist-id.pt",
+            "hostname": "dot.ist-id.ist.utl.pt",
+            "apps": [
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/dashBoard.do?method=viewDigest&_CONTEXT_PATH_=335007460497",
+                    "description": {
+                        "en": "Resume",
+                        "pt": "Resumo"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/dashBoard.do?method=viewDigest&_CONTEXT_PATH_=335007460497",
+                            "description": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            },
+                            "title": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Resume",
+                        "pt": "Resumo"
+                    }
+                },
+                {
+                    "accessExpression": "Administrador de Sistema",
+                    "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489746066",
+                    "description": {
+                        "pt": "Administrador"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Administrador de Sistema",
+                            "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489746066",
+                            "description": {
+                                "pt": "Administrador"
+                            },
+                            "title": {
+                                "pt": "Administrador"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/expenditureConfiguration.do?method=viewConfiguration&_CONTEXT_PATH_=691489746066,335007460508",
+                            "description": {
+                                "en": "Acquisitions Configuration",
+                                "pt": "Configura\u00e7\u00e3o Aquisi\u00e7\u00f5es"
+                            },
+                            "title": {
+                                "en": "Acquisitions Configuration",
+                                "pt": "Configura\u00e7\u00e3o Aquisi\u00e7\u00f5es"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/expenditureConfiguration.do?method=viewConfiguration&_CONTEXT_PATH_=691489746066,335007460507",
+                            "description": {
+                                "en": "Acquisitions Configuration",
+                                "pt": "Configura\u00e7\u00e3o Aquisi\u00e7\u00f5es"
+                            },
+                            "title": {
+                                "en": "Acquisitions Configuration",
+                                "pt": "Configura\u00e7\u00e3o Aquisi\u00e7\u00f5es"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/workingCapital.do?method=configuration&_CONTEXT_PATH_=691489746066,335007460506",
+                            "description": {
+                                "en": "Configure Working Capitals",
+                                "pt": "Configurar Fundos de Maneio"
+                            },
+                            "title": {
+                                "en": "Configure Working Capitals",
+                                "pt": "Configurar Fundos de Maneio"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/workflowConfiguration.do?method=viewConfiguration&_CONTEXT_PATH_=691489746066,335007460505",
+                            "description": {
+                                "en": "Configure Workflow",
+                                "pt": "Configurar Workflow"
+                            },
+                            "title": {
+                                "en": "Configure Workflow",
+                                "pt": "Configurar Workflow"
+                            }
+                        },
+                        {
+                            "accessExpression": "Qualquer Pessoa",
+                            "path": "/workflowQueueManagement.do?method=manageQueues&_CONTEXT_PATH_=691489746066,335007460504",
+                            "description": {
+                                "en": "Queue Management",
+                                "pt": "Gest\u00e3o de filas"
+                            },
+                            "title": {
+                                "en": "Queue Management",
+                                "pt": "Gest\u00e3o de filas"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/processSelectionNodeConfiguration.do?method=manageNodeSelection&_CONTEXT_PATH_=691489746066,335007460503",
+                            "description": {
+                                "en": "Node Selection Configuration",
+                                "pt": "Gest\u00e3o de conte\u00fados iniciais do processo"
+                            },
+                            "title": {
+                                "en": "Node Selection Configuration",
+                                "pt": "Gest\u00e3o de conte\u00fados iniciais do processo"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/storageConfigurationManagement.do?method=prepare&_CONTEXT_PATH_=691489746066,335007460501",
+                            "description": {
+                                "en": "File Types Management",
+                                "pt": "Gest\u00e3o de Tipos de Ficheiros"
+                            },
+                            "title": {
+                                "en": "File Types Management",
+                                "pt": "Gest\u00e3o de Tipos de Ficheiros"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/fileStorageManagement.do?method=prepare&_CONTEXT_PATH_=691489746066,335007460500",
+                            "description": {
+                                "en": "File Storage Management",
+                                "pt": "Gest\u00e3o de Reposit\u00f3rios de Ficheiros"
+                            },
+                            "title": {
+                                "en": "File Storage Management",
+                                "pt": "Gest\u00e3o de Reposit\u00f3rios de Ficheiros"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/organizationModel.do?method=viewModels&_CONTEXT_PATH_=691489746066,335007460499",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "pt": "Administrador"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/search.do?method=search&_CONTEXT_PATH_=335007460509",
+                    "description": {
+                        "en": "Acquisitions",
+                        "pt": "Aquisi\u00e7\u00f5es"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/search.do?method=search&_CONTEXT_PATH_=335007460509",
+                            "description": {
+                                "en": "Acquisitions",
+                                "pt": "Aquisi\u00e7\u00f5es"
+                            },
+                            "title": {
+                                "en": "Acquisitions",
+                                "pt": "Aquisi\u00e7\u00f5es"
+                            }
+                        },
+                        {
+                            "accessExpression": "Central de Compras",
+                            "path": "/wizard.do?method=afterTheFactOperationsWizard&_CONTEXT_PATH_=335007460509,335007465297",
+                            "description": {
+                                "en": "Register",
+                                "pt": "Registar"
+                            },
+                            "title": {
+                                "en": "Register",
+                                "pt": "Registar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=manageSuppliers&_CONTEXT_PATH_=335007460509,335007460516",
+                            "description": {
+                                "en": "Suppliers",
+                                "pt": "Fornecedores"
+                            },
+                            "title": {
+                                "en": "Suppliers",
+                                "pt": "Fornecedores"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=searchUsers&_CONTEXT_PATH_=335007460509,335007460515",
+                            "description": {
+                                "en": "Users",
+                                "pt": "Utilizadores"
+                            },
+                            "title": {
+                                "en": "Users",
+                                "pt": "Utilizadores"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=viewOrganization&_CONTEXT_PATH_=335007460509,335007460514",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Unidades"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Unidades"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administrador da Contabilidade (GIAF)",
+                            "path": "/acquisitionProcess.do?method=checkFundAllocations&_CONTEXT_PATH_=335007460509,335007460513",
+                            "description": {
+                                "en": "Fund Allocations",
+                                "pt": "Cabimentos"
+                            },
+                            "title": {
+                                "en": "Fund Allocations",
+                                "pt": "Cabimentos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/search.do?method=search&_CONTEXT_PATH_=335007460509,335007460511",
+                            "description": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            },
+                            "title": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/wizard.do?method=newAcquisitionWizard&_CONTEXT_PATH_=335007460509,335007460510",
+                            "description": {
+                                "en": "New",
+                                "pt": "Nova Aquisi\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "New",
+                                "pt": "Nova Aquisi\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Acquisitions",
+                        "pt": "Aquisi\u00e7\u00f5es"
+                    }
+                },
+                {
+                    "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                    "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007460517",
+                    "description": {
+                        "en": "Statistics",
+                        "pt": "Estat\u00edsticas"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                            "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007460517",
+                            "description": {
+                                "en": "Statistics",
+                                "pt": "Estat\u00edsticas"
+                            },
+                            "title": {
+                                "en": "Statistics",
+                                "pt": "Estat\u00edsticas"
+                            }
+                        },
+                        {
+                            "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                            "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007460517,335007460520",
+                            "description": {
+                                "en": "Reports",
+                                "pt": "Listagens"
+                            },
+                            "title": {
+                                "en": "Reports",
+                                "pt": "Listagens"
+                            }
+                        },
+                        {
+                            "accessExpression": "Observador de Estat\u00edsticas",
+                            "path": "/statistics.do?method=showRefundProcessStatistics&_CONTEXT_PATH_=335007460517,335007460519",
+                            "description": {
+                                "en": "Refunds",
+                                "pt": "Reembolsos"
+                            },
+                            "title": {
+                                "en": "Refunds",
+                                "pt": "Reembolsos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Observador de Estat\u00edsticas",
+                            "path": "/statistics.do?method=showSimplifiedProcessStatistics&_CONTEXT_PATH_=335007460517,335007460518",
+                            "description": {
+                                "en": "Simplified Regiem",
+                                "pt": "Regime Simplificado"
+                            },
+                            "title": {
+                                "en": "Simplified Regiem",
+                                "pt": "Regime Simplificado"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Statistics",
+                        "pt": "Estat\u00edsticas"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/workingCapital.do?method=frontPage&_CONTEXT_PATH_=335007460521",
+                    "description": {
+                        "en": "Working Capital",
+                        "pt": "Fundo de Maneio"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/workingCapital.do?method=frontPage&_CONTEXT_PATH_=335007460521",
+                            "description": {
+                                "en": "Working Capital",
+                                "pt": "Fundo de Maneio"
+                            },
+                            "title": {
+                                "en": "Working Capital",
+                                "pt": "Fundo de Maneio"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/workingCapital.do?method=configuration&_CONTEXT_PATH_=335007460521,335007460524",
+                            "description": {
+                                "en": "Configure Working Capitals",
+                                "pt": "Configurar Fundos de Maneio"
+                            },
+                            "title": {
+                                "en": "Configure Working Capitals",
+                                "pt": "Configurar Fundos de Maneio"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/workingCapital.do?method=frontPage&_CONTEXT_PATH_=335007460521,335007460523",
+                            "description": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            },
+                            "title": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/workingCapital.do?method=prepareCreateWorkingCapitalInitialization&_CONTEXT_PATH_=335007460521,335007460522",
+                            "description": {
+                                "en": "Create New Working Capital",
+                                "pt": "Constituir Novo Fundo"
+                            },
+                            "title": {
+                                "en": "Create New Working Capital",
+                                "pt": "Constituir Novo Fundo"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Working Capital",
+                        "pt": "Fundo de Maneio"
+                    }
+                },
+                {
+                    "accessExpression": "Qualquer Pessoa",
+                    "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489746093",
+                    "description": {
+                        "pt": "Avisos"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Qualquer Pessoa",
+                            "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489746093",
+                            "description": {
+                                "pt": "Avisos"
+                            },
+                            "title": {
+                                "pt": "Avisos"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "pt": "Avisos"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/mailtracking.do?method=prepare&_CONTEXT_PATH_=335007461697",
+                    "description": {
+                        "en": "Correspond\u00eancia",
+                        "pt": "Correspond\u00eancia"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/mailtracking.do?method=prepare&_CONTEXT_PATH_=335007461697",
+                            "description": {
+                                "en": "Correspond\u00eancia",
+                                "pt": "Correspond\u00eancia"
+                            },
+                            "title": {
+                                "en": "Correspond\u00eancia",
+                                "pt": "Correspond\u00eancia"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Correspond\u00eancia",
+                        "pt": "Correspond\u00eancia"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/regulationDispatch.do?method=prepare&_CONTEXT_PATH_=335007461897",
+                    "description": {
+                        "en": "Regulation Dispatch",
+                        "pt": "Despachos"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/regulationDispatch.do?method=prepare&_CONTEXT_PATH_=335007461897",
+                            "description": {
+                                "en": "Regulation Dispatch",
+                                "pt": "Despachos"
+                            },
+                            "title": {
+                                "en": "Regulation Dispatch",
+                                "pt": "Despachos"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Regulation Dispatch",
+                        "pt": "Despachos"
+                    }
+                },
+                {
+                    "accessExpression": "Administradores de Sistema",
+                    "path": "/organizationModel.do?method=viewModels&_CONTEXT_PATH_=335007462297",
+                    "description": {
+                        "en": "Organization",
+                        "pt": "Organiza\u00e7\u00e3o"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/organizationModel.do?method=viewModels&_CONTEXT_PATH_=335007462297",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Organization",
+                        "pt": "Organiza\u00e7\u00e3o"
+                    }
+                },
+                {
+                    "accessExpression": "Utilizadores com possibilidade de envio mensagens",
+                    "path": "/messagingAction.do?method=listSenders&_CONTEXT_PATH_=335007462497",
+                    "description": {
+                        "en": "Communication",
+                        "pt": "Comunica\u00e7\u00e3o"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Utilizadores com possibilidade de envio mensagens",
+                            "path": "/messagingAction.do?method=listSenders&_CONTEXT_PATH_=335007462497",
+                            "description": {
+                                "en": "Communication",
+                                "pt": "Comunica\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Communication",
+                                "pt": "Comunica\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Communication",
+                        "pt": "Comunica\u00e7\u00e3o"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/missionProcess/pagina-inicial",
+                    "description": {
+                        "en": "Missions",
+                        "pt": "Miss\u00f5es"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/missionProcess/pagina-inicial",
+                            "description": {
+                                "en": "Missions",
+                                "pt": "Miss\u00f5es"
+                            },
+                            "title": {
+                                "en": "Missions",
+                                "pt": "Miss\u00f5es"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/missionProcess.do?method=help&_CONTEXT_PATH_=335007465897,335007465902",
+                            "description": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            },
+                            "title": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/configureMissions.do?method=prepare&_CONTEXT_PATH_=335007465897,335007465901",
+                            "description": {
+                                "en": "Configuration",
+                                "pt": "Configura\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Configuration",
+                                "pt": "Configura\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/missionOrganization.do?method=showPerson&_CONTEXT_PATH_=335007465897,335007465900",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/searchMissions.do?method=prepare&_CONTEXT_PATH_=335007465897,335007465899",
+                            "description": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            },
+                            "title": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/missionProcess/pagina-inicial/criar-missoes",
+                            "description": {
+                                "en": "New Mission",
+                                "pt": "Nova Miss\u00e3o"
+                            },
+                            "title": {
+                                "en": "New Mission",
+                                "pt": "Nova Miss\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Missions",
+                        "pt": "Miss\u00f5es"
+                    }
+                }
+            ],
+            "theme": {
+                "description": "Red Header on Grey Background",
+                "screenshot": "noShot.jpg",
+                "name": "redOnGrey"
+            },
+            "googleSearchEnabled": false
+        },
+        {
+            "supportEmailAddress": "ci@dot.ist.utl.pt",
+            "subtitle": {
+                "pt": "Aplica\u00e7\u00f5es Centrais do IST"
+            },
+            "copyright": {
+                "pt": "Instituto Superior T\u00e9cnico"
+            },
+            "title": {
+                "pt": ".IST"
+            },
+            "systemEmailAddress": "noreply@ist.utl.pt",
+            "hostname": "ashtray.ist.utl.pt",
+            "apps": [
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/dashBoard.do?method=viewDigest&_CONTEXT_PATH_=335007454116",
+                    "description": {
+                        "en": "Resume",
+                        "pt": "Resumo"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/dashBoard.do?method=viewDigest&_CONTEXT_PATH_=335007454116",
+                            "description": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            },
+                            "title": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Resume",
+                        "pt": "Resumo"
+                    }
+                },
+                {
+                    "accessExpression": "Qualquer Pessoa",
+                    "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489738064",
+                    "description": {
+                        "en": "News",
+                        "pt": "Avisos"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Qualquer Pessoa",
+                            "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489738064",
+                            "description": {
+                                "en": "News",
+                                "pt": "Avisos"
+                            },
+                            "title": {
+                                "en": "News",
+                                "pt": "Avisos"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "News",
+                        "pt": "Avisos"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/search.do?method=search&_CONTEXT_PATH_=335007454499",
+                    "description": {
+                        "en": "Acquisitions",
+                        "pt": "Aquisi\u00e7\u00f5es"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/search.do?method=search&_CONTEXT_PATH_=335007454499",
+                            "description": {
+                                "en": "Acquisitions",
+                                "pt": "Aquisi\u00e7\u00f5es"
+                            },
+                            "title": {
+                                "en": "Acquisitions",
+                                "pt": "Aquisi\u00e7\u00f5es"
+                            }
+                        },
+                        {
+                            "accessExpression": "Gestor de Unidades de Aquisi\u00e7\u00e3o",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=335007454499,6597069775465#PageView?page=322122548602",
+                            "description": {
+                                "en": "Viki",
+                                "pt": "Ajuda"
+                            },
+                            "title": {
+                                "en": "Viki",
+                                "pt": "Ajuda"
+                            }
+                        },
+                        {
+                            "accessExpression": "Qualquer Pessoa",
+                            "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=335007454499,691489740264",
+                            "description": {
+                                "pt": "Ajuda"
+                            },
+                            "title": {
+                                "pt": "Ajuda"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=manageSuppliers&_CONTEXT_PATH_=335007454499,335007454506",
+                            "description": {
+                                "en": "Suppliers",
+                                "pt": "Fornecedores"
+                            },
+                            "title": {
+                                "en": "Suppliers",
+                                "pt": "Fornecedores"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=searchUsers&_CONTEXT_PATH_=335007454499,335007454505",
+                            "description": {
+                                "en": "Users",
+                                "pt": "Utilizadores"
+                            },
+                            "title": {
+                                "en": "Users",
+                                "pt": "Utilizadores"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=viewOrganization&_CONTEXT_PATH_=335007454499,335007454504",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Unidades"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Unidades"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administrador da Contabilidade (GIAF)",
+                            "path": "/acquisitionProcess.do?method=checkFundAllocations&_CONTEXT_PATH_=335007454499,335007454503",
+                            "description": {
+                                "en": "Fund Allocations",
+                                "pt": "Cabimentos"
+                            },
+                            "title": {
+                                "en": "Fund Allocations",
+                                "pt": "Cabimentos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Central de Compras",
+                            "path": "/wizard.do?method=afterTheFactOperationsWizard&_CONTEXT_PATH_=335007454499,335007454502",
+                            "description": {
+                                "en": "Register",
+                                "pt": "Registar"
+                            },
+                            "title": {
+                                "en": "Register",
+                                "pt": "Registar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/search.do?method=search&_CONTEXT_PATH_=335007454499,335007454501",
+                            "description": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            },
+                            "title": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/wizard.do?method=newAcquisitionWizard&_CONTEXT_PATH_=335007454499,335007454500",
+                            "description": {
+                                "en": "New",
+                                "pt": "Nova Aquisi\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "New",
+                                "pt": "Nova Aquisi\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Acquisitions",
+                        "pt": "Aquisi\u00e7\u00f5es"
+                    }
+                },
+                {
+                    "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                    "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007454507",
+                    "description": {
+                        "en": "Statistics",
+                        "pt": "Estat\u00edsticas"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                            "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007454507",
+                            "description": {
+                                "en": "Statistics",
+                                "pt": "Estat\u00edsticas"
+                            },
+                            "title": {
+                                "en": "Statistics",
+                                "pt": "Estat\u00edsticas"
+                            }
+                        },
+                        {
+                            "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                            "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007454507,335007454510",
+                            "description": {
+                                "en": "Reports",
+                                "pt": "Listagens"
+                            },
+                            "title": {
+                                "en": "Reports",
+                                "pt": "Listagens"
+                            }
+                        },
+                        {
+                            "accessExpression": "Observador de Estat\u00edsticas",
+                            "path": "/statistics.do?method=showRefundProcessStatistics&_CONTEXT_PATH_=335007454507,335007454509",
+                            "description": {
+                                "en": "Refunds",
+                                "pt": "Reembolsos"
+                            },
+                            "title": {
+                                "en": "Refunds",
+                                "pt": "Reembolsos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Observador de Estat\u00edsticas",
+                            "path": "/statistics.do?method=showSimplifiedProcessStatistics&_CONTEXT_PATH_=335007454507,335007454508",
+                            "description": {
+                                "en": "Simplified Regiem",
+                                "pt": "Regime Simplificado"
+                            },
+                            "title": {
+                                "en": "Simplified Regiem",
+                                "pt": "Regime Simplificado"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Statistics",
+                        "pt": "Estat\u00edsticas"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/mailtracking.do?method=prepare&_CONTEXT_PATH_=335007450897",
+                    "description": {
+                        "en": "Correspond\u00eancia",
+                        "pt": "Correspond\u00eancia"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/mailtracking.do?method=prepare&_CONTEXT_PATH_=335007450897",
+                            "description": {
+                                "en": "Correspond\u00eancia",
+                                "pt": "Correspond\u00eancia"
+                            },
+                            "title": {
+                                "en": "Correspond\u00eancia",
+                                "pt": "Correspond\u00eancia"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Correspond\u00eancia",
+                        "pt": "Correspond\u00eancia"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/workingCapital.do?method=frontPage&_CONTEXT_PATH_=335007451901",
+                    "description": {
+                        "en": "Working Capital",
+                        "pt": "Fundo de Maneio"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/workingCapital.do?method=frontPage&_CONTEXT_PATH_=335007451901",
+                            "description": {
+                                "en": "Working Capital",
+                                "pt": "Fundo de Maneio"
+                            },
+                            "title": {
+                                "en": "Working Capital",
+                                "pt": "Fundo de Maneio"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=335007451901,6597069773665#PageView?page=322122547404",
+                            "description": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            },
+                            "title": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "https://fenix-ashes.ist.utl.pt/fenixWiki/Qualidade/FundoDeManeio",
+                            "description": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            },
+                            "title": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/workingCapital.do?method=configuration&_CONTEXT_PATH_=335007451901,335007451904",
+                            "description": {
+                                "en": "Configure Working Capitals",
+                                "pt": "Configurar Fundos de Maneio"
+                            },
+                            "title": {
+                                "en": "Configure Working Capitals",
+                                "pt": "Configurar Fundos de Maneio"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/workingCapital.do?method=frontPage&_CONTEXT_PATH_=335007451901,335007451903",
+                            "description": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            },
+                            "title": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/workingCapital.do?method=prepareCreateWorkingCapitalInitialization&_CONTEXT_PATH_=335007451901,335007451902",
+                            "description": {
+                                "en": "Create New Working Capital",
+                                "pt": "Constituir Novo Fundo"
+                            },
+                            "title": {
+                                "en": "Create New Working Capital",
+                                "pt": "Constituir Novo Fundo"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Working Capital",
+                        "pt": "Fundo de Maneio"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/missionProcess/pagina-inicial",
+                    "description": {
+                        "en": "Missions",
+                        "pt": "Miss\u00f5es"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/missionProcess/pagina-inicial",
+                            "description": {
+                                "en": "Missions",
+                                "pt": "Miss\u00f5es"
+                            },
+                            "title": {
+                                "en": "Missions",
+                                "pt": "Miss\u00f5es"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=335007455097,6597069773464#PageView?page=322122547202",
+                            "description": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            },
+                            "title": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            }
+                        },
+                        {
+                            "accessExpression": "Utilizadores N\u00e3o Autenticados",
+                            "path": "/missionProcess.do?method=help&_CONTEXT_PATH_=335007455097,335007455102",
+                            "description": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            },
+                            "title": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/configureMissions.do?method=prepare&_CONTEXT_PATH_=335007455097,335007455101",
+                            "description": {
+                                "en": "Configuration",
+                                "pt": "Configura\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Configuration",
+                                "pt": "Configura\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/missionOrganization.do?method=showPerson&_CONTEXT_PATH_=335007455097,335007455100",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/searchMissions.do?method=prepare&_CONTEXT_PATH_=335007455097,335007455099",
+                            "description": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            },
+                            "title": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/missionProcess/pagina-inicial/criar-missoes",
+                            "description": {
+                                "en": "New Mission",
+                                "pt": "Nova Miss\u00e3o"
+                            },
+                            "title": {
+                                "en": "New Mission",
+                                "pt": "Nova Miss\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Missions",
+                        "pt": "Miss\u00f5es"
+                    }
+                },
+                {
+                    "accessExpression": "Administradores de Sistema",
+                    "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489739882",
+                    "description": {
+                        "pt": "Administrador"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/pageVersioning.do?method=viewPage&_CONTEXT_PATH_=691489739882",
+                            "description": {
+                                "pt": "Administrador"
+                            },
+                            "title": {
+                                "pt": "Administrador"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/workflowConfiguration.do?method=viewConfiguration&_CONTEXT_PATH_=691489739882,335007460099",
+                            "description": {
+                                "en": "Configure Workflow",
+                                "pt": "Configurar Workflow"
+                            },
+                            "title": {
+                                "en": "Configure Workflow",
+                                "pt": "Configurar Workflow"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/expenditureConfiguration.do?method=viewConfiguration&_CONTEXT_PATH_=691489739882,335007460097",
+                            "description": {
+                                "en": "Acquisitions Configuration",
+                                "pt": "Configura\u00e7\u00e3o Aquisi\u00e7\u00f5es"
+                            },
+                            "title": {
+                                "en": "Acquisitions Configuration",
+                                "pt": "Configura\u00e7\u00e3o Aquisi\u00e7\u00f5es"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/communication.do?method=frontPage&_CONTEXT_PATH_=691489739882,335007459897",
+                            "description": {
+                                "en": "!link.sideBar.remote!",
+                                "pt": "!link.sideBar.remote!"
+                            },
+                            "title": {
+                                "en": "!link.sideBar.remote!",
+                                "pt": "!link.sideBar.remote!"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/storageConfigurationManagement.do?method=prepare&_CONTEXT_PATH_=691489739882,335007454498",
+                            "description": {
+                                "en": "File Types Management",
+                                "pt": "Gest\u00e3o de Tipos de Ficheiros"
+                            },
+                            "title": {
+                                "en": "File Types Management",
+                                "pt": "Gest\u00e3o de Tipos de Ficheiros"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/fileStorageManagement.do?method=prepare&_CONTEXT_PATH_=691489739882,335007454497",
+                            "description": {
+                                "en": "File Storage Management",
+                                "pt": "Gest\u00e3o de Reposit\u00f3rios de Ficheiros"
+                            },
+                            "title": {
+                                "en": "File Storage Management",
+                                "pt": "Gest\u00e3o de Reposit\u00f3rios de Ficheiros"
+                            }
+                        },
+                        {
+                            "accessExpression": "Qualquer Pessoa",
+                            "path": "/workflowQueueManagement.do?method=manageQueues&_CONTEXT_PATH_=691489739882,335007454322",
+                            "description": {
+                                "en": "Queue Management",
+                                "pt": "Gest\u00e3o de filas"
+                            },
+                            "title": {
+                                "en": "Queue Management",
+                                "pt": "Gest\u00e3o de filas"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/processSelectionNodeConfiguration.do?method=manageNodeSelection&_CONTEXT_PATH_=691489739882,335007454321",
+                            "description": {
+                                "en": "Node Selection Configuration",
+                                "pt": "Gest\u00e3o de conte\u00fados iniciais do processo"
+                            },
+                            "title": {
+                                "en": "Node Selection Configuration",
+                                "pt": "Gest\u00e3o de conte\u00fados iniciais do processo"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/organizationModel.do?method=viewModels&_CONTEXT_PATH_=691489739882,335007454315",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "pt": "Administrador"
+                    }
+                },
+                {
+                    "accessExpression": "Administradores de Sistema",
+                    "path": "/organizationModel.do?method=viewModels&_CONTEXT_PATH_=335007457097",
+                    "description": {
+                        "en": "Organization",
+                        "pt": "Organiza\u00e7\u00e3o"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/organizationModel.do?method=viewModels&_CONTEXT_PATH_=335007457097",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Organization",
+                        "pt": "Organiza\u00e7\u00e3o"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/regulationDispatch.do?method=prepare&_CONTEXT_PATH_=335007461898",
+                    "description": {
+                        "en": "Regulation Dispatch",
+                        "pt": "Despachos"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/regulationDispatch.do?method=prepare&_CONTEXT_PATH_=335007461898",
+                            "description": {
+                                "en": "Regulation Dispatch",
+                                "pt": "Despachos"
+                            },
+                            "title": {
+                                "en": "Regulation Dispatch",
+                                "pt": "Despachos"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Regulation Dispatch",
+                        "pt": "Despachos"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/siadapManagement.do?method=manageSiadap&_CONTEXT_PATH_=335007463497",
+                    "description": {
+                        "en": "SIADAP",
+                        "pt": "SIADAP"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/siadapManagement.do?method=manageSiadap&_CONTEXT_PATH_=335007463497",
+                            "description": {
+                                "en": "SIADAP",
+                                "pt": "SIADAP"
+                            },
+                            "title": {
+                                "en": "SIADAP",
+                                "pt": "SIADAP"
+                            }
+                        },
+                        {
+                            "accessExpression": "Union of: SiadapStructureManagementGroup AND SiadapCCAGroup AND SiadapScheduleEditorsGroup AND Administradores de Sistema",
+                            "path": "/siadapProcessCount.do?method=showUnit&_CONTEXT_PATH_=335007463497,335007464097",
+                            "description": {
+                                "en": "Process Counts",
+                                "pt": "Contagens"
+                            },
+                            "title": {
+                                "en": "Process Counts",
+                                "pt": "Contagens"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=335007463497,6597069781073#PageView-322122548202",
+                            "description": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            },
+                            "title": {
+                                "en": "Help",
+                                "pt": "Ajuda"
+                            }
+                        },
+                        {
+                            "accessExpression": "Homologation Members",
+                            "path": "/siadapManagement.do?method=manageHarmonizationUnitsForMode&mode=homologationDone&_CONTEXT_PATH_=335007463497,335007463503",
+                            "description": {
+                                "en": "!link.siadap.homologationProcedure!",
+                                "pt": "Homologa\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "!link.siadap.homologationProcedure!",
+                                "pt": "Homologa\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "SiadapCCAGroup",
+                            "path": "/siadapManagement.do?method=validate&_CONTEXT_PATH_=335007463497,335007463502",
+                            "description": {
+                                "en": "!link.siadap.validationProcedure!",
+                                "pt": "Valida\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "!link.siadap.validationProcedure!",
+                                "pt": "Valida\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "SiadapStructureManagementGroup",
+                            "path": "/siadapPersonnelManagement.do?method=start&_CONTEXT_PATH_=335007463497,335007463501",
+                            "description": {
+                                "en": "Person Management",
+                                "pt": "Gest\u00e3o de Pessoas"
+                            },
+                            "title": {
+                                "en": "Person Management",
+                                "pt": "Gest\u00e3o de Pessoas"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/siadapManagement.do?method=showConfiguration&_CONTEXT_PATH_=335007463497,335007463500",
+                            "description": {
+                                "en": "Configuration",
+                                "pt": "Configura\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Configuration",
+                                "pt": "Configura\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/competencesManagement.do?method=manageCompetences&_CONTEXT_PATH_=335007463497,335007463499",
+                            "description": {
+                                "en": "Competences list management",
+                                "pt": "Gest\u00e3o das listas de compet\u00eancias"
+                            },
+                            "title": {
+                                "en": "Competences list management",
+                                "pt": "Gest\u00e3o das listas de compet\u00eancias"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/siadapManagement.do?method=manageSiadap&_CONTEXT_PATH_=335007463497,335007463498",
+                            "description": {
+                                "en": "Start",
+                                "pt": "In\u00edcio"
+                            },
+                            "title": {
+                                "en": "Start",
+                                "pt": "In\u00edcio"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "SIADAP",
+                        "pt": "SIADAP"
+                    }
+                },
+                {
+                    "accessExpression": "Grupo de Pessoas",
+                    "path": "/mobility.do?method=jobOffers&_CONTEXT_PATH_=335007463697",
+                    "description": {
+                        "en": "Mobility",
+                        "pt": "Mobilidade"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Grupo de Pessoas",
+                            "path": "/mobility.do?method=jobOffers&_CONTEXT_PATH_=335007463697",
+                            "description": {
+                                "en": "Mobility",
+                                "pt": "Mobilidade"
+                            },
+                            "title": {
+                                "en": "Mobility",
+                                "pt": "Mobilidade"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/mobility.do?method=configuration&_CONTEXT_PATH_=335007463697,335007463702",
+                            "description": {
+                                "en": "Configuration",
+                                "pt": "Configura\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Configuration",
+                                "pt": "Configura\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "Grupo de Pessoas",
+                            "path": "/mobility.do?method=employeeOffers&_CONTEXT_PATH_=335007463697,335007463701",
+                            "description": {
+                                "en": "Employee Offers",
+                                "pt": "Procuras"
+                            },
+                            "title": {
+                                "en": "Employee Offers",
+                                "pt": "Procuras"
+                            }
+                        },
+                        {
+                            "accessExpression": "Grupo de Pessoas",
+                            "path": "/mobility.do?method=jobOffers&_CONTEXT_PATH_=335007463697,335007463700",
+                            "description": {
+                                "en": "Job Offers",
+                                "pt": "Ofertas"
+                            },
+                            "title": {
+                                "en": "Job Offers",
+                                "pt": "Ofertas"
+                            }
+                        },
+                        {
+                            "accessExpression": "Membros (Pessoal) da unidade Instituto Superior T\u00e9cnico (IST) incluindo subunidades",
+                            "path": "/mobility.do?method=portfolio&_CONTEXT_PATH_=335007463697,335007463699",
+                            "description": {
+                                "en": "Portfolio",
+                                "pt": "Portf\u00f3lio"
+                            },
+                            "title": {
+                                "en": "Portfolio",
+                                "pt": "Portf\u00f3lio"
+                            }
+                        },
+                        {
+                            "accessExpression": "Grupo de Gest\u00e3o de Mobilidade",
+                            "path": "/mobility.do?method=frontPage&_CONTEXT_PATH_=335007463697,335007463698",
+                            "description": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            },
+                            "title": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Mobility",
+                        "pt": "Mobilidade"
+                    }
+                },
+                {
+                    "accessExpression": "Utilizadores com possibilidade de envio mensagens",
+                    "path": "/messagingAction.do?method=listSenders&_CONTEXT_PATH_=335007464497",
+                    "description": {
+                        "en": "Communication",
+                        "pt": "Comunica\u00e7\u00e3o"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Utilizadores com possibilidade de envio mensagens",
+                            "path": "/messagingAction.do?method=listSenders&_CONTEXT_PATH_=335007464497",
+                            "description": {
+                                "en": "Communication",
+                                "pt": "Comunica\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Communication",
+                                "pt": "Comunica\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Communication",
+                        "pt": "Comunica\u00e7\u00e3o"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/metaWorkflow.do?method=viewOpenProcessesInMyQueues&_CONTEXT_PATH_=335007465097",
+                    "description": {
+                        "en": "Meta Processes",
+                        "pt": "Processos"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/metaWorkflow.do?method=viewOpenProcessesInMyQueues&_CONTEXT_PATH_=335007465097",
+                            "description": {
+                                "en": "Meta Processes",
+                                "pt": "Processos"
+                            },
+                            "title": {
+                                "en": "Meta Processes",
+                                "pt": "Processos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/equivalencePlanManagement.do?method=prepare&_CONTEXT_PATH_=335007465097,335007465104",
+                            "description": {
+                                "en": "Equivalence Plan Management",
+                                "pt": "Configura\u00e7\u00e3o da Gest\u00e3o de Planos de Equival\u00eancias"
+                            },
+                            "title": {
+                                "en": "Equivalence Plan Management",
+                                "pt": "Configura\u00e7\u00e3o da Gest\u00e3o de Planos de Equival\u00eancias"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=335007465097,6597069782671#metaTypeManagement",
+                            "description": {
+                                "en": "Manage Metatypes",
+                                "pt": "Gerir Metatipos"
+                            },
+                            "title": {
+                                "en": "Manage Metatypes",
+                                "pt": "Gerir Metatipos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/metaTypeManagement.do?method=manageMetaType&_CONTEXT_PATH_=335007465097,335007465101",
+                            "description": {
+                                "en": "Manage Metatypes",
+                                "pt": "Gerir Metatipos"
+                            },
+                            "title": {
+                                "en": "Manage Metatypes",
+                                "pt": "Gerir Metatipos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/metaWorkflow.do?method=search&_CONTEXT_PATH_=335007465097,335007465100",
+                            "description": {
+                                "en": "Search",
+                                "pt": "Pesquisa"
+                            },
+                            "title": {
+                                "en": "Search",
+                                "pt": "Pesquisa"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/metaWorkflow.do?method=viewOpenProcessesInMyQueues&_CONTEXT_PATH_=335007465097,335007465099",
+                            "description": {
+                                "en": "Dashboard",
+                                "pt": "Resumo"
+                            },
+                            "title": {
+                                "en": "Dashboard",
+                                "pt": "Resumo"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/metaWorkflow.do?method=prepareCreateProcess&_CONTEXT_PATH_=335007465097,335007465098",
+                            "description": {
+                                "en": "New Process",
+                                "pt": "Novo Processo"
+                            },
+                            "title": {
+                                "en": "New Process",
+                                "pt": "Novo Processo"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Meta Processes",
+                        "pt": "Processos"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265#DocumentHome",
+                    "description": {
+                        "en": "Documents",
+                        "pt": "Documentos"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265#DocumentHome",
+                            "description": {
+                                "en": "Documents",
+                                "pt": "Documentos"
+                            },
+                            "title": {
+                                "en": "Documents",
+                                "pt": "Documentos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265,6597069784265#WebdavHome",
+                            "description": {
+                                "en": "WebDav",
+                                "pt": "WebDav"
+                            },
+                            "title": {
+                                "en": "WebDav",
+                                "pt": "WebDav"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265,6597069782464#DocumentSearch",
+                            "description": {
+                                "en": "Search",
+                                "pt": "Procurar"
+                            },
+                            "title": {
+                                "en": "Search",
+                                "pt": "Procurar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265,6597069782269#ManageMetadataTemplates",
+                            "description": {
+                                "en": "Template Management",
+                                "pt": "Gest\u00e3o de Templates"
+                            },
+                            "title": {
+                                "en": "Template Management",
+                                "pt": "Gest\u00e3o de Templates"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265,6597069782268#LogPage",
+                            "description": {
+                                "en": "See Logs",
+                                "pt": "Ver Logs"
+                            },
+                            "title": {
+                                "en": "See Logs",
+                                "pt": "Ver Logs"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265,6597069782267#DocumentBrowse",
+                            "description": {
+                                "en": "Browse",
+                                "pt": "Navegar"
+                            },
+                            "title": {
+                                "en": "Browse",
+                                "pt": "Navegar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265,6597069782266#DocumentHome",
+                            "description": {
+                                "en": "Home",
+                                "pt": "In\u00edcio"
+                            },
+                            "title": {
+                                "en": "Home",
+                                "pt": "In\u00edcio"
+                            }
+                        },
+                        {
+                            "accessExpression": "Union of: \u00c2ngela Francisca Soto Ribeiro Martins Almeida (ist23487) AND Alexandra Maria Cardoso Alves (ist23021) AND Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265,6597069780668#LoadGasCardInvoiceFiles",
+                            "description": {
+                                "en": "Galp Card Invoices",
+                                "pt": "Faturas Cart\u00e3o Galp"
+                            },
+                            "title": {
+                                "en": "Galp Card Invoices",
+                                "pt": "Faturas Cart\u00e3o Galp"
+                            }
+                        },
+                        {
+                            "accessExpression": "Union of: \u00c2ngela Francisca Soto Ribeiro Martins Almeida (ist23487) AND Alexandra Maria Cardoso Alves (ist23021) AND Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265,6597069780667#LoadIRSFiles",
+                            "description": {
+                                "en": "IRS",
+                                "pt": "IRS"
+                            },
+                            "title": {
+                                "en": "IRS",
+                                "pt": "IRS"
+                            }
+                        },
+                        {
+                            "accessExpression": "Union of: \u00c2ngela Francisca Soto Ribeiro Martins Almeida (ist23487) AND Alexandra Maria Cardoso Alves (ist23021) AND Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265,6597069780666#LoadScheduleFiles",
+                            "description": {
+                                "en": "Schedules",
+                                "pt": "Hor\u00e1rios"
+                            },
+                            "title": {
+                                "en": "Schedules",
+                                "pt": "Hor\u00e1rios"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069782265,6597069780665#LoadVacationFiles",
+                            "description": {
+                                "en": "Vacations",
+                                "pt": "F\u00e9rias"
+                            },
+                            "title": {
+                                "en": "Vacations",
+                                "pt": "F\u00e9rias"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Documents",
+                        "pt": "Documentos"
+                    }
+                },
+                {
+                    "accessExpression": "Administradores de Sistema",
+                    "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783865#ClientHostManagement",
+                    "description": {
+                        "en": "Hosts",
+                        "pt": "Hosts"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783865#ClientHostManagement",
+                            "description": {
+                                "en": "Hosts",
+                                "pt": "Hosts"
+                            },
+                            "title": {
+                                "en": "Hosts",
+                                "pt": "Hosts"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783865,6597069783867#ServerHostManagement",
+                            "description": {
+                                "en": "Server Configuration",
+                                "pt": "Configurar Servidores"
+                            },
+                            "title": {
+                                "en": "Server Configuration",
+                                "pt": "Configurar Servidores"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/vaadinContext.do?method=forwardToVaadin&_CONTEXT_PATH_=6597069783865,6597069783866#ClientHostManagement",
+                            "description": {
+                                "en": "Client Configuration",
+                                "pt": "Configurar Clientes"
+                            },
+                            "title": {
+                                "en": "Client Configuration",
+                                "pt": "Configurar Clientes"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Hosts",
+                        "pt": "Hosts"
+                    }
+                }
+            ],
+            "favicon": "AAABAAEAEBEAAAAAAAB8BQAAFgAAACgAAAAQAAAAIgAAAAEACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A9/f3AO/n5wDn3t4A3tbOAM7OxgDGvb0Ata2lAK2clACllIwAnIyEAJSEcwCEc2sAe2taAHNjUgBrUkoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDQ8PCgQAAAAAAAAAAAAABQ8NAAsPAwAAAAAAAAAAAAAAAAAHDwsAAAAAAAAAAAAABAQABw8NAAIEAwAAAAAABA8PBAcPDwAHDwsAAAAAAAQPDwQHDw8ABw8LAAAAAAAEDw8EBw8PAAcPCwAAAAAABA8PBAcPDwAHDwsAAAAAAAQPDwQHDw8ABw8LAAAAAAAEDw8EBw8PAAcPCwAAAAAABA8PBAcPDwAHDwsAAAAAAAQPDwQHDw8ECw8NBgAAAAADCwsDBw8PBgwLCwgAAAAAAAAAAAUPDwAAAAAAAAAAAAAAAAAADA8AAw0JAAAAAAAAAAAAAAIMDQ0PCwAAAAAAAAAAAAAAAAAEAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+            "theme": {
+                "description": "Green layout with top menu",
+                "screenshot": "noShot.jpg",
+                "name": "theme_test"
+            },
+            "logo": "iVBORw0KGgoAAAANSUhEUgAAACsAAAA2CAYAAABeFWCFAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDExRUE2RTUwMEQ4MTFFMjlFRjNCNENCQjExMzE1MUUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDExRUE2RTYwMEQ4MTFFMjlFRjNCNENCQjExMzE1MUUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0MTFFQTZFMzAwRDgxMUUyOUVGM0I0Q0JCMTEzMTUxRSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0MTFFQTZFNDAwRDgxMUUyOUVGM0I0Q0JCMTEzMTUxRSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PiFz0hMAAAIKSURBVHja7JqNUYMwFMebngPQCWQDu4G6ARvICLhBmUCdAJ0AnaDtBMUJ6AbUCTC5e3DPNCXfCL28uxy9VxJ+Tf/vJS8tadt2MRdbLmZks4K9gesctECCDAIs0qwPO9L2SdsP8t3RlhiPyPJs694yGDtFvgJ8MW0HgzG9wGZoIrZ/n9b7I9pqXVjXmj0RQl6lOYiQE0jkXwOskkhuPdUAE1lBgXN6jWnLpg7LZrYMi8I1wD4SMPZasU9OLhh9bxdm1sKe2ALBpbEUfOupZYMYGu97CAEWYANsgL1e2COG3c0Jtpo47B7Dfk8ctsLLLauHCtUNNKr9tMoU2g8vr7caXXd9KS6qRA2N36y4GLPsOHE2+JioBL5EqYtJ4aRTdo+RBej+/P0MFmr5N0Wxr+j9K5PaX9Pys+Mj7qSkkWgowQEj0WxjodWa51wKTkpyyae9V4x8likii1l9Fh7MCXxDUdx0JyvwTWB7Qf6Dq6zSc16AjSVfYQM1VNTVUizFQL/EEpSNHSvDooJOxQ4Au7XU6FlMKMPCDUU7rm0GWIZh4aZyJNBCwqEEaxssykuqNewIwEzrkTNYj8CqOz09WA9BV2g+Vx8WOmaWoKnBM81g0b5AN6/Wpr8rWMEiHaumtlIlkLzBcqtdMzCbiYNnuIFFs8wH38ZmNr3BcpugjWgzYgtLwn9kPNmvAAMAGniMkTISxG0AAAAASUVORK5CYII=",
+            "googleSearchEnabled": false
+        },
+        {
+            "supportEmailAddress": "",
+            "subtitle": {
+                "pt": "sistema de registo central de compras"
+            },
+            "copyright": {
+                "pt": "Instituto Superior T\u00e9cnico"
+            },
+            "title": {
+                "pt": "CENTRAL DE COMPRAS"
+            },
+            "systemEmailAddress": "",
+            "hostname": "compras.ist.utl.pt",
+            "apps": [
+                {
+                    "accessExpression": "Utilizadores N\u00e3o Autenticados",
+                    "path": "/expendituresHome.do?method=showAcquisitionAnnouncements&_CONTEXT_PATH_=335007449090",
+                    "description": {
+                        "en": "Announcements",
+                        "pt": "An\u00fancios"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Utilizadores N\u00e3o Autenticados",
+                            "path": "/expendituresHome.do?method=showAcquisitionAnnouncements&_CONTEXT_PATH_=335007449090",
+                            "description": {
+                                "en": "Announcements",
+                                "pt": "An\u00fancios"
+                            },
+                            "title": {
+                                "en": "Announcements",
+                                "pt": "An\u00fancios"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Announcements",
+                        "pt": "An\u00fancios"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/dashBoard.do?method=viewDigest&_CONTEXT_PATH_=335007449493",
+                    "description": {
+                        "en": "Acquisitions",
+                        "pt": "Aquisi\u00e7\u00f5es"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/dashBoard.do?method=viewDigest&_CONTEXT_PATH_=335007449493",
+                            "description": {
+                                "en": "Acquisitions",
+                                "pt": "Aquisi\u00e7\u00f5es"
+                            },
+                            "title": {
+                                "en": "Acquisitions",
+                                "pt": "Aquisi\u00e7\u00f5es"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administrador da Contabilidade (GIAF)",
+                            "path": "/acquisitionProcess.do?method=checkFundAllocations&_CONTEXT_PATH_=335007449493,335007449498",
+                            "description": {
+                                "en": "Fund Allocations",
+                                "pt": "Cabimentos"
+                            },
+                            "title": {
+                                "en": "Fund Allocations",
+                                "pt": "Cabimentos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Central de Compras",
+                            "path": "/wizard.do?method=afterTheFactOperationsWizard&_CONTEXT_PATH_=335007449493,335007449497",
+                            "description": {
+                                "en": "Register",
+                                "pt": "Registar"
+                            },
+                            "title": {
+                                "en": "Register",
+                                "pt": "Registar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/dashBoard.do?method=viewDigest&_CONTEXT_PATH_=335007449493,335007449496",
+                            "description": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            },
+                            "title": {
+                                "en": "Resume",
+                                "pt": "Resumo"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/search.do?method=search&_CONTEXT_PATH_=335007449493,335007449495",
+                            "description": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            },
+                            "title": {
+                                "en": "Search",
+                                "pt": "Pesquisar"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/wizard.do?method=newAcquisitionWizard&_CONTEXT_PATH_=335007449493,335007449494",
+                            "description": {
+                                "en": "New",
+                                "pt": "Nova Aquisi\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "New",
+                                "pt": "Nova Aquisi\u00e7\u00e3o"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Acquisitions",
+                        "pt": "Aquisi\u00e7\u00f5es"
+                    }
+                },
+                {
+                    "accessExpression": "Todos os Utilizadores",
+                    "path": "/expenditureTrackingOrganization.do?method=viewLoggedPerson&_CONTEXT_PATH_=335007449499",
+                    "description": {
+                        "en": "Organization",
+                        "pt": "Organiza\u00e7\u00e3o"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=viewLoggedPerson&_CONTEXT_PATH_=335007449499",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=manageSuppliers&_CONTEXT_PATH_=335007449499,335007449502",
+                            "description": {
+                                "en": "Suppliers",
+                                "pt": "Fornecedores"
+                            },
+                            "title": {
+                                "en": "Suppliers",
+                                "pt": "Fornecedores"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=searchUsers&_CONTEXT_PATH_=335007449499,335007449501",
+                            "description": {
+                                "en": "Users",
+                                "pt": "Utilizadores"
+                            },
+                            "title": {
+                                "en": "Users",
+                                "pt": "Utilizadores"
+                            }
+                        },
+                        {
+                            "accessExpression": "Todos os Utilizadores",
+                            "path": "/expenditureTrackingOrganization.do?method=viewOrganization&_CONTEXT_PATH_=335007449499,335007449500",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Unidades"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Unidades"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Organization",
+                        "pt": "Organiza\u00e7\u00e3o"
+                    }
+                },
+                {
+                    "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                    "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007449703",
+                    "description": {
+                        "en": "Statistics",
+                        "pt": "Estat\u00edsticas"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                            "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007449703",
+                            "description": {
+                                "en": "Statistics",
+                                "pt": "Estat\u00edsticas"
+                            },
+                            "title": {
+                                "en": "Statistics",
+                                "pt": "Estat\u00edsticas"
+                            }
+                        },
+                        {
+                            "accessExpression": "Union of: Observador de Estat\u00edsticas AND Administrador da Central de Compras",
+                            "path": "/statistics.do?method=showStatisticsReports&_CONTEXT_PATH_=335007449703,335007449706",
+                            "description": {
+                                "en": "Reports",
+                                "pt": "Listagens"
+                            },
+                            "title": {
+                                "en": "Reports",
+                                "pt": "Listagens"
+                            }
+                        },
+                        {
+                            "accessExpression": "Observador de Estat\u00edsticas",
+                            "path": "/statistics.do?method=showRefundProcessStatistics&_CONTEXT_PATH_=335007449703,335007449705",
+                            "description": {
+                                "en": "Refunds",
+                                "pt": "Reembolsos"
+                            },
+                            "title": {
+                                "en": "Refunds",
+                                "pt": "Reembolsos"
+                            }
+                        },
+                        {
+                            "accessExpression": "Observador de Estat\u00edsticas",
+                            "path": "/statistics.do?method=showSimplifiedProcessStatistics&_CONTEXT_PATH_=335007449703,335007449704",
+                            "description": {
+                                "en": "Simplified Regiem",
+                                "pt": "Regime Simplificado"
+                            },
+                            "title": {
+                                "en": "Simplified Regiem",
+                                "pt": "Regime Simplificado"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Statistics",
+                        "pt": "Estat\u00edsticas"
+                    }
+                },
+                {
+                    "accessExpression": "Administradores de Sistema",
+                    "path": "/organizationModel.do?method=viewModels&_CONTEXT_PATH_=335007450090",
+                    "description": {
+                        "en": "Organization",
+                        "pt": "Organiza\u00e7\u00e3o"
+                    },
+                    "functionalities": [
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/organizationModel.do?method=viewModels&_CONTEXT_PATH_=335007450090",
+                            "description": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Organization",
+                                "pt": "Organiza\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/organization.do?method=managePersons&_CONTEXT_PATH_=335007450090,335007450095",
+                            "description": {
+                                "en": "Manage Persons",
+                                "pt": "Gerir Pessoas"
+                            },
+                            "title": {
+                                "en": "Manage Persons",
+                                "pt": "Gerir Pessoas"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/organization.do?method=viewOrganization&_CONTEXT_PATH_=335007450090,335007450094",
+                            "description": {
+                                "en": "Organizational Structure",
+                                "pt": "Estrutura Organizacional"
+                            },
+                            "title": {
+                                "en": "Organizational Structure",
+                                "pt": "Estrutura Organizacional"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/organization.do?method=viewConnectionRules&_CONTEXT_PATH_=335007450090,335007450093",
+                            "description": {
+                                "en": "Rules",
+                                "pt": "Regras"
+                            },
+                            "title": {
+                                "en": "Rules",
+                                "pt": "Regras"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/organization.do?method=viewAccountabilityTypes&_CONTEXT_PATH_=335007450090,335007450092",
+                            "description": {
+                                "en": "Accountability Type",
+                                "pt": "Tipo de Rela\u00e7\u00e3o"
+                            },
+                            "title": {
+                                "en": "Accountability Type",
+                                "pt": "Tipo de Rela\u00e7\u00e3o"
+                            }
+                        },
+                        {
+                            "accessExpression": "Administradores de Sistema",
+                            "path": "/organization.do?method=viewPartyTypes&_CONTEXT_PATH_=335007450090,335007450091",
+                            "description": {
+                                "en": "Party Type",
+                                "pt": "Tipo da Entidade"
+                            },
+                            "title": {
+                                "en": "Party Type",
+                                "pt": "Tipo da Entidade"
+                            }
+                        }
+                    ],
+                    "title": {
+                        "en": "Organization",
+                        "pt": "Organiza\u00e7\u00e3o"
+                    }
+                }
+            ],
+            "favicon": "AAABAAEAEBEAAAAAAAB8BQAAFgAAACgAAAAQAAAAIgAAAAEACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A9/f3AO/n5wDn3t4A3tbOAM7OxgDGvb0Ata2lAK2clACllIwAnIyEAJSEcwCEc2sAe2taAHNjUgBrUkoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDQ8PCgQAAAAAAAAAAAAABQ8NAAsPAwAAAAAAAAAAAAAAAAAHDwsAAAAAAAAAAAAABAQABw8NAAIEAwAAAAAABA8PBAcPDwAHDwsAAAAAAAQPDwQHDw8ABw8LAAAAAAAEDw8EBw8PAAcPCwAAAAAABA8PBAcPDwAHDwsAAAAAAAQPDwQHDw8ABw8LAAAAAAAEDw8EBw8PAAcPCwAAAAAABA8PBAcPDwAHDwsAAAAAAAQPDwQHDw8ECw8NBgAAAAADCwsDBw8PBgwLCwgAAAAAAAAAAAUPDwAAAAAAAAAAAAAAAAAADA8AAw0JAAAAAAAAAAAAAAIMDQ0PCwAAAAAAAAAAAAAAAAAEAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+            "theme": {
+                "description": "Layout used in the expenditures application.",
+                "screenshot": "compras.jpg",
+                "name": "compras"
+            },
+            "logo": "R0lGODlhJAAtAOf+AFWCm7TE0fDy9lSLqUR9m6m9y+Xq7pzK5I2rvCFdfoOitUx6lTp0k+ru8UyDomudunOlwQxQczpui9Xd5VeFnXutyA5RdBZXeO7w9D1wjdDa4nucsKzAzS1qinOVq6W7yWSYtYW20OHm7BJVdm2hvWGNpLrJ1dLf5WCVsiVhgfX2+IGxzXmqxvj4+kR1kV2TsM7Y4GeNpSlmhhBRc1uRrsXV3S1lhKG2xcrV3hRVdounuU5/mR5dfRBSdA1OccHP2ZbF3hJTdHWoxBhXeP/+/22WqgpOcQZJbOXs8BhYeXmar3WYrZ60xEiAn4m51FF+mBxZehlYejNpiJStvmGJoZmxwiNggFeOqxRWd/L09jVqiH6xzF2JoDFtjbbI0x1bfOzv8t7k6vv8/UV4kw5Qc+Lo7QpMbtng57DBzhpaez13lqDP6GqUqaO4x8bS293j6drh6CligpCqvJavwJuwvhpYeiBef1KJpzJohpLC3MHR2oejto2/2Y292EByj77M13CivrzL1sTR2yZkhfr6+zRvjmuQp2iPpY281vT195C/2czW3xZYeZKsvdvl6pLA2jZxkAtOcQBGa1CGpIm409Pc5Jewwfr7/L7O2JTD3TBnhfb3+TZsim6SqZnI4YCfsvz7/GSPpmSKoou61YK0z//9/oS0zwhNcBVUdpyxwf38/RRTdRNUdZWrvUh3k7nM1v39/SVffwtQcglOccfT3ZfG34elt5u0wxVWd9fe5U2IpRFUdoCwzGWbuIS30ujr8GaMpC1kg4q71RhUd26XqxNTdSpffgtNcFuGn4e30hRUdTFriw5PcWmSqEB5mAZLb1+Gn5yzw2ibtxtaeypkhA9TdSVig9/o7cjY35m1xHygsw9RdG+YrBBTdRpXeGCMo26kwJy0w/7+/gtPchRSc9Pb49Tc5JivwO/x9PPy9Shjg3+vyitjgr7K04/A2itnh6a9+glLcL7Q2ff3+Q1QcidhloOzzhVVdrDE0BZVd9ff5gA/ZcjS2srU2////xlZeiwAAAAAJAAtAAAI/gD/CRxIsKDBgwgFjrDQo6HDhxAjSrSAZWC3T9hqaNxYA9OrjyBDfpTHkSOVHgLHfTAgp9WUl40aGfBHs6ZNmuV0uITZKt2ecQJnfQh0ZFyEo+N84LjJ1N8NSbKORphFZoICoP/GNVrEKsnAJN4WNb3ZhgzBCzxELJElMIICOBe8CgQrdmzNsgRxpfhVwoJAeh5EJLjwNSxTDHIoiBLkD+/AEXjQAdgm0AKVBuwqzjVss4yEGDH2sStVwOzAXX7SudglsMcOARJYb65bM8YqA4REdfL3wXTrJ1m0jBC4S0KWBShn2zSQIE4Dm47/svllBZdAXHF+AfO7GYY/DRr8/gkiY+NNGDhwGtygPDCCrVze5F6IAudqYXMihkQx4GWWhHPDJDCMH62wQhA9BejB3j9JzGDCB8zcJ8I/0xjAwSl4lLNBBHGYcMMMXymzCBMREDSOJTjsIhdY+E3zhYWzBJPIH0ZI4E9pA+FixS9KlDiQBYaUMdhmLb7IQYwqmFCjODgS50ciC8gmUDcuCOCHbCyK4KKFpwSTpH9ENPkPPYcIQI1mAl0QiwGd+Jjllkeyk8grS4oZQTga5CPXXDMEUgBWb754wyzGpBMImE0mkU8lN/hoogIifEFYoAYMWmggdZo2ghSJiMIdQd2MQcgTflFqqaGImkZmOpoMV9AF/l+IEA5QphJqaKZ/cUBLMXuaeMsvg7EYxjZBlHGqF5LYEKZZuCTwyydYGWTBE/4gYwFYGqATSihZMEEoOpVQoARvZlnARQuxIQRrGAGQwQhnNNHxjHHQkZGEBQG4EUSvBY1jCyFSdGNYC7D4k4okopBFxi54ZNFmQv/swkkLCszizQTlsDPuHke0o/A4e/wSi3UQk8GBCFCgok8/RzwDjSYKMNWGEQmwFG1CPbhSCjDHiIWGBxvw01QbkiyRDh6uQpxEDyZUMsxSdtF0wyphRHMzxDnn9kfUNM3RCTp4SAmxQGQUkIt3XAcQhg5Xj72LFL9wTRMslSSA5tgDjTOuZ9z+cBEh3q8O8YPcH2zDL+D/9OCHAFGHEYzYiA8UyRJ2qYJM25Ez2EMBY8nhaOYFjZAA2jZ5gQvJoEsrQdw1TRAH5Kmb+EQiNP2SwaexHzRODP4k8kQkuY8NGBWfB49QD90YrzxCAQEAOw==",
+            "googleSearchEnabled": false
+        }
+    ]
+}

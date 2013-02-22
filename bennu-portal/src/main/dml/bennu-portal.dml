@@ -1,0 +1,61 @@
+package pt.ist.bennu.portal.domain;
+
+class HostInfo {
+	Boolean googleSearchEnabled;
+	Boolean languageSelectionEnabled;
+	MultiLanguageString applicationTitle;
+	MultiLanguageString htmlTitle;
+	MultiLanguageString applicationSubTitle;
+	MultiLanguageString applicationCopyright;
+	String errorPage;
+	String helpLink;
+	bytearray logo;
+	bytearray favicon;
+	String supportEmailAddress;
+	String systemEmailAddress;
+}
+
+class Theme {
+	String name;
+	String description;
+	String screenshotFileName;
+}
+
+class MenuItem {
+	Integer ord;
+	MultiLanguageString title;
+	MultiLanguageString description;
+	String path;
+	String accessExpression;
+}
+
+relation MenuItemItems {
+	MenuItem playsRole parent;
+	MenuItem playsRole child {
+		multiplicity 0..*;
+	}
+}
+
+
+/* Hosts */
+
+relation HostMenu {
+	.pt.ist.bennu.core.domain.VirtualHost playsRole host;
+	MenuItem playsRole menu;
+}
+
+relation HostInfoVirtualHost {
+	HostInfo playsRole info;
+	.pt.ist.bennu.core.domain.VirtualHost playsRole host {
+		multiplicity 1..1;
+	}
+}
+
+relation HostTheme {
+	.pt.ist.bennu.core.domain.VirtualHost playsRole host {
+		multiplicity 1..1;
+	}
+	Theme playsRole theme {
+		multiplicity 0..*;
+	}
+}
