@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 public class MenuItemAdapter implements JsonAdapter<MenuItem> {
 
     @Override
-    public MenuItem update(JsonObject json, MenuItem obj, JsonBuilder ctx) {
+    public MenuItem update(JsonElement json, MenuItem obj, JsonBuilder ctx) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -26,7 +26,7 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
     }
 
     @Override
-    public MenuItem create(JsonObject json, JsonBuilder ctx) {
+    public MenuItem create(JsonElement json, JsonBuilder ctx) {
         return null;
     }
 
