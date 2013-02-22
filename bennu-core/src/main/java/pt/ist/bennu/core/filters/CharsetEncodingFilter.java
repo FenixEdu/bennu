@@ -54,10 +54,10 @@ public class CharsetEncodingFilter implements Filter {
         if (request.getCharacterEncoding() == null) {
             request.setCharacterEncoding(defaultCharset);
         }
+        chain.doFilter(request, response);
         if (response.getCharacterEncoding() == null) {
             response.setCharacterEncoding(defaultCharset);
         }
-        chain.doFilter(request, response);
     }
 
 }
