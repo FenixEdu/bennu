@@ -1,7 +1,8 @@
 package pt.ist.bennu.json;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
+
 
 public interface JsonUpdater<T> {
-    T update(JsonObject json, T obj, JsonBuilder jsonRegistry);
+    T update(JsonElement jsonElement, T obj, JsonBuilder jsonRegistry);
 }

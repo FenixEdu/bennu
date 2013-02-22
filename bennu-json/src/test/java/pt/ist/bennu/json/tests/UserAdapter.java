@@ -9,7 +9,8 @@ import com.google.gson.JsonObject;
 public class UserAdapter implements JsonAdapter<User> {
 
     @Override
-    public User create(JsonObject jsonObject, JsonBuilder ctx) {
+    public User create(JsonElement jsonElement, JsonBuilder ctx) {
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
         final String name = jsonObject.get("name").getAsString();
         final String password = jsonObject.get("password").getAsString();
         final String number = jsonObject.get("number").getAsString();
@@ -17,7 +18,8 @@ public class UserAdapter implements JsonAdapter<User> {
     }
 
     @Override
-    public User update(JsonObject jsonObject, User obj, JsonBuilder ctx) {
+    public User update(JsonElement jsonElement, User obj, JsonBuilder ctx) {
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
         final String name = jsonObject.get("name").getAsString();
         final String password = jsonObject.get("password").getAsString();
         final String number = jsonObject.get("number").getAsString();
