@@ -15,6 +15,8 @@ import pt.ist.bennu.json.JsonUpdater;
 import pt.ist.bennu.json.JsonViewer;
 import pt.ist.bennu.service.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
@@ -23,9 +25,11 @@ public class JsonAwareResource {
 
     private static final JsonBuilder BUILDER;
     private static final JsonParser PARSER;
+    private static final Gson GSON;
     static {
         PARSER = new JsonParser();
         BUILDER = new JsonBuilder();
+        GSON = new GsonBuilder().setPrettyPrinting().create();
         BUILDER.setDefault(User.class, UserViewer.class);
         BUILDER.setDefault(CasConfigContext.class, CasConfigContextSerializer.class);
         BUILDER.setDefault(DateTime.class, DateTimeViewer.class);
@@ -44,7 +48,7 @@ public class JsonAwareResource {
     }
 
     public final String view(Object object, Class<? extends JsonViewer<?>> viewerClass) {
-        return BUILDER.view(object, viewerClass).toString();
+        return GSON.toJson(BUILDER.view(object, viewerClass));
     }
 
     public final String view(Object object, String collectionKey) {
@@ -54,7 +58,7 @@ public class JsonAwareResource {
     public final String view(Object object, String collectionKey, Class<? extends JsonViewer<?>> viewerClass) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add(collectionKey, BUILDER.view(object, viewerClass));
-        return jsonObject.toString();
+        return GSON.toJson(jsonObject);
     }
 
     public <T> T create(String jsonData, Class<T> clazz) {

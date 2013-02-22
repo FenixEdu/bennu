@@ -286,12 +286,20 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
         return false;
     }
 
-    public JsonElement json() {
+    public JsonObject json() {
         JsonObject json = new JsonObject();
         for (Language language : getAllLanguages()) {
             json.addProperty(language.name(), getContent(language));
         }
         return json;
+    }
+
+    public static MultiLanguageString fromJson(JsonObject mlsJsonString) {
+        Map<Language, String> contents = new HashMap<>();
+        for (Entry<String, JsonElement> entry : mlsJsonString.entrySet()) {
+            contents.put(Language.valueOf(entry.getKey()), entry.getValue().getAsString());
+        }
+        return new MultiLanguageString(contents);
     }
 
     @Override

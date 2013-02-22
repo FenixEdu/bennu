@@ -16,6 +16,8 @@
  */
 package pt.ist.bennu.core.domain;
 
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.fenixframework.FenixFramework;
 
 /**
@@ -37,5 +39,17 @@ public class Bennu extends Bennu_Base {
         if (FenixFramework.getRoot() != null && FenixFramework.getRoot() != this) {
             throw new Error("There can only be one! (instance of Bennu)");
         }
+    }
+
+    public VirtualHost getVirtualHost(String hostname) {
+        if (StringUtils.isBlank(hostname)) {
+            return null;
+        }
+        for (VirtualHost host : getVirtualHosts()) {
+            if (hostname.equals(host.getHostname())) {
+                return host;
+            }
+        }
+        return null;
     }
 }
