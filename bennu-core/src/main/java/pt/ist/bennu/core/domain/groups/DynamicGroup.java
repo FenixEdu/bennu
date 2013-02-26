@@ -19,8 +19,6 @@ package pt.ist.bennu.core.domain.groups;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
@@ -153,7 +151,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
     public static PersistentGroup getInstance(final String name) throws GroupException {
         DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
             @Override
-            public boolean apply(@Nullable DynamicGroup input) {
+            public boolean apply(DynamicGroup input) {
                 return input.getName().equals(name);
             }
         });

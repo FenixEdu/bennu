@@ -29,8 +29,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import javax.annotation.Nullable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,7 +133,7 @@ public abstract class CustomGroup extends CustomGroup_Base {
             }
             G group = select(type, new Predicate<G>() {
                 @Override
-                public boolean apply(@Nullable G input) {
+                public boolean apply(G input) {
                     Object[] extracted = new Object[arguments.size()];
                     for (int i = 0; i < arguments.size(); i++) {
                         extracted[i] = arguments.get(i).extract(input);

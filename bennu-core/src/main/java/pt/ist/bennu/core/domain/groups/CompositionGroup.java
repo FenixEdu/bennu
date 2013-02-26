@@ -18,8 +18,6 @@ package pt.ist.bennu.core.domain.groups;
 
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
@@ -39,8 +37,7 @@ public abstract class CompositionGroup extends CompositionGroup_Base {
 
     private class PresentationNameTransformer implements Function<PersistentGroup, String> {
         @Override
-        @Nullable
-        public String apply(@Nullable PersistentGroup input) {
+        public String apply(PersistentGroup input) {
             return input.getPresentationName();
         }
     }
@@ -54,8 +51,7 @@ public abstract class CompositionGroup extends CompositionGroup_Base {
 
     private class ExpressionTransformer implements Function<PersistentGroup, String> {
         @Override
-        @Nullable
-        public String apply(@Nullable PersistentGroup input) {
+        public String apply(PersistentGroup input) {
             return input.expression();
         }
     }

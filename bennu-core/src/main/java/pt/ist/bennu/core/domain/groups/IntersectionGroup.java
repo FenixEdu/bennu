@@ -21,8 +21,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
@@ -125,7 +123,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     public static IntersectionGroup getInstance(final Set<PersistentGroup> children) {
         IntersectionGroup group = select(IntersectionGroup.class, new Predicate<IntersectionGroup>() {
             @Override
-            public boolean apply(@Nullable IntersectionGroup input) {
+            public boolean apply(IntersectionGroup input) {
                 return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
             }
         });

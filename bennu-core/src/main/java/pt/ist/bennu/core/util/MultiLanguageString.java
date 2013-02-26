@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import org.apache.commons.lang.StringUtils;
 
 import com.google.gson.JsonElement;
@@ -50,7 +48,7 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
         }
     }
 
-    public MultiLanguageString(@Nonnull Language language, final String content) {
+    public MultiLanguageString(Language language, final String content) {
         this();
         if (language == null) {
             throw new IllegalArgumentException("language cannot be null");
@@ -73,7 +71,7 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
      * @return a <b>new</b> {@link MultiLanguageString} with the given content in the given language added to the already existing
      *         content NOTE: it does not change the content of this instance
      */
-    public MultiLanguageString with(@Nonnull Language language, final String content) {
+    public MultiLanguageString with(Language language, final String content) {
         if (content == null) {
             return this;
         }

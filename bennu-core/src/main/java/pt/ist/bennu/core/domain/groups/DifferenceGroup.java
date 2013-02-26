@@ -21,8 +21,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
@@ -135,7 +133,7 @@ public class DifferenceGroup extends DifferenceGroup_Base {
     public static DifferenceGroup getInstance(final Set<PersistentGroup> children) {
         DifferenceGroup group = select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
             @Override
-            public boolean apply(@Nullable DifferenceGroup input) {
+            public boolean apply(DifferenceGroup input) {
                 return Iterables.elementsEqual(input.getChildrenSet(), children);
             }
         });

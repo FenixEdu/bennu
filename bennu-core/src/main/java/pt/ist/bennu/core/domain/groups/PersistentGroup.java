@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import org.antlr.runtime.RecognitionException;
 import org.joda.time.DateTime;
 
@@ -225,7 +223,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      *            the wanted type
      * @return group instance.
      */
-    protected static <T extends PersistentGroup> T select(final @Nonnull Class<? extends T> type) {
+    protected static <T extends PersistentGroup> T select(final Class<? extends T> type) {
         return (T) Iterables.tryFind(VirtualHost.getVirtualHostForThread().getGroupsSet(), Predicates.instanceOf(type)).orNull();
     }
 
@@ -239,8 +237,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      *            the predicate to apply to group instances
      * @return group instance.
      */
-    protected static <T extends PersistentGroup> T select(final @Nonnull Class<? extends T> type,
-            final @Nonnull Predicate<? super T> predicate) {
+    protected static <T extends PersistentGroup> T select(final Class<? extends T> type, final Predicate<? super T> predicate) {
         @SuppressWarnings("unchecked")
         Predicate<? super PersistentGroup> realPredicate =
                 Predicates.and(Predicates.instanceOf(type), (Predicate<? super PersistentGroup>) predicate);

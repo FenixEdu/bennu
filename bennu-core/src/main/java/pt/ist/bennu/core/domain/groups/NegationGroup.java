@@ -19,8 +19,6 @@ package pt.ist.bennu.core.domain.groups;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.Bennu;
@@ -91,7 +89,7 @@ public class NegationGroup extends NegationGroup_Base {
     public static NegationGroup getInstance(final PersistentGroup persistentGroup) {
         NegationGroup group = select(NegationGroup.class, new Predicate<NegationGroup>() {
             @Override
-            public boolean apply(@Nullable NegationGroup input) {
+            public boolean apply(NegationGroup input) {
                 return input.getNegated().equals(persistentGroup);
             }
         });

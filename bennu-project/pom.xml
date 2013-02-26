@@ -41,11 +41,12 @@
 		<version.org.antlr.antlr.runtime>3.4</version.org.antlr.antlr.runtime>
 		<version.axis.axis>1.4</version.axis.axis>
 		<version.cas.casclient>2.1.1</version.cas.casclient>
-		<version.com.google.guava.guava>12.0</version.com.google.guava.guava>
+		<version.com.google.guava.guava>14.0-rc3</version.com.google.guava.guava>
 		<version.com.google.code.gson.gson>2.2.2</version.com.google.code.gson.gson>
 		<version.com.google.gwt.gwt.user>2.3.0</version.com.google.gwt.gwt.user>
 		<version.com.google.soastation>1.0</version.com.google.soastation>
 		<version.com.googlecode.json.simple.json.simple>1.1.1</version.com.googlecode.json.simple.json.simple>
+		<version.com.lowagie.itext>4.2.0</version.com.lowagie.itext>
 		<version.com.javabib.javabib.bin>20040801</version.com.javabib.javabib.bin>
 		<version.com.oracle.ojdbc14>9.0.2.0.0</version.com.oracle.ojdbc14>
 		<version.com.sun.codemodel.codemodel>2.6</version.com.sun.codemodel.codemodel>
@@ -349,6 +350,11 @@
 				<groupId>com.googlecode.json-simple</groupId>
 				<artifactId>json-simple</artifactId>
 				<version>${version.com.googlecode.json.simple.json.simple}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.lowagie</groupId>
+				<artifactId>itext</artifactId>
+				<version>${version.com.lowagie.itext}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.sun.jersey</groupId>

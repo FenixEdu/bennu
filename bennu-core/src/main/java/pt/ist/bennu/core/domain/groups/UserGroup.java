@@ -20,8 +20,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
@@ -121,7 +119,7 @@ public class UserGroup extends UserGroup_Base {
     public static UserGroup getInstance(final Set<User> users) {
         UserGroup group = select(UserGroup.class, new Predicate<UserGroup>() {
             @Override
-            public boolean apply(@Nullable UserGroup input) {
+            public boolean apply(UserGroup input) {
                 return Sets.symmetricDifference(input.getMemberSet(), users).isEmpty();
             }
         });
