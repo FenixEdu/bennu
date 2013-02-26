@@ -7,6 +7,7 @@
 
 .settings/
 .serviceAnnotationLog
+.classpath
 
 # Maven #
 target/
