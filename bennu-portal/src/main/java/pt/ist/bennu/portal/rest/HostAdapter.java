@@ -35,19 +35,31 @@ public class HostAdapter implements JsonAdapter<VirtualHost> {
     }
 
     private void setHostInfo(JsonObject jsonObj, HostInfo info) {
-        info.setApplicationCopyright(MultiLanguageString.fromJson(jsonObj.get("applicationCopyright").getAsJsonObject()));
-        info.setApplicationTitle(MultiLanguageString.fromJson(jsonObj.get("applicationTitle").getAsJsonObject()));
-        info.setHtmlTitle(MultiLanguageString.fromJson(jsonObj.get("htmlTitle").getAsJsonObject()));
-        info.setApplicationSubTitle(MultiLanguageString.fromJson(jsonObj.get("applicationSubTitle").getAsJsonObject()));
-        info.setApplicationCopyright(MultiLanguageString.fromJson(jsonObj.get("applicationCopyright").getAsJsonObject()));
-        info.setSupportEmailAddress(jsonObj.get("supportEmailAddress").getAsString());
-        info.setSystemEmailAddress(jsonObj.get("systemEmailAddress").getAsString());
+        if (jsonObj.has("applicationCopyright")) {
+            info.setApplicationCopyright(MultiLanguageString.fromJson(jsonObj.get("applicationCopyright").getAsJsonObject()));
+        }
+        if (jsonObj.has("applicationTitle")) {
+            info.setApplicationTitle(MultiLanguageString.fromJson(jsonObj.get("applicationTitle").getAsJsonObject()));
+        }
+        if (jsonObj.has("htmlTitle")) {
+            info.setHtmlTitle(MultiLanguageString.fromJson(jsonObj.get("htmlTitle").getAsJsonObject()));
+        }
+        if (jsonObj.has("applicationSubTitle")) {
+            info.setApplicationSubTitle(MultiLanguageString.fromJson(jsonObj.get("applicationSubTitle").getAsJsonObject()));
+        }
+        if (jsonObj.has("supportEmailAddress")) {
+            info.setSupportEmailAddress(jsonObj.get("supportEmailAddress").getAsString());
+        }
+        if (jsonObj.has("systemEmailAddress")) {
+            info.setSystemEmailAddress(jsonObj.get("systemEmailAddress").getAsString());
+        }
     }
 
     @Override
     public JsonElement view(VirtualHost obj, JsonBuilder ctx) {
         JsonObject json = new JsonObject();
         json.addProperty("id", obj.getExternalId());
+        json.addProperty("hostname", obj.getHostname());
         json.add("applicationTitle", obj.getInfo().getApplicationTitle().json());
         json.add("htmlTitle", obj.getInfo().getHtmlTitle().json());
         json.add("applicationSubTitle", obj.getInfo().getApplicationSubTitle().json());
