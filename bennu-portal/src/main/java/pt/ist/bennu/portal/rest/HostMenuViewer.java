@@ -1,25 +1,13 @@
 package pt.ist.bennu.portal.rest;
 
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
+import pt.ist.bennu.json.JsonViewer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class VirtualHostAdapter implements JsonAdapter<VirtualHost> {
-
-    @Override
-    public VirtualHost create(JsonElement json, JsonBuilder ctx) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public VirtualHost update(JsonElement json, VirtualHost obj, JsonBuilder ctx) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+public class HostMenuViewer implements JsonViewer<VirtualHost> {
 
     @Override
     public JsonElement view(VirtualHost obj, JsonBuilder ctx) {
@@ -28,5 +16,4 @@ public class VirtualHostAdapter implements JsonAdapter<VirtualHost> {
         json.add("menu", ctx.view(obj.getMenu().getChild()));
         return json;
     }
-
 }

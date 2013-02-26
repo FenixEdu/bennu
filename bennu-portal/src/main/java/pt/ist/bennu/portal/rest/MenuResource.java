@@ -9,18 +9,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
 import pt.ist.bennu.bennu.core.rest.BennuRestResource;
-import pt.ist.bennu.bennu.core.rest.serializer.JsonAwareResource;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.portal.domain.MenuItem;
 
 @Path("menu")
 public class MenuResource extends BennuRestResource {
-
-    static {
-        JsonAwareResource.setDefault(MenuItem.class, MenuItemAdapter.class);
-        JsonAwareResource.setDefault(VirtualHost.class, VirtualHostAdapter.class);
-    }
 
     @Path("{hostname: [a-zA-Z0-9\\.]+}")
     @GET

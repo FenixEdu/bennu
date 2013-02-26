@@ -12,6 +12,9 @@
                 "pt": "Documentos"
             },
             "systemEmailAddress": "noreply@ist.utl.pt",
+            "htmlTitle": {
+                "pt": "Documentos"
+            },
             "hostname": "docs.ist.utl.pt",
             "apps": [
                 {
@@ -197,6 +200,9 @@
                 "pt": ".ADIST"
             },
             "systemEmailAddress": "noreply@adist.pt",
+            "htmlTitle": {
+                "pt": ".ADIST"
+            },
             "hostname": "dot.adist.ist.utl.pt",
             "apps": [
                 {
@@ -583,6 +589,9 @@
                 "pt": ".IST-ID"
             },
             "systemEmailAddress": "noreply@ist-id.pt",
+            "htmlTitle": {
+                "pt": ".IST-ID"
+            },
             "hostname": "dot.ist-id.ist.utl.pt",
             "apps": [
                 {
@@ -1207,6 +1216,9 @@
                 "pt": ".IST"
             },
             "systemEmailAddress": "noreply@ist.utl.pt",
+            "htmlTitle": {
+                "pt": ".IST"
+            },
             "hostname": "ashtray.ist.utl.pt",
             "apps": [
                 {
@@ -2385,6 +2397,9 @@
                 "pt": "CENTRAL DE COMPRAS"
             },
             "systemEmailAddress": "",
+            "htmlTitle": {
+                "pt": "CENTRAL DE COMPRAS"
+            },
             "hostname": "compras.ist.utl.pt",
             "apps": [
                 {

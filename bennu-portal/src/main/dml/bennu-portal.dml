@@ -1,16 +1,10 @@
 package pt.ist.bennu.portal.domain;
 
 class HostInfo {
-	Boolean googleSearchEnabled;
-	Boolean languageSelectionEnabled;
 	MultiLanguageString applicationTitle;
 	MultiLanguageString htmlTitle;
 	MultiLanguageString applicationSubTitle;
 	MultiLanguageString applicationCopyright;
-	String errorPage;
-	String helpLink;
-	bytearray logo;
-	bytearray favicon;
 	String supportEmailAddress;
 	String systemEmailAddress;
 }

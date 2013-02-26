@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +36,25 @@ public class InitResource extends BennuRestResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response loadModel() throws IOException {
+        initLocalhostInfo();
         InputStream stream = InitResource.class.getResourceAsStream("/model.json");
         final JsonObject jsonObject = new JsonParser().parse(new InputStreamReader(stream)).getAsJsonObject();
         parseHosts(jsonObject.get("hosts").getAsJsonArray());
         return Response.ok().build();
+    }
+
+    @Service
+    private void initLocalhostInfo() {
+        final VirtualHost localhost = Bennu.getInstance().getVirtualHost("localhost");
+        if (!localhost.hasInfo()) {
+            final HostInfo hostInfo = new HostInfo(localhost);
+            hostInfo.setApplicationCopyright(new MultiLanguageString("copyright"));
+            hostInfo.setApplicationTitle(new MultiLanguageString("localhost"));
+            hostInfo.setApplicationSubTitle(new MultiLanguageString("localhost"));
+            hostInfo.setHtmlTitle(new MultiLanguageString("htmlTitle"));
+            hostInfo.setSupportEmailAddress("support@localhost");
+            hostInfo.setSystemEmailAddress("system@localhost");
+        }
     }
 
     @Service
@@ -64,6 +80,17 @@ public class InitResource extends BennuRestResource {
         return MultiLanguageString.fromJson(json.get(attr).getAsJsonObject());
     }
 
+    private String get(JsonObject obj, String attr) {
+        return get(obj, attr, StringUtils.EMPTY);
+    }
+
+    private String get(JsonObject obj, String attr, String defValue) {
+        if (obj.has(attr)) {
+            return obj.get(attr).getAsString();
+        }
+        return defValue;
+    }
+
     private void parseHost(JsonObject host) {
         final String hostname = host.get("hostname").getAsString();
         final VirtualHost virtualHost = getOrCreate(hostname);
@@ -72,27 +99,13 @@ public class InitResource extends BennuRestResource {
             HostInfo hostInfo = new HostInfo(virtualHost);
             final String supportEmailAddress = host.get("supportEmailAddress").getAsString();
             final String systemEmailAddress = host.get("systemEmailAddress").getAsString();
-
-            final boolean googleSearchEnabled = host.get("googleSearchEnabled").getAsBoolean();
-
             hostInfo.setApplicationCopyright(mls(host, "copyright"));
-
-            if (host.has("logo")) {
-                hostInfo.setLogo(dec64(host.get("logo")));
-            }
-            if (host.has("favicon")) {
-                hostInfo.setFavicon(dec64(host.get("favicon")));
-            }
             hostInfo.setApplicationSubTitle(mls(host, "subtitle"));
             hostInfo.setApplicationTitle(mls(host, "title"));
             hostInfo.setSupportEmailAddress(supportEmailAddress);
             hostInfo.setSystemEmailAddress(systemEmailAddress);
-            hostInfo.setGoogleSearchEnabled(googleSearchEnabled);
+            hostInfo.setHtmlTitle(mls(host, "htmlTitle"));
             createMenu(virtualHost, host);
-//            hostInfo.setBreadCrumbsEnabled(breadCrumbsEnabled);
-//            hostInfo.setErrorPage(errorPage);
-//            hostInfo.setHtmlTitle(htmlTitle);
-//            hostInfo.setLanguageSelectionEnabled(languageSelectionEnabled);
         }
     }
 
