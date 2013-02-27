@@ -1,0 +1,39 @@
+<!--  {    
+            "hostname" : "myapp.com",
+            "applicationTitle" : {"pt" : "my app"},
+            "htmlTitle" : {"pt" : "app html title"},
+            "applicationSubTitle" : {"pt" : "app subtitle"},
+            "applicationCopyright" : {"pt" : "app copyright"},
+            "supportEmailAddress" : "email@myapp.com",
+            "systemEmailAddress" : "system@myapp.com" 
+        }
+        
+         -->
+
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Hostname</th>
+			<th>applicationTitle</th>
+			<th>htmlTitle</th>
+			<th>applicationSubTitle</th>
+			<th>applicationCopyright</th>
+			<th>supportEmailAddress</th>
+			<th>systemEmailAddress</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#hosts}}
+		<tr>
+			<td>{{hostname}}</td>
+			<td>{{#mls}}applicationTitle{{/mls}}</td>
+			<td>{{#mls}}htmlTitle{{/mls}}</td>
+			<td>{{#mls}}applicationSubTitle{{/mls}}</td>
+			<td>{{#mls}}applicationCopyright{{/mls}}</td>
+			<td>{{supportEmailAddress}}</td>
+			<td>{{systemEmailAddress}}</td>
+			<td><button class="edit-host" id="{{id}}" class="btn">Editar</button></td>
+		</tr>
+		{{/hosts}}
+	</tbody>
+</table>
