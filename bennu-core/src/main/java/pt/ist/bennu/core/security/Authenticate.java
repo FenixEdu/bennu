@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
+import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.groups.DynamicGroup;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.TransactionalThread;
@@ -54,7 +54,7 @@ public class Authenticate {
         User user = User.findByUsername(username);
         if (checkPassword && ConfigurationManager.getBooleanProperty("check.login.password", true)) {
             if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
-                throw BennuCoreDomainException.authenticationFailed();
+                throw AuthorizationException.authenticationFailed();
             }
         }
         if (user == null) {

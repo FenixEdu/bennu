@@ -1,4 +1,4 @@
-package pt.ist.bennu.bennu.core.rest;
+package pt.ist.bennu.core.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

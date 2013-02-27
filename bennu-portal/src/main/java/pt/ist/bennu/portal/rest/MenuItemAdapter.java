@@ -1,5 +1,6 @@
 package pt.ist.bennu.portal.rest;
 
+import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.portal.domain.MenuItem;
@@ -7,6 +8,7 @@ import pt.ist.bennu.portal.domain.MenuItem;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+@DefaultJsonAdapter(MenuItem.class)
 public class MenuItemAdapter implements JsonAdapter<MenuItem> {
 
     @Override

@@ -1,4 +1,4 @@
-package pt.ist.bennu.bennu.core.rest;
+package pt.ist.bennu.core.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,13 +9,11 @@ import javax.ws.rs.core.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.bennu.core.rest.mapper.BennuJsonDeserializer;
-import pt.ist.bennu.bennu.core.rest.mapper.BennuJsonSerializer;
-import pt.ist.bennu.bennu.core.rest.mapper.BennuRestError;
-import pt.ist.bennu.bennu.core.rest.mapper.RestException;
-import pt.ist.bennu.bennu.core.rest.serializer.JsonAwareResource;
 import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
+import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.security.UserView;
 import pt.ist.bennu.core.util.ConfigurationManager;
@@ -37,9 +35,8 @@ public abstract class BennuRestResource extends JsonAwareResource {
     protected CasConfig getCasConfig() {
         if (request != null) {
             return ConfigurationManager.getCasConfig(request.getServerName());
-        } else {
-            return null;
         }
+        return null;
     }
 
     protected CasConfigContext getCasConfigContext() {
@@ -69,9 +66,8 @@ public abstract class BennuRestResource extends JsonAwareResource {
         CasConfig casConfig = getCasConfig();
         if (casConfig != null) {
             return casConfig.isCasEnabled();
-        } else {
-            return false;
         }
+        return false;
     }
 
     protected <T extends DomainObject> T readDomainObject(final String externalId) {
@@ -87,19 +83,19 @@ public abstract class BennuRestResource extends JsonAwareResource {
             error = true;
         } finally {
             if (error) {
-                throw new RestException(BennuRestError.RESOURCE_NOT_FOUND);
+                throw BennuCoreDomainException.resourceNotFound(externalId);
             }
         }
         LOG.error("Unreachable code");
         return null;
     }
 
-    protected User accessControl(PersistentGroup persistentGroup) {
+    protected User accessControl(PersistentGroup group) {
         final User user = UserView.getUser();
-        if (persistentGroup.isMember(user)) {
+        if (group.isMember(user)) {
             return user;
         }
-        throw new RestException(BennuRestError.UNAUTHORIZED);
+        throw AuthorizationException.unauthorized(group, user);
     }
 
     protected User accessControl(String accessExpression) {
@@ -115,7 +111,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
         try {
             return new URI("http", getHost(), relativePath + "/" + domainObject.getExternalId(), null);
         } catch (URISyntaxException e) {
-            throw new RestException(BennuRestError.CANNOT_CREATE_ENTITY);
+            throw BennuCoreDomainException.cannotCreateEntity();
         }
     }
 

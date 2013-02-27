@@ -7,8 +7,8 @@ import javax.servlet.annotation.WebListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.bennu.core.rest.serializer.JsonAwareResource;
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.portal.domain.MenuItem;
 
 @WebListener

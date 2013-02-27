@@ -1,14 +1,6 @@
-package pt.ist.bennu.bennu.core.rest.serializer;
+package pt.ist.bennu.core.rest.json;
 
-import org.joda.time.DateTime;
-
-import pt.ist.bennu.bennu.core.rest.BennuRestResource.CasConfigContext;
-import pt.ist.bennu.bennu.core.rest.mapper.BennuRestError;
-import pt.ist.bennu.bennu.core.rest.mapper.CasConfigContextSerializer;
-import pt.ist.bennu.bennu.core.rest.mapper.DateTimeViewer;
-import pt.ist.bennu.bennu.core.rest.mapper.RestException;
-import pt.ist.bennu.bennu.core.rest.mapper.UserViewer;
-import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.json.JsonCreator;
 import pt.ist.bennu.json.JsonUpdater;
@@ -30,9 +22,6 @@ public class JsonAwareResource {
         PARSER = new JsonParser();
         BUILDER = new JsonBuilder();
         GSON = new GsonBuilder().setPrettyPrinting().create();
-        BUILDER.setDefault(User.class, UserViewer.class);
-        BUILDER.setDefault(CasConfigContext.class, CasConfigContextSerializer.class);
-        BUILDER.setDefault(DateTime.class, DateTimeViewer.class);
     }
 
     public static final JsonBuilder getBuilder() {
@@ -90,10 +79,8 @@ public class JsonAwareResource {
     private JsonObject parse(String jsonString) {
         try {
             return PARSER.parse(jsonString).getAsJsonObject();
-        } catch (JsonParseException e) {
-            throw new RestException(BennuRestError.BAD_REQUEST);
-        } catch (IllegalStateException e) {
-            throw new RestException(BennuRestError.BAD_REQUEST);
+        } catch (JsonParseException | IllegalStateException e) {
+            throw BennuCoreDomainException.parseError();
         }
     }
 

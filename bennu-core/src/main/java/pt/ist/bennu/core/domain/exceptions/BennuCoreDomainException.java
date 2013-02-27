@@ -16,6 +16,8 @@
  */
 package pt.ist.bennu.core.domain.exceptions;
 
+import javax.ws.rs.core.Response.Status;
+
 /**
  * Factory class for bennu-core expected errors.
  */
@@ -26,15 +28,31 @@ public class BennuCoreDomainException extends DomainException {
         super(BUNDLE, key, args);
     }
 
+    protected BennuCoreDomainException(Status status, String key, String... args) {
+        super(status, BUNDLE, key, args);
+    }
+
     protected BennuCoreDomainException(Throwable cause, String key, String... args) {
         super(cause, BUNDLE, key, args);
     }
 
-    public static BennuCoreDomainException authenticationFailed() {
-        return new BennuCoreDomainException("error.bennu.core.authentication.failed");
+    protected BennuCoreDomainException(Throwable cause, Status status, String key, String... args) {
+        super(cause, status, BUNDLE, key, args);
     }
 
     public static BennuCoreDomainException badOldPassword() {
         return new BennuCoreDomainException("error.bennu.core.bad.old.password");
+    }
+
+    public static BennuCoreDomainException resourceNotFound(String id) {
+        return new BennuCoreDomainException(Status.NOT_FOUND, "error.bennu.core.resourcenotfound", id);
+    }
+
+    public static BennuCoreDomainException cannotCreateEntity() {
+        return new BennuCoreDomainException("error.bennu.core.cannotcreateentity");
+    }
+
+    public static BennuCoreDomainException parseError() {
+        return new BennuCoreDomainException(Status.BAD_REQUEST, "error.bennu.core.parseerror");
     }
 }

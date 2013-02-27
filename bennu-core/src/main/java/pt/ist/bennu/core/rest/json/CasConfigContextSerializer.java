@@ -1,6 +1,7 @@
-package pt.ist.bennu.bennu.core.rest.mapper;
+package pt.ist.bennu.core.rest.json;
 
-import pt.ist.bennu.bennu.core.rest.BennuRestResource.CasConfigContext;
+import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
+import pt.ist.bennu.core.rest.BennuRestResource.CasConfigContext;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.json.JsonViewer;
@@ -8,6 +9,7 @@ import pt.ist.bennu.json.JsonViewer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+@DefaultJsonAdapter(CasConfigContext.class)
 public class CasConfigContextSerializer implements JsonViewer<CasConfigContext> {
 
     @Override

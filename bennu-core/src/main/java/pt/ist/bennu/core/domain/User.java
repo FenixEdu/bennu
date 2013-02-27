@@ -38,7 +38,7 @@ public class User extends User_Base {
         public String shortPresent(User user);
     }
 
-    public static final UserPresentationStrategy defaultStrategy = new UserPresentationStrategy() {
+    private static final UserPresentationStrategy defaultStrategy = new UserPresentationStrategy() {
 
         @Override
         public String present(User user) {
@@ -105,11 +105,6 @@ public class User extends User_Base {
 
     public String getShortPresentationName() {
         return strategy.shortPresent(this);
-    }
-
-    @Override
-    public String toString() {
-        return getUsername();
     }
 
     public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {

@@ -14,28 +14,38 @@
  * You should have received a copy of the GNU General Public License along with bennu-core. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package pt.ist.bennu.core.domain.groups;
+package pt.ist.bennu.core.domain.exceptions;
+
+import javax.ws.rs.core.Response.Status;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
+import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
 /**
  * Group access authorization exception.
  */
 public class AuthorizationException extends BennuCoreDomainException {
     private AuthorizationException(String key, String... args) {
-        super(key, args);
+        super(Status.UNAUTHORIZED, key, args);
     }
 
     private AuthorizationException(Throwable cause, String key, String... args) {
-        super(cause, key, args);
+        super(cause, Status.UNAUTHORIZED, key, args);
+    }
+
+    public static AuthorizationException authenticationFailed() {
+        return new AuthorizationException("error.bennu.core.authentication.failed");
     }
 
     public static AuthorizationException unauthorized(PersistentGroup group, User user) {
-        return new AuthorizationException("error.bennu.group.unauthorized", user.getUsername(), group.getPresentationName());
+        return new AuthorizationException("error.bennu.core.unauthorized", user.getUsername(), group.getPresentationName());
+    }
+
+    public static AuthorizationException unauthorized() {
+        return new AuthorizationException("error.bennu.core.unauthorized");
     }
 
     public static AuthorizationException badAccessGroupConfiguration() {
-        return new AuthorizationException("error.bennu.group.badaccessgroupconfiguration");
+        return new AuthorizationException("error.bennu.core.badaccessgroupconfiguration");
     }
 }

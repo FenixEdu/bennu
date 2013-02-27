@@ -25,6 +25,7 @@ import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.grouplanguage.GroupExpressionParser;
 import pt.ist.bennu.core.security.UserView;
 

@@ -8,9 +8,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
-import pt.ist.bennu.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.rest.BennuRestResource;
 
 @Path("menu")
 public class MenuResource extends BennuRestResource {

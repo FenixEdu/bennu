@@ -26,9 +26,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
 
 import pt.ist.bennu.core.domain.groups.CustomGroup;
+import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.core.servlets.BennuJerseyRestApplication;
 
-@HandlesTypes({ CustomGroupOperator.class, Path.class, Provider.class })
+@HandlesTypes({ CustomGroupOperator.class, Path.class, Provider.class, DefaultJsonAdapter.class })
 public class BennuCoreAnnotationInitializer implements ServletContainerInitializer {
     @Override
     @SuppressWarnings("unchecked")
@@ -46,6 +47,10 @@ public class BennuCoreAnnotationInitializer implements ServletContainerInitializ
                 Provider restProvider = type.getAnnotation(Provider.class);
                 if (restProvider != null) {
                     BennuJerseyRestApplication.registerEndpoint(type);
+                }
+                DefaultJsonAdapter defaultJsonAdapter = type.getAnnotation(DefaultJsonAdapter.class);
+                if (defaultJsonAdapter != null) {
+                    JsonAwareResource.setDefault(defaultJsonAdapter.value(), type);
                 }
             }
         }

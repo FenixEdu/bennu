@@ -26,6 +26,16 @@ cd bennu-core
 mvn clean install -q
 cd ..
 
+echo Installing Bennu File Support...
+cd bennu-filesupport
+mvn clean install -q
+cd ..
+
+echo Installing Bennu Search...
+cd bennu-search
+mvn clean install -q
+cd ..
+
 echo Installing Bennu Dispatch...
 cd bennu-dispatch
 mvn clean install -q

@@ -9,9 +9,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import pt.ist.bennu.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.rest.BennuRestResource;
 
 @Path("hosts")
 public class HostResource extends BennuRestResource {

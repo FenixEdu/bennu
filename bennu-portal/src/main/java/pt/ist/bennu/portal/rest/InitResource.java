@@ -14,9 +14,9 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.portal.domain.HostInfo;
 import pt.ist.bennu.portal.domain.MenuItem;
