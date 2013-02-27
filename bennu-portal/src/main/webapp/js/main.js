@@ -5,11 +5,11 @@ MenuManager.Router.Main = Backbone.Router.extend({
 		"login" : "showLogin",
 		"home" : "showHome",
 		"hosts": "showHosts",
-		"hosts/edit/:id" : "editHost",
+		"hosts/edit/:hostname" : "editHost",
+		"hosts/create": "createHost",
 	},
 	
 	showLogin : function () {
-		var that = this;
 		var settingsModel = new MenuManager.Model.ApplicationSettingsModel();
 		settingsModel.fetch({
 			success : function() {
@@ -82,12 +82,18 @@ MenuManager.Router.Main = Backbone.Router.extend({
 	},
 
 	createHost : function() {
-		var createHostView = new MenuManager.View.CreateHostView();
+		var createHostView = new MenuManager.View.CreateHostView({model : new MenuManager.Model.HostModel()});
 		createHostView.render();
 	},
 	
 	editHost : function(id) {
-		
+		var hostModel = new MenuManager.Model.HostModel({id : id});
+		hostModel.fetch({
+			success: function() {
+				var hostCreateModelView = new MenuManager.View.CreateHostView({model : hostModel});
+				hostCreateModelView.render();
+			}
+		});
 	}
 	
 	

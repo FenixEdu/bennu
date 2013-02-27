@@ -1,26 +1,16 @@
 package pt.ist.bennu.portal.rest;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import java.util.Collection;
 
+import javax.ws.rs.Path;
+
+import pt.ist.bennu.bennu.core.rest.DomainObjectResource;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.rest.BennuRestResource;
 
 @Path("hosts")
-public class HostResource extends BennuRestResource {
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String list() {
-        return view(Bennu.getInstance().getVirtualHosts(), "hosts");
-    }
+public class HostResource extends DomainObjectResource<VirtualHost> {
 
     /* {    
             "hostname" : "myapp.com",
@@ -33,15 +23,18 @@ public class HostResource extends BennuRestResource {
         }
      */
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public String create(@FormParam("model") String jsonData) {
-        return view(create(jsonData, VirtualHost.class));
+    @Override
+    public Collection<VirtualHost> all() {
+        return Bennu.getInstance().getVirtualHosts();
     }
 
-    @PUT
-    @Path("{oid}")
-    public String update(@PathParam("oid") String oid, @FormParam("model") String jsonData) {
-        return view(update(jsonData, readDomainObject(oid)));
+    @Override
+    public String collectionKey() {
+        return "hosts";
+    }
+
+    @Override
+    public Class<VirtualHost> type() {
+        return VirtualHost.class;
     }
 }

@@ -16,7 +16,7 @@ MenuManager.View.HostListView = Backbone.View.extend({
     	MenuManager.Util.renderTemplate("HostListView", this.el, { hosts: this.collection.toJSON(), mls : function() { 
 		return function(val) { 
 				return this[val].pt;
-			  } 
+			  }
 	}});
         return this;
     }
