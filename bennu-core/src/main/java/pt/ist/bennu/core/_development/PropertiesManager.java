@@ -100,6 +100,7 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
                     filterRequestWithDigest = getBooleanProperty("filter.request.with.digest");
                     tamperingRedirect = getProperty("digest.tampering.url");
                     errorIfChangingDeletedObject = getBooleanProperty("error.if.changing.deleted.object");
+                    canCreateDomainMetaObjects = getBooleanProperty("can.create.domain.meta.objects");
                     defaultLanguage = getProperty("language");
                     defaultLocation = getProperty("location");
                     defaultVariant = getProperty("variant");
