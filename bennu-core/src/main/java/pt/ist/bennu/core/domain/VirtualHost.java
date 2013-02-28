@@ -16,11 +16,8 @@
  */
 package pt.ist.bennu.core.domain;
 
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
 
 import pt.ist.bennu.core.domain.groups.AnonymousGroup;
 import pt.ist.bennu.core.domain.groups.AnyoneGroup;
@@ -28,7 +25,7 @@ import pt.ist.bennu.core.domain.groups.LoggedGroup;
 import pt.ist.bennu.core.domain.groups.NobodyGroup;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
-import pt.ist.bennu.core.util.Language;
+import pt.ist.bennu.core.util.LocaleArray;
 import pt.ist.bennu.service.Service;
 
 public class VirtualHost extends VirtualHost_Base {
@@ -65,7 +62,7 @@ public class VirtualHost extends VirtualHost_Base {
         setBennu(Bennu.getInstance());
         setHostname(hostname);
         setVirtualHostForThread(this);
-        setLanguages(Collections.singleton(Language.en));
+        setSupportedLanguages(new LocaleArray(Locale.forLanguageTag("en-UK"), Locale.forLanguageTag("pt-PT")));
         initializeGroups();
     }
 
@@ -92,25 +89,5 @@ public class VirtualHost extends VirtualHost_Base {
     public boolean isCasEnabled() {
         CasConfig casConfig = ConfigurationManager.getCasConfig(getHostname());
         return casConfig != null && casConfig.isCasEnabled();
-    }
-
-    public Set<Language> getSupportedLanguagesSet() {
-        Set<Language> languages = new HashSet<>();
-        if (StringUtils.isNotBlank(getSupportedLanguages())) {
-            for (String code : getSupportedLanguages().split(":")) {
-                languages.add(Language.valueOf(code));
-            }
-        }
-        return languages;
-    }
-
-    public boolean supports(final Language language) {
-        final String supportedLanguages = getSupportedLanguages();
-        return supportedLanguages != null && language != null && supportedLanguages.indexOf(language.name()) >= 0;
-    }
-
-    @Service
-    public void setLanguages(final Set<Language> languages) {
-        setSupportedLanguages(StringUtils.join(languages, ":"));
     }
 }

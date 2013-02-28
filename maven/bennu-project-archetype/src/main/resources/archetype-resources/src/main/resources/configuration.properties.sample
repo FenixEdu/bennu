@@ -12,11 +12,6 @@ db.pass=<pass>
 # For extra goodies, turn this on (only in development mode)
 development.mode=true
 
-# Default language
-language=pt
-location=PT
-variant=
-
 # Repeat the following properties for each virtual host configuration
 <host>.cas.enable=false
 <host>.cas.loginUrl=https://login.ist.utl.pt/login?service=

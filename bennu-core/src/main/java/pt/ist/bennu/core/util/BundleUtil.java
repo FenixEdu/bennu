@@ -24,12 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.i18n.I18N;
 
 public class BundleUtil {
     private static final Logger logger = LoggerFactory.getLogger(BundleUtil.class);
 
     public static String getString(final String bundle, final String key, String... args) {
-        return getString(bundle, Language.getLocale(), key, args);
+        return getString(bundle, I18N.getLocale(), key, args);
     }
 
     public static String getString(final String bundle, Locale locale, final String key, String... args) {
@@ -47,8 +48,8 @@ public class BundleUtil {
 
     public static MultiLanguageString getMultilanguageString(final String bundle, final String key, String... args) {
         MultiLanguageString mls = new MultiLanguageString();
-        for (Language language : VirtualHost.getVirtualHostForThread().getSupportedLanguagesSet()) {
-            String message = getString(bundle, new Locale(language.name()), key, args);
+        for (Locale language : VirtualHost.getVirtualHostForThread().getSupportedLanguages().getLocales()) {
+            String message = getString(bundle, language, key, args);
             mls = mls.with(language, message);
         }
         return mls;

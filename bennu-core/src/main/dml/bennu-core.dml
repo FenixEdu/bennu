@@ -25,12 +25,18 @@ package pt.ist.bennu.core.domain;
  * 
  */
 
+valueType com.google.gson.JsonElement as JsonElement {
+    externalizeWith {
+        String toString();
+    }
+    internalizeWith pt.ist.bennu.core.util.JsonImporter.importJson();
+}
+
 valueType pt.ist.bennu.core.util.MultiLanguageString as MultiLanguageString {
     externalizeWith {
-        String exportAsString();
+        JsonElement json();
     }
-
-    internalizeWith importFromString();
+    internalizeWith fromJson();
 }
 
 valueType java.lang.Class as Class {
@@ -38,6 +44,20 @@ valueType java.lang.Class as Class {
 		String getName();
 	}
 	internalizeWith pt.ist.bennu.core.util.ClassInternalizer.internalize();
+}
+
+valueType java.util.Locale as Locale {
+	externalizeWith {
+		String toLanguageTag();
+	}
+	internalizeWith forLanguageTag();
+}
+
+valueType pt.ist.bennu.core.util.LocaleArray as LocaleArray {
+	externalizeWith {
+		String externalize();
+	}
+	internalizeWith internalize();
 }
 
 class Bennu {
@@ -50,6 +70,7 @@ class User {
 	DateTime lastLogoutDateTime;
 	DateTime expiration;
 	String email;
+	Locale preferredLocale;
 }
 
 relation SystemUsers {
@@ -64,7 +85,7 @@ relation SystemUsers {
 /* Virtual Hosting */
 class VirtualHost {
 	String hostname;
-	String supportedLanguages;
+	LocaleArray supportedLanguages;
 }
 
 relation SystemHosts {

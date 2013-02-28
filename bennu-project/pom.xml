@@ -93,7 +93,7 @@
 		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
 		<!-- ************************************************************************************************ -->
 		<version.com.alexnederlof.jasperreports.plugin>1.5-SNAPSHOT</version.com.alexnederlof.jasperreports.plugin>
-		<version.dml.dml.maven.plugin>1.1.4</version.dml.dml.maven.plugin>
+		<version.dml.dml.maven.plugin>1.1.6-beta</version.dml.dml.maven.plugin>
 		<version.org.apache.maven.plugins.maven.compiler.plugin>2.5.1</version.org.apache.maven.plugins.maven.compiler.plugin>
 		<version.org.apache.maven.plugins.maven.deploy.plugin>2.7</version.org.apache.maven.plugins.maven.deploy.plugin>
 		<version.org.apache.maven.plugins.maven.enforcer.plugin>1.1.1</version.org.apache.maven.plugins.maven.enforcer.plugin>

@@ -30,6 +30,7 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.groups.DynamicGroup;
+import pt.ist.bennu.core.i18n.I18N;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.TransactionalThread;
 import pt.ist.bennu.service.Service;
@@ -37,11 +38,16 @@ import pt.ist.bennu.service.Service;
 public class Authenticate {
     private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
 
+    private static final String USER_SESSION_ATTRIBUTE = "USER_SESSION_ATTRIBUTE";
+
+    private static final ThreadLocal<SessionUserWrapper> wrapper = new ThreadLocal<>();
+
     private static Set<AuthenticationListener> authenticationListeners;
 
     public static User login(HttpSession session, String username, String password, boolean checkPassword) {
         SessionUserWrapper user = internalLogin(username, password, checkPassword);
-        session.setAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE, user);
+        session.setAttribute(USER_SESSION_ATTRIBUTE, user);
+        I18N.setLocale(session, user.getUser().getPreferredLocale());
 
         fireLoginListeners(user.getUser());
         logger.info("Logged in user: " + user.getUsername());
@@ -62,7 +68,7 @@ public class Authenticate {
         }
 
         SessionUserWrapper userWrapper = new SessionUserWrapper(user);
-        UserView.setSessionUserWrapper(userWrapper);
+        wrapper.set(userWrapper);
         if (Bennu.getInstance().getUsersCount() == 1) {
             DynamicGroup.getInstance("managers").grant(user);
             logger.info("Bootstrapped #managers group to user: " + user.getUsername());
@@ -72,17 +78,48 @@ public class Authenticate {
     }
 
     public static void logout(HttpSession session) {
-        final SessionUserWrapper wrapper = (SessionUserWrapper) session.getAttribute(SetUserViewFilter.USER_SESSION_ATTRIBUTE);
-        if (wrapper != null) {
-            internalLogout(wrapper.getUser());
+        final SessionUserWrapper userWrapper = (SessionUserWrapper) session.getAttribute(USER_SESSION_ATTRIBUTE);
+        if (userWrapper != null) {
+            internalLogout(userWrapper.getUser());
         }
-        UserView.setSessionUserWrapper(null);
+        wrapper.set(userWrapper);
         session.invalidate();
     }
 
     @Service
     private static void internalLogout(User user) {
         user.setLastLogoutDateTime(new DateTime());
+    }
+
+    public static User getUser() {
+        return wrapper.get() != null ? wrapper.get().getUser() : null;
+    }
+
+    public static boolean hasUser() {
+        return wrapper.get() != null;
+    }
+
+    public static String getPrivateConstantForDigestCalculation() {
+        return wrapper.get() != null ? wrapper.get().getPrivateConstantForDigestCalculation() : null;
+    }
+
+    static void updateFromSession(HttpSession session) {
+        SessionUserWrapper user = (SessionUserWrapper) (session == null ? null : session.getAttribute(USER_SESSION_ATTRIBUTE));
+        if (user != null) {
+            final DateTime lastLogoutDateTime = user.getLastLogoutDateTime();
+            if (lastLogoutDateTime == null || user.getUserCreationDateTime().isAfter(lastLogoutDateTime)) {
+                wrapper.set(user);
+                logger.debug("Set thread's user to: {}", user.getUsername());
+            } else {
+                wrapper.set(null);
+            }
+        } else {
+            wrapper.set(null);
+        }
+    }
+
+    static void clear() {
+        wrapper.set(null);
     }
 
     public static void addAuthenticationListener(AuthenticationListener listener) {

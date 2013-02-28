@@ -27,7 +27,7 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.grouplanguage.GroupExpressionParser;
-import pt.ist.bennu.core.security.UserView;
+import pt.ist.bennu.core.security.Authenticate;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -122,8 +122,8 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      *             if user is not a member of the group.
      */
     public void verify() throws AuthorizationException {
-        if (!isMember(UserView.getUser())) {
-            throw AuthorizationException.unauthorized(this, UserView.getUser());
+        if (!isMember(Authenticate.getUser())) {
+            throw AuthorizationException.unauthorized(this, Authenticate.getUser());
         }
     }
 

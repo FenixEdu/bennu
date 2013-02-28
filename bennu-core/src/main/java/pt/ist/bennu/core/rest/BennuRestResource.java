@@ -15,7 +15,6 @@ import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.core.security.UserView;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 import pt.ist.fenixframework.DomainObject;
@@ -91,7 +90,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
     }
 
     protected User accessControl(PersistentGroup group) {
-        final User user = UserView.getUser();
+        final User user = Authenticate.getUser();
         if (group.isMember(user)) {
             return user;
         }

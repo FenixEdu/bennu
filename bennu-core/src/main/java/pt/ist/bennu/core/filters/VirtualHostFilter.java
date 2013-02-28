@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.security.UserView;
+import pt.ist.bennu.core.security.Authenticate;
 
 /**
  * 
@@ -57,7 +57,7 @@ public class VirtualHostFilter implements Filter {
             final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(serverName.toLowerCase());
             if (logger.isDebugEnabled()) {
                 final String hostname = virtualHost == null ? null : virtualHost.getHostname();
-                final User user = UserView.getUser();
+                final User user = Authenticate.getUser();
                 final String username = user == null ? null : user.getUsername();
                 logger.debug("Setting virtual host: " + hostname + " for user: " + username + " on server: " + serverName);
             }

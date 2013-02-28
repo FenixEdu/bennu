@@ -20,7 +20,6 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.Locale;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -32,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.util.ConfigurationManager;
-import pt.ist.bennu.core.util.Language;
 import pt.ist.bennu.service.Service;
 import pt.ist.fenixframework.FenixFrameworkInitializer;
 import pt.ist.fenixframework.pstm.PersistentRoot;
@@ -54,18 +52,12 @@ public class BennuCoreContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
         try {
-            Language.setDefaultLocale(ConfigurationManager.getDefaultLocale());
-            setLocale();
-            try {
-                Class.forName(FenixFrameworkInitializer.class.getName());
-            } catch (ClassNotFoundException e) {
-            }
-            PersistentRoot.initRootIfNeeded(ConfigurationManager.getFenixFrameworkConfig());
-
-            ensureModelBootstrap();
-        } finally {
-            Language.setLocale(null);
+            Class.forName(FenixFrameworkInitializer.class.getName());
+        } catch (ClassNotFoundException e) {
         }
+        PersistentRoot.initRootIfNeeded(ConfigurationManager.getFenixFrameworkConfig());
+
+        ensureModelBootstrap();
     }
 
     @Service
@@ -81,12 +73,6 @@ public class BennuCoreContextListener implements ServletContextListener {
         this.thisClassLoader = this.getClass().getClassLoader();
         interruptThreads();
         deregisterJDBCDrivers();
-    }
-
-    private void setLocale() {
-        final String language = ConfigurationManager.getProperty("language");
-        final String location = ConfigurationManager.getProperty("location");
-        Language.setLocale(new Locale(language, location));
     }
 
     private void deregisterJDBCDrivers() {

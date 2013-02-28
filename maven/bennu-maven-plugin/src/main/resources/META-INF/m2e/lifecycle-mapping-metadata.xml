@@ -1,0 +1,22 @@
+<!--
+    This file tells eclipse to ignore goals from bennu-maven-plugin, to avoid warnings.
+    In the future, it would be nice if these targets correctly worked with eclipse, instead
+    of just being ignored.
+
+    For more details see http://wiki.eclipse.org/M2E_compatible_maven_plugins
+-->
+<lifecycleMappingMetadata>
+    <pluginExecutions>
+        <pluginExecution>
+            <pluginExecutionFilter>
+                <goals>
+                    <goal>update-web-fragment</goal>
+                    <goal>post-compile</goal>
+                </goals>
+            </pluginExecutionFilter>
+            <action>
+                <ignore></ignore>
+            </action>
+        </pluginExecution>
+    </pluginExecutions>
+</lifecycleMappingMetadata>

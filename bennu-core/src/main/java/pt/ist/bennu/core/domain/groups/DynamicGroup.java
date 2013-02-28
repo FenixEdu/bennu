@@ -22,7 +22,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.security.UserView;
+import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.service.Service;
 
 import com.google.common.base.Predicate;
@@ -47,7 +47,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
         this();
         setName(name);
         setCreated(new DateTime());
-        setCreator(UserView.getUser());
+        setCreator(Authenticate.getUser());
         setGroup(group);
     }
 
@@ -102,7 +102,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
         old.setGroup(getGroup());
         old.setNext(this);
         setCreated(new DateTime());
-        setCreator(UserView.getUser());
+        setCreator(Authenticate.getUser());
     }
 
     public DynamicGroup rename(String name) {

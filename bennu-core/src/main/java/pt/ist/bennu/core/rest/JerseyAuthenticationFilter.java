@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.core.security.UserView;
 import pt.ist.bennu.core.util.ConfigurationManager;
 
 import com.sun.jersey.core.util.Base64;
@@ -41,8 +40,8 @@ public class JerseyAuthenticationFilter implements Filter {
         System.out.println("authentication filter");
         if (isPublicRequest(request)) {
             LOG.info("Request is public");
-            if (UserView.getUser() != null) {
-                LOG.info("User is logged in {}", UserView.getUser());
+            if (Authenticate.getUser() != null) {
+                LOG.info("User is logged in {}", Authenticate.getUser());
             }
             filterChain.doFilter(request, response);
         } else {
