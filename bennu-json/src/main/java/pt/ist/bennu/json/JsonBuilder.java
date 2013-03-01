@@ -32,11 +32,14 @@ public class JsonBuilder {
     }
 
     public JsonElement view(Object obj, Class<? extends JsonViewer> jsonViewerClass) {
-        if (obj instanceof Collection) {
+        return view(obj, obj.getClass(), jsonViewerClass);
+    }
+
+    public JsonElement view(Object obj, Class<?> objectClass, Class<? extends JsonViewer> jsonViewerClass) {
+        if (Collection.class.isAssignableFrom(objectClass)) {
             return views((Collection) obj, jsonViewerClass);
         }
-        JsonViewer jsonViewer = viewers.get(obj.getClass(), jsonViewerClass);
-        return jsonViewer.view(obj, this);
+        return viewers.get(objectClass, jsonViewerClass).view(obj, this);
     }
 
     private JsonArray views(Collection coll, Class<? extends JsonViewer> jsonViewerClass) {

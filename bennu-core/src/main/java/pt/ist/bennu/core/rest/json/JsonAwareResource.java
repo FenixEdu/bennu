@@ -37,7 +37,14 @@ public class JsonAwareResource {
     }
 
     public final String view(Object object, Class<? extends JsonViewer<?>> viewerClass) {
-        return GSON.toJson(BUILDER.view(object, viewerClass));
+        if (object == null) {
+            return view(object, (Class<?>) null, viewerClass);
+        }
+        return view(object, object.getClass(), viewerClass);
+    }
+
+    public final String view(Object object, Class<?> objectClass, Class<? extends JsonViewer<?>> viewerClass) {
+        return GSON.toJson(BUILDER.view(object, objectClass, viewerClass));
     }
 
     public final String view(Object object, String collectionKey) {
@@ -45,8 +52,15 @@ public class JsonAwareResource {
     }
 
     public final String view(Object object, String collectionKey, Class<? extends JsonViewer<?>> viewerClass) {
+        if (object == null) {
+            return view(object, (Class<?>) null, collectionKey, viewerClass);
+        }
+        return view(object, object.getClass(), collectionKey, viewerClass);
+    }
+
+    public final String view(Object object, Class<?> objectClass, String collectionKey, Class<? extends JsonViewer<?>> viewerClass) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add(collectionKey, BUILDER.view(object, viewerClass));
+        jsonObject.add(collectionKey, BUILDER.view(object, objectClass, viewerClass));
         return GSON.toJson(jsonObject);
     }
 
@@ -54,6 +68,7 @@ public class JsonAwareResource {
         return create(jsonData, clazz, null);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T create(String jsonData, Class<T> clazz, Class<? extends JsonCreator<? extends T>> jsonCreatorClass) {
         return (T) innerCreate(jsonData, clazz, jsonCreatorClass);
     }
@@ -72,6 +87,7 @@ public class JsonAwareResource {
         return BUILDER.update(parse(jsonData), object, jsonUpdaterClass);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T update(String jsonData, T object, Class<? extends JsonUpdater<? extends T>> jsonUpdaterClass) {
         return (T) innerUpdate(jsonData, object, jsonUpdaterClass);
     }
