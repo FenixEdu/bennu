@@ -24,7 +24,7 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 import pt.ist.bennu.core.domain.groups.UserGroup;
 
-class Users extends Group {
+class Users extends GroupToken {
     private final List<String> usernames;
 
     public Users(List<String> usernames) {

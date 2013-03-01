@@ -16,19 +16,18 @@
  */
 package pt.ist.bennu.core.grouplanguage;
 
-import pt.ist.bennu.core.domain.groups.GroupException;
 import pt.ist.bennu.core.domain.groups.NegationGroup;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
-class Negation extends Group {
-    private final Group group;
+class Negation extends GroupToken {
+    private final GroupToken groupToken;
 
-    public Negation(Group group) {
-        this.group = group;
+    public Negation(GroupToken groupToken) {
+        this.groupToken = groupToken;
     }
 
     @Override
-    public PersistentGroup group() throws GroupException {
-        return NegationGroup.getInstance(group.group());
+    public PersistentGroup group() {
+        return NegationGroup.getInstance(groupToken.group());
     }
 }

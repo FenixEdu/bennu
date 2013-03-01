@@ -21,7 +21,7 @@ import java.util.List;
 import pt.ist.bennu.core.domain.groups.CustomGroup;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
-class Custom extends Group {
+class Custom extends GroupToken {
     private final String operator;
 
     private final List<String> args;

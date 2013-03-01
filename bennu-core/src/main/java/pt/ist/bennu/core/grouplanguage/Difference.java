@@ -21,21 +21,20 @@ import java.util.List;
 import java.util.Set;
 
 import pt.ist.bennu.core.domain.groups.DifferenceGroup;
-import pt.ist.bennu.core.domain.groups.GroupException;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
-class Difference extends Group {
-    private final List<Group> children;
+class Difference extends GroupToken {
+    private final List<GroupToken> children;
 
-    public Difference(List<Group> children) {
+    public Difference(List<GroupToken> children) {
         this.children = children;
     }
 
     @Override
-    public PersistentGroup group() throws GroupException {
+    public PersistentGroup group() {
         Set<PersistentGroup> groups = new HashSet<>();
-        for (Group group : children) {
-            groups.add(group.group());
+        for (GroupToken groupToken : children) {
+            groups.add(groupToken.group());
         }
         return DifferenceGroup.getInstance(groups);
     }

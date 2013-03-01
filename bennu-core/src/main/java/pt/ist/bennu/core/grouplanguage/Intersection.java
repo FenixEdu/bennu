@@ -20,22 +20,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import pt.ist.bennu.core.domain.groups.GroupException;
 import pt.ist.bennu.core.domain.groups.IntersectionGroup;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
-class Intersection extends Group {
-    private final List<Group> children;
+class Intersection extends GroupToken {
+    private final List<GroupToken> children;
 
-    public Intersection(List<Group> children) {
+    public Intersection(List<GroupToken> children) {
         this.children = children;
     }
 
     @Override
-    public PersistentGroup group() throws GroupException {
+    public PersistentGroup group() {
         Set<PersistentGroup> groups = new HashSet<>();
-        for (Group group : children) {
-            groups.add(group.group());
+        for (GroupToken groupToken : children) {
+            groups.add(groupToken.group());
         }
         return IntersectionGroup.getInstance(groups);
     }

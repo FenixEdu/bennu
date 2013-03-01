@@ -19,7 +19,7 @@ package pt.ist.bennu.core.grouplanguage;
 import pt.ist.bennu.core.domain.groups.AnonymousGroup;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
-class Anonymous extends Group {
+class Anonymous extends GroupToken {
     @Override
     public PersistentGroup group() {
         return AnonymousGroup.getInstance();

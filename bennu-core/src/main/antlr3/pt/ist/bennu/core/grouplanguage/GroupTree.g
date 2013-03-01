@@ -10,11 +10,11 @@ options {
 package pt.ist.bennu.core.grouplanguage;
 }
 
-definition returns [Group value]
+definition returns [GroupToken value]
 	:	g=group { $value = $g.value; } EOF!
 	;
 
-group returns [Group value]
+group returns [GroupToken value]
 	:	ANONYMOUS { $value = new Anonymous(); }
 	|	ANYONE { $value = new Anyone(); }
 	|	NOBODY { $value = new Nobody(); }
@@ -30,7 +30,7 @@ group returns [Group value]
 
 intersection returns [Intersection value]
 	@init {
-		java.util.List<Group> children = new java.util.ArrayList<>();
+		java.util.List<GroupToken> children = new java.util.ArrayList<>();
 	}
 	:	^('&' (group { children.add($group.value); })+)
 		{ $value = new Intersection(children); }
@@ -38,7 +38,7 @@ intersection returns [Intersection value]
 
 union returns [Union value]
 	@init {
-		java.util.List<Group> children = new java.util.ArrayList<>();
+		java.util.List<GroupToken> children = new java.util.ArrayList<>();
 	}
 	:	^('|' (group { children.add($group.value); })+)
 		{ $value = new Union(children); }
@@ -46,7 +46,7 @@ union returns [Union value]
 
 difference returns [Difference value]
 	@init {
-		java.util.List<Group> children = new java.util.ArrayList<>();
+		java.util.List<GroupToken> children = new java.util.ArrayList<>();
 	}
 	:	^('-' (group { children.add($group.value); })+)
 		{ $value = new Difference(children); }
