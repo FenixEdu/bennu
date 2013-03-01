@@ -59,4 +59,8 @@ public class BennuCoreDomainException extends DomainException {
     public static BennuCoreDomainException groupParsingError(Throwable cause) {
         return new BennuCoreDomainException(cause, "error.bennu.core.groups.parse");
     }
+
+    public static BennuCoreDomainException errorOnDeleteDomainObject() {
+        return new BennuCoreDomainException("error.bennu.core.cant.delete.domainObject");
+    }
 }

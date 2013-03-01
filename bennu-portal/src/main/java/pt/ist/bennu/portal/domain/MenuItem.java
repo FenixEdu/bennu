@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
+import pt.ist.bennu.service.Service;
+
 public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
 
     public MenuItem() {
@@ -34,4 +36,14 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
         return getOrd().compareTo(o.getOrd());
     }
 
+    @Service
+    public void delete() {
+        if (hasHost()) {
+            removeHost();
+        }
+        for (MenuItem child : getChild()) {
+            child.delete();
+        }
+        deleteDomainObject();
+    }
 }

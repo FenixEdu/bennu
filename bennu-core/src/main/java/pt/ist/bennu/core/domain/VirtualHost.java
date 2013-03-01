@@ -21,6 +21,7 @@ import java.util.Set;
 
 import pt.ist.bennu.core.domain.groups.AnonymousGroup;
 import pt.ist.bennu.core.domain.groups.AnyoneGroup;
+import pt.ist.bennu.core.domain.groups.BennuGroup;
 import pt.ist.bennu.core.domain.groups.LoggedGroup;
 import pt.ist.bennu.core.domain.groups.NobodyGroup;
 import pt.ist.bennu.core.util.ConfigurationManager;
@@ -74,10 +75,19 @@ public class VirtualHost extends VirtualHost_Base {
     }
 
     @Service
-    public void delete() {
+    public Boolean delete() {
         if (Bennu.getInstance().getVirtualHostsSet().size() > 1) {
             removeBennu();
+            deleteGroups();
             deleteDomainObject();
+            return true;
+        }
+        return false;
+    }
+
+    private void deleteGroups() {
+        for (BennuGroup group : getGroupsSet()) {
+            group.removeHost();
         }
     }
 

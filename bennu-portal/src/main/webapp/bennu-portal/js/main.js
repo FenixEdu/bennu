@@ -24,6 +24,8 @@ require(['jquery', 'jquery.bootstrap', 'backbone', 'mustache', 'marionette', 'me
     });
 
     Backbone.Marionette.Renderer.render = Mustache.to_html;
+    
+    Backbone.emulateJSON = true;
 
     App.addRegions({
         page: "body"

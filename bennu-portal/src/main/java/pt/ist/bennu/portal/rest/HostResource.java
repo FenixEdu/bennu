@@ -36,4 +36,11 @@ public class HostResource extends DomainObjectResource<VirtualHost> {
     public Class<VirtualHost> type() {
         return VirtualHost.class;
     }
+
+    @Override
+    public boolean delete(VirtualHost obj) {
+        obj.getInfo().delete();
+        return true;
+    }
+
 }

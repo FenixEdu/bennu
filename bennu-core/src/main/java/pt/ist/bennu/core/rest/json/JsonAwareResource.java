@@ -1,5 +1,8 @@
 package pt.ist.bennu.core.rest.json;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.json.JsonCreator;
@@ -15,6 +18,7 @@ import com.google.gson.JsonParser;
 
 public class JsonAwareResource {
 
+    private static final Logger LOG = LoggerFactory.getLogger("RestAdapters");
     private static final JsonBuilder BUILDER;
     private static final JsonParser PARSER;
     private static final Gson GSON;
@@ -75,6 +79,7 @@ public class JsonAwareResource {
 
     @Service
     private Object innerCreate(String jsonData, Class<?> clazz, Class<? extends JsonCreator<?>> jsonCreatorClass) {
+        LOG.info("Create instance of {} with data {}", clazz.getSimpleName(), jsonData);
         return BUILDER.create(parse(jsonData), clazz, jsonCreatorClass);
     }
 
@@ -82,14 +87,15 @@ public class JsonAwareResource {
         return update(jsonData, object, null);
     }
 
-    @Service
-    private Object innerUpdate(String jsonData, Object object, Class<? extends JsonUpdater<?>> jsonUpdaterClass) {
-        return BUILDER.update(parse(jsonData), object, jsonUpdaterClass);
-    }
-
     @SuppressWarnings("unchecked")
     public <T> T update(String jsonData, T object, Class<? extends JsonUpdater<? extends T>> jsonUpdaterClass) {
         return (T) innerUpdate(jsonData, object, jsonUpdaterClass);
+    }
+
+    @Service
+    private Object innerUpdate(String jsonData, Object object, Class<? extends JsonUpdater<?>> jsonUpdaterClass) {
+        LOG.info("Update instance {} with data {}", object.toString(), jsonData);
+        return BUILDER.update(parse(jsonData), object, jsonUpdaterClass);
     }
 
     private JsonObject parse(String jsonString) {
