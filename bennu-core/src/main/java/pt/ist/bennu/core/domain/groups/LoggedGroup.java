@@ -29,7 +29,7 @@ import pt.ist.bennu.service.Service;
 /**
  * Authenticated users group.
  * 
- * @see Group
+ * @see BennuGroup
  */
 public class LoggedGroup extends LoggedGroup_Base {
     protected LoggedGroup() {
@@ -67,7 +67,7 @@ public class LoggedGroup extends LoggedGroup_Base {
     }
 
     @Override
-    public Group not() {
+    public BennuGroup not() {
         return AnonymousGroup.getInstance();
     }
 

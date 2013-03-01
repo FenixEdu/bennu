@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import pt.ist.bennu.core.domain.groups.Group;
+import pt.ist.bennu.core.domain.groups.BennuGroup;
 import pt.ist.bennu.core.domain.groups.UnionGroup;
 
 class Union extends GroupToken {
@@ -31,8 +31,8 @@ class Union extends GroupToken {
     }
 
     @Override
-    public Group group() {
-        Set<Group> groups = new HashSet<>();
+    public BennuGroup group() {
+        Set<BennuGroup> groups = new HashSet<>();
         for (GroupToken groupToken : children) {
             groups.add(groupToken.group());
         }

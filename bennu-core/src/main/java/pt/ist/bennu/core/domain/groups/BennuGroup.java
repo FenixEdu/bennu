@@ -58,8 +58,8 @@ import com.google.common.collect.Iterables;
  * @see DynamicGroup
  * @see CustomGroup
  */
-public abstract class Group extends Group_Base {
-    protected Group() {
+public abstract class BennuGroup extends BennuGroup_Base {
+    protected BennuGroup() {
         super();
         setHost(VirtualHost.getVirtualHostForThread());
     }
@@ -135,8 +135,8 @@ public abstract class Group extends Group_Base {
      * @param group group to intersect with
      * @return group resulting of the intersection between '{@code this}' and '{@code group}'
      */
-    public Group and(Group group) {
-        Set<Group> children = new HashSet<>();
+    public BennuGroup and(BennuGroup group) {
+        Set<BennuGroup> children = new HashSet<>();
         children.add(this);
         children.add(group);
         return IntersectionGroup.getInstance(children);
@@ -149,8 +149,8 @@ public abstract class Group extends Group_Base {
      *            group to unite with
      * @return group resulting of the union between '{@code this}' and '{@code group}'
      */
-    public Group or(Group group) {
-        Set<Group> children = new HashSet<>();
+    public BennuGroup or(BennuGroup group) {
+        Set<BennuGroup> children = new HashSet<>();
         children.add(this);
         children.add(group);
         return UnionGroup.getInstance(children);
@@ -163,8 +163,8 @@ public abstract class Group extends Group_Base {
      *            group to subtract with
      * @return group resulting of all members of '{@code this}' except members of '{@code group}'
      */
-    public Group minus(Group group) {
-        Set<Group> children = new HashSet<>();
+    public BennuGroup minus(BennuGroup group) {
+        Set<BennuGroup> children = new HashSet<>();
         children.add(this);
         children.add(group);
         return DifferenceGroup.getInstance(children);
@@ -175,7 +175,7 @@ public abstract class Group extends Group_Base {
      * 
      * @return inverse group
      */
-    public Group not() {
+    public BennuGroup not() {
         return NegationGroup.getInstance(this);
     }
 
@@ -186,7 +186,7 @@ public abstract class Group extends Group_Base {
      *            user to grant access to
      * @return group resulting of the union between '{@code this}' and the group of the given user
      */
-    public Group grant(User user) {
+    public BennuGroup grant(User user) {
         return or(UserGroup.getInstance(user));
     }
 
@@ -197,7 +197,7 @@ public abstract class Group extends Group_Base {
      *            user to revoke access from
      * @return group resulting of the difference between '{@code this}' and the group of the given user
      */
-    public Group revoke(User user) {
+    public BennuGroup revoke(User user) {
         return minus(UserGroup.getInstance(user));
     }
 
@@ -210,7 +210,7 @@ public abstract class Group extends Group_Base {
      * @throws GroupException
      *             if a parsing error occurs
      */
-    public static Group parse(String expression) {
+    public static BennuGroup parse(String expression) {
         try {
             return GroupExpressionParser.parse(expression);
         } catch (RecognitionException | IOException e) {
@@ -218,15 +218,15 @@ public abstract class Group extends Group_Base {
         }
     }
 
-    public static Set<Group> userAccessibleGroups(User user) {
-        Set<Group> groups = new HashSet<>();
-        Set<Group> ignored = new HashSet<>();
+    public static Set<BennuGroup> userAccessibleGroups(User user) {
+        Set<BennuGroup> groups = new HashSet<>();
+        Set<BennuGroup> ignored = new HashSet<>();
         processAccessibleGroups(groups, ignored, AnyoneGroup.getInstance(), user);
         processAccessibleGroups(groups, ignored, LoggedGroup.getInstance(), user);
         for (UserGroup group : user.getUserGroupSet()) {
             processAccessibleGroups(groups, ignored, group, user);
         }
-        for (Group group : CustomGroup.groupsForUser(user)) {
+        for (BennuGroup group : CustomGroup.groupsForUser(user)) {
             processAccessibleGroups(groups, ignored, group, user);
         }
         for (NegationGroup group : VirtualHost.getVirtualHostForThread().getNegationSet()) {
@@ -239,11 +239,11 @@ public abstract class Group extends Group_Base {
 
     // These we are not interested to see listed as accessible groups, either because they are obvious, or because they are meaningless
     // unless used in some context.
-    private static Set<Class<? extends Group>> IGNORES = new HashSet<>(Arrays.asList(AnonymousGroup.class, AnyoneGroup.class,
-            NobodyGroup.class, LoggedGroup.class, DifferenceGroup.class, IntersectionGroup.class, NegationGroup.class,
-            UnionGroup.class));
+    private static Set<Class<? extends BennuGroup>> IGNORES = new HashSet<>(Arrays.asList(AnonymousGroup.class,
+            AnyoneGroup.class, NobodyGroup.class, LoggedGroup.class, DifferenceGroup.class, IntersectionGroup.class,
+            NegationGroup.class, UnionGroup.class));
 
-    private static void processAccessibleGroups(Set<Group> groups, Set<Group> ignored, Group group, User user) {
+    private static void processAccessibleGroups(Set<BennuGroup> groups, Set<BennuGroup> ignored, BennuGroup group, User user) {
         if (!groups.contains(group) && !ignored.contains(group)) {
             if (IGNORES.contains(group.getClass())) {
                 ignored.add(group);
@@ -269,7 +269,7 @@ public abstract class Group extends Group_Base {
      *            the wanted type
      * @return group instance.
      */
-    protected static <T extends Group> T select(final Class<? extends T> type) {
+    protected static <T extends BennuGroup> T select(final Class<? extends T> type) {
         return (T) Iterables.tryFind(VirtualHost.getVirtualHostForThread().getGroupsSet(), Predicates.instanceOf(type)).orNull();
     }
 
@@ -283,10 +283,10 @@ public abstract class Group extends Group_Base {
      *            the predicate to apply to group instances
      * @return group instance.
      */
-    protected static <T extends Group> T select(final Class<? extends T> type, final Predicate<? super T> predicate) {
+    protected static <T extends BennuGroup> T select(final Class<? extends T> type, final Predicate<? super T> predicate) {
         @SuppressWarnings("unchecked")
-        Predicate<? super Group> realPredicate =
-                Predicates.and(Predicates.instanceOf(type), (Predicate<? super Group>) predicate);
+        Predicate<? super BennuGroup> realPredicate =
+                Predicates.and(Predicates.instanceOf(type), (Predicate<? super BennuGroup>) predicate);
         return (T) Iterables.tryFind(VirtualHost.getVirtualHostForThread().getGroupsSet(), realPredicate).orNull();
     }
 }

@@ -17,11 +17,11 @@
 package pt.ist.bennu.core.grouplanguage;
 
 import pt.ist.bennu.core.domain.groups.NobodyGroup;
-import pt.ist.bennu.core.domain.groups.Group;
+import pt.ist.bennu.core.domain.groups.BennuGroup;
 
 class Nobody extends GroupToken {
     @Override
-    public Group group() {
+    public BennuGroup group() {
         return NobodyGroup.getInstance();
     }
 }

@@ -18,8 +18,8 @@ package pt.ist.bennu.core.grouplanguage;
 
 import java.io.Serializable;
 
-import pt.ist.bennu.core.domain.groups.Group;
+import pt.ist.bennu.core.domain.groups.BennuGroup;
 
 abstract class GroupToken implements Serializable {
-    public abstract Group group();
+    public abstract BennuGroup group();
 }

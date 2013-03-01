@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import pt.ist.bennu.core.domain.groups.IntersectionGroup;
-import pt.ist.bennu.core.domain.groups.Group;
+import pt.ist.bennu.core.domain.groups.BennuGroup;
 
 class Intersection extends GroupToken {
     private final List<GroupToken> children;
@@ -31,8 +31,8 @@ class Intersection extends GroupToken {
     }
 
     @Override
-    public Group group() {
-        Set<Group> groups = new HashSet<>();
+    public BennuGroup group() {
+        Set<BennuGroup> groups = new HashSet<>();
         for (GroupToken groupToken : children) {
             groups.add(groupToken.group());
         }

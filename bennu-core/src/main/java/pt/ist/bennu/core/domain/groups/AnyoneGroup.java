@@ -28,7 +28,7 @@ import pt.ist.bennu.service.Service;
 /**
  * Group that always returns <code>true</code> on membership tests.
  * 
- * @see Group
+ * @see BennuGroup
  */
 public class AnyoneGroup extends AnyoneGroup_Base {
     protected AnyoneGroup() {
@@ -66,7 +66,7 @@ public class AnyoneGroup extends AnyoneGroup_Base {
     }
 
     @Override
-    public Group not() {
+    public BennuGroup not() {
         return NobodyGroup.getInstance();
     }
 

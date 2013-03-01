@@ -17,7 +17,7 @@
 package pt.ist.bennu.core.grouplanguage;
 
 import pt.ist.bennu.core.domain.groups.NegationGroup;
-import pt.ist.bennu.core.domain.groups.Group;
+import pt.ist.bennu.core.domain.groups.BennuGroup;
 
 class Negation extends GroupToken {
     private final GroupToken groupToken;
@@ -27,7 +27,7 @@ class Negation extends GroupToken {
     }
 
     @Override
-    public Group group() {
+    public BennuGroup group() {
         return NegationGroup.getInstance(groupToken.group());
     }
 }

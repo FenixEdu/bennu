@@ -36,14 +36,14 @@ import com.google.common.base.Predicate;
  * In practice it's a wrapper over an immutable group with versioning over the relation between this and the wrapped group.
  * </p>
  * 
- * @see Group
+ * @see BennuGroup
  */
 public final class DynamicGroup extends DynamicGroup_Base {
     protected DynamicGroup() {
         super();
     }
 
-    protected DynamicGroup(String name, Group group) {
+    protected DynamicGroup(String name, BennuGroup group) {
         this();
         setName(name);
         setCreated(new DateTime());
@@ -73,17 +73,17 @@ public final class DynamicGroup extends DynamicGroup_Base {
 
     @Override
     public Set<User> getMembers(DateTime when) {
-        Group group = getGroup(when);
+        BennuGroup group = getGroup(when);
         return group != null ? group.getMembers() : Collections.<User> emptySet();
     }
 
     @Override
     public boolean isMember(User user, DateTime when) {
-        Group group = getGroup(when);
+        BennuGroup group = getGroup(when);
         return group != null ? group.isMember(user) : false;
     }
 
-    public Group getGroup(DateTime when) {
+    public BennuGroup getGroup(DateTime when) {
         if (when.isAfter(getCreated())) {
             return getGroup();
         }
@@ -111,44 +111,44 @@ public final class DynamicGroup extends DynamicGroup_Base {
         return this;
     }
 
-    public DynamicGroup changeGroup(Group group) {
+    public DynamicGroup changeGroup(BennuGroup group) {
         pushHistory();
         setGroup(group);
         return this;
     }
 
     @Override
-    public Group and(Group group) {
+    public BennuGroup and(BennuGroup group) {
         return changeGroup(getGroup().and(group));
     }
 
     @Override
-    public Group or(Group group) {
+    public BennuGroup or(BennuGroup group) {
         return changeGroup(getGroup().or(group));
     }
 
     @Override
-    public Group minus(Group group) {
+    public BennuGroup minus(BennuGroup group) {
         return changeGroup(getGroup().minus(group));
     }
 
     @Override
-    public Group not() {
+    public BennuGroup not() {
         return changeGroup(getGroup().not());
     }
 
     @Override
-    public Group grant(User user) {
+    public BennuGroup grant(User user) {
         return changeGroup(getGroup().grant(user));
     }
 
     @Override
-    public Group revoke(User user) {
+    public BennuGroup revoke(User user) {
         return changeGroup(getGroup().revoke(user));
     }
 
     @Service
-    public static Group getInstance(final String name) {
+    public static BennuGroup getInstance(final String name) {
         DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
             @Override
             public boolean apply(DynamicGroup input) {

@@ -31,10 +31,10 @@ import com.google.common.collect.Sets;
 /**
  * Union composition group.
  * 
- * @see Group
+ * @see BennuGroup
  */
 public class UnionGroup extends UnionGroup_Base {
-    protected UnionGroup(Set<Group> children) {
+    protected UnionGroup(Set<BennuGroup> children) {
         super();
         init(children);
     }
@@ -47,7 +47,7 @@ public class UnionGroup extends UnionGroup_Base {
     @Override
     public Set<User> getMembers() {
         final Set<User> users = new HashSet<>();
-        for (final Group group : getChildrenSet()) {
+        for (final BennuGroup group : getChildrenSet()) {
             users.addAll(group.getMembers());
         }
         return users;
@@ -55,7 +55,7 @@ public class UnionGroup extends UnionGroup_Base {
 
     @Override
     public boolean isMember(final User user) {
-        for (final Group group : getChildrenSet()) {
+        for (final BennuGroup group : getChildrenSet()) {
             if (group.isMember(user)) {
                 return true;
             }
@@ -66,7 +66,7 @@ public class UnionGroup extends UnionGroup_Base {
     @Override
     public Set<User> getMembers(DateTime when) {
         final Set<User> users = new HashSet<>();
-        for (final Group group : getChildrenSet()) {
+        for (final BennuGroup group : getChildrenSet()) {
             users.addAll(group.getMembers(when));
         }
         return users;
@@ -74,7 +74,7 @@ public class UnionGroup extends UnionGroup_Base {
 
     @Override
     public boolean isMember(User user, DateTime when) {
-        for (final Group group : getChildrenSet()) {
+        for (final BennuGroup group : getChildrenSet()) {
             if (group.isMember(user, when)) {
                 return true;
             }
@@ -83,8 +83,8 @@ public class UnionGroup extends UnionGroup_Base {
     }
 
     @Override
-    public Group or(Group group) {
-        Set<Group> children = new HashSet<>(getChildrenSet());
+    public BennuGroup or(BennuGroup group) {
+        Set<BennuGroup> children = new HashSet<>(getChildrenSet());
         children.add(group);
         return UnionGroup.getInstance(children);
     }
@@ -93,7 +93,7 @@ public class UnionGroup extends UnionGroup_Base {
      * @see #getInstance(Set)
      */
     @Service
-    public static UnionGroup getInstance(final Group... children) {
+    public static UnionGroup getInstance(final BennuGroup... children) {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }
 
@@ -105,7 +105,7 @@ public class UnionGroup extends UnionGroup_Base {
      * @return {@link UnionGroup} instance
      */
     @Service
-    public static UnionGroup getInstance(final Set<Group> children) {
+    public static UnionGroup getInstance(final Set<BennuGroup> children) {
         UnionGroup group = select(UnionGroup.class, new Predicate<UnionGroup>() {
             @Override
             public boolean apply(UnionGroup input) {

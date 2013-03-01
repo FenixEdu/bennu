@@ -28,7 +28,7 @@ import pt.ist.bennu.service.Service;
 /**
  * Group that always returns false.
  * 
- * @see Group
+ * @see BennuGroup
  */
 public class NobodyGroup extends NobodyGroup_Base {
     protected NobodyGroup() {
@@ -66,22 +66,22 @@ public class NobodyGroup extends NobodyGroup_Base {
     }
 
     @Override
-    public Group and(Group group) {
+    public BennuGroup and(BennuGroup group) {
         return this;
     }
 
     @Override
-    public Group or(Group group) {
+    public BennuGroup or(BennuGroup group) {
         return group;
     }
 
     @Override
-    public Group minus(Group group) {
+    public BennuGroup minus(BennuGroup group) {
         return this;
     }
 
     @Override
-    public Group not() {
+    public BennuGroup not() {
         return AnyoneGroup.getInstance();
     }
 

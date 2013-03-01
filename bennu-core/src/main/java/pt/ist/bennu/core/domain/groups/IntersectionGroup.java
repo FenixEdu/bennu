@@ -32,10 +32,10 @@ import com.google.common.collect.Sets;
 /**
  * Intersection composition group.
  * 
- * @see Group
+ * @see BennuGroup
  */
 public class IntersectionGroup extends IntersectionGroup_Base {
-    protected IntersectionGroup(Set<Group> children) {
+    protected IntersectionGroup(Set<BennuGroup> children) {
         super();
         init(children);
     }
@@ -48,7 +48,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     @Override
     public Set<User> getMembers() {
         final Set<User> users = new HashSet<>();
-        Iterator<Group> iterator = getChildrenSet().iterator();
+        Iterator<BennuGroup> iterator = getChildrenSet().iterator();
         if (iterator.hasNext()) {
             users.addAll(iterator.next().getMembers());
             while (iterator.hasNext()) {
@@ -63,7 +63,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
         if (getChildrenCount() == 0) {
             return false;
         }
-        for (final Group group : getChildrenSet()) {
+        for (final BennuGroup group : getChildrenSet()) {
             if (!group.isMember(user)) {
                 return false;
             }
@@ -74,7 +74,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     @Override
     public Set<User> getMembers(DateTime when) {
         final Set<User> users = new HashSet<>();
-        Iterator<Group> iterator = getChildrenSet().iterator();
+        Iterator<BennuGroup> iterator = getChildrenSet().iterator();
         if (iterator.hasNext()) {
             users.addAll(iterator.next().getMembers(when));
             while (iterator.hasNext()) {
@@ -89,7 +89,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
         if (getChildrenCount() == 0) {
             return false;
         }
-        for (final Group group : getChildrenSet()) {
+        for (final BennuGroup group : getChildrenSet()) {
             if (!group.isMember(user, when)) {
                 return false;
             }
@@ -98,8 +98,8 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     }
 
     @Override
-    public Group and(Group group) {
-        Set<Group> children = new HashSet<>(getChildrenSet());
+    public BennuGroup and(BennuGroup group) {
+        Set<BennuGroup> children = new HashSet<>(getChildrenSet());
         children.add(group);
         return IntersectionGroup.getInstance(children);
     }
@@ -108,7 +108,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
      * @see #getInstance(Set)
      */
     @Service
-    public static IntersectionGroup getInstance(final Group... children) {
+    public static IntersectionGroup getInstance(final BennuGroup... children) {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }
 
@@ -120,7 +120,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
      * @return singleton {@link IntersectionGroup} instance
      */
     @Service
-    public static IntersectionGroup getInstance(final Set<Group> children) {
+    public static IntersectionGroup getInstance(final Set<BennuGroup> children) {
         IntersectionGroup group = select(IntersectionGroup.class, new Predicate<IntersectionGroup>() {
             @Override
             public boolean apply(IntersectionGroup input) {
