@@ -1,0 +1,131 @@
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+
+<!-- Le styles -->
+<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
+<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
+
+<script src="http://twitter.github.com/bootstrap/assets/js/jquery.js"></script>
+<script src="https://raw.github.com/janl/mustache.js/master/mustache.js" type="text/javascript"></script>
+<script type="text/html" id="tpl">
+
+<h1>{{title}}</h1>
+  {{#menu}}
+<div class="btn-group">
+
+  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+    {{title}}
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+    {{#menu}}
+	 <li>
+	         <a href="{{path}}">{{title}} - {{description}}</a>
+	 </li>
+      {{/menu}}
+  </ul>
+</div>
+  {{/menu}}
+</script>
+
+<script type="text/html" id="droptpl">
+<h1>{{title}}</h1>
+<div class="dropdown clearfix">
+<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: static; margin-bottom: 5px; *width: 180px;">
+  {{#menu}}
+  <li class="dropdown-submenu">
+    <a tabindex="-1" href="#">{{title}}</a>
+    <ul class="dropdown-menu">
+      {{#menu}}
+	<li>
+          <a tabindex="-1" href="{{path}}">{{title}} - {{description}}</a>
+	</li>
+      {{/menu}}
+    </ul>
+  </li>
+  {{/menu}}
+</ul>
+</div>
+</script>
+
+
+<script type="text/html" id="navtpl">
+<div class="dropdown clearfix">
+<ul class="nav nav-pills">
+  <li class="dropdown">
+    <a class="dropdown-toggle"
+       data-toggle="dropdown"
+       href="#">
+        {{title}}
+        <b class="caret"></b>
+      </a>
+    <ul class="dropdown-menu">
+      {{#menu}}
+	<li class="dropdown-submenu">
+		<a tabindex="-1" href="#">{{title}}</a>
+	<ul class="dropdown-menu">
+         {{#menu}}
+	  <li>
+            <a tabindex="-1" href="{{path}}">{{title}} - {{description}}</a>
+	  </li>
+         {{/menu}}
+	</ul>
+        </li>
+       {{/menu}}
+    </ul>
+  </li>
+</ul>
+</div>
+</script>
+
+<script type="text/javascript">
+function getModel(target_url) {
+  var rawJSON = $.ajax( { type: "GET",
+		  url : target_url,
+		  dataType: "json",
+		  async: false}).responseText;
+  return $.parseJSON(rawJSON);
+}
+$(document).ready(function() {
+	model = getModel("../api/menu/" + window.location.hostname);
+	$('#content').html(Mustache.to_html($('#tpl').html(),model));
+	$('#dropcontent').html(Mustache.to_html($('#droptpl').html(),model));
+	$('#navcontent').html(Mustache.to_html($('#navtpl').html(),model));
+});
+</script>
+
+</head>
+
+<body>
+
+<div id="content">
+</div>
+
+<div style="display: inline;">
+	<div id="dropcontent">
+	</div>
+	<div id="navcontent">
+	</div>
+</div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-transition.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-alert.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tab.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tooltip.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-button.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-collapse.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-carousel.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-typeahead.js"></script>
+
+</body>
+
+</html>

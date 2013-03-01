@@ -23,7 +23,7 @@ public class MenuResource extends PortalResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String menu(@PathParam("hostname") final String hostname) {
-        return view(getVirtualHost(hostname));
+        return view(getVirtualHost(hostname).getMenu());
     }
 
     @Path("{hostname: [a-zA-Z0-9\\.]+}")
