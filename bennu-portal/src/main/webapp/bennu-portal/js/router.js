@@ -12,9 +12,9 @@ define([
     var Router = Backbone.Marionette.AppRouter.extend({
 
         initialize: function() {
-            App.layout = new AppLayout();
-            App.layout.render();
-            App.page.show(App.layout);
+            App.Layout = new AppLayout();
+            App.Layout.render();
+            App.page.show(App.Layout);
         },
         
         appRoutes: {
@@ -32,7 +32,7 @@ define([
     			var hostCollection = new MenuManager.Collections.Host();
     			hostCollection.fetch({
     				success : function() {
-    					App.layout.contentRegion.show(new MenuManager.Views.HostList({
+    					App.Layout.contentRegion.show(new MenuManager.Views.HostList({
     						collection : hostCollection
     					}));
     				}
@@ -40,29 +40,20 @@ define([
     		},
 
     		createHost : function() {
-    			App.layout.contentRegion.show(new MenuManager.Views.HostCreate({model : new MenuManager.Models.Host()}));
+    			App.Layout.contentRegion.show(new MenuManager.Views.HostCreate({model : new MenuManager.Models.Host()}));
     		},
     		
     		editHost : function(id) {
     			var hostModel = new MenuManager.Models.Host({id : id});
     			hostModel.fetch({
     				success: function() {
-    					App.layout.contentRegion.show(new MenuManager.Views.HostCreate({model : hostModel}));
+    					App.Layout.contentRegion.show(new MenuManager.Views.HostCreate({model : hostModel}));
     				}
     			});
     		}
     	}
     });
     
-    var initialize = function() {
-        if(App.router === undefined) {
-            App.router = new Router();
-        }
-    };
-
-    return {
-        initialize: initialize
-    };
-    
+    return Router;
     
 });

@@ -2,9 +2,9 @@ define([
     'jquery',
     'backbone',
     'marionette',
-    'menu-manager',
+    'app',
     'text!templates/HostCreate.html'
-], function($, Backbone, Marionette, MenuManager, tpl) {
+], function($, Backbone, Marionette, App, tpl) {
 	
 
 	return Backbone.Marionette.ItemView.extend({
@@ -31,7 +31,7 @@ define([
 	    	console.log(this.model.toJSON());
 	    	
 	    	this.model.save(null,{ success : function () {
-	    		MenuManager.Application.navigate("hosts", true);
+	    		Backbone.history.navigate("hosts", true);
 	    	} });
 	    },
 	});

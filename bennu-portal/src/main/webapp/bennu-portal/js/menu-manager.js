@@ -3,14 +3,14 @@ define([
     'models/Host',
     'views/HostCreate',
     'views/HostList',
-], function(HostCollection, HostModel, HostCreateView, HostListView) {
+    'backbone',
+    'marionette'
+], function(HostCollection, HostModel, HostCreateView, HostListView, Backbone, Marionette) {
 	var MenuManager = MenuManager || {};
 
 	/** THE PLACE TO STORE THE COLLECTIONS AND MODELS **/
 	MenuManager.DB = MenuManager.DB || {};
 
-	MenuManager.Util = MenuManager.Util || {};
-	
 	MenuManager.Collections = MenuManager.Collections || {};
 	MenuManager.Collections.Host = HostCollection || {};
 	
@@ -22,7 +22,8 @@ define([
 	MenuManager.Views.HostList = HostListView || {};
 	
 	MenuManager.Router = MenuManager.Router || {};
-	MenuManager.Application = MenuManager.Application || {};
+	
+	MenuManager.Layout = MenuManager.Layout || {};
 	
 	return MenuManager;
 

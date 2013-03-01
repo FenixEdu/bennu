@@ -14,7 +14,7 @@ require.config({
         'appLayout': 'layouts/AppLayout',
 		'bennuViews' : '../../js/views',
 		'bennuTemplates' : '../../templates',
-        'templates': '../templates'
+        'templates': '../templates',
     },
 
     config: {

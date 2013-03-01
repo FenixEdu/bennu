@@ -2,9 +2,9 @@ define([
     'jquery',
     'backbone',
     'marionette',
-    'menu-manager',
+    'app',
     'text!templates/HostList.html'
-], function($, Backbone, Marionette, MenuManager, tpl) {
+], function($, Backbone, Marionette, App, tpl) {
 
     return Backbone.Marionette.ItemView.extend({
 
@@ -27,7 +27,7 @@ define([
 	
 	editHost : function(e) {
 		e.preventDefault();
-		MenuManager.Application.navigate("#hosts/edit/" + e.target.id, true);
+		Backbone.history.navigate("#hosts/edit/" + e.target.id, true);
 	}
 	
 });

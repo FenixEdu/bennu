@@ -1,11 +1,10 @@
 define([
     'backbone',
     'marionette',
-    'app',
     'text!templates/AppLayout.html',
     'views/Header',
     'views/Footer',
-], function(Backbone, Marionette, App, tpl, HeaderView, FooterView) {
+], function(Backbone, Marionette, tpl, HeaderView, FooterView) {
 
     return Backbone.Marionette.Layout.extend({
 
@@ -18,8 +17,8 @@ define([
         },
 
         onShow: function() {
-                	App.layout.headerRegion.show(new HeaderView());
-                    App.layout.footerRegion.show(new FooterView());
+        	this.headerRegion.show(new HeaderView());
+        	this.footerRegion.show(new FooterView());
         }
     });
 });
