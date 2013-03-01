@@ -11,7 +11,7 @@
   <packaging>jar</packaging>
   <name>bennu-core</name>
   <properties>
-    <version.pt.ist.fenix.framework.core>1.2.0</version.pt.ist.fenix.framework.core>
+    <version.pt.ist.fenix.framework.core>1.2-SNAPSHOT</version.pt.ist.fenix.framework.core>
     <version.pt.ist.fenix.web.framework>2.0-SNAPSHOT</version.pt.ist.fenix.web.framework>
     <version.pt.ist.fenix.tools>1.0</version.pt.ist.fenix.tools>
   </properties>
