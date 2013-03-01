@@ -20,11 +20,14 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -35,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.bennu.core.annotation.CustomGroupArgument;
 import pt.ist.bennu.core.annotation.CustomGroupConstructor;
 import pt.ist.bennu.core.annotation.CustomGroupOperator;
+import pt.ist.bennu.core.domain.User;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
@@ -115,11 +119,15 @@ public abstract class CustomGroup extends CustomGroup_Base {
 
         private final List<Argument<?, G>> arguments;
 
-        public Operator(String operator, Class<? extends G> type, Constructor<G> constructor, List<Argument<?, G>> arguments) {
+        private final Method groupsForUser;
+
+        public Operator(String operator, Class<? extends G> type, Constructor<G> constructor, List<Argument<?, G>> arguments,
+                Method groupsForUser) {
             this.operator = operator;
             this.type = type;
             this.arguments = arguments;
             this.constructor = constructor;
+            this.groupsForUser = groupsForUser;
         }
 
         public Class<? extends G> getType() {
@@ -156,6 +164,14 @@ public abstract class CustomGroup extends CustomGroup_Base {
             }
             return params.isEmpty() ? operator : operator + "(" + Joiner.on(", ").join(params) + ")";
         }
+
+        public Set<PersistentGroup> groupsForUser(User user) {
+            try {
+                return (Set<PersistentGroup>) groupsForUser.invoke(null, user);
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                throw new Error(e);
+            }
+        }
     }
 
     protected CustomGroup() {
@@ -178,11 +194,20 @@ public abstract class CustomGroup extends CustomGroup_Base {
 
     private static final Map<Class<? extends CustomGroup>, Operator<?>> types = new HashMap<>();
 
+    public static Set<PersistentGroup> groupsForUser(User user) {
+        Set<PersistentGroup> groups = new HashSet<>();
+        for (Operator<?> operator : operators.values()) {
+            groups.addAll(operator.groupsForUser(user));
+        }
+        return groups;
+    }
+
     public static void registerOperator(Class<? extends CustomGroup> type) {
         CustomGroupOperator operatorAnnotation = type.getAnnotation(CustomGroupOperator.class);
         Constructor<CustomGroup> constructor = findConstructor(type);
         List<Argument<?, CustomGroup>> arguments = findArguments(type);
-        Operator<CustomGroup> operator = new Operator<>(operatorAnnotation.value(), type, constructor, arguments);
+        Method groupsForUser = findGroupsForUser(type);
+        Operator<CustomGroup> operator = new Operator<>(operatorAnnotation.value(), type, constructor, arguments, groupsForUser);
         operators.put(operatorAnnotation.value(), operator);
         types.put(type, operator);
         if (logger.isInfoEnabled()) {
@@ -214,5 +239,16 @@ public abstract class CustomGroup extends CustomGroup_Base {
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new Error("CustomGroup: " + type.getName() + " failed to access it's arguments");
         }
+    }
+
+    private static Method findGroupsForUser(Class<? extends CustomGroup> type) {
+        try {
+            Method method = type.getDeclaredMethod("groupsForUser", User.class);
+            if (Modifier.isPublic(method.getModifiers()) && Modifier.isStatic(method.getModifiers())) {
+                return method;
+            }
+        } catch (NoSuchMethodException | SecurityException e) {
+        }
+        throw new Error("CustomGroup: " + type.getName() + " is missing groupsForUser(User) static method");
     }
 }

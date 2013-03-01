@@ -148,7 +148,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
     }
 
     @Service
-    public static PersistentGroup getInstance(final String name) throws GroupException {
+    public static PersistentGroup getInstance(final String name) {
         DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
             @Override
             public boolean apply(DynamicGroup input) {

@@ -55,4 +55,8 @@ public class BennuCoreDomainException extends DomainException {
     public static BennuCoreDomainException parseError() {
         return new BennuCoreDomainException(Status.BAD_REQUEST, "error.bennu.core.parseerror");
     }
+
+    public static BennuCoreDomainException groupParsingError(Throwable cause) {
+        return new BennuCoreDomainException(cause, "error.bennu.core.groups.parse");
+    }
 }

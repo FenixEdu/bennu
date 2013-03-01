@@ -17,6 +17,7 @@
 package pt.ist.bennu.core.domain.groups;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ import org.joda.time.DateTime;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
+import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.grouplanguage.GroupExpressionParser;
 import pt.ist.bennu.core.security.Authenticate;
 
@@ -185,7 +187,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      * @return group resulting of the union between '{@code this}' and the group of the given user
      */
     public PersistentGroup grant(User user) {
-        return UnionGroup.getInstance(this, UserGroup.getInstance(user));
+        return or(UserGroup.getInstance(user));
     }
 
     /**
@@ -196,7 +198,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      * @return group resulting of the difference between '{@code this}' and the group of the given user
      */
     public PersistentGroup revoke(User user) {
-        return DifferenceGroup.getInstance(this, UserGroup.getInstance(user));
+        return minus(UserGroup.getInstance(user));
     }
 
     /**
@@ -211,8 +213,52 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
     public static PersistentGroup parse(String expression) {
         try {
             return GroupExpressionParser.parse(expression);
-        } catch (RecognitionException | IOException | GroupException e) {
-            throw GroupException.groupParsingError(e);
+        } catch (RecognitionException | IOException e) {
+            throw BennuCoreDomainException.groupParsingError(e);
+        }
+    }
+
+    public static Set<PersistentGroup> userAccessibleGroups(User user) {
+        Set<PersistentGroup> groups = new HashSet<>();
+        Set<PersistentGroup> ignored = new HashSet<>();
+        processAccessibleGroups(groups, ignored, AnyoneGroup.getInstance(), user);
+        processAccessibleGroups(groups, ignored, LoggedGroup.getInstance(), user);
+        for (UserGroup group : user.getUserGroupSet()) {
+            processAccessibleGroups(groups, ignored, group, user);
+        }
+        for (PersistentGroup group : CustomGroup.groupsForUser(user)) {
+            processAccessibleGroups(groups, ignored, group, user);
+        }
+        for (NegationGroup group : VirtualHost.getVirtualHostForThread().getNegationSet()) {
+            if (group.isMember(user)) {
+                processAccessibleGroups(groups, ignored, group, user);
+            }
+        }
+        return groups;
+    }
+
+    // These we are not interested to see listed as accessible groups, either because they are obvious, or because they are meaningless
+    // unless used in some context.
+    private static Set<Class<? extends PersistentGroup>> IGNORES = new HashSet<>(Arrays.asList(AnonymousGroup.class,
+            AnyoneGroup.class, NobodyGroup.class, LoggedGroup.class, DifferenceGroup.class, IntersectionGroup.class,
+            NegationGroup.class, UnionGroup.class));
+
+    private static void processAccessibleGroups(Set<PersistentGroup> groups, Set<PersistentGroup> ignored, PersistentGroup group,
+            User user) {
+        if (!groups.contains(group) && !ignored.contains(group)) {
+            if (IGNORES.contains(group.getClass())) {
+                ignored.add(group);
+            } else {
+                groups.add(group);
+            }
+            for (DynamicGroup dynamic : group.getDynamicGroupSet()) {
+                processAccessibleGroups(groups, ignored, dynamic, user);
+            }
+            for (CompositionGroup composition : group.getCompositionsSet()) {
+                if (composition instanceof UnionGroup || composition.isMember(user)) {
+                    processAccessibleGroups(groups, ignored, composition, user);
+                }
+            }
         }
     }
 

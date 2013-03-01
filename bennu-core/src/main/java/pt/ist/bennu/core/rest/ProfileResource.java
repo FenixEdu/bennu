@@ -27,6 +27,7 @@ public class ProfileResource extends BennuRestResource {
             JsonObject object;
             if (user != null) {
                 object = ctx.view(user).getAsJsonObject();
+                object.add("groups", ctx.view(user.accessibleGroups()));
             } else {
                 object = new JsonObject();
             }
@@ -38,7 +39,7 @@ public class ProfileResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProfile() {
-        return Response.ok(view(Authenticate.getUser(), ProfileJsonViewer.class)).build();
+        return Response.ok(view(Authenticate.getUser(), User.class, ProfileJsonViewer.class)).build();
     }
 
     @POST

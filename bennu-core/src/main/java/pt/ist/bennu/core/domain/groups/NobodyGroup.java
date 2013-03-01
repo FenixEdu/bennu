@@ -66,6 +66,21 @@ public class NobodyGroup extends NobodyGroup_Base {
     }
 
     @Override
+    public PersistentGroup and(PersistentGroup group) {
+        return this;
+    }
+
+    @Override
+    public PersistentGroup or(PersistentGroup group) {
+        return group;
+    }
+
+    @Override
+    public PersistentGroup minus(PersistentGroup group) {
+        return this;
+    }
+
+    @Override
     public PersistentGroup not() {
         return AnyoneGroup.getInstance();
     }

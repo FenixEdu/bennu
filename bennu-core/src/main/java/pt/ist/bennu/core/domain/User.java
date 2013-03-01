@@ -18,6 +18,7 @@ package pt.ist.bennu.core.domain;
 
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.Set;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
@@ -26,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
+import pt.ist.bennu.core.domain.groups.PersistentGroup;
 
 /**
  * The application end user.
@@ -115,6 +117,10 @@ public class User extends User_Base {
             return locale;
         }
         return Locale.getDefault();
+    }
+
+    public Set<PersistentGroup> accessibleGroups() {
+        return PersistentGroup.userAccessibleGroups(this);
     }
 
     public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {

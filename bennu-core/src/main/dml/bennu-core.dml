@@ -127,7 +127,7 @@ class groups.UserGroup extends groups.PersistentGroup {
 }
 
 relation UserGroupMembers {
-	groups.UserGroup playsRole {
+	groups.UserGroup playsRole userGroup {
 		multiplicity *;
 	}
 	User playsRole member {
@@ -142,7 +142,7 @@ relation PersistentGroupComposition {
 	groups.PersistentGroup playsRole children {
 		multiplicity 1..*;
 	}
-	groups.CompositionGroup playsRole {
+	groups.CompositionGroup playsRole compositions {
 		multiplicity *;
 	}
 }
@@ -159,12 +159,21 @@ class groups.DifferenceGroup extends groups.CompositionGroup {
 class groups.NegationGroup extends groups.PersistentGroup {
 }
 
+relation NegationGroups {
+    VirtualHost playsRole {
+        multiplicity 1..1;
+    }
+    groups.NegationGroup playsRole negation {
+        multiplicity 0..*;
+    }
+}
+
 relation PersistentGroupNegationGroup {
 	groups.PersistentGroup playsRole negated {
 		multiplicity 1..1;
 	}
-	groups.NegationGroup playsRole {
-		multiplicity *;
+	groups.NegationGroup playsRole negation {
+		multiplicity 0..1;
 	}
 }
 
