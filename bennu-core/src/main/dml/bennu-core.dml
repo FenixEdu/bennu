@@ -160,7 +160,7 @@ class groups.NegationGroup extends groups.Group {
 }
 
 relation NegationGroups {
-    VirtualHost playsRole {
+    VirtualHost playsRole negationVirtualHost {
         multiplicity 1..1;
     }
     groups.NegationGroup playsRole negation {

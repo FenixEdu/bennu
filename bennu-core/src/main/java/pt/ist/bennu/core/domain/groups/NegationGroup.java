@@ -36,6 +36,7 @@ import com.google.common.base.Predicate;
 public class NegationGroup extends NegationGroup_Base {
     protected NegationGroup(Group negated) {
         super();
+        setNegationVirtualHost(getHost());
         setNegated(negated);
     }
 
