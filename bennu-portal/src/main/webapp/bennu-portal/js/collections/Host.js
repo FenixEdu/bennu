@@ -4,7 +4,7 @@ define([
 ], function(Backbone, HostModel) {
 	return Backbone.Collection.extend({
 
-	    url: "../api/hosts",
+	    url: "api/hosts",
 
 	    model: HostModel,
 	    
