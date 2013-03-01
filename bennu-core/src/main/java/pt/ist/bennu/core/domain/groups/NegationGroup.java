@@ -31,10 +31,10 @@ import com.google.common.base.Predicate;
 /**
  * Inverse group of another group.
  * 
- * @see PersistentGroup
+ * @see Group
  */
 public class NegationGroup extends NegationGroup_Base {
-    protected NegationGroup(PersistentGroup negated) {
+    protected NegationGroup(Group negated) {
         super();
         setNegated(negated);
     }
@@ -74,25 +74,24 @@ public class NegationGroup extends NegationGroup_Base {
     }
 
     @Override
-    public PersistentGroup not() {
+    public Group not() {
         return getNegated();
     }
 
     /**
      * Get or create singleton instance of {@link NegationGroup}
      * 
-     * @param persistentGroup
-     *            the group to inverse
+     * @param group the group to inverse
      * @return singleton {@link NegationGroup} instance
      */
     @Service
-    public static NegationGroup getInstance(final PersistentGroup persistentGroup) {
-        NegationGroup group = select(NegationGroup.class, new Predicate<NegationGroup>() {
+    public static NegationGroup getInstance(final Group group) {
+        NegationGroup negated = select(NegationGroup.class, new Predicate<NegationGroup>() {
             @Override
             public boolean apply(NegationGroup input) {
-                return input.getNegated().equals(persistentGroup);
+                return input.getNegated().equals(group);
             }
         });
-        return group != null ? group : new NegationGroup(persistentGroup);
+        return negated != null ? negated : new NegationGroup(negated);
     }
 }

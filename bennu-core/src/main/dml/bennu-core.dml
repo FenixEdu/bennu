@@ -99,31 +99,31 @@ relation SystemHosts {
 
 /* Authorization Groups */
 
-class groups.PersistentGroup {
+class groups.Group {
 }
 
-relation PersistentGroups {
+relation Groups {
 	VirtualHost playsRole host {
 		multiplicity 0..1;
 	}
-	groups.PersistentGroup playsRole groups {
+	groups.Group playsRole groups {
 		multiplicity *;
 	}
 }
 
-class groups.NobodyGroup extends groups.PersistentGroup {
+class groups.NobodyGroup extends groups.Group {
 }
 
-class groups.AnyoneGroup extends groups.PersistentGroup {
+class groups.AnyoneGroup extends groups.Group {
 }
 
-class groups.AnonymousGroup extends groups.PersistentGroup {
+class groups.AnonymousGroup extends groups.Group {
 }
 
-class groups.LoggedGroup extends groups.PersistentGroup {
+class groups.LoggedGroup extends groups.Group {
 }
 
-class groups.UserGroup extends groups.PersistentGroup {
+class groups.UserGroup extends groups.Group {
 }
 
 relation UserGroupMembers {
@@ -135,11 +135,11 @@ relation UserGroupMembers {
 	}
 }
 
-class groups.CompositionGroup extends groups.PersistentGroup {
+class groups.CompositionGroup extends groups.Group {
 }
 
-relation PersistentGroupComposition {
-	groups.PersistentGroup playsRole children {
+relation GroupComposition {
+	groups.Group playsRole children {
 		multiplicity 1..*;
 	}
 	groups.CompositionGroup playsRole compositions {
@@ -156,7 +156,7 @@ class groups.IntersectionGroup extends groups.CompositionGroup {
 class groups.DifferenceGroup extends groups.CompositionGroup {
 }
 
-class groups.NegationGroup extends groups.PersistentGroup {
+class groups.NegationGroup extends groups.Group {
 }
 
 relation NegationGroups {
@@ -168,8 +168,8 @@ relation NegationGroups {
     }
 }
 
-relation PersistentGroupNegationGroup {
-	groups.PersistentGroup playsRole negated {
+relation GroupNegationGroup {
+	groups.Group playsRole negated {
 		multiplicity 1..1;
 	}
 	groups.NegationGroup playsRole negation {
@@ -177,10 +177,10 @@ relation PersistentGroupNegationGroup {
 	}
 }
 
-class groups.CustomGroup extends groups.PersistentGroup {
+class groups.CustomGroup extends groups.Group {
 }
 
-class groups.DynamicGroup extends groups.PersistentGroup {
+class groups.DynamicGroup extends groups.Group {
 	String name (REQUIRED);
 	DateTime created (REQUIRED);
 }
@@ -198,7 +198,7 @@ relation DynamicGroupWrapper {
 	groups.DynamicGroup playsRole dynamicGroup {
 		multiplicity *;
 	}
-	groups.PersistentGroup playsRole group {
+	groups.Group playsRole group {
 		multiplicity 1..1;
 	}
 }

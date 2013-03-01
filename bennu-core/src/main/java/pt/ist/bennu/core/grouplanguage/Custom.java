@@ -19,7 +19,7 @@ package pt.ist.bennu.core.grouplanguage;
 import java.util.List;
 
 import pt.ist.bennu.core.domain.groups.CustomGroup;
-import pt.ist.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 class Custom extends GroupToken {
     private final String operator;
@@ -32,7 +32,7 @@ class Custom extends GroupToken {
     }
 
     @Override
-    public PersistentGroup group() {
+    public Group group() {
         return CustomGroup.parse(operator, args.toArray(new String[0]));
     }
 }

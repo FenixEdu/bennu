@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import pt.ist.bennu.core.domain.groups.DifferenceGroup;
-import pt.ist.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 class Difference extends GroupToken {
     private final List<GroupToken> children;
@@ -31,8 +31,8 @@ class Difference extends GroupToken {
     }
 
     @Override
-    public PersistentGroup group() {
-        Set<PersistentGroup> groups = new HashSet<>();
+    public Group group() {
+        Set<Group> groups = new HashSet<>();
         for (GroupToken groupToken : children) {
             groups.add(groupToken.group());
         }

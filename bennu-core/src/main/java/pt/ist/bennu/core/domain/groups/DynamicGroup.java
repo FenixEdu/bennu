@@ -36,14 +36,14 @@ import com.google.common.base.Predicate;
  * In practice it's a wrapper over an immutable group with versioning over the relation between this and the wrapped group.
  * </p>
  * 
- * @see PersistentGroup
+ * @see Group
  */
 public final class DynamicGroup extends DynamicGroup_Base {
     protected DynamicGroup() {
         super();
     }
 
-    protected DynamicGroup(String name, PersistentGroup group) {
+    protected DynamicGroup(String name, Group group) {
         this();
         setName(name);
         setCreated(new DateTime());
@@ -73,17 +73,17 @@ public final class DynamicGroup extends DynamicGroup_Base {
 
     @Override
     public Set<User> getMembers(DateTime when) {
-        PersistentGroup group = getGroup(when);
+        Group group = getGroup(when);
         return group != null ? group.getMembers() : Collections.<User> emptySet();
     }
 
     @Override
     public boolean isMember(User user, DateTime when) {
-        PersistentGroup group = getGroup(when);
+        Group group = getGroup(when);
         return group != null ? group.isMember(user) : false;
     }
 
-    public PersistentGroup getGroup(DateTime when) {
+    public Group getGroup(DateTime when) {
         if (when.isAfter(getCreated())) {
             return getGroup();
         }
@@ -111,44 +111,44 @@ public final class DynamicGroup extends DynamicGroup_Base {
         return this;
     }
 
-    public DynamicGroup changeGroup(PersistentGroup group) {
+    public DynamicGroup changeGroup(Group group) {
         pushHistory();
         setGroup(group);
         return this;
     }
 
     @Override
-    public PersistentGroup and(PersistentGroup group) {
+    public Group and(Group group) {
         return changeGroup(getGroup().and(group));
     }
 
     @Override
-    public PersistentGroup or(PersistentGroup group) {
+    public Group or(Group group) {
         return changeGroup(getGroup().or(group));
     }
 
     @Override
-    public PersistentGroup minus(PersistentGroup group) {
+    public Group minus(Group group) {
         return changeGroup(getGroup().minus(group));
     }
 
     @Override
-    public PersistentGroup not() {
+    public Group not() {
         return changeGroup(getGroup().not());
     }
 
     @Override
-    public PersistentGroup grant(User user) {
+    public Group grant(User user) {
         return changeGroup(getGroup().grant(user));
     }
 
     @Override
-    public PersistentGroup revoke(User user) {
+    public Group revoke(User user) {
         return changeGroup(getGroup().revoke(user));
     }
 
     @Service
-    public static PersistentGroup getInstance(final String name) {
+    public static Group getInstance(final String name) {
         DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
             @Override
             public boolean apply(DynamicGroup input) {

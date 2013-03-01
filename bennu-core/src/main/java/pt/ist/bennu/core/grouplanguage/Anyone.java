@@ -17,11 +17,11 @@
 package pt.ist.bennu.core.grouplanguage;
 
 import pt.ist.bennu.core.domain.groups.AnyoneGroup;
-import pt.ist.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 class Anyone extends GroupToken {
     @Override
-    public PersistentGroup group() {
+    public Group group() {
         return AnyoneGroup.getInstance();
     }
 }

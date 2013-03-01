@@ -25,10 +25,10 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.apache.tools.ant.filters.StringInputStream;
 
-import pt.ist.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 public class GroupExpressionParser {
-    public static PersistentGroup parse(String expression) throws RecognitionException, IOException {
+    public static Group parse(String expression) throws RecognitionException, IOException {
         try (StringInputStream stream = new StringInputStream(expression)) {
             ANTLRInputStream input = new ANTLRInputStream(stream);
             GroupLexer lexer = new GroupLexer(input);

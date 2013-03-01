@@ -99,7 +99,7 @@ import com.google.common.base.Predicate;
  * 
  * </p>
  * 
- * @see PersistentGroup
+ * @see Group
  */
 public abstract class CustomGroup extends CustomGroup_Base {
     private static final Logger logger = LoggerFactory.getLogger(CustomGroup.class);
@@ -165,9 +165,9 @@ public abstract class CustomGroup extends CustomGroup_Base {
             return params.isEmpty() ? operator : operator + "(" + Joiner.on(", ").join(params) + ")";
         }
 
-        public Set<PersistentGroup> groupsForUser(User user) {
+        public Set<Group> groupsForUser(User user) {
             try {
-                return (Set<PersistentGroup>) groupsForUser.invoke(null, user);
+                return (Set<Group>) groupsForUser.invoke(null, user);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new Error(e);
             }
@@ -194,8 +194,8 @@ public abstract class CustomGroup extends CustomGroup_Base {
 
     private static final Map<Class<? extends CustomGroup>, Operator<?>> types = new HashMap<>();
 
-    public static Set<PersistentGroup> groupsForUser(User user) {
-        Set<PersistentGroup> groups = new HashSet<>();
+    public static Set<Group> groupsForUser(User user) {
+        Set<Group> groups = new HashSet<>();
         for (Operator<?> operator : operators.values()) {
             groups.addAll(operator.groupsForUser(user));
         }

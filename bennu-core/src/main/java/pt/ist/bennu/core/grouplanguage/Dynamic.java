@@ -17,7 +17,7 @@
 package pt.ist.bennu.core.grouplanguage;
 
 import pt.ist.bennu.core.domain.groups.DynamicGroup;
-import pt.ist.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 class Dynamic extends GroupToken {
     private final String name;
@@ -27,7 +27,7 @@ class Dynamic extends GroupToken {
     }
 
     @Override
-    public PersistentGroup group() {
+    public Group group() {
         return DynamicGroup.getInstance(name);
     }
 }

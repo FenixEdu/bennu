@@ -32,10 +32,10 @@ import com.google.common.collect.Sets;
 /**
  * Intersection composition group.
  * 
- * @see PersistentGroup
+ * @see Group
  */
 public class IntersectionGroup extends IntersectionGroup_Base {
-    protected IntersectionGroup(Set<PersistentGroup> children) {
+    protected IntersectionGroup(Set<Group> children) {
         super();
         init(children);
     }
@@ -48,7 +48,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     @Override
     public Set<User> getMembers() {
         final Set<User> users = new HashSet<>();
-        Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
+        Iterator<Group> iterator = getChildrenSet().iterator();
         if (iterator.hasNext()) {
             users.addAll(iterator.next().getMembers());
             while (iterator.hasNext()) {
@@ -63,8 +63,8 @@ public class IntersectionGroup extends IntersectionGroup_Base {
         if (getChildrenCount() == 0) {
             return false;
         }
-        for (final PersistentGroup persistentGroup : getChildrenSet()) {
-            if (!persistentGroup.isMember(user)) {
+        for (final Group group : getChildrenSet()) {
+            if (!group.isMember(user)) {
                 return false;
             }
         }
@@ -74,7 +74,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     @Override
     public Set<User> getMembers(DateTime when) {
         final Set<User> users = new HashSet<>();
-        Iterator<PersistentGroup> iterator = getChildrenSet().iterator();
+        Iterator<Group> iterator = getChildrenSet().iterator();
         if (iterator.hasNext()) {
             users.addAll(iterator.next().getMembers(when));
             while (iterator.hasNext()) {
@@ -89,8 +89,8 @@ public class IntersectionGroup extends IntersectionGroup_Base {
         if (getChildrenCount() == 0) {
             return false;
         }
-        for (final PersistentGroup persistentGroup : getChildrenSet()) {
-            if (!persistentGroup.isMember(user, when)) {
+        for (final Group group : getChildrenSet()) {
+            if (!group.isMember(user, when)) {
                 return false;
             }
         }
@@ -98,8 +98,8 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     }
 
     @Override
-    public PersistentGroup and(PersistentGroup group) {
-        Set<PersistentGroup> children = new HashSet<>(getChildrenSet());
+    public Group and(Group group) {
+        Set<Group> children = new HashSet<>(getChildrenSet());
         children.add(group);
         return IntersectionGroup.getInstance(children);
     }
@@ -108,7 +108,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
      * @see #getInstance(Set)
      */
     @Service
-    public static IntersectionGroup getInstance(final PersistentGroup... children) {
+    public static IntersectionGroup getInstance(final Group... children) {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }
 
@@ -120,7 +120,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
      * @return singleton {@link IntersectionGroup} instance
      */
     @Service
-    public static IntersectionGroup getInstance(final Set<PersistentGroup> children) {
+    public static IntersectionGroup getInstance(final Set<Group> children) {
         IntersectionGroup group = select(IntersectionGroup.class, new Predicate<IntersectionGroup>() {
             @Override
             public boolean apply(IntersectionGroup input) {

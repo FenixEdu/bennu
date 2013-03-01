@@ -19,7 +19,7 @@ package pt.ist.bennu.core.domain.exceptions;
 import javax.ws.rs.core.Response.Status;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 /**
  * Group access authorization exception.
@@ -37,7 +37,7 @@ public class AuthorizationException extends BennuCoreDomainException {
         return new AuthorizationException("error.bennu.core.authentication.failed");
     }
 
-    public static AuthorizationException unauthorized(PersistentGroup group, User user) {
+    public static AuthorizationException unauthorized(Group group, User user) {
         return new AuthorizationException("error.bennu.core.unauthorized", user.getUsername(), group.getPresentationName());
     }
 

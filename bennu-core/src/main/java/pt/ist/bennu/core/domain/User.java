@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
-import pt.ist.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 /**
  * The application end user.
@@ -119,8 +119,8 @@ public class User extends User_Base {
         return Locale.getDefault();
     }
 
-    public Set<PersistentGroup> accessibleGroups() {
-        return PersistentGroup.userAccessibleGroups(this);
+    public Set<Group> accessibleGroups() {
+        return Group.userAccessibleGroups(this);
     }
 
     public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
