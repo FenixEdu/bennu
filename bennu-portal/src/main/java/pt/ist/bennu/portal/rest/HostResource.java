@@ -4,10 +4,9 @@ import java.util.Collection;
 
 import javax.ws.rs.Path;
 
-import pt.ist.bennu.bennu.core.rest.DomainObjectResource;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.rest.BennuRestResource;
+import pt.ist.bennu.core.rest.DomainObjectResource;
 
 @Path("hosts")
 public class HostResource extends DomainObjectResource<VirtualHost> {

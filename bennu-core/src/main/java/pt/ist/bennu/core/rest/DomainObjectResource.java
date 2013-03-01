@@ -1,4 +1,4 @@
-package pt.ist.bennu.bennu.core.rest;
+package pt.ist.bennu.core.rest;
 
 import java.util.Collection;
 
