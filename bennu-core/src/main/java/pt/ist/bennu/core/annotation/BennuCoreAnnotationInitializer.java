@@ -39,7 +39,7 @@ public class BennuCoreAnnotationInitializer implements ServletContainerInitializ
     @Override
     @SuppressWarnings("unchecked")
     public void onStartup(Set<Class<?>> classes, ServletContext ctx) throws ServletException {
-    	
+
         if (classes != null) {
             for (Class<?> type : classes) {
                 CustomGroupOperator operator = type.getAnnotation(CustomGroupOperator.class);
@@ -61,41 +61,45 @@ public class BennuCoreAnnotationInitializer implements ServletContainerInitializ
             }
         }
     }
-    
+
     public String getModuleName(Class<?> type) {
-    	URL typeLocation = type.getProtectionDomain().getCodeSource().getLocation();
-    	
-    	if (typeLocation.toExternalForm().endsWith("/")){
-    		Properties props = new Properties();
-    		InputStream propStream = null;
-    		try {
-				propStream = new URL(typeLocation + "configuration.properties").openStream();
-				props.load(propStream);
-				return (String) props.get("app.name");
-			} catch (IOException e) {
-				throw new Error(e);
-			}finally{
-				try {
-					propStream.close();
-				} catch (IOException e) {
-					throw new Error(e);
-				}
-			}
-    	}
-    	InputStream mfStream = null;
-    	try {
-    		mfStream = new URL("jar:".concat(typeLocation.toExternalForm()).concat("!/META-INF/MANIFEST.MF")).openStream();
-			Manifest mf = new Manifest(mfStream);
-			return mf.getMainAttributes().getValue("artifactId");
-		} catch (IOException e) {
-			throw new Error(e);
-		}finally {
-			try {
-				mfStream.close();
-			} catch (IOException e) {
-				throw new Error(e);
-			}
-		}
+        URL typeLocation = type.getProtectionDomain().getCodeSource().getLocation();
+
+        if (typeLocation.toExternalForm().endsWith("/")) {
+            Properties props = new Properties();
+            InputStream propStream = null;
+            try {
+                propStream = new URL(typeLocation + "configuration.properties").openStream();
+                props.load(propStream);
+                return (String) props.get("app.name");
+            } catch (IOException e) {
+                throw new Error(e);
+            } finally {
+                try {
+                    if (propStream != null) {
+                        propStream.close();
+                    }
+                } catch (IOException e) {
+                    throw new Error(e);
+                }
+            }
+        }
+        InputStream mfStream = null;
+        try {
+            mfStream = new URL("jar:".concat(typeLocation.toExternalForm()).concat("!/META-INF/MANIFEST.MF")).openStream();
+            Manifest mf = new Manifest(mfStream);
+            return mf.getMainAttributes().getValue("artifactId");
+        } catch (IOException e) {
+            throw new Error(e);
+        } finally {
+            try {
+                if (mfStream != null) {
+                    mfStream.close();
+                }
+            } catch (IOException e) {
+                throw new Error(e);
+            }
+        }
     }
 
 }
