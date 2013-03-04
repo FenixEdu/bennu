@@ -17,31 +17,25 @@
 package pt.ist.bennu.core.domain.groups;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.annotation.CustomGroupArgument;
-import pt.ist.bennu.core.annotation.CustomGroupConstructor;
 import pt.ist.bennu.core.annotation.CustomGroupOperator;
 import pt.ist.bennu.core.domain.User;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 
 /**
  * <p>
@@ -104,63 +98,67 @@ import com.google.common.base.Predicate;
 public abstract class CustomGroup extends CustomGroup_Base {
     private static final Logger logger = LoggerFactory.getLogger(CustomGroup.class);
 
-    public static interface Argument<A, G extends CustomGroup> extends Serializable {
+    protected static interface Argument<A, G extends CustomGroup> extends Serializable {
         public A parse(String argument);
 
+        public Class<? extends A> getType();
+    }
+
+    protected static interface SimpleArgument<A, G extends CustomGroup> extends Argument<A, G> {
         public String extract(G group);
     }
 
-    public static class Operator<G extends CustomGroup> implements Serializable {
+    protected static interface MultiArgument<A, G extends CustomGroup> extends Argument<A, G> {
+        public Set<String> extract(G group);
+    }
+
+    private static class Operator<G extends CustomGroup> implements Serializable {
         private final String operator;
 
         private final Class<? extends G> type;
 
-        private final Constructor<G> constructor;
+        private final Vector<Argument<Object, G>> arguments;
 
-        private final List<Argument<?, G>> arguments;
+        private final Method instantiator;
 
         private final Method groupsForUser;
 
-        public Operator(String operator, Class<? extends G> type, Constructor<G> constructor, List<Argument<?, G>> arguments,
-                Method groupsForUser) {
-            this.operator = operator;
+        public Operator(Class<? extends G> type) {
+            this.operator = type.getAnnotation(CustomGroupOperator.class).value();
             this.type = type;
-            this.arguments = arguments;
-            this.constructor = constructor;
-            this.groupsForUser = groupsForUser;
-        }
-
-        public Class<? extends G> getType() {
-            return type;
+            this.arguments = findArguments();
+            this.instantiator = findInstantiator();
+            this.groupsForUser = findGroupsForUser();
         }
 
         public G parse(String[] parameters) {
             final Object[] parsed = new Object[parameters.length];
             for (int i = 0; i < parameters.length; i++) {
-                parsed[i] = this.arguments.get(i).parse(parameters[i]);
+                parsed[i] = getArgumentForArgumentIndex(i).parse(parameters[i]);
             }
-            G group = select(type, new Predicate<G>() {
-                @Override
-                public boolean apply(G input) {
-                    Object[] extracted = new Object[arguments.size()];
-                    for (int i = 0; i < arguments.size(); i++) {
-                        extracted[i] = arguments.get(i).extract(input);
-                    }
-                    return Arrays.equals(parsed, extracted);
-                }
-            });
             try {
-                return group != null ? group : constructor.newInstance(parsed);
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                throw new Error(e);
+                return (G) instantiator.invoke(null, parsed);
+            } catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
+                throw new Error("CustomGroup: error invoking " + type.getName() + ".getInstance(..)", e.getCause());
             }
         }
 
+        private Argument<Object, G> getArgumentForArgumentIndex(int i) {
+            if (i >= arguments.size()) {
+                return arguments.get(arguments.size() - 1);
+            }
+            return arguments.get(i);
+        }
+
         @SuppressWarnings("unchecked")
-        public String expression(CustomGroup group) {
+        public String expression(G customGroup) {
             List<String> params = new ArrayList<>();
-            for (Argument<?, G> argument : arguments) {
-                params.add(argument.extract((G) group));
+            for (Argument<Object, G> argument : arguments) {
+                if (argument instanceof SimpleArgument) {
+                    params.add(((SimpleArgument<Object, G>) argument).extract(customGroup));
+                } else {
+                    params.addAll(((MultiArgument<Object, G>) argument).extract(customGroup));
+                }
             }
             return params.isEmpty() ? operator : operator + "(" + Joiner.on(", ").join(params) + ")";
         }
@@ -172,6 +170,52 @@ public abstract class CustomGroup extends CustomGroup_Base {
                 throw new Error(e);
             }
         }
+
+        private Vector<Argument<Object, G>> findArguments() {
+            try {
+                Vector<Argument<Object, G>> arguments = new Vector<>();
+                for (Method method : type.getMethods()) {
+                    CustomGroupArgument annotation = method.getAnnotation(CustomGroupArgument.class);
+                    if (annotation != null) {
+                        arguments.ensureCapacity(annotation.index());
+                        if (arguments.get(annotation.index() - 1) != null) {
+                            throw new Error("CustomGroup: " + type.getName()
+                                    + " duplicate index, please set index property in @CustomGroupArgument annotations");
+                        }
+                        arguments.set(annotation.index() - 1, (Argument<Object, G>) method.invoke(null));
+                    }
+                }
+                return arguments;
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                throw new Error("CustomGroup: " + type.getName() + " failed to access it's arguments", e);
+            }
+        }
+
+        private Method findInstantiator() {
+            Class<?>[] parameterTypes = new Class<?>[arguments.size()];
+            for (int i = 0; i < arguments.size(); i++) {
+                parameterTypes[i] = getArgumentForArgumentIndex(i).getType();
+            }
+            try {
+                Method method = type.getDeclaredMethod("getInstance", parameterTypes);
+                if (Modifier.isPublic(method.getModifiers()) && Modifier.isStatic(method.getModifiers())) {
+                    return method;
+                }
+            } catch (NoSuchMethodException | SecurityException e) {
+            }
+            throw new Error("CustomGroup: " + type.getName() + " is missing getInstance(...) static method");
+        }
+
+        private Method findGroupsForUser() {
+            try {
+                Method method = type.getDeclaredMethod("groupsForUser", User.class);
+                if (Modifier.isPublic(method.getModifiers()) && Modifier.isStatic(method.getModifiers())) {
+                    return method;
+                }
+            } catch (NoSuchMethodException | SecurityException e) {
+            }
+            throw new Error("CustomGroup: " + type.getName() + " is missing groupsForUser(User) static method");
+        }
     }
 
     protected CustomGroup() {
@@ -180,19 +224,13 @@ public abstract class CustomGroup extends CustomGroup_Base {
 
     @Override
     public String expression() {
-        return types.get(this.getClass()).expression(this);
+        return getOperator(this.getClass()).expression(this);
     }
 
     @SuppressWarnings("unchecked")
     public static <T extends CustomGroup> T parse(String operator, String[] parameters) {
-        return (T) operators.get(operator).parse(parameters);
+        return (T) getOperator(operator).parse(parameters);
     }
-
-    /* CustomGroup language registry */
-
-    private static final Map<String, Operator<?>> operators = new HashMap<>();
-
-    private static final Map<Class<? extends CustomGroup>, Operator<?>> types = new HashMap<>();
 
     public static Set<BennuGroup> groupsForUser(User user) {
         Set<BennuGroup> groups = new HashSet<>();
@@ -202,53 +240,29 @@ public abstract class CustomGroup extends CustomGroup_Base {
         return groups;
     }
 
+    /* CustomGroup language registry */
+
+    private static final Map<String, Operator<?>> operators = new HashMap<>();
+
+    private static final Map<Class<? extends CustomGroup>, Operator<?>> types = new HashMap<>();
+
+    private static <O extends Operator<CustomGroup>> O getOperator(String operator) {
+        return (O) operators.get(operator);
+    }
+
+    private static <G extends CustomGroup> Operator<G> getOperator(Class<? extends G> operator) {
+        return (Operator<G>) types.get(operator);
+    }
+
     public static void registerOperator(Class<? extends CustomGroup> type) {
-        CustomGroupOperator operatorAnnotation = type.getAnnotation(CustomGroupOperator.class);
-        Constructor<CustomGroup> constructor = findConstructor(type);
-        List<Argument<?, CustomGroup>> arguments = findArguments(type);
-        Method groupsForUser = findGroupsForUser(type);
-        Operator<CustomGroup> operator = new Operator<>(operatorAnnotation.value(), type, constructor, arguments, groupsForUser);
-        operators.put(operatorAnnotation.value(), operator);
+        Operator<CustomGroup> operator = new Operator<>(type);
+        if (operators.containsKey(operator.operator)) {
+            throw new Error("CustomGroup: Duplicate operator name: " + operator.operator);
+        }
+        operators.put(operator.operator, operator);
         types.put(type, operator);
         if (logger.isInfoEnabled()) {
-            logger.info("Registering group language operator: " + operatorAnnotation.value());
+            logger.info("Registering group language operator: " + operator.operator);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Constructor<CustomGroup> findConstructor(Class<? extends CustomGroup> type) {
-        for (Constructor<?> constructor : type.getConstructors()) {
-            CustomGroupConstructor annotation = constructor.getAnnotation(CustomGroupConstructor.class);
-            if (annotation != null) {
-                return (Constructor<CustomGroup>) constructor;
-            }
-        }
-        throw new Error("CustomGroup: " + type.getName() + " does not have a proper constructor");
-    }
-
-    private static List<Argument<?, CustomGroup>> findArguments(Class<? extends CustomGroup> type) {
-        try {
-            SortedMap<Integer, Argument<?, CustomGroup>> arguments = new TreeMap<>();
-            for (Method method : type.getMethods()) {
-                CustomGroupArgument annotation = method.getAnnotation(CustomGroupArgument.class);
-                if (annotation != null) {
-                    arguments.put(annotation.index(), (Argument<?, CustomGroup>) method.invoke(null));
-                }
-            }
-            return new Vector<>(arguments.values());
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            throw new Error("CustomGroup: " + type.getName() + " failed to access it's arguments");
-        }
-    }
-
-    private static Method findGroupsForUser(Class<? extends CustomGroup> type) {
-        try {
-            Method method = type.getDeclaredMethod("groupsForUser", User.class);
-            if (Modifier.isPublic(method.getModifiers()) && Modifier.isStatic(method.getModifiers())) {
-                return method;
-            }
-        } catch (NoSuchMethodException | SecurityException e) {
-        }
-        throw new Error("CustomGroup: " + type.getName() + " is missing groupsForUser(User) static method");
     }
 }

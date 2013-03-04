@@ -26,6 +26,4 @@ import java.lang.annotation.Target;
 @Target({ METHOD })
 public @interface CustomGroupArgument {
     int index() default 1;
-
-    boolean multiple() default false;
 }
