@@ -3,12 +3,15 @@ define([
     'backbone',
     'marionette',
     'app',
-    'text!templates/HostList.html'
-], function($, Backbone, Marionette, App, tpl) {
+    'text!templates/HostList.html',
+    'views/SingleHost'
+], function($, Backbone, Marionette, App, tpl, SingleHostView) {
 
-    return Backbone.Marionette.ItemView.extend({
+    return Backbone.Marionette.CompositeView.extend({
 
         template: tpl,
+        itemView: SingleHostView,
+        itemViewContainer: "tbody",
 
 	events: {
 		"click .edit-host" : "editHost",
@@ -28,18 +31,7 @@ define([
 		console.log('closing view!');
 	},*/
 	
-	
 		
-	serializeData: function () {
-		return { hosts : this.collection.toJSON(),
-				 mls : function() { 
-							return function(val) { 
-								return this[val].pt;
-							};
-						}
-			   };
-		},
-	
 	editHost : function(e) {
 		e.preventDefault();
 		Backbone.history.navigate("#hosts/edit/" + e.target.id, true);

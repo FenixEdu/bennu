@@ -10,7 +10,7 @@
         
          -->
 <p>Existem neste momento {{hosts.length}} hosts configurados!</p>
-<table class="table table-condensed">
+<table id="hostList" class="table table-condensed">
 	<thead>
 		<tr>
 			<th>Hostname</th>
@@ -23,19 +23,6 @@
 		</tr>
 	</thead>
 	<tbody>
-		{{#hosts}}
-		<tr>
-			<td>{{hostname}}</td>
-			<td>{{#mls}}applicationTitle{{/mls}}</td>
-			<td>{{#mls}}htmlTitle{{/mls}}</td>
-			<td>{{#mls}}applicationSubTitle{{/mls}}</td>
-			<td>{{#mls}}applicationCopyright{{/mls}}</td>
-			<td>{{supportEmailAddress}}</td>
-			<td>{{systemEmailAddress}}</td>
-			<td><button class="edit-host" id="{{id}}" class="btn">Editar</button></td>
-			<td><button class="delete-host" id="{{id}}" class="btn">Apagar</button></td>
-		</tr>
-		{{/hosts}}
 	</tbody>
 </table>
 

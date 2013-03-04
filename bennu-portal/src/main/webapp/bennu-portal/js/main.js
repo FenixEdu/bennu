@@ -23,7 +23,14 @@ require(['jquery', 'jquery.bootstrap', 'backbone', 'mustache', 'marionette', 'me
         }
     });
 
-    Backbone.Marionette.Renderer.render = Mustache.to_html;
+    Backbone.Marionette.Renderer.render = function(template, data){
+    	  data['_mls'] = function() { 
+				return function(val) { 
+					return this[val].pt;
+				};
+			};
+    	  return Mustache.to_html(template, data);
+    	};
     
     Backbone.emulateJSON = true;
 
