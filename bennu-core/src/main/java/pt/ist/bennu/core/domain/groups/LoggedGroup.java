@@ -71,6 +71,12 @@ public class LoggedGroup extends LoggedGroup_Base {
         return AnonymousGroup.getInstance();
     }
 
+    @Override
+    protected boolean isGarbageCollectable() {
+        // Singleton group, no point in delete
+        return false;
+    }
+
     /**
      * Get or create singleton instance of {@link LoggedGroup}
      * 

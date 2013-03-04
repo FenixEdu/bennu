@@ -90,11 +90,20 @@ class VirtualHost {
 
 relation SystemHosts {
 	Bennu playsRole bennu {
-		multiplicity 1..1;
+		multiplicity 0..1;
 	}
 	VirtualHost playsRole virtualHosts {
 		multiplicity *;
 	}
+}
+
+relation DeletedHosts {
+    Bennu playsRole deletedFromBennu {
+        multiplicity 0..1;
+    }
+    VirtualHost playsRole deletedVirtualHosts {
+        multiplicity *;
+    }
 }
 
 /* Authorization Groups */
@@ -104,7 +113,7 @@ class groups.BennuGroup {
 
 relation Groups {
 	VirtualHost playsRole host {
-		multiplicity 0..1;
+		multiplicity 1..1;
 	}
 	groups.BennuGroup playsRole groups {
 		multiplicity *;

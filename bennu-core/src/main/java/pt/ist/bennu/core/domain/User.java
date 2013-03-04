@@ -28,6 +28,10 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.UserGroup;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 /**
  * The application end user.
@@ -71,6 +75,23 @@ public class User extends User_Base {
         setUsername(username);
         setBennu(Bennu.getInstance());
         setCreated(new DateTime());
+    }
+
+    /**
+     * @see #usersGroups()
+     */
+    @Override
+    public Set<UserGroup> getUserGroupSet() {
+        throw new UnsupportedOperationException();
+    }
+
+    public Iterable<UserGroup> usersGroups() {
+        return Iterables.filter(super.getUserGroupSet(), new Predicate<UserGroup>() {
+            @Override
+            public boolean apply(UserGroup group) {
+                return group.getHost().equals(VirtualHost.getVirtualHostForThread());
+            }
+        });
     }
 
     public static User findByUsername(final String username) {

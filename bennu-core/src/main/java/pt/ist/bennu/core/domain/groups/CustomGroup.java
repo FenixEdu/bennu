@@ -150,7 +150,6 @@ public abstract class CustomGroup extends CustomGroup_Base {
             return arguments.get(i);
         }
 
-        @SuppressWarnings("unchecked")
         public String expression(G customGroup) {
             List<String> params = new ArrayList<>();
             for (Argument<Object, G> argument : arguments) {

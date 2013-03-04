@@ -202,6 +202,25 @@ public abstract class BennuGroup extends BennuGroup_Base {
     }
 
     /**
+     * Should return true is the instance can be discarded without damaging the system. As a general rule, if this is not in use
+     * and can be recovered from the language, it can be discarded. Acceptable exceptions to this rule are singleton groups, since
+     * they do not save up that many space and are too often used.
+     * 
+     * @return {@code true} if can be discarded, {@code false} otherwise
+     */
+    protected boolean isGarbageCollectable() {
+        return getNegation() == null && getCompositionsSet().isEmpty() && getDynamicGroupSet().isEmpty();
+    }
+
+    /**
+     * Delete the object from the system. Assume true in {@link #isGarbageCollectable()} since it is tested before invoking this.
+     */
+    protected void gc() {
+        removeHost();
+        deleteDomainObject();
+    }
+
+    /**
      * Parse group from the group language expression.
      * 
      * @param expression
@@ -223,7 +242,7 @@ public abstract class BennuGroup extends BennuGroup_Base {
         Set<BennuGroup> ignored = new HashSet<>();
         processAccessibleGroups(groups, ignored, AnyoneGroup.getInstance(), user);
         processAccessibleGroups(groups, ignored, LoggedGroup.getInstance(), user);
-        for (UserGroup group : user.getUserGroupSet()) {
+        for (UserGroup group : user.usersGroups()) {
             processAccessibleGroups(groups, ignored, group, user);
         }
         for (BennuGroup group : CustomGroup.groupsForUser(user)) {
@@ -257,6 +276,15 @@ public abstract class BennuGroup extends BennuGroup_Base {
                 if (composition instanceof UnionGroup || composition.isMember(user)) {
                     processAccessibleGroups(groups, ignored, composition, user);
                 }
+            }
+        }
+    }
+
+    public static void garbageCollect() {
+        VirtualHost host = VirtualHost.getVirtualHostForThread();
+        for (BennuGroup group : host.getGroupsSet()) {
+            if (group.isGarbageCollectable()) {
+                group.gc();
             }
         }
     }

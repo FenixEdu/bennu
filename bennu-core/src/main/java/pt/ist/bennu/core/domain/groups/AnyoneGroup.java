@@ -70,6 +70,12 @@ public class AnyoneGroup extends AnyoneGroup_Base {
         return NobodyGroup.getInstance();
     }
 
+    @Override
+    protected boolean isGarbageCollectable() {
+        // Singleton group, no point in delete
+        return false;
+    }
+
     /**
      * Get or create singleton instance of {@link AnyoneGroup}
      * 

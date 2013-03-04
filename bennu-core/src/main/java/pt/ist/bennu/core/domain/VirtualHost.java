@@ -19,15 +19,14 @@ package pt.ist.bennu.core.domain;
 import java.util.Locale;
 import java.util.Set;
 
+import jvstm.cps.ConsistencyPredicate;
 import pt.ist.bennu.core.domain.groups.AnonymousGroup;
 import pt.ist.bennu.core.domain.groups.AnyoneGroup;
-import pt.ist.bennu.core.domain.groups.BennuGroup;
 import pt.ist.bennu.core.domain.groups.LoggedGroup;
 import pt.ist.bennu.core.domain.groups.NobodyGroup;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 import pt.ist.bennu.core.util.LocaleArray;
-import pt.ist.bennu.service.Service;
 
 public class VirtualHost extends VirtualHost_Base {
 
@@ -74,20 +73,16 @@ public class VirtualHost extends VirtualHost_Base {
         NobodyGroup.getInstance();
     }
 
-    @Service
-    public Boolean delete() {
-        if (Bennu.getInstance().getVirtualHostsSet().size() > 1) {
+    public void delete() {
+        if (!VirtualHost.getVirtualHostForThread().equals(this)) {
             removeBennu();
-            deleteGroups();
-            deleteDomainObject();
-            return true;
-        }
-        return false;
-    }
-
-    private void deleteGroups() {
-        for (BennuGroup group : getGroupsSet()) {
-            group.removeHost();
+            removeDeletedFromBennu();
+            try {
+                checkDisconnected();
+                deleteDomainObject();
+            } catch (Error e) {
+                setDeletedFromBennu(Bennu.getInstance());
+            }
         }
     }
 
@@ -99,5 +94,10 @@ public class VirtualHost extends VirtualHost_Base {
     public boolean isCasEnabled() {
         CasConfig casConfig = ConfigurationManager.getCasConfig(getHostname());
         return casConfig != null && casConfig.isCasEnabled();
+    }
+
+    @ConsistencyPredicate
+    protected final boolean hostIsConnected() {
+        return getBennu() != null || getDeletedFromBennu() != null;
     }
 }

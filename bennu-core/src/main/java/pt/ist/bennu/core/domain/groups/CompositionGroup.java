@@ -62,5 +62,11 @@ public abstract class CompositionGroup extends CompositionGroup_Base {
                 + ")";
     }
 
+    @Override
+    protected void gc() {
+        getChildrenSet().clear();
+        super.gc();
+    }
+
     protected abstract String operator();
 }

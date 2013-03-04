@@ -85,6 +85,12 @@ public class NobodyGroup extends NobodyGroup_Base {
         return AnyoneGroup.getInstance();
     }
 
+    @Override
+    protected boolean isGarbageCollectable() {
+        // Singleton group, no point in delete
+        return false;
+    }
+
     /**
      * Get or create singleton instance of {@link NobodyGroup}
      * 

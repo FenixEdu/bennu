@@ -147,6 +147,12 @@ public final class DynamicGroup extends DynamicGroup_Base {
         return changeGroup(getGroup().revoke(user));
     }
 
+    @Override
+    protected boolean isGarbageCollectable() {
+        // Dynamic (named) groups cannot be recovered only from language, therefore we can never safely delete.
+        return false;
+    }
+
     @Service
     public static BennuGroup getInstance(final String name) {
         DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {

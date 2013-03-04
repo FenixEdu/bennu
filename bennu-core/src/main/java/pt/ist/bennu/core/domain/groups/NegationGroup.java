@@ -79,6 +79,12 @@ public class NegationGroup extends NegationGroup_Base {
         return getNegated();
     }
 
+    @Override
+    protected void gc() {
+        removeNegated();
+        super.gc();
+    }
+
     /**
      * Get or create singleton instance of {@link NegationGroup}
      * 

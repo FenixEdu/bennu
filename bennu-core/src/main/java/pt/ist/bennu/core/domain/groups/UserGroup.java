@@ -100,6 +100,12 @@ public class UserGroup extends UserGroup_Base {
         return UserGroup.getInstance(users);
     }
 
+    @Override
+    protected void gc() {
+        getMemberSet().clear();
+        super.gc();
+    }
+
     /**
      * @see #getInstance(Set)
      */
