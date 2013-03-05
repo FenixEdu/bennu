@@ -27,7 +27,7 @@ mvn clean install -q
 cd ..
 
 echo Installing Bennu File Support...
-cd bennu-filesupport
+cd bennu-io
 mvn clean install -q
 cd ..
 
