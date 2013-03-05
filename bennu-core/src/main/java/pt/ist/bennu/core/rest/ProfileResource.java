@@ -43,7 +43,7 @@ public class ProfileResource extends BennuRestResource {
     }
 
     @POST
-    @Path("/change-locale")
+    @Path("/locale")
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeLocale(String localeTag) {
         I18N.setLocale(request.getSession(true), Locale.forLanguageTag(localeTag));
@@ -51,7 +51,7 @@ public class ProfileResource extends BennuRestResource {
     }
 
     @POST
-    @Path("/change-preferred-locale")
+    @Path("/preferred-locale")
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePreferredLocale(String localeTag) {
         accessControl(LoggedGroup.getInstance());

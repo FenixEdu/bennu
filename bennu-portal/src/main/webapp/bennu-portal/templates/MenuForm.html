@@ -1,0 +1,39 @@
+<div class="span12">    
+    <form class="form-horizontal">
+      <fieldset>
+      	<div class="control-group">
+      		<label class="control-label" for="title">Title</label>
+      		<div class="controls">
+      			<div class="input-append">
+	        		<input type="text" lang="pt" id="title" name="title" value="{{title.pt}}" placeholder="Menu Title" required>
+	        		<span class="add-on">PT</span>
+	        	</div>
+	        	<div class="input-append">
+	        		<input type="text" lang="en" id="title" name="title" value="{{title.en}}" placeholder="Menu Title" required>
+	        		<span class="add-on">EN</span>
+	        	</div>
+	        </div>
+	    </div>
+	    <div class="control-group">
+      		<label class="control-label" for="description">Description</label>
+      		<div class="controls">
+      			<div class="input-append">
+	        		<input type="text" lang="pt" id="description" name="description" value="{{description.pt}}" placeholder="Menu Description" required>
+	        		<span class="add-on">PT</span>
+	        	</div>
+	        	<div class="input-append">
+	        		<input type="text" lang="en" id="description" name="description" value="{{description.en}}" placeholder="Menu Description" required>
+	        		<span class="add-on">EN</span>
+	        	</div>
+	        </div>
+	    </div>
+	    <div class="control-group">
+      		<label class="control-label" for="path">Path</label>
+      		<div class="controls">
+	        	<input type="text" id="path" name="path" value="{{path}}" placeholder="Path" required>
+	        </div>
+	    </div>
+        <button id='confirm' class="btn">Confirmar</button>
+      </fieldset>
+    </form>
+</div>

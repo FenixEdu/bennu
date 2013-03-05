@@ -1,11 +1,13 @@
 define([
     'collections/Host',
+    'collections/Menu',
     'models/Host',
+    'models/Menu',
     'views/HostCreate',
     'views/HostList',
-    'backbone',
-    'marionette'
-], function(HostCollection, HostModel, HostCreateView, HostListView, Backbone, Marionette) {
+    'views/Menu',
+    'views/MenuCreate',
+], function(HostCollection, MenuCollection, HostModel, MenuModel, HostCreateView, HostListView, MenuView, MenuCreate) {
 	var MenuManager = MenuManager || {};
 
 	/** THE PLACE TO STORE THE COLLECTIONS AND MODELS **/
@@ -13,16 +15,19 @@ define([
 
 	MenuManager.Collections = MenuManager.Collections || {};
 	MenuManager.Collections.Host = HostCollection || {};
+	MenuManager.Collections.Menu = MenuCollection || {};
 	
 	MenuManager.Models = MenuManager.Models || {};
 	MenuManager.Models.Host = HostModel || {};
+	MenuManager.Models.Menu = MenuModel || {};
 	
 	MenuManager.Views = MenuManager.Views || {};
 	MenuManager.Views.HostCreate = HostCreateView || {};
 	MenuManager.Views.HostList = HostListView || {};
+	MenuManager.Views.Menu = MenuView || {};
+	MenuManager.Views.MenuCreate = MenuCreate || {};
 	
 	MenuManager.Router = MenuManager.Router || {};
-	
 	MenuManager.Layout = MenuManager.Layout || {};
 	
 	return MenuManager;

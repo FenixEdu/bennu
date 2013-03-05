@@ -17,6 +17,7 @@ define([
 		"click .edit-host" : "editHost",
 		"click .create-host": "createHost",
 		"click .delete-host": "deleteHost",
+		"click .show-menu" : "showMenu",
 	},
 	
 	/*itemRemoved : function(viewInstance) {
@@ -31,7 +32,10 @@ define([
 		console.log('closing view!');
 	},*/
 	
-		
+	showMenu : function(e) {
+		Backbone.history.navigate("#menu/" + e.target.id, true);
+	},
+	
 	editHost : function(e) {
 		e.preventDefault();
 		Backbone.history.navigate("#hosts/edit/" + e.target.id, true);

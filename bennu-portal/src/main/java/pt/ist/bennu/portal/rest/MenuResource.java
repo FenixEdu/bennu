@@ -11,6 +11,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.rest.BennuRestResource;
@@ -25,7 +27,21 @@ public class MenuResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String menu(@PathParam("hostname") final String hostname) {
-        return view(getVirtualHost(hostname).getMenu());
+        if (StringUtils.isNumeric(hostname)) {
+            return getMenu(hostname);
+        }
+        return viewMenu(getVirtualHost(hostname).getMenu());
+    }
+
+    @Path("{menuOid}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getMenu(@PathParam("menuOid") final String menuOid) {
+        return viewMenu((MenuItem) readDomainObject(menuOid));
+    }
+
+    private String viewMenu(MenuItem menuItem) {
+        return view(menuItem);
     }
 
     private VirtualHost getVirtualHost(String hostname) {

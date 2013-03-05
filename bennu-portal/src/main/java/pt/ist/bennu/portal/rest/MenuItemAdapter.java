@@ -1,7 +1,5 @@
 package pt.ist.bennu.portal.rest;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.json.JsonAdapter;
@@ -62,14 +60,10 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
         json.addProperty("id", obj.getExternalId());
         json.addProperty("order", obj.getOrd());
         json.addProperty("path", obj.getPath());
-        json.addProperty("title", emptyIfNull(obj.getTitle()));
-        json.addProperty("description", emptyIfNull(obj.getDescription()));
+        json.add("title", ctx.view(obj.getTitle()));
+        json.add("description", ctx.view(obj.getDescription()));
         json.add("menu", ctx.view(obj.getOrderedChild()));
         return json;
-    }
-
-    private String emptyIfNull(MultiLanguageString obj) {
-        return (obj == null || obj.isEmpty()) ? StringUtils.EMPTY : obj.getContent();
     }
 
     @Override

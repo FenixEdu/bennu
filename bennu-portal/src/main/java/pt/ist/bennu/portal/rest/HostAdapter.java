@@ -2,6 +2,7 @@ package pt.ist.bennu.portal.rest;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.rest.json.DomainObjectViewer;
 import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
@@ -66,6 +67,7 @@ public class HostAdapter implements JsonAdapter<VirtualHost> {
         json.add("applicationCopyright", obj.getInfo().getApplicationCopyright().json());
         json.addProperty("supportEmailAddress", obj.getInfo().getSupportEmailAddress());
         json.addProperty("systemEmailAddress", obj.getInfo().getSystemEmailAddress());
+        json.add("menu", ctx.view(obj.getMenu(), DomainObjectViewer.class));
         return json;
     }
 

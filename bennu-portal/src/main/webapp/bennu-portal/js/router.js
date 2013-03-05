@@ -7,7 +7,8 @@ define([
     'menu-manager',
     'app',
     'appLayout',
-], function($, _, Mustache, Backbone, Marionette, MenuManager, App, AppLayout) {
+    'layouts/MenuLayout',
+], function($, _, Mustache, Backbone, Marionette, MenuManager, App, AppLayout, MenuLayout) {
 
     var Router = Backbone.Marionette.AppRouter.extend({
 
@@ -22,6 +23,8 @@ define([
     		"hosts": "showHosts",
     		"hosts/edit/:hostname" : "editHost",
     		"hosts/create": "createHost",
+    		"menu/:id" : "showMenu",
+    		"menu/:id/:id" : "showMenu",
     	},
     	
     	controller: {
@@ -38,7 +41,39 @@ define([
     				}
     			});
     		},
-
+    		
+    		
+    		
+    		showMenu: function (topMenuId, selectedMenuId) {
+    			console.log("top: "  + topMenuId + " sel: " + selectedMenuId);
+    			var menuModel = new MenuManager.Models.Menu({id : topMenuId});
+    			
+    			App.Layout.menuLayout = new MenuLayout();
+    			App.Layout.menuLayout.menuId = topMenuId;
+    			
+				App.Layout.contentRegion.show(App.Layout.menuLayout);
+				
+    			menuModel.fetch({
+    				success: function() {
+    					var menu = menuModel.get("menu");
+    					var menuCollection = new MenuManager.Collections.Menu(menu);
+    					menuTree = new MenuManager.Views.Menu({collection : menuCollection });
+    					menuTree.menuId = topMenuId;
+    					App.Layout.menuLayout.tree.show(menuTree);
+    				},
+    			});
+    			
+    			if (selectedMenuId) {
+    				var selectedMenuModel = new MenuManager.Models.Menu({id : selectedMenuId});
+    				selectedMenuModel.fetch({
+    					success: function() {
+    						App.Layout.menuLayout.menu.show(new MenuManager.Views.MenuCreate({model : selectedMenuModel}));
+    					}
+    				});
+    			}
+    			
+    		},
+    		
     		createHost : function() {
     			App.Layout.contentRegion.show(new MenuManager.Views.HostCreate({model : new MenuManager.Models.Host()}));
     		},
