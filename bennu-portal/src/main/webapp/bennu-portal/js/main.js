@@ -27,11 +27,16 @@ require(['jquery', 'jquery.bootstrap', 'backbone', 'mustache', 'marionette', 'me
     	if (data) {
     	  data['_mls'] = function() { 
 				return function(val) { 
-					return this[val].pt;
+					if (this[val]) {
+						if (this[val].pt) {
+							return this[val].pt;
+						}
+					}
+					return "";
 				};
 			};
     	}
-		console.log(data);
+		//console.log(data);
     	return Mustache.to_html(template, data);
     	};
     

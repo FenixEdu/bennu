@@ -3,17 +3,23 @@ define([
     'backbone',
     'marionette',
     'app',
-    'text!templates/SingleMenu.html'
-], function($, Backbone, Marionette, App, tpl) {
+    'text!templates/SingleMenu.html',
+], function($, Backbone, Marionette, App, singleTpl) {
 
     return Backbone.Marionette.CompositeView.extend({
     	
-    	template: tpl,
-    	tagName : 'ul',
+    	template: singleTpl, 
+    	tagName : "li",
     	
     	events: {
     		"click .edit-menu" : "editMenu",
+    		"drop" : "drop",
     	},
+    	
+    	drop: function(event, index) {
+    		console.log("drop : " + index);
+            this.$el.trigger('update-sort', [this.model, index]);
+        },
     	
     	editMenu: function (e) {
     		require(["menu-manager"], function(MenuManager) {
@@ -30,13 +36,19 @@ define([
             // grab the child collection from the parent model
             // so that we can render the collection as children
             // of this parent node
-            this.collection = this.model.menu;
+        	this.collection = this.model.menu;
         },
         
-        appendHtml: function(collectionView, itemView){
+        appendHtml: function(cv, iv){
             // ensure we nest the child list inside of 
             // the current list item
-            collectionView.$("li:first").append(itemView.el);
+        	cv.$("ul:first").append(iv.el);
+        },
+        
+        onRender: function() {
+            if(_.isUndefined(this.collection)){
+                this.$("ul:first").remove();
+            }
         }
         
     });

@@ -5,9 +5,10 @@ define([
     'models/Menu',
     'views/HostCreate',
     'views/HostList',
+    'views/SingleMenu',
     'views/Menu',
     'views/MenuCreate',
-], function(HostCollection, MenuCollection, HostModel, MenuModel, HostCreateView, HostListView, MenuView, MenuCreate) {
+], function(HostCollection, MenuCollection, HostModel, MenuModel, HostCreateView, HostListView, SingleMenuView, MenuView, MenuCreate) {
 	var MenuManager = MenuManager || {};
 
 	/** THE PLACE TO STORE THE COLLECTIONS AND MODELS **/
@@ -25,6 +26,7 @@ define([
 	MenuManager.Views.HostCreate = HostCreateView || {};
 	MenuManager.Views.HostList = HostListView || {};
 	MenuManager.Views.Menu = MenuView || {};
+	MenuManager.Views.SingleMenu = SingleMenuView || {};
 	MenuManager.Views.MenuCreate = MenuCreate || {};
 	
 	MenuManager.Router = MenuManager.Router || {};

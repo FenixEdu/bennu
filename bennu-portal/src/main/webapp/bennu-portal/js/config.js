@@ -1,7 +1,8 @@
 require.config({
 
     paths: {
-        'jquery': '../../js/libs/jquery/jquery-min',
+        'jquery': '../../js/libs/jquery/jquery',
+        'jquery.ui': '../../js/libs/jquery/jquery-ui',
         'less': '../../js/libs/less/less-min',
         'moment': '../../js/libs/moment/moment-min',
         'underscore': '../../js/libs/underscore/underscore-min',
@@ -33,6 +34,10 @@ require.config({
         'jquery.bootstrap': {
             deps: ['jquery'],
             exports: 'jquery'
+        },
+        'jquery.ui': {
+            deps: ['jquery'],
+            exports: '$'
         },
         'backbone': {
             deps: ['underscore', 'jquery'],
