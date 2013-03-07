@@ -21,12 +21,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.bennu.core.annotation.BennuCoreAnnotationInitializer;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.util.rest.RestHost;
 import pt.ist.fenixframework.Config;
@@ -51,7 +50,9 @@ public class ConfigurationManager {
 
     private static Config config = null;
 
-    private static List<URL> urls = null;
+    private static List<URL> urls = new ArrayList<>();
+
+    private static Map<String, String> resourceModuleMap = new HashMap<>();
 
     private static Map<String, RestHost> serverHosts;
 
@@ -81,6 +82,26 @@ public class ConfigurationManager {
                     return getUrls();
                 }
             };
+
+            try {
+                List<DmlFile> dmlFiles = new ArrayList<>();
+                for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(getProperty("app.name")).getArtifacts()) {
+                    dmlFiles.addAll(artifact.getDmls());
+                    String projectResource = "/" + artifact.getName() + "/project.properties";
+                    String url = BennuCoreAnnotationInitializer.class.getResource(projectResource).toExternalForm();
+                    if (url.startsWith("jar")) {
+                        resourceModuleMap.put(url.substring("jar:".length(), url.length() - projectResource.length() - 1),
+                                artifact.getName());
+                    } else {
+                        resourceModuleMap.put(url.replace(projectResource, ""), artifact.getName());
+                    }
+                }
+                for (DmlFile dml : dmlFiles) {
+                    urls.add(dml.getUrl());
+                }
+            } catch (FenixFrameworkProjectException | IOException e) {
+                throw new Error(e);
+            }
 
             casConfigByHost = new HashMap<>();
             serverHosts = new HashMap<>();
@@ -142,39 +163,8 @@ public class ConfigurationManager {
         return thisServerRestSecret;
     }
 
-    public synchronized static List<URL> getUrls() {
-        if (urls == null) {
-            urls = new ArrayList<>();
-            try {
-                for (DmlFile dml : FenixFrameworkArtifact.fromName(getProperty("app.name")).getFullDmlSortedList()) {
-                    urls.add(dml.getUrl());
-                }
-            } catch (FenixFrameworkProjectException | IOException e) {
-                throw new Error(e);
-            }
-        }
+    public static List<URL> getUrls() {
         return urls;
-    }
-
-    /*
-     * This method is used to initialize Jersey Servlet Container with the package name of Root Class correspondent with REST
-     * Endpoints.
-     */
-    public synchronized static String[] getRestRootClassPackages() {
-        final Set<String> rootClassPackages = new HashSet<String>();
-        try {
-            final List<FenixFrameworkArtifact> artifacts =
-                    FenixFrameworkArtifact.fromName(getProperty("app.name")).getArtifacts();
-            LOG.info("Search for promissing rest endpoints packages:");
-            for (FenixFrameworkArtifact artifact : artifacts) {
-                final String packageName = String.format("pt.ist.bennu.%s.rest", artifact.getName().replace("-", "."));
-                LOG.info("\tpackage {}", packageName);
-                rootClassPackages.add(packageName);
-            }
-        } catch (IOException | FenixFrameworkProjectException e) {
-            e.printStackTrace();
-        }
-        return rootClassPackages.toArray(new String[rootClassPackages.size()]);
     }
 
     public static String getProperty(final String key) {
@@ -247,5 +237,18 @@ public class ConfigurationManager {
 
     public static Config getFenixFrameworkConfig() {
         return config;
+    }
+
+    public static String getModuleOf(Class<?> type) {
+        String typeLocation = type.getProtectionDomain().getCodeSource().getLocation().toExternalForm();
+        if (resourceModuleMap.containsKey(typeLocation)) {
+            return resourceModuleMap.get(typeLocation);
+        }
+        for (String path : resourceModuleMap.keySet()) {
+            if (typeLocation.startsWith(path)) {
+                return resourceModuleMap.get(path);
+            }
+        }
+        throw new Error("Type: " + type.getName() + " not found on any module");
     }
 }

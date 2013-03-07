@@ -16,12 +16,7 @@
  */
 package pt.ist.bennu.core.annotation;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Properties;
 import java.util.Set;
-import java.util.jar.Manifest;
 
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
@@ -33,13 +28,13 @@ import javax.ws.rs.ext.Provider;
 import pt.ist.bennu.core.domain.groups.CustomGroup;
 import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.core.servlets.BennuJerseyRestApplication;
+import pt.ist.bennu.core.util.ConfigurationManager;
 
 @HandlesTypes({ CustomGroupOperator.class, Path.class, Provider.class, DefaultJsonAdapter.class })
 public class BennuCoreAnnotationInitializer implements ServletContainerInitializer {
     @Override
     @SuppressWarnings("unchecked")
     public void onStartup(Set<Class<?>> classes, ServletContext ctx) throws ServletException {
-
         if (classes != null) {
             for (Class<?> type : classes) {
                 CustomGroupOperator operator = type.getAnnotation(CustomGroupOperator.class);
@@ -48,7 +43,8 @@ public class BennuCoreAnnotationInitializer implements ServletContainerInitializ
                 }
                 Path restEndpoint = type.getAnnotation(Path.class);
                 if (restEndpoint != null) {
-                    BennuJerseyRestApplication.registerEndpoint(getModuleName(type), restEndpoint.value(), type);
+                    BennuJerseyRestApplication.registerEndpoint(ConfigurationManager.getModuleOf(type), restEndpoint.value(),
+                            type);
                 }
                 Provider restProvider = type.getAnnotation(Provider.class);
                 if (restProvider != null) {
@@ -61,45 +57,4 @@ public class BennuCoreAnnotationInitializer implements ServletContainerInitializ
             }
         }
     }
-
-    public String getModuleName(Class<?> type) {
-        URL typeLocation = type.getProtectionDomain().getCodeSource().getLocation();
-
-        if (typeLocation.toExternalForm().endsWith("/")) {
-            Properties props = new Properties();
-            InputStream propStream = null;
-            try {
-                propStream = new URL(typeLocation + "configuration.properties").openStream();
-                props.load(propStream);
-                return (String) props.get("app.name");
-            } catch (IOException e) {
-                throw new Error(e);
-            } finally {
-                try {
-                    if (propStream != null) {
-                        propStream.close();
-                    }
-                } catch (IOException e) {
-                    throw new Error(e);
-                }
-            }
-        }
-        InputStream mfStream = null;
-        try {
-            mfStream = new URL("jar:".concat(typeLocation.toExternalForm()).concat("!/META-INF/MANIFEST.MF")).openStream();
-            Manifest mf = new Manifest(mfStream);
-            return mf.getMainAttributes().getValue("artifactId");
-        } catch (IOException e) {
-            throw new Error(e);
-        } finally {
-            try {
-                if (mfStream != null) {
-                    mfStream.close();
-                }
-            } catch (IOException e) {
-                throw new Error(e);
-            }
-        }
-    }
-
 }
