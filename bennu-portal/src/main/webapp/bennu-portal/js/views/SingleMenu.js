@@ -16,20 +16,22 @@ define([
     		"drop" : "drop",
     	},
     	
+    	modelEvents: {
+            'change': 'render'
+            },
+            
+    	
     	drop: function(event, index) {
     		console.log("drop : " + index);
             this.$el.trigger('update-sort', [this.model, index]);
         },
     	
     	editMenu: function (e) {
+    		var selectedMenuModel = this.model;
     		require(["menu-manager"], function(MenuManager) {
-    			var selectedMenuModel = new MenuManager.Models.Menu({id : e.target.id});
-    			selectedMenuModel.fetch({
-    				success: function() {
-    					App.Layout.menuLayout.menu.show(new MenuManager.Views.MenuCreate({model : selectedMenuModel}));
-    				}
-    			});
+    			App.Layout.menuLayout.menu.show(new MenuManager.Views.MenuCreate({ model : selectedMenuModel}));
     		});
+    		return false;
     	},
         
         initialize: function(){

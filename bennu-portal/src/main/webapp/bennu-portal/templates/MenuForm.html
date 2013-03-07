@@ -1,12 +1,13 @@
 <fieldset class="affix">
+	<div class="notifications top-right"></div>
 	<div class="control-group">
 		<label class="control-label" for="title">Title</label>
 		<div class="controls">
 			<div class="input-append">
-				<input type="text" lang="pt" id="title" name="title"
+				<input type="text" lang="pt" name="title"
 					value="{{title.pt}}" placeholder="Menu Title" required> <span
 					class="add-on">PT</span>
-				<input type="text" lang="en" id="title" name="title"
+				<input type="text" lang="en" name="title"
 					value="{{title.en}}" placeholder="Menu Title" required> <span
 					class="add-on">EN</span>
 			</div>
@@ -16,10 +17,10 @@
 		<label class="control-label" for="description">Description</label>
 		<div class="controls">
 			<div class="input-append">
-				<input type="text" lang="pt" id="description" name="description"
+				<input type="text" lang="pt" name="description"
 					value="{{description.pt}}" placeholder="Menu Description" required>
 				<span class="add-on">PT</span>
-				<input type="text" lang="en" id="description" name="description"
+				<input type="text" lang="en" name="description"
 					value="{{description.en}}" placeholder="Menu Description" required>
 				<span class="add-on">EN</span>
 			</div>
@@ -28,9 +29,9 @@
 	<div class="control-group">
 		<label class="control-label" for="path">Path</label>
 		<div class="controls">
-			<input type="text" id="path" name="path" value="{{path}}"
+			<input type="text" name="path" value="{{path}}"
 				placeholder="Path" class="input-block-level" required>
 		</div>
 	</div>
-	<button id='confirm' class="btn">Confirmar</button>
+	<div id='confirm' class="btn">Confirmar</div>
 </fieldset>

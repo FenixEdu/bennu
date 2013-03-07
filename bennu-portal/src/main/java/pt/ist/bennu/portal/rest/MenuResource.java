@@ -7,36 +7,19 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.lang.StringUtils;
-
-import pt.ist.bennu.core.domain.Bennu;
-import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.portal.domain.MenuItem;
-import pt.ist.bennu.portal.domain.exception.MenuNotAvailableException;
 import pt.ist.bennu.service.Service;
 
 @Path("menu")
 public class MenuResource extends BennuRestResource {
 
-    @Path("{hostname: [a-zA-Z0-9\\.]+}")
+    @Path("{oid}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String menu(@PathParam("hostname") final String hostname) {
-        if (StringUtils.isNumeric(hostname)) {
-            return getMenu(hostname);
-        }
-        return viewMenu(getVirtualHost(hostname).getMenu());
-    }
-
-    @Path("{menuOid}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getMenu(@PathParam("menuOid") final String menuOid) {
+    public String getMenu(@PathParam("oid") final String menuOid) {
         return viewMenu((MenuItem) readDomainObject(menuOid));
     }
 
@@ -44,50 +27,26 @@ public class MenuResource extends BennuRestResource {
         return view(menuItem);
     }
 
-    private VirtualHost getVirtualHost(String hostname) {
-        final VirtualHost virtualHost = Bennu.getInstance().getVirtualHost(hostname);
-        if (virtualHost != null) {
-            return virtualHost;
-        } else {
-            throw new WebApplicationException(Status.NOT_FOUND);
-        }
-    }
-
-    @Path("{hostname: [a-zA-Z0-9\\.]+}")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(@PathParam("hostname") final String hostname, @FormParam("model") final String jsonData) {
-        final VirtualHost virtualHost = innerCreate(hostname, jsonData);
-        return view(virtualHost.getMenu());
+    public String create(@FormParam("model") final String jsonData) {
+        return innerCreate(jsonData);
     }
 
     @Service
-    public VirtualHost innerCreate(final String hostname, final String jsonData) {
-        final VirtualHost virtualHost = getVirtualHost(hostname);
-        if (virtualHost.hasMenu()) {
-            update(jsonData, virtualHost);
-        } else {
-            virtualHost.setMenu(create(jsonData, MenuItem.class));
-        }
-        return virtualHost;
+    public String innerCreate(final String jsonData) {
+        return view(create(jsonData, MenuItem.class));
     }
 
-    @Path("{hostname: [a-zA-Z0-9\\.]+}")
+    @Path("{oid}")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
-    public String update(@PathParam("hostname") final String hostname, @FormParam("model") final String jsonData) {
-        final VirtualHost virtualHost = innerUpdate(hostname, jsonData);
-        return view(virtualHost.getMenu());
+    public String update(@PathParam("oid") final String oid, @FormParam("model") final String jsonData) {
+        return view(innerUpdate((MenuItem) readDomainObject(oid), jsonData));
     }
 
     @Service
-    public VirtualHost innerUpdate(final String hostname, final String jsonData) {
-        final VirtualHost virtualHost = getVirtualHost(hostname);
-        if (virtualHost.hasMenu()) {
-            update(jsonData, virtualHost.getMenu());
-        } else {
-            throw new MenuNotAvailableException();
-        }
-        return virtualHost;
+    public MenuItem innerUpdate(final MenuItem menuItem, final String jsonData) {
+        return update(jsonData, menuItem);
     }
 }

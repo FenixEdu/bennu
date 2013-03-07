@@ -12,26 +12,28 @@ define([
 		template: tpl,
 		
 		events : {
-	    	"click #confirm" : "createHost"
+	    	"click #confirm" : "createMenu"
 	    },
 	    
-	    createHost : function(e) {
+	    createMenu : function(e) {
 	    	var that = this;
 	    	e.preventDefault();
 	    	$('input').each(function(index, input) {
 	    		if ($(input).attr('lang')) {
-	    			var mls = that.model.get(input.id) || {};
+	    			var mls = that.model.get(input.name) || {};
 	    			mls[$(input).attr('lang')] = $(input).val();
-	    			that.model.set(input.id, mls);
+	    			that.model.set(input.name, mls);
 	    		} else {
-	    			that.model.set(input.id, $(input).val());
+	    			that.model.set(input.name, $(input).val());
 	    		}
 	    	});
 	    	
 	    	console.log(this.model.toJSON());
 	    	
 	    	this.model.save(null,{ success : function () {
-	    		Backbone.history.navigate("hosts", true);
+	    		$('.top-right').notify({
+	    		    message: { text: 'Ok!' }
+	    		  }).show();
 	    	} });
 	    },
 	});

@@ -10,6 +10,7 @@ require.config({
         'backbone': '../../js/libs/backbone/backbone',
         'marionette': '../../js/libs/backbone/backbone.marionette',
         'jquery.bootstrap': '../../js/libs/bootstrap/bootstrap-min',
+        'bootstrap.notify' : '../../js/libs/bootstrap/bootstrap-notify',
         'text': '../../js/libs/require/text',
         'i18n': '../../js/libs/require/i18n',
         'appLayout': 'layouts/AppLayout',
@@ -36,7 +37,7 @@ require.config({
             exports: 'jquery'
         },
         'jquery.ui': {
-            deps: ['jquery'],
+            deps: ['jquery', 'bootstrap.notify'],
             exports: '$'
         },
         'backbone': {
