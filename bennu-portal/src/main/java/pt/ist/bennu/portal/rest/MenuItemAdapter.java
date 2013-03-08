@@ -43,7 +43,7 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
         if (jsonObj.has("menu")) {
             final JsonArray menu = jsonObj.get("menu").getAsJsonArray();
             for (JsonElement menuEl : menu) {
-                menuItem.addChild(update(menuEl, getMenuItem(menuEl), ctx));
+                update(menuEl, getMenuItem(menuEl), ctx);
             }
         }
 

@@ -5,5 +5,9 @@ define([
 	return Backbone.Collection.extend({
 
 	    model: MenuModel,
+	    
+	    comparator: function(menu) {
+    		return menu.get("order");
+    	},
 	});
 });

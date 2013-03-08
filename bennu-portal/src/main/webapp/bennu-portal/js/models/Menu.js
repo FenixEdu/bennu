@@ -14,10 +14,11 @@ define([
 	        	console.log("init menu model:" + menu);
 	        	var MenuCollection = require("collections/Menu");
 	        	this.menu = new MenuCollection(menu);
+	        	this.menu.parent = this;
 	            this.unset("menu");
 	        }
-	    }
-    
+	    },
+	    
 	});
 
 });

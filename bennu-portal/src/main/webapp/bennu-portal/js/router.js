@@ -57,8 +57,10 @@ define([
     				success: function() {
     					var menu = menuModel.get("menu");
     					var menuCollection = new MenuManager.Collections.Menu(menu);
+    					menuCollection.parent = menuModel;
     					menuTree = new MenuManager.Views.Menu({collection : menuCollection });
     					menuTree.menuId = topMenuId;
+    					menuModel.unset("menu");
     					App.Layout.menuLayout.tree.show(menuTree);
     				},
     			});
