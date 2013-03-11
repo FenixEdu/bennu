@@ -19,6 +19,7 @@
 	<properties>
 		<version.pt.ist.bennu.bennu-core>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-core>
 		<version.pt.ist.bennu.bennu-backbone>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-backbone>
+		<version.pt.ist.bennu.bennu-dispatch>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-dispatch>
 	</properties>
 	
 	<build>
@@ -67,6 +68,11 @@
 			<groupId>pt.ist.bennu</groupId>
 			<artifactId>bennu-backbone</artifactId>
 			<version>${version.pt.ist.bennu.bennu-backbone}</version>
+		</dependency>
+		<dependency>
+			<groupId>pt.ist.bennu</groupId>
+			<artifactId>bennu-dispatch</artifactId>
+			<version>${version.pt.ist.bennu.bennu-dispatch}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>

@@ -1,0 +1,15 @@
+{ 
+
+"title" :  {"pt" : "isto e uma app"},
+"description" : {"pt" : "isto é a descrição da app"},
+"accessExpression" : "anyone",
+"path" : "/app",
+"functionalities" : [
+			{ 
+   			  "title" : {"pt" : "isto e um titulo"},
+			  "description" : {"pt" : "isto e uma descrição"},
+			  "path" : "http://www.google.com",
+			  "accessExpression" : "anyone"
+                        }
+                      ]
+}

@@ -36,7 +36,8 @@ require(['jquery', 'jquery.bootstrap', 'backbone', 'mustache', 'marionette', 'me
 				};
 			};
     	}
-		//console.log(data);
+    	console.log(template);
+		console.log(data);
     	return Mustache.to_html(template, data);
     	};
     

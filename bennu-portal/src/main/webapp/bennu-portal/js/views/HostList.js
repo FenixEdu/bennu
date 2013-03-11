@@ -7,7 +7,7 @@ define([
     'views/SingleHost'
 ], function($, Backbone, Marionette, App, tpl, SingleHostView) {
 
-    return Backbone.Marionette.CompositeView.extend({
+    return Backbone.Marionette.CollectionView.extend({
 
         template: tpl,
         itemView: SingleHostView,

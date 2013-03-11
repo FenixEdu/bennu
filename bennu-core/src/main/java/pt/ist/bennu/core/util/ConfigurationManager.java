@@ -18,6 +18,7 @@ package pt.ist.bennu.core.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,7 +86,7 @@ public class ConfigurationManager {
 
             try {
                 List<DmlFile> dmlFiles = new ArrayList<>();
-                for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(getProperty("app.name")).getArtifacts()) {
+                for (FenixFrameworkArtifact artifact : getArtifacts()) {
                     dmlFiles.addAll(artifact.getDmls());
                     String projectResource = "/" + artifact.getName() + "/project.properties";
                     String url = BennuCoreAnnotationInitializer.class.getResource(projectResource).toExternalForm();
@@ -116,6 +117,11 @@ public class ConfigurationManager {
         } catch (IOException e) {
             throw new Error("configuration.properties could not be read.", e);
         }
+    }
+
+    public static List<FenixFrameworkArtifact> getArtifacts() throws MalformedURLException, IOException,
+            FenixFrameworkProjectException {
+        return FenixFrameworkArtifact.fromName(getProperty("app.name")).getArtifacts();
     }
 
     public static void initializeCasConfig(final String property) {
