@@ -155,4 +155,8 @@ public class User extends User_Base {
         super.setPassword(null);
         return new PasswordRecoveryRequest(this);
     }
+
+    public boolean hasRole(String role) {
+        return false;
+    }
 }

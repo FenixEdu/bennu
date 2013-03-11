@@ -171,6 +171,10 @@ public class ConfigurationManager {
         return properties.getProperty(key);
     }
 
+    public static String getProperty(final String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
+    }
+
     public static boolean getBooleanProperty(final String key, boolean defaultValue) {
         return properties.containsKey(key) ? Boolean.parseBoolean(properties.getProperty(key)) : defaultValue;
     }

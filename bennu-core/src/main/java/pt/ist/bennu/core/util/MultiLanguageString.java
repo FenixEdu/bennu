@@ -1,7 +1,6 @@
 package pt.ist.bennu.core.util;
 
 import java.io.Serializable;
-import java.text.Collator;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,11 +50,11 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
      *         content NOTE: it does not change the content of this instance
      */
     public MultiLanguageString with(Locale locale, final String content) {
-        if (!Strings.isNullOrEmpty(content)) {
+        if (Strings.isNullOrEmpty(content)) {
             return this;
         }
         Map<Locale, String> contents = new HashMap<>();
-        contents.putAll(contents);
+        contents.putAll(this.contents);
         contents.put(locale, content);
         return new MultiLanguageString(contents);
     }
@@ -72,7 +71,7 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
     public MultiLanguageString without(Locale locale) {
         if (locale != null) {
             Map<Locale, String> contents = new HashMap<>();
-            contents.putAll(contents);
+            contents.putAll(this.contents);
             contents.remove(locale);
             return new MultiLanguageString(contents);
         }
@@ -169,19 +168,8 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
     }
 
     @Override
-    public int compareTo(MultiLanguageString localeString) {
-        String mine = getContent();
-        String other = localeString.getContent();
-        if (mine == null && other == null) {
-            return 0;
-        }
-        if (mine == null && other != null) {
-            return -1;
-        }
-        if (mine != null && other == null) {
-            return 1;
-        }
-        return Collator.getInstance().compare(mine, other);
+    public int compareTo(MultiLanguageString other) {
+        return getContent().compareTo(other.getContent());
     }
 
     public boolean equalInAnyLocale(Object obj) {
