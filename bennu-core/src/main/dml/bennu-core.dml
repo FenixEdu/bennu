@@ -113,7 +113,7 @@ class groups.BennuGroup {
 
 relation Groups {
 	VirtualHost playsRole host {
-		multiplicity 1..1;
+		multiplicity 0..1;
 	}
 	groups.BennuGroup playsRole groups {
 		multiplicity *;
