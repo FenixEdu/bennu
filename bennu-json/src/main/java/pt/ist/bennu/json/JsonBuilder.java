@@ -36,7 +36,7 @@ public class JsonBuilder {
     }
 
     public JsonElement view(Object obj, Class<?> objectClass, Class<? extends JsonViewer> jsonViewerClass) {
-        if (obj == null || objectClass == null) {
+        if (objectClass == null) {
             return null;
         }
 
