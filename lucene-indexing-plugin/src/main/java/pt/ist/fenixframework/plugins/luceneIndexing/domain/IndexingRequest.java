@@ -1,18 +1,19 @@
 package pt.ist.fenixframework.plugins.luceneIndexing.domain;
 
+import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.interfaces.Indexable;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
 
 public class IndexingRequest extends IndexingRequest_Base {
 
     public IndexingRequest(Indexable indexableObject) {
         super();
-        setIndexableExternalId(((AbstractDomainObject) indexableObject).getExternalId());
+        setIndexableExternalId(((DomainObject) indexableObject).getExternalId());
         setPluginRoot(LuceneSearchPluginRoot.getInstance());
     }
 
     public IndexDocument getIndex() {
-        AbstractDomainObject someDomainObject = AbstractDomainObject.fromExternalId(getIndexableExternalId());
+        DomainObject someDomainObject = FenixFramework.getDomainObject(getIndexableExternalId());
         return ((Indexable) someDomainObject).getDocumentToIndex();
     }
 
