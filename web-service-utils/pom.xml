@@ -39,18 +39,20 @@
 			<artifactId>bennu-vaadin</artifactId>
 			<version>${version.pt.ist.bennu.vaadin}</version>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-client</artifactId>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-servlet</artifactId>
-		</dependency>
+		</dependency> -->
 	</dependencies>
 
 	<repositories>
