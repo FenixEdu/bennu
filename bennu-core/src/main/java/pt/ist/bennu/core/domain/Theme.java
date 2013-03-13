@@ -24,7 +24,7 @@
  */
 package pt.ist.bennu.core.domain;
 
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -53,8 +53,8 @@ public class Theme extends Theme_Base {
 
     public void delete() {
         removeMyOrg();
-        while (!getVirtualHosts().isEmpty()) {
-            getVirtualHosts().get(0).removeTheme();
+        for (VirtualHost virtualHost : getVirtualHosts()) {
+            virtualHost.removeTheme();
         }
         deleteDomainObject();
     }
@@ -78,12 +78,12 @@ public class Theme extends Theme_Base {
         return screenshotName != null ? screenshotName : getName() + ".jpg";
     }
 
-    @Service
+    @Atomic
     public static Theme createTheme(String themeName, String description, ThemeType type, String screenshotFileName) {
         return new Theme(themeName, description, type, screenshotFileName);
     }
 
-    @Service
+    @Atomic
     public static void deleteTheme(Theme theme) {
         theme.delete();
     }

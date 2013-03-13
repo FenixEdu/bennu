@@ -28,7 +28,7 @@ import java.util.Set;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.exceptions.DomainException;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -58,7 +58,7 @@ public class NegationGroup extends NegationGroup_Base {
         return !getPersistentGroup().isMember(user);
     }
 
-    @Service
+    @Atomic
     public static NegationGroup createNegationGroup(final PersistentGroup persistentGroup) {
         return new NegationGroup(persistentGroup);
     }

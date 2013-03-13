@@ -34,7 +34,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.bennu.core.domain.User;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -95,7 +95,7 @@ public class UnionGroup extends UnionGroup_Base {
         return false;
     }
 
-    @Service
+    @Atomic
     public static UnionGroup createUnionGroup(final PersistentGroup... persistentGroups) {
         return new UnionGroup(persistentGroups);
     }

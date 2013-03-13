@@ -33,7 +33,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -93,7 +93,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
         return true;
     }
 
-    @Service
+    @Atomic
     public static IntersectionGroup createIntersectionGroup(final PersistentGroup... persistentGroups) {
         return new IntersectionGroup(persistentGroups);
     }

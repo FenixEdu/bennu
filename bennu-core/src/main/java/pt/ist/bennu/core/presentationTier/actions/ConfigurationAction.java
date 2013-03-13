@@ -60,8 +60,8 @@ import pt.ist.bennu.core.presentationTier.LayoutContext;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.servlets.functionalities.CreateNodeAction;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+import pt.ist.fenixframework.core.Project;
+import pt.ist.fenixframework.core.exception.ProjectException;
 import pt.utl.ist.fenix.tools.util.ByteArray;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
@@ -347,12 +347,11 @@ public class ConfigurationAction extends ContextBaseAction {
     }
 
     public ActionForward viewSystemConfig(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException, FenixFrameworkProjectException {
+            final HttpServletResponse response) throws IOException, ProjectException {
         String propertiesLocation = "/" + PropertiesManager.getProperty("app.name") + "/project.properties";
 
         ArrayList<String> modulesList = new ArrayList<String>();
-        for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(PropertiesManager.getProperty("app.name"))
-                .getArtifacts()) {
+        for (Project artifact : Project.fromName(PropertiesManager.getProperty("app.name")).getProjects()) {
             modulesList.add(artifact.getName());
         }
 //    	Properties projectProperties = new Properties();

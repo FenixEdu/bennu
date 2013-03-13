@@ -24,7 +24,7 @@
 */
 package pt.ist.bennu.core.domain;
 
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -39,12 +39,12 @@ public class Layout extends Layout_Base {
         setName(name);
     }
 
-    @Service
+    @Atomic
     public static Layout createLayout(String name) {
         return new Layout(name);
     }
 
-    @Service
+    @Atomic
     public void delete() {
         removeMyOrg();
         for (VirtualHost virtualHost : getVirtualHostsSet()) {

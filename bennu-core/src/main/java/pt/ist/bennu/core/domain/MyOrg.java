@@ -29,14 +29,15 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainModelUtil;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.fenixframework.pstm.IllegalWriteException;
-import dml.DomainClass;
-import dml.Role;
+import pt.ist.fenixframework.core.WriteOnReadError;
+import pt.ist.fenixframework.dml.DomainClass;
+import pt.ist.fenixframework.dml.Role;
 
 /**
  * 
@@ -47,25 +48,27 @@ import dml.Role;
  */
 public class MyOrg extends MyOrg_Base {
 
-    private static final Logger logger = Logger.getLogger(MyOrg.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(MyOrg.class.getName());
 
     public static MyOrg getInstance() {
-        return FenixFramework.getRoot();
+        return FenixFramework.getDomainRoot().getMyOrg();
     }
 
     public MyOrg() {
         super();
         checkIfIsSingleton();
+        FenixFramework.getDomainRoot().setMyOrg(this);
         new VirtualHost(this);
+        logger.info("Created new Instance of MyOrg: {}", this);
     }
 
     private void checkIfIsSingleton() {
-        if (FenixFramework.getRoot() != null && FenixFramework.getRoot() != this) {
+        if (FenixFramework.getDomainRoot().getMyOrg() != null && FenixFramework.getDomainRoot().getMyOrg() != this) {
             throw new Error("There can only be one! (instance of MyOrg)");
         }
     }
 
-    @Service
+    @Atomic
     public static void initModules() throws SecurityException, IllegalAccessException, InvocationTargetException,
             NoSuchMethodException, ClassNotFoundException {
 
@@ -80,9 +83,9 @@ public class MyOrg extends MyOrg_Base {
             try {
                 root = (ModuleInitializer) clazz.getMethod("getInstance", new Class[] {}).invoke(clazz, new Object[] {});
             } catch (InvocationTargetException e) {
-                if (e.getCause() instanceof IllegalWriteException) {
+                if (e.getCause() instanceof WriteOnReadError) {
                     logger.debug("IllegalWrite restarting!");
-                    throw new IllegalWriteException();
+                    throw new WriteOnReadError();
                 } else {
                     throw e;
                 }

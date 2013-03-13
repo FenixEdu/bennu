@@ -53,8 +53,7 @@ import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 import pt.ist.fenixWebFramework.servlets.json.JsonObject;
 import pt.ist.fenixframework.DomainObject;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * 
@@ -85,12 +84,7 @@ public abstract class BaseAction extends DispatchAction {
 
     @SuppressWarnings("unchecked")
     protected <T extends DomainObject> T getDomainObject(final String value) {
-        return (T) AbstractDomainObject.fromExternalId(value);
-    }
-
-    @Deprecated
-    protected <T extends DomainObject> T getDomainObject(final Long oid) {
-        return oid == null ? null : (T) Transaction.getObjectForOID(oid.longValue());
+        return (T) FenixFramework.getDomainObject(value);
     }
 
     @SuppressWarnings("unchecked")
@@ -106,7 +100,7 @@ public abstract class BaseAction extends DispatchAction {
                 oid = (String) attribute;
             }
         }
-        return (T) AbstractDomainObject.fromExternalId(oid);
+        return (T) FenixFramework.getDomainObject(oid);
     }
 
     protected <T extends Object> T getRenderedObject() {

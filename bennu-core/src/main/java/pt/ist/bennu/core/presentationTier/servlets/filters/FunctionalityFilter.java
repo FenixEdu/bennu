@@ -55,8 +55,8 @@ import pt.ist.bennu.core.presentationTier.Context;
 import pt.ist.bennu.core.presentationTier.actions.ContextBaseAction;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.functionalities.FunctionalityAnnotationProcessor;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+import pt.ist.fenixframework.core.Project;
+import pt.ist.fenixframework.core.exception.ProjectException;
 
 /**
  * 
@@ -131,8 +131,7 @@ public class FunctionalityFilter implements Filter {
     public void init(final FilterConfig filterConfig) throws ServletException {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(PropertiesManager.getProperty("app.name"))
-                    .getArtifacts()) {
+            for (Project artifact : Project.fromName(PropertiesManager.getProperty("app.name")).getProjects()) {
                 try (InputStream stream =
                         loader.getResourceAsStream(artifact.getName() + File.separatorChar
                                 + FunctionalityAnnotationProcessor.FUNCTIONALITIES_FILE)) {
@@ -162,7 +161,7 @@ public class FunctionalityFilter implements Filter {
                     }
                 }
             }
-        } catch (IOException | FenixFrameworkProjectException e) {
+        } catch (IOException | ProjectException e) {
             e.printStackTrace();
         }
     }

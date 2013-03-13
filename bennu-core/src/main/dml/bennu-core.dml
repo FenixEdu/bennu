@@ -185,6 +185,11 @@ class Layout {
 	String name;
 }
 
+relation DomainRootHasMyOrg {
+	.pt.ist.fenixframework.DomainRoot playsRole domainRoot;
+	MyOrg playsRole myOrg;
+}
+
 relation ThemeMyOrg {
 	MyOrg playsRole myOrg;
 	Theme playsRole themes {

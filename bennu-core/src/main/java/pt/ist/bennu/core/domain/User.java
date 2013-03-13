@@ -28,14 +28,14 @@ import java.util.Comparator;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.exceptions.DomainException;
 import pt.ist.bennu.core.domain.groups.IRoleEnum;
 import pt.ist.bennu.core.domain.groups.People;
 import pt.ist.bennu.core.domain.groups.Role;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -118,13 +118,13 @@ public class User extends User_Base {
         return false;
     }
 
-    @Service
+    @Atomic
     @Override
     public void setLastLogoutDateTime(final DateTime lastLogoutDateTime) {
         super.setLastLogoutDateTime(lastLogoutDateTime);
     }
 
-    @Service
+    @Atomic
     public void generatePassword() {
         final String password = RandomStringUtils.randomAlphanumeric(10);
         setPassword(password);
@@ -146,18 +146,18 @@ public class User extends User_Base {
         return hash.equals(getPassword());
     }
 
-    @Service
+    @Atomic
     public static User createNewUser(final String username) {
         return new User(username);
     }
 
-    @Service
+    @Atomic
     public void addRoleType(final IRoleEnum roleType) {
         final Role role = Role.getRole(roleType);
         addPeopleGroups(role);
     }
 
-    @Service
+    @Atomic
     @Override
     public void removePeopleGroups(final People peopleGroups) {
         super.removePeopleGroups(peopleGroups);
@@ -178,7 +178,7 @@ public class User extends User_Base {
 
     public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
         if (strategy != defaultStrategy) {
-            Logger.getLogger(User.class).warn("Overriding non-default strategy");
+            LoggerFactory.getLogger(User.class).warn("Overriding non-default strategy");
         }
         strategy = newStrategy;
     }
