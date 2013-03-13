@@ -2,7 +2,7 @@ package module.webserviceutils.domain;
 
 import module.webserviceutils.client.JerseyClient;
 import pt.ist.bennu.core.domain.MyOrg;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 public class HostSystem extends HostSystem_Base {
 
@@ -17,7 +17,7 @@ public class HostSystem extends HostSystem_Base {
         return MyOrg.getInstance().getHostSystem();
     }
 
-    @Service
+    @Atomic
     private static void initRemoteSystem() {
         MyOrg.getInstance().setHostSystem(new HostSystem());
     }
