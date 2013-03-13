@@ -28,7 +28,7 @@ package pt.ist.bennu.core.domain.scheduler;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.MyOrg;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 public class TaskConfiguration extends TaskConfiguration_Base {
 
@@ -47,7 +47,7 @@ public class TaskConfiguration extends TaskConfiguration_Base {
         setDayofweek(taskConfigurationBean.getDayofweek());
     }
 
-    @Service
+    @Atomic
     public void delete() {
         removeTask();
         removeMyOrg();

@@ -26,7 +26,7 @@
 package pt.ist.bennu.core.domain.scheduler;
 
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 public class TaskExecutor extends TransactionalThread {
@@ -50,7 +50,7 @@ public class TaskExecutor extends TransactionalThread {
             //        and used whenever the app is launchede.
             VirtualHost.setVirtualHostForThread("dot.ist.utl.pt");
             Language.setLocale(Language.getDefaultLocale());
-            final Task task = AbstractDomainObject.fromExternalId(taskId);
+            final Task task = FenixFramework.getDomainObject(taskId);
             task.executeTask();
             successful = true;
         } finally {

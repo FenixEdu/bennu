@@ -33,6 +33,12 @@
 			<artifactId>scheduler-plugin</artifactId>
 			<version>${version.pt.ist.scheduler.plugin}</version>
 		</dependency>
+		<dependency>
+			<groupId>pt.ist</groupId>
+			<artifactId>bennu-backend-util</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>

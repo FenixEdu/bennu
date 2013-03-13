@@ -33,18 +33,15 @@ import java.util.SortedSet;
 import java.util.TimerTask;
 import java.util.TreeSet;
 
-import jvstm.TransactionalCommand;
-
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.fenixWebFramework.FenixWebFramework;
-import pt.ist.fenixWebFramework.services.Service;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.dml.DomainClass;
+import pt.ist.fenixframework.dml.DomainModel;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
-import dml.DomainClass;
-import dml.DomainModel;
 
 public abstract class Task extends Task_Base {
 
@@ -96,9 +93,9 @@ public abstract class Task extends Task_Base {
         return this;
     }
 
-    @Service
+    @Atomic
     public static void initTasks() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        final DomainModel domainModel = FenixWebFramework.getDomainModel();
+        final DomainModel domainModel = FenixFramework.getDomainModel();
         for (final DomainClass domainClass : domainModel.getDomainClasses()) {
             if (isTaskInstance(domainClass) && !existsTaskInstance(domainClass)) {
                 initTask(domainClass);
@@ -167,7 +164,7 @@ public abstract class Task extends Task_Base {
 
     public abstract void executeTask();
 
-    @Service
+    @Atomic
     public void createTaskConfiguration(final TaskConfigurationBean taskConfigurationBean) {
         new TaskConfiguration(taskConfigurationBean);
     }
@@ -205,12 +202,12 @@ public abstract class Task extends Task_Base {
         }
     }
 
-    @Service
+    @Atomic
     public void invokeNow() {
         MyOrg.getInstance().getPendingExecutionTaskQueue().offer(this);
     }
 
-    @Service
+    @Atomic
     public void stop() {
         removePendingExecutionTaskQueue();
     }
@@ -245,24 +242,20 @@ public abstract class Task extends Task_Base {
 
         @Override
         public void run() {
+            doIt();
+            success = true;
+        }
+
+        @Atomic
+        private void doIt() {
             try {
-                Transaction.withTransaction(false, new TransactionalCommand() {
-                    @Override
-                    public void doIt() {
-                        try {
-                            // TODO : This needs to be placed in the apps task configuration
-                            //        and used whenever the app is launchede.
-                            VirtualHost.setVirtualHostForThread("dot.ist.utl.pt");
-                            Language.setLocale(Language.getDefaultLocale());
-                            executeTask();
-                        } finally {
-                            VirtualHost.releaseVirtualHostFromThread();
-                        }
-                    }
-                });
-                success = true;
+                // TODO : This needs to be placed in the apps task configuration
+                //        and used whenever the app is launchede.
+                VirtualHost.setVirtualHostForThread("dot.ist.utl.pt");
+                Language.setLocale(Language.getDefaultLocale());
+                executeTask();
             } finally {
-                Transaction.forceFinish();
+                VirtualHost.releaseVirtualHostFromThread();
             }
         }
 
@@ -281,24 +274,16 @@ public abstract class Task extends Task_Base {
             this.log = log;
         }
 
+        @Atomic
         @Override
         public void run() {
-            try {
-                Transaction.withTransaction(false, new TransactionalCommand() {
-                    @Override
-                    public void doIt() {
-                        final TaskLog taskLog = new TaskLog(getThis());
-                        taskLog.setTaskStart(start);
-                        taskLog.setTaskEnd(end);
-                        taskLog.setOutput(log);
-                        taskLog.setSuccessful(Boolean.valueOf(success));
-                        setLastRun(start);
-                        cleanupLogs(100);
-                    }
-                });
-            } finally {
-                Transaction.forceFinish();
-            }
+            final TaskLog taskLog = new TaskLog(getThis());
+            taskLog.setTaskStart(start);
+            taskLog.setTaskEnd(end);
+            taskLog.setOutput(log);
+            taskLog.setSuccessful(Boolean.valueOf(success));
+            setLastRun(start);
+            cleanupLogs(100);
         }
 
     }

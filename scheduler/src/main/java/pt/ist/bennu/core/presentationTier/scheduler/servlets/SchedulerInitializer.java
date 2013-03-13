@@ -4,7 +4,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.scheduler.Scheduler;
 
@@ -17,7 +18,7 @@ import pt.ist.bennu.core.domain.scheduler.Scheduler;
 @WebListener
 public class SchedulerInitializer implements ServletContextListener {
 
-    private static final Logger logger = Logger.getLogger(SchedulerInitializer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SchedulerInitializer.class);
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {

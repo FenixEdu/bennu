@@ -2,12 +2,12 @@ package pt.ist.bennu.core.domain.scheduler;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+import java.util.Set;
 
 import pt.ist.bennu.core.domain.MyOrg;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
 
 public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base implements Queue<Task> {
 
@@ -21,16 +21,18 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
         return queue == null ? new PendingExecutionTaskQueue() : queue;
     }
 
-    public static List<Task> getPendingExecutionTasks() {
+    public static Set<Task> getPendingExecutionTasks() {
         return getPendingExecutionTaskQueue().getTasks();
     }
 
     private Task getHead() {
-        return getTasks().get(size() - 1);
+        return getTasks().iterator().next();
     }
 
     private Task removeHead() {
-        return getTasks().remove(size() - 1);
+        Task head = getHead();
+        getTasks().remove(head);
+        return head;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
 
     @Override
     public boolean offer(Task task) {
-        getTasks().add(0, task);
+        getTasks().add(task);
         return true;
     }
 
@@ -62,27 +64,9 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
         return task;
     }
 
+    @Atomic
     public Task popPendingTaskService() {
-        Task result = null;
-        boolean committed = false;
-        try {
-            if (jvstm.Transaction.current() != null) {
-                jvstm.Transaction.commit();
-            }
-            Transaction.begin();
-
-            result = poll();
-
-            jvstm.Transaction.checkpoint();
-            committed = true;
-        } finally {
-            if (!committed) {
-                Transaction.abort();
-                Transaction.begin();
-            }
-            Transaction.currentFenixTransaction().setReadOnly();
-        }
-        return result;
+        return poll();
     }
 
     @Override
