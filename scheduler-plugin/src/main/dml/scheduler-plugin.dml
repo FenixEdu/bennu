@@ -25,6 +25,10 @@ class TaskLog {
 	Boolean successful;
 }
 
+relation DomainRootHasSchedulerSystem {
+	.pt.ist.fenixframework.DomainRoot playsRole domainRoot;
+	SchedulerSystem playsRole schedulerSystem;
+}
 
 relation SchedulerSystemTask {
 	SchedulerSystem playsRole schedulerSystem;
