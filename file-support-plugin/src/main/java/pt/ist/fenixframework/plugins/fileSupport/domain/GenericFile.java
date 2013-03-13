@@ -10,15 +10,13 @@ import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
-import jvstm.TransactionalCommand;
-
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
-import pt.ist.fenixframework.FFDomainException;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.bennu.core.domain.exceptions.DomainException;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -73,14 +71,9 @@ abstract public class GenericFile extends GenericFile_Base {
         return getStorage().readAsInputStream(getContentKey());
     }
 
+    @Atomic
     private void updateFileStorage() {
-        Transaction.withTransaction(new TransactionalCommand() {
-
-            @Override
-            public void doIt() {
-                setContent(getContent());
-            }
-        });
+        setContent(getContent());
     }
 
     /**
@@ -98,7 +91,7 @@ abstract public class GenericFile extends GenericFile_Base {
         try {
             messageDigest = MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new FFDomainException(e);
+            throw new DomainException("error.digest.algorithm.not.found", e);
         }
         return messageDigest.digest(getContent());
     }
@@ -167,16 +160,9 @@ abstract public class GenericFile extends GenericFile_Base {
         return new MimetypesFileTypeMap().getContentType(filename);
     }
 
+    @Atomic
     public void deleteService() {
-        Transaction.withTransaction(new TransactionalCommand() {
-
-            @Override
-            public void doIt() {
-                delete();
-            }
-
-        });
-
+        delete();
     }
 
     public void delete() {
