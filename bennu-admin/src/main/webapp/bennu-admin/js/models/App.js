@@ -3,7 +3,7 @@ define([
 ], function(Backbone) {
 	return Backbone.Model.extend({
 	
-	urlRoot : "/api/bennu-dispatch/apps",
+	urlRoot : "../api/bennu-dispatch/apps",
 	
 	url : function() {
 		return this.urlRoot + "/" + this.get("path");

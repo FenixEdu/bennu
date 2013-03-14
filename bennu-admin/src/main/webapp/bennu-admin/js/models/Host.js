@@ -3,7 +3,7 @@ define([
 ], function(Backbone) {
 	return Backbone.Model.extend({
 	
-	urlRoot : "/api/bennu-portal/hosts",
+	urlRoot : "../api/bennu-portal/hosts",
 	
 	defaults: {    
         hostname : "zen.com",

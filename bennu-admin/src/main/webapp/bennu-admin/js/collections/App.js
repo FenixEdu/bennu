@@ -4,7 +4,7 @@ define([
 ], function(Backbone, AppModel) {
 	return Backbone.Collection.extend({
 
-	    url: "/api/bennu-dispatch/apps",
+	    url: "../api/bennu-dispatch/apps",
 
 	    model: AppModel,
 	    

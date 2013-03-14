@@ -3,7 +3,7 @@ define([
 ], function(Backbone) {
 	return Backbone.Model.extend({
 	
-		urlRoot : "/api/bennu-portal/menu",
+		urlRoot : "../api/bennu-portal/menu",
 		
 		defaults: {
 	    },

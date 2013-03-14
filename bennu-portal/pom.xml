@@ -18,45 +18,10 @@
 
 	<properties>
 		<version.pt.ist.bennu.bennu-core>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-core>
-		<version.pt.ist.bennu.bennu-backbone>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-backbone>
 		<version.pt.ist.bennu.bennu-dispatch>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-dispatch>
+		<version.pt.ist.bennu.bennu-json>1.0-SNAPSHOT</version.pt.ist.bennu.bennu-json>
 	</properties>
 	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.8.v20121106</version>
-				<configuration>
-					<scanIntervalSeconds>10</scanIntervalSeconds>
-					<stopKey>foo</stopKey>
-					<stopPort>9999</stopPort>
-					<encoding>UTF-8</encoding>
-				</configuration>
-				<executions>
-					<execution>
-						<id>start-jetty</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<scanIntervalSeconds>0</scanIntervalSeconds>
-							<daemon>true</daemon>
-						</configuration>
-					</execution>
-					<execution>
-						<id>stop-jetty</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 
 	<dependencies>
 		<dependency>
@@ -66,29 +31,13 @@
 		</dependency>
 		<dependency>
 			<groupId>pt.ist.bennu</groupId>
-			<artifactId>bennu-backbone</artifactId>
-			<version>${version.pt.ist.bennu.bennu-backbone}</version>
-		</dependency>
-		<dependency>
-			<groupId>pt.ist.bennu</groupId>
 			<artifactId>bennu-dispatch</artifactId>
 			<version>${version.pt.ist.bennu.bennu-dispatch}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-servlet</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
+			<groupId>pt.ist.bennu</groupId>
+			<artifactId>bennu-json</artifactId>
+			<version>${version.pt.ist.bennu.bennu-json}</version>
 		</dependency>
 	</dependencies>
 
