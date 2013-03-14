@@ -20,6 +20,7 @@ import pt.ist.bennu.dispatch.model.MultiLanguageDetails;
 import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
 import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -33,8 +34,12 @@ public class BennuDispatchContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         try {
             for (FenixFrameworkArtifact artifact : ConfigurationManager.getArtifacts()) {
-                final JsonObject appJson = getArtifactAppJson(artifact.getName());
-                parseApplicationInfo(appJson);
+                final JsonArray appsJson = getArtifactAppsJson(artifact.getName());
+                if (appsJson != null) {
+                    for (JsonElement appJson : appsJson) {
+                        parseApplicationInfo((JsonObject) appJson);
+                    }
+                }
             }
         } catch (IOException | FenixFrameworkProjectException e) {
             throw new Error(e);
@@ -43,9 +48,6 @@ public class BennuDispatchContextListener implements ServletContextListener {
     }
 
     private void parseApplicationInfo(JsonObject appJson) {
-        if (appJson == null) {
-            return;
-        }
         final String accessExpression = appJson.get("accessExpression").getAsString();
         final String path = appJson.get("path").getAsString();
         ApplicationInfo appInfo = new ApplicationInfo(path, accessExpression, getDetails(appJson));
@@ -70,17 +72,17 @@ public class BennuDispatchContextListener implements ServletContextListener {
         return details;
     }
 
-    public JsonObject getArtifactAppJson(String modulePath) {
-        final String appJsonPath = String.format("/%s/app.json", modulePath);
+    public JsonArray getArtifactAppsJson(String modulePath) {
+        final String appJsonPath = String.format("/%s/apps.json", modulePath);
         final InputStream appJsonStream = BennuDispatchContextListener.class.getResourceAsStream(appJsonPath);
         if (appJsonStream != null) {
             final InputStreamReader appJsonReader = new InputStreamReader(appJsonStream);
             JsonParser parse = new JsonParser();
-            LOGGER.info("parsing app.json for {}", modulePath);
-            return parse.parse(appJsonReader).getAsJsonObject();
+            LOGGER.info("parsing apps.json for {}", modulePath);
+            return parse.parse(appJsonReader).getAsJsonObject().get("apps").getAsJsonArray();
 
         }
-        LOGGER.info("No app.json found in {}", modulePath);
+        LOGGER.info("No apps.json found in {}", modulePath);
         return null;
     }
 

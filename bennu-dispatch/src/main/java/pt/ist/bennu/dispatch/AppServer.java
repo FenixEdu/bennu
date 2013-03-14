@@ -14,10 +14,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import pt.ist.bennu.core.rest.json.JsonAwareResource;
+import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.dispatch.model.ApplicationInfo;
 import pt.ist.bennu.dispatch.model.FunctionalityInfo;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @Path("apps")
 public class AppServer {
@@ -35,11 +38,13 @@ public class AppServer {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listApps() {
-        JsonArray array = new JsonArray();
+        JsonArray appsArray = new JsonArray();
         for (ApplicationInfo application : apps) {
-            array.add(application.json());
+            appsArray.add(application.json());
         }
-        return Response.ok(array.toString()).build();
+        JsonObject appsJson = new JsonObject();
+        appsJson.add("apps", appsArray);
+        return Response.ok(JsonAwareResource.toJson(appsJson)).build();
     }
 
     @GET
@@ -48,8 +53,28 @@ public class AppServer {
     public String listFunctionality(@PathParam("path") String path) {
         final FunctionalityInfo abstractFunctionalityInfo = pathFunctionalityMap.get(path);
         if (abstractFunctionalityInfo != null) {
-            return abstractFunctionalityInfo.json().toString();
+            return JsonAwareResource.toJson(abstractFunctionalityInfo.json());
         }
         throw new WebApplicationException(Status.NOT_FOUND);
+    }
+
+    public static MultiLanguageString getTitle(String path) {
+        final FunctionalityInfo functionalityInfo = pathFunctionalityMap.get(path);
+        if (functionalityInfo != null) {
+            return functionalityInfo.getTitle();
+        }
+        return null;
+    }
+
+    public static MultiLanguageString getDescription(String path) {
+        final FunctionalityInfo functionalityInfo = pathFunctionalityMap.get(path);
+        if (functionalityInfo != null) {
+            return functionalityInfo.getDescription();
+        }
+        return null;
+    }
+
+    public static Boolean hasFunctionality(String path) {
+        return pathFunctionalityMap.get(path) != null;
     }
 }
