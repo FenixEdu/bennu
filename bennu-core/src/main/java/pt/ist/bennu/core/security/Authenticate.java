@@ -40,23 +40,23 @@ public class Authenticate {
 
     private static final String USER_SESSION_ATTRIBUTE = "USER_SESSION_ATTRIBUTE";
 
-    private static final ThreadLocal<SessionUserWrapper> wrapper = new ThreadLocal<>();
+    private static final ThreadLocal<UserSession> wrapper = new ThreadLocal<>();
 
     private static Set<AuthenticationListener> authenticationListeners;
 
-    public static User login(HttpSession session, String username, String password, boolean checkPassword) {
-        SessionUserWrapper user = internalLogin(username, password, checkPassword);
+    public static UserSession login(HttpSession session, String username, String password, boolean checkPassword) {
+        UserSession user = internalLogin(username, password, checkPassword);
         session.setAttribute(USER_SESSION_ATTRIBUTE, user);
         I18N.setLocale(session, user.getUser().getPreferredLocale());
 
         fireLoginListeners(user.getUser());
         logger.info("Logged in user: " + user.getUsername());
 
-        return user.getUser();
+        return user;
     }
 
     @Service
-    private static SessionUserWrapper internalLogin(String username, String password, boolean checkPassword) {
+    private static UserSession internalLogin(String username, String password, boolean checkPassword) {
         User user = User.findByUsername(username);
         if (checkPassword && ConfigurationManager.getBooleanProperty("check.login.password", true)) {
             if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
@@ -64,31 +64,41 @@ public class Authenticate {
             }
         }
         if (user == null) {
-            user = new User(username);
+            if (VirtualHost.getVirtualHostForThread().isCasEnabled() || Bennu.getInstance().getUsersCount() == 0) {
+                user = new User(username);
+            } else {
+                throw AuthorizationException.authenticationFailed();
+            }
         }
 
-        SessionUserWrapper userWrapper = new SessionUserWrapper(user);
+        UserSession userWrapper = new UserSession(user);
         wrapper.set(userWrapper);
         if (Bennu.getInstance().getUsersCount() == 1) {
             DynamicGroup.getInstance("managers").grant(user);
             logger.info("Bootstrapped #managers group to user: " + user.getUsername());
         }
-
         return userWrapper;
     }
 
     public static void logout(HttpSession session) {
-        final SessionUserWrapper userWrapper = (SessionUserWrapper) session.getAttribute(USER_SESSION_ATTRIBUTE);
-        if (userWrapper != null) {
-            internalLogout(userWrapper.getUser());
+        if (session != null) {
+            final UserSession userWrapper = (UserSession) session.getAttribute(USER_SESSION_ATTRIBUTE);
+            if (userWrapper != null) {
+                internalLogout(userWrapper.getUser());
+            }
+            session.removeAttribute(USER_SESSION_ATTRIBUTE);
+            session.invalidate();
         }
-        wrapper.set(userWrapper);
-        session.invalidate();
+        wrapper.set(null);
     }
 
     @Service
     private static void internalLogout(User user) {
         user.setLastLogoutDateTime(new DateTime());
+    }
+
+    public static UserSession getUserSession() {
+        return wrapper.get();
     }
 
     public static User getUser() {
@@ -104,7 +114,7 @@ public class Authenticate {
     }
 
     static void updateFromSession(HttpSession session) {
-        SessionUserWrapper user = (SessionUserWrapper) (session == null ? null : session.getAttribute(USER_SESSION_ATTRIBUTE));
+        UserSession user = (UserSession) (session == null ? null : session.getAttribute(USER_SESSION_ATTRIBUTE));
         if (user != null) {
             final DateTime lastLogoutDateTime = user.getLastLogoutDateTime();
             if (lastLogoutDateTime == null || user.getUserCreationDateTime().isAfter(lastLogoutDateTime)) {

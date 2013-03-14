@@ -112,8 +112,10 @@ public final class DynamicGroup extends DynamicGroup_Base {
     }
 
     public DynamicGroup changeGroup(BennuGroup group) {
-        pushHistory();
-        setGroup(group);
+        if (!group.equals(getGroup())) {
+            pushHistory();
+            setGroup(group);
+        }
         return this;
     }
 

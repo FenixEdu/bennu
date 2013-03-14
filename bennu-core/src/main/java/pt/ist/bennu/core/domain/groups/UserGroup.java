@@ -63,7 +63,7 @@ public class UserGroup extends UserGroup_Base {
             }
         });
 
-        return "P(" + Joiner.on(", ").join(usernames) + ")";
+        return "U(" + Joiner.on(", ").join(usernames) + ")";
     }
 
     @Override

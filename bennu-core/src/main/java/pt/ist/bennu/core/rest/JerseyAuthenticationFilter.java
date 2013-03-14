@@ -37,11 +37,10 @@ public class JerseyAuthenticationFilter implements Filter {
 
     public void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws IOException, ServletException {
-        System.out.println("authentication filter");
         if (isPublicRequest(request)) {
             LOG.info("Request is public");
             if (Authenticate.getUser() != null) {
-                LOG.info("User is logged in {}", Authenticate.getUser());
+                LOG.info("User is logged in {}", Authenticate.getUser().getUsername());
             }
             filterChain.doFilter(request, response);
         } else {

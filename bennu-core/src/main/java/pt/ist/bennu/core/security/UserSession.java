@@ -1,5 +1,5 @@
 /*
- * SessionUserWrapper.java
+ * UserSession.java
  * 
  * Copyright (c) 2013, Instituto Superior Técnico. All rights reserved.
  * 
@@ -18,16 +18,18 @@ package pt.ist.bennu.core.security;
 
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.security.SecureRandom;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
-import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.domain.groups.BennuGroup;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 
-class SessionUserWrapper implements Serializable {
+public class UserSession implements Serializable, Principal {
     private static final long serialVersionUID = -16953310282144136L;
 
     private final String userExternalId;
@@ -38,7 +40,11 @@ class SessionUserWrapper implements Serializable {
 
     private final DateTime lastLogoutDateTime;
 
-    public SessionUserWrapper(final User user) {
+    private final Set<String> groupExpressions = new HashSet<>();
+
+    private transient Set<BennuGroup> groups = null;
+
+    UserSession(final User user) {
         userExternalId = user.getExternalId();
 
         SecureRandom random = null;
@@ -55,28 +61,15 @@ class SessionUserWrapper implements Serializable {
         privateConstantForDigestCalculation = user.getUsername() + user.getPassword() + random.nextLong();
 
         lastLogoutDateTime = user.getLastLogoutDateTime();
-    }
 
-    public SessionUserWrapper(final String username) {
-        this(findByUsername(username));
-    }
-
-    private static User findByUsername(final String username) {
-        final User user = User.findByUsername(username);
-        if (user == null) {
-            final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-            if (virtualHost != null && virtualHost.isCasEnabled() || Bennu.getInstance().getUsersCount() == 0) {
-                return new User(username);
-            }
-            return new User(username);
-            // throw new Error("authentication.exception");
+        for (BennuGroup group : user.accessibleGroups()) {
+            groupExpressions.add(group.expression());
         }
-        return user;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof SessionUserWrapper && userExternalId.equals(((SessionUserWrapper) obj).userExternalId);
+        return obj instanceof UserSession && userExternalId.equals(((UserSession) obj).userExternalId);
     }
 
     @Override
@@ -102,5 +95,20 @@ class SessionUserWrapper implements Serializable {
 
     public DateTime getLastLogoutDateTime() {
         return lastLogoutDateTime;
+    }
+
+    public Set<BennuGroup> accessibleGroups() {
+        if (groups == null) {
+            groups = new HashSet<>();
+            for (String expression : groupExpressions) {
+                groups.add(BennuGroup.parse(expression));
+            }
+        }
+        return groups;
+    }
+
+    @Override
+    public String getName() {
+        return getUser().getPresentationName();
     }
 }

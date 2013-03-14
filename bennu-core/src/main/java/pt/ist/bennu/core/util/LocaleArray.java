@@ -1,32 +1,33 @@
 package pt.ist.bennu.core.util;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 public class LocaleArray implements Serializable {
-    private final Locale[] locales;
+    private final List<Locale> locales;
 
-    public LocaleArray(Locale... locales) {
+    public LocaleArray(List<Locale> locales) {
         this.locales = locales;
     }
 
-    public Locale[] getLocales() {
+    public List<Locale> getLocales() {
         return locales;
     }
 
     public LocaleArray with(Locale locale) {
-        Locale[] locs = new Locale[locales.length + 1];
-        locs[locales.length] = locale;
-        return new LocaleArray(locs);
+        List<Locale> newlist = new Vector<>(locales);
+        newlist.add(locale);
+        return new LocaleArray(newlist);
     }
 
     public String externalize() {
-        return Joiner.on(',').join(Iterables.transform(Arrays.asList(locales), new Function<Locale, String>() {
+        return Joiner.on(',').join(Iterables.transform(locales, new Function<Locale, String>() {
             @Override
             public String apply(Locale locale) {
                 return locale.toLanguageTag();
@@ -35,11 +36,10 @@ public class LocaleArray implements Serializable {
     }
 
     public static LocaleArray internalize(String externalized) {
-        String[] parts = externalized.split(",");
-        Locale[] locales = new Locale[parts.length];
-        for (int i = 0; i < parts.length; i++) {
-            locales[i] = Locale.forLanguageTag(parts[i]);
+        List<Locale> newlist = new Vector<>();
+        for (String tag : externalized.split(",")) {
+            newlist.add(Locale.forLanguageTag(tag));
         }
-        return new LocaleArray(locales);
+        return new LocaleArray(newlist);
     }
 }

@@ -165,7 +165,15 @@ public abstract class CustomGroup extends CustomGroup_Base {
         public Set<BennuGroup> groupsForUser(User user) {
             try {
                 return (Set<BennuGroup>) groupsForUser.invoke(null, user);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            } catch (InvocationTargetException e) {
+                if (e.getCause() instanceof RuntimeException) {
+                    throw (RuntimeException) e.getCause();
+                }
+                if (e.getCause() instanceof Error) {
+                    throw (Error) e.getCause();
+                }
+                throw new Error(e.getCause());
+            } catch (IllegalAccessException | IllegalArgumentException e) {
                 throw new Error(e);
             }
         }
