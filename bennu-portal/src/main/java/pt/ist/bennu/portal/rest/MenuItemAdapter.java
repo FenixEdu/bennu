@@ -1,6 +1,9 @@
 package pt.ist.bennu.portal.rest;
 
+import java.util.Locale;
+
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
+import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
@@ -43,7 +46,9 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
         if (jsonObj.has("menu")) {
             final JsonArray menu = jsonObj.get("menu").getAsJsonArray();
             for (JsonElement menuEl : menu) {
-                update(menuEl, getMenuItem(menuEl), ctx);
+                final MenuItem childMenuItem = getMenuItem(menuEl);
+                childMenuItem.setParent(menuItem);
+                update(menuEl, childMenuItem, ctx);
             }
         }
 
@@ -60,7 +65,16 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
         json.addProperty("id", obj.getExternalId());
         json.addProperty("order", obj.getOrd());
         json.addProperty("path", obj.getPath());
-        json.add("title", ctx.view(obj.getTitle()));
+        json.addProperty("functionality", obj.isFunctionalityLink());
+        if (obj.hasHost()) {
+            MultiLanguageString mls = new MultiLanguageString();
+            for (Locale locale : VirtualHost.getVirtualHostForThread().getSupportedLanguages().getLocales()) {
+                mls = mls.with(locale, obj.getHost().getHostname());
+            }
+            json.add("title", ctx.view(mls));
+        } else {
+            json.add("title", ctx.view(obj.getTitle()));
+        }
         json.add("description", ctx.view(obj.getDescription()));
         json.add("menu", ctx.view(obj.getOrderedChild()));
         return json;

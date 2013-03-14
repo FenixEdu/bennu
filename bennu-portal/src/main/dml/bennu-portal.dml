@@ -1,10 +1,10 @@
 package pt.ist.bennu.portal.domain;
 
 class HostInfo {
-	MultiLanguageString applicationTitle;
-	MultiLanguageString htmlTitle;
-	MultiLanguageString applicationSubTitle;
-	MultiLanguageString applicationCopyright;
+	MultiLanguageString applicationTitle (REQUIRED);
+	MultiLanguageString htmlTitle (REQUIRED);
+	MultiLanguageString applicationSubTitle (REQUIRED);
+	MultiLanguageString applicationCopyright (REQUIRED);
 	String supportEmailAddress;
 	String systemEmailAddress;
 }

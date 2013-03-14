@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
+import pt.ist.bennu.core.util.MultiLanguageString;
+import pt.ist.bennu.dispatch.AppServer;
 import pt.ist.bennu.service.Service;
 
 public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
@@ -38,6 +40,7 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
 
     @Service
     public void delete() {
+        setParent(null);
         if (hasHost()) {
             removeHost();
         }
@@ -45,5 +48,41 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
             child.delete();
         }
         deleteDomainObject();
+    }
+
+    @Override
+    public MultiLanguageString getDescription() {
+        final MultiLanguageString description = super.getDescription();
+        if (description == null) {
+            return AppServer.getDescription(getPath());
+        }
+        return description;
+    }
+
+    @Override
+    public MultiLanguageString getTitle() {
+        final MultiLanguageString title = super.getTitle();
+        if (title == null) {
+            return AppServer.getTitle(getPath());
+        }
+        return title;
+    }
+
+    @Override
+    public void setTitle(MultiLanguageString title) {
+        if (!isFunctionalityLink()) {
+            super.setTitle(title);
+        }
+    }
+
+    @Override
+    public void setDescription(MultiLanguageString description) {
+        if (!isFunctionalityLink()) {
+            super.setDescription(description);
+        }
+    }
+
+    public Boolean isFunctionalityLink() {
+        return AppServer.hasFunctionality(getPath());
     }
 }

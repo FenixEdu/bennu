@@ -12,6 +12,9 @@ define([
         template: tpl,
         itemView: SingleHostView,
         itemViewContainer: "tbody",
+        modelEvents : {
+        	"change" : "render",
+        },
 
 	events: {
 		"click .edit-host" : "editHost",
@@ -19,18 +22,6 @@ define([
 		"click .delete-host": "deleteHost",
 		"click .show-menu" : "showMenu",
 	},
-	
-	/*itemRemoved : function(viewInstance) {
-		console.log(viewInstance);
-	},
-	
-	onBeforeClose: function(){
-		console.log('before closing view!');
-	  },
-	  
-	onClose: function() {
-		console.log('closing view!');
-	},*/
 	
 	showMenu : function(e) {
 		Backbone.history.navigate("#menu/" + e.target.id, true);
@@ -48,15 +39,13 @@ define([
 	
 	deleteHost : function(e) {
 		var hostModel = this.collection.get(e.target.id);
-		var that = this;
 		hostModel.destroy({
-            success:function () {
-                alert('Host apagado!');
-                that.render();
-            }
+            	success:function () {
+            		alert('Host apagado!');
+            	}
         });
 		return false;
-	}
+	},
 	
-});
+    });
 });

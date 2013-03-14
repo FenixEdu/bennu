@@ -12,6 +12,7 @@ define([
         regions: {
             tree: "#menu-tree",
             menu: "#menu",
+            modal: "#modal",
         },
     });
 });

@@ -1,5 +1,6 @@
 package pt.ist.bennu.portal.rest;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -48,5 +49,15 @@ public class MenuResource extends BennuRestResource {
     @Service
     public MenuItem innerUpdate(final MenuItem menuItem, final String jsonData) {
         return update(jsonData, menuItem);
+    }
+
+    @Path("{oid}")
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteMenu(@PathParam("oid") final String menuOid) {
+        final MenuItem menuItem = (MenuItem) readDomainObject(menuOid);
+        final String rsp = viewMenu(menuItem);
+        menuItem.delete();
+        return rsp;
     }
 }

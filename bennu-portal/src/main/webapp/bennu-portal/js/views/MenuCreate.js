@@ -3,8 +3,9 @@ define([
     'backbone',
     'marionette',
     'app',
-    'text!templates/MenuForm.html'
-], function($, Backbone, Marionette, App, tpl) {
+    'text!templates/MenuForm.html',
+    'views/MenuModalAdd',
+], function($, Backbone, Marionette, App, tpl, MenuModalAddView) {
 	
 
 	return Backbone.Marionette.ItemView.extend({
@@ -12,12 +13,27 @@ define([
 		template: tpl,
 		
 		events : {
-	    	"click #confirm" : "createMenu"
+	    	"click #confirm" : "createMenu",
+	    	"click #delete"  : "deleteMenu",
+	    	"click #add-menu" : "addMenu",
+	    },
+	    
+	    modelEvents : {
+	    	"change" : "render",
+	    },
+	    
+	    initialize : function () {
+	    	this.modalMenuView = new MenuModalAddView();
+	    },
+	    
+	    serializeData: function() {
+	    	var data = this.model.toJSON();
+	    	data.hasMenu = this.model.menu != undefined && this.model.menu.length > 0;
+	    	return data;
 	    },
 	    
 	    createMenu : function(e) {
 	    	var that = this;
-	    	e.preventDefault();
 	    	$('input').each(function(index, input) {
 	    		if ($(input).attr('lang')) {
 	    			var mls = that.model.get(input.name) || {};
@@ -36,5 +52,21 @@ define([
 	    		  }).show();
 	    	} });
 	    },
+	    
+	    deleteMenu : function(e) {
+	    	var that = this;
+	    	this.model.destroy({ success : function() {
+	    		console.log("deleted " + that.model.get("id"));
+	    		that.remove();
+	    	}});
+	    },
+	    
+	    addMenu: function(e) {
+	    	this.modalMenuView.model = App.apps;
+	    	this.modalMenuView.parentMenu = this.model;
+	    	App.Layout.menuLayout.modal.show(this.modalMenuView);
+	    	$('#modal-add-menu').modal("show");
+	    },
+	    
 	});
 });

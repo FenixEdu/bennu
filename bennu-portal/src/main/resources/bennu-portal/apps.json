@@ -1,0 +1,21 @@
+{"apps" : [{
+"title" :  {"pt" : "Gestão de Menus"},
+"description" : {"pt" : "Gestão de Menus"},
+"accessExpression" : "#managers",
+"path" : "/bennu-portal",
+"functionalities" : 
+		[
+			{ 
+   			  "title" : {"pt" : "Gestão de Hosts"},
+			  "description" : {"pt" : "Gestão das propriedades e menu de cada host"},
+			  "path" : "/bennu-portal/#hosts",
+			  "accessExpression" : "#managers"
+			},
+			{ 
+   			  "title" : {"pt" : "Criar Host"},
+			  "description" : {"pt" : "Criação de um novo host"},
+			  "path" : "/bennu-portal/#hosts/create",
+			  "accessExpression" : "#managers"
+			}
+		]
+}]}

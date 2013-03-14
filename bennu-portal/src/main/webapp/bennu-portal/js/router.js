@@ -24,7 +24,6 @@ define([
     		"hosts/edit/:hostname" : "editHost",
     		"hosts/create": "createHost",
     		"menu/:id" : "showMenu",
-    		"menu/:id/:id" : "showMenu",
     	},
     	
     	controller: {
@@ -44,35 +43,33 @@ define([
     		
     		
     		
-    		showMenu: function (topMenuId, selectedMenuId) {
-    			console.log("top: "  + topMenuId + " sel: " + selectedMenuId);
+    		showMenu: function (topMenuId) {
     			var menuModel = new MenuManager.Models.Menu({id : topMenuId});
     			
     			App.Layout.menuLayout = new MenuLayout();
-    			App.Layout.menuLayout.menuId = topMenuId;
     			
 				App.Layout.contentRegion.show(App.Layout.menuLayout);
 				
     			menuModel.fetch({
     				success: function() {
-    					var menu = menuModel.get("menu");
+    					menuModel.initialize();
+    					/*var menu = menuModel.get("menu");
     					var menuCollection = new MenuManager.Collections.Menu(menu);
     					menuCollection.parent = menuModel;
     					menuTree = new MenuManager.Views.Menu({collection : menuCollection });
-    					menuTree.menuId = topMenuId;
     					menuModel.unset("menu");
+    					App.Layout.menuLayout.tree.show(menuTree);*/
+    					var menuTree = new MenuManager.Views.SingleMenu({model : menuModel });	
     					App.Layout.menuLayout.tree.show(menuTree);
+    					
+    					if (!App.appsView) {
+    						App.apps = new MenuManager.Collections.App();
+    						App.apps.fetch();
+//    						App.appsView = new MenuManager.Views.App({collection : App.apps});
+    					}
+//    					App.Layout.menuLayout.functionalities.show(App.appsView);
     				},
     			});
-    			
-    			if (selectedMenuId) {
-    				var selectedMenuModel = new MenuManager.Models.Menu({id : selectedMenuId});
-    				selectedMenuModel.fetch({
-    					success: function() {
-    						App.Layout.menuLayout.menu.show(new MenuManager.Views.MenuCreate({model : selectedMenuModel}));
-    					}
-    				});
-    			}
     			
     		},
     		

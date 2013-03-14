@@ -31,13 +31,19 @@ require(['jquery', 'jquery.bootstrap', 'backbone', 'mustache', 'marionette', 'me
 						if (this[val].pt) {
 							return this[val].pt;
 						}
+						if (this[val]["pt-PT"]) {
+							return this[val]["pt-PT"];
+						}
 					}
 					return "";
 				};
 			};
     	}
-    	console.log(template);
-		console.log(data);
+    	App.DEBUG = App.DEBUG || false;
+    	if (App.DEBUG) {
+    		console.log("template: " + template);
+    		console.log("data:" + JSON.stringify(data));
+    	}
     	return Mustache.to_html(template, data);
     	};
     

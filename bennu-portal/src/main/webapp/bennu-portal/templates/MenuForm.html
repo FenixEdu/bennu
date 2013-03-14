@@ -1,14 +1,14 @@
-<fieldset class="affix">
+<fieldset id="menu-form" class="affix">
 	<div class="notifications top-right"></div>
 	<div class="control-group">
 		<label class="control-label" for="title">Title</label>
 		<div class="controls">
 			<div class="input-append">
 				<input type="text" lang="pt" name="title"
-					value="{{title.pt}}" placeholder="Menu Title" required> <span
+					value="{{title.pt}}" placeholder="Menu Title" required {{#functionality}}readonly{{/functionality}}> <span
 					class="add-on">PT</span>
 				<input type="text" lang="en" name="title"
-					value="{{title.en}}" placeholder="Menu Title" required> <span
+					value="{{title.en}}" placeholder="Menu Title" required {{#functionality}}readonly{{/functionality}}> <span
 					class="add-on">EN</span>
 			</div>
 		</div>
@@ -18,10 +18,10 @@
 		<div class="controls">
 			<div class="input-append">
 				<input type="text" lang="pt" name="description"
-					value="{{description.pt}}" placeholder="Menu Description" required>
+					value="{{description.pt}}" placeholder="Menu Description" required {{#functionality}}readonly{{/functionality}}>
 				<span class="add-on">PT</span>
 				<input type="text" lang="en" name="description"
-					value="{{description.en}}" placeholder="Menu Description" required>
+					value="{{description.en}}" placeholder="Menu Description" required {{#functionality}}readonly{{/functionality}}>
 				<span class="add-on">EN</span>
 			</div>
 		</div>
@@ -30,8 +30,26 @@
 		<label class="control-label" for="path">Path</label>
 		<div class="controls">
 			<input type="text" name="path" value="{{path}}"
-				placeholder="Path" class="input-block-level" required>
+				placeholder="Path" class="input-block-level" required {{#functionality}}readonly{{/functionality}}>
 		</div>
 	</div>
-	<div id='confirm' class="btn">Confirmar</div>
+	<button id='confirm' class="btn" {{#functionality}}disabled{{/functionality}}>Confirmar</button>
+	{{#id}}
+		<a href="#modal-delete-menu" role="button" class="btn" data-toggle="modal">Apagar</a>
+	{{/id}}
+	<a id="add-menu" class="btn">Adicionar Menu</a>
 </fieldset>
+
+<div id="modal-delete-menu" class="modal hide fade">
+    <div class="modal-header">
+      <a href="#" data-dismiss="modal" class="close">&times;</a>
+      <h3>Apagar Menu</h3>
+    </div>
+    <div class="modal-body">
+      <p>Deseja apagar o menu?</p>
+    </div>
+    <div class="modal-footer">
+      <a id="delete" data-dismiss="modal" class="btn danger">Sim</a>
+      <a data-dismiss="modal" class="btn secondary">Não</a>
+    </div>
+</div>

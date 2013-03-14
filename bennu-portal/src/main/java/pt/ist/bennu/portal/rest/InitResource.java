@@ -40,7 +40,7 @@ public class InitResource extends BennuRestResource {
         InputStream stream = InitResource.class.getResourceAsStream("/model.json");
         final JsonObject jsonObject = new JsonParser().parse(new InputStreamReader(stream)).getAsJsonObject();
         parseHosts(jsonObject.get("hosts").getAsJsonArray());
-        return Response.ok().build();
+        return Response.ok("Init ok.").build();
     }
 
     @Service

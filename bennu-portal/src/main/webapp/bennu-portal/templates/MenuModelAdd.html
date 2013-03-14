@@ -1,0 +1,19 @@
+<div class="modal-header">
+	<a href="#" data-dismiss="modal" class="close">&times;</a>
+	<h3>Adicionar Menu</h3>
+</div>
+<div id="content" class="modal-body">
+	<select id="select-menu" class="input-block-level">
+		<option value="custom">Custom</option> 
+	{{#.}}
+		<option value="{{path}}">{{#_mls}}title{{/_mls}} - {{path}}</option>
+		{{#functionalities}}
+		<option value="{{path}}">{{#_mls}}title{{/_mls}} - {{path}}</option>
+		{{/functionalities}} 
+	{{/.}}
+	</select>
+</div>
+<div class="modal-footer">
+	<a id="add-menu-confirm" data-dismiss="modal" class="btn danger">Confirmar</a>
+	<a data-dismiss="modal" class="btn secondary">Cancelar</a>
+</div>
