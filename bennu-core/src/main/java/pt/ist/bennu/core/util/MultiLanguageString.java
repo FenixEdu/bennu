@@ -21,6 +21,8 @@ import com.google.gson.JsonObject;
 public class MultiLanguageString implements Serializable, Comparable<MultiLanguageString> {
     private final Map<Locale, String> contents;
 
+    public static final MultiLanguageString EMPTY = new MultiLanguageString();
+
     public MultiLanguageString() {
         contents = new HashMap<>();
     }

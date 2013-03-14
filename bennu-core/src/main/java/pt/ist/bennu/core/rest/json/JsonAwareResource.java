@@ -12,6 +12,7 @@ import pt.ist.bennu.service.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
@@ -79,8 +80,9 @@ public class JsonAwareResource {
 
     @Service
     private Object innerCreate(String jsonData, Class<?> clazz, Class<? extends JsonCreator<?>> jsonCreatorClass) {
-        LOG.info("Create instance of {} with data {}", clazz.getSimpleName(), jsonData);
-        return BUILDER.create(parse(jsonData), clazz, jsonCreatorClass);
+        final JsonObject parse = parse(jsonData);
+        LOG.info("Create instance of {} with data {}", clazz.getSimpleName(), toJson(parse));
+        return BUILDER.create(parse, clazz, jsonCreatorClass);
     }
 
     public <T> T update(String jsonData, T object) {
@@ -94,8 +96,9 @@ public class JsonAwareResource {
 
     @Service
     private Object innerUpdate(String jsonData, Object object, Class<? extends JsonUpdater<?>> jsonUpdaterClass) {
-        LOG.info("Update instance {} with data {}", object.toString(), jsonData);
-        return BUILDER.update(parse(jsonData), object, jsonUpdaterClass);
+        final JsonObject parse = parse(jsonData);
+        LOG.info("Update instance {} with data {}", object.toString(), toJson(parse));
+        return BUILDER.update(parse, object, jsonUpdaterClass);
     }
 
     private JsonObject parse(String jsonString) {
@@ -104,6 +107,10 @@ public class JsonAwareResource {
         } catch (JsonParseException | IllegalStateException e) {
             throw BennuCoreDomainException.parseError();
         }
+    }
+
+    public static String toJson(JsonElement el) {
+        return GSON.toJson(el);
     }
 
 }
