@@ -42,7 +42,7 @@ public class SetUserViewFilter implements Filter {
             Authenticate.updateFromSession(((HttpServletRequest) request).getSession(false));
             chain.doFilter(request, response);
         } finally {
-            Authenticate.clear();
+            Authenticate.setUser(null);
         }
     }
 }

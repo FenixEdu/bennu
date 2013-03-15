@@ -38,8 +38,12 @@ public class I18N {
         if (session != null) {
             session.setAttribute(LOCALE_KEY, locale);
         }
+        setLocale(locale);
+    }
+
+    public static void setLocale(Locale locale) {
         I18N.locale.set(locale);
-        logger.debug("Set locale to: {}", locale.toString());
+        logger.debug("Set locale to: {}", locale);
     }
 
     static void updateFromSession(HttpSession session) {
@@ -49,9 +53,5 @@ public class I18N {
         } else {
             locale.set(null);
         }
-    }
-
-    static void clear() {
-        locale.set(null);
     }
 }

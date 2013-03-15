@@ -72,7 +72,7 @@ public class Authenticate {
         }
 
         UserSession userWrapper = new UserSession(user);
-        wrapper.set(userWrapper);
+        setUser(userWrapper);
         if (Bennu.getInstance().getUsersCount() == 1) {
             DynamicGroup.getInstance("managers").grant(user);
             logger.info("Bootstrapped #managers group to user: " + user.getUsername());
@@ -89,7 +89,7 @@ public class Authenticate {
             session.removeAttribute(USER_SESSION_ATTRIBUTE);
             session.invalidate();
         }
-        wrapper.set(null);
+        setUser(null);
     }
 
     @Service
@@ -103,6 +103,10 @@ public class Authenticate {
 
     public static User getUser() {
         return wrapper.get() != null ? wrapper.get().getUser() : null;
+    }
+
+    public static void setUser(UserSession user) {
+        wrapper.set(user);
     }
 
     public static boolean hasUser() {
@@ -126,10 +130,6 @@ public class Authenticate {
         } else {
             wrapper.set(null);
         }
-    }
-
-    static void clear() {
-        wrapper.set(null);
     }
 
     public static void addAuthenticationListener(AuthenticationListener listener) {

@@ -54,7 +54,7 @@ public class I18NFilter implements Filter {
             }
             chain.doFilter(request, response);
         } finally {
-            I18N.clear();
+            I18N.setLocale(null);
         }
     }
 }

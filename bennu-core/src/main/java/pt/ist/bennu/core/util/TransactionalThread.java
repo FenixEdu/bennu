@@ -16,10 +16,13 @@
  */
 package pt.ist.bennu.core.util;
 
-import java.util.ArrayList;
+import java.util.Locale;
 
 import jvstm.TransactionalCommand;
-import pt.ist.bennu.service.Service;
+import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.i18n.I18N;
+import pt.ist.bennu.core.security.Authenticate;
+import pt.ist.bennu.core.security.UserSession;
 import pt.ist.fenixframework.pstm.Transaction;
 
 /**
@@ -29,15 +32,18 @@ import pt.ist.fenixframework.pstm.Transaction;
  * 
  */
 public abstract class TransactionalThread extends Thread {
-    public static interface ExceptionListener {
-        public void notifyException(Throwable e);
-    }
+    private VirtualHost virtualHost;
+
+    private UserSession user;
+
+    private Locale locale;
 
     private final boolean readOnly;
 
-    private ArrayList<ExceptionListener> listeners;
-
-    public TransactionalThread(final boolean readOnly) {
+    public TransactionalThread(boolean readOnly) {
+        virtualHost = VirtualHost.getVirtualHostForThread();
+        user = Authenticate.getUserSession();
+        locale = I18N.getLocale();
         this.readOnly = readOnly;
     }
 
@@ -45,51 +51,18 @@ public abstract class TransactionalThread extends Thread {
         this(false);
     }
 
-    public void addExceptionListener(ExceptionListener listener) {
-        if (listeners == null) {
-            listeners = new ArrayList<>();
-        }
-        listeners.add(listener);
-    }
-
-    public void removeExceptionListener(ExceptionListener listener) {
-        if (listeners != null) {
-            listeners.remove(listener);
-        }
-    }
-
     @Override
     public void run() {
-        try {
-            Transaction.withTransaction(true, new TransactionalCommand() {
-                @Override
-                public void doIt() {
-                    try {
-                        if (readOnly) {
-                            transactionalRun();
-                        } else {
-                            callService();
-                        }
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                        if (listeners != null) {
-                            for (ExceptionListener listener : listeners) {
-                                listener.notifyException(e);
-                            }
-                        }
-                    }
-                }
-            });
-        } finally {
-            Transaction.forceFinish();
-        }
+        VirtualHost.setVirtualHostForThread(virtualHost);
+        Authenticate.setUser(user);
+        I18N.setLocale(locale);
+        Transaction.withTransaction(readOnly, new TransactionalCommand() {
+            @Override
+            public void doIt() {
+                transactionalRun();
+            }
+        });
     }
 
     public abstract void transactionalRun();
-
-    @Service
-    private void callService() {
-        transactionalRun();
-    }
-
 }
