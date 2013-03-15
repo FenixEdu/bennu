@@ -16,7 +16,7 @@ public class CasConfigContextSerializer implements JsonViewer<CasConfigContext> 
     public JsonElement view(CasConfigContext casConfigContext, JsonBuilder context) {
         JsonObject jsonObject = new JsonObject();
         CasConfig casConfig = casConfigContext.getCasConfig();
-        if (casConfig.isCasEnabled()) {
+        if (casConfig != null && casConfig.isCasEnabled()) {
             jsonObject.addProperty("casEnabled", true);
             jsonObject.addProperty("loginUrl", casConfig.getCasLoginUrl(casConfigContext.getRequest()));
             jsonObject.addProperty("logoutUrl", casConfig.getCasLogoutUrl());
