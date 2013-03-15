@@ -1,5 +1,6 @@
-package pt.ist.bennu.portal.rest;
+package pt.ist.bennu.portal.rest.json;
 
+import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.rest.json.DomainObjectViewer;
@@ -11,6 +12,7 @@ import pt.ist.bennu.portal.domain.HostInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+@DefaultJsonAdapter(VirtualHost.class)
 public class HostAdapter implements JsonAdapter<VirtualHost> {
 
     @Override
@@ -54,6 +56,9 @@ public class HostAdapter implements JsonAdapter<VirtualHost> {
         if (jsonObj.has("systemEmailAddress")) {
             info.setSystemEmailAddress(jsonObj.get("systemEmailAddress").getAsString());
         }
+        if (jsonObj.has("theme")) {
+            info.setTheme(jsonObj.get("theme").getAsString());
+        }
     }
 
     @Override
@@ -67,6 +72,7 @@ public class HostAdapter implements JsonAdapter<VirtualHost> {
         json.add("applicationCopyright", obj.getInfo().getApplicationCopyright().json());
         json.addProperty("supportEmailAddress", obj.getInfo().getSupportEmailAddress());
         json.addProperty("systemEmailAddress", obj.getInfo().getSystemEmailAddress());
+        json.addProperty("theme", obj.getInfo().getTheme());
         json.add("menu", ctx.view(obj.getMenu(), DomainObjectViewer.class));
         return json;
     }

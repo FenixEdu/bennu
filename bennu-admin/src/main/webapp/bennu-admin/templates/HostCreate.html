@@ -71,6 +71,17 @@
 	        	<input type="email" id="systemEmailAddress" name="systemEmailAddress" value="{{systemEmailAddress}}" placeholder="System Email" required>
 	        </div>
 	    </div>
+	    <div class="control-group">
+      		<label class="control-label" for="systemEmailAddress">Theme</label>
+      		<div class="controls">
+	        	<select id="theme">
+	        	{{#themes}}
+	        		<option value="{{name}}"{{#selected}}selected{{/selected}}>{{name}}</option>
+	        	{{/themes}}
+	        	</select>
+	        </div>
+	    </div>
+	    
         <button id='confirm' class="btn">Confirmar</button>
       </fieldset>
     </form>

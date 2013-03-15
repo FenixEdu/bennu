@@ -16,6 +16,11 @@ define([
             App.Layout = new AppLayout();
             App.Layout.render();
             App.page.show(App.Layout);
+            console.log("initialize controller ...");
+			if (!App.themes) {
+				App.themes = new MenuManager.Collections.Theme();
+    			App.themes.fetch();
+			}
         },
         
         appRoutes: {

@@ -54,6 +54,7 @@ public class InitResource extends BennuRestResource {
             hostInfo.setHtmlTitle(new MultiLanguageString("htmlTitle"));
             hostInfo.setSupportEmailAddress("support@localhost");
             hostInfo.setSystemEmailAddress("system@localhost");
+            hostInfo.setTheme("bennu");
         }
     }
 
@@ -105,6 +106,7 @@ public class InitResource extends BennuRestResource {
             hostInfo.setSupportEmailAddress(supportEmailAddress);
             hostInfo.setSystemEmailAddress(systemEmailAddress);
             hostInfo.setHtmlTitle(mls(host, "htmlTitle"));
+            hostInfo.setTheme("bennu");
             createMenu(virtualHost, host);
         }
     }

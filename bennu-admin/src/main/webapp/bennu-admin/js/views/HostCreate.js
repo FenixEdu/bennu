@@ -28,11 +28,25 @@ define([
 	    		}
 	    	});
 	    	
+	    	this.model.set("theme", $("#theme").val());
+	    	
 	    	console.log(this.model.toJSON());
 	    	
 	    	this.model.save(null,{ success : function () {
 	    		Backbone.history.navigate("hosts", true);
 	    	} });
 	    },
+	    
+	    serializeData: function(e) {
+	    	var model = this.model.toJSON();
+	    	model.themes = App.themes.toJSON();
+	    	$(model.themes).each(function(i,t) {
+	    		if (t.name === model.theme){
+	    			t.selected = true;
+	    		}
+	    	});
+	    	console.log("Themes : " + model);
+	    	return model;
+	    }
 	});
 });

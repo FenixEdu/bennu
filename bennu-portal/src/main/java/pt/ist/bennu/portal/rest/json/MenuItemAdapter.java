@@ -1,4 +1,4 @@
-package pt.ist.bennu.portal.rest;
+package pt.ist.bennu.portal.rest.json;
 
 import java.util.Locale;
 

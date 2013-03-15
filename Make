@@ -1,47 +1,57 @@
 #!/bin/bash
 
+function stat() {
+	echo -e "\n";
+	echo -e "\e[1;32m$@\e[0m";
+}
 
-echo Installing Bennu Json...
+stat Installing Bennu Json...
 cd bennu-json
 mvn clean install -q
 cd ..
 
-echo Installing Bennu Maven Plugin...
+stat Installing Bennu Maven Plugin...
 cd maven/bennu-maven-plugin/
 mvn clean install -q
 cd ../../
 
-echo Installing Bennu Project...
+stat Installing Bennu Project...
 cd bennu-project
 mvn clean install -q
 cd ..
 
-echo Installing Bennu Service Annotation...
+stat Installing Bennu Service Annotation...
 cd bennu-service
 mvn clean install -q
 cd ..
 
-echo Installing Bennu Core...
+stat Installing Bennu Core...
 cd bennu-core
 mvn clean install -q
 cd ..
 
-echo Installing Bennu File Support...
+stat Installing Bennu File Support...
 cd bennu-io
 mvn clean install -q
 cd ..
 
-echo Installing Bennu Search...
+stat Installing Bennu Search...
 cd bennu-search
 mvn clean install -q
 cd ..
 
-echo Installing Bennu Dispatch...
+stat Installing Bennu Dispatch...
 cd bennu-dispatch
 mvn clean install -q
 cd ..
 
-echo Installing Bennu Portal ...
+stat Installing Bennu Portal ...
 cd bennu-portal
-mvn clean package -q
+mvn clean install -q
 cd ..
+
+stat Installing Bennu Admin ...
+cd bennu-portal
+mvn clean install -q
+cd ..
+

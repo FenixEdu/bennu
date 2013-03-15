@@ -7,12 +7,7 @@ class HostInfo {
 	MultiLanguageString applicationCopyright (REQUIRED);
 	String supportEmailAddress;
 	String systemEmailAddress;
-}
-
-class Theme {
-	String name;
-	String description;
-	String screenshotFileName;
+	String theme;
 }
 
 class MenuItem {
@@ -45,11 +40,11 @@ relation HostInfoVirtualHost {
 	}
 }
 
-relation HostTheme {
+/*relation HostTheme {
 	.pt.ist.bennu.core.domain.VirtualHost playsRole host {
 		multiplicity 1..1;
 	}
 	Theme playsRole theme {
 		multiplicity 0..*;
 	}
-}
+}*/
