@@ -14,6 +14,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.dispatch.model.ApplicationInfo;
@@ -24,15 +27,21 @@ import com.google.gson.JsonObject;
 
 @Path("apps")
 public class AppServer {
+    private static Logger LOG = LoggerFactory.getLogger(AppServer.class);
     private static Set<ApplicationInfo> apps = new HashSet<>();
     private static Map<String, FunctionalityInfo> pathFunctionalityMap = new HashMap<>();
 
     static void registerApp(ApplicationInfo application) {
+        mapFunctionality(application);
         for (FunctionalityInfo func : application.getFunctionalities()) {
-            pathFunctionalityMap.put(func.getPath(), func);
+            mapFunctionality(func);
         }
-        pathFunctionalityMap.put(application.getPath(), application);
         apps.add(application);
+    }
+
+    public static void mapFunctionality(FunctionalityInfo functionality) {
+        pathFunctionalityMap.put(functionality.getPath(), functionality);
+        LOG.info("register functionality {}", functionality.getPath());
     }
 
     @GET

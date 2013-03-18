@@ -43,6 +43,37 @@ public class InitResource extends BennuRestResource {
         return Response.ok("Init ok.").build();
     }
 
+    @Path("drop")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response dropModel() throws IOException {
+        initDropModel();
+        return Response.ok("Drop ok.").build();
+    }
+
+    @Service
+    private void initDropModel() {
+        final VirtualHost localhost = Bennu.getInstance().getVirtualHost("localhost");
+        for (VirtualHost host : Bennu.getInstance().getVirtualHosts()) {
+            if (!host.equals(localhost)) {
+                if (host.hasInfo()) {
+                    host.getInfo().delete();
+                }
+            }
+            if (host.hasMenu()) {
+                host.getMenu().delete();
+            }
+        }
+        if (localhost != null) {
+            if (localhost.hasMenu()) {
+                localhost.getMenu().delete();
+            }
+            if (localhost.hasInfo()) {
+                localhost.getInfo().delete();
+            }
+        }
+    }
+
     @Service
     private void initLocalhostInfo() {
         final VirtualHost localhost = Bennu.getInstance().getVirtualHost("localhost");

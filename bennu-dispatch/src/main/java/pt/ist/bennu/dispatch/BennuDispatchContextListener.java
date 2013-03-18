@@ -55,14 +55,13 @@ public class BennuDispatchContextListener implements ServletContextListener {
         for (JsonElement functionality : appJson.get("functionalities").getAsJsonArray()) {
             parseFunctionality(appInfo, (JsonObject) functionality);
         }
-
         AppServer.registerApp(appInfo);
     }
 
     private void parseFunctionality(ApplicationInfo appInfo, JsonObject funcJson) {
         final String accessExpression = funcJson.get("accessExpression").getAsString();
         final String path = funcJson.get("path").getAsString();
-        appInfo.addFunctionality(new FunctionalityInfo(path, accessExpression, getDetails(funcJson)));
+        appInfo.addFunctionality(new FunctionalityInfo(appInfo.getPath().concat(path), accessExpression, getDetails(funcJson)));
     }
 
     public Details getDetails(JsonObject functionality) {

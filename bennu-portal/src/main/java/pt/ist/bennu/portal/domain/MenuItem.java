@@ -12,7 +12,7 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
 
     public MenuItem() {
         super();
-        setOrd(0);
+        setOrd(1);
     }
 
     @Override

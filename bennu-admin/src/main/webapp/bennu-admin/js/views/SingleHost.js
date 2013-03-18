@@ -10,7 +10,28 @@ define([
 
         template: tpl,
         tagName : 'tr',
-
+        
+        events: {
+        	"click .add-menu" : "addMenu"
+        },
+        
+        modelEvents: {
+        	"change" : "render"
+        },
+        
+        addMenu: function(e) {
+        	var MenuManager = require("menu-manager");
+        	var menu = new MenuManager.Models.Menu();
+        	var hostModel = this.model;
+        	menu.save(null, {success : function(model) {
+        		var menu = { id : model.id };
+        		hostModel.set("menu", menu);
+        		hostModel.save(null, function(e) {
+        			Backbone.history.navigate("#menu/" + menu.id, true);
+        		});
+        	}});
+        },
+        
         
     });
 });

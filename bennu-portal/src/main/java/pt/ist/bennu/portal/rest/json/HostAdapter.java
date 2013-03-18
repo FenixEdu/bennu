@@ -8,6 +8,7 @@ import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.portal.domain.HostInfo;
+import pt.ist.bennu.portal.domain.MenuItem;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -23,7 +24,7 @@ public class HostAdapter implements JsonAdapter<VirtualHost> {
         if (virtualHost == null) {
             virtualHost = new VirtualHost(hostname);
             HostInfo info = new HostInfo(virtualHost);
-            setHostInfo(jsonObj, info);
+            setHostInfo(virtualHost, jsonObj, info, ctx);
         }
         return virtualHost;
     }
@@ -33,11 +34,11 @@ public class HostAdapter implements JsonAdapter<VirtualHost> {
         JsonObject jsonObj = json.getAsJsonObject();
         HostInfo info = obj.getInfo();
         obj.setHostname(jsonObj.get("hostname").getAsString());
-        setHostInfo(jsonObj, info);
+        setHostInfo(obj, jsonObj, info, ctx);
         return obj;
     }
 
-    private void setHostInfo(JsonObject jsonObj, HostInfo info) {
+    private void setHostInfo(VirtualHost obj, JsonObject jsonObj, HostInfo info, JsonBuilder ctx) {
         if (jsonObj.has("applicationCopyright")) {
             info.setApplicationCopyright(MultiLanguageString.fromJson(jsonObj.get("applicationCopyright").getAsJsonObject()));
         }
@@ -58,6 +59,11 @@ public class HostAdapter implements JsonAdapter<VirtualHost> {
         }
         if (jsonObj.has("theme")) {
             info.setTheme(jsonObj.get("theme").getAsString());
+        }
+        if (jsonObj.has("menu")) {
+            final JsonObject menuObj = jsonObj.get("menu").getAsJsonObject();
+            final MenuItem menuItem = ctx.create(menuObj, MenuItem.class);
+            obj.setMenu(menuItem);
         }
     }
 

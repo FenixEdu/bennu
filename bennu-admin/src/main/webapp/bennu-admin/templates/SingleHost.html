@@ -9,4 +9,7 @@
 	{{#menu.id}}
 		<button class="show-menu" id="{{menu.id}}" class="btn">Menu</button>
 	{{/menu.id}}
+	{{^menu.id}}
+		<button class="add-menu" class="btn">Criar Menu</button>
+	{{/menu.id}}
 </td>
