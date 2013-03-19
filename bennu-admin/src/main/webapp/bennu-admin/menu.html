@@ -9,7 +9,6 @@
 <script src="http://twitter.github.com/bootstrap/assets/js/jquery.js"></script>
 <script src="https://raw.github.com/janl/mustache.js/master/mustache.js" type="text/javascript"></script>
 <script type="text/html" id="tpl">
-
 <h1>{{title}}</h1>
   {{#menu}}
 <div class="btn-group">
@@ -88,27 +87,18 @@ function getModel(target_url) {
   return $.parseJSON(rawJSON);
 }
 $(document).ready(function() {
-	model = getModel("../api/menu/" + window.location.hostname);
-	$('#content').html(Mustache.to_html($('#tpl').html(),model));
-	$('#dropcontent').html(Mustache.to_html($('#droptpl').html(),model));
-	$('#navcontent').html(Mustache.to_html($('#navtpl').html(),model));
+	model = getModel("../api/bennu-portal/hostmenu/" + window.location.hostname);
+	$('#menu').html(Mustache.to_html($('#tpl').html(),model));
 });
 </script>
 
 </head>
 
 <body>
-
+<div id="menu">
+</div>
 <div id="content">
 </div>
-
-<div style="display: inline;">
-	<div id="dropcontent">
-	</div>
-	<div id="navcontent">
-	</div>
-</div>
-
 
     <!-- Le javascript
     ================================================== -->

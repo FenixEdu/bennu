@@ -3,11 +3,11 @@ define([
     'backbone',
     'marionette',
     'app',
-    'text!templates/HostList.html',
-    'views/SingleHost'
-], function($, Backbone, Marionette, App, tpl, SingleHostView) {
+    'views/SingleHost',
+    'text!templates/HostList.html'
+], function($, Backbone, Marionette, App, SingleHostView, tpl) {
 
-    return Backbone.Marionette.CollectionView.extend({
+    return Backbone.Marionette.CompositeView.extend({
 
         template: tpl,
         itemView: SingleHostView,

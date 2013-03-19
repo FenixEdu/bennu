@@ -10,10 +10,9 @@ import com.google.gson.JsonObject;
 public class HostMenuViewer implements JsonViewer<VirtualHost> {
     @Override
     public JsonElement view(VirtualHost obj, JsonBuilder ctx) {
-        JsonObject json = new JsonObject();
-        json.add("title", ctx.view(obj.getInfo().getApplicationTitle()));
+        JsonObject json = (JsonObject) ctx.view(obj);
         if (obj.hasMenu()) {
-            json.add("menu", ctx.view(obj.getMenu().getChild()));
+            json.add("menu", ctx.view(obj.getMenu().getOrderedChild()));
         }
         return json;
     }

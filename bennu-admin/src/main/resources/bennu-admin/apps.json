@@ -2,7 +2,7 @@
 "title" :  {"pt" : "Gestão de Menus"},
 "description" : {"pt" : "Gestão de Menus"},
 "accessExpression" : "#managers",
-"path" : "/bennu-portal",
+"path" : "/bennu-admin/",
 "functionalities" : 
 		[
 			{ 
