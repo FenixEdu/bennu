@@ -156,6 +156,9 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
     }
 
     public static MultiLanguageString fromJson(JsonElement json) {
+        if (json.isJsonPrimitive()) {
+            return new MultiLanguageString(json.getAsString());
+        }
         Map<Locale, String> contents = new HashMap<>();
         for (Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
             contents.put(Locale.forLanguageTag(entry.getKey()), entry.getValue().getAsString());
