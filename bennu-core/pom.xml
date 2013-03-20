@@ -13,6 +13,7 @@
 
 	<properties>
 		<version.pt.ist.fenix.framework.core>2.1-SNAPSHOT</version.pt.ist.fenix.framework.core>
+		<version.pt.ist.fenix.framework.consistency.predicates>2.1-SNAPSHOT</version.pt.ist.fenix.framework.consistency.predicates>
 		<version.pt.ist.fenix.web.framework>2.1-SNAPSHOT</version.pt.ist.fenix.web.framework>
 		<version.pt.ist.fenix.tools>1.0</version.pt.ist.fenix.tools>
 	</properties>
@@ -22,6 +23,11 @@
 			<groupId>pt.ist</groupId>
 			<artifactId>fenix-framework-core</artifactId>
 			<version>${version.pt.ist.fenix.framework.core}</version>
+		</dependency>
+				<dependency>
+			<groupId>pt.ist</groupId>
+			<artifactId>fenix-framework-consistency-predicates</artifactId>
+			<version>${version.pt.ist.fenix.framework.consistency.predicates}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
@@ -80,12 +86,6 @@
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc14</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>jvstm</groupId>
-			<artifactId>jvstm-fenix</artifactId>
-			<version>${version.jvstm.fenix}</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
