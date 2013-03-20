@@ -1,0 +1,59 @@
+/* LOGO AND TITLES */
+img.logo {
+}
+
+div.title {
+}
+
+div.subtitle {
+}
+
+/* LOGIN */
+form.login {
+  display: inline;
+  background: pink;
+}
+
+form.login span {
+}
+
+form.login input[type="submit"] {
+  padding: 3px 4px;
+  color: #fff;
+  border: 1px solid #ab4f20;
+  font-weight: bold;
+  background: #e89267;
+}
+
+div.login {
+  display: inline;
+  background: red;
+}
+
+/* GOOGLE SEARCH */
+form.globalsearch {
+}
+
+/* APPLICATION MENU */
+ul.mainnav {
+}
+
+ul.mainnav li {
+}
+
+ul.mainnav li.selected {
+}
+
+ul.mainnav li a {
+}
+
+ul.mainnav li a span {
+}
+
+/* PAGE OPERATIONS (CONTENTS) */
+.pageops {
+}
+
+/* BreadCrumbs */
+.beadCrumbs {
+}

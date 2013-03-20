@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schemas SYSTEM "../fenix-renderers-schemas.dtd" []>
+<schemas>
+<schema name="createDomainStorage" type="module.fileSupport.dto.DomainStorageDTO" bundle="FILE_SUPPORT_RESOURCES">
+	<slot name="name" key="label.domainStorage.name" required="true" />
+</schema>
+
+<schema name="createDBStorage" type="module.fileSupport.dto.DBStorageDTO" bundle="FILE_SUPPORT_RESOURCES">
+	<slot name="name" key="label.dBStorage.name" required="true"/>
+	<slot name="host" key="label.dBStorage.host" required="true"/>
+	<slot name="port" key="label.dBStorage.port" validator="pt.ist.fenixWebFramework.renderers.validators.NumberValidator"/>
+	<slot name="dbName" key="label.dBStorage.dbName" required="true"/>
+	<slot name="tableName" key="label.dBStorage.tableName" required="true"/>
+	<slot name="username" key="label.dBStorage.username" required="true"/>
+	<slot name="password" key="label.dBStorage.password"/>
+</schema>
+
+<schema name="createLocalFileSystemStorage" type="module.fileSupport.dto.LocalFileSystemStorageDTO" bundle="FILE_SUPPORT_RESOURCES">
+	<slot name="name" key="label.localFileSystemStorage.name" required="true"/>
+	<slot name="path" key="label.localFileSystemStorage.path" required="true"/>
+	<slot name="treeDirectoriesNameLength" key="label.localFileSystemStorage.treeDirectoriesNameLength" validator="pt.ist.fenixWebFramework.renderers.validators.NumberValidator">
+		<validator class="pt.ist.fenixWebFramework.renderers.validators.RequiredValidator"/>
+		<validator class="pt.ist.fenixWebFramework.renderers.validators.NumberValidator"/>
+	</slot>
+</schema>
+
+<schema name="view.fileStorage.list" type="pt.ist.fenixframework.plugins.fileSupport.domain.FileStorage" bundle="FILE_SUPPORT_RESOURCES">
+	<slot name="name" key="label.fileStorage.name" />
+
+	<slot name="name" key="label.fileStorage.name">
+	<!--  <property name="subLayout" value="default"/>
+		<property name="javascriptEnabled" value="true"/>
+		<property name="useParent" value="true"/>
+		<property name="list" value="presentationDetails"/>
+		<property name="key" value="false"/>
+		<property name="listFormat" value="${key} - ${value}"/>-->
+	</slot>	
+	
+	<slot name="class.simpleName" key="label.fileStorage.type" />
+	<slot name="filesCount" key="label.fileStorage.filesCount" />
+</schema>
+
+<schema name="edit.fileStorageConfigurations" type="pt.ist.fenixframework.plugins.fileSupport.domain.FileStorageConfiguration" bundle="FILE_SUPPORT_RESOURCES">
+	<slot name="fileType" key="label.fileStorageConfiguration.fileType" read-only="true"/>
+	<slot name="storage" layout="menu-select" key="label.fileStorageConfiguration.storage">
+		<property name="providerClass" value="module.fileSupport.presentationTier.renderers.providers.FileStorageProvider"/>
+		<property name="format" value="${name}"/>
+	</slot>
+</schema></schemas>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schemas SYSTEM "../fenix-renderers-schemas.dtd" []>
+<schemas>
+<schema name="virtualHost.application.configuration.headers.and.footers" type="pt.ist.bennu.core.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
+	<slot name="hostname" key="label.application.hostname" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
+	<slot name="htmlTitle" key="label.application.htmlTitle" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="virtualHost.application.configuration.external.interactions" type="pt.ist.bennu.core.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
+	<slot name="errorPage" key="label.error.page" bundle="MYORG_RESOURCES"
+		required="true" />
+	<slot name="helpLink" key="label.help.link.url" bundle="MYORG_RESOURCES"/>
+	<slot name="supportEmailAddress" key="label.supportEmailAddress" bundle="MYORG_RESOURCES"/>
+	<slot name="systemEmailAddress" key="label.systemEmailAddress" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="virtualHost.application.configuration.summary" type="pt.ist.bennu.core.domain.VirtualHost" bundle="MYORG_RESOURCES">
+	<slot name="hostname" key="label.application.hostname" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
+	<slot name="htmlTitle" key="label.application.htmlTitle" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="virtualHost.bean" type="pt.ist.bennu.core.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
+	<slot name="hostname" key="label.application.hostname" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationTitle" key="label.application.title" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationSubTitle" key="label.application.subtitle" bundle="MYORG_RESOURCES"/>
+	<slot name="htmlTitle" key="label.application.htmlTitle" bundle="MYORG_RESOURCES"/>
+	<slot name="applicationCopyright" key="label.application.copyright" bundle="MYORG_RESOURCES"/>
+	<slot name="helpLink" key="label.help.link.url" bundle="MYORG_RESOURCES"/>
+	<slot name="supportEmailAddress" key="label.supportEmailAddress" bundle="MYORG_RESOURCES"/>
+	<slot name="systemEmailAddress" key="label.systemEmailAddress" bundle="MYORG_RESOURCES"/>
+	<slot name="errorPage" key="label.error.page" bundle="MYORG_RESOURCES"
+		required="true"/>
+	<slot name="googleSearchEnabled"/>
+	<slot name="languageSelectionEnabled"/>
+	<slot name="breadCrumbsEnabled" key="label.application.breadCrumbs" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="virtualHost.application.configuration.logo" type="pt.ist.bennu.core.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
+	<slot name="logoInputStream" key="label.application.logo" bundle="MYORG_RESOURCES">
+		<property name="fileNameSlot" value="logoFilename" />
+		<property name="size" value="30"/>
+	</slot>
+</schema>
+
+<schema name="virtualHost.application.configuration.favico" type="pt.ist.bennu.core.domain.VirtualHostBean" bundle="MYORG_RESOURCES">
+	<slot name="faviconInputStream" key="label.application.favicon" bundle="MYORG_RESOURCES">
+		<property name="fileNameSlot" value="faviconFilename" />
+		<property name="size" value="30"/>
+	</slot>
+</schema>
+
+<schema name="pt.ist.bennu.core.presentationTier.actions.ContextBaseAction.LocaleBean" type="pt.ist.bennu.core.presentationTier.actions.ContextBaseAction$LocaleBean" bundle="MYORG_RESOURCES">
+	<slot name="language" key="label.application.language" bundle="MYORG_RESOURCES" layout="postback"/>
+</schema>
+
+
+<schema name="theme.name" type="pt.ist.bennu.core.domain.Theme">
+ <slot name="name"/>
+</schema>
+
+<schema name="layout.name" type="pt.ist.bennu.core.domain.Layout">
+ <slot name="name"/>
+</schema>
+
+<schema name="application.searchUsers"
+		type="pt.ist.bennu.core.domain.SearchUsers"
+		bundle="MYORG_RESOURCES">
+	<slot name="user" layout="autoComplete" key="label.user" bundle="MYORG_RESOURCES">
+        <property name="labelField" value="username"/>
+		<property name="format" value="${presentationName}"/>
+		<property name="minChars" value="3"/>		
+		<property name="args" value="provider=pt.ist.bennu.core.presentationTier.renderers.autoCompleteProvider.UserAutoComplete"/>
+		<property name="size" value="40"/>
+	</slot>
+</schema>
+
+<schema name="create.new.user"
+		type="pt.ist.bennu.core.domain.SearchUsers"
+		bundle="MYORG_RESOURCES">
+	<slot name="username" key="label.user.username" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="edit.user"
+		type="pt.ist.bennu.core.domain.User"
+		bundle="MYORG_RESOURCES">
+	<slot name="username" key="label.user.username" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="change.password"
+		type="pt.ist.bennu.core.domain.User"
+		bundle="MYORG_RESOURCES">
+	<slot name="password" key="label.user.password" bundle="MYORG_RESOURCES" layout="password"/>
+</schema>
+
+<schema name="view.user.presentationName"
+		type="pt.ist.bennu.core.domain.User"
+		bundle="MYORG_RESOURCES">
+	<slot name="presentationName" key="label.user.presentationName" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="view.user.shortPresentationName"
+		type="pt.ist.bennu.core.domain.User"
+		bundle="MYORG_RESOURCES">
+	<slot name="shortPresentationName" key="label.user.presentationName" bundle="MYORG_RESOURCES"/>
+</schema>
+
+<schema name="pt.ist.bennu.core.domain.contents.edit.ActionNode" type="pt.ist.bennu.core.domain.contents.ActionNode" bundle="MYORG_RESOURCES">
+	<slot name="path" key="" />
+	<slot name="method" key="" />
+	<slot name="linkBundle" key="" />
+	<slot name="linkKey" key="" />
+</schema>
+
+<schema name="pt.ist.bennu.core.domain.contents.edit.LinkNode" type="pt.ist.bennu.core.domain.contents.LinkNode" bundle="MYORG_RESOURCES">
+	<slot name="url" key="" />
+	<slot name="linkBundle" key="" />
+	<slot name="linkKey" key="" />
+</schema>
+
+<schema name="pt.ist.bennu.core.domain.contents.create.nodeBean.ActionNode" type="pt.ist.bennu.core.domain.contents.ActionNode" bundle="MYORG_RESOURCES">
+	<slot name="path" key="" />
+	<slot name="method" key="" />
+	<slot name="linkBundle" key="" />
+	<slot name="linkKey" key="" />
+	<slot name="persistentGroup" layout="menu-select">
+		<property name="providerClass" value="pt.ist.bennu.core.presentationTier.renderers.providers.SystemGroupsProvider"/>
+		<property name="format" value="${name}"/>	 
+	</slot>
+</schema>
+
+<schema name="pt.ist.bennu.core.domain.contents.create.nodeBean.LinkNode" type="pt.ist.bennu.core.domain.contents.LinkNode" bundle="MYORG_RESOURCES">
+	<slot name="url" key="" />
+	<slot name="linkBundle" key="" />
+	<slot name="linkKey" key="" />
+	<slot name="persistentGroup" layout="menu-select">
+		<property name="providerClass" value="pt.ist.bennu.core.presentationTier.renderers.providers.SystemGroupsProvider"/>
+		<property name="format" value="${name}"/>	 
+	</slot>
+</schema>
+</schemas>

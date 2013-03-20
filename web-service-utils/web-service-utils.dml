@@ -1,0 +1,24 @@
+package module.webserviceutils.domain;
+
+class WSURemoteSystem {
+}
+
+class WSURemoteHost {
+	String name (REQUIRED);
+	String url (REQUIRED);
+	String username (REQUIRED);
+	String password (REQUIRED);
+	Boolean allowInvocationAccess (REQUIRED);
+}
+
+relation WSURemoteSystemRemoteHost {
+	WSURemoteSystem playsRole remoteSystem;
+	WSURemoteHost playsRole remoteHosts {
+		multiplicity *;
+	}
+}
+
+relation WSUMyOrgRemoteSystem {
+	.pt.ist.bennu.core.domain.MyOrg playsRole myOrg;
+	WSURemoteSystem playsRole remoteSystem;
+}

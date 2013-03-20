@@ -1,0 +1,62 @@
+package pt.ist.emailNotifier.domain;
+
+
+
+
+valueType pt.ist.emailNotifier.util.EmailAddressList as EmailAddressList {
+    externalizeWith {
+        String toString();
+    }
+}
+
+
+class EmailNotifier {
+}
+
+class Email {
+	EmailAddressList bccAddresses;
+	String body;
+	String htmlBody;
+	EmailAddressList ccAddresses;
+	String fromAddress;
+	String fromName;
+	EmailAddressList replyTos;
+	String subject;
+	EmailAddressList toAddresses;
+	EmailAddressList confirmedAddresses;
+	EmailAddressList failedAddresses;
+}
+
+class MessageTransportResult {
+	Integer code;
+	String description;
+}
+
+class MessageId {
+	String id;
+	DateTime sendTime;
+}
+
+class EmailTask extends .pt.ist.fenixframework.plugins.scheduler.domain.Task { }
+
+
+relation EmailNotifierEmail {
+	EmailNotifier playsRole emailNotifier;
+	Email playsRole emails {
+		multiplicity *;
+	}
+}
+
+relation MessageIdEmail {
+    Email playsRole email;
+    MessageId playsRole messageIds {
+        multiplicity *;
+    }
+}
+
+relation EmailMessageTransportResult {
+	Email playsRole email;
+	MessageTransportResult playsRole messageTransportResult {
+		multiplicity *;
+	}
+}
