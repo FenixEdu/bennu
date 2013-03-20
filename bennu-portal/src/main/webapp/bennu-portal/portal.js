@@ -51,7 +51,7 @@ function addMls(model) {
 					 		   			var new_body = Mustache.to_html(layoutTemplate,hostJson);
 					 		   			var old_body = $('body').html();
 					 		   			$('body').html(new_body);
-					 		   			$("#content").html(old_body);
+					 		   			$("#content")[0].innerHTML = old_body;
 					 		   			$("head").append('<link href="' + styles_url + '" rel="stylesheet">');
 					 		   			$("body").show();
 					 		   		 }
