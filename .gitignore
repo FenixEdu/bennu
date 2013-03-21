@@ -1,4 +1,13 @@
-target
 *.class
-*~
-bin
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+.settings/
+.serviceAnnotationLog
+
+# Maven #
+target/
+bin/
