@@ -3,17 +3,17 @@
   <parent>
     <groupId>pt.ist</groupId>
     <artifactId>bennu-project</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <groupId>pt.ist</groupId>
   <artifactId>lucene</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
   <name>lucene</name>
   <properties>
-    <version.pt.ist.bennu.core>1.0-SNAPSHOT</version.pt.ist.bennu.core>
-    <version.pt.ist.scheduler>1.0-SNAPSHOT</version.pt.ist.scheduler>
-    <version.pt.ist.lucene.indexing.plugin>2.0-SNAPSHOT</version.pt.ist.lucene.indexing.plugin>
+    <version.pt.ist.bennu.core>1.0.0</version.pt.ist.bennu.core>
+    <version.pt.ist.scheduler>1.0.0</version.pt.ist.scheduler>
+    <version.pt.ist.lucene.indexing.plugin>1.0.0</version.pt.ist.lucene.indexing.plugin>
   </properties>
   <dependencies>
     <dependency>

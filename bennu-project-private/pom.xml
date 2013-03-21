@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>pt.ist</groupId>
 		<artifactId>bennu-project</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<groupId>pt.ist</groupId>
 	<artifactId>bennu-project-private</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<name>Bennu Private Project</name>

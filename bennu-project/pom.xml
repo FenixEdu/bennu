@@ -5,7 +5,7 @@
 
 	<groupId>pt.ist</groupId>
 	<artifactId>bennu-project</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<!-- "One POM to rule them all, -->
@@ -89,7 +89,7 @@
 			wrath of a Bennu Developer * -->
 		<!-- ************************************************************************************************ -->
 		<version.com.alexnederlof.jasperreports.plugin>1.5-SNAPSHOT</version.com.alexnederlof.jasperreports.plugin>
-		<version.dml.dml.maven.plugin>1.2-SNAPSHOT</version.dml.dml.maven.plugin>
+		<version.dml.dml.maven.plugin>1.2.1</version.dml.dml.maven.plugin>
 		<version.org.apache.maven.plugins.maven.compiler.plugin>2.5.1</version.org.apache.maven.plugins.maven.compiler.plugin>
 		<version.org.apache.maven.plugins.maven.deploy.plugin>2.7</version.org.apache.maven.plugins.maven.deploy.plugin>
 		<version.org.apache.maven.plugins.maven.enforcer.plugin>1.1.1</version.org.apache.maven.plugins.maven.enforcer.plugin>
