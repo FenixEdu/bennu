@@ -208,15 +208,15 @@ public abstract class Node extends Node_Base implements INode {
             final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
             descNodeOrders(virtualHost.getTopLevelNodesSet());
         } else {
-            removeParentNode();
+            setParentNode(null);
             descNodeOrders(parentNode.getChildNodesSet());
         }
         for (final Node childNode : getChildNodesSet()) {
             childNode.delete();
         }
-        removeVirtualHost();
-        removeMyOrg();
-        removeAccessibilityGroup();
+        setVirtualHost(null);
+        setMyOrg(null);
+        setAccessibilityGroup(null);
         deleteDomainObject();
     }
 
@@ -231,7 +231,7 @@ public abstract class Node extends Node_Base implements INode {
 
         int i = 0;
         for (final Node node : nodes) {
-            if (!virtualHost.hasTopLevelNodes(node)) {
+            if (!virtualHost.getTopLevelNodesSet().contains(node)) {
                 throwError();
             }
             node.setNodeOrder(Integer.valueOf(i++));
@@ -248,7 +248,7 @@ public abstract class Node extends Node_Base implements INode {
 
         int i = 0;
         for (final Node node : nodes) {
-            if (!hasChildNodes(node)) {
+            if (!getChildNodesSet().contains(node)) {
                 throwError();
             }
             node.setNodeOrder(Integer.valueOf(i++));
@@ -291,7 +291,7 @@ public abstract class Node extends Node_Base implements INode {
         if (matchesSearch(mapping, method)) {
             return this;
         } else {
-            for (Node child : getChildNodes()) {
+            for (Node child : getChildNodesSet()) {
                 Node result = child.findMatchNode(mapping, method);
                 if (result != null) {
                     return result;

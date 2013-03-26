@@ -134,14 +134,9 @@ public class VirtualHost extends VirtualHost_Base {
         return layout != null ? layout : setAndReturnDefaultLayout();
     }
 
-    @Override
-    public boolean hasTheme() {
-        return super.getTheme() != null;
-    }
-
     @Atomic
     private Theme setAndReturnDefaultTheme() {
-        Theme theme = getMyOrg().getThemes().iterator().next();
+        Theme theme = getMyOrg().getThemesSet().iterator().next();
         setTheme(theme);
         return theme;
     }
@@ -164,12 +159,12 @@ public class VirtualHost extends VirtualHost_Base {
                 node.delete();
             }
 
-            // removeExpenditureTrackingSystem();
-            // removeExternalAccountingIntegrationSystem();
-            // removeWorkflowSystem();
-            // removeWorkingCapitalSystem();
-            removeTheme();
-            removeMyOrg();
+            // setExpenditureTrackingSystem(null);
+            // setExternalAccountingIntegrationSystem(null);
+            // setWorkflowSystem(null);
+            // setWorkingCapitalSystem(null);
+            setTheme(null);
+            setMyOrg(null);
             deleteDomainObject();
         }
     }

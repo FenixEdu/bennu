@@ -54,6 +54,7 @@ import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter.ChecksumPredicate;
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 /**
@@ -71,7 +72,7 @@ public class StartupServlet implements ServletContextListener {
     private static final long serialVersionUID = -7035892286820898843L;
 
     @Override
-    @Atomic(readOnly = true)
+    @Atomic(mode = TxMode.READ)
     public void contextInitialized(ServletContextEvent event) {
         try {
 
@@ -133,7 +134,7 @@ public class StartupServlet implements ServletContextListener {
             themeNames.add(folder.substring("/CSS/".length(), folder.length() - 1));
         }
 
-        for (Theme theme : MyOrg.getInstance().getThemes()) {
+        for (Theme theme : MyOrg.getInstance().getThemesSet()) {
             if (!matchThemeOrLayoutName(theme.getName(), themeNames)) {
                 Theme.deleteTheme(theme);
             }

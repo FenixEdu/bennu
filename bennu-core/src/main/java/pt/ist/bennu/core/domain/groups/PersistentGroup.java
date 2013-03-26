@@ -80,9 +80,9 @@ public abstract class PersistentGroup extends PersistentGroup_Base implements Pr
     }
 
     public void delete() {
-        removeGroupOwner();
-        removeSystemGroupMyOrg();
-        removeMyOrg();
+        setGroupOwner(null);
+        setSystemGroupMyOrg(null);
+        setMyOrg(null);
         deleteDomainObject();
     }
 

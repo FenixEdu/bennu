@@ -119,7 +119,7 @@ public class Authenticate implements Serializable {
             final User user = User.findByUsername(username);
             if (user == null) {
                 final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-                if ((virtualHost != null && virtualHost.isCasEnabled()) || MyOrg.getInstance().getUserCount() == 0) {
+                if ((virtualHost != null && virtualHost.isCasEnabled()) || MyOrg.getInstance().getUserSet().size() == 0) {
                     return new User(username);
                 }
                 return new User(username);
@@ -231,7 +231,7 @@ public class Authenticate implements Serializable {
         }
 
         final Role role = Role.getRole(RoleType.MANAGER);
-        if (role.getUsersCount() == 0) {
+        if (role.getUsersSet().size() == 0) {
             user.addPeopleGroups(role);
         }
     }

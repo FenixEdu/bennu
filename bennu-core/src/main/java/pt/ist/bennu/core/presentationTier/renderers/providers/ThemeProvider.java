@@ -44,7 +44,7 @@ public class ThemeProvider implements DataProvider {
 
     @Override
     public Object provide(Object arg0, Object arg1) {
-        return MyOrg.getInstance().getThemes();
+        return MyOrg.getInstance().getThemesSet();
     }
 
 }

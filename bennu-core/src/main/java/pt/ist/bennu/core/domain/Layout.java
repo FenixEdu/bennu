@@ -46,7 +46,7 @@ public class Layout extends Layout_Base {
 
     @Atomic
     public void delete() {
-        removeMyOrg();
+        setMyOrg(null);
         for (VirtualHost virtualHost : getVirtualHostsSet()) {
             removeVirtualHosts(virtualHost);
         }

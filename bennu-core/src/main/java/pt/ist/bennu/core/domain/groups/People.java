@@ -42,7 +42,7 @@ public abstract class People extends People_Base {
         @Override
         public void afterAdd(final User user, final People people) {
             super.afterAdd(user, people);
-            if (user == null || people == null || !user.hasPeopleGroups(people)) {
+            if (user == null || people == null || !user.getPeopleGroupsSet().contains(people)) {
                 new PeopleUserLog("Add", user == null ? "" : user.getUsername(), people == null ? "" : people.getName());
             }
         }

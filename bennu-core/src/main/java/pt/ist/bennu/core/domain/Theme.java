@@ -52,15 +52,15 @@ public class Theme extends Theme_Base {
     }
 
     public void delete() {
-        removeMyOrg();
-        for (VirtualHost virtualHost : getVirtualHosts()) {
-            virtualHost.removeTheme();
+        setMyOrg(null);
+        for (VirtualHost virtualHost : getVirtualHostsSet()) {
+            virtualHost.setTheme(null);
         }
         deleteDomainObject();
     }
 
     public static Theme getThemeByName(String name) {
-        for (Theme theme : MyOrg.getInstance().getThemes()) {
+        for (Theme theme : MyOrg.getInstance().getThemesSet()) {
             if (theme.getName().equals(name)) {
                 return theme;
             }

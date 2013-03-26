@@ -184,7 +184,7 @@ public class User extends User_Base {
     }
 
     public void delete() {
-        removeMyOrg();
+        setMyOrg(null);
         deleteDomainObject();
     }
 

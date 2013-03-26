@@ -81,7 +81,7 @@ public class ActionNode extends ActionNode_Base {
         final FunctionalityInfo functionality = FunctionalityFilter.getFunctionality(getPath(), getMethod());
         Node parentNode = getParentNode();
         if (parentNode != null) {
-            for (Node sibling : parentNode.getChildNodes()) {
+            for (Node sibling : parentNode.getChildNodesSet()) {
                 if (sibling != this) {
                     FunctionalityFilter.checkForAliasConflict(functionality, sibling);
                 }

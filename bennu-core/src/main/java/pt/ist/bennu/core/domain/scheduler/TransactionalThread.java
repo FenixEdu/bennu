@@ -27,6 +27,7 @@ package pt.ist.bennu.core.domain.scheduler;
 import java.util.ArrayList;
 
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 /**
  * 
@@ -65,7 +66,7 @@ public abstract class TransactionalThread extends Thread {
     }
 
     @Override
-    @Atomic(readOnly = true)
+    @Atomic(mode = TxMode.READ)
     public void run() {
         try {
             if (readOnly) {
