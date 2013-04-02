@@ -17,45 +17,9 @@ public class VirtualHostAwareCodeGenerator extends FenixCodeGeneratorOneBoxPerOb
     }
 
     @Override
-    protected void generateRoleSlotMethodsMultStarCount(final Role role, final PrintWriter out, final String methodModifiers,
-            final String capitalizedSlotName, final String slotAccessExpression) {
-        final String slotExpression = wrapSlotExpression(role, slotAccessExpression);
-        super.generateRoleSlotMethodsMultStarCount(role, out, methodModifiers, capitalizedSlotName, slotExpression);
-    }
-
-    @Override
-    protected void generateRoleSlotMethodsMultStarHasAnyChild(Role role, PrintWriter out, String methodModifiers,
-            String capitalizedSlotName, String slotAccessExpression) {
-        final String slotExpression = wrapSlotExpression(role, slotAccessExpression);
-        super.generateRoleSlotMethodsMultStarHasAnyChild(role, out, methodModifiers, capitalizedSlotName, slotExpression);
-    }
-
-    @Override
-    protected void generateRoleSlotMethodsMultStarHasChild(Role role, PrintWriter out, String methodModifiers,
-            String capitalizedSlotName, String slotAccessExpression, String typeName, String slotName, String indexGetterCall) {
-        final String slotExpression = wrapSlotExpression(role, slotAccessExpression);
-        super.generateRoleSlotMethodsMultStarHasChild(role, out, methodModifiers, capitalizedSlotName, slotExpression, typeName,
-                slotName, indexGetterCall);
-    }
-
-    @Override
-    protected void generateRoleSlotMethodsMultStarSet(Role role, PrintWriter out, String methodModifiers,
-            String capitalizedSlotName, String slotAccessExpression, String slotName, String typeName) {
-        final String slotExpression = wrapSlotExpression(role, getSlotExpression(role.getName()));
-        super.generateRoleSlotMethodsMultStarSet(role, out, methodModifiers, capitalizedSlotName, slotExpression, slotName,
-                typeName);
-    }
-
-    @Override
     protected void generateRelationGetter(final Role role, final String paramListType, final PrintWriter out) {
         final String slotExpression = wrapSlotExpression(role, getSlotExpression(role.getName()));
-        generateRelationGetter("get" + capitalize(role.getName()), slotExpression, paramListType, out);
-    }
-
-    @Override
-    protected void generateIteratorMethod(final Role role, final PrintWriter out, final String slotAccessExpression) {
-        final String slotExpression = wrapSlotExpression(role, getSlotExpression(role.getName()));
-        super.generateIteratorMethod(role, out, slotExpression);
+        generateRelationGetter("get" + capitalize(role.getName()) + "Set", slotExpression, paramListType, out);
     }
 
     private String wrapSlotExpression(final Role role, final String slotExpression) {
