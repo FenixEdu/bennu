@@ -42,13 +42,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.bennu.core.domain.PasswordRecoveryRequest;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.contents.Node;
 import pt.ist.bennu.core.presentationTier.Context;
 import pt.ist.fenixWebFramework.servlets.functionalities.CreateNodeActionAnnotationProcessor;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.Project;
 import pt.utl.ist.fenix.tools.util.ByteArray;
 
@@ -138,7 +138,7 @@ public class HomeAction extends ContextBaseAction {
 
         final Map<String, Set<ContentCreator>> contentCreatorsMap = new TreeMap<String, Set<ContentCreator>>();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        for (Project artifact : Project.fromName(PropertiesManager.getProperty("app.name")).getProjects()) {
+        for (Project artifact : FenixFramework.getProject().getProjects()) {
             try (InputStream stream =
                     loader.getResourceAsStream(artifact.getName() + "/" + CreateNodeActionAnnotationProcessor.LOG_FILENAME)) {
                 if (stream != null) {

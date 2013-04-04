@@ -41,11 +41,10 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.config.MessageResourcesConfig;
 import org.apache.struts.config.ModuleConfig;
 
-import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.fenixWebFramework.renderers.plugin.RenderersRequestProcessorImpl;
 import pt.ist.fenixWebFramework.renderers.plugin.SimpleRenderersRequestProcessor;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.Project;
-import pt.ist.fenixframework.core.exception.ProjectException;
 
 /**
  * 
@@ -127,7 +126,7 @@ public class ActionServletWrapper extends ActionServlet {
 
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            for (Project artifact : Project.fromName(PropertiesManager.getProperty("app.name")).getProjects()) {
+            for (Project artifact : FenixFramework.getProject().getProjects()) {
                 try (InputStream stream = loader.getResourceAsStream(artifact.getName() + "/.messageResources")) {
                     if (stream != null) {
                         List<String> resources = IOUtils.readLines(stream);
@@ -142,7 +141,7 @@ public class ActionServletWrapper extends ActionServlet {
                     }
                 }
             }
-        } catch (IOException | ProjectException e) {
+        } catch (IOException e) {
             throw new ServletException(e);
         }
 

@@ -46,7 +46,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 
-import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.contents.ActionNode;
@@ -55,8 +54,8 @@ import pt.ist.bennu.core.presentationTier.Context;
 import pt.ist.bennu.core.presentationTier.actions.ContextBaseAction;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.functionalities.FunctionalityAnnotationProcessor;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.Project;
-import pt.ist.fenixframework.core.exception.ProjectException;
 
 /**
  * 
@@ -131,7 +130,7 @@ public class FunctionalityFilter implements Filter {
     public void init(final FilterConfig filterConfig) throws ServletException {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            for (Project artifact : Project.fromName(PropertiesManager.getProperty("app.name")).getProjects()) {
+            for (Project artifact : FenixFramework.getProject().getProjects()) {
                 try (InputStream stream =
                         loader.getResourceAsStream(artifact.getName() + File.separatorChar
                                 + FunctionalityAnnotationProcessor.FUNCTIONALITIES_FILE)) {
@@ -161,7 +160,7 @@ public class FunctionalityFilter implements Filter {
                     }
                 }
             }
-        } catch (IOException | ProjectException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
