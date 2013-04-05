@@ -112,4 +112,9 @@ public class UnionGroup extends UnionGroup_Base {
         return UnionGroup.createUnionGroup(persistentGroups);
     }
 
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.PersistentGroup> getPersistentGroups() {
+        return getPersistentGroupsSet();
+    }
+
 }

@@ -97,4 +97,9 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     public static IntersectionGroup createIntersectionGroup(final PersistentGroup... persistentGroups) {
         return new IntersectionGroup(persistentGroups);
     }
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.PersistentGroup> getPersistentGroups() {
+        return getPersistentGroupsSet();
+    }
+
 }

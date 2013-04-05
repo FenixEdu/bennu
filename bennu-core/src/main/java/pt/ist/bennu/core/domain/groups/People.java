@@ -84,4 +84,9 @@ public abstract class People extends People_Base {
         addUsers(user);
     }
 
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.User> getUsers() {
+        return getUsersSet();
+    }
+
 }

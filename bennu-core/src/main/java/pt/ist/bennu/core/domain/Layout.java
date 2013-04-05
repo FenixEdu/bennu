@@ -61,4 +61,9 @@ public class Layout extends Layout_Base {
         }
         return null;
     }
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.VirtualHost> getVirtualHosts() {
+        return getVirtualHostsSet();
+    }
+
 }

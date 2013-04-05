@@ -270,4 +270,9 @@ public class VirtualHost extends VirtualHost_Base {
         }
         return count;
     }
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.contents.Node> getTopLevelNodes() {
+        return getTopLevelNodesSet();
+    }
+
 }

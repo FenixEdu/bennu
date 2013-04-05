@@ -87,4 +87,9 @@ public class Theme extends Theme_Base {
     public static void deleteTheme(Theme theme) {
         theme.delete();
     }
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.VirtualHost> getVirtualHosts() {
+        return getVirtualHostsSet();
+    }
+
 }

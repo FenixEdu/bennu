@@ -193,4 +193,14 @@ public class User extends User_Base {
         return new PasswordRecoveryRequest(this);
     }
 
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.People> getPeopleGroups() {
+        return getPeopleGroupsSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.PersistentGroup> getUserGroups() {
+        return getUserGroupsSet();
+    }
+
 }

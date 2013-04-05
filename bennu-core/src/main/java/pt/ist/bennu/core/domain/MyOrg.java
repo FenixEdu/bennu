@@ -128,4 +128,44 @@ public class MyOrg extends MyOrg_Base {
         return ModuleInitializer.class.isAssignableFrom(clazz);
     }
 
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.PersistentGroup> getPersistentGroups() {
+        return getPersistentGroupsSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.VirtualHost> getVirtualHosts() {
+        return getVirtualHostsSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.Layout> getLayout() {
+        return getLayoutSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.PeopleUserLog> getPeopleUserLog() {
+        return getPeopleUserLogSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.User> getUser() {
+        return getUserSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.Theme> getThemes() {
+        return getThemesSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.contents.Node> getNodes() {
+        return getNodesSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.PersistentGroup> getSystemGroups() {
+        return getSystemGroupsSet();
+    }
+
 }

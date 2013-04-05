@@ -309,4 +309,9 @@ public abstract class Node extends Node_Base implements INode {
             return false;
         }
     }
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.contents.Node> getChildNodes() {
+        return getChildNodesSet();
+    }
+
 }
