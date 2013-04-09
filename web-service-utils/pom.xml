@@ -13,7 +13,7 @@
 
 	<properties>
 		<version.pt.ist.bennu.core>1.1-SNAPSHOT</version.pt.ist.bennu.core>
-		<version.pt.ist.bennu.vaadin>1.0.0</version.pt.ist.bennu.vaadin>
+		<version.pt.ist.bennu.vaadin>1.1-SNAPSHOT</version.pt.ist.bennu.vaadin>
 	</properties>
 
 	<dependencies>
