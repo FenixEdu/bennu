@@ -1,9 +1,6 @@
 package pt.ist.fenixframework.plugins.scheduler.domain;
 
 import jvstm.TransactionalCommand;
-
-import org.joda.time.DateTime;
-
 import pt.ist.fenixframework.pstm.Transaction;
 
 public abstract class Task extends Task_Base {
@@ -22,61 +19,61 @@ public abstract class Task extends Task_Base {
 //    }
 
     public void queue(final Task task) {
-	if (getClass() != task.getClass()) {
-	    if (hasNextTask()) {
-		getNextTask().queue(task);
-	    } else {
-		setNextTask(task);
-	    }
-	}
+        if (getClass() != task.getClass()) {
+            if (hasNextTask()) {
+                getNextTask().queue(task);
+            } else {
+                setNextTask(task);
+            }
+        }
     }
 
     public boolean shouldRunNow() {
-	for (final TaskSchedule taskSchedule : getTaskScheduleSet()) {
-	    if (taskSchedule.shouldRunNow()) {
-		return true;
-	    }
-	}
-	return false;
+        for (final TaskSchedule taskSchedule : getTaskScheduleSet()) {
+            if (taskSchedule.shouldRunNow()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void runPendingTask() {
-	final TaskThread taskThread = new TaskThread();
-	taskThread.start();
-	try {
-	    taskThread.join();
-	} catch (final InterruptedException e) {
-	    e.printStackTrace();
+        final TaskThread taskThread = new TaskThread();
+        taskThread.start();
+        try {
+            taskThread.join();
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
 //	    throw new Error(e);
-	}
+        }
     }
 
     public abstract void runTask();
 
     private class TaskThread extends Thread {
 
-	@Override
-	public void run() {
-	    try {
-		Transaction.withTransaction(true, new TransactionalCommand() {
-		    @Override
-		    public void doIt() {
+        @Override
+        public void run() {
+            try {
+                Transaction.withTransaction(true, new TransactionalCommand() {
+                    @Override
+                    public void doIt() {
 //			setLastRunStart(new DateTime());
-			runTask();
+                        runTask();
 //			setLastRunEnd(new DateTime());
-		    }
-		});
-	    } finally {
-		Transaction.forceFinish();
-	    }
-	}
+                    }
+                });
+            } finally {
+                Transaction.forceFinish();
+            }
+        }
 
     }
 
     public void clearAllSchedules() {
-	for (final TaskSchedule schedule : getTaskScheduleSet()) {
-	    schedule.delete();
-	}
+        for (final TaskSchedule schedule : getTaskScheduleSet()) {
+            schedule.delete();
+        }
     }
 
 }

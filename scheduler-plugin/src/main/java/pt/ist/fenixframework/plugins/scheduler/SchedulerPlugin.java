@@ -11,12 +11,12 @@ public class SchedulerPlugin implements FenixFrameworkPlugin {
 
     @Override
     public List<URL> getDomainModel() {
-	return Collections.singletonList(getClass().getResource("/scheduler-plugin.dml"));
+        return Collections.singletonList(getClass().getResource("/scheduler-plugin.dml"));
     }
 
     @Override
     public void initialize() {
-	SchedulerSystem.getInstance();
+        SchedulerSystem.getInstance();
     }
 
 }
