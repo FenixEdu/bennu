@@ -1,8 +1,6 @@
 package pt.ist.fenixframework.plugins.scheduler.domain;
 
 import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.List;
 
 import org.joda.time.DateTime;
 
@@ -11,7 +9,6 @@ import pt.ist.fenixframework.pstm.PersistentRoot;
 import pt.ist.fenixframework.pstm.Transaction;
 import dml.DomainClass;
 import dml.DomainModel;
-
 
 public class SchedulerSystem extends SchedulerSystem_Base {
 
@@ -78,7 +75,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     private boolean existsTaskInstance(final DomainClass domainClass) {
 	final String classname = domainClass.getFullName();
 	for (final Task task : getTaskSet()) {
-	    if (task.getOjbConcreteClass().equals(classname)) {
+	    if (task.getClass().getName().equals(classname)) {
 		return true;
 	    }
 	}

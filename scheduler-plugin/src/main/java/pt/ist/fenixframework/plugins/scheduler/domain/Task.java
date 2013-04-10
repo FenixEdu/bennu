@@ -10,7 +10,6 @@ public abstract class Task extends Task_Base {
 
     public Task() {
         super();
-        setOjbConcreteClass(getClass().getName());
         setSchedulerSystem(SchedulerSystem.getInstance());
     }
 
