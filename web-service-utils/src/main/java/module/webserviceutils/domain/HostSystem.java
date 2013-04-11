@@ -11,7 +11,7 @@ public class HostSystem extends HostSystem_Base {
     }
 
     public static HostSystem getInstance() {
-        if (!MyOrg.getInstance().hasHostSystem()) {
+        if (MyOrg.getInstance().getHostSystem() == null) {
             initRemoteSystem();
         }
         return MyOrg.getInstance().getHostSystem();
@@ -50,6 +50,16 @@ public class HostSystem extends HostSystem_Base {
             }
         }
         return null;
+    }
+
+    @Deprecated
+    public java.util.Set<module.webserviceutils.domain.ServerHost> getServerHosts() {
+        return getServerHostsSet();
+    }
+
+    @Deprecated
+    public java.util.Set<module.webserviceutils.domain.ClientHost> getClientHosts() {
+        return getClientHostsSet();
     }
 
 }
