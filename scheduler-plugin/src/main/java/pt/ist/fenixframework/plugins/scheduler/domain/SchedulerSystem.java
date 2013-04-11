@@ -44,7 +44,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     private void queueTasks(final Task task) {
-        if (hasPendingTask()) {
+        if ((getPendingTask() != null)) {
             getPendingTask().queue(task);
         } else {
             setPendingTask(task);
@@ -135,6 +135,11 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         for (final Task task : getTaskSet()) {
             task.clearAllSchedules();
         }
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.scheduler.domain.Task> getTask() {
+        return getTaskSet();
     }
 
 }

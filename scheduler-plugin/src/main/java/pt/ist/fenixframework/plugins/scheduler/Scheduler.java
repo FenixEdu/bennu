@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.backend.util.LockManager;
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
 
 public class Scheduler extends TimerTask {
@@ -38,7 +39,7 @@ public class Scheduler extends TimerTask {
         }
     }
 
-    @Atomic(readOnly = true)
+    @Atomic(mode = TxMode.READ)
     private void runPendingTask() {
         final String lockVariable = SchedulerSystem.class.getName();
 

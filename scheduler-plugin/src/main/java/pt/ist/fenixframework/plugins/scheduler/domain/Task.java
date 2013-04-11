@@ -1,6 +1,7 @@
 package pt.ist.fenixframework.plugins.scheduler.domain;
 
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 public abstract class Task extends Task_Base {
 
@@ -19,7 +20,7 @@ public abstract class Task extends Task_Base {
 
     public void queue(final Task task) {
         if (getClass() != task.getClass()) {
-            if (hasNextTask()) {
+            if (getNextTask() != null) {
                 getNextTask().queue(task);
             } else {
                 setNextTask(task);
@@ -52,7 +53,7 @@ public abstract class Task extends Task_Base {
     private class TaskThread extends Thread {
 
         @Override
-        @Atomic(readOnly = true)
+        @Atomic(mode = TxMode.READ)
         public void run() {
             runTask();
         }
@@ -63,6 +64,16 @@ public abstract class Task extends Task_Base {
         for (final TaskSchedule schedule : getTaskScheduleSet()) {
             schedule.delete();
         }
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.scheduler.domain.TaskSchedule> getTaskSchedule() {
+        return getTaskScheduleSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.scheduler.domain.TaskLog> getTaskLog() {
+        return getTaskLogSet();
     }
 
 }
