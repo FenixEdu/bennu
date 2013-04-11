@@ -39,7 +39,7 @@ public class MessageTransportResult extends MessageTransportResult_Base {
     }
 
     public void delete() {
-        removeEmail();
+        setEmail(null);
         deleteDomainObject();
     }
 
