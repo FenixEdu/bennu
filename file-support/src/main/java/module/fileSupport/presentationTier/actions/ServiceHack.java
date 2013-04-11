@@ -28,6 +28,7 @@ import module.fileSupport.dto.DBStorageDTO;
 import module.fileSupport.dto.DomainStorageDTO;
 import module.fileSupport.dto.LocalFileSystemStorageDTO;
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.plugins.fileSupport.domain.FileStorage;
 
 /**
@@ -37,18 +38,18 @@ import pt.ist.fenixframework.plugins.fileSupport.domain.FileStorage;
  */
 public class ServiceHack {
 
-    @Atomic(speculativeReadOnly = false)
+    @Atomic(mode = TxMode.WRITE)
     public static void createDomainStorage(DomainStorageDTO domainStorageDTO) {
         FileStorage.createNewDomainStorage(domainStorageDTO.getName());
     }
 
-    @Atomic(speculativeReadOnly = false)
+    @Atomic(mode = TxMode.WRITE)
     public static void createDBStorage(DBStorageDTO dbStorageDTO) {
         FileStorage.createNewDatabaseStorage(dbStorageDTO.getName(), dbStorageDTO.getHost(), dbStorageDTO.getPort(),
                 dbStorageDTO.getDbName(), dbStorageDTO.getTableName(), dbStorageDTO.getUsername(), dbStorageDTO.getPassword());
     }
 
-    @Atomic(speculativeReadOnly = false)
+    @Atomic(mode = TxMode.WRITE)
     public static void createLocalFileSystemStorage(LocalFileSystemStorageDTO fdStorageDTO) {
         FileStorage.createNewFileSystemStorage(fdStorageDTO.getName(), fdStorageDTO.getPath(),
                 fdStorageDTO.getTreeDirectoriesNameLength());
