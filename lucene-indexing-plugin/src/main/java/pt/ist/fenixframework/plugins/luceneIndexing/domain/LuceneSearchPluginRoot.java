@@ -25,4 +25,19 @@ public class LuceneSearchPluginRoot extends LuceneSearchPluginRoot_Base {
         }
         return instance;
     }
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.luceneIndexing.domain.DomainIndexFile> getDomainIndexFiles() {
+        return getDomainIndexFilesSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.luceneIndexing.domain.IndexingRequest> getIndexingRequests() {
+        return getIndexingRequestsSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.luceneIndexing.domain.DomainIndexDirectory> getDomainIndexDirectories() {
+        return getDomainIndexDirectoriesSet();
+    }
+
 }

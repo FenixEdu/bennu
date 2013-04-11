@@ -18,7 +18,7 @@ public class IndexingRequest extends IndexingRequest_Base {
     }
 
     public void delete() {
-        removePluginRoot();
+        setPluginRoot(null);
         super.deleteDomainObject();
     }
 }
