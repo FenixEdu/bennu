@@ -167,8 +167,8 @@ abstract public class GenericFile extends GenericFile_Base {
 
     public void delete() {
         setContent(null);
-        removeStorage();
-        removeFileSupport();
+        setStorage(null);
+        setFileSupport(null);
         deleteDomainObject();
     }
 

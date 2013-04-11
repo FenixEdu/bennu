@@ -26,4 +26,29 @@ public class FileSupport extends FileSupport_Base {
         return instance;
     }
 
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.fileSupport.domain.FileRawData> getFileRawDatas() {
+        return getFileRawDatasSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.fileSupport.domain.FileStorage> getFileStorages() {
+        return getFileStoragesSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.fileSupport.domain.LocalFileToDelete> getLocalFilesToDelete() {
+        return getLocalFilesToDeleteSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.fileSupport.domain.FileStorageConfiguration> getFileStorageConfigurations() {
+        return getFileStorageConfigurationsSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile> getGenericFiles() {
+        return getGenericFilesSet();
+    }
+
 }
