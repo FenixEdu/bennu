@@ -25,4 +25,5 @@
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-private</url>
 		</pluginRepository>
 	</pluginRepositories>
+	<packaging>pom</packaging>
 </project>
