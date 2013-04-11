@@ -84,7 +84,7 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
 
     @Override
     public int size() {
-        return getTasksCount();
+        return getTasks().size();
     }
 
     @Override
@@ -151,6 +151,11 @@ public class PendingExecutionTaskQueue extends PendingExecutionTaskQueue_Base im
         for (Task task = queue.popPendingTaskService(); task != null; task = queue.popPendingTaskService()) {
             task.runPendingTask();
         }
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.scheduler.Task> getTasks() {
+        return getTasksSet();
     }
 
 }

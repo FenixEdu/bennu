@@ -88,4 +88,9 @@ public class CustomTaskLog extends CustomTaskLog_Base {
         setMyOrg(null);
         deleteDomainObject();
     }
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile> getGenericFile() {
+        return getGenericFileSet();
+    }
+
 }

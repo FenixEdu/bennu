@@ -34,6 +34,7 @@ import pt.ist.bennu.backend.util.LockManager;
 import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 /**
  * 
@@ -123,7 +124,7 @@ public class Scheduler extends TimerTask {
         }
     }
 
-    @Atomic(readOnly = true)
+    @Atomic(mode = TxMode.READ)
     private void runPendingTask() {
         try {
             logger.debug("Running Scheduler");

@@ -49,8 +49,8 @@ public class TaskConfiguration extends TaskConfiguration_Base {
 
     @Atomic
     public void delete() {
-        removeTask();
-        removeMyOrg();
+        setTask(null);
+        setMyOrg(null);
         deleteDomainObject();
     }
 

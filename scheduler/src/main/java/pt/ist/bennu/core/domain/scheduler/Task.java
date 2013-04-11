@@ -209,7 +209,7 @@ public abstract class Task extends Task_Base {
 
     @Atomic
     public void stop() {
-        removePendingExecutionTaskQueue();
+        setPendingExecutionTaskQueue(null);
     }
 
     public void runPendingTask() {
@@ -286,6 +286,16 @@ public abstract class Task extends Task_Base {
             cleanupLogs(100);
         }
 
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.scheduler.TaskLog> getTaskLogs() {
+        return getTaskLogsSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.scheduler.TaskConfiguration> getTaskConfigurations() {
+        return getTaskConfigurationsSet();
     }
 
 }
