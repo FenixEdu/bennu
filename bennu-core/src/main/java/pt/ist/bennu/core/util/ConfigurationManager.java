@@ -43,7 +43,7 @@ import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
 
 public class ConfigurationManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConfigurationManager.class);
 
     private static final Properties properties = new Properties();
 
