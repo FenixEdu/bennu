@@ -8,7 +8,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.bennu.service.Service;
 import pt.ist.fenixframework.FenixFrameworkPlugin;
 import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
 

@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebListener;
 
 import org.apache.log4j.Logger;
 
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.bennu.service.Service;
 import pt.ist.fenixframework.FenixFrameworkPlugin;
 import pt.ist.fenixframework.plugins.luceneIndexing.IndexListener;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.LuceneSearchPluginRoot;

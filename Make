@@ -30,20 +30,40 @@ cd bennu-core
 mvn clean install -q
 cd ..
 
-stat Installing Bennu File Support...
-cd bennu-io
-mvn clean install -q
-cd ..
-
-stat Installing Bennu Search...
-cd bennu-search
-mvn clean install -q
-cd ..
-
 stat Installing Bennu Dispatch...
 cd bennu-dispatch
 mvn clean install -q
 cd ..
+
+stat Installing File Support Plugin...
+cd file-support-plugin
+mvn clean install -q
+cd ..
+
+#stat Installing File Support...
+#cd file-support
+#mvn clean install -q
+#cd ..
+
+stat Installing Scheduler Plugin...
+cd scheduler-plugin
+mvn clean install -q
+cd ..
+
+#stat Installing Scheduler...
+#cd scheduler
+#mvn clean install -q
+#cd ..
+
+stat Installing Lucene Indexing Plugin...
+cd lucene-indexing-plugin
+mvn clean install -q
+cd ..
+
+#stat Installing Lucene...
+#cd lucene
+#mvn clean install -q
+#cd ..
 
 stat Installing Bennu Portal ...
 cd bennu-portal
@@ -51,7 +71,7 @@ mvn clean install -q
 cd ..
 
 stat Installing Bennu Admin ...
-cd bennu-portal
+cd bennu-admin
 mvn clean install -q
 cd ..
 
