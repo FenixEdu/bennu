@@ -1,29 +1,16 @@
 package pt.ist.bennu.io.domain;
 
-import pt.ist.fenixframework.pstm.PersistentRoot;
+import pt.ist.bennu.core.domain.Bennu;
 
 public class FileSupport extends FileSupport_Base {
-
-    private static FileSupport instance = null;
-
     private FileSupport() {
         super();
-        FileSupport root = PersistentRoot.getRoot(FileSupport.class.getName());
-        if (root != null && root != this) {
-            throw new Error("Trying to create a 2nd instance of LuceneSearchPluginRoot! That, my friend, is not allowed!");
-        }
-
     }
 
     public static FileSupport getInstance() {
-        if (instance == null) {
-            instance = PersistentRoot.getRoot(FileSupport.class.getName());
-            if (instance == null) {
-                instance = new FileSupport();
-                PersistentRoot.addRoot(FileSupport.class.getName(), instance);
-            }
+        if (!Bennu.getInstance().hasFileSupport()) {
+            Bennu.getInstance().setFileSupport(new FileSupport());
         }
-        return instance;
+        return Bennu.getInstance().getFileSupport();
     }
-
 }
