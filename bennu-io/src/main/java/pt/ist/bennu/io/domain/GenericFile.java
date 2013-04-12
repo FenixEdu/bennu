@@ -186,8 +186,9 @@ abstract public class GenericFile extends GenericFile_Base {
         deleteDomainObject();
     }
 
+    @SuppressWarnings("unchecked")
     public static <T extends GenericFile> List<T> getFiles(final Class<T> clazz) {
-        final List<T> files = new ArrayList<T>();
+        final List<T> files = new ArrayList<>();
         for (final GenericFile file : FileSupport.getInstance().getGenericFiles()) {
             if (file.getClass().equals(clazz)) {
                 files.add((T) file);

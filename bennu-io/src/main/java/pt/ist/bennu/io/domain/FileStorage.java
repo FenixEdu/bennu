@@ -8,7 +8,6 @@ import java.io.InputStream;
  * 
  */
 abstract public class FileStorage extends FileStorage_Base {
-
     public FileStorage() {
         super();
         setFileSupport(FileSupport.getInstance());
@@ -20,17 +19,14 @@ abstract public class FileStorage extends FileStorage_Base {
 
     abstract public InputStream readAsInputStream(String uniqueIdentification);
 
-    // @Service
     public static DomainStorage createNewDomainStorage(final String name) {
         return new DomainStorage(name);
     }
 
-    // @Service
     public static LocalFileSystemStorage createNewFileSystemStorage(String name, String path, Integer treeDirectoriesNameLength) {
         return new LocalFileSystemStorage(name, path, treeDirectoriesNameLength);
     }
 
-    // @Service
     public void delete() {
         if (isCanBeDeleted()) {
             getConfigurations().clear();
@@ -42,7 +38,4 @@ abstract public class FileStorage extends FileStorage_Base {
     public boolean isCanBeDeleted() {
         return getFilesCount() == 0;
     }
-
-    // abstract public Collection<Pair<String, String>>
-    // getPresentationDetails();
 }

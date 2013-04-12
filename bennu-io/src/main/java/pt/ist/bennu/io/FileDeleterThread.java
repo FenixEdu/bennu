@@ -11,7 +11,6 @@ import pt.ist.bennu.io.domain.LocalFileToDelete;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class FileDeleterThread implements Runnable {
-
     private static final long SLEEP_TIME = 300000;
     private static final Logger logger = Logger.getLogger(FileDeleterThread.class.getName());
 
@@ -32,7 +31,7 @@ public class FileDeleterThread implements Runnable {
 
             @Override
             public void doIt() {
-                for (final LocalFileToDelete localFileToDelete : new ArrayList<LocalFileToDelete>(FileSupport.getInstance()
+                for (final LocalFileToDelete localFileToDelete : new ArrayList<>(FileSupport.getInstance()
                         .getLocalFilesToDelete())) {
                     logger.info("Deleting: " + localFileToDelete.getFilePath());
                     try {

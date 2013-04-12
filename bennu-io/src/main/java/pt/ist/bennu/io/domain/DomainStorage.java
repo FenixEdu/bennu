@@ -37,7 +37,7 @@ public class DomainStorage extends DomainStorage_Base {
 
     @Override
     public byte[] read(String uniqueIdentification) {
-        final FileRawData rawData = FileRawData.fromExternalId(uniqueIdentification);
+        final FileRawData rawData = AbstractDomainObject.fromExternalId(uniqueIdentification);
         return rawData != null ? rawData.getContent() : null;
     }
 
@@ -45,9 +45,4 @@ public class DomainStorage extends DomainStorage_Base {
     public InputStream readAsInputStream(String uniqueIdentification) {
         return new ByteArrayInputStream(read(uniqueIdentification));
     }
-
-    // @Override
-    // public Collection<Pair<String, String>> getPresentationDetails() {
-    // return Collections.EMPTY_LIST;
-    // }
 }

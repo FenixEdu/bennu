@@ -1,6 +1,5 @@
 package pt.ist.bennu.io.domain;
 
-
 /**
  * 
  * @author Shezad Anavarali Date: Aug 11, 2009
