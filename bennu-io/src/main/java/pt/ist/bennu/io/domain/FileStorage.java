@@ -31,12 +31,6 @@ abstract public class FileStorage extends FileStorage_Base {
     }
 
     // @Service
-    public static DBStorage createNewDatabaseStorage(String name, String host, Integer port, String dbName, String tableName,
-            String username, String password) {
-        return new DBStorage(name, host, port, dbName, tableName, username, password);
-    }
-
-    // @Service
     public void delete() {
         if (isCanBeDeleted()) {
             getConfigurations().clear();

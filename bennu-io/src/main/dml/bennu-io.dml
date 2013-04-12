@@ -23,14 +23,7 @@ class FileStorage {
 }
 	class DomainStorage extends FileStorage{
 	}
-	class DBStorage extends FileStorage{
-		String host;
-		Integer port;
-		String dbName;
-		String tableName;
-		String username;
-		String password;
-	}
+
 	class LocalFileSystemStorage extends FileStorage{
 		String path;
 		Integer treeDirectoriesNameLength;
