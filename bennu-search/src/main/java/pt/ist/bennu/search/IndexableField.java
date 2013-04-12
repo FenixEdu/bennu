@@ -3,7 +3,7 @@ package pt.ist.bennu.search;
 /**
  * This interface is used in objects that represent index names. Along with this
  * plugin there's already an implementation of IndexableField, the enum
- * pt.ist.bennu.search.DomainIndexer.DefaultIndexFields
+ * pt.ist.fenixframework.plugins.luceneIndexing.DomainIndexer.DefaultIndexFields
  * which offers, among others, the DEFAULT_FIELD (which is the one recommended
  * to do generic searches).
  * 
@@ -13,6 +13,5 @@ package pt.ist.bennu.search;
  * @author Paulo Abrantes
  */
 public interface IndexableField {
-
     public String getFieldName();
 }

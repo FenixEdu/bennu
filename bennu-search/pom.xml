@@ -15,8 +15,6 @@
 
 	<properties>
 		<version.pt.ist.bennu.bennu-core>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-core>
-		<version.pt.ist.bennu.bennu-io>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-io>
-		<version.pt.ist.fenix.tools>1.0</version.pt.ist.fenix.tools>
 	</properties>
 
 	<dependencies>
@@ -26,22 +24,12 @@
 			<version>${version.pt.ist.bennu.bennu-core}</version>
 		</dependency>
 		<dependency>
-			<groupId>pt.ist.bennu</groupId>
-			<artifactId>bennu-io</artifactId>
-			<version>${version.pt.ist.bennu.bennu-io}</version>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>pt.ist</groupId>
-			<artifactId>fenix-tools</artifactId>
-			<version>${version.pt.ist.fenix.tools}</version>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -1,38 +1,33 @@
 package pt.ist.bennu.search;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.index.SerialMergeScheduler;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
-import pt.ist.bennu.search.domain.DomainIndexDirectory;
-import pt.ist.bennu.search.domain.IndexDocument;
+import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.search.queryBuilder.dsl.DSLState;
-import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.fenixframework.pstm.OneBoxDomainObject;
+
+import com.google.common.base.CharMatcher;
 
 /**
  * DomainIndexer is the core of this plugin. This is a singleton class that
@@ -42,10 +37,10 @@ import pt.ist.fenixframework.pstm.OneBoxDomainObject;
  */
 public class DomainIndexer {
 
-    public static final Version VERSION = Version.LUCENE_35;
+    public static final Version VERSION = Version.LUCENE_36;
 
     public static enum DefaultIndexFields implements IndexableField {
-        DEFAULT_FIELD("all"), IDENTIFIER_FIELD("OID"), GENERIC_FIELD("generic");
+        DEFAULT_FIELD("all"), IDENTIFIER_FIELD("OID");
 
         private String fieldName;
 
@@ -69,12 +64,9 @@ public class DomainIndexer {
         }
     }
 
-    private int maxClouseCount = 10000;
-
     private static DomainIndexer singletonInstance;
 
     private DomainIndexer() {
-
     }
 
     private static synchronized void init() {
@@ -90,286 +82,146 @@ public class DomainIndexer {
         return singletonInstance;
     }
 
-    public int getMaxClouseCount() {
-        return maxClouseCount;
-    }
-
-    public void setMaxClouseCount(int maxClouseCount) {
-        this.maxClouseCount = maxClouseCount;
-    }
-
     public void indexDomainObject(IndexDocument document) {
-        String name = findDirectoryNameForClass(document.getDomainObjectClass());
-        IndexWriter writer = null;
-        try {
-            LuceneDomainDirectory luceneDomainDirectory =
-                    DomainIndexDirectory.getIndexDirectory(name, true).getLuceneDomainDirectory();
-            writer =
-                    new IndexWriter(luceneDomainDirectory, new IndexWriterConfig(VERSION, new StandardAnalyzer(VERSION))
-                            .setOpenMode(OpenMode.CREATE_OR_APPEND).setMergeScheduler(new SerialMergeScheduler()));
-
-            if (isIndexed(document, luceneDomainDirectory)) {
-                unindexDomainObject(document, writer);
-            }
-
-            writer.addDocument(generateLuceneDocument(document));
-        } catch (CorruptIndexException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (CorruptIndexException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+        try (FSDirectory directory = getLuceneDomainDirectory(document.getIndexableClass(), true)) {
+            try (StandardAnalyzer analyser = new StandardAnalyzer(VERSION)) {
+                try (IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(VERSION, analyser))) {
+                    QueryParser parser = new QueryParser(VERSION, DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), analyser);
+                    writer.deleteDocuments(parser.parse(document.getIndexId()));
+                    writer.addDocument(document.getLuceneDocument());
                 }
             }
+        } catch (ParseException e) {
+            throw new DomainIndexException(e);
+        } catch (IOException e) {
+            throw new DomainIndexException(e);
         }
-
     }
 
     public void indexDomainObjects(Collection<IndexDocument> documents) {
-
-        Map<String, IndexWriter> writerMap = new HashMap<String, IndexWriter>();
-        IndexWriter writer = null;
-        try {
-            for (IndexDocument document : documents) {
-                String className = findDirectoryNameForClass(document.getDomainObjectClass());
-                LuceneDomainDirectory luceneDomainDirectory =
-                        DomainIndexDirectory.getIndexDirectory(className, true).getLuceneDomainDirectory();
-                writer = writerMap.get(className);
-
-                if (writer == null) {
-                    writer =
-                            new IndexWriter(luceneDomainDirectory, new IndexWriterConfig(VERSION, new StandardAnalyzer(VERSION))
-                                    .setOpenMode(OpenMode.CREATE_OR_APPEND).setMergeScheduler(new SerialMergeScheduler()));
-                    writerMap.put(className, writer);
-                }
-                if (isIndexed(document, luceneDomainDirectory)) {
-                    unindexDomainObject(document, writer);
-                }
-                writer.addDocument(generateLuceneDocument(document));
+        Map<Class<? extends Indexable>, Collection<IndexDocument>> map = new HashMap<>();
+        for (IndexDocument document : documents) {
+            if (!map.containsKey(document.getClass())) {
+                map.put(document.getIndexableClass(), new ArrayList<IndexDocument>());
             }
-            for (IndexWriter writerToClose : writerMap.values()) {
-                writerToClose.close();
-            }
-        } catch (CorruptIndexException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } finally {
-            try {
-                boolean foundWriter = false;
-                for (IndexWriter writerToClose : writerMap.values()) {
-                    writerToClose.close();
-                    if (writerToClose == writer) {
-                        foundWriter = true;
+            map.get(document.getClass()).add(document);
+        }
+        indexDomainObjects(map);
+    }
+
+    public void indexDomainObjects(Map<Class<? extends Indexable>, Collection<IndexDocument>> documents) {
+        for (Entry<Class<? extends Indexable>, Collection<IndexDocument>> entry : documents.entrySet()) {
+            try (FSDirectory directory = getLuceneDomainDirectory(entry.getKey(), true)) {
+                try (StandardAnalyzer analyser = new StandardAnalyzer(VERSION)) {
+                    try (IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(VERSION, analyser))) {
+                        for (IndexDocument document : entry.getValue()) {
+                            QueryParser parser =
+                                    new QueryParser(VERSION, DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), analyser);
+                            writer.deleteDocuments(parser.parse(document.getIndexId()));
+                            writer.addDocument(document.getLuceneDocument());
+                        }
                     }
                 }
-                if (writer != null && !foundWriter) {
-                    writer.close();
-                }
-            } catch (CorruptIndexException e) {
-                e.printStackTrace();
+            } catch (ParseException e) {
+                throw new DomainIndexException(e);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new DomainIndexException(e);
             }
         }
-
-    }
-
-    private static boolean isIndexed(IndexDocument document, LuceneDomainDirectory luceneDomainDirectory)
-            throws CorruptIndexException, IOException, ParseException {
-        IndexSearcher searcher = new IndexSearcher(IndexReader.open(luceneDomainDirectory, true));
-
-        QueryParser queryParser =
-                new QueryParser(VERSION, DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), new StandardAnalyzer(VERSION));
-        Query query = queryParser.parse(document.getIndexId());
-
-        TopDocs topDocs = searcher.search(query, 10);
-        int length = topDocs.scoreDocs.length;
-        if (length > 1) {
-            System.out.println("[WARN] Various hits for OID: " + document.getIndexId() + " hits:" + length);
-        }
-
-        return length > 0;
-    }
-
-    public boolean isIndexed(IndexDocument document) {
-        String name = findDirectoryNameForClass(document.getDomainObjectClass());
-        if (!DomainIndexDirectory.hasIndexDirectory(name)) {
-            return false;
-        }
-        try {
-            LuceneDomainDirectory luceneDomainDirectory = DomainIndexDirectory.getIndexDirectory(name).getLuceneDomainDirectory();
-            return isIndexed(document, luceneDomainDirectory);
-        } catch (CorruptIndexException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        }
-    }
-
-    private static void unindexDomainObject(IndexDocument document, IndexWriter writer) throws CorruptIndexException,
-            IOException, ParseException {
-        QueryParser queryParser =
-                new QueryParser(VERSION, DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), new StandardAnalyzer(VERSION));
-        Query query = queryParser.parse(document.getIndexId());
-        writer.deleteDocuments(query);
     }
 
     public void unindexDomainObject(IndexDocument document) {
-        String name = findDirectoryNameForClass(document.getDomainObjectClass());
-        IndexWriter writer = null;
-        try {
-            LuceneDomainDirectory luceneDomainDirectory =
-                    DomainIndexDirectory.getIndexDirectory(name, true).getLuceneDomainDirectory();
-            writer =
-                    new IndexWriter(luceneDomainDirectory, new IndexWriterConfig(VERSION, new StandardAnalyzer(VERSION))
-                            .setOpenMode(OpenMode.CREATE_OR_APPEND).setMergeScheduler(new SerialMergeScheduler()));
-            unindexDomainObject(document, writer);
-        } catch (CorruptIndexException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new DomainIndexException(e);
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (CorruptIndexException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    public <T extends DomainObject> List<T> search(Class<T> domainObjectClass, String value) {
-        return search(domainObjectClass, DefaultIndexFields.DEFAULT_FIELD, value, DEFAULT_MAX_SIZE);
-    }
-
-    public <T extends DomainObject> List<T> search(Class<T> domainObjectClass, IndexableField searchField, String value) {
-        return search(domainObjectClass, searchField, value, DEFAULT_MAX_SIZE);
-    }
-
-    public <T extends DomainObject> List<T> search(Class<T> domainObjectClass, IndexableField searchField, String value,
-            int maxHits) {
-
-        if (StringUtils.isEmpty(value)) {
-            return Collections.emptyList();
-        }
-        return search(domainObjectClass, value, maxHits, searchField);
-    }
-
-    public <T extends DomainObject> List<T> search(Class<T> domainObjectClass, DSLState queryHelper, int maxHits) {
-
-        if (queryHelper.isEmpty()) {
-            return Collections.<T> emptyList();
-        }
-        return search(domainObjectClass, queryHelper.finish(), maxHits, DefaultIndexFields.DEFAULT_FIELD);
-    }
-
-    public <T extends DomainObject> List<T> expertSearch(Class<T> domainObjectClass, String luceneQuery, int maxHits) {
-        if (StringUtils.isEmpty(luceneQuery)) {
-            return Collections.<T> emptyList();
-        }
-        return search(domainObjectClass, luceneQuery, maxHits, DefaultIndexFields.DEFAULT_FIELD);
-    }
-
-    protected <T extends DomainObject> List<T> search(Class<T> domainObjectClass, String luceneQuery, int maxHits,
-            IndexableField defaultField) {
-        String directoryName = findDirectoryNameForClass(domainObjectClass);
-        if (!DomainIndexDirectory.hasIndexDirectory(directoryName)) {
-            return Collections.emptyList();
-        }
-
-        List<T> domainObjects = new ArrayList<T>();
-        try {
-            LuceneDomainDirectory luceneDomainDirectory =
-                    DomainIndexDirectory.getIndexDirectory(directoryName, true).getLuceneDomainDirectory();
-
-            IndexSearcher searcher = new IndexSearcher(IndexReader.open(luceneDomainDirectory, true));
-
-            QueryParser queryParser = new QueryParser(VERSION, defaultField.getFieldName(), new StandardAnalyzer(VERSION));
-            Query query = queryParser.parse(luceneQuery);
-            BooleanQuery.setMaxClauseCount(getMaxClouseCount());
-
-            TopDocs topDocs = searcher.search(query, maxHits);
-
-            for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-                int docId = scoreDoc.doc;
-                Document doc = searcher.doc(docId);
-
-                String OID = doc.get(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName());
-                T domainObject = AbstractDomainObject.<T> fromExternalId(OID);
-                if (domainObject != null && domainObject.getClass().isAssignableFrom(domainObjectClass)) {
-                    domainObjects.add(domainObject);
+        try (FSDirectory directory = getLuceneDomainDirectory(document.getIndexableClass(), false)) {
+            if (directory != null) {
+                try (StandardAnalyzer analyser = new StandardAnalyzer(VERSION)) {
+                    try (IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(VERSION, analyser))) {
+                        QueryParser parser =
+                                new QueryParser(VERSION, DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), analyser);
+                        writer.deleteDocuments(parser.parse(document.getIndexId()));
+                    }
                 }
             }
-
-            searcher.close();
-        } catch (CorruptIndexException e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
             throw new DomainIndexException(e);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new DomainIndexException(e);
+        }
+    }
+
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, IndexableField defaultField, String query, int maxHits) {
+        try (StandardAnalyzer analyser = new StandardAnalyzer(VERSION)) {
+            try (FSDirectory directory = getLuceneDomainDirectory(indexedClass, false)) {
+                List<T> indexables = new ArrayList<>();
+                if (directory != null) {
+                    try (IndexReader reader = IndexReader.open(directory)) {
+                        try (IndexSearcher searcher = new IndexSearcher(reader)) {
+                            QueryParser parser = new QueryParser(VERSION, defaultField.getFieldName(), analyser);
+                            TopDocs docs = searcher.search(parser.parse(query), maxHits);
+                            for (ScoreDoc scoreDoc : docs.scoreDocs) {
+                                int docId = scoreDoc.doc;
+                                String OID = searcher.doc(docId).get(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName());
+                                indexables.add(AbstractDomainObject.<T> fromExternalId(OID));
+                            }
+                        }
+                    }
+                }
+                return indexables;
+            }
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new DomainIndexException(e);
+        } catch (IOException e) {
             throw new DomainIndexException(e);
         }
-        return domainObjects;
     }
 
-    private String findDirectoryNameForClass(Class<? extends DomainObject> domainObjectClass) {
-        Class<? extends DomainObject> superclass = (Class<? extends DomainObject>) domainObjectClass.getSuperclass();
-        if (superclass.getName().endsWith("_Base")) {
-            superclass = (Class<? extends DomainObject>) superclass.getSuperclass();
-        }
-
-        return superclass == AbstractDomainObject.class || superclass == OneBoxDomainObject.class ? domainObjectClass.getName() : findDirectoryNameForClass(superclass);
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, IndexableField defaultField, String query) {
+        return search(indexedClass, defaultField, query, DEFAULT_MAX_SIZE);
     }
 
-    private static Document generateLuceneDocument(IndexDocument indexDocument) {
-        Document doc = new Document();
-        StringBuilder builder = new StringBuilder();
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, String query, int maxHits) {
+        return search(indexedClass, DefaultIndexFields.DEFAULT_FIELD, query, maxHits);
+    }
 
-        doc.add(new Field(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), indexDocument.getIndexId(), Field.Store.YES,
-                Field.Index.NOT_ANALYZED));
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, String query) {
+        return search(indexedClass, DefaultIndexFields.DEFAULT_FIELD, query, DEFAULT_MAX_SIZE);
+    }
 
-        for (IndexableField indexableField : indexDocument.getIndexableFields()) {
-            String value = indexDocument.getValueForField(indexableField);
-            doc.add(new Field(indexableField.getFieldName(), value, Field.Store.NO, Field.Index.ANALYZED));
-            builder.append(value);
-            builder.append(" ");
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, IndexableField defaultField, DSLState query, int maxHits) {
+        return search(indexedClass, defaultField, query.finish(), maxHits);
+    }
+
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, IndexableField defaultField, DSLState query) {
+        return search(indexedClass, defaultField, query.finish(), DEFAULT_MAX_SIZE);
+    }
+
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, DSLState query, int maxHits) {
+        return search(indexedClass, DefaultIndexFields.DEFAULT_FIELD, query.finish(), maxHits);
+    }
+
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, DSLState query) {
+        return search(indexedClass, DefaultIndexFields.DEFAULT_FIELD, query.finish(), DEFAULT_MAX_SIZE);
+    }
+
+    private static FSDirectory getLuceneDomainDirectory(Class<? extends Indexable> indexableClass, boolean create)
+            throws IOException {
+        String basedir = ConfigurationManager.getProperty("lucene.indexing.directory");
+        if (basedir == null) {
+            throw new RuntimeException("Please specify 'lucene.indexing.directory' in configuration.properties");
         }
-        doc.add(new Field(DefaultIndexFields.DEFAULT_FIELD.getFieldName(), builder.toString(), Field.Store.NO,
-                Field.Index.ANALYZED));
-        return doc;
+        Matcher matcher = Pattern.compile("(\\{.+?\\})").matcher(basedir);
+        StringBuffer result = new StringBuffer();
+        while (matcher.find()) {
+            String replaceStr = CharMatcher.anyOf("{}").trimFrom(matcher.group());
+            matcher.appendReplacement(result, System.getProperty(replaceStr));
+        }
+        matcher.appendTail(result);
+        File file = new File(result.toString() + File.separator + indexableClass.getName());
+        if (!file.isDirectory()) {
+            if (!create) {
+                return null;
+            }
+            file.mkdir();
+        }
+        return FSDirectory.open(file);
     }
 }

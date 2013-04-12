@@ -1,6 +1,6 @@
-package pt.ist.bennu.search.domain.interfaces;
+package pt.ist.bennu.search;
 
-import pt.ist.bennu.search.domain.IndexDocument;
+import pt.ist.fenixframework.DomainObject;
 
 /**
  * This interface is used in objects that know how to generate a IndexDocument
@@ -9,12 +9,6 @@ import pt.ist.bennu.search.domain.IndexDocument;
  * 
  * @author Paulo Abrantes
  */
-public interface Indexable {
-    public static enum IndexMode {
-        MANUAL, SYNC, ASYNC;
-    }
-
-    public IndexMode getIndexMode();
-
+public interface Indexable extends DomainObject {
     public IndexDocument getDocumentToIndex();
 }

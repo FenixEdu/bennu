@@ -1,4 +1,4 @@
-package pt.ist.bennu.search.domain.interfaces;
+package pt.ist.bennu.search;
 
 import java.util.Set;
 
@@ -12,6 +12,5 @@ import java.util.Set;
  * @author Paulo Abrantes
  */
 public interface Searchable {
-
     public Set<Indexable> getObjectsToIndex();
 }
