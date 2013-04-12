@@ -1,4 +1,4 @@
-package pt.ist.fenixframework.plugins.fileSupport;
+package pt.ist.bennu.io;
 
 import java.util.ArrayList;
 
@@ -6,8 +6,8 @@ import jvstm.TransactionalCommand;
 
 import org.apache.log4j.Logger;
 
-import pt.ist.fenixframework.plugins.fileSupport.domain.FileSupport;
-import pt.ist.fenixframework.plugins.fileSupport.domain.LocalFileToDelete;
+import pt.ist.bennu.io.domain.FileSupport;
+import pt.ist.bennu.io.domain.LocalFileToDelete;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class FileDeleterThread implements Runnable {

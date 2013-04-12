@@ -1,4 +1,4 @@
-package pt.ist.fenixframework.plugins.fileSupport.domain;
+package pt.ist.bennu.io.domain;
 
 import pt.ist.fenixframework.pstm.PersistentRoot;
 

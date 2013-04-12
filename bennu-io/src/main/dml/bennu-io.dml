@@ -1,4 +1,4 @@
-package pt.ist.fenixframework.plugins.fileSupport.domain;
+package pt.ist.bennu.io.domain;
 
 valueType pt.utl.ist.fenix.tools.util.ByteArray as ByteArray {
     externalizeWith {
