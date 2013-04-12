@@ -1,11 +1,5 @@
 package pt.ist.bennu.io.domain;
 
-valueType pt.utl.ist.fenix.tools.util.ByteArray as ByteArray {
-    externalizeWith {
-        bytearray getBytes();
-    }
-}
-
 class GenericFile {
 	Long size;
 	DateTime creationDate;
@@ -17,7 +11,7 @@ class GenericFile {
 
 class FileRawData {
 	String contentKey;
-	ByteArray content;
+	bytearray content;
 }
 
 class LocalFileToDelete {

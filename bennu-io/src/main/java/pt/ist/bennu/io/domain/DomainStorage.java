@@ -38,7 +38,7 @@ public class DomainStorage extends DomainStorage_Base {
     @Override
     public byte[] read(String uniqueIdentification) {
         final FileRawData rawData = FileRawData.fromExternalId(uniqueIdentification);
-        return rawData != null ? rawData.getContent().getBytes() : null;
+        return rawData != null ? rawData.getContent() : null;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package pt.ist.bennu.io.domain;
 
-import pt.utl.ist.fenix.tools.util.ByteArray;
 
 /**
  * 
@@ -16,7 +15,7 @@ public class FileRawData extends FileRawData_Base {
 
     public FileRawData(String uniqueIdentification, byte[] content) {
         this();
-        setContent(new ByteArray(content));
+        setContent(content);
         setContentKey(uniqueIdentification);
     }
 
