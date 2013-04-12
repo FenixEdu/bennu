@@ -8,7 +8,7 @@
 		<version>2.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>scheduler-plugin</artifactId>
+	<artifactId>bennu-scheduler</artifactId>
 	<name>Bennu Scheduler</name>
 
 	<properties>

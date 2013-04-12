@@ -1,4 +1,4 @@
-package pt.ist.fenixframework.plugins.scheduler;
+package pt.ist.bennu.scheduler;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,8 +11,8 @@ import jvstm.TransactionalCommand;
 
 import org.joda.time.DateTime;
 
+import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
 import pt.ist.fenixframework.pstm.Transaction;
 
 public class Scheduler extends TimerTask {

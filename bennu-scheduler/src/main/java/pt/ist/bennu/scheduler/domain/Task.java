@@ -1,4 +1,4 @@
-package pt.ist.fenixframework.plugins.scheduler.domain;
+package pt.ist.bennu.scheduler.domain;
 
 import jvstm.TransactionalCommand;
 import pt.ist.fenixframework.pstm.Transaction;

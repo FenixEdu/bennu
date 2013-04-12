@@ -1,4 +1,4 @@
-package pt.ist.fenixframework.plugins.scheduler.domain;
+package pt.ist.bennu.scheduler.domain;
 
 public class TaskLog extends TaskLog_Base {
 

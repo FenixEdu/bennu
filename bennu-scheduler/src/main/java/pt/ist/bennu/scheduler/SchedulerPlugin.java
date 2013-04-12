@@ -1,4 +1,4 @@
-package pt.ist.fenixframework.plugins.scheduler;
+package pt.ist.bennu.scheduler;
 
 import java.net.URL;
 import java.util.Collections;
@@ -8,9 +8,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.bennu.service.Service;
 import pt.ist.fenixframework.FenixFrameworkPlugin;
-import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
 
 @WebListener
 public class SchedulerPlugin implements FenixFrameworkPlugin, ServletContextListener {
