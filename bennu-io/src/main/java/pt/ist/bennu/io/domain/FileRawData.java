@@ -6,7 +6,6 @@ package pt.ist.bennu.io.domain;
  * 
  */
 public class FileRawData extends FileRawData_Base {
-
     public FileRawData() {
         super();
         setFileSupport(FileSupport.getInstance());

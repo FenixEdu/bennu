@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 
 import jvstm.PerTxBox;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.CharMatcher;
+import com.google.common.io.Files;
 
 /**
  * 
@@ -36,7 +36,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         }
 
         public void write() throws IOException {
-            FileUtils.writeByteArrayToFile(new File(path), contents);
+            Files.write(contents, new File(path));
         }
     }
 
@@ -98,7 +98,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
             // Replace all occurrences of pattern in input
             StringBuffer result = new StringBuffer();
             while (matcher.find()) {
-                String replaceStr = StringUtils.strip(matcher.group(), "{}");
+                String replaceStr = CharMatcher.anyOf("{}").trimFrom(matcher.group());
                 matcher.appendReplacement(result, System.getProperty(replaceStr));
             }
             matcher.appendTail(result);
@@ -134,7 +134,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
                 return map.get(uniqueIdentification).contents;
             }
 
-            return FileUtils.readFileToByteArray(new File(getFullPath(uniqueIdentification) + uniqueIdentification));
+            return Files.toByteArray(new File(getFullPath(uniqueIdentification) + uniqueIdentification));
         } catch (IOException e) {
             throw new RuntimeException("error.store.file", e);
         }

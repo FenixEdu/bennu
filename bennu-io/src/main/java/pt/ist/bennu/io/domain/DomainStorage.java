@@ -12,7 +12,6 @@ import pt.ist.fenixframework.pstm.AbstractDomainObject;
  * 
  */
 public class DomainStorage extends DomainStorage_Base {
-
     public DomainStorage() {
         super();
     }

@@ -15,7 +15,6 @@
 
 	<properties>
 		<version.pt.ist.bennu.bennu-core>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-core>
-		<version.pt.ist.fenix.tools>1.0</version.pt.ist.fenix.tools>
 	</properties>
 
 	<dependencies>
@@ -33,9 +32,8 @@
 			<artifactId>commons-codec</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>pt.ist</groupId>
-			<artifactId>fenix-tools</artifactId>
-			<version>${version.pt.ist.fenix.tools}</version>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -10,15 +10,15 @@ import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
-import jvstm.TransactionalCommand;
-
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import pt.ist.bennu.service.Service;
 import pt.ist.fenixframework.FFDomainException;
-import pt.ist.fenixframework.pstm.Transaction;
+
+import com.google.common.base.Strings;
 
 /**
  * 
@@ -26,6 +26,7 @@ import pt.ist.fenixframework.pstm.Transaction;
  * 
  */
 abstract public class GenericFile extends GenericFile_Base {
+    private static final Logger logger = LoggerFactory.getLogger(GenericFile.class);
 
     public GenericFile() {
         super();
@@ -44,7 +45,7 @@ abstract public class GenericFile extends GenericFile_Base {
 
     @Override
     public void setFilename(String filename) {
-        final String nicerFilename = FilenameUtils.getName(filename);
+        final String nicerFilename = filename.substring(filename.lastIndexOf('/') + 1);
         final String normalizedFilename = Normalizer.normalize(nicerFilename, Form.NFD).replaceAll("[^\\p{ASCII}]", "");
         super.setFilename(normalizedFilename);
         super.setContentType(guessContentType(normalizedFilename));
@@ -55,10 +56,10 @@ abstract public class GenericFile extends GenericFile_Base {
         setSize(Long.valueOf(size));
         final FileStorage fileStorage = getFileStorage();
         final String uniqueIdentification =
-                fileStorage.store(StringUtils.isEmpty(getContentKey()) ? getExternalId() : getContentKey(), content);
+                fileStorage.store(Strings.isNullOrEmpty(getContentKey()) ? getExternalId() : getContentKey(), content);
         setStorage(fileStorage);
 
-        if (StringUtils.isEmpty(uniqueIdentification) && content != null) {
+        if (Strings.isNullOrEmpty(uniqueIdentification) && content != null) {
             throw new RuntimeException();
         }
 
@@ -71,16 +72,6 @@ abstract public class GenericFile extends GenericFile_Base {
 
     public InputStream getStream() {
         return getStorage().readAsInputStream(getContentKey());
-    }
-
-    private void updateFileStorage() {
-        Transaction.withTransaction(new TransactionalCommand() {
-
-            @Override
-            public void doIt() {
-                setContent(getContent());
-            }
-        });
     }
 
     /**
@@ -135,11 +126,9 @@ abstract public class GenericFile extends GenericFile_Base {
      */
     public String getHexSHA1MessageDigest() {
         return Hex.encodeHexString(getSHA1MessageDigest());
-
     }
 
     public static void convertFileStorages(final FileStorage fileStorageToUpdate) {
-
         if (fileStorageToUpdate != null) {
             try {
                 for (final GenericFile genericFile : FileSupport.getInstance().getGenericFiles()) {
@@ -147,12 +136,17 @@ abstract public class GenericFile extends GenericFile_Base {
                         genericFile.updateFileStorage();
                     }
                 }
-                System.out.println("FILE Conversion: DONE SUCESSFULLY!");
+                logger.debug("FILE Conversion: DONE SUCESSFULLY!");
             } catch (Throwable e) {
-                System.out.println("FILE Conversion: ABORTED!!!");
+                logger.debug("FILE Conversion: ABORTED!!!");
                 e.printStackTrace();
             }
         }
+    }
+
+    @Service
+    private void updateFileStorage() {
+        setContent(getContent());
     }
 
     private FileStorage getFileStorage() {
@@ -165,18 +159,6 @@ abstract public class GenericFile extends GenericFile_Base {
 
     protected String guessContentType(final String filename) {
         return new MimetypesFileTypeMap().getContentType(filename);
-    }
-
-    public void deleteService() {
-        Transaction.withTransaction(new TransactionalCommand() {
-
-            @Override
-            public void doIt() {
-                delete();
-            }
-
-        });
-
     }
 
     public void delete() {
