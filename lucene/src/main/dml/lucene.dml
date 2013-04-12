@@ -1,3 +1,0 @@
-package module.lucene.domain;
-
-class IndexingTask extends .pt.ist.bennu.core.domain.scheduler.Task;
