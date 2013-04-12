@@ -4,34 +4,22 @@ import java.lang.reflect.Modifier;
 
 import org.joda.time.DateTime;
 
+import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.fenixframework.pstm.PersistentRoot;
 import pt.ist.fenixframework.pstm.Transaction;
 import dml.DomainClass;
 import dml.DomainModel;
 
 public class SchedulerSystem extends SchedulerSystem_Base {
-
-    private static SchedulerSystem instance = null;
-
     private SchedulerSystem() {
         super();
-        final SchedulerSystem root = PersistentRoot.getRoot(SchedulerSystem.class.getName());
-        if (root != null && root != this) {
-            throw new Error("Trying to create a 2nd instance of SchedulerSystemRoot! There can only be one!");
-        }
     }
 
     public static SchedulerSystem getInstance() {
-        if (instance == null) {
-            instance = PersistentRoot.getRoot(SchedulerSystem.class.getName());
-            if (instance == null) {
-                instance = new SchedulerSystem();
-                PersistentRoot.addRoot(SchedulerSystem.class.getName(), instance);
-            }
-            instance.initTasks();
+        if (!Bennu.getInstance().hasSchedulerSystem()) {
+            Bennu.getInstance().setSchedulerSystem(new SchedulerSystem());
         }
-        return instance;
+        return Bennu.getInstance().getSchedulerSystem();
     }
 
     public static void queueTasks() {

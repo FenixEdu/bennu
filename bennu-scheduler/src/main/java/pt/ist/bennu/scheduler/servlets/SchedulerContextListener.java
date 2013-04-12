@@ -1,8 +1,4 @@
-package pt.ist.bennu.scheduler;
-
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
+package pt.ist.bennu.scheduler.servlets;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -10,22 +6,15 @@ import javax.servlet.annotation.WebListener;
 
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.bennu.service.Service;
-import pt.ist.fenixframework.FenixFrameworkPlugin;
 
 @WebListener
-public class SchedulerPlugin implements FenixFrameworkPlugin, ServletContextListener {
+public class SchedulerContextListener implements ServletContextListener {
     private static boolean initialized = false;
 
-    @Override
-    public List<URL> getDomainModel() {
-        return Collections.singletonList(getClass().getResource("/scheduler-plugin.dml"));
-    }
-
-    @Override
     @Service
     public void initialize() {
         if (!initialized) {
-            SchedulerSystem.getInstance();
+            SchedulerSystem.getInstance().initTasks();
             initialized = true;
         }
     }
