@@ -55,8 +55,8 @@ cd ..
 #mvn clean install -q
 #cd ..
 
-stat Installing Lucene Indexing Plugin...
-cd lucene-indexing-plugin
+stat Installing Bennu Search...
+cd bennu-search
 mvn clean install -q
 cd ..
 
