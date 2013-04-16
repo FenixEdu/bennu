@@ -1,29 +1,30 @@
 package pt.ist.bennu.core.util;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
-import java.util.Vector;
+import java.util.Set;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 public class LocaleArray implements Serializable {
-    private final List<Locale> locales;
+    private final Set<Locale> locales;
 
-    public LocaleArray(List<Locale> locales) {
-        this.locales = locales;
+    public LocaleArray(Set<Locale> locales) {
+        this.locales = Collections.unmodifiableSet(locales);
     }
 
-    public List<Locale> getLocales() {
+    public Set<Locale> getLocales() {
         return locales;
     }
 
     public LocaleArray with(Locale locale) {
-        List<Locale> newlist = new Vector<>(locales);
-        newlist.add(locale);
-        return new LocaleArray(newlist);
+        Set<Locale> localeSet = new HashSet<>(locales);
+        localeSet.add(locale);
+        return new LocaleArray(localeSet);
     }
 
     public String externalize() {
@@ -36,10 +37,10 @@ public class LocaleArray implements Serializable {
     }
 
     public static LocaleArray internalize(String externalized) {
-        List<Locale> newlist = new Vector<>();
+        Set<Locale> localeSet = new HashSet<>();
         for (String tag : externalized.split(",")) {
-            newlist.add(Locale.forLanguageTag(tag));
+            localeSet.add(Locale.forLanguageTag(tag));
         }
-        return new LocaleArray(newlist);
+        return new LocaleArray(localeSet);
     }
 }

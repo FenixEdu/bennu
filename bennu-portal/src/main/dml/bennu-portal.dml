@@ -8,6 +8,8 @@ class HostInfo {
 	String supportEmailAddress;
 	String systemEmailAddress;
 	String theme;
+	bytearray logo;
+	String logoType;
 }
 
 class MenuItem {

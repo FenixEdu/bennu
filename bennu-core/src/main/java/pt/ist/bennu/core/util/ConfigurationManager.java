@@ -22,10 +22,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,6 +43,10 @@ import pt.ist.fenixframework.Config;
 import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
 import pt.ist.fenixframework.project.DmlFile;
 import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 
 public class ConfigurationManager {
 
@@ -59,12 +66,16 @@ public class ConfigurationManager {
 
     private static String thisServerRestSecret;
 
+    private static Set<Locale> locales;
+
     static {
         try (InputStream inputStream = ConfigurationManager.class.getResourceAsStream("/configuration.properties")) {
             if (inputStream == null) {
                 throw new Error("configuration.properties not found in classpath.");
             }
             properties.load(inputStream);
+
+            initializeLocales();
 
             config = new Config() {
                 {
@@ -117,6 +128,33 @@ public class ConfigurationManager {
         } catch (IOException e) {
             throw new Error("configuration.properties could not be read.", e);
         }
+    }
+
+    private static void initializeLocales() {
+        final String localesString = getProperty("locales");
+
+        if (StringUtils.isEmpty(localesString)) {
+            throw new Error("Please add locales property to configuration.properties");
+        }
+
+        locales = new HashSet<Locale>();
+        Locale defaultLocale = Locale.getDefault();
+        for (String locale : localesString.split(",")) {
+            locales.add(Locale.forLanguageTag(locale));
+        }
+        if (!locales.contains(defaultLocale)) {
+            throw new Error(String.format("Please add default locale %s to supported locales in configuration.properties",
+                    defaultLocale));
+        }
+
+        logger.info("Supported Locales : {}",
+                Joiner.on(",").join(FluentIterable.from(locales).transform(new Function<Locale, String>() {
+
+                    @Override
+                    public String apply(Locale input) {
+                        return input.toLanguageTag();
+                    }
+                }).toArray(String.class)));;
     }
 
     public static List<FenixFrameworkArtifact> getArtifacts() throws MalformedURLException, IOException,
@@ -260,5 +298,13 @@ public class ConfigurationManager {
             }
         }
         throw new Error("Type: " + type.getName() + " not found on any module");
+    }
+
+    public static Set<Locale> getSupportedLocales() {
+        return locales;
+    }
+
+    public static Boolean isSupportedLanguage(String languageTag) {
+        return locales.contains(Locale.forLanguageTag(languageTag));
     }
 }

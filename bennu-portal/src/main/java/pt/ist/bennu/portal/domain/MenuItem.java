@@ -4,9 +4,15 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
+import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.dispatch.AppServer;
 import pt.ist.bennu.service.Service;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 
 public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
 
@@ -31,6 +37,16 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
 
     public Set<MenuItem> getOrderedChild() {
         return Collections.unmodifiableSet(new TreeSet<>(getChild()));
+    }
+
+    public Set<MenuItem> getUserMenu() {
+        return FluentIterable.from(getOrderedChild()).filter(new Predicate<MenuItem>() {
+
+            @Override
+            public boolean apply(MenuItem menu) {
+                return menu.isAvailable(Authenticate.getUser());
+            }
+        }).toSet();
     }
 
     @Override
@@ -84,5 +100,9 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
 
     public Boolean isFunctionalityLink() {
         return AppServer.hasFunctionality(getPath());
+    }
+
+    public Boolean isAvailable(User user) {
+        return BennuGroup.parse(getAccessExpression()).isMember(user);
     }
 }

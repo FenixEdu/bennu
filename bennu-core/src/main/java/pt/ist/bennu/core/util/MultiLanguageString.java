@@ -14,12 +14,14 @@ import org.apache.commons.lang.StringUtils;
 
 import pt.ist.bennu.core.i18n.I18N;
 
+import com.google.common.base.Function;
 import com.google.common.base.Strings;
+import com.google.common.collect.FluentIterable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class MultiLanguageString implements Serializable, Comparable<MultiLanguageString> {
-    private final Map<Locale, String> contents;
+    private final Map<String, String> contents;
 
     public static final MultiLanguageString EMPTY = new MultiLanguageString();
 
@@ -34,11 +36,11 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
     public MultiLanguageString(Locale locale, final String content) {
         this();
         if (!Strings.isNullOrEmpty(content)) {
-            contents.put(locale, content);
+            contents.put(locale.getLanguage(), content);
         }
     }
 
-    private MultiLanguageString(Map<Locale, String> contents) {
+    private MultiLanguageString(Map<String, String> contents) {
         this.contents = contents;
     }
 
@@ -55,9 +57,9 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
         if (Strings.isNullOrEmpty(content)) {
             return this;
         }
-        Map<Locale, String> contents = new HashMap<>();
+        Map<String, String> contents = new HashMap<>();
         contents.putAll(this.contents);
-        contents.put(locale, content);
+        contents.put(locale.getLanguage(), content);
         return new MultiLanguageString(contents);
     }
 
@@ -72,9 +74,9 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
 
     public MultiLanguageString without(Locale locale) {
         if (locale != null) {
-            Map<Locale, String> contents = new HashMap<>();
+            Map<String, String> contents = new HashMap<>();
             contents.putAll(this.contents);
-            contents.remove(locale);
+            contents.remove(locale.getLanguage());
             return new MultiLanguageString(contents);
         }
         return this;
@@ -85,21 +87,21 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
     }
 
     public MultiLanguageString append(MultiLanguageString string) {
-        Map<Locale, String> contents = new HashMap<>();
+        Map<String, String> contents = new HashMap<>();
         Set<Locale> allLocales = new HashSet<>();
         allLocales.addAll(string.getAllLocales());
         allLocales.addAll(getAllLocales());
         for (Locale locale : allLocales) {
-            contents.put(locale,
+            contents.put(locale.getLanguage(),
                     StringUtils.defaultString(getContent(locale)) + StringUtils.defaultString(string.getContent(locale)));
         }
         return new MultiLanguageString(contents);
     }
 
     public MultiLanguageString append(String string) {
-        Map<Locale, String> contents = new HashMap<>();
+        Map<String, String> contents = new HashMap<>();
         for (Locale locale : getAllLocales()) {
-            contents.put(locale, StringUtils.defaultString(getContent(locale)) + StringUtils.defaultString(string));
+            contents.put(locale.getLanguage(), StringUtils.defaultString(getContent(locale)) + StringUtils.defaultString(string));
         }
         return new MultiLanguageString(contents);
     }
@@ -109,7 +111,13 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
     }
 
     public Collection<Locale> getAllLocales() {
-        return Collections.unmodifiableCollection(contents.keySet());
+        return FluentIterable.from(contents.keySet()).transform(new Function<String, Locale>() {
+
+            @Override
+            public Locale apply(String locale) {
+                return new Locale(locale);
+            }
+        }).toSet();
     }
 
     public boolean isLocaleAvailable() {
@@ -117,7 +125,7 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
     }
 
     public boolean isLocaleAvailable(Locale locale) {
-        return contents.containsKey(locale);
+        return contents.containsKey(locale.getLanguage());
     }
 
     /**
@@ -136,7 +144,7 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
         if (isLocaleAvailable(locale)) {
             return locale;
         }
-        return contents.isEmpty() ? null : contents.keySet().iterator().next();
+        return contents.isEmpty() ? null : new Locale(contents.keySet().iterator().next());
     }
 
     public String getContent() {
@@ -144,13 +152,13 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
     }
 
     public String getContent(Locale locale) {
-        return contents.get(locale);
+        return contents.get(locale.getLanguage());
     }
 
     public JsonElement json() {
         JsonObject json = new JsonObject();
         for (Locale locale : getAllLocales()) {
-            json.addProperty(locale.toLanguageTag(), getContent(locale));
+            json.addProperty(locale.getLanguage(), getContent(locale));
         }
         return json;
     }
@@ -159,9 +167,9 @@ public class MultiLanguageString implements Serializable, Comparable<MultiLangua
         if (json.isJsonPrimitive()) {
             return new MultiLanguageString(json.getAsString());
         }
-        Map<Locale, String> contents = new HashMap<>();
+        Map<String, String> contents = new HashMap<>();
         for (Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
-            contents.put(Locale.forLanguageTag(entry.getKey()), entry.getValue().getAsString());
+            contents.put(entry.getKey(), entry.getValue().getAsString());
         }
         return new MultiLanguageString(contents);
     }

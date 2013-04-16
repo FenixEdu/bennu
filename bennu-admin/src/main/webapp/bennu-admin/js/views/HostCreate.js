@@ -12,19 +12,57 @@ define([
 		template: tpl,
 		
 		events : {
-	    	"click #confirm" : "createHost"
+	    	"click #confirm" : "createHost",
+	    	"change #logo" : "changeLogo",
+	    },
+	    
+	    changeLogo: function(e) {
+	    	var files = e.target.files; // FileList object
+	    	var that = this;
+	    	$("#error").empty();
+	    	$("#confirm").attr('disabled', 'disabled');
+	    	for (var i = 0; i < files.length; i++) {
+	    	    	var file = files[i];
+	    	    	if (!file.type.match("image.*")) {
+	    	    		$("#error").append("<p>Apenas são aceites imagens</p>");
+	    	    		$("#logo").val("");
+	    	    		$("#confirm").removeAttr('disabled');
+	    	    		continue;
+	    	    	}
+	    	    	
+	    	    	if (file.size > 200 * 1024) { //200kb
+	    	    		$("#error").append("<p>Imagem muito grande. Tamanho máximo : 200kb</p>");
+	    				$("#logo").val("");
+	    				$("#confirm").removeAttr('disabled');
+	    				continue;
+	    	    	}
+	    	    	
+	    	    	var reader = new FileReader();
+	    	    	reader.onload = (function(f) {
+	    	    		return function(e) {
+	    	    			var content = e.target.result;
+	    	    			var picBase64 = content.substr(content.indexOf(",") + 1, content.length);	    	    			
+	    	    			that.model.set({logo : picBase64, logoType: file.type});
+	    	    			$("#image-logo").attr('src', content);
+	    	    			$("#confirm").removeAttr('disabled');
+	    	    		};
+	    	    	})(file);
+	    	    	reader.readAsDataURL(file);
+	    	}
 	    },
 	    
 	    createHost : function(e) {
 	    	var that = this;
 	    	e.preventDefault();
 	    	$('input').each(function(index, input) {
-	    		if ($(input).attr('lang')) {
-	    			var mls = that.model.get(input.id) || {};
-	    			mls[$(input).attr('lang')] = $(input).val();
-	    			that.model.set(input.id, mls);
-	    		} else {
-	    			that.model.set(input.id, $(input).val());
+	    		if ($(input).attr('type') != 'file') {
+		    		if ($(input).attr('lang')) {
+		    			var mls = that.model.get(input.id) || {};
+		    			mls[$(input).attr('lang')] = $(input).val();
+		    			that.model.set(input.id, mls);
+		    		} else {
+		    			that.model.set(input.id, $(input).val());
+		    		}
 	    		}
 	    	});
 	    	

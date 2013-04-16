@@ -20,6 +20,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.Locale;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -30,10 +31,9 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.core.i18n.I18N;
 import pt.ist.bennu.service.Service;
 import pt.ist.fenixframework.FenixFrameworkInitializer;
-import pt.ist.fenixframework.pstm.PersistentRoot;
 
 /**
  * 
@@ -55,7 +55,7 @@ public class BennuCoreContextListener implements ServletContextListener {
             Class.forName(FenixFrameworkInitializer.class.getName());
         } catch (ClassNotFoundException e) {
         }
-        PersistentRoot.initRootIfNeeded(ConfigurationManager.getFenixFrameworkConfig());
+        //PersistentRoot.initRootIfNeeded(ConfigurationManager.getFenixFrameworkConfig());
 
         ensureModelBootstrap();
     }
@@ -66,6 +66,8 @@ public class BennuCoreContextListener implements ServletContextListener {
             logger.info("Bootstrapping bennu application");
             new VirtualHost("localhost");
         }
+        final Locale currentLocale = I18N.getLocale();
+
     }
 
     @Override

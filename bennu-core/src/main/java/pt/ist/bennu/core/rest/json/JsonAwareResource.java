@@ -1,5 +1,7 @@
 package pt.ist.bennu.core.rest.json;
 
+import java.util.Map.Entry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,4 +115,15 @@ public class JsonAwareResource {
         return GSON.toJson(el);
     }
 
+    /**
+     * merges the source within target
+     * 
+     * @param target
+     * @param source
+     */
+    public void merge(JsonObject target, JsonObject source) {
+        for (final Entry<String, JsonElement> entry : source.entrySet()) {
+            target.add(entry.getKey(), entry.getValue());
+        }
+    }
 }

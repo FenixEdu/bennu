@@ -1,5 +1,7 @@
 package pt.ist.bennu.portal.rest.json;
 
+import org.apache.commons.codec.binary.Base64;
+
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
@@ -15,7 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 @DefaultJsonAdapter(VirtualHost.class)
-public class HostAdapter implements JsonAdapter<VirtualHost> {
+public class VirtualHostAdapter implements JsonAdapter<VirtualHost> {
 
     @Override
     public VirtualHost create(JsonElement json, JsonBuilder ctx) {
@@ -71,6 +73,12 @@ public class HostAdapter implements JsonAdapter<VirtualHost> {
                 }
             }
         }
+        if (jsonObj.has("logo")) {
+            info.setLogo(Base64.decodeBase64(jsonObj.get("logo").getAsString()));
+        }
+        if (jsonObj.has("logoType")) {
+            info.setLogoType(jsonObj.get("logoType").getAsString());
+        }
     }
 
     @Override
@@ -86,6 +94,8 @@ public class HostAdapter implements JsonAdapter<VirtualHost> {
         json.addProperty("systemEmailAddress", obj.getInfo().getSystemEmailAddress());
         json.addProperty("theme", obj.getInfo().getTheme());
         json.add("menu", ctx.view(obj.getMenu(), DomainObjectViewer.class));
+        json.addProperty("logo", Base64.encodeBase64String(obj.getInfo().getLogo()));
+        json.addProperty("logoType", new String(obj.getInfo().getLogoType()));
         return json;
     }
 

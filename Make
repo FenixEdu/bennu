@@ -46,7 +46,7 @@ cd ..
 #cd ..
 
 stat Installing Scheduler Plugin...
-cd scheduler-plugin
+cd bennu-scheduler
 mvn clean install -q
 cd ..
 
@@ -74,4 +74,3 @@ stat Installing Bennu Admin ...
 cd bennu-admin
 mvn clean install -q
 cd ..
-

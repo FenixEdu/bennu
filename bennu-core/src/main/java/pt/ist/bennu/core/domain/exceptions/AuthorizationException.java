@@ -38,6 +38,9 @@ public class AuthorizationException extends BennuCoreDomainException {
     }
 
     public static AuthorizationException unauthorized(BennuGroup group, User user) {
+        if (user == null) {
+            return new AuthorizationException("error.bennu.core.unauthorized.nouser", group.getPresentationName());
+        }
         return new AuthorizationException("error.bennu.core.unauthorized", user.getUsername(), group.getPresentationName());
     }
 

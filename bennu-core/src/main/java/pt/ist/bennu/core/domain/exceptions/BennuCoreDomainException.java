@@ -63,4 +63,5 @@ public class BennuCoreDomainException extends DomainException {
     public static BennuCoreDomainException errorOnDeleteDomainObject() {
         return new BennuCoreDomainException("error.bennu.core.cant.delete.domainObject");
     }
+
 }

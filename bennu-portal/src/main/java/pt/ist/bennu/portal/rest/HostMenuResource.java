@@ -11,7 +11,12 @@ import javax.ws.rs.core.Response.Status;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.rest.BennuRestResource;
+import pt.ist.bennu.core.rest.json.UserSessionViewer;
+import pt.ist.bennu.core.security.Authenticate;
+import pt.ist.bennu.core.security.UserSession;
 import pt.ist.bennu.portal.rest.json.HostMenuViewer;
+
+import com.google.gson.JsonObject;
 
 @Path("hostmenu")
 public class HostMenuResource extends BennuRestResource {
@@ -20,7 +25,12 @@ public class HostMenuResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String menu(@PathParam("hostname") final String hostname) {
-        return view(getVirtualHost(hostname), HostMenuViewer.class);
+        final JsonObject hostMenuView = new JsonObject();
+        merge(hostMenuView, getBuilder().view(getVirtualHost(hostname), HostMenuViewer.class).getAsJsonObject());
+        merge(hostMenuView, getBuilder().view(getCasConfigContext()).getAsJsonObject());
+        merge(hostMenuView, getBuilder().view(Authenticate.getUserSession(), UserSession.class, UserSessionViewer.class)
+                .getAsJsonObject());
+        return toJson(hostMenuView);
     }
 
     private VirtualHost getVirtualHost(String hostname) {

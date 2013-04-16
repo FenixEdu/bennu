@@ -23,6 +23,7 @@ require(['jquery', 'jquery.bootstrap', 'backbone', 'mustache', 'marionette', 'me
         }
     });
 
+
     Backbone.Marionette.Renderer.render = function(template, data){
     	if (data) {
     	  data['_mls'] = function() { 
@@ -59,5 +60,4 @@ require(['jquery', 'jquery.bootstrap', 'backbone', 'mustache', 'marionette', 'me
     });
 
     App.start();
-
 });

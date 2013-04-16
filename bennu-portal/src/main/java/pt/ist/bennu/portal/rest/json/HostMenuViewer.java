@@ -12,7 +12,7 @@ public class HostMenuViewer implements JsonViewer<VirtualHost> {
     public JsonElement view(VirtualHost obj, JsonBuilder ctx) {
         JsonObject json = (JsonObject) ctx.view(obj);
         if (obj.hasMenu()) {
-            json.add("menu", ctx.view(obj.getMenu().getOrderedChild()));
+            json.add("menu", ctx.view(obj.getMenu().getUserMenu()));
         }
         return json;
     }
