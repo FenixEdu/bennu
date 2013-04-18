@@ -74,6 +74,12 @@ valueType java.lang.Class as Class {
 	internalizeWith pt.ist.bennu.core.domain.util.ClassInternalizer.internalize();
 }
 
+valueType java.math.BigDecimal as BigDecimal {
+    externalizeWith {
+        String toString();
+    }
+}
+
 class MyOrg {
 }
 
