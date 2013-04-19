@@ -84,7 +84,7 @@ define([
     	editMenu: function (e) {
     		var selectedMenuModel = this.model;
     		require(["menu-manager"], function(MenuManager) {
-    			App.Layout.menuLayout.menu.show(new MenuManager.Views.MenuCreate({ model : selectedMenuModel}));
+    			App.menuLayout.menu.show(new MenuManager.Views.MenuCreate({ model : selectedMenuModel}));
     		});
     		return false;
     	},

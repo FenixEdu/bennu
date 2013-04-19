@@ -1,6 +1,6 @@
 require(['jquery', 'jquery.bootstrap', 'backbone', 'mustache', 'marionette', 'menu-manager','router', 'app'], 
 		function($, jQueryBootstrap, Backbone, Mustache, Marionette, MenuManager, Router, App) {
-
+	
     $.ajaxSetup({
         contentType: "application/json; charset=utf-8",
         statusCode : {
@@ -51,7 +51,7 @@ require(['jquery', 'jquery.bootstrap', 'backbone', 'mustache', 'marionette', 'me
     Backbone.emulateJSON = true;
 
     App.addRegions({
-        page: "body"
+        page: "#xpto"
     });
 
     App.addInitializer(function() {

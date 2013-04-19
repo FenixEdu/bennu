@@ -7,6 +7,7 @@ require.config({
         'moment': '../../js/libs/moment/moment-min',
         'underscore': '../../js/libs/underscore/underscore-min',
         'mustache': '../../js/libs/mustache/mustache-min',
+        'portal': '../../bennu-portal/portal',
         'backbone': '../../js/libs/backbone/backbone',
         'marionette': '../../js/libs/backbone/backbone.marionette',
         'jquery.bootstrap': '../../js/libs/bootstrap/bootstrap-min',
@@ -47,6 +48,14 @@ require.config({
         'marionette': {
             deps: ['backbone'],
             exports: 'Backbone.Marionette'
+        },
+        
+        'mustache' : {
+        	exports: 'Mustache'
+        },
+        
+        'portal' : {
+        	deps: ['mustache']
         }
     },
 
