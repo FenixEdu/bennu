@@ -16,7 +16,7 @@
 	<properties>
 		<version.pt.ist.fenix.framework.core>1.1.6</version.pt.ist.fenix.framework.core>
 		<version.pt.ist.bennu.bennu-service>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-service>
-		<version.pt.ist.bennu.bennu-json>1.0-SNAPSHOT</version.pt.ist.bennu.bennu-json>
+		<version.pt.ist.bennu.bennu-json>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-json>
 	</properties>
 
 	<build>
