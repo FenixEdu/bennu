@@ -12,8 +12,8 @@
 	<name>Bennu Framework Core</name>
 
 	<properties>
-		<version.pt.ist.fenix.framework.core>2.1-SNAPSHOT</version.pt.ist.fenix.framework.core>
-		<version.pt.ist.fenix.framework.consistency.predicates>2.1-SNAPSHOT</version.pt.ist.fenix.framework.consistency.predicates>
+		<version.pt.ist.fenix.framework.core.api>2.1-SNAPSHOT</version.pt.ist.fenix.framework.core.api>
+		<version.pt.ist.fenix.framework.core.consistency.predicates>2.1-SNAPSHOT</version.pt.ist.fenix.framework.core.consistency.predicates>
 		<version.pt.ist.fenix.web.framework>2.1-SNAPSHOT</version.pt.ist.fenix.web.framework>
 		<version.pt.ist.fenix.tools>1.0</version.pt.ist.fenix.tools>
 	</properties>
@@ -21,13 +21,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>pt.ist</groupId>
-			<artifactId>fenix-framework-core</artifactId>
-			<version>${version.pt.ist.fenix.framework.core}</version>
+			<artifactId>fenix-framework-core-api</artifactId>
+			<version>${version.pt.ist.fenix.framework.core.api}</version>
 		</dependency>
 				<dependency>
 			<groupId>pt.ist</groupId>
-			<artifactId>fenix-framework-consistency-predicates</artifactId>
-			<version>${version.pt.ist.fenix.framework.consistency.predicates}</version>
+			<artifactId>fenix-framework-core-consistency-predicates</artifactId>
+			<version>${version.pt.ist.fenix.framework.core.consistency.predicates}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>

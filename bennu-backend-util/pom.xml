@@ -31,7 +31,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>pt.ist</groupId>
-			<artifactId>${fenix.framework.backend}</artifactId>
+			<artifactId>${fenix.framework.backend}-code-generator</artifactId>
 			<version>${version.fenix.framework.backend}</version>
 			<!-- The reason this dependency is provided is so that Bennu Modules do 
 				not depend directly from any backend. Instead, they depend from this module, 
