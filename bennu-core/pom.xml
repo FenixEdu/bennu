@@ -39,6 +39,10 @@
 			<version>${version.pt.ist.fenix.web.framework}</version>
 		</dependency>
 		<dependency>
+			<groupId>pt.ist</groupId>
+			<artifactId>bennu-backend-util</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>cas</groupId>
 			<artifactId>casclient</artifactId>
 		</dependency>
