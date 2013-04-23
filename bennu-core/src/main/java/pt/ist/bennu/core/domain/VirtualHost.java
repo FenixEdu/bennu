@@ -16,7 +16,6 @@
  */
 package pt.ist.bennu.core.domain;
 
-import java.util.Locale;
 import java.util.Set;
 
 import jvstm.cps.ConsistencyPredicate;
@@ -26,7 +25,6 @@ import pt.ist.bennu.core.domain.groups.LoggedGroup;
 import pt.ist.bennu.core.domain.groups.NobodyGroup;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
-import pt.ist.bennu.core.util.LocaleArray;
 
 public class VirtualHost extends VirtualHost_Base {
 
@@ -62,7 +60,6 @@ public class VirtualHost extends VirtualHost_Base {
         setBennu(Bennu.getInstance());
         setHostname(hostname);
         setVirtualHostForThread(this);
-        setSupportedLanguages(new LocaleArray(ConfigurationManager.getSupportedLocales()));
         initializeGroups();
     }
 
@@ -99,9 +96,5 @@ public class VirtualHost extends VirtualHost_Base {
     @ConsistencyPredicate
     protected final boolean hostIsConnected() {
         return getBennu() != null || getDeletedFromBennu() != null;
-    }
-
-    public Boolean isSupportedLanguage(final String languageTag) {
-        return getSupportedLanguages().getLocales().contains(Locale.forLanguageTag(languageTag));
     }
 }

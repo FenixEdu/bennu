@@ -3,7 +3,7 @@ package pt.ist.bennu.portal.rest.json;
 import java.util.Locale;
 
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
-import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
@@ -68,7 +68,7 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
         json.addProperty("functionality", obj.isFunctionalityLink());
         if (obj.hasHost()) {
             MultiLanguageString mls = new MultiLanguageString();
-            for (Locale locale : VirtualHost.getVirtualHostForThread().getSupportedLanguages().getLocales()) {
+            for (Locale locale : ConfigurationManager.getSupportedLocales()) {
                 mls = mls.with(locale, obj.getHost().getHostname());
             }
             json.add("title", ctx.view(mls));

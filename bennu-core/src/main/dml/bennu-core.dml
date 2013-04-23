@@ -53,13 +53,6 @@ valueType java.util.Locale as Locale {
 	internalizeWith forLanguageTag();
 }
 
-valueType pt.ist.bennu.core.util.LocaleArray as LocaleArray {
-	externalizeWith {
-		String externalize();
-	}
-	internalizeWith internalize();
-}
-
 class Bennu {
 }
 
@@ -85,7 +78,6 @@ relation SystemUsers {
 /* Virtual Hosting */
 class VirtualHost {
 	String hostname;
-	LocaleArray supportedLanguages;
 }
 
 relation SystemHosts {

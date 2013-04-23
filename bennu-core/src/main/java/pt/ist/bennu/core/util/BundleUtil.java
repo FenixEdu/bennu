@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.i18n.I18N;
 
 public class BundleUtil {
@@ -48,7 +47,7 @@ public class BundleUtil {
 
     public static MultiLanguageString getMultilanguageString(final String bundle, final String key, String... args) {
         MultiLanguageString mls = new MultiLanguageString();
-        for (Locale language : VirtualHost.getVirtualHostForThread().getSupportedLanguages().getLocales()) {
+        for (Locale language : ConfigurationManager.getSupportedLocales()) {
             String message = getString(bundle, language, key, args);
             mls = mls.with(language, message);
         }
