@@ -10,7 +10,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<fenix.framework.backend>fenix-framework-backend-jvstm-ojb</fenix.framework.backend>
-		<version.fenix.framework.backend>2.1-SNAPSHOT</version.fenix.framework.backend>
+		<version.fenix.framework.backend>2.1.0-rc2</version.fenix.framework.backend>
 	</properties>
 
 	<build>

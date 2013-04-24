@@ -59,6 +59,7 @@
 		<version.commons.io.commons.io>2.3</version.commons.io.commons.io>
 		<version.commons.lang.commons.lang>2.6</version.commons.lang.commons.lang>
 		<version.commons.logging.commons.logging>1.1.1</version.commons.logging.commons.logging>
+        <version.fenix.framework>2.1.0-rc2</version.fenix.framework>
 		<version.informa.informa>1.0</version.informa.informa>
 		<version.javax.mail.mail>1.4.2</version.javax.mail.mail>
 		<version.javax.servlet.jstl>1.2</version.javax.servlet.jstl>
@@ -87,7 +88,7 @@
 		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
 		<!-- ************************************************************************************************ -->
 		<version.com.alexnederlof.jasperreports.plugin>1.5-SNAPSHOT</version.com.alexnederlof.jasperreports.plugin>
-		<version.pt.ist.ff.maven.plugin>2.1-SNAPSHOT</version.pt.ist.ff.maven.plugin>
+		<version.pt.ist.ff.maven.plugin>2.1.0-rc2</version.pt.ist.ff.maven.plugin>
 		<version.org.apache.maven.plugins.maven.compiler.plugin>2.5.1</version.org.apache.maven.plugins.maven.compiler.plugin>
 		<version.org.apache.maven.plugins.maven.deploy.plugin>2.7</version.org.apache.maven.plugins.maven.deploy.plugin>
 		<version.org.apache.maven.plugins.maven.enforcer.plugin>1.1.1</version.org.apache.maven.plugins.maven.enforcer.plugin>
@@ -559,7 +560,7 @@
 							<dependency>
 								<groupId>pt.ist</groupId>
 								<artifactId>fenix-framework-backend-jvstm-ojb-code-generator</artifactId>
-								<version>2.1-SNAPSHOT</version>
+								<version>${version.fenix.framework}</version>
 							</dependency>
 							<dependency>
 								<groupId>pt.ist</groupId>
@@ -622,7 +623,7 @@
 				<dependency>
 					<groupId>pt.ist</groupId>
 					<artifactId>fenix-framework-backend-jvstm-ojb-runtime</artifactId>
-					<version>2.1-SNAPSHOT</version>
+					<version>${version.fenix.framework}</version>
 				</dependency>
 			</dependencies>
 		</profile>
