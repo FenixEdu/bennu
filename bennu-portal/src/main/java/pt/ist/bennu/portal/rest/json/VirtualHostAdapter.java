@@ -94,8 +94,10 @@ public class VirtualHostAdapter implements JsonAdapter<VirtualHost> {
         json.addProperty("systemEmailAddress", obj.getInfo().getSystemEmailAddress());
         json.addProperty("theme", obj.getInfo().getTheme());
         json.add("menu", ctx.view(obj.getMenu(), DomainObjectViewer.class));
-        json.addProperty("logo", Base64.encodeBase64String(obj.getInfo().getLogo()));
-        json.addProperty("logoType", new String(obj.getInfo().getLogoType()));
+        if (obj.getInfo().hasLogo()) {
+            json.addProperty("logo", Base64.encodeBase64String(obj.getInfo().getLogo()));
+            json.addProperty("logoType", new String(obj.getInfo().getLogoType()));
+        }
         return json;
     }
 

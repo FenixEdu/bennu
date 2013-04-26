@@ -227,6 +227,10 @@ public class ConfigurationManager {
         return Integer.valueOf(properties.getProperty(key));
     }
 
+    public static Integer getIntegerProperty(final String key, final Integer defaultValue) {
+        return properties.containsKey(key) ? Integer.valueOf(properties.getProperty(key)) : defaultValue;
+    }
+
     public static void setProperty(final String key, final String value) {
         properties.setProperty(key, value);
     }
@@ -307,4 +311,5 @@ public class ConfigurationManager {
     public static Boolean isSupportedLanguage(String languageTag) {
         return locales.contains(Locale.forLanguageTag(languageTag));
     }
+
 }

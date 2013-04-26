@@ -45,15 +45,18 @@ cd ..
 #mvn clean install -q
 #cd ..
 
-stat Installing Scheduler Plugin...
+stat Installing Scheduler ...
 cd bennu-scheduler
 mvn clean install -q
 cd ..
 
-#stat Installing Scheduler...
-#cd scheduler
-#mvn clean install -q
-#cd ..
+stat Installing Scheduler UI...
+cd bennu-scheduler-ui
+mvn clean install -q
+cd ..
+
+
+
 
 stat Installing Bennu Search...
 cd bennu-search

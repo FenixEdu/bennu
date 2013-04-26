@@ -1,16 +1,70 @@
 package pt.ist.bennu.scheduler.domain;
 
-import java.lang.reflect.Modifier;
+import it.sauronsoftware.cron4j.Scheduler;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import jvstm.TransactionalCommand;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
-import pt.ist.fenixframework.FenixFramework;
+import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.scheduler.annotation.Task;
 import pt.ist.fenixframework.pstm.Transaction;
-import dml.DomainClass;
-import dml.DomainModel;
 
 public class SchedulerSystem extends SchedulerSystem_Base {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SchedulerSystem.class);
+    private static final Map<String, Task> tasks = new HashMap<>();
+
+    private static Scheduler scheduler;
+    public static LinkedBlockingQueue<TaskRunner> queue;
+
+    private static final Integer DEFAULT_LEASE_TIME_MINUTES = 5;
+    private static final Integer DEFAULT_QUEUE_THREADS_NUMBER = 2;
+
+    static {
+        queue = new LinkedBlockingQueue<>();
+    }
+
+    /**
+     * The scheduler will wait this value till next attempt to run scheduler.
+     * This value must be greater than 1.
+     * 
+     * @return reattempt scheduler initialization time (in minutes)
+     */
+    private static Integer getLeaseTimeMinutes() {
+        final Integer leaseTime =
+                ConfigurationManager.getIntegerProperty("scheduler.lease.time.minutes", DEFAULT_LEASE_TIME_MINUTES);
+        if (leaseTime < 2) {
+            throw new Error("property scheduler.lease.time.minutes must be a positive integer greater than 1.");
+        }
+        return leaseTime;
+    }
+
+    /**
+     * Number of threads that are processing the queue of threads
+     * 
+     * @return number of threads
+     */
+    private static Integer getQueueThreadsNumber() {
+        final Integer queueThreadsNumber =
+                ConfigurationManager.getIntegerProperty("scheduler.queue.threads.number", DEFAULT_QUEUE_THREADS_NUMBER);
+        if (queueThreadsNumber < 1) {
+            throw new Error("property scheduler.queue.threads.number must be a positive integer greater than 0.");
+        }
+        return queueThreadsNumber;
+    }
+
     private SchedulerSystem() {
         super();
     }
@@ -22,125 +76,174 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         return Bennu.getInstance().getSchedulerSystem();
     }
 
-    public static void queueTasks() {
-        final SchedulerSystem schedulerSystem = getInstance();
-        for (final Task task : schedulerSystem.getTaskSet()) {
-            if (task.shouldRunNow()) {
-                schedulerSystem.queueTasks(task);
-            }
-        }
-    }
-
-    private void queueTasks(final Task task) {
-        if (hasPendingTask()) {
-            getPendingTask().queue(task);
-        } else {
-            setPendingTask(task);
-        }
-    }
-
-    public void initTasks() {
-        final DomainModel domainModel = FenixFramework.getDomainModel();
-        for (final DomainClass domainClass : domainModel.getDomainClasses()) {
-            if (isTaskInstance(domainClass) && !existsTaskInstance(domainClass)) {
-                initTask(domainClass);
-            }
-        }
-    }
-
-    private static boolean isTask(final DomainClass domainClass) {
-        return domainClass != null && domainClass.getFullName().equals(Task.class.getName());
-    }
-
-    private static boolean isTaskInstance(final DomainClass domainClass) {
-        if (domainClass == null || isTask(domainClass)) {
-            return false;
-        }
-        final DomainClass superclass = (DomainClass) domainClass.getSuperclass();
-        return isTask(superclass) || isTaskInstance(superclass);
-    }
-
-    private boolean existsTaskInstance(final DomainClass domainClass) {
-        final String classname = domainClass.getFullName();
-        for (final Task task : getTaskSet()) {
-            if (task.getClass().getName().equals(classname)) {
-                return true;
-            }
+    private Boolean shouldRun() {
+        if (isLeaseExpired()) {
+            lease();
+            return true;
         }
         return false;
     }
 
-    private void initTask(final DomainClass domainClass) {
-        try {
-            final Class taskClass = Class.forName(domainClass.getFullName());
-            if (!Modifier.isAbstract(taskClass.getModifiers())) {
-                taskClass.newInstance();
+    private DateTime lease() {
+        setLease(new DateTime());
+        return getLease();
+    }
+
+    private boolean isLeaseExpired() {
+        final DateTime lease = getLease();
+        if (lease == null) {
+            return true;
+        }
+        return lease.plusMinutes(getLeaseTimeMinutes()).isBeforeNow();
+    }
+
+    /***
+     * This method starts the scheduler if lease is expired.
+     * */
+    public static void init() {
+
+        new Timer(true).scheduleAtFixedRate(new TimerTask() {
+
+            Boolean shouldRun = false;
+
+            @Override
+            public void run() {
+                Transaction.withTransaction(false, new TransactionalCommand() {
+
+                    @Override
+                    public void doIt() {
+                        setShouldRun(SchedulerSystem.getInstance().shouldRun());
+                    }
+                });
+                if (shouldRun) {
+                    LOG.debug("Running bootstrap");
+                    Transaction.withTransaction(false, new TransactionalCommand() {
+
+                        @Override
+                        public void doIt() {
+                            bootstrap();
+                        }
+                    });
+                } else {
+                    LOG.debug("Lease is not gone. Wait for it ...");
+                }
+                setShouldRun(false);
             }
-        } catch (final ClassNotFoundException e) {
-            System.out.println("Scheduler: failed initialization of task: " + domainClass.getFullName());
-            e.printStackTrace();
-        } catch (final InstantiationException e) {
-            System.out.println("Scheduler: failed initialization of task: " + domainClass.getFullName());
-            e.printStackTrace();
-        } catch (final IllegalAccessException e) {
-            System.out.println("Scheduler: failed initialization of task: " + domainClass.getFullName());
-            e.printStackTrace();
+
+            public void setShouldRun(Boolean shouldRun) {
+                this.shouldRun = shouldRun;
+            }
+
+        }, 0, getLeaseTimeMinutes() * 60 * 1000);
+
+    }
+
+    private static void bootstrap() {
+        if (scheduler == null) {
+            scheduler = new Scheduler();
+            scheduler.setDaemon(true);
+        }
+        if (!scheduler.isStarted()) {
+            cleanNonExistingSchedules();
+            initSchedules();
+            spawnConsumers();
+            scheduler.start();
         }
     }
 
-    public static void runPendingTask() {
-        for (Task task = popPendingTaskService(); task != null; task = popPendingTaskService()) {
-            task.runPendingTask();
+    private static void spawnConsumers() {
+        final ExecutorService threadPool = Executors.newFixedThreadPool(getQueueThreadsNumber());
+
+        for (int i = 1; i <= getQueueThreadsNumber(); i++) {
+            LOG.info("Launching queue consumer {}", i);
+            threadPool.execute(new ProcessQueue());
         }
+
     }
 
-    private static Task popPendingTaskService() {
-        Task result = null;
-        boolean committed = false;
-        try {
-            if (jvstm.Transaction.current() != null) {
-                jvstm.Transaction.commit();
+    private static void cleanNonExistingSchedules() {
+        for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskSchedule()) {
+            if (!tasks.containsKey(schedule.getTaskClassName())) {
+                LOG.warn("Class {} is no longer available. schedule {} - {} - {} deleted. ", schedule.getTaskClassName(),
+                        schedule.getExternalId(), schedule.getTaskClassName(), schedule.getSchedule());
+                schedule.delete();
             }
-            Transaction.begin();
-
-            result = SchedulerSystem.getInstance().popPendingTask();
-
-            jvstm.Transaction.checkpoint();
-            committed = true;
-        } finally {
-            if (!committed) {
-                Transaction.abort();
-                Transaction.begin();
-            }
-            Transaction.currentFenixTransaction().setReadOnly();
         }
-        return result;
+
     }
 
-    private Task popPendingTask() {
-        final Task task = getPendingTask();
-        if (task != null) {
-            final Task next = task.getNextTask();
-            task.setNextTask(null);
-            setPendingTask(next);
-            task.setLastRun(new DateTime());
+    private static void initSchedules() {
+        for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskSchedule()) {
+            schedule(schedule);
         }
-        return task;
+
+        scheduler.schedule(String.format("*/%d * * * *", getLeaseTimeMinutes() / 2), new Runnable() {
+            @Override
+            public void run() {
+                Transaction.withTransaction(false, new TransactionalCommand() {
+
+                    @Override
+                    public void doIt() {
+                        final DateTime lease = SchedulerSystem.getInstance().lease();
+                        LOG.info("Leasing until {}", lease);
+                    }
+                });
+            }
+        });
     }
 
-    public <T> Task getTask(final Class<? extends Task> clazz) {
-        for (final Task task : getTaskSet()) {
-            if (task.getClass() == clazz) {
-                return task;
+    public static void schedule(final TaskSchedule schedule) {
+        LOG.info("schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+        schedule.setTaskId(scheduler.schedule(schedule.getSchedule(), new Runnable() {
+
+            @Override
+            public void run() {
+                synchronized (queue) {
+                    try {
+                        final TaskRunner taskRunner = schedule.getTaskRunner();
+                        if (!queue.contains(taskRunner)) {
+                            LOG.info("Add to queue {}", taskRunner.getTaskName());
+                            queue.put(taskRunner);
+                        } else {
+                            LOG.info("Don't add to queue. Already exists {}", taskRunner.getTaskName());
+                        }
+                    } catch (InterruptedException e) {
+                    }
+                }
             }
+        }));
+    }
+
+    public static void unschedule(TaskSchedule schedule) {
+        LOG.info("unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+        scheduler.deschedule(schedule.getTaskId());
+    }
+
+    public static final void addTask(String className, Task taskAnnotation) {
+        LOG.info("Register Task : {} with name {}", className, taskAnnotation.englishTitle());
+        tasks.put(className, taskAnnotation);
+    }
+
+    public static void destroy() {
+        Transaction.withTransaction(false, new TransactionalCommand() {
+
+            @Override
+            public void doIt() {
+                LOG.info("Revert lease to null");
+                SchedulerSystem.getInstance().setLease(null);
+            }
+        });
+    }
+
+    public static Map<String, Task> getTasks() {
+        return tasks;
+    }
+
+    public static String getTaskName(String className) {
+        final Task taskAnnotation = tasks.get(className);
+        if (taskAnnotation != null) {
+            return taskAnnotation.englishTitle();
         }
         return null;
     }
-
-    public void clearAllScheduledTasks() {
-        for (final Task task : getTaskSet()) {
-            task.clearAllSchedules();
-        }
-    }
-
 }

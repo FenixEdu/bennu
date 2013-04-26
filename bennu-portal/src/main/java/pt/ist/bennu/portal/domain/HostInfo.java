@@ -1,5 +1,7 @@
 package pt.ist.bennu.portal.domain;
 
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.service.Service;
@@ -45,4 +47,11 @@ public class HostInfo extends HostInfo_Base {
         super.setHtmlTitle(mls(htmlTitle));
     }
 
+    public boolean hasLogo() {
+        return getLogo() != null && getLogo().length > 0;
+    }
+
+    public boolean hasLogoType() {
+        return !StringUtils.isEmpty(getLogoType());
+    }
 }

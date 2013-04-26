@@ -20,6 +20,6 @@ import pt.ist.bennu.core.util.ConfigurationManager;
 
 public class FenixFrameworkInitializer {
     static {
-        FenixFramework.bootStrap(ConfigurationManager.getFenixFrameworkConfig());
+        FenixFramework.initialize(ConfigurationManager.getFenixFrameworkConfig());
     }
 }

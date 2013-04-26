@@ -1,0 +1,21 @@
+{"apps" : [{
+"title" :  {"en" : "Scheduler Management"},
+"description" : {"en" : "Manage scheduling of periodic tasks"},
+"accessExpression" : "#managers",
+"path" : "/bennu-scheduler-ui/",
+"functionalities" : 
+		[
+			{ 
+   			  "title" : {"en" : "Tasks"},
+			  "description" : {"en" : "Available tasks for scheduling"},
+			  "path" : "#tasks",
+			  "accessExpression" : "#managers"
+			},
+			{ 
+   			  "title" : {"en" : "Schedules"},
+			  "description" : {"en" : "Task schedules"},
+			  "path" : "#schedules",
+			  "accessExpression" : "#managers"
+			}
+		]
+}]}
