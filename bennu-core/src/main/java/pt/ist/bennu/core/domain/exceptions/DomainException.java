@@ -18,7 +18,7 @@ package pt.ist.bennu.core.domain.exceptions;
 
 import javax.ws.rs.core.Response.Status;
 
-import pt.ist.bennu.core.util.BundleUtil;
+import pt.ist.bennu.core.i18n.BundleUtil;
 
 import com.google.gson.JsonObject;
 

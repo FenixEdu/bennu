@@ -6,8 +6,8 @@ import java.util.TreeSet;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.dispatch.AppServer;
 import pt.ist.bennu.service.Service;
 
@@ -67,8 +67,8 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     }
 
     @Override
-    public MultiLanguageString getDescription() {
-        final MultiLanguageString description = super.getDescription();
+    public InternationalString getDescription() {
+        final InternationalString description = super.getDescription();
         if (description == null) {
             return AppServer.getDescription(getPath());
         }
@@ -76,8 +76,8 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     }
 
     @Override
-    public MultiLanguageString getTitle() {
-        final MultiLanguageString title = super.getTitle();
+    public InternationalString getTitle() {
+        final InternationalString title = super.getTitle();
         if (title == null) {
             return AppServer.getTitle(getPath());
         }
@@ -85,14 +85,14 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     }
 
     @Override
-    public void setTitle(MultiLanguageString title) {
+    public void setTitle(InternationalString title) {
         if (!isFunctionalityLink()) {
             super.setTitle(title);
         }
     }
 
     @Override
-    public void setDescription(MultiLanguageString description) {
+    public void setDescription(InternationalString description) {
         if (!isFunctionalityLink()) {
             super.setDescription(description);
         }

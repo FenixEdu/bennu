@@ -1,10 +1,10 @@
 package pt.ist.bennu.portal.domain;
 
 class HostInfo {
-	MultiLanguageString applicationTitle (REQUIRED);
-	MultiLanguageString htmlTitle (REQUIRED);
-	MultiLanguageString applicationSubTitle (REQUIRED);
-	MultiLanguageString applicationCopyright (REQUIRED);
+	InternationalString applicationTitle (REQUIRED);
+	InternationalString htmlTitle (REQUIRED);
+	InternationalString applicationSubTitle (REQUIRED);
+	InternationalString applicationCopyright (REQUIRED);
 	String supportEmailAddress;
 	String systemEmailAddress;
 	String theme;
@@ -14,8 +14,8 @@ class HostInfo {
 
 class MenuItem {
 	Integer ord;
-	MultiLanguageString title;
-	MultiLanguageString description;
+	InternationalString title;
+	InternationalString description;
 	String path;
 	String accessExpression;
 }

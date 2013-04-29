@@ -11,8 +11,8 @@ import javax.servlet.annotation.WebListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.util.ConfigurationManager;
-import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.dispatch.model.ApplicationInfo;
 import pt.ist.bennu.dispatch.model.Details;
 import pt.ist.bennu.dispatch.model.FunctionalityInfo;
@@ -65,8 +65,8 @@ public class BennuDispatchContextListener implements ServletContextListener {
     }
 
     public Details getDetails(JsonObject functionality) {
-        final MultiLanguageString title = MultiLanguageString.fromJson(functionality.get("title"));
-        final MultiLanguageString description = MultiLanguageString.fromJson(functionality.get("description"));
+        final InternationalString title = InternationalString.fromJson(functionality.get("title"));
+        final InternationalString description = InternationalString.fromJson(functionality.get("description"));
         Details details = new MultiLanguageDetails(title, description);
         return details;
     }

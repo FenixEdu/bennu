@@ -16,8 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.i18n.I18N;
+import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.rest.BennuRestResource;
-import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.portal.domain.HostInfo;
 import pt.ist.bennu.portal.domain.MenuItem;
 import pt.ist.bennu.service.Service;
@@ -79,10 +80,10 @@ public class InitResource extends BennuRestResource {
         final VirtualHost localhost = Bennu.getInstance().getVirtualHost("localhost");
         if (!localhost.hasInfo()) {
             final HostInfo hostInfo = new HostInfo(localhost);
-            hostInfo.setApplicationCopyright(new MultiLanguageString("copyright"));
-            hostInfo.setApplicationTitle(new MultiLanguageString("localhost"));
-            hostInfo.setApplicationSubTitle(new MultiLanguageString("localhost"));
-            hostInfo.setHtmlTitle(new MultiLanguageString("htmlTitle"));
+            hostInfo.setApplicationCopyright(new InternationalString(I18N.getLocale(), "copyright"));
+            hostInfo.setApplicationTitle(new InternationalString(I18N.getLocale(), "localhost"));
+            hostInfo.setApplicationSubTitle(new InternationalString(I18N.getLocale(), "localhost"));
+            hostInfo.setHtmlTitle(new InternationalString(I18N.getLocale(), "htmlTitle"));
             hostInfo.setSupportEmailAddress("support@localhost");
             hostInfo.setSystemEmailAddress("system@localhost");
             hostInfo.setTheme("bennu");
@@ -108,8 +109,8 @@ public class InitResource extends BennuRestResource {
         return Base64.decode(base64JsonElement.getAsString());
     }
 
-    private MultiLanguageString mls(JsonObject json, String attr) {
-        return MultiLanguageString.fromJson(json.get(attr).getAsJsonObject());
+    private InternationalString mls(JsonObject json, String attr) {
+        return InternationalString.fromJson(json.get(attr).getAsJsonObject());
     }
 
     private String get(JsonObject obj, String attr) {

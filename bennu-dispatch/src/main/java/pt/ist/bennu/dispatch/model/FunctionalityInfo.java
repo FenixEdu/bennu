@@ -2,7 +2,7 @@ package pt.ist.bennu.dispatch.model;
 
 import java.io.Serializable;
 
-import pt.ist.bennu.core.util.MultiLanguageString;
+import pt.ist.bennu.core.i18n.InternationalString;
 
 import com.google.gson.JsonObject;
 
@@ -30,11 +30,11 @@ public class FunctionalityInfo implements Serializable {
         return group;
     }
 
-    public MultiLanguageString getTitle() {
+    public InternationalString getTitle() {
         return details.getTitle();
     }
 
-    public MultiLanguageString getDescription() {
+    public InternationalString getDescription() {
         return details.getDescription();
     }
 

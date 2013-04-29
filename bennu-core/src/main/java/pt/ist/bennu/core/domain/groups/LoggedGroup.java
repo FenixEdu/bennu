@@ -23,7 +23,7 @@ import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.util.BundleUtil;
+import pt.ist.bennu.core.i18n.BundleUtil;
 import pt.ist.bennu.service.Service;
 
 /**

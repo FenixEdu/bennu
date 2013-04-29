@@ -1,7 +1,7 @@
 package pt.ist.bennu.portal.domain;
 
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.util.MultiLanguageString;
+import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.service.Service;
 
 public class HostInfo extends HostInfo_Base {
@@ -26,22 +26,22 @@ public class HostInfo extends HostInfo_Base {
         deleteDomainObject();
     }
 
-    private MultiLanguageString mls(MultiLanguageString mls) {
-        return mls == null ? new MultiLanguageString() : mls;
+    private InternationalString mls(InternationalString mls) {
+        return mls == null ? new InternationalString() : mls;
     }
 
     @Override
-    public void setApplicationCopyright(MultiLanguageString applicationCopyright) {
+    public void setApplicationCopyright(InternationalString applicationCopyright) {
         super.setApplicationCopyright(mls(applicationCopyright));
     }
 
     @Override
-    public void setApplicationSubTitle(MultiLanguageString applicationSubTitle) {
+    public void setApplicationSubTitle(InternationalString applicationSubTitle) {
         super.setApplicationSubTitle(mls(applicationSubTitle));
     }
 
     @Override
-    public void setHtmlTitle(MultiLanguageString htmlTitle) {
+    public void setHtmlTitle(InternationalString htmlTitle) {
         super.setHtmlTitle(mls(htmlTitle));
     }
 

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with bennu-core. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package pt.ist.bennu.core.util;
+package pt.ist.bennu.core.i18n;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.i18n.I18N;
+import pt.ist.bennu.core.util.ConfigurationManager;
 
 public class BundleUtil {
     private static final Logger logger = LoggerFactory.getLogger(BundleUtil.class);
@@ -45,12 +45,12 @@ public class BundleUtil {
         }
     }
 
-    public static MultiLanguageString getMultilanguageString(final String bundle, final String key, String... args) {
-        MultiLanguageString mls = new MultiLanguageString();
-        for (Locale language : ConfigurationManager.getSupportedLocales()) {
-            String message = getString(bundle, language, key, args);
-            mls = mls.with(language, message);
+    public static InternationalString getInternationalString(final String bundle, final String key, String... args) {
+        InternationalString i18NString = new InternationalString();
+        for (Locale locale : ConfigurationManager.getSupportedLocales()) {
+            String message = getString(bundle, locale, key, args);
+            i18NString = i18NString.with(locale, message);
         }
-        return mls;
+        return i18NString;
     }
 }

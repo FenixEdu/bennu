@@ -5,8 +5,8 @@ import org.apache.commons.codec.binary.Base64;
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.rest.json.DomainObjectViewer;
-import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.portal.domain.HostInfo;
@@ -43,16 +43,16 @@ public class VirtualHostAdapter implements JsonAdapter<VirtualHost> {
 
     private void setHostInfo(VirtualHost obj, JsonObject jsonObj, HostInfo info, JsonBuilder ctx) {
         if (jsonObj.has("applicationCopyright")) {
-            info.setApplicationCopyright(MultiLanguageString.fromJson(jsonObj.get("applicationCopyright").getAsJsonObject()));
+            info.setApplicationCopyright(InternationalString.fromJson(jsonObj.get("applicationCopyright").getAsJsonObject()));
         }
         if (jsonObj.has("applicationTitle")) {
-            info.setApplicationTitle(MultiLanguageString.fromJson(jsonObj.get("applicationTitle").getAsJsonObject()));
+            info.setApplicationTitle(InternationalString.fromJson(jsonObj.get("applicationTitle").getAsJsonObject()));
         }
         if (jsonObj.has("htmlTitle")) {
-            info.setHtmlTitle(MultiLanguageString.fromJson(jsonObj.get("htmlTitle").getAsJsonObject()));
+            info.setHtmlTitle(InternationalString.fromJson(jsonObj.get("htmlTitle").getAsJsonObject()));
         }
         if (jsonObj.has("applicationSubTitle")) {
-            info.setApplicationSubTitle(MultiLanguageString.fromJson(jsonObj.get("applicationSubTitle").getAsJsonObject()));
+            info.setApplicationSubTitle(InternationalString.fromJson(jsonObj.get("applicationSubTitle").getAsJsonObject()));
         }
         if (jsonObj.has("supportEmailAddress")) {
             info.setSupportEmailAddress(jsonObj.get("supportEmailAddress").getAsString());

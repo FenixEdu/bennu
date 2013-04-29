@@ -3,8 +3,8 @@ package pt.ist.bennu.portal.rest.json;
 import java.util.Locale;
 
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
+import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.util.ConfigurationManager;
-import pt.ist.bennu.core.util.MultiLanguageString;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.portal.domain.MenuItem;
@@ -67,7 +67,7 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
         json.addProperty("path", obj.getPath());
         json.addProperty("functionality", obj.isFunctionalityLink());
         if (obj.hasHost()) {
-            MultiLanguageString mls = new MultiLanguageString();
+            InternationalString mls = new InternationalString();
             for (Locale locale : ConfigurationManager.getSupportedLocales()) {
                 mls = mls.with(locale, obj.getHost().getHostname());
             }
@@ -97,13 +97,13 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
 
     public void setMenuInfo(JsonObject jsonObj, MenuItem menuItem) {
         if (jsonObj.has("title")) {
-            menuItem.setTitle(MultiLanguageString.fromJson(jsonObj.get("title").getAsJsonObject()));
+            menuItem.setTitle(InternationalString.fromJson(jsonObj.get("title").getAsJsonObject()));
         }
         if (jsonObj.has("path")) {
             menuItem.setPath(jsonObj.get("path").getAsString());
         }
         if (jsonObj.has("description")) {
-            menuItem.setDescription(MultiLanguageString.fromJson(jsonObj.get("description").getAsJsonObject()));
+            menuItem.setDescription(InternationalString.fromJson(jsonObj.get("description").getAsJsonObject()));
         }
         if (jsonObj.has("order")) {
             menuItem.setOrd(jsonObj.get("order").getAsInt());
