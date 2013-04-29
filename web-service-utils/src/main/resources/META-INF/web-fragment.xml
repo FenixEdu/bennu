@@ -18,7 +18,7 @@
             <others />
         </before>
     </ordering>
-    
+<!-- Commented out until Jersey ASM dependency is fixed!    
     <servlet>
 		<servlet-name>WebServiceUtilsAPI</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -52,4 +52,5 @@
 		<url-pattern>/jersey/*</url-pattern>
 	</filter-mapping>
 	
+	-->
 </web-fragment>

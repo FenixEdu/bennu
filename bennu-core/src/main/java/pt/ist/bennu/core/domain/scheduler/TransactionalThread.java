@@ -26,9 +26,8 @@ package pt.ist.bennu.core.domain.scheduler;
 
 import java.util.ArrayList;
 
-import jvstm.TransactionalCommand;
-import pt.ist.fenixWebFramework.services.Service;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 /**
  * 
@@ -67,35 +66,27 @@ public abstract class TransactionalThread extends Thread {
     }
 
     @Override
+    @Atomic(mode = TxMode.READ)
     public void run() {
         try {
-            Transaction.withTransaction(true, new TransactionalCommand() {
-                @Override
-                public void doIt() {
-                    try {
-                        if (readOnly) {
-                            transactionalRun();
-                        } else {
-                            callService();
-                        }
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                        if (listeners != null) {
-                            for (ExceptionListener listener : listeners) {
-                                listener.notifyException(e);
-                            }
-                        }
-                    }
+            if (readOnly) {
+                transactionalRun();
+            } else {
+                callService();
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+            if (listeners != null) {
+                for (ExceptionListener listener : listeners) {
+                    listener.notifyException(e);
                 }
-            });
-        } finally {
-            Transaction.forceFinish();
+            }
         }
     }
 
     public abstract void transactionalRun();
 
-    @Service
+    @Atomic
     private void callService() {
         transactionalRun();
     }

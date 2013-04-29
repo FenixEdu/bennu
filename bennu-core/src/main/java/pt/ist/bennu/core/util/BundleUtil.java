@@ -29,7 +29,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
@@ -43,7 +44,7 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
  * 
  */
 public class BundleUtil {
-    protected static final Logger LOGGER = Logger.getLogger(BundleUtil.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(BundleUtil.class);
 
     public static String getStringFromResourceBundle(final String bundle, final String key) throws MissingResourceException {
         return getStringFromResourceBundle(bundle, Language.getLocale(), key);

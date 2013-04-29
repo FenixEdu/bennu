@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import pt.ist.fenixframework.DomainObject;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * 
@@ -24,7 +24,7 @@ public class DomainStorage extends DomainStorage_Base {
 
     @Override
     public String store(String uniqueIdentification, byte[] content) {
-        final DomainObject existingRawData = AbstractDomainObject.fromExternalId(uniqueIdentification);
+        final DomainObject existingRawData = FenixFramework.getDomainObject(uniqueIdentification);
         if (existingRawData instanceof FileRawData && existingRawData != null) {
             ((FileRawData) existingRawData).delete();
         }
@@ -37,7 +37,7 @@ public class DomainStorage extends DomainStorage_Base {
 
     @Override
     public byte[] read(String uniqueIdentification) {
-        final FileRawData rawData = FileRawData.fromExternalId(uniqueIdentification);
+        final FileRawData rawData = FenixFramework.getDomainObject(uniqueIdentification);
         return rawData != null ? rawData.getContent().getBytes() : null;
     }
 

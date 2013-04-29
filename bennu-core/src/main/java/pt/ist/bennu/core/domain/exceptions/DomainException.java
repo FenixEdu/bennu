@@ -26,7 +26,6 @@ package pt.ist.bennu.core.domain.exceptions;
 
 import java.util.ResourceBundle;
 
-import pt.ist.fenixframework.FFDomainException;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 /**
@@ -38,7 +37,7 @@ import pt.utl.ist.fenix.tools.util.i18n.Language;
  * @author Luis Cruz
  * 
  */
-public class DomainException extends FFDomainException {
+public class DomainException extends Error {
 
     private final String key;
 

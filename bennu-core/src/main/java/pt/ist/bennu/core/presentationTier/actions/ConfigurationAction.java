@@ -26,7 +26,6 @@ package pt.ist.bennu.core.presentationTier.actions;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,7 +41,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.bennu.core.applicationTier.Authenticate.UserView;
 import pt.ist.bennu.core.domain.RoleType;
 import pt.ist.bennu.core.domain.User;
@@ -60,8 +58,8 @@ import pt.ist.bennu.core.presentationTier.LayoutContext;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
 import pt.ist.fenixWebFramework.servlets.functionalities.CreateNodeAction;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.core.Project;
 import pt.utl.ist.fenix.tools.util.ByteArray;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
@@ -347,12 +345,10 @@ public class ConfigurationAction extends ContextBaseAction {
     }
 
     public ActionForward viewSystemConfig(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException, FenixFrameworkProjectException {
-        String propertiesLocation = "/" + PropertiesManager.getProperty("app.name") + "/project.properties";
+            final HttpServletResponse response) {
 
         ArrayList<String> modulesList = new ArrayList<String>();
-        for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(PropertiesManager.getProperty("app.name"))
-                .getArtifacts()) {
+        for (Project artifact : FenixFramework.getProject().getProjects()) {
             modulesList.add(artifact.getName());
         }
 //    	Properties projectProperties = new Properties();

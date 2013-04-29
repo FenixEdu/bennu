@@ -34,7 +34,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.bennu.core.domain.User;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -75,7 +75,7 @@ public class UnionGroup extends UnionGroup_Base {
     @Override
     public String getName() {
         String groupName = "Union of: ";
-        for (Iterator persistentGroupIterator = getPersistentGroupsIterator(); persistentGroupIterator.hasNext();) {
+        for (Iterator persistentGroupIterator = getPersistentGroupsSet().iterator(); persistentGroupIterator.hasNext();) {
             PersistentGroup group = (PersistentGroup) persistentGroupIterator.next();
             groupName = groupName.concat(group.getName());
             if (persistentGroupIterator.hasNext()) {
@@ -95,21 +95,26 @@ public class UnionGroup extends UnionGroup_Base {
         return false;
     }
 
-    @Service
+    @Atomic
     public static UnionGroup createUnionGroup(final PersistentGroup... persistentGroups) {
         return new UnionGroup(persistentGroups);
     }
 
     public static UnionGroup getOrCreateUnionGroup(final PersistentGroup... persistentGroups) {
-        for (PersistentGroup group : MyOrg.getInstance().getPersistentGroups()) {
+        for (PersistentGroup group : MyOrg.getInstance().getPersistentGroupsSet()) {
             if (group instanceof UnionGroup) {
                 UnionGroup unionGroup = (UnionGroup) group;
-                if (CollectionUtils.isEqualCollection(unionGroup.getPersistentGroups(), Arrays.asList(persistentGroups))) {
+                if (CollectionUtils.isEqualCollection(unionGroup.getPersistentGroupsSet(), Arrays.asList(persistentGroups))) {
                     return unionGroup;
                 }
             }
         }
         return UnionGroup.createUnionGroup(persistentGroups);
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.PersistentGroup> getPersistentGroups() {
+        return getPersistentGroupsSet();
     }
 
 }

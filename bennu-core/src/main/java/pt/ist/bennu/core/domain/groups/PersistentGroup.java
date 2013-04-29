@@ -80,15 +80,35 @@ public abstract class PersistentGroup extends PersistentGroup_Base implements Pr
     }
 
     public void delete() {
-        removeGroupOwner();
-        removeSystemGroupMyOrg();
-        removeMyOrg();
+        setGroupOwner(null);
+        setSystemGroupMyOrg(null);
+        setMyOrg(null);
         deleteDomainObject();
     }
 
     @Override
     public String getPresentationName() {
         return getName();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.contents.Node> getNodes() {
+        return getNodesSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.NegationGroup> getNegationGroups() {
+        return getNegationGroupsSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.IntersectionGroup> getIntersectionGroups() {
+        return getIntersectionGroupsSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.UnionGroup> getUnionGroups() {
+        return getUnionGroupsSet();
     }
 
 }

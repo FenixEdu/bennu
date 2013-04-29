@@ -26,7 +26,7 @@ package pt.ist.bennu.core.domain.groups;
 
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.bennu.core.domain.exceptions.DomainException;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -49,7 +49,7 @@ public class Role extends Role_Base {
         setSystemGroupMyOrg(MyOrg.getInstance());
     }
 
-    @Service
+    @Atomic
     public static Role createRole(IRoleEnum roleType) {
         final Role role = find(roleType);
         return role == null ? new Role(roleType) : role;

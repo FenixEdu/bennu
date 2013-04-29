@@ -29,7 +29,7 @@ import pt.ist.bennu.core.domain.groups.PersistentGroup;
 import pt.ist.bennu.core.presentationTier.servlets.filters.FunctionalityFilter;
 import pt.ist.bennu.core.presentationTier.servlets.filters.FunctionalityFilter.FunctionalityInfo;
 import pt.ist.bennu.core.util.BundleUtil;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 /**
@@ -81,7 +81,7 @@ public class ActionNode extends ActionNode_Base {
         final FunctionalityInfo functionality = FunctionalityFilter.getFunctionality(getPath(), getMethod());
         Node parentNode = getParentNode();
         if (parentNode != null) {
-            for (Node sibling : parentNode.getChildNodes()) {
+            for (Node sibling : parentNode.getChildNodesSet()) {
                 if (sibling != this) {
                     FunctionalityFilter.checkForAliasConflict(functionality, sibling);
                 }
@@ -89,7 +89,7 @@ public class ActionNode extends ActionNode_Base {
         }
     }
 
-    @Service
+    @Atomic
     public static ActionNode createActionNode(final VirtualHost virtualHost, final Node node, final String path,
             final String method, final String bundle, final String key, final PersistentGroup accessibilityGroup) {
         return new ActionNode(virtualHost, node, path, method, bundle, key, accessibilityGroup);

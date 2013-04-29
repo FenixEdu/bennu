@@ -29,7 +29,7 @@ import java.util.Set;
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.util.BundleUtil;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -49,7 +49,7 @@ public class UserGroup extends UserGroup_Base {
         return user != null;
     }
 
-    @Service
+    @Atomic
     public static UserGroup getInstance() {
         final UserGroup userGroup = (UserGroup) PersistentGroup.getSystemGroup(UserGroup.class);
         return userGroup == null ? new UserGroup() : userGroup;

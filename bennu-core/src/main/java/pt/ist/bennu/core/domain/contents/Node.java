@@ -39,9 +39,9 @@ import pt.ist.bennu.core.domain.groups.PersistentGroup;
 import pt.ist.bennu.core.domain.groups.Role;
 import pt.ist.bennu.core.presentationTier.Context;
 import pt.ist.bennu.core.presentationTier.actions.ContextBaseAction;
-import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * 
@@ -193,11 +193,11 @@ public abstract class Node extends Node_Base implements INode {
     }
 
     public static INode fromString(final String string) {
-        Node node = AbstractDomainObject.fromExternalId(string);
+        Node node = FenixFramework.getDomainObject(string);
         return node;
     }
 
-    @Service
+    @Atomic
     public void deleteService() {
         delete();
     }
@@ -208,19 +208,19 @@ public abstract class Node extends Node_Base implements INode {
             final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
             descNodeOrders(virtualHost.getTopLevelNodesSet());
         } else {
-            removeParentNode();
+            setParentNode(null);
             descNodeOrders(parentNode.getChildNodesSet());
         }
         for (final Node childNode : getChildNodesSet()) {
             childNode.delete();
         }
-        removeVirtualHost();
-        removeMyOrg();
-        removeAccessibilityGroup();
+        setVirtualHost(null);
+        setMyOrg(null);
+        setAccessibilityGroup(null);
         deleteDomainObject();
     }
 
-    @Service
+    @Atomic
     public static void reorderTopLevelNodes(final List<Node> nodes) throws Error {
         final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
         for (final Node node : virtualHost.getTopLevelNodesSet()) {
@@ -231,14 +231,14 @@ public abstract class Node extends Node_Base implements INode {
 
         int i = 0;
         for (final Node node : nodes) {
-            if (!virtualHost.hasTopLevelNodes(node)) {
+            if (!virtualHost.getTopLevelNodesSet().contains(node)) {
                 throwError();
             }
             node.setNodeOrder(Integer.valueOf(i++));
         }
     }
 
-    @Service
+    @Atomic
     public void reorderNodes(final List<Node> nodes) {
         for (final Node node : getChildNodesSet()) {
             if (!nodes.contains(node)) {
@@ -248,7 +248,7 @@ public abstract class Node extends Node_Base implements INode {
 
         int i = 0;
         for (final Node node : nodes) {
-            if (!hasChildNodes(node)) {
+            if (!getChildNodesSet().contains(node)) {
                 throwError();
             }
             node.setNodeOrder(Integer.valueOf(i++));
@@ -291,7 +291,7 @@ public abstract class Node extends Node_Base implements INode {
         if (matchesSearch(mapping, method)) {
             return this;
         } else {
-            for (Node child : getChildNodes()) {
+            for (Node child : getChildNodesSet()) {
                 Node result = child.findMatchNode(mapping, method);
                 if (result != null) {
                     return result;
@@ -309,4 +309,9 @@ public abstract class Node extends Node_Base implements INode {
             return false;
         }
     }
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.contents.Node> getChildNodes() {
+        return getChildNodesSet();
+    }
+
 }

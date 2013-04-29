@@ -63,7 +63,7 @@ public class LuceneDomainDirectory extends Directory {
     private void removeFile(IndexFile file) {
         if (file.isPersisted()) {
             DomainIndexFile domainFile = (DomainIndexFile) file;
-            domainFile.removeDirectory();
+            domainFile.setDirectory(null);
             // On the original RamDirectory the file isn't being deleted
             // but probably only because since it's RAM will be flushed
             // as soon the application stops. I'm deleting it explicitly

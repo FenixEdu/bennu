@@ -32,7 +32,7 @@ import java.util.TreeSet;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.MyOrg;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 
 /**
@@ -80,7 +80,7 @@ public class CustomTaskLog extends CustomTaskLog_Base {
         return sortedCustomTaskLogs;
     }
 
-    @Service
+    @Atomic
     public void delete() {
         for (final GenericFile genericFile : getGenericFileSet()) {
             genericFile.delete();
@@ -88,4 +88,9 @@ public class CustomTaskLog extends CustomTaskLog_Base {
         setMyOrg(null);
         deleteDomainObject();
     }
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile> getGenericFile() {
+        return getGenericFileSet();
+    }
+
 }

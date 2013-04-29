@@ -29,7 +29,7 @@ import java.util.Set;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.exceptions.DomainException;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -40,7 +40,7 @@ public class SingleUserGroup extends SingleUserGroup_Base {
 
     private SingleUserGroup(final User user) {
         super();
-        if (user.hasSingleUserGroup()) {
+        if (user.getSingleUserGroup() != null) {
             throw new DomainException("user.already.has.single.user.group");
         }
         setUser(user);
@@ -61,9 +61,9 @@ public class SingleUserGroup extends SingleUserGroup_Base {
         return user == getUser();
     }
 
-    @Service
+    @Atomic
     public static SingleUserGroup getOrCreateGroup(final User user) {
-        return user == null ? null : user.hasSingleUserGroup() ? user.getSingleUserGroup() : new SingleUserGroup(user);
+        return user == null ? null : user.getSingleUserGroup() != null ? user.getSingleUserGroup() : new SingleUserGroup(user);
     }
 
 }

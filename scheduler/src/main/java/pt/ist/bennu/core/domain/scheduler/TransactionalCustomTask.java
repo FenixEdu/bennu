@@ -24,33 +24,29 @@
  */
 package pt.ist.bennu.core.domain.scheduler;
 
-import jvstm.TransactionalCommand;
-
-import org.apache.log4j.Logger;
-
-import pt.ist.fenixframework.pstm.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
  * @author Luis Cruz
  * 
  */
-public abstract class TransactionalCustomTask extends CustomTask implements TransactionalCommand {
+public abstract class TransactionalCustomTask extends CustomTask {
 
-    private final Logger logger = Logger.getLogger(TransactionalCustomTask.class.getName());
-
-    protected abstract boolean readOnly();
+    private final Logger logger = LoggerFactory.getLogger(TransactionalCustomTask.class.getName());
 
     @Override
     public void run() {
 
         logger.info("Task " + this.getClass().getSimpleName() + " started");
         try {
-            Transaction.withTransaction(readOnly(), this);
+            runTask();
         } finally {
-            Transaction.forceFinish();
             logger.info("Task " + this.getClass().getSimpleName() + " finished");
         }
     }
+
+    protected abstract void runTask();
 
 }

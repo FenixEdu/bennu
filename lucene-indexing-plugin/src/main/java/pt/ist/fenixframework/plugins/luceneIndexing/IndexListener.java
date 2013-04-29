@@ -4,28 +4,31 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import pt.ist.fenixframework.CommitListener;
 import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.Transaction;
 import pt.ist.fenixframework.plugins.LuceneSearchPlugin;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.IndexDocument;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.IndexingRequest;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.interfaces.Indexable;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.interfaces.Searchable;
-import pt.ist.fenixframework.pstm.CommitListener;
-import pt.ist.fenixframework.pstm.TopLevelTransaction;
+import pt.ist.fenixframework.txintrospector.TxIntrospector;
 
 public class IndexListener implements CommitListener {
+
     @Override
-    public void afterCommit(TopLevelTransaction topLevelTransaction) {
+    public void afterCommit(Transaction topLevelTransaction) {
 
     }
 
     @Override
-    public void beforeCommit(TopLevelTransaction topLevelTransaction) {
-        if (topLevelTransaction.isWriteTransaction()) {
+    public void beforeCommit(Transaction topLevelTransaction) {
+        TxIntrospector introspector = topLevelTransaction.getTxIntrospector();
+        if (introspector.isWriteTransaction()) {
             long t1 = System.currentTimeMillis();
             Map<Indexable, IndexDocument> newIndexes = new HashMap<Indexable, IndexDocument>();
 
-            for (DomainObject domainObject : new HashSet<DomainObject>(topLevelTransaction.getNewObjects())) {
+            for (DomainObject domainObject : new HashSet<DomainObject>(introspector.getNewObjects())) {
                 if (domainObject instanceof Searchable) {
                     for (Indexable indexableObject : ((Searchable) domainObject).getObjectsToIndex()) {
                         switch (indexableObject.getIndexMode()) {
@@ -42,8 +45,8 @@ public class IndexListener implements CommitListener {
                 }
             }
 
-            for (DomainObject domainObject : topLevelTransaction.getModifiedObjects()) {
-                if (!topLevelTransaction.isDeleted(domainObject)) {
+            for (DomainObject domainObject : introspector.getModifiedObjects()) {
+                if (!introspector.isDeleted(domainObject)) {
                     if (domainObject instanceof Searchable) {
                         for (Indexable indexableObject : ((Searchable) domainObject).getObjectsToIndex()) {
                             switch (indexableObject.getIndexMode()) {
