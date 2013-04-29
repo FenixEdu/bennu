@@ -1,64 +1,55 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>pt.ist</groupId>
-		<artifactId>bennu-project</artifactId>
-		<version>1.1-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>pt.ist</groupId>
+        <artifactId>bennu-project</artifactId>
+        <version>1.1.0-rc1</version>
+    </parent>
 
-	<artifactId>web-service-utils</artifactId>
-	<name>Bennu Web-Service Utils</name>
+    <artifactId>web-service-utils</artifactId>
+    <name>Bennu Web-Service Utils</name>
 
-	<properties>
-		<version.pt.ist.bennu.core>1.1-SNAPSHOT</version.pt.ist.bennu.core>
-		<version.pt.ist.bennu.vaadin>1.1-SNAPSHOT</version.pt.ist.bennu.vaadin>
-	</properties>
+    <properties>
+        <version.pt.ist.bennu.vaadin>1.1.0-rc1</version.pt.ist.bennu.vaadin>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>pt.ist</groupId>
-			<artifactId>bennu-core</artifactId>
-			<version>${version.pt.ist.bennu.core}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey.contribs</groupId>
-			<artifactId>jersey-multipart</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jvnet</groupId>
-			<artifactId>mimepull</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>jsr311-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>pt.ist</groupId>
-			<artifactId>bennu-vaadin</artifactId>
-			<version>${version.pt.ist.bennu.vaadin}</version>
-		</dependency>
-		<!-- 
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-		</dependency> -->
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-		</dependency>
-		<!-- 
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-servlet</artifactId>
-		</dependency> -->
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>bennu-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-multipart</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet</groupId>
+            <artifactId>mimepull</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>bennu-vaadin</artifactId>
+            <version>${version.pt.ist.bennu.vaadin}</version>
+        </dependency>
+        <!-- <dependency> <groupId>com.sun.jersey</groupId> <artifactId>jersey-server</artifactId> </dependency> -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+        </dependency>
+        <!-- <dependency> <groupId>com.sun.jersey</groupId> <artifactId>jersey-servlet</artifactId> </dependency> -->
+    </dependencies>
 
-	<repositories>
-		<repository>
-			<id>fenix-ashes-maven-repository</id>
-			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+        </repository>
+    </repositories>
 </project>

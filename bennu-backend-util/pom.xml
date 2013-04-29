@@ -1,61 +1,56 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>pt.ist</groupId>
-	<artifactId>bennu-backend-util</artifactId>
-	<version>1.1-SNAPSHOT</version>
-	<name>Fenix Framework Backend-specific Features for Bennu</name>
+    <groupId>pt.ist</groupId>
+    <artifactId>bennu-backend-util</artifactId>
+    <version>1.1.0-rc1</version>
+    <name>Fenix Framework Backend-specific Features for Bennu</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<fenix.framework.backend>fenix-framework-backend-jvstm-ojb</fenix.framework.backend>
-		<version.fenix.framework.backend>2.1.0-rc2</version.fenix.framework.backend>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <fenix.framework.backend>fenix-framework-backend-jvstm-ojb</fenix.framework.backend>
+        <version.fenix.framework.backend>2.1.0-rc2</version.fenix.framework.backend>
+    </properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
-	<dependencies>
-		<dependency>
-			<groupId>pt.ist</groupId>
-			<artifactId>${fenix.framework.backend}-code-generator</artifactId>
-			<version>${version.fenix.framework.backend}</version>
-			<!-- The reason this dependency is provided is so that Bennu Modules do 
-				not depend directly from any backend. Instead, they depend from this module, 
-				and it is up to the end application to provide its implementation. -->
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>${fenix.framework.backend}-code-generator</artifactId>
+            <version>${version.fenix.framework.backend}</version>
+            <!-- The reason this dependency is provided is so that Bennu Modules do not depend directly from any backend. 
+                Instead, they depend from this module, and it is up to the end application to provide its implementation. -->
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
-	<repositories>
-		<repository>
-			<id>fenix-ashes-maven-repository</id>
-			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+        </repository>
+    </repositories>
 
-	<distributionManagement>
-		<repository>
-			<id>fenix-ashes-releases</id>
-			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>fenix-ashes-snapshots</id>
-			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>fenix-ashes-releases</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
+        </repository>
+    </distributionManagement>
 
 </project>
