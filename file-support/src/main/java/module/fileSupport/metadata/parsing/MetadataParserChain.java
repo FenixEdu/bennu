@@ -24,8 +24,8 @@
  */
 package module.fileSupport.metadata.parsing;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import module.fileSupport.metadata.parsing.parsers.ExcelParser;
@@ -69,7 +69,7 @@ public class MetadataParserChain {
         return fileMetaData;
     }
 
-    public static FileMetadata parseFiles(List<? extends GenericFile> files) {
+    public static FileMetadata parseFiles(Collection<? extends GenericFile> files) {
         FileMetadata fileMetaData = new FileMetadata();
         for (GenericFile file : files) {
             for (FileMetaDataParser parser : parsers) {

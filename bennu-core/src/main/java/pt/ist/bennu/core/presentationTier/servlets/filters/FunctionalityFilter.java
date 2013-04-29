@@ -46,7 +46,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 
-import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.contents.ActionNode;
@@ -55,8 +54,8 @@ import pt.ist.bennu.core.presentationTier.Context;
 import pt.ist.bennu.core.presentationTier.actions.ContextBaseAction;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.functionalities.FunctionalityAnnotationProcessor;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.core.Project;
 
 /**
  * 
@@ -131,8 +130,7 @@ public class FunctionalityFilter implements Filter {
     public void init(final FilterConfig filterConfig) throws ServletException {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            for (FenixFrameworkArtifact artifact : FenixFrameworkArtifact.fromName(PropertiesManager.getProperty("app.name"))
-                    .getArtifacts()) {
+            for (Project artifact : FenixFramework.getProject().getProjects()) {
                 try (InputStream stream =
                         loader.getResourceAsStream(artifact.getName() + File.separatorChar
                                 + FunctionalityAnnotationProcessor.FUNCTIONALITIES_FILE)) {
@@ -162,16 +160,16 @@ public class FunctionalityFilter implements Filter {
                     }
                 }
             }
-        } catch (IOException | FenixFrameworkProjectException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void checkConsistency() {
-        for (VirtualHost virtualHost : MyOrg.getInstance().getVirtualHosts()) {
+        for (VirtualHost virtualHost : MyOrg.getInstance().getVirtualHostsSet()) {
             for (FunctionalityInfo functionality : relativeMapping.values()) {
                 // Checking for consistency across nodes' tree branches
-                for (Node node : virtualHost.getTopLevelNodes()) {
+                for (Node node : virtualHost.getTopLevelNodesSet()) {
                     final Node matchingNode = node.findMatchNode(functionality.getPath(), functionality.getMethod());
                     if (matchingNode != null) {
                         // Fetch the parent, and navigate to siblings. They
@@ -179,7 +177,7 @@ public class FunctionalityFilter implements Filter {
                         // conflict with the matchingNode
                         Node parentNode = matchingNode.getParentNode();
                         if (parentNode != null) {
-                            for (Node sibling : parentNode.getChildNodes()) {
+                            for (Node sibling : parentNode.getChildNodesSet()) {
                                 if (sibling != matchingNode) {
                                     checkForAliasConflict(functionality, sibling);
                                 }
@@ -280,7 +278,7 @@ public class FunctionalityFilter implements Filter {
 
                 Node matchingNode = null;
                 final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-                for (Node node : virtualHost.getTopLevelNodes()) {
+                for (Node node : virtualHost.getTopLevelNodesSet()) {
                     matchingNode = node.findMatchNode(path, method);
                     if (matchingNode != null) {
                         break;
@@ -301,7 +299,7 @@ public class FunctionalityFilter implements Filter {
                 String path = null;
                 String method = null;
 
-                for (Node possibleNode : lastNode.getChildNodes()) {
+                for (Node possibleNode : lastNode.getChildNodesSet()) {
                     if (possibleNode instanceof ActionNode) {
                         path = ((ActionNode) possibleNode).getPath();
                         method = getRealMethodName(path, methodAlias);
@@ -330,7 +328,7 @@ public class FunctionalityFilter implements Filter {
 
     public static Node getNode(String mapping, String method) {
         final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-        for (Node node : virtualHost.getTopLevelNodes()) {
+        for (Node node : virtualHost.getTopLevelNodesSet()) {
             Node result = node.findMatchNode(mapping, method);
             if (result != null) {
                 return result;

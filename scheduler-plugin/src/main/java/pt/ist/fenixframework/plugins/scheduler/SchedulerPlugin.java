@@ -1,28 +1,17 @@
 package pt.ist.fenixframework.plugins.scheduler;
 
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import pt.ist.fenixWebFramework.services.Service;
-import pt.ist.fenixframework.FenixFrameworkPlugin;
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.plugins.scheduler.domain.SchedulerSystem;
 
 @WebListener
-public class SchedulerPlugin implements FenixFrameworkPlugin, ServletContextListener {
+public class SchedulerPlugin implements ServletContextListener {
     private static boolean initialized = false;
 
-    @Override
-    public List<URL> getDomainModel() {
-        return Collections.singletonList(getClass().getResource("/scheduler-plugin.dml"));
-    }
-
-    @Override
-    @Service
+    @Atomic
     public void initialize() {
         if (!initialized) {
             SchedulerSystem.getInstance();

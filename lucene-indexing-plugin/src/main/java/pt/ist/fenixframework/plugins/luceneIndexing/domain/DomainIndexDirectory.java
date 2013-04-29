@@ -81,7 +81,12 @@ public class DomainIndexDirectory extends DomainIndexDirectory_Base {
         for (DomainIndexFile file : getIndexFilesSet()) {
             file.delete();
         }
-        removePluginRoot();
+        setPluginRoot(null);
         deleteDomainObject();
     }
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.luceneIndexing.domain.DomainIndexFile> getIndexFiles() {
+        return getIndexFilesSet();
+    }
+
 }

@@ -36,7 +36,7 @@ public class ServerHost extends ServerHost_Base {
 
     @Override
     protected void removeHostSystem() {
-        removeServerHostSystem();
+        setServerHostSystem(null);
     }
 
     public boolean hasClientAddress(final String clientAddress) {

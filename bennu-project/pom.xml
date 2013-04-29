@@ -37,8 +37,9 @@
 		<!-- * DEPENDENCIES VERSIONS * -->
 		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
 		<!-- ************************************************************************************************ -->
-		<version.antlr.antlr>2.7.2</version.antlr.antlr>
+		<version.antlr.antlr>2.7.7</version.antlr.antlr>
 		<version.axis.axis>1.4</version.axis.axis>
+		<version.bennu.backend.util>1.1-SNAPSHOT</version.bennu.backend.util>
 		<version.cas.casclient>2.1.1</version.cas.casclient>
 		<version.com.google.guava.guava>12.0</version.com.google.guava.guava>
 		<version.com.google.gwt.gwt.user>2.3.0</version.com.google.gwt.gwt.user>
@@ -58,6 +59,7 @@
 		<version.commons.io.commons.io>2.3</version.commons.io.commons.io>
 		<version.commons.lang.commons.lang>2.6</version.commons.lang.commons.lang>
 		<version.commons.logging.commons.logging>1.1.1</version.commons.logging.commons.logging>
+        <version.fenix.framework>2.1.0-rc2</version.fenix.framework>
 		<version.informa.informa>1.0</version.informa.informa>
 		<version.javax.mail.mail>1.4.2</version.javax.mail.mail>
 		<version.javax.servlet.jstl>1.2</version.javax.servlet.jstl>
@@ -66,7 +68,6 @@
 		<version.jline.jline>0.9.94</version.jline.jline>
 		<version.joda.time.joda.time>1.5.2</version.joda.time.joda.time>
 		<version.joda.time.joda.time.jsptags>1.1.1</version.joda.time.joda.time.jsptags>
-		<version.log4j.log4j>1.2.16</version.log4j.log4j>
 		<version.jasperreports.jasperreports.javaflow>3.6.0</version.jasperreports.jasperreports.javaflow>
 		<version.org.apache.lucene.lucene.core>3.5.0</version.org.apache.lucene.lucene.core>
 		<version.org.apache.pdfbox.pdfbox>1.6.0</version.org.apache.pdfbox.pdfbox>
@@ -87,7 +88,7 @@
 		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
 		<!-- ************************************************************************************************ -->
 		<version.com.alexnederlof.jasperreports.plugin>1.5-SNAPSHOT</version.com.alexnederlof.jasperreports.plugin>
-		<version.dml.dml.maven.plugin>1.2.1</version.dml.dml.maven.plugin>
+		<version.pt.ist.ff.maven.plugin>2.1.0-rc2</version.pt.ist.ff.maven.plugin>
 		<version.org.apache.maven.plugins.maven.compiler.plugin>2.5.1</version.org.apache.maven.plugins.maven.compiler.plugin>
 		<version.org.apache.maven.plugins.maven.deploy.plugin>2.7</version.org.apache.maven.plugins.maven.deploy.plugin>
 		<version.org.apache.maven.plugins.maven.enforcer.plugin>1.1.1</version.org.apache.maven.plugins.maven.enforcer.plugin>
@@ -202,15 +203,16 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>dml</groupId>
-				<artifactId>dml-maven-plugin</artifactId>
-				<version>${version.dml.dml.maven.plugin}</version>
+				<groupId>pt.ist</groupId>
+				<artifactId>ff-maven-plugin</artifactId>
+				<version>${version.pt.ist.ff.maven.plugin}</version>
 				<executions>
 					<execution>
 						<id>default</id>
 						<goals>
-							<goal>generate-domain</goal>
-							<goal>post-compile</goal>
+							<goal>ff-generate-domain</goal>
+							<goal>ff-post-compile</goal>
+							<goal>ff-process-atomic-annotations</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -257,7 +259,8 @@
 					</archive>
 					<excludes>
 						<exclude>**/*_Base*</exclude>
-						<exclude>**/pt/ist/fenixframework/ValueTypeSerializationGenerator*</exclude>
+						<exclude>**/pt/ist/fenixframework/ValueTypeSerializer*</exclude>
+  						<exclude>**/pt/ist/fenixframework/backend/CurrentBackEndId*</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -281,11 +284,6 @@
 							<groupId>jasperreports</groupId>
 							<artifactId>jasperreports-javaflow</artifactId>
 							<version>${version.jasperreports.jasperreports.javaflow}</version>
-						</dependency>
-						<dependency>
-							<groupId>log4j</groupId>
-							<artifactId>log4j</artifactId>
-							<version>${version.log4j.log4j}</version>
 						</dependency>
 					</dependencies>
 					<configuration>
@@ -505,11 +503,6 @@
 				<version>${version.com.oracle.ojdbc14}</version>
 			</dependency>
 			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>${version.log4j.log4j}</version>
-			</dependency>
-			<dependency>
 				<groupId>com.google</groupId>
 				<artifactId>soastation</artifactId>
 				<version>${version.com.google.soastation}</version>
@@ -544,6 +537,11 @@
 				<artifactId>axis</artifactId>
 				<version>${version.axis.axis}</version>
 			</dependency>
+			<dependency>
+				<groupId>pt.ist</groupId>
+				<artifactId>bennu-backend-util</artifactId>
+				<version>${version.bennu.backend.util}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -553,18 +551,31 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>dml</groupId>
-						<artifactId>dml-maven-plugin</artifactId>
-						<version>${version.dml.dml.maven.plugin}</version>
+						<groupId>pt.ist</groupId>
+						<artifactId>ff-maven-plugin</artifactId>
+						<version>${version.pt.ist.ff.maven.plugin}</version>
 						<configuration>
-							<codeGeneratorClassName>pt.ist.fenixframework.pstm.dml.VirtualHostAwareCodeGenerator</codeGeneratorClassName>
+							<codeGeneratorClassName>pt.ist.bennu.backend.codeGenerator.VirtualHostAwareCodeGenerator</codeGeneratorClassName>
 						</configuration>
+						<dependencies>
+							<dependency>
+								<groupId>pt.ist</groupId>
+								<artifactId>fenix-framework-backend-jvstm-ojb-code-generator</artifactId>
+								<version>${version.fenix.framework}</version>
+							</dependency>
+							<dependency>
+								<groupId>pt.ist</groupId>
+								<artifactId>bennu-backend-util</artifactId>
+								<version>${version.bennu.backend.util}</version>
+							</dependency>
+						</dependencies>
 						<executions>
 							<execution>
 								<id>default</id>
 								<goals>
-									<goal>generate-domain</goal>
-									<goal>post-compile</goal>
+									<goal>ff-generate-domain</goal>
+									<goal>ff-post-compile</goal>
+									<goal>ff-process-atomic-annotations</goal>
 								</goals>
 							</execution>
 						</executions>
@@ -604,6 +615,18 @@
 					</plugin>
 				</plugins>
 			</build>
+			<dependencies>
+				<dependency>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+					<version>1.0.9</version>
+				</dependency>
+				<dependency>
+					<groupId>pt.ist</groupId>
+					<artifactId>fenix-framework-backend-jvstm-ojb-runtime</artifactId>
+					<version>${version.fenix.framework}</version>
+				</dependency>
+			</dependencies>
 		</profile>
 	</profiles>
 

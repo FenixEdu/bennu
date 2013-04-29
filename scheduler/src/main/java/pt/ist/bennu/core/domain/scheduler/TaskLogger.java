@@ -25,7 +25,7 @@
 
 package pt.ist.bennu.core.domain.scheduler;
 
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 
 public class TaskLogger {
 
@@ -44,7 +44,7 @@ public class TaskLogger {
     }
 
     public void run() {
-        final Task task = AbstractDomainObject.fromExternalId(taskId);
+        final Task task = FenixFramework.getDomainObject(taskId);
         if (successful == null) {
             task.createNewLog();
         } else {

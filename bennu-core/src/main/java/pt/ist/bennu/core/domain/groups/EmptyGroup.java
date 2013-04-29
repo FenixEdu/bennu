@@ -29,7 +29,7 @@ import java.util.Set;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.util.BundleUtil;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -58,7 +58,7 @@ public class EmptyGroup extends EmptyGroup_Base {
         return false;
     }
 
-    @Service
+    @Atomic
     public static EmptyGroup getInstance() {
         final EmptyGroup emptyGroup = (EmptyGroup) PersistentGroup.getSystemGroup(EmptyGroup.class);
         return emptyGroup == null ? new EmptyGroup() : emptyGroup;

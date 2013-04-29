@@ -74,6 +74,12 @@ valueType java.lang.Class as Class {
 	internalizeWith pt.ist.bennu.core.domain.util.ClassInternalizer.internalize();
 }
 
+valueType java.math.BigDecimal as BigDecimal {
+    externalizeWith {
+        String toString();
+    }
+}
+
 class MyOrg {
 }
 
@@ -183,6 +189,11 @@ class Theme {
 
 class Layout {
 	String name;
+}
+
+relation DomainRootHasMyOrg {
+	.pt.ist.fenixframework.DomainRoot playsRole domainRoot;
+	MyOrg playsRole myOrg;
 }
 
 relation ThemeMyOrg {

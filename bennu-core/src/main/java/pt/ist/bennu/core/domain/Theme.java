@@ -24,7 +24,7 @@
  */
 package pt.ist.bennu.core.domain;
 
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -52,15 +52,15 @@ public class Theme extends Theme_Base {
     }
 
     public void delete() {
-        removeMyOrg();
-        while (!getVirtualHosts().isEmpty()) {
-            getVirtualHosts().get(0).removeTheme();
+        setMyOrg(null);
+        for (VirtualHost virtualHost : getVirtualHostsSet()) {
+            virtualHost.setTheme(null);
         }
         deleteDomainObject();
     }
 
     public static Theme getThemeByName(String name) {
-        for (Theme theme : MyOrg.getInstance().getThemes()) {
+        for (Theme theme : MyOrg.getInstance().getThemesSet()) {
             if (theme.getName().equals(name)) {
                 return theme;
             }
@@ -78,13 +78,18 @@ public class Theme extends Theme_Base {
         return screenshotName != null ? screenshotName : getName() + ".jpg";
     }
 
-    @Service
+    @Atomic
     public static Theme createTheme(String themeName, String description, ThemeType type, String screenshotFileName) {
         return new Theme(themeName, description, type, screenshotFileName);
     }
 
-    @Service
+    @Atomic
     public static void deleteTheme(Theme theme) {
         theme.delete();
     }
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.VirtualHost> getVirtualHosts() {
+        return getVirtualHostsSet();
+    }
+
 }

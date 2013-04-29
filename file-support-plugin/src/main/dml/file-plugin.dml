@@ -1,11 +1,5 @@
 package pt.ist.fenixframework.plugins.fileSupport.domain;
 
-valueType pt.utl.ist.fenix.tools.util.ByteArray as ByteArray {
-    externalizeWith {
-        bytearray getBytes();
-    }
-}
-
 class GenericFile {
 	Long size;
 	DateTime creationDate;
@@ -48,6 +42,11 @@ class FileStorageConfiguration {
 
 class FileSupport {
 
+}
+
+relation DomainRootHasFileSupport {
+	.pt.ist.fenixframework.DomainRoot playsRole domainRoot;
+	FileSupport playsRole fileSupport;
 }
 	
 relation FileStorageFile {

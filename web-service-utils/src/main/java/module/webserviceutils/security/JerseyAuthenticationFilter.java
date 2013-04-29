@@ -15,13 +15,14 @@ import module.webserviceutils.domain.HostSystem;
 import module.webserviceutils.domain.ServerHost;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.applicationTier.Authenticate;
 import pt.ist.bennu.core.domain.User;
 
 public class JerseyAuthenticationFilter implements Filter {
-    private static final Logger LOG = Logger.getLogger(JerseyAuthenticationFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JerseyAuthenticationFilter.class);
 
     @Override
     public void destroy() {

@@ -42,7 +42,7 @@ public class AccessibilityGroupsProvider implements DataProvider {
 
     @Override
     public Object provide(Object arg0, Object arg1) {
-        return MyOrg.getInstance().getPersistentGroups();
+        return MyOrg.getInstance().getPersistentGroupsSet();
     }
 
 }

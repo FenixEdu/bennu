@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
 import pt.utl.ist.fenix.tools.util.excel.Spreadsheet;
 
@@ -38,7 +38,7 @@ import pt.utl.ist.fenix.tools.util.excel.Spreadsheet;
  * @author Luis Cruz
  * 
  */
-public abstract class WriteCustomTask extends ReadCustomTask {
+public abstract class WriteCustomTask extends TransactionalCustomTask {
 
     private Set<GenericFile> outputFiles;
 
@@ -48,13 +48,9 @@ public abstract class WriteCustomTask extends ReadCustomTask {
 
     protected abstract void doService();
 
+    @Atomic
     @Override
-    public final void doIt() {
-        callService();
-    }
-
-    @Service
-    private void callService() {
+    protected void runTask() {
         try {
             if (getServerName() != null) {
                 VirtualHost.setVirtualHostForThread(getServerName().toLowerCase());

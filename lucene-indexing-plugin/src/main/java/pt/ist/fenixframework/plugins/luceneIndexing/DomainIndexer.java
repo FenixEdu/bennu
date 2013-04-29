@@ -27,12 +27,13 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
 
+import pt.ist.fenixframework.DomainModelUtil;
 import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.dml.DomainClass;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.DomainIndexDirectory;
 import pt.ist.fenixframework.plugins.luceneIndexing.domain.IndexDocument;
 import pt.ist.fenixframework.plugins.luceneIndexing.queryBuilder.dsl.DSLState;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.fenixframework.pstm.OneBoxDomainObject;
 
 /**
  * DomainIndexer is the core of this plugin. This is a singleton class that
@@ -326,7 +327,7 @@ public class DomainIndexer {
                 Document doc = searcher.doc(docId);
 
                 String OID = doc.get(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName());
-                T domainObject = AbstractDomainObject.<T> fromExternalId(OID);
+                T domainObject = FenixFramework.getDomainObject(OID);
                 if (domainObject != null && domainObject.getClass().isAssignableFrom(domainObjectClass)) {
                     domainObjects.add(domainObject);
                 }
@@ -347,12 +348,15 @@ public class DomainIndexer {
     }
 
     private String findDirectoryNameForClass(Class<? extends DomainObject> domainObjectClass) {
-        Class<? extends DomainObject> superclass = (Class<? extends DomainObject>) domainObjectClass.getSuperclass();
-        if (superclass.getName().endsWith("_Base")) {
-            superclass = (Class<? extends DomainObject>) superclass.getSuperclass();
-        }
+        return findDirectoryNameForDomainClass(DomainModelUtil.getDomainClassFor(domainObjectClass));
+    }
 
-        return superclass == AbstractDomainObject.class || superclass == OneBoxDomainObject.class ? domainObjectClass.getName() : findDirectoryNameForClass(superclass);
+    private String findDirectoryNameForDomainClass(DomainClass domainClass) {
+        if (domainClass.getSuperclass() == null) {
+            return domainClass.getFullName();
+        } else {
+            return findDirectoryNameForDomainClass((DomainClass) domainClass.getSuperclass());
+        }
     }
 
     private static Document generateLuceneDocument(IndexDocument indexDocument) {

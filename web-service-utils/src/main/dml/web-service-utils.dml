@@ -1,13 +1,5 @@
 package module.webserviceutils.domain;
 
-valueType pt.utl.ist.fenix.tools.util.Strings as Strings {
-    externalizeWith {
-        String exportAsString();
-    }
-
-    internalizeWith importFromString();
-}
-
 class HostSystem {
 }
 

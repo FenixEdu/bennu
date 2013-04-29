@@ -29,7 +29,7 @@ import java.util.Set;
 import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.util.BundleUtil;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -38,7 +38,7 @@ import pt.ist.fenixWebFramework.services.Service;
  */
 public class AnonymousGroup extends AnonymousGroup_Base {
 
-    @Service
+    @Atomic
     public static AnonymousGroup getInstance() {
         final AnonymousGroup anonymousGroup = (AnonymousGroup) PersistentGroup.getSystemGroup(AnonymousGroup.class);
         return anonymousGroup == null ? new AnonymousGroup() : anonymousGroup;

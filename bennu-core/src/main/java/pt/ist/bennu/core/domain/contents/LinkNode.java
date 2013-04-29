@@ -27,7 +27,7 @@ package pt.ist.bennu.core.domain.contents;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.groups.PersistentGroup;
 import pt.ist.bennu.core.util.BundleUtil;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
 /**
@@ -44,7 +44,7 @@ public class LinkNode extends LinkNode_Base {
         setUrl(url);
     }
 
-    @Service
+    @Atomic
     public static LinkNode createLinkNode(final VirtualHost virtualHost, final Node parentNode, final String url,
             final String bundle, final String key, final PersistentGroup accessibilityGroup) {
         final LinkNode linkNode = new LinkNode(virtualHost, parentNode, url);

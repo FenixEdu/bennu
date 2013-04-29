@@ -26,8 +26,6 @@ package pt.ist.bennu.core.presentationTier.servlets;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Properties;
@@ -38,6 +36,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.bennu.core.applicationTier.Authenticate;
@@ -52,8 +53,8 @@ import pt.ist.bennu.core.domain.groups.UserGroup;
 import pt.ist.fenixWebFramework.FenixWebFramework;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter;
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.RequestChecksumFilter.ChecksumPredicate;
-import pt.ist.fenixframework.FenixFrameworkInitializer;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 /**
@@ -66,45 +67,41 @@ import pt.utl.ist.fenix.tools.util.i18n.Language;
 @WebListener
 public class StartupServlet implements ServletContextListener {
 
+    private static final Logger logger = LoggerFactory.getLogger(StartupServlet.class);
+
     private static final long serialVersionUID = -7035892286820898843L;
 
     @Override
+    @Atomic(mode = TxMode.READ)
     public void contextInitialized(ServletContextEvent event) {
         try {
+
+            logger.info("Initializing Bennu");
+
             setLocale();
-            try {
-                Class.forName(FenixFrameworkInitializer.class.getName());
-            } catch (ClassNotFoundException e) {
-            }
             FenixWebFramework.initialize(PropertiesManager.getFenixFrameworkConfig());
 
+            ensureMyOrg();
+
             try {
-                Transaction.begin(true);
-                Transaction.currentFenixTransaction().setReadOnly();
-
-                try {
-                    MyOrg.initModules();
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    throw new Error(t);
-                }
-
-                final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
-                Authenticate.initRole(RoleType.MANAGER, managerUsernames);
-
-                initializePersistentGroups();
-
-                initScheduler();
-
-                syncThemes(event.getServletContext());
-
-                syncLayouts(event.getServletContext());
-
-                registerFilterCheckSumRules();
-
-            } finally {
-                Transaction.forceFinish();
+                MyOrg.initModules();
+            } catch (Throwable t) {
+                t.printStackTrace();
+                throw new Error(t);
             }
+
+            final String managerUsernames = PropertiesManager.getProperty("manager.usernames");
+            Authenticate.initRole(RoleType.MANAGER, managerUsernames);
+
+            initializePersistentGroups();
+
+            syncThemes(event.getServletContext());
+
+            syncLayouts(event.getServletContext());
+
+            registerFilterCheckSumRules();
+
+            logger.info("Bennu Initialized Successfully");
         } finally {
             Language.setLocale(null);
         }
@@ -112,6 +109,15 @@ public class StartupServlet implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
+    }
+
+    @Atomic
+    private MyOrg ensureMyOrg() {
+        MyOrg myOrg = MyOrg.getInstance();
+        if (myOrg == null) {
+            myOrg = new MyOrg();
+        }
+        return myOrg;
     }
 
     private void setLocale() {
@@ -128,7 +134,7 @@ public class StartupServlet implements ServletContextListener {
             themeNames.add(folder.substring("/CSS/".length(), folder.length() - 1));
         }
 
-        for (Theme theme : MyOrg.getInstance().getThemes()) {
+        for (Theme theme : MyOrg.getInstance().getThemesSet()) {
             if (!matchThemeOrLayoutName(theme.getName(), themeNames)) {
                 Theme.deleteTheme(theme);
             }
@@ -207,29 +213,4 @@ public class StartupServlet implements ServletContextListener {
 
     }
 
-    private void initScheduler() {
-        try {
-            final Class clazz = Class.forName("pt.ist.bennu.core.domain.scheduler.Scheduler");
-            final Method method = clazz.getDeclaredMethod("initialize");
-            method.invoke(null);
-            System.out.println("Scheduler initializeed.");
-        } catch (ClassNotFoundException ex) {
-            // scheduler not included in deploy... keep going.
-        } catch (SecurityException e) {
-            System.out.println("Unable to init scheduler");
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            System.out.println("Unable to init scheduler");
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            System.out.println("Unable to init scheduler");
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            System.out.println("Unable to init scheduler");
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            System.out.println("Unable to init scheduler");
-            e.printStackTrace();
-        }
-    }
 }

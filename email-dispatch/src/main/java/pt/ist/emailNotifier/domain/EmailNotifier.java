@@ -1,13 +1,13 @@
 package pt.ist.emailNotifier.domain;
 
 import pt.ist.bennu.core.domain.MyOrg;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 public class EmailNotifier extends EmailNotifier_Base {
 
     private static EmailNotifier instance = null;
 
-    @Service
+    @Atomic
     public synchronized static void initialize() {
         final MyOrg myOrg = MyOrg.getInstance();
         instance = myOrg.getEmailNotifier();
@@ -26,6 +26,11 @@ public class EmailNotifier extends EmailNotifier_Base {
 
     private EmailNotifier() {
         super();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.emailNotifier.domain.Email> getEmails() {
+        return getEmailsSet();
     }
 
 }

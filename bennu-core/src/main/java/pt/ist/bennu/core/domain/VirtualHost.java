@@ -37,7 +37,7 @@ import pt.ist.bennu.core.domain.contents.Node;
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
 import pt.ist.fenixWebFramework.FenixWebFramework;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 import pt.utl.ist.fenix.tools.util.ByteArray;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
@@ -117,7 +117,7 @@ public class VirtualHost extends VirtualHost_Base {
         setSystemEmailAddress(virtualHostBean.getSystemEmailAddress());
     }
 
-    @Service
+    @Atomic
     public static VirtualHost createVirtualHost(final VirtualHostBean virtualHostBean) {
         return new VirtualHost(virtualHostBean);
     }
@@ -134,26 +134,21 @@ public class VirtualHost extends VirtualHost_Base {
         return layout != null ? layout : setAndReturnDefaultLayout();
     }
 
-    @Override
-    public boolean hasTheme() {
-        return super.getTheme() != null;
-    }
-
-    @Service
+    @Atomic
     private Theme setAndReturnDefaultTheme() {
-        Theme theme = getMyOrg().getThemes().get(0);
+        Theme theme = getMyOrg().getThemesSet().iterator().next();
         setTheme(theme);
         return theme;
     }
 
-    @Service
+    @Atomic
     private Layout setAndReturnDefaultLayout() {
         Layout layout = Layout.getLayoutByName("default");
         setLayout(layout);
         return layout;
     }
 
-    @Service
+    @Atomic
     public void deleteService() {
         delete();
     }
@@ -164,12 +159,12 @@ public class VirtualHost extends VirtualHost_Base {
                 node.delete();
             }
 
-            // removeExpenditureTrackingSystem();
-            // removeExternalAccountingIntegrationSystem();
-            // removeWorkflowSystem();
-            // removeWorkingCapitalSystem();
-            removeTheme();
-            removeMyOrg();
+            // setExpenditureTrackingSystem(null);
+            // setExternalAccountingIntegrationSystem(null);
+            // setWorkflowSystem(null);
+            // setWorkingCapitalSystem(null);
+            setTheme(null);
+            setMyOrg(null);
             deleteDomainObject();
         }
     }
@@ -180,7 +175,7 @@ public class VirtualHost extends VirtualHost_Base {
         return nodes;
     }
 
-    @Service
+    @Atomic
     public void edit(VirtualHostBean bean) {
         setHostname(bean.getHostname());
         setApplicationTitle(bean.getApplicationTitle());
@@ -209,13 +204,13 @@ public class VirtualHost extends VirtualHost_Base {
         super.setHostname(hostname.toLowerCase());
     }
 
-    @Service
+    @Atomic
     @Override
     public void setFavicon(final ByteArray favicon) {
         super.setFavicon(favicon);
     }
 
-    @Service
+    @Atomic
     @Override
     public void setLogo(final ByteArray logo) {
         super.setLogo(logo);
@@ -242,7 +237,7 @@ public class VirtualHost extends VirtualHost_Base {
         return supportedLanguages != null && language != null && supportedLanguages.indexOf(language.name()) >= 0;
     }
 
-    @Service
+    @Atomic
     public void setLanguages(final Set<Language> languages) {
         final StringBuilder stringBuilder = new StringBuilder();
         for (final Language language : languages) {
@@ -275,4 +270,9 @@ public class VirtualHost extends VirtualHost_Base {
         }
         return count;
     }
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.contents.Node> getTopLevelNodes() {
+        return getTopLevelNodesSet();
+    }
+
 }

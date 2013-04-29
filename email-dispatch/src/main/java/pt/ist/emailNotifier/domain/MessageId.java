@@ -40,7 +40,7 @@ public class MessageId extends MessageId_Base {
     }
 
     public void delete() {
-        removeEmail();
+        setEmail(null);
         deleteDomainObject();
     }
 

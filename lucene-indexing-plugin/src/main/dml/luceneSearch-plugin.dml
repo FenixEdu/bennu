@@ -21,6 +21,11 @@ class IndexingRequest {
 	String indexableExternalId;
 }
 
+relation DomainRootHasLuceneSearchPluginRoot {
+	.pt.ist.fenixframework.DomainRoot playsRole domainRoot;
+	LuceneSearchPluginRoot playsRole luceneSearchPluginRoot;
+}
+
 relation DomainIndexFileDomainIndexStore {
 	DomainIndexFile playsRole;
 	DomainIndexContent playsRole storedFile;

@@ -1,6 +1,6 @@
 package module.webserviceutils.domain;
 
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 public abstract class Host extends Host_Base {
 
@@ -32,7 +32,7 @@ public abstract class Host extends Host_Base {
 
     public abstract void setHostSystem(HostSystem hostSystem);
 
-    @Service
+    @Atomic
     public void delete() {
         removeHostSystem();
         deleteDomainObject();

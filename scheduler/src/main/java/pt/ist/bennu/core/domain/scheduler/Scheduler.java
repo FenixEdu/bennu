@@ -24,17 +24,17 @@
  */
 package pt.ist.bennu.core.domain.scheduler;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import jvstm.TransactionalCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import pt.ist.bennu.backend.util.LockManager;
 import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.bennu.core.domain.MyOrg;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 /**
  * 
@@ -43,7 +43,9 @@ import pt.ist.fenixframework.pstm.Transaction;
  */
 public class Scheduler extends TimerTask {
 
-    private static final String LOCK_VARIABLE = Scheduler.class.getName() + "_" + getAppDbAliasConnection();
+    private static final Logger logger = LoggerFactory.getLogger(Scheduler.class);
+
+    private static final String LOCK_VARIABLE = Scheduler.class.getName();
 
     private static volatile Scheduler instance = null;
 
@@ -90,11 +92,6 @@ public class Scheduler extends TimerTask {
 
     // Internals
 
-    private static String getAppDbAliasConnection() {
-        final String dbAlias = PropertiesManager.getProperty("db.alias");
-        return dbAlias == null || dbAlias.isEmpty() ? "" : dbAlias;
-    }
-
     private final Timer timer = new Timer(true);
 
     private Scheduler() {
@@ -104,79 +101,14 @@ public class Scheduler extends TimerTask {
     @Override
     public void run() {
         try {
-            try {
-                Transaction.withTransaction(false, new TransactionalCommand() {
-                    @Override
-                    public void doIt() {
-                        queueTasks();
-                    }
-                });
-            } finally {
-                Transaction.forceFinish();
-            }
+            queueTasks();
             runPendingTask();
         } catch (final Throwable t) {
             t.printStackTrace();
         }
     }
 
-    private void run(final Connection connection) throws SQLException {
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            try {
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT GET_LOCK('" + LOCK_VARIABLE + "', 10)");
-                if (resultSet.next() && (resultSet.getInt(1) == 1)) {
-                    runTasks();
-                }
-            } finally {
-                Statement statement2 = null;
-                try {
-                    statement2 = connection.createStatement();
-                    statement2.executeUpdate("DO RELEASE_LOCK('" + LOCK_VARIABLE + "')");
-                } finally {
-                    if (statement2 != null) {
-                        try {
-                            statement2.close();
-                        } catch (final SQLException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void runTasks() {
-        final SchedulerProducerThread schedulerProducerThread = new SchedulerProducerThread();
-        schedulerProducerThread.start();
-        try {
-            schedulerProducerThread.join();
-            final SchedulerConsumerThread schedulerConsumerThread = new SchedulerConsumerThread();
-            schedulerConsumerThread.start();
-            schedulerConsumerThread.join();
-        } catch (final InterruptedException e) {
-            e.printStackTrace();
-            throw new Error(e);
-        }
-    }
-
+    @Atomic
     private void queueTasks() {
         final PendingExecutionTaskQueue queue = PendingExecutionTaskQueue.getPendingExecutionTaskQueue();
         for (final Task task : MyOrg.getInstance().getTasksSet()) {
@@ -192,66 +124,19 @@ public class Scheduler extends TimerTask {
         }
     }
 
+    @Atomic(mode = TxMode.READ)
     private void runPendingTask() {
         try {
-            Transaction.withTransaction(true, new TransactionalCommand() {
-                @Override
-                public void doIt() {
-                    final Connection connection = Transaction.getCurrentJdbcConnection();
-                    try {
-                        runPendingTask(connection);
-                    } catch (SQLException e) {
-                        throw new Error(e);
-                    }
-                }
-            });
-        } finally {
-            Transaction.forceFinish();
-        }
-    }
-
-    private void runPendingTask(Connection connection) throws SQLException {
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            try {
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT GET_LOCK('" + LOCK_VARIABLE + "', 10)");
-                if (resultSet.next() && (resultSet.getInt(1) == 1)) {
-                    PendingExecutionTaskQueue.runPendingTask();
-                }
-            } finally {
-                if (!connection.isClosed()) {
-                    Statement statement2 = null;
-                    try {
-                        statement2 = connection.createStatement();
-                        statement2.executeUpdate("DO RELEASE_LOCK('" + LOCK_VARIABLE + "')");
-                    } finally {
-                        if (statement2 != null) {
-                            try {
-                                statement2.close();
-                            } catch (final SQLException e) {
-//			    	e.printStackTrace();
-                            }
-                        }
-                    }
-                }
+            logger.debug("Running Scheduler");
+            if (LockManager.acquireDistributedLock(LOCK_VARIABLE)) {
+                logger.debug("Lock acquired, running pending tasks.");
+                PendingExecutionTaskQueue.runPendingTask();
+            } else {
+                logger.debug("Not running pending task, another server already running!");
             }
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-//		    e.printStackTrace();
-                }
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-//		    e.printStackTrace();
-                }
-            }
+            LockManager.releaseDistributedLock(LOCK_VARIABLE);
+            logger.debug("Released Lock");
         }
     }
 
