@@ -3,13 +3,13 @@
     <form class="form-horizontal">
       <fieldset>
       	<div class="control-group">
-      		<label class="control-label" for="hostname">Hostname</label>
+      		<label class="control-label" for="hostname">{{#_i18n}}Hostname{{/_i18n}}</label>
       		<div class="controls">
 	        	<input type="text" id="hostname" name="hostname" value="{{hostname}}" placeholder="Host Name" required>
 	        </div>
 	    </div>
       	<div class="control-group">
-      		<label class="control-label" for="applicationTitle">Title</label>
+      		<label class="control-label" for="applicationTitle">{{#_i18n}}Title{{/_i18n}}</label>
       		<div class="controls">
       			<div class="input-append">
 	        		<input type="text" lang="pt" id="applicationTitle" name="applicationTitle" value="{{applicationTitle.pt}}" placeholder="Application Title" required>
@@ -22,7 +22,7 @@
 	        </div>
 	    </div>
 	    <div class="control-group">
-      		<label class="control-label" for="applicationSubTitle">Subtitle</label>
+      		<label class="control-label" for="applicationSubTitle">{{#_i18n}}Subtitle{{/_i18n}}</label>
       		<div class="controls">
       			<div class="input-append">
 	        		<input type="text" lang="pt" id="applicationSubTitle" name="applicationSubTitle" value="{{applicationSubTitle.pt}}" placeholder="Application Subtitle" required>
@@ -35,7 +35,7 @@
 	        </div>
 	    </div>
 	    <div class="control-group">
-      		<label class="control-label" for="htmlTitle">HTML Title</label>
+      		<label class="control-label" for="htmlTitle">{{#_i18n}}HTML Title{{/_i18n}}</label>
       		<div class="controls">
       			<div class="input-append">
 	        		<input type="text" lang="pt" id="htmlTitle" name="htmlTitle" value="{{htmlTitle.pt}}" placeholder="HTML Title" required>
@@ -48,7 +48,7 @@
 	        </div>
 	    </div>
 	    <div class="control-group">
-      		<label class="control-label" for="applicationCopyright">Copyright</label>
+      		<label class="control-label" for="applicationCopyright">{{#_i18n}}Copyright{{/_i18n}}</label>
       		<div class="controls">
       			<div class="input-append">
 	        		<input type="text" lang="pt" id="applicationCopyright" name="applicationCopyright" value="{{applicationCopyright.pt}}" placeholder="Application Copyright" required>
@@ -61,19 +61,19 @@
 	        </div>
 	    </div>
 	    <div class="control-group">
-      		<label class="control-label" for="supportEmailAddress">Support Email</label>
+      		<label class="control-label" for="supportEmailAddress">{{#_i18n}}Support Email{{/_i18n}}</label>
       		<div class="controls">
 	        	<input type="email" id="supportEmailAddress" name="supportEmailAddress" value="{{supportEmailAddress}}" placeholder="Support Email" required>
 	        </div>
 	    </div>
 	    <div class="control-group">
-      		<label class="control-label" for="systemEmailAddress">System Email</label>
+      		<label class="control-label" for="systemEmailAddress">{{#_i18n}}System Email{{/_i18n}}</label>
       		<div class="controls">
 	        	<input type="email" id="systemEmailAddress" name="systemEmailAddress" value="{{systemEmailAddress}}" placeholder="System Email" required>
 	        </div>
 	    </div>
 	    <div class="control-group">
-      		<label class="control-label" for="systemEmailAddress">Theme</label>
+      		<label class="control-label" for="systemEmailAddress">{{#_i18n}}Theme{{/_i18n}}</label>
       		<div class="controls">
 	        	<select id="theme">
 	        	{{#themes}}
@@ -83,13 +83,13 @@
 	        </div>
 	    </div>
 	    <div class="control-group">
-      		<label class="control-label" for="systemEmailAddress">Logo</label>
+      		<label class="control-label" for="systemEmailAddress">{{#_i18n}}Logo{{/_i18n}}</label>
       		<div class="controls">
 	        	<input type="file" id="logo" name="logo"/>
 	        	<img id="image-logo" width="200px" height="200px" src="data:{{logoType}};base64,{{logo}}"></img>
 	        </div>
 	    </div>
-        <button id='confirm' class="btn">Confirmar</button>
+        <button id='confirm' class="btn">{{#_i18n}}Confirm{{/_i18n}}</button>
       </fieldset>
     </form>
 </div>

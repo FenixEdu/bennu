@@ -4,11 +4,10 @@ define([
     'mustache',
     'backbone',
     'marionette',
-    'menu-manager',
+    'client-factory',
     'app',
-    'appLayout',
     'layouts/MenuLayout',
-], function($, _, Mustache, Backbone, Marionette, MenuManager, App, AppLayout, MenuLayout) {
+], function($, _, Mustache, Backbone, Marionette, MenuManager, App, MenuLayout) {
 
     var Router = Backbone.Marionette.AppRouter.extend({
 
@@ -90,6 +89,6 @@ define([
     	}
     });
     
-    return Router;
+    Bankai.setRouter(Router);
     
 });

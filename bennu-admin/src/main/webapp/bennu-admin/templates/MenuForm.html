@@ -1,7 +1,7 @@
 <fieldset id="menu-form" class="affix">
 	<div class="notifications top-right"></div>
 	<div class="control-group">
-		<label class="control-label" for="title">Title</label>
+		<label class="control-label" for="title">{{#_i18n}}Title{{/_i18n}}</label>
 		<div class="controls">
 			<div class="input-append">
 				<input type="text" lang="pt" name="title"
@@ -14,7 +14,7 @@
 		</div>
 	</div>
 	<div class="control-group">
-		<label class="control-label" for="description">Description</label>
+		<label class="control-label" for="description">{{#_i18n}}Description{{/_i18n}}</label>
 		<div class="controls">
 			<div class="input-append">
 				<input type="text" lang="pt" name="description"
@@ -27,7 +27,7 @@
 		</div>
 	</div>
 	<div class="control-group">
-		<label class="control-label" for="path">Path</label>
+		<label class="control-label" for="path">{{#_i18n}}Path{{/_i18n}}</label>
 		<div class="controls">
 			<input type="text" name="path" value="{{path}}"
 				placeholder="Path" class="input-block-level" required {{#functionality}}readonly{{/functionality}}>
@@ -40,23 +40,23 @@
 <!-- 				placeholder="Path" class="input-block-level" required> -->
 <!-- 		</div> -->
 <!-- 	</div> -->
-	<button id='confirm' class="btn">Confirmar</button>
+	<button id='confirm' class="btn">{{#_i18n}}Confirm{{/_i18n}}</button>
 	{{#id}}
-		<a href="#modal-delete-menu" role="button" class="btn" data-toggle="modal">Apagar</a>
+		<a href="#modal-delete-menu" role="button" class="btn" data-toggle="modal">{{#_i18n}}Delete{{/_i18n}}</a>
 	{{/id}}
-	<a id="add-menu" class="btn">Adicionar Menu</a>
+	<a id="add-menu" class="btn">{{#_i18n}}Add Menu{{/_i18n}}</a>
 </fieldset>
 
 <div id="modal-delete-menu" class="modal hide fade">
     <div class="modal-header">
       <a href="#" data-dismiss="modal" class="close">&times;</a>
-      <h3>Apagar Menu</h3>
+      <h3>{{#_i18n}}Delete Menu{{/_i18n}}</h3>
     </div>
     <div class="modal-body">
-      <p>Deseja apagar o menu?</p>
+      <p>{{#_i18n}}Do you wish to delete the menu?{{/_i18n}}</p>
     </div>
     <div class="modal-footer">
-      <a id="delete" data-dismiss="modal" class="btn danger">Sim</a>
-      <a data-dismiss="modal" class="btn secondary">Não</a>
+      <a id="delete" data-dismiss="modal" class="btn danger">{{#_i18n}}Sim{{/_i18n}}</a>
+      <a data-dismiss="modal" class="btn secondary">{{#_i18n}}Não{{/_i18n}}</a>
     </div>
 </div>

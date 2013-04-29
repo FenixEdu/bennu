@@ -4,12 +4,12 @@
 <td>{{#_mls}}htmlTitle{{/_mls}}</td>
 <td>{{#_mls}}applicationCopyright{{/_mls}}</td>
 <td>
-	<button class="edit-host" id="{{id}}" class="btn">Editar</button>
-	<button class="delete-host" id="{{id}}" class="btn">Apagar</button>
+	<button class="btn btn-mini btn-info edit-host" id="{{id}}" class="btn">{{#_i18n}}Edit{{/_i18n}}</button>
+	<button class="btn btn-mini btn-danger delete-host" id="{{id}}" class="btn">{{#_i18n}}Delete{{/_i18n}}</button>
 	{{#menu.id}}
-		<button class="show-menu" id="{{menu.id}}" class="btn">Menu</button>
+		<button class="btn btn-mini btn-inverse show-menu" id="{{menu.id}}" class="btn">{{#_i18n}}Menu{{/_i18n}}</button>
 	{{/menu.id}}
 	{{^menu.id}}
-		<button class="add-menu" class="btn">Criar Menu</button>
+		<button class="add-menu" class="btn">{{#_i18n}}Create Menu{{/_i18n}}</button>
 	{{/menu.id}}
 </td>
