@@ -1,11 +1,12 @@
 define([
-    'jquery',
+    'jquery-bootstrap',
+    'bootstrap-notify',
     'backbone',
     'marionette',
     'app',
     'text!templates/MenuForm.html',
     'views/MenuModalAdd',
-], function($, Backbone, Marionette, App, tpl, MenuModalAddView) {
+], function(b,bn, Backbone, Marionette, App, tpl, MenuModalAddView) {
 	
 
 	return Backbone.Marionette.ItemView.extend({
@@ -64,7 +65,7 @@ define([
 	    addMenu: function(e) {
 	    	this.modalMenuView.model = App.apps;
 	    	this.modalMenuView.parentMenu = this.model;
-	    	App.Layout.menuLayout.modal.show(this.modalMenuView);
+	    	App.menuLayout.modal.show(this.modalMenuView);
 	    	$('#modal-add-menu').modal("show");
 	    },
 	    

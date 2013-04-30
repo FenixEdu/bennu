@@ -1,5 +1,5 @@
 define([
-    'jquery.ui',
+    'jquery',
     'backbone',
     'marionette',
     'app',

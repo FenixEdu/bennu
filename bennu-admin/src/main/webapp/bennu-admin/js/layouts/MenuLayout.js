@@ -1,5 +1,5 @@
 define([
-    'jquery.ui',
+    'jquery',
     'backbone',
     'marionette',
     'text!templates/MenuLayout.html',

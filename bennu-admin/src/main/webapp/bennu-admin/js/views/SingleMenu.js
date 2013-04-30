@@ -1,5 +1,5 @@
 define([
-    'jquery.ui',
+    'jquery',
     'backbone',
     'marionette',
     'app',
@@ -83,7 +83,7 @@ define([
     	
     	editMenu: function (e) {
     		var selectedMenuModel = this.model;
-    		require(["menu-manager"], function(MenuManager) {
+    		require(["client-factory"], function(MenuManager) {
     			App.menuLayout.menu.show(new MenuManager.Views.MenuCreate({ model : selectedMenuModel}));
     		});
     		return false;
@@ -106,7 +106,7 @@ define([
             if(_.isUndefined(this.collection)){
                 this.$("ul:first").remove();
             }
-            require(["menu-manager"], function(MenuManager) {
+            require(["client-factory"], function(MenuManager) {
             	MenuManager.Views.Menu.prototype.makeSortable();
             });
         },

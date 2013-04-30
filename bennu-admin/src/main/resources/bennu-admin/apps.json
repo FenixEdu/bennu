@@ -1,19 +1,19 @@
 {"apps" : [{
-"title" :  {"pt" : "Gestão de Menus"},
-"description" : {"pt" : "Gestão de Menus"},
+"title" :  {"pt-PT" : "Gestão de Menus", "en-GB" : "Menu Manager"},
+"description" : {"pt-PT" : "Gestão de Menus", "en-GB" : "Menu Manager"},
 "accessExpression" : "#managers",
 "path" : "/bennu-admin/",
 "functionalities" : 
 		[
 			{ 
-   			  "title" : {"pt" : "Gestão de Hosts"},
-			  "description" : {"pt" : "Gestão das propriedades e menu de cada host"},
+   			  "title" : {"pt-PT" : "Gestão de Hosts", "en-GB": "Host Management"},
+			  "description" : {"pt-PT" : "Gestão das propriedades e menu de cada host", "en-GB" : "Host info and menu management"},
 			  "path" : "#hosts",
 			  "accessExpression" : "#managers"
 			},
 			{ 
-   			  "title" : {"pt" : "Criar Host"},
-			  "description" : {"pt" : "Criação de um novo host"},
+   			  "title" : {"pt-PT" : "Criar Host", "en-GB": "Create Host"},
+			  "description" : {"pt-PT" : "Criação de um novo host", "en-GB": "Create new host"},
 			  "path" : "#hosts/create",
 			  "accessExpression" : "#managers"
 			}

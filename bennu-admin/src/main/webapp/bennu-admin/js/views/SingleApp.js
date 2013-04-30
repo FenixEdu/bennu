@@ -1,5 +1,5 @@
 define([
-    'jquery.ui',
+    'jquery',
     'backbone',
     'marionette',
     'app',
@@ -20,7 +20,7 @@ define([
     	},
     	
     	onRender: function() {
-    		require(["menu-manager"], function(MenuManager) {
+    		require(["client-factory"], function(MenuManager) {
     			MenuManager.Views.App.prototype.makeSortable();
             });
     	},

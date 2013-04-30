@@ -84,6 +84,10 @@ public class AppServer {
     }
 
     public static Boolean hasFunctionality(String path) {
-        return pathFunctionalityMap.get(path) != null;
+        return getFunctionalityInfo(path) != null;
+    }
+
+    public static FunctionalityInfo getFunctionalityInfo(String path) {
+        return pathFunctionalityMap.get(path);
     }
 }

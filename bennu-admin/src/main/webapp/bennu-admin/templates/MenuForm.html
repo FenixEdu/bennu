@@ -1,4 +1,4 @@
-<fieldset id="menu-form" class="affix">
+<fieldset id="menu-form">
 	<div class="notifications top-right"></div>
 	<div class="control-group">
 		<label class="control-label" for="title">{{#_i18n}}Title{{/_i18n}}</label>
@@ -34,11 +34,10 @@
 		</div>
 	</div>
 <!-- 	<div class="control-group"> -->
-<!-- 		<label class="control-label" for="accessExpression">Access Expression</label> -->
-<!-- 		<div class="controls"> -->
-<!-- 			<input type="text" name="accessExpression" value="{{accessExpression}}" -->
-<!-- 				placeholder="Path" class="input-block-level" required> -->
-<!-- 		</div> -->
+<!-- 		<label class="control-label" for="accessExpression">{{#_i18n}}Access Expression{{/_i18n}}</label> -->
+<!-- 			<div class="controls"> -->
+<!-- 				<input type="text" name="accessExpression" value="{{accessExpression}}" placeholder="accessExpression" class="input-block-level" {{#functionality}}readonly{{/functionality}}> -->
+<!-- 	 		</div> -->
 <!-- 	</div> -->
 	<button id='confirm' class="btn">{{#_i18n}}Confirm{{/_i18n}}</button>
 	{{#id}}

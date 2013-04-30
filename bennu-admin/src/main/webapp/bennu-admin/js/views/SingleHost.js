@@ -20,7 +20,7 @@ define([
         },
         
         addMenu: function(e) {
-        	var MenuManager = require("menu-manager");
+        	var MenuManager = require("client-factory");
         	var menu = new MenuManager.Models.Menu();
         	var hostModel = this.model;
         	menu.save(null, {success : function(model) {

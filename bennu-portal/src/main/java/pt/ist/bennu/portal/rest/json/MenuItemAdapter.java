@@ -5,6 +5,8 @@ import java.util.Locale;
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.dispatch.AppServer;
+import pt.ist.bennu.dispatch.model.FunctionalityInfo;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.portal.domain.MenuItem;
@@ -100,7 +102,12 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
             menuItem.setTitle(InternationalString.fromJson(jsonObj.get("title").getAsJsonObject()));
         }
         if (jsonObj.has("path")) {
-            menuItem.setPath(jsonObj.get("path").getAsString());
+            final String path = jsonObj.get("path").getAsString();
+            final FunctionalityInfo functionalityInfo = AppServer.getFunctionalityInfo(path);
+            if (functionalityInfo != null) {
+                menuItem.setAccessExpression(functionalityInfo.getGroup());
+            }
+            menuItem.setPath(path);
         }
         if (jsonObj.has("description")) {
             menuItem.setDescription(InternationalString.fromJson(jsonObj.get("description").getAsJsonObject()));

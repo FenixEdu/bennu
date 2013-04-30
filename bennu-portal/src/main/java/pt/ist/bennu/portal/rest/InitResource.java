@@ -44,6 +44,14 @@ public class InitResource extends BennuRestResource {
         return Response.ok("Init ok.").build();
     }
 
+    @Path("basic")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String loadBasic() {
+        initLocalhostInfo();
+        return view(Bennu.getInstance().getVirtualHosts(), "hosts");
+    }
+
     @Path("drop")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -86,7 +94,7 @@ public class InitResource extends BennuRestResource {
             hostInfo.setHtmlTitle(new InternationalString(I18N.getLocale(), "htmlTitle"));
             hostInfo.setSupportEmailAddress("support@localhost");
             hostInfo.setSystemEmailAddress("system@localhost");
-            hostInfo.setTheme("bennu");
+            hostInfo.setTheme("dot");
         }
     }
 
@@ -138,7 +146,7 @@ public class InitResource extends BennuRestResource {
             hostInfo.setSupportEmailAddress(supportEmailAddress);
             hostInfo.setSystemEmailAddress(systemEmailAddress);
             hostInfo.setHtmlTitle(mls(host, "htmlTitle"));
-            hostInfo.setTheme("bennu");
+            hostInfo.setTheme("dot");
             createMenu(virtualHost, host);
         }
     }

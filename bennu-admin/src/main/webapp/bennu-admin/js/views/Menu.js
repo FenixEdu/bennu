@@ -1,10 +1,10 @@
 define([
-    'jquery.ui',
+    'jquery-ui',
     'backbone',
     'marionette',
     'app',
     'views/SingleMenu',
-], function($, Backbone, Marionette, App, SingleMenuView) {
+], function(jQueryUI, Backbone, Marionette, App, SingleMenuView) {
 
     return Backbone.Marionette.CollectionView.extend({
     	
