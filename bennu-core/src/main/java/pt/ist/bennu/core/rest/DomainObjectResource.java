@@ -30,9 +30,12 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
 
     public abstract boolean delete(T obj);
 
+    public abstract String getAccessExpression();
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String view() {
+        accessControl(getAccessExpression());
         return view(all(), collectionKey());
     }
 
@@ -40,18 +43,21 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String view(@PathParam("oid") String oid) {
+        accessControl(getAccessExpression());
         return view(readDomainObject(oid));
     }
 
     @PUT
     @Path("{oid}")
     public String update(@PathParam("oid") String oid, @FormParam("model") String jsonData) {
+        accessControl(getAccessExpression());
         return view(update(jsonData, readDomainObject(oid)));
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String create(@FormParam("model") String jsonData) {
+        accessControl(getAccessExpression());
         return view(create(jsonData, type()));
     }
 
@@ -59,17 +65,7 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String delete(@PathParam("oid") String oid) {
-//        final T readDomainObject = readDomainObject(oid);
-//        final String jsonRep = view(readDomainObject);
-//        try {
-//            final Method method = readDomainObject.getClass().getMethod(getDeleteMethodName(), null);
-//            method.setAccessible(true);
-//            method.invoke(readDomainObject, null);
-//        } catch (Exception e) {
-//            throw BennuCoreDomainException.errorOnDeleteDomainObject(e.getLocalizedMessage());
-//        }
-//        return jsonRep;
-
+        accessControl(getAccessExpression());
         final T readDomainObject = readDomainObject(oid);
         final String jsonRep = view(readDomainObject);
         if (!delete(readDomainObject)) {

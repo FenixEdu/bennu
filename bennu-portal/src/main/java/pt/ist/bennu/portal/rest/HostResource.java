@@ -43,4 +43,9 @@ public class HostResource extends DomainObjectResource<VirtualHost> {
         return true;
     }
 
+    @Override
+    public String getAccessExpression() {
+        return "#managers";
+    }
+
 }

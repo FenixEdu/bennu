@@ -1,10 +1,10 @@
 define([
-    'jquery.ui',
+    'jquery-ui',
     'backbone',
     'marionette',
     'views/SingleTask',
     'text!templates/TaskList.html'
-], function($, Backbone, Marionette, SingleTaskView, tpl) {
+], function(ui, Backbone, Marionette, SingleTaskView, tpl) {
 
     return Backbone.Marionette.CompositeView.extend({
     	template: tpl,

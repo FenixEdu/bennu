@@ -20,6 +20,7 @@ public class TaskResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getTasks() {
+        accessControl("#managers");
         final JsonObject objContainer = new JsonObject();
         final JsonArray tasks = new JsonArray();
         for (Entry<String, Task> taskEntry : SchedulerSystem.getTasks().entrySet()) {

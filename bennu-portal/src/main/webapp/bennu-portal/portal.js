@@ -57,7 +57,7 @@ function loadScript(url, callback) {
 					return locale;
 				})(hostJson.locale.tag),
 				addMls: function(model) {
-					var lang = this.lang;
+					var lang = this.locale.tag;
 					model['_mls'] = function() {
 						return function(val) {
 							if (this[val]) {

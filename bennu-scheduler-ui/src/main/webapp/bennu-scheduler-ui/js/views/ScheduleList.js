@@ -1,10 +1,10 @@
 define([
-    'jquery.ui',
+    'jquery-ui',
     'backbone',
     'marionette',
     'views/SingleSchedule',
     'text!templates/ScheduleList.html'
-], function($, Backbone, Marionette, SingleScheduleView,tpl) {
+], function(ui, Backbone, Marionette, SingleScheduleView,tpl) {
 
     return Backbone.Marionette.CompositeView.extend({
     	

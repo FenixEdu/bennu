@@ -1,19 +1,19 @@
 {"apps" : [{
-"title" :  {"en" : "Scheduler Management", "pt": "Tarefas"},
-"description" : {"en" : "Manage scheduling of periodic tasks", "pt": "Agendamento de tarefas"},
+"title" :  {"en-GB" : "Scheduler Management", "pt-PT": "Tarefas"},
+"description" : {"en-GB" : "Manage scheduling of periodic tasks", "pt-PT": "Agendamento de tarefas"},
 "accessExpression" : "#managers",
 "path" : "/bennu-scheduler-ui/",
 "functionalities" : 
 		[
 			{ 
-   			  "title" : {"en" : "Tasks", "pt": "Tarefas"},
-			  "description" : {"en" : "Available tasks for scheduling", "pt" : "Tarefas disponíveis para agendamento"},
+   			  "title" : {"en-GB" : "Tasks", "pt-PT": "Tarefas"},
+			  "description" : {"en-GB" : "Available tasks for scheduling", "pt-PT" : "Tarefas disponíveis para agendamento"},
 			  "path" : "#tasks",
 			  "accessExpression" : "#managers"
 			},
 			{ 
-   			  "title" : {"en" : "Schedules", "pt" : "Agendamentos"},
-			  "description" : {"en" : "Task schedules", "pt" : "Agendamento de tarefas"},
+   			  "title" : {"en-GB" : "Schedules", "pt-PT" : "Agendamentos"},
+			  "description" : {"en-GB" : "Task schedules", "pt-PT" : "Agendamento de tarefas"},
 			  "path" : "#schedules",
 			  "accessExpression" : "#managers"
 			}

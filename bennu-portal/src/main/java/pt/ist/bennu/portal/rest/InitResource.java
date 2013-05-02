@@ -35,6 +35,7 @@ public class InitResource extends BennuRestResource {
     Logger LOGGER = LoggerFactory.getLogger(InitResource.class);
 
     @GET
+    @Path("advanced")
     @Produces(MediaType.TEXT_PLAIN)
     public Response loadModel() throws IOException {
         initLocalhostInfo();
@@ -44,7 +45,6 @@ public class InitResource extends BennuRestResource {
         return Response.ok("Init ok.").build();
     }
 
-    @Path("basic")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String loadBasic() {
@@ -85,6 +85,7 @@ public class InitResource extends BennuRestResource {
 
     @Service
     private void initLocalhostInfo() {
+        accessControl("#managers");
         final VirtualHost localhost = Bennu.getInstance().getVirtualHost("localhost");
         if (!localhost.hasInfo()) {
             final HostInfo hostInfo = new HostInfo(localhost);

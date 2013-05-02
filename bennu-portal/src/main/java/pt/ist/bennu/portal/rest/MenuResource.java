@@ -21,6 +21,7 @@ public class MenuResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getMenu(@PathParam("oid") final String menuOid) {
+        accessControl("#managers");
         return viewMenu((MenuItem) readDomainObject(menuOid));
     }
 
@@ -31,6 +32,7 @@ public class MenuResource extends BennuRestResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String create(@FormParam("model") final String jsonData) {
+        accessControl("#managers");
         return innerCreate(jsonData);
     }
 
@@ -43,6 +45,7 @@ public class MenuResource extends BennuRestResource {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     public String update(@PathParam("oid") final String oid, @FormParam("model") final String jsonData) {
+        accessControl("#managers");
         return view(innerUpdate((MenuItem) readDomainObject(oid), jsonData));
     }
 
@@ -55,6 +58,7 @@ public class MenuResource extends BennuRestResource {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteMenu(@PathParam("oid") final String menuOid) {
+        accessControl("#managers");
         final MenuItem menuItem = (MenuItem) readDomainObject(menuOid);
         final String rsp = viewMenu(menuItem);
         menuItem.delete();

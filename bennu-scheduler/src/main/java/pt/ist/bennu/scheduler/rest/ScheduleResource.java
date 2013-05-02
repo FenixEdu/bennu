@@ -23,7 +23,7 @@ public class ScheduleResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getSchedule() {
-//        accessControl("#managers");
+        accessControl("#managers");
         return view(SchedulerSystem.getInstance().getTaskSchedule(), "schedule");
     }
 
@@ -31,14 +31,14 @@ public class ScheduleResource extends BennuRestResource {
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String get(@PathParam("oid") String taskOid) {
-//        accessControl("#managers");
+        accessControl("#managers");
         return view(readDomainObject(taskOid));
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public String addSchedule(@FormParam("model") String configJson) {
-//        accessControl("#managers");
+        accessControl("#managers");
         return view(create(configJson, TaskSchedule.class));
     }
 
@@ -46,14 +46,14 @@ public class ScheduleResource extends BennuRestResource {
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String changeSchedule(@PathParam("oid") String taskScheduleOid, @FormParam("model") String taskScheduleJson) {
-//        accessControl("#managers");
+        accessControl("#managers");
         return view(update(taskScheduleJson, readDomainObject(taskScheduleOid)));
     }
 
     @DELETE
     @Path("{oid}")
     public Response delete(@PathParam("oid") String taskOid) {
-//        accessControl("#managers");
+        accessControl("#managers");
         clear((TaskSchedule) readDomainObject(taskOid));
         return Response.status(Status.OK).build();
     }
