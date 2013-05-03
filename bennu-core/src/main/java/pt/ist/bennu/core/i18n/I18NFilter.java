@@ -45,13 +45,7 @@ public class I18NFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
         try {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
-            String requestLocale = request.getParameter("locale");
-            if (requestLocale != null) {
-                I18N.setLocale(httpRequest.getSession(true), Locale.forLanguageTag(requestLocale));
-            } else {
-                I18N.updateFromSession(httpRequest.getSession(false));
-            }
+            I18N.updateFromSession(((HttpServletRequest) request).getSession(false));
             chain.doFilter(request, response);
         } finally {
             I18N.setLocale(null);

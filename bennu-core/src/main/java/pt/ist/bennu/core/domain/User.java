@@ -17,7 +17,6 @@
 package pt.ist.bennu.core.domain;
 
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -129,15 +128,6 @@ public class User extends User_Base {
 
     public String getShortPresentationName() {
         return strategy.shortPresent(this);
-    }
-
-    @Override
-    public Locale getPreferredLocale() {
-        Locale locale = super.getPreferredLocale();
-        if (locale != null) {
-            return locale;
-        }
-        return Locale.getDefault();
     }
 
     public Set<BennuGroup> accessibleGroups() {

@@ -17,6 +17,7 @@
 package pt.ist.bennu.core.security;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
@@ -47,7 +48,10 @@ public class Authenticate {
     public static UserSession login(HttpSession session, String username, String password, boolean checkPassword) {
         UserSession user = internalLogin(username, password, checkPassword);
         session.setAttribute(USER_SESSION_ATTRIBUTE, user);
-        I18N.setLocale(session, user.getUser().getPreferredLocale());
+        final Locale preferredLocale = user.getUser().getPreferredLocale();
+        if (preferredLocale != null) {
+            I18N.setLocale(session, preferredLocale);
+        }
 
         fireLoginListeners(user.getUser());
         logger.info("Logged in user: " + user.getUsername());
