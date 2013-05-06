@@ -31,6 +31,7 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.groups.DynamicGroup;
+import pt.ist.bennu.core.domain.groups.UserGroup;
 import pt.ist.bennu.core.i18n.I18N;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.TransactionalThread;
@@ -78,7 +79,7 @@ public class Authenticate {
         UserSession userWrapper = new UserSession(user);
         setUser(userWrapper);
         if (Bennu.getInstance().getUsersCount() == 1) {
-            DynamicGroup.getInstance("managers").grant(user);
+            DynamicGroup.initialize("managers", UserGroup.getInstance(user));
             logger.info("Bootstrapped #managers group to user: " + user.getUsername());
         }
         return userWrapper;

@@ -22,6 +22,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
+import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.service.Service;
 
@@ -166,6 +167,21 @@ public final class DynamicGroup extends DynamicGroup_Base {
         if (group != null) {
             return group;
         }
-        return new DynamicGroup(name, NobodyGroup.getInstance());
+        throw BennuCoreDomainException.dynamicGroupNotFound(name);
+    }
+
+    @Service
+    public static BennuGroup initialize(final String name, BennuGroup overridingGroup) {
+        DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
+            @Override
+            public boolean apply(DynamicGroup input) {
+                return input.getName().equals(name);
+            }
+        });
+        if (group != null) {
+            group.changeGroup(overridingGroup);
+            return group;
+        }
+        return new DynamicGroup(name, overridingGroup);
     }
 }

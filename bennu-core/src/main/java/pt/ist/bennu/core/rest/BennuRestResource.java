@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
+import pt.ist.bennu.core.domain.exceptions.DomainException;
 import pt.ist.bennu.core.domain.groups.BennuGroup;
 import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.core.security.Authenticate;
@@ -95,12 +96,16 @@ public abstract class BennuRestResource extends JsonAwareResource {
         if (group.isMember(user)) {
             return user;
         }
-        throw AuthorizationException.unauthorized(group, user);
+        throw AuthorizationException.unauthorized();
     }
 
     protected User accessControl(String accessExpression) {
-        final BennuGroup group = BennuGroup.parse(accessExpression);
-        return accessControl(group);
+        try {
+            final BennuGroup group = BennuGroup.parse(accessExpression);
+            return accessControl(group);
+        } catch (DomainException e) {
+            throw AuthorizationException.unauthorized();
+        }
     }
 
     protected User verifyAndGetRequestAuthor() {

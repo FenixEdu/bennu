@@ -125,7 +125,7 @@ public abstract class BennuGroup extends BennuGroup_Base {
      */
     public void verify() throws AuthorizationException {
         if (!isMember(Authenticate.getUser())) {
-            throw AuthorizationException.unauthorized(this, Authenticate.getUser());
+            throw AuthorizationException.unauthorized();
         }
     }
 
