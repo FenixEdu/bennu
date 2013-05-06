@@ -1,2 +1,21 @@
 define({
+	"title.storages" : "Gestão de Repositórios",
+	"title.new.repository" : "Novo Repositório",
+	"lfsstorage.create.title" : "Criar Repositório - Sistema de Ficheiros",
+	"lfsstorage.field.name.label": "Nome",
+	"lfsstorage.field.path.label": "Caminho",
+	"lfsstorage.field.treeDirectoriesNameLength.label":"Caracteres Directório Indexação",
+	"domainstorage.create.title": "Criar Repositório - Domínio",
+	"domainstorage.field.name.label": "Nome",
+	"submit": "Submeter",
+	"save": "Guardar",
+	"storageconfiguration": "Gestão de Tipos de Ficheiros",
+	'delete':"Apagar",
+	'convert':"Converter",
+	"repository.name": "Nome Repositório",
+	"repository.type": "Tipo Repositório",
+	"repository.filecount" :"Num. Ficheiros",
+	"repository.operations" : "Operações",
+	"storageconfiguration.filetype": "Tipo de Ficheiro",
+	"storageconfiguration.repository": "Repositório"
 });

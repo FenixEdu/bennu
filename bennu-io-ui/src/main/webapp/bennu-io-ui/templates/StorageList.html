@@ -2,10 +2,10 @@
 <table class="table table-condensed">
 	<thead>
 		<tr>
-			<th>Title</th>
-			<th>Type</th>
-			<th>File Count</th>
-			<th>Operations</th>
+			<th>{{#_i18n}}repository.name{{/_i18n}}</th>
+			<th>{{#_i18n}}repository.type{{/_i18n}}</th>
+			<th>{{#_i18n}}repository.filecount{{/_i18n}}</th>
+			<th>{{#_i18n}}repository.operations{{/_i18n}}</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -23,17 +23,18 @@
 
 <div class="tab-content">
 	<div class="tab-pane active" id="createDomainStorage">
-		<form id="createDomainStorageForm">
+		<form id="createDomainStorageForm" class="form-horizontal">
 		  <fieldset>
 		    <legend>{{#_i18n}}domainstorage.create.title{{/_i18n}}</legend>
 		    <label>{{#_i18n}}domainstorage.field.name.label{{/_i18n}}</label>
 		    <input field="name" type="text" placeholder="{{#_i18n}}domainstorage.field.name.label{{/_i18n}}">
+		    <label></label>
 		    <button type="submit" class="btn btn-success submit-domainstorage">{{#_i18n}}submit{{/_i18n}}</button>
 		  </fieldset>
 		</form>
 	</div>
 	<div class="tab-pane" id="createLocalFileSystemStorage">
-		<form id="createLFSStorageForm">
+		<form id="createLFSStorageForm" class="form-horizontal">
 		  <fieldset>
 		    <legend>{{#_i18n}}lfsstorage.create.title{{/_i18n}}</legend>
 		    
@@ -45,7 +46,8 @@
 		    
 		    <label>{{#_i18n}}lfsstorage.field.treeDirectoriesNameLength.label{{/_i18n}}</label>
 		    <input type="text" field="treeDirectoriesNameLength" placeholder="{{#_i18n}}lfsstorage.field.treeDirectoriesNameLength.label{{/_i18n}}">
-		    	<button type="submit" class="btn btn-success submit-lfsstorage">{{#_i18n}}submit{{/_i18n}}</button>
+			<label></label>
+			<button type="submit" class="btn btn-success submit-lfsstorage">{{#_i18n}}submit{{/_i18n}}</button>
 		  </fieldset>
 		</form>
 	</div>
