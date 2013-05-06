@@ -57,7 +57,7 @@ define([
 	    	$('input').each(function(index, input) {
 	    		if ($(input).attr('type') != 'file') {
 		    		if ($(input).attr('lang')) {
-		    			var mls = that.model.get(input.id) || {};
+		    			var mls = that.model.get(input.name) || {};
 		    			mls[$(input).attr('lang')] = $(input).val();
 		    			that.model.set(input.id, mls);
 		    		} else {
@@ -83,7 +83,14 @@ define([
 	    			t.selected = true;
 	    		}
 	    	});
-	    	console.log("Themes : " + model);
+	    	model.locales = BennuPortal.locales;
+	    	
+	    	model["_mlsLocale"] = function() {
+	    		return function(data) {
+	    			return model[data][this.tag];
+	    		};
+	    	};
+	    	
 	    	return model;
 	    }
 	});

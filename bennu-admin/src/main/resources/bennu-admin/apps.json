@@ -2,7 +2,7 @@
 "title" :  {"pt-PT" : "Gestão de Menus", "en-GB" : "Menu Manager"},
 "description" : {"pt-PT" : "Gestão de Menus", "en-GB" : "Menu Manager"},
 "accessExpression" : "#managers",
-"path" : "/bennu-admin/",
+"path" : "bennu-admin/",
 "functionalities" : 
 		[
 			{ 

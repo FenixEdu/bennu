@@ -68,6 +68,7 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
         json.addProperty("order", obj.getOrd());
         json.addProperty("path", obj.getPath());
         json.addProperty("functionality", obj.isFunctionalityLink());
+        json.addProperty("accessExpression", obj.getAccessExpression());
         if (obj.hasHost()) {
             InternationalString mls = new InternationalString();
             for (Locale locale : ConfigurationManager.getSupportedLocales()) {

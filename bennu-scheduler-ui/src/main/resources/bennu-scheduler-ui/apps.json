@@ -2,7 +2,7 @@
 "title" :  {"en-GB" : "Scheduler Management", "pt-PT": "Tarefas"},
 "description" : {"en-GB" : "Manage scheduling of periodic tasks", "pt-PT": "Agendamento de tarefas"},
 "accessExpression" : "#managers",
-"path" : "/bennu-scheduler-ui/",
+"path" : "bennu-scheduler-ui/",
 "functionalities" : 
 		[
 			{ 

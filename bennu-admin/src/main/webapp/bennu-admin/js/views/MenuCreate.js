@@ -28,9 +28,20 @@ define([
 	    },
 	    
 	    serializeData: function() {
-	    	var data = this.model.toJSON();
-	    	data.hasMenu = this.model.menu != undefined && this.model.menu.length > 0;
-	    	return data;
+	    	var model = this.model.toJSON();
+	    	model.hasMenu = this.model.menu != undefined && this.model.menu.length > 0;
+	    	model.locales = BennuPortal.locales;
+	    	model["_mlsLocale"] = function() {
+	    		return function(data) {
+	    			if (model[data]) {
+	    				if (model[data][this.tag]) {
+	    					return model[data][this.tag];
+	    				}
+	    			}
+	    			return "";
+	    		};
+	    	};
+	    	return model;
 	    },
 	    
 	    createMenu : function(e) {

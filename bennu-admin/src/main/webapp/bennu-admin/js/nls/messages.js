@@ -1,5 +1,6 @@
 define({
     "root": {
+    	"Path" : "Path",
 		"Create": "Create",
 		"Create Menu": "Create Menu",
 		"Edit": "Edit",
@@ -24,7 +25,12 @@ define({
 		"Delete Menu": "Delete Menu",
 		"Do you wish to delete the menu?": "Do you wish to delete the menu?",
 		"Yes": "Yes",
-		"No": "No"
+		"No": "No",
+		'title.host.create': "Manage ",
+		'cancel': 'Cancel',
+		'Access Expression':'Access Expression',
+		'yes': 'Yes',
+		'no': 'No',
     },
     "pt-pt": true
 });

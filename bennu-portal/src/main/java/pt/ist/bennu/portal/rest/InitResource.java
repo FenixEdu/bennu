@@ -3,6 +3,7 @@ package pt.ist.bennu.portal.rest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,9 +17,10 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.i18n.I18N;
 import pt.ist.bennu.core.i18n.InternationalString;
+import pt.ist.bennu.core.i18n.InternationalString.Builder;
 import pt.ist.bennu.core.rest.BennuRestResource;
+import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.portal.domain.HostInfo;
 import pt.ist.bennu.portal.domain.MenuItem;
 import pt.ist.bennu.service.Service;
@@ -89,14 +91,22 @@ public class InitResource extends BennuRestResource {
         final VirtualHost localhost = Bennu.getInstance().getVirtualHost("localhost");
         if (!localhost.hasInfo()) {
             final HostInfo hostInfo = new HostInfo(localhost);
-            hostInfo.setApplicationCopyright(new InternationalString(I18N.getLocale(), "copyright"));
-            hostInfo.setApplicationTitle(new InternationalString(I18N.getLocale(), "localhost"));
-            hostInfo.setApplicationSubTitle(new InternationalString(I18N.getLocale(), "localhost"));
-            hostInfo.setHtmlTitle(new InternationalString(I18N.getLocale(), "htmlTitle"));
+            hostInfo.setApplicationCopyright(getIS("Localhost Copyright"));
+            hostInfo.setApplicationTitle(getIS("Localhost Title"));
+            hostInfo.setApplicationSubTitle(getIS("Localhost SubTitle"));
+            hostInfo.setHtmlTitle(getIS("Localhost HTML Title"));
             hostInfo.setSupportEmailAddress("support@localhost");
             hostInfo.setSystemEmailAddress("system@localhost");
             hostInfo.setTheme("dot");
         }
+    }
+
+    private InternationalString getIS(String content) {
+        Builder builder = new Builder();
+        for (Locale locale : ConfigurationManager.getSupportedLocales()) {
+            builder.append(new InternationalString(locale, content));
+        }
+        return builder.build();
     }
 
     @Service

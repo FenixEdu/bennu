@@ -19,6 +19,7 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     public MenuItem() {
         super();
         setOrd(1);
+        setDescription(new InternationalString());
     }
 
     @Override
