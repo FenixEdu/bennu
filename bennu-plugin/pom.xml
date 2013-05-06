@@ -1,32 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>Bennu Maven Plugin</name>
 
-    <groupId>pt.ist</groupId>
+    <parent>
+        <groupId>pt.ist</groupId>
+        <artifactId>ist-dsi-project</artifactId>
+        <version>1.0.0-rc1</version>
+        <relativePath />
+    </parent>
+
     <artifactId>bennu-maven-plugin</artifactId>
+    <name>Bennu Maven Plugin</name>
     <packaging>maven-plugin</packaging>
     <version>1.1-SNAPSHOT</version>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.org.apache.maven>3.0.3</version.org.apache.maven>
         <version.commons.io.commons.io>1.4</version.commons.io.commons.io>
     </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
         <dependency>
@@ -48,14 +39,4 @@
         </repository>
     </repositories>
 
-    <distributionManagement>
-        <repository>
-            <id>fenix-ashes-releases</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>fenix-ashes-snapshots</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
