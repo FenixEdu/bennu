@@ -3,7 +3,13 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pt.ist</groupId>
+    <parent>
+        <groupId>pt.ist</groupId>
+        <artifactId>fenix-framework-project</artifactId>
+        <version>1.0.0-rc1</version>
+        <relativePath />
+    </parent>
+
     <artifactId>bennu-project</artifactId>
     <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -15,18 +21,7 @@
     <!-- - Anonymous Bennu Developer, The Fellowship of the POM -->
     <name>Bennu Project</name>
 
-    <organization>
-        <name>Instituto Superior Técnico</name>
-        <url>http://www.ist.utl.pt</url>
-    </organization>
-
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <java.compilation.source.version>1.7</java.compilation.source.version>
-        <java.compilation.target.version>1.7</java.compilation.target.version>
-
         <requireMavenVersion.regex>[3.0.0,)</requireMavenVersion.regex>
         <requireJavaVersion.regex>[1.7.0,)</requireJavaVersion.regex>
 
@@ -59,6 +54,7 @@
         <version.commons.lang.commons.lang>2.6</version.commons.lang.commons.lang>
         <version.commons.logging.commons.logging>1.1.1</version.commons.logging.commons.logging>
         <version.bennu.backend.util>1.1-SNAPSHOT</version.bennu.backend.util>
+        <version.ch.qos.logback.logback.classic>1.0.12</version.ch.qos.logback.logback.classic>
         <version.fenix.framework>2.1.0-rc2</version.fenix.framework>
         <version.informa.informa>1.0</version.informa.informa>
         <version.javax.mail.mail>1.4.2</version.javax.mail.mail>
@@ -90,12 +86,8 @@
         <version.com.alexnederlof.jasperreports.plugin>1.5.0</version.com.alexnederlof.jasperreports.plugin>
         <version.pt.ist.bennu.maven.plugin>1.1-SNAPSHOT</version.pt.ist.bennu.maven.plugin>
         <version.pt.ist.ff.maven.plugin>2.1.0-rc2</version.pt.ist.ff.maven.plugin>
-        <version.org.apache.maven.plugins.maven.compiler.plugin>2.5.1</version.org.apache.maven.plugins.maven.compiler.plugin>
-        <version.org.apache.maven.plugins.maven.deploy.plugin>2.7</version.org.apache.maven.plugins.maven.deploy.plugin>
         <version.org.apache.maven.plugins.maven.enforcer.plugin>1.1.1</version.org.apache.maven.plugins.maven.enforcer.plugin>
-        <version.org.apache.maven.plugins.maven.jar.plugin>2.4</version.org.apache.maven.plugins.maven.jar.plugin>
         <version.org.apache.maven.plugins.maven.resources.plugin>2.5</version.org.apache.maven.plugins.maven.resources.plugin>
-        <version.org.apache.maven.plugins.maven.source.plugin>2.1.2</version.org.apache.maven.plugins.maven.source.plugin>
         <version.org.apache.maven.plugins.maven.surefire.plugin>2.12.4</version.org.apache.maven.plugins.maven.surefire.plugin>
         <version.org.apache.maven.plugins.maven.war.plugin>2.3</version.org.apache.maven.plugins.maven.war.plugin>
         <version.org.codehaus.mojo.axistools.maven.plugin>1.4</version.org.codehaus.mojo.axistools.maven.plugin>
@@ -174,50 +166,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${version.org.apache.maven.plugins.maven.source.plugin}</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Explicitly define maven-deploy-plugin after others that run on the same phase to force exec order -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>${version.org.apache.maven.plugins.maven.deploy.plugin}</version>
-                <executions>
-                    <execution>
-                        <id>deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>pt.ist</groupId>
-                <artifactId>ff-maven-plugin</artifactId>
-                <version>${version.pt.ist.ff.maven.plugin}</version>
-                <executions>
-                    <execution>
-                        <id>default</id>
-                        <goals>
-                            <goal>ff-generate-domain</goal>
-                            <goal>ff-post-compile</goal>
-                            <goal>ff-process-atomic-annotations</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>pt.ist</groupId>
                 <artifactId>bennu-maven-plugin</artifactId>
                 <version>${version.pt.ist.bennu.maven.plugin}</version>
@@ -229,40 +177,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.org.apache.maven.plugins.maven.compiler.plugin}</version>
-                <configuration>
-                    <source>${java.compilation.source.version}</source>
-                    <target>${java.compilation.target.version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${version.org.apache.maven.plugins.maven.jar.plugin}</version>
-                <configuration>
-                    <archive>
-                        <index>true</index>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                        <manifestEntries>
-                            <Implementation-Title>${project.name}</Implementation-Title>
-                            <Implementation-Version>${project.version}</Implementation-Version>
-                            <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                        </manifestEntries>
-                    </archive>
-                    <excludes>
-                        <exclude>**/*_Base*</exclude>
-                        <exclude>**/pt/ist/fenixframework/ValueTypeSerializer*</exclude>
-                        <exclude>**/pt/ist/fenixframework/backend/CurrentBackEndId*</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -614,7 +528,7 @@
                 <dependency>
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-classic</artifactId>
-                    <version>1.0.9</version>
+                    <version>${version.ch.qos.logback.logback.classic}</version>
                 </dependency>
                 <dependency>
                     <groupId>pt.ist</groupId>
@@ -637,21 +551,4 @@
         </repository>
     </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>fenix-ashes-maven-repository</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>fenix-ashes-releases</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>fenix-ashes-snapshots</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
