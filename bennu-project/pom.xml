@@ -5,7 +5,7 @@
 
     <groupId>pt.ist</groupId>
     <artifactId>bennu-project</artifactId>
-    <version>1.1.0-rc1</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <!-- "One POM to rule them all, -->
@@ -58,7 +58,7 @@
         <version.commons.io.commons.io>2.3</version.commons.io.commons.io>
         <version.commons.lang.commons.lang>2.6</version.commons.lang.commons.lang>
         <version.commons.logging.commons.logging>1.1.1</version.commons.logging.commons.logging>
-        <version.bennu.backend.util>1.1.0-rc1</version.bennu.backend.util>
+        <version.bennu.backend.util>1.1-SNAPSHOT</version.bennu.backend.util>
         <version.fenix.framework>2.1.0-rc2</version.fenix.framework>
         <version.informa.informa>1.0</version.informa.informa>
         <version.javax.mail.mail>1.4.2</version.javax.mail.mail>
@@ -88,7 +88,7 @@
         <!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
         <!-- ************************************************************************************************ -->
         <version.com.alexnederlof.jasperreports.plugin>1.5.0</version.com.alexnederlof.jasperreports.plugin>
-        <version.pt.ist.bennu.maven.plugin>1.1.0-rc1</version.pt.ist.bennu.maven.plugin>
+        <version.pt.ist.bennu.maven.plugin>1.1-SNAPSHOT</version.pt.ist.bennu.maven.plugin>
         <version.pt.ist.ff.maven.plugin>2.1.0-rc2</version.pt.ist.ff.maven.plugin>
         <version.org.apache.maven.plugins.maven.compiler.plugin>2.5.1</version.org.apache.maven.plugins.maven.compiler.plugin>
         <version.org.apache.maven.plugins.maven.deploy.plugin>2.7</version.org.apache.maven.plugins.maven.deploy.plugin>
