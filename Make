@@ -40,6 +40,12 @@ cd bennu-io
 mvn clean install -q
 cd ..
 
+stat Installing Bennu IO UI...
+cd bennu-io-ui
+mvn clean install -q
+cd ..
+
+
 #stat Installing File Support...
 #cd file-support
 #mvn clean install -q
