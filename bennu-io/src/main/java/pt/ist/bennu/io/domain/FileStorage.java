@@ -27,12 +27,14 @@ abstract public class FileStorage extends FileStorage_Base {
         return new LocalFileSystemStorage(name, path, treeDirectoriesNameLength);
     }
 
-    public void delete() {
+    public Boolean delete() {
         if (isCanBeDeleted()) {
             getConfigurations().clear();
             removeFileSupport();
             deleteDomainObject();
+            return true;
         }
+        return false;
     }
 
     public boolean isCanBeDeleted() {
