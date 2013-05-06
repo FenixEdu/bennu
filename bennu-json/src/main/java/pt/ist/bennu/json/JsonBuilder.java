@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class JsonBuilder {
@@ -55,20 +54,20 @@ public class JsonBuilder {
         return json;
     }
 
-    public <T> T create(JsonObject json, Class<T> clazz) {
+    public <T> T create(JsonElement json, Class<T> clazz) {
         return create(json, clazz, null);
     }
 
-    public <T> T create(JsonObject json, Class<T> clazz, Class<? extends JsonCreator> jsonCreatorClass) {
+    public <T> T create(JsonElement json, Class<T> clazz, Class<? extends JsonCreator> jsonCreatorClass) {
         final JsonCreator jsonCreator = creators.get(clazz, jsonCreatorClass);
         return (T) jsonCreator.create(json, this);
     }
 
-    public <T> T update(JsonObject json, T object) {
+    public <T> T update(JsonElement json, T object) {
         return update(json, object, null);
     }
 
-    public <T> T update(JsonObject json, T object, Class<? extends JsonUpdater> jsonUpdaterClass) {
+    public <T> T update(JsonElement json, T object, Class<? extends JsonUpdater> jsonUpdaterClass) {
         final JsonUpdater jsonUpdater = updaters.get(object.getClass(), jsonUpdaterClass);
         return (T) jsonUpdater.update(json, object, this);
     }

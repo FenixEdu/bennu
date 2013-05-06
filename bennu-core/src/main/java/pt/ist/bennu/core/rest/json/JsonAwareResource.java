@@ -83,7 +83,7 @@ public class JsonAwareResource {
 
     @Service
     private Object innerCreate(String jsonData, Class<?> clazz, Class<? extends JsonCreator<?>> jsonCreatorClass) {
-        final JsonObject parse = parse(jsonData);
+        final JsonElement parse = parse(jsonData);
         return BUILDER.create(parse, clazz, jsonCreatorClass);
     }
 
@@ -99,13 +99,13 @@ public class JsonAwareResource {
 
     @Service
     private Object innerUpdate(String jsonData, Object object, Class<? extends JsonUpdater<?>> jsonUpdaterClass) {
-        final JsonObject parse = parse(jsonData);
+        final JsonElement parse = parse(jsonData);
         return BUILDER.update(parse, object, jsonUpdaterClass);
     }
 
-    private JsonObject parse(String jsonString) {
+    private JsonElement parse(String jsonString) {
         try {
-            return PARSER.parse(jsonString).getAsJsonObject();
+            return PARSER.parse(jsonString);
         } catch (JsonParseException | IllegalStateException e) {
             throw BennuCoreDomainException.parseError();
         }
