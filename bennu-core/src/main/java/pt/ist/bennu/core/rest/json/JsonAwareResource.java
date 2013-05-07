@@ -12,6 +12,7 @@ import pt.ist.bennu.json.JsonUpdater;
 import pt.ist.bennu.json.JsonViewer;
 import pt.ist.bennu.service.Service;
 
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -105,6 +106,9 @@ public class JsonAwareResource {
 
     private JsonElement parse(String jsonString) {
         try {
+            if (Strings.isNullOrEmpty(jsonString)) {
+                return new JsonObject();
+            }
             return PARSER.parse(jsonString);
         } catch (JsonParseException | IllegalStateException e) {
             throw BennuCoreDomainException.parseError();
