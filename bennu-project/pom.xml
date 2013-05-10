@@ -82,7 +82,7 @@
         <!-- * PLUGIN VERSIONS * -->
         <!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
         <!-- ************************************************************************************************ -->
-        <version.com.alexnederlof.jasperreports.plugin>1.5.0</version.com.alexnederlof.jasperreports.plugin>
+        <version.com.alexnederlof.jasperreports.plugin>1.5.1</version.com.alexnederlof.jasperreports.plugin>
         <version.pt.ist.bennu.maven.plugin>1.1.0-SNAPSHOT</version.pt.ist.bennu.maven.plugin>
         <version.pt.ist.ff.maven.plugin>2.1.0-rc2</version.pt.ist.ff.maven.plugin>
         <version.org.apache.maven.plugins.maven.enforcer.plugin>1.1.1</version.org.apache.maven.plugins.maven.enforcer.plugin>
