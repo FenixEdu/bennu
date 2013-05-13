@@ -11,6 +11,10 @@ define([
 	    parse: function(response){
 	        return response.apps;
 	     },
+	    
+	    comparator: function(app) {
+	    	return app.get("path");
+	    }
 
 	});
 });
