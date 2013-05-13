@@ -1,29 +1,33 @@
-/*
- * TransactionalThread.java
- * 
- * Copyright (c) 2013, Instituto Superior Técnico. All rights reserved.
- * 
- * This file is part of bennu-core.
- * 
- * bennu-core is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * bennu-core is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with bennu-core. If not, see
- * <http://www.gnu.org/licenses/>.
- */
+/* 
+* @(#)TransactionalThread.java 
+* 
+* Copyright 2010 Instituto Superior Tecnico 
+* Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes 
+*  
+*      https://fenix-ashes.ist.utl.pt/ 
+*  
+*   This file is part of the Bennu Web Application Infrastructure. 
+* 
+*   The Bennu Web Application Infrastructure is free software: you can 
+*   redistribute it and/or modify it under the terms of the GNU Lesser General 
+*   Public License as published by the Free Software Foundation, either version  
+*   3 of the License, or (at your option) any later version. 
+* 
+*   Bennu is distributed in the hope that it will be useful, 
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+*   GNU Lesser General Public License for more details. 
+* 
+*   You should have received a copy of the GNU Lesser General Public License 
+*   along with Bennu. If not, see <http://www.gnu.org/licenses/>. 
+*  
+*/
 package pt.ist.bennu.core.util;
 
-import java.util.Locale;
+import java.util.ArrayList;
 
-import jvstm.TransactionalCommand;
-import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.i18n.I18N;
-import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.core.security.UserSession;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 /**
  * 
@@ -32,18 +36,15 @@ import pt.ist.fenixframework.pstm.Transaction;
  * 
  */
 public abstract class TransactionalThread extends Thread {
-    private VirtualHost virtualHost;
-
-    private UserSession user;
-
-    private Locale locale;
+    public static interface ExceptionListener {
+        public void notifyException(Throwable e);
+    }
 
     private final boolean readOnly;
 
-    public TransactionalThread(boolean readOnly) {
-        virtualHost = VirtualHost.getVirtualHostForThread();
-        user = Authenticate.getUserSession();
-        locale = I18N.getLocale();
+    private ArrayList<ExceptionListener> listeners;
+
+    public TransactionalThread(final boolean readOnly) {
         this.readOnly = readOnly;
     }
 
@@ -51,18 +52,43 @@ public abstract class TransactionalThread extends Thread {
         this(false);
     }
 
+    public void addExceptionListener(ExceptionListener listener) {
+        if (listeners == null) {
+            listeners = new ArrayList<ExceptionListener>();
+        }
+        listeners.add(listener);
+    }
+
+    public void removeExceptionListener(ExceptionListener listener) {
+        if (listeners != null) {
+            listeners.remove(listener);
+        }
+    }
+
     @Override
+    @Atomic(mode = TxMode.READ)
     public void run() {
-        VirtualHost.setVirtualHostForThread(virtualHost);
-        Authenticate.setUser(user);
-        I18N.setLocale(locale);
-        Transaction.withTransaction(readOnly, new TransactionalCommand() {
-            @Override
-            public void doIt() {
+        try {
+            if (readOnly) {
                 transactionalRun();
+            } else {
+                callService();
             }
-        });
+        } catch (Throwable e) {
+            e.printStackTrace();
+            if (listeners != null) {
+                for (ExceptionListener listener : listeners) {
+                    listener.notifyException(e);
+                }
+            }
+        }
     }
 
     public abstract void transactionalRun();
+
+    @Atomic
+    private void callService() {
+        transactionalRun();
+    }
+
 }

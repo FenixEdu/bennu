@@ -23,7 +23,7 @@ import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.i18n.BundleUtil;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * Group that always returns false.
@@ -96,7 +96,7 @@ public class NobodyGroup extends NobodyGroup_Base {
      * 
      * @return singleton {@link NobodyGroup} instance
      */
-    @Service
+    @Atomic
     public static NobodyGroup getInstance() {
         NobodyGroup group = select(NobodyGroup.class);
         return group == null ? new NobodyGroup() : group;

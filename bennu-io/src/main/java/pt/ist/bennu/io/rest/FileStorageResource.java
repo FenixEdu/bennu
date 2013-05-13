@@ -17,7 +17,7 @@ import pt.ist.bennu.io.domain.FileStorage;
 import pt.ist.bennu.io.domain.FileSupport;
 import pt.ist.bennu.io.domain.GenericFile;
 import pt.ist.bennu.io.domain.LocalFileSystemStorage;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 @Path("/storage")
 public class FileStorageResource extends BennuRestResource {
@@ -42,10 +42,10 @@ public class FileStorageResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String all() {
         accessControl("#managers");
-        return view(FileSupport.getInstance().getFileStorages(), "storages");
+        return view(FileSupport.getInstance().getFileStoragesSet(), "storages");
     }
 
-    @Service
+    @Atomic
     private DomainStorage createDomainStorageService(String name) {
         return FileStorage.createNewDomainStorage(name);
     }
@@ -64,7 +64,7 @@ public class FileStorageResource extends BennuRestResource {
         return Response.noContent().build();
     }
 
-    @Service
+    @Atomic
     private Boolean deleteStorage(FileStorage fileStorage) {
         return fileStorage.delete();
     }

@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.portal.domain.MenuItem;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 @Path("menu")
 public class MenuResource extends BennuRestResource {
@@ -36,7 +36,7 @@ public class MenuResource extends BennuRestResource {
         return innerCreate(jsonData);
     }
 
-    @Service
+    @Atomic
     public String innerCreate(final String jsonData) {
         return view(create(jsonData, MenuItem.class));
     }
@@ -49,7 +49,7 @@ public class MenuResource extends BennuRestResource {
         return view(innerUpdate((MenuItem) readDomainObject(oid), jsonData));
     }
 
-    @Service
+    @Atomic
     public MenuItem innerUpdate(final MenuItem menuItem, final String jsonData) {
         return update(jsonData, menuItem);
     }

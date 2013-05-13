@@ -20,8 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import pt.ist.bennu.core.domain.groups.DifferenceGroup;
 import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.DifferenceGroup;
 
 class Difference extends GroupToken {
     private final List<GroupToken> children;

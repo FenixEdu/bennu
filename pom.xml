@@ -1,22 +1,166 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-	<groupId>pt.ist.bennu</groupId>
+    <parent>
+        <groupId>pt.ist.bennu</groupId>
+        <artifactId>bennu-project</artifactId>
+        <version>2.0-SNAPSHOT</version>
+        <relativePath>bennu-project</relativePath>
+    </parent>
+
     <artifactId>bennu</artifactId>
-	<version>2.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
     <name>Bennu Framework</name>
-    <url>http://fenix-ashes.ist.utl.pt</url>
+    <packaging>pom</packaging>
+
+    <properties>
+        <!-- ************************************************************************************************ -->
+        <!-- * DEPENDENCIES VERSIONS * -->
+        <!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
+        <!-- ************************************************************************************************ -->
+        <version.org.antlr.antlr.runtime>3.4</version.org.antlr.antlr.runtime>
+        <version.cas.casclient>2.1.1</version.cas.casclient>
+        <version.com.google.guava.guava>14.0-rc3</version.com.google.guava.guava>
+        <version.com.google.code.gson.gson>2.2.2</version.com.google.code.gson.gson>
+        <version.com.sun.jersey.contribs.jersey.multipart>1.14</version.com.sun.jersey.contribs.jersey.multipart>
+        <version.com.sun.jersey.jersey.client>1.14</version.com.sun.jersey.jersey.client>
+        <version.com.sun.jersey.jersey.server>1.14</version.com.sun.jersey.jersey.server>
+        <version.com.sun.jersey.jersey.servlet>1.14</version.com.sun.jersey.jersey.servlet>
+        <version.commons.codec.commons.codec>1.6</version.commons.codec.commons.codec>
+        <version.joda.time.joda.time>1.5.2</version.joda.time.joda.time>
+        <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
+        <version.org.apache.lucene.lucene.core>3.6.1</version.org.apache.lucene.lucene.core>
+        <version.org.apache.tomcat.tomcat.jsp.api>7.0.28</version.org.apache.tomcat.tomcat.jsp.api>
+        <version.pt.ist.bankai>0.0.1-SNAPSHOT</version.pt.ist.bankai>
+
+        <!-- ************************************************************************************************ -->
+        <!-- * PLUGIN VERSIONS * -->
+        <!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
+        <!-- ************************************************************************************************ -->
+        <version.org.antlr.antlr3.maven.plugin>3.4</version.org.antlr.antlr3.maven.plugin>
+    </properties>
+
+    <scm>
+        <connection>scm:git:git@github.com:ist-dsi/bennu.git</connection>
+        <developerConnection>scm:git:git@github.com:ist-dsi/bennu.git</developerConnection>
+        <url>http://ist-dsi.github.io/bennu</url>
+    </scm>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr3-maven-plugin</artifactId>
+                    <version>${version.org.antlr.antlr3.maven.plugin}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>antlr</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>pt.ist</groupId>
+                <artifactId>fenix-framework-core-api</artifactId>
+                <version>${version.pt.ist.fenix.framework}</version>
+            </dependency>
+            <dependency>
+                <groupId>pt.ist</groupId>
+                <artifactId>fenix-framework-core-consistency-predicates</artifactId>
+                <version>${version.pt.ist.fenix.framework}</version>
+            </dependency>
+            <dependency>
+                <groupId>cas</groupId>
+                <artifactId>casclient</artifactId>
+                <version>${version.cas.casclient}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${version.com.google.guava.guava}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${version.com.google.code.gson.gson}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${version.commons.codec.commons.codec}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${version.joda.time.joda.time}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr-runtime</artifactId>
+                <version>${version.org.antlr.antlr.runtime}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${version.com.sun.jersey.jersey.server}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-client</artifactId>
+                <version>${version.com.sun.jersey.jersey.client}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-servlet</artifactId>
+                <version>${version.com.sun.jersey.jersey.servlet}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-core</artifactId>
+                <version>${version.org.apache.lucene.lucene.core}</version>
+            </dependency>
+            <dependency>
+                <groupId>pt.ist</groupId>
+                <artifactId>bankai</artifactId>
+                <version>${version.pt.ist.bankai}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.cron4j</groupId>
+                <artifactId>cron4j</artifactId>
+                <version>${version.net.sf.cron4j.cron4j}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <modules>
-        <module>maven/bennu-maven-plugin</module>
-        <module>bennu-project</module>
-        <module>bennu-service</module>
+        <module>bennu-admin</module>
         <module>bennu-core</module>
-		<module>bennu-dispatch</module>
-    <module>bennu-filesupport</module>
-    <module>bennu-search</module>
-  </modules>
+        <module>bennu-dispatch</module>
+        <module>bennu-io</module>
+        <module>bennu-json</module>
+        <module>bennu-portal</module>
+        <module>bennu-project</module>
+        <module>bennu-scheduler</module>
+        <module>bennu-scheduler-ui</module>
+        <module>bennu-search</module>
+        <module>bennu-renderers</module>
+        <module>bankai</module>
+        <module>maven/bennu-maven-plugin</module>
+        <module>maven/bennu-project-archetype</module>
+    </modules>
 </project>

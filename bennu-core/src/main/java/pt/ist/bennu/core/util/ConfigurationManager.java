@@ -18,7 +18,6 @@ package pt.ist.bennu.core.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,12 +36,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.annotation.BennuCoreAnnotationInitializer;
-import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.util.rest.RestHost;
-import pt.ist.fenixframework.Config;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.DmlFile;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.core.DmlFile;
+import pt.ist.fenixframework.core.Project;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -55,8 +52,6 @@ public class ConfigurationManager {
     private static final Properties properties = new Properties();
 
     private static Map<String, CasConfig> casConfigByHost;
-
-    private static Config config = null;
 
     private static List<URL> urls = new ArrayList<>();
 
@@ -77,42 +72,20 @@ public class ConfigurationManager {
 
             initializeLocales();
 
-            config = new Config() {
-                {
-                    domainModelPaths = new String[0];
-                    dbAlias = getProperty("db.alias");
-                    dbUsername = getProperty("db.user");
-                    dbPassword = getProperty("db.pass");
-                    appName = getProperty("app.name");
-                    updateRepositoryStructureIfNeeded = true;
-                    rootClass = Bennu.class;
-                    errorfIfDeletingObjectNotDisconnected = true;
+            List<DmlFile> dmlFiles = new ArrayList<>();
+            for (Project artifact : getArtifacts()) {
+                dmlFiles.addAll(artifact.getDmls());
+                String projectResource = "/" + artifact.getName() + "/project.properties";
+                String url = BennuCoreAnnotationInitializer.class.getResource(projectResource).toExternalForm();
+                if (url.startsWith("jar")) {
+                    resourceModuleMap.put(url.substring("jar:".length(), url.length() - projectResource.length() - 1),
+                            artifact.getName());
+                } else {
+                    resourceModuleMap.put(url.replace(projectResource, ""), artifact.getName());
                 }
-
-                @Override
-                public List<URL> getDomainModelURLs() {
-                    return getUrls();
-                }
-            };
-
-            try {
-                List<DmlFile> dmlFiles = new ArrayList<>();
-                for (FenixFrameworkArtifact artifact : getArtifacts()) {
-                    dmlFiles.addAll(artifact.getDmls());
-                    String projectResource = "/" + artifact.getName() + "/project.properties";
-                    String url = BennuCoreAnnotationInitializer.class.getResource(projectResource).toExternalForm();
-                    if (url.startsWith("jar")) {
-                        resourceModuleMap.put(url.substring("jar:".length(), url.length() - projectResource.length() - 1),
-                                artifact.getName());
-                    } else {
-                        resourceModuleMap.put(url.replace(projectResource, ""), artifact.getName());
-                    }
-                }
-                for (DmlFile dml : dmlFiles) {
-                    urls.add(dml.getUrl());
-                }
-            } catch (FenixFrameworkProjectException | IOException e) {
-                throw new Error(e);
+            }
+            for (DmlFile dml : dmlFiles) {
+                urls.add(dml.getUrl());
             }
 
             casConfigByHost = new HashMap<>();
@@ -157,9 +130,8 @@ public class ConfigurationManager {
                 }).toArray(String.class)));;
     }
 
-    public static List<FenixFrameworkArtifact> getArtifacts() throws MalformedURLException, IOException,
-            FenixFrameworkProjectException {
-        return FenixFrameworkArtifact.fromName(getProperty("app.name")).getArtifacts();
+    public static List<Project> getArtifacts() {
+        return FenixFramework.getProject().getProjects();
     }
 
     public static void initializeCasConfig(final String property) {
@@ -285,10 +257,6 @@ public class ConfigurationManager {
             }
         }
         return null;
-    }
-
-    public static Config getFenixFrameworkConfig() {
-        return config;
     }
 
     public static String getModuleOf(Class<?> type) {

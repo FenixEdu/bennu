@@ -8,7 +8,7 @@ public class FileSupport extends FileSupport_Base {
     }
 
     public static FileSupport getInstance() {
-        if (!Bennu.getInstance().hasFileSupport()) {
+        if (Bennu.getInstance().getFileSupport() == null) {
             Bennu.getInstance().setFileSupport(new FileSupport());
         }
         return Bennu.getInstance().getFileSupport();

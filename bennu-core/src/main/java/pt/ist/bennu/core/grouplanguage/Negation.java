@@ -16,8 +16,8 @@
  */
 package pt.ist.bennu.core.grouplanguage;
 
-import pt.ist.bennu.core.domain.groups.NegationGroup;
 import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.NegationGroup;
 
 class Negation extends GroupToken {
     private final GroupToken groupToken;

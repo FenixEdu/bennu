@@ -33,7 +33,8 @@ public class FileStorageConfiguration extends FileStorageConfiguration_Base {
 
     public static void createMissingStorageConfigurations() {
         final HashSet<String> existingFileTypes = new HashSet<>();
-        for (final FileStorageConfiguration fileStorageConfiguration : FileSupport.getInstance().getFileStorageConfigurations()) {
+        for (final FileStorageConfiguration fileStorageConfiguration : FileSupport.getInstance()
+                .getFileStorageConfigurationsSet()) {
             existingFileTypes.add(fileStorageConfiguration.getFileType());
         }
 

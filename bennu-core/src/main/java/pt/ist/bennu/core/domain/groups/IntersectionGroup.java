@@ -24,7 +24,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
@@ -60,7 +60,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 
     @Override
     public boolean isMember(final User user) {
-        if (getChildrenCount() == 0) {
+        if (getChildrenSet().isEmpty()) {
             return false;
         }
         for (final BennuGroup group : getChildrenSet()) {
@@ -86,7 +86,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 
     @Override
     public boolean isMember(User user, DateTime when) {
-        if (getChildrenCount() == 0) {
+        if (getChildrenSet().isEmpty()) {
             return false;
         }
         for (final BennuGroup group : getChildrenSet()) {
@@ -107,7 +107,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     /**
      * @see #getInstance(Set)
      */
-    @Service
+    @Atomic
     public static IntersectionGroup getInstance(final BennuGroup... children) {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }
@@ -119,7 +119,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
      *            the groups to make a {@link IntersectionGroup} on.
      * @return singleton {@link IntersectionGroup} instance
      */
-    @Service
+    @Atomic
     public static IntersectionGroup getInstance(final Set<BennuGroup> children) {
         IntersectionGroup group = select(IntersectionGroup.class, new Predicate<IntersectionGroup>() {
             @Override

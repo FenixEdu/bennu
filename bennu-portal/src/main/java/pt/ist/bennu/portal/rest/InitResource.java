@@ -23,7 +23,7 @@ import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.portal.domain.HostInfo;
 import pt.ist.bennu.portal.domain.MenuItem;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -51,7 +51,7 @@ public class InitResource extends BennuRestResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String loadBasic() {
         initLocalhostInfo();
-        return view(Bennu.getInstance().getVirtualHosts(), "hosts");
+        return view(Bennu.getInstance().getVirtualHostsSet(), "hosts");
     }
 
     @Path("drop")
@@ -62,34 +62,34 @@ public class InitResource extends BennuRestResource {
         return Response.ok("Drop ok.").build();
     }
 
-    @Service
+    @Atomic
     private void initDropModel() {
         final VirtualHost localhost = Bennu.getInstance().getVirtualHost("localhost");
-        for (VirtualHost host : Bennu.getInstance().getVirtualHosts()) {
+        for (VirtualHost host : Bennu.getInstance().getVirtualHostsSet()) {
             if (!host.equals(localhost)) {
-                if (host.hasInfo()) {
+                if (host.getInfo() != null) {
                     host.getInfo().delete();
                 }
             }
-            if (host.hasMenu()) {
+            if (host.getMenu() != null) {
                 host.getMenu().delete();
             }
         }
         if (localhost != null) {
-            if (localhost.hasMenu()) {
+            if (localhost.getMenu() != null) {
                 localhost.getMenu().delete();
             }
-            if (localhost.hasInfo()) {
+            if (localhost.getInfo() != null) {
                 localhost.getInfo().delete();
             }
         }
     }
 
-    @Service
+    @Atomic
     private void initLocalhostInfo() {
         accessControl("#managers");
         final VirtualHost localhost = Bennu.getInstance().getVirtualHost("localhost");
-        if (!localhost.hasInfo()) {
+        if (localhost.getInfo() == null) {
             final HostInfo hostInfo = new HostInfo(localhost);
             hostInfo.setApplicationCopyright(getIS("Localhost Copyright"));
             hostInfo.setApplicationTitle(getIS("Localhost Title"));
@@ -109,7 +109,7 @@ public class InitResource extends BennuRestResource {
         return builder.build();
     }
 
-    @Service
+    @Atomic
     private void parseHosts(JsonArray hostsArray) {
         for (JsonElement host : hostsArray) {
             parseHost(host.getAsJsonObject());
@@ -147,7 +147,7 @@ public class InitResource extends BennuRestResource {
         final String hostname = host.get("hostname").getAsString();
         final VirtualHost virtualHost = getOrCreate(hostname);
         LOGGER.trace("parse Host {}", hostname);
-        if (!virtualHost.hasInfo()) {
+        if (virtualHost.getInfo() == null) {
             HostInfo hostInfo = new HostInfo(virtualHost);
             final String supportEmailAddress = host.get("supportEmailAddress").getAsString();
             final String systemEmailAddress = host.get("systemEmailAddress").getAsString();

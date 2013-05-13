@@ -10,7 +10,7 @@ import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.json.JsonCreator;
 import pt.ist.bennu.json.JsonUpdater;
 import pt.ist.bennu.json.JsonViewer;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
@@ -82,7 +82,7 @@ public class JsonAwareResource {
         return (T) innerCreate(jsonData, clazz, jsonCreatorClass);
     }
 
-    @Service
+    @Atomic
     private Object innerCreate(String jsonData, Class<?> clazz, Class<? extends JsonCreator<?>> jsonCreatorClass) {
         final JsonElement parse = parse(jsonData);
         return BUILDER.create(parse, clazz, jsonCreatorClass);
@@ -98,7 +98,7 @@ public class JsonAwareResource {
         return (T) innerUpdate(jsonData, object, jsonUpdaterClass);
     }
 
-    @Service
+    @Atomic
     private Object innerUpdate(String jsonData, Object object, Class<? extends JsonUpdater<?>> jsonUpdaterClass) {
         final JsonElement parse = parse(jsonData);
         return BUILDER.update(parse, object, jsonUpdaterClass);

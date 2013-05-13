@@ -20,8 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import pt.ist.bennu.core.domain.groups.IntersectionGroup;
 import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.IntersectionGroup;
 
 class Intersection extends GroupToken {
     private final List<GroupToken> children;

@@ -21,7 +21,7 @@ public class LocalFileToDelete extends LocalFileToDelete_Base {
     public void delete() {
         final File existingFile = new File(getFilePath());
         if (!existingFile.exists() || existingFile.delete()) {
-            removeFileSupport();
+            setFileSupport(null);
             deleteDomainObject();
         }
     }

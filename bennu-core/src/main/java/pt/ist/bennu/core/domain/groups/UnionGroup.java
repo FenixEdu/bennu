@@ -23,7 +23,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
@@ -92,7 +92,7 @@ public class UnionGroup extends UnionGroup_Base {
     /**
      * @see #getInstance(Set)
      */
-    @Service
+    @Atomic
     public static UnionGroup getInstance(final BennuGroup... children) {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }
@@ -104,7 +104,7 @@ public class UnionGroup extends UnionGroup_Base {
      *            the groups to make a {@link UnionGroup} on.
      * @return {@link UnionGroup} instance
      */
-    @Service
+    @Atomic
     public static UnionGroup getInstance(final Set<BennuGroup> children) {
         UnionGroup group = select(UnionGroup.class, new Predicate<UnionGroup>() {
             @Override

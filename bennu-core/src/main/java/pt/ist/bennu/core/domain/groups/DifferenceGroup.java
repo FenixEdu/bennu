@@ -24,7 +24,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -117,7 +117,7 @@ public class DifferenceGroup extends DifferenceGroup_Base {
     /**
      * @see #getInstance(Set)
      */
-    @Service
+    @Atomic
     public static DifferenceGroup getInstance(final BennuGroup... children) {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }
@@ -129,7 +129,7 @@ public class DifferenceGroup extends DifferenceGroup_Base {
      *            the groups to make a {@link DifferenceGroup} on.
      * @return singleton {@link DifferenceGroup} instance
      */
-    @Service
+    @Atomic
     public static DifferenceGroup getInstance(final Set<BennuGroup> children) {
         DifferenceGroup group = select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
             @Override

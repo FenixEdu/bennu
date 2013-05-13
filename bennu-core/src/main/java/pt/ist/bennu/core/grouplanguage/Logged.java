@@ -16,8 +16,8 @@
  */
 package pt.ist.bennu.core.grouplanguage;
 
-import pt.ist.bennu.core.domain.groups.LoggedGroup;
 import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.LoggedGroup;
 
 class Logged extends GroupToken {
     @Override

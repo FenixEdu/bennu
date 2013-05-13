@@ -16,6 +16,7 @@
  */
 package pt.ist.bennu.core.grouplanguage;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.antlr.runtime.ANTLRInputStream;
@@ -23,13 +24,12 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
-import org.apache.tools.ant.filters.StringInputStream;
 
 import pt.ist.bennu.core.domain.groups.BennuGroup;
 
 public class GroupExpressionParser {
     public static BennuGroup parse(String expression) throws RecognitionException, IOException {
-        try (StringInputStream stream = new StringInputStream(expression)) {
+        try (ByteArrayInputStream stream = new ByteArrayInputStream(expression.getBytes())) {
             ANTLRInputStream input = new ANTLRInputStream(stream);
             GroupLexer lexer = new GroupLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);

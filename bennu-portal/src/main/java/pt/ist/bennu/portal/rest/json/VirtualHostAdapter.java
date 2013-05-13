@@ -11,7 +11,7 @@ import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.portal.domain.HostInfo;
 import pt.ist.bennu.portal.domain.MenuItem;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -67,7 +67,7 @@ public class VirtualHostAdapter implements JsonAdapter<VirtualHost> {
             final JsonObject menuObj = jsonObj.get("menu").getAsJsonObject();
             if (menuObj.has("id")) {
                 final String menuExternalId = menuObj.get("id").getAsString();
-                MenuItem menu = AbstractDomainObject.fromExternalId(menuExternalId);
+                MenuItem menu = FenixFramework.getDomainObject(menuExternalId);
                 if (!menu.equals(obj.getMenu())) {
                     obj.setMenu(menu);
                 }

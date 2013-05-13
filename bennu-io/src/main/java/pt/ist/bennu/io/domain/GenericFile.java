@@ -15,8 +15,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.service.Service;
-import pt.ist.fenixframework.FFDomainException;
+import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Strings;
 
@@ -89,7 +88,7 @@ abstract public class GenericFile extends GenericFile_Base {
         try {
             messageDigest = MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new FFDomainException(e);
+            throw new RuntimeException(e);
         }
         return messageDigest.digest(getContent());
     }
@@ -131,7 +130,7 @@ abstract public class GenericFile extends GenericFile_Base {
     public static void convertFileStorages(final FileStorage fileStorageToUpdate) {
         if (fileStorageToUpdate != null) {
             try {
-                for (final GenericFile genericFile : FileSupport.getInstance().getGenericFiles()) {
+                for (final GenericFile genericFile : FileSupport.getInstance().getGenericFilesSet()) {
                     if (fileStorageToUpdate == genericFile.getFileStorage() && fileStorageToUpdate != genericFile.getStorage()) {
                         genericFile.updateFileStorage();
                     }
@@ -144,7 +143,7 @@ abstract public class GenericFile extends GenericFile_Base {
         }
     }
 
-    @Service
+    @Atomic
     private void updateFileStorage() {
         setContent(getContent());
     }
@@ -163,15 +162,15 @@ abstract public class GenericFile extends GenericFile_Base {
 
     public void delete() {
         setContent(null);
-        removeStorage();
-        removeFileSupport();
+        setStorage(null);
+        setFileSupport(null);
         deleteDomainObject();
     }
 
     @SuppressWarnings("unchecked")
     public static <T extends GenericFile> List<T> getFiles(final Class<T> clazz) {
         final List<T> files = new ArrayList<>();
-        for (final GenericFile file : FileSupport.getInstance().getGenericFiles()) {
+        for (final GenericFile file : FileSupport.getInstance().getGenericFilesSet()) {
             if (file.getClass().equals(clazz)) {
                 files.add((T) file);
             }

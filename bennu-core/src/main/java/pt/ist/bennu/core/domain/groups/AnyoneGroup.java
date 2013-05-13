@@ -23,7 +23,7 @@ import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.i18n.BundleUtil;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * Group that always returns <code>true</code> on membership tests.
@@ -81,7 +81,7 @@ public class AnyoneGroup extends AnyoneGroup_Base {
      * 
      * @return singleton {@link AnyoneGroup} instance
      */
-    @Service
+    @Atomic
     public static AnyoneGroup getInstance() {
         AnyoneGroup group = select(AnyoneGroup.class);
         return group == null ? new AnyoneGroup() : group;

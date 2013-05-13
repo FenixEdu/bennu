@@ -2,18 +2,17 @@ package pt.ist.bennu.io;
 
 import java.util.ArrayList;
 
-import jvstm.TransactionalCommand;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.io.domain.FileSupport;
 import pt.ist.bennu.io.domain.LocalFileToDelete;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
 
 public class FileDeleterThread implements Runnable {
+
     private static final long SLEEP_TIME = 300000;
-    private static final Logger logger = LoggerFactory.getLogger(FileDeleterThread.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileDeleterThread.class.getName());
 
     @Override
     public void run() {
@@ -27,22 +26,15 @@ public class FileDeleterThread implements Runnable {
         }
     }
 
+    @Atomic
     private void process() {
-        Transaction.withTransaction(new TransactionalCommand() {
-            @Override
-            public void doIt() {
-                for (final LocalFileToDelete localFileToDelete : new ArrayList<>(FileSupport.getInstance()
-                        .getLocalFilesToDelete())) {
-                    logger.info("Deleting: " + localFileToDelete.getFilePath());
-                    try {
-                        localFileToDelete.delete();
-                    } catch (Exception e) {
-                        logger.debug("Failed to delete file", e);
-                    }
-                }
-
+        for (final LocalFileToDelete localFileToDelete : new ArrayList<>(FileSupport.getInstance().getLocalFilesToDeleteSet())) {
+            logger.info("Deleting: " + localFileToDelete.getFilePath());
+            try {
+                localFileToDelete.delete();
+            } catch (Exception e) {
+                logger.debug("Failed to delete file", e);
             }
-
-        });
+        }
     }
 }

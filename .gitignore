@@ -5,9 +5,10 @@
 *.war
 *.ear
 
+.project
+.classpath
 .settings/
 .serviceAnnotationLog
-.classpath
 
 # Maven #
 target/

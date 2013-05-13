@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.io.domain.FileStorageConfiguration;
 import pt.ist.bennu.io.domain.FileSupport;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 @Path("/storage/config")
 public class StorageConfigurationResource extends BennuRestResource {
@@ -20,10 +20,10 @@ public class StorageConfigurationResource extends BennuRestResource {
     public String all() {
         accessControl("#managers");
         createMissingConfigurations();
-        return view(FileSupport.getInstance().getFileStorageConfigurations(), "storageConfigurations");
+        return view(FileSupport.getInstance().getFileStorageConfigurationsSet(), "storageConfigurations");
     }
 
-    @Service
+    @Atomic
     private void createMissingConfigurations() {
         FileStorageConfiguration.createMissingStorageConfigurations();
     }

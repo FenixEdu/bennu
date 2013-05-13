@@ -20,7 +20,7 @@ import pt.ist.bennu.core.security.UserSession;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 import pt.ist.fenixframework.DomainObject;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 
 public abstract class BennuRestResource extends JsonAwareResource {
 
@@ -74,7 +74,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
     protected <T extends DomainObject> T readDomainObject(final String externalId) {
         boolean error = false;
         try {
-            T obj = AbstractDomainObject.fromExternalId(externalId);
+            T obj = FenixFramework.getDomainObject(externalId);
             if (obj == null) {
                 error = true;
             } else {

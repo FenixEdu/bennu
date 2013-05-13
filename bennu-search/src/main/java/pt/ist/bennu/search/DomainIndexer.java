@@ -25,7 +25,7 @@ import org.apache.lucene.util.Version;
 
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.search.queryBuilder.dsl.DSLState;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.base.CharMatcher;
 
@@ -160,7 +160,7 @@ public class DomainIndexer {
                             for (ScoreDoc scoreDoc : docs.scoreDocs) {
                                 int docId = scoreDoc.doc;
                                 String OID = searcher.doc(docId).get(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName());
-                                indexables.add(AbstractDomainObject.<T> fromExternalId(OID));
+                                indexables.add(FenixFramework.<T> getDomainObject(OID));
                             }
                         }
                     }

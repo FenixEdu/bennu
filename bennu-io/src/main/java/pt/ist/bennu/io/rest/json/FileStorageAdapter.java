@@ -27,7 +27,7 @@ public class FileStorageAdapter implements JsonAdapter<FileStorage> {
         json.addProperty("id", fs.getExternalId());
         json.addProperty("name", fs.getName());
         json.addProperty("type", fs.getClass().getSimpleName());
-        json.addProperty("filesCount", fs.getFilesCount());
+        json.addProperty("filesCount", fs.getFilesSet().size());
         return json;
     }
 }

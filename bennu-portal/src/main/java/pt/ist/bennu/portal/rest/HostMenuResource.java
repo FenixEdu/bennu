@@ -21,7 +21,7 @@ import pt.ist.bennu.core.security.UserSession;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.portal.domain.HostInfo;
 import pt.ist.bennu.portal.rest.json.HostMenuViewer;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 import com.google.gson.JsonObject;
 
@@ -60,7 +60,7 @@ public class HostMenuResource extends BennuRestResource {
         return builder.build();
     }
 
-    @Service
+    @Atomic
     private void initLocalhostInfo(VirtualHost virtualHost) {
         if (virtualHost.getInfo() == null) {
             final HostInfo hostInfo = new HostInfo(virtualHost);

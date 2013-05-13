@@ -61,10 +61,5 @@
 			<id>fenix-ashes-releases</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-releases</url>
 		</repository>
-		<snapshotRepository>
-			<id>fenix-ashes-snapshots</id>
-			<url>https://fenix-ashes.ist.utl.pt/nexus/content/repositories/fenix-ashes-snapshots</url>
-		</snapshotRepository>
 	</distributionManagement>
-
 </project>

@@ -11,7 +11,7 @@ public class HostMenuViewer implements JsonViewer<VirtualHost> {
     @Override
     public JsonElement view(VirtualHost obj, JsonBuilder ctx) {
         JsonObject json = (JsonObject) ctx.view(obj);
-        if (obj.hasMenu()) {
+        if (obj.getMenu() != null) {
             json.add("menu", ctx.view(obj.getMenu().getUserMenu()));
         }
         return json;

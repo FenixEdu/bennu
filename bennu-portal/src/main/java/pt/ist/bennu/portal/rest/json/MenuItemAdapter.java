@@ -10,7 +10,7 @@ import pt.ist.bennu.dispatch.model.FunctionalityInfo;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.portal.domain.MenuItem;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -58,7 +58,7 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
     }
 
     private MenuItem getMenuItem(JsonElement menuJson) {
-        return AbstractDomainObject.fromExternalId(menuJson.getAsJsonObject().get("id").getAsString());
+        return FenixFramework.getDomainObject(menuJson.getAsJsonObject().get("id").getAsString());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
         json.addProperty("path", obj.getPath());
         json.addProperty("functionality", obj.isFunctionalityLink());
         json.addProperty("accessExpression", obj.getAccessExpression());
-        if (obj.hasHost()) {
+        if (obj.getHost() != null) {
             InternationalString mls = new InternationalString();
             for (Locale locale : ConfigurationManager.getSupportedLocales()) {
                 mls = mls.with(locale, obj.getHost().getHostname());

@@ -20,7 +20,6 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.Locale;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -31,9 +30,8 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.i18n.I18N;
-import pt.ist.bennu.service.Service;
-import pt.ist.fenixframework.FenixFrameworkInitializer;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 /**
  * 
@@ -50,24 +48,20 @@ public class BennuCoreContextListener implements ServletContextListener {
     private ClassLoader thisClassLoader;
 
     @Override
+    @Atomic(mode = TxMode.READ)
     public void contextInitialized(ServletContextEvent event) {
-        try {
-            Class.forName(FenixFrameworkInitializer.class.getName());
-        } catch (ClassNotFoundException e) {
-        }
-        //PersistentRoot.initRootIfNeeded(ConfigurationManager.getFenixFrameworkConfig());
-
         ensureModelBootstrap();
     }
 
-    @Service
+    @Atomic
     private void ensureModelBootstrap() {
-        if (!Bennu.getInstance().hasAnyVirtualHosts()) {
+        if (Bennu.getInstance() == null) {
+            new Bennu();
+        }
+        if (Bennu.getInstance().getVirtualHostsSet().isEmpty()) {
             logger.info("Bootstrapping bennu application");
             new VirtualHost("localhost");
         }
-        final Locale currentLocale = I18N.getLocale();
-
     }
 
     @Override

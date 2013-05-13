@@ -27,7 +27,7 @@ import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.groups.BennuGroup;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 
 public class UserSession implements Serializable, Principal {
     private static final long serialVersionUID = -16953310282144136L;
@@ -78,7 +78,7 @@ public class UserSession implements Serializable, Principal {
     }
 
     public User getUser() {
-        return userExternalId == null ? null : (User) AbstractDomainObject.fromExternalId(userExternalId);
+        return userExternalId == null ? null : (User) FenixFramework.getDomainObject(userExternalId);
     }
 
     public String getUsername() {

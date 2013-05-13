@@ -3,15 +3,14 @@ package pt.ist.bennu.scheduler;
 import java.io.File;
 import java.io.IOException;
 
-import jvstm.TransactionalCommand;
-
-import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+
+import com.google.common.io.Files;
 
 public abstract class CronTask implements Runnable {
     private Logger logger;
@@ -35,15 +34,10 @@ public abstract class CronTask implements Runnable {
     public abstract void runTask();
 
     @Override
+    @Atomic
     public void run() {
         getLogger().info("Start at {}", new DateTime());
-        Transaction.withTransaction(false, new TransactionalCommand() {
-
-            @Override
-            public void doIt() {
-                runTask();
-            }
-        });
+        runTask();
         getLogger().info("End at {}", new DateTime());
     }
 
@@ -54,7 +48,7 @@ public abstract class CronTask implements Runnable {
     public File output(String filename, byte[] fileContent) {
         try {
             File outputFile = new File(getPath() + filename);
-            FileUtils.writeByteArrayToFile(outputFile, fileContent);
+            Files.write(fileContent, outputFile);
             return outputFile;
         } catch (IOException e) {
             return null;

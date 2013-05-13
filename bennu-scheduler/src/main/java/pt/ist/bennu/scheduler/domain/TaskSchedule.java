@@ -20,7 +20,7 @@ public class TaskSchedule extends TaskSchedule_Base {
 
     public void delete() {
         SchedulerSystem.unschedule(this);
-        removeSchedulerSystem();
+        setSchedulerSystem(null);
         super.deleteDomainObject();
     }
 

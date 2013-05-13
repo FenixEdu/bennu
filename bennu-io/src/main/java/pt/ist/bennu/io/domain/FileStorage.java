@@ -29,8 +29,8 @@ abstract public class FileStorage extends FileStorage_Base {
 
     public Boolean delete() {
         if (isCanBeDeleted()) {
-            getConfigurations().clear();
-            removeFileSupport();
+            getConfigurationsSet().clear();
+            setFileSupport(null);
             deleteDomainObject();
             return true;
         }
@@ -38,6 +38,6 @@ abstract public class FileStorage extends FileStorage_Base {
     }
 
     public boolean isCanBeDeleted() {
-        return getFilesCount() == 0;
+        return getFilesSet().isEmpty();
     }
 }

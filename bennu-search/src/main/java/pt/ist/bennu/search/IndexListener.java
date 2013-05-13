@@ -9,24 +9,26 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.fenixframework.CommitListener;
 import pt.ist.fenixframework.DomainObject;
-import pt.ist.fenixframework.pstm.CommitListener;
-import pt.ist.fenixframework.pstm.TopLevelTransaction;
+import pt.ist.fenixframework.Transaction;
+import pt.ist.fenixframework.txintrospector.TxIntrospector;
 
 public class IndexListener implements CommitListener {
     private static Logger logger = LoggerFactory.getLogger(IndexListener.class);
 
     @Override
-    public void beforeCommit(TopLevelTransaction topLevelTransaction) {
+    public void beforeCommit(Transaction transaction) {
     }
 
     @Override
-    public void afterCommit(TopLevelTransaction topLevelTransaction) {
-        if (topLevelTransaction.isWriteTransaction()) {
+    public void afterCommit(Transaction transaction) {
+        TxIntrospector introspector = transaction.getTxIntrospector();
+        if (introspector.isWriteTransaction()) {
             long t1 = System.currentTimeMillis();
             Map<Class<? extends Indexable>, Collection<IndexDocument>> newIndexes = new HashMap<>();
 
-            for (DomainObject domainObject : new HashSet<>(topLevelTransaction.getNewObjects())) {
+            for (DomainObject domainObject : new HashSet<>(introspector.getNewObjects())) {
                 if (domainObject instanceof Searchable) {
                     for (Indexable indexableObject : ((Searchable) domainObject).getObjectsToIndex()) {
                         IndexDocument document = indexableObject.getDocumentToIndex();
@@ -38,8 +40,8 @@ public class IndexListener implements CommitListener {
                 }
             }
 
-            for (DomainObject domainObject : topLevelTransaction.getModifiedObjects()) {
-                if (!topLevelTransaction.isDeleted(domainObject)) {
+            for (DomainObject domainObject : introspector.getModifiedObjects()) {
+                if (!introspector.isDeleted(domainObject)) {
                     if (domainObject instanceof Searchable) {
                         for (Indexable indexableObject : ((Searchable) domainObject).getObjectsToIndex()) {
                             IndexDocument document = indexableObject.getDocumentToIndex();
@@ -67,4 +69,5 @@ public class IndexListener implements CommitListener {
             }
         }
     }
+
 }

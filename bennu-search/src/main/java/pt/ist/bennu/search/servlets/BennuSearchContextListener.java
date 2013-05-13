@@ -5,7 +5,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import pt.ist.bennu.search.IndexListener;
-import pt.ist.fenixframework.pstm.TopLevelTransaction;
+import pt.ist.fenixframework.FenixFramework;
 
 @WebListener
 public class BennuSearchContextListener implements ServletContextListener {
@@ -13,11 +13,11 @@ public class BennuSearchContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        TopLevelTransaction.addCommitListener(listener);
+        FenixFramework.getTransactionManager().addCommitListener(listener);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
-        TopLevelTransaction.removeCommitListener(listener);
+        FenixFramework.getTransactionManager().removeCommitListener(listener);
     }
 }

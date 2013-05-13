@@ -72,10 +72,10 @@ public class VirtualHost extends VirtualHost_Base {
 
     public void delete() {
         if (!VirtualHost.getVirtualHostForThread().equals(this)) {
-            removeBennu();
-            removeDeletedFromBennu();
+            setBennu(null);
+            setDeletedFromBennu(null);
             try {
-                checkDisconnected();
+//                checkDisconnected();
                 deleteDomainObject();
             } catch (Error e) {
                 setDeletedFromBennu(Bennu.getInstance());

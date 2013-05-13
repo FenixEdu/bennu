@@ -23,7 +23,7 @@ import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.i18n.BundleUtil;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * Group for unauthenticated users.
@@ -81,7 +81,7 @@ public class AnonymousGroup extends AnonymousGroup_Base {
      * 
      * @return singleton {@link AnonymousGroup} instance
      */
-    @Service
+    @Atomic
     public static AnonymousGroup getInstance() {
         AnonymousGroup group = select(AnonymousGroup.class);
         return group == null ? new AnonymousGroup() : group;

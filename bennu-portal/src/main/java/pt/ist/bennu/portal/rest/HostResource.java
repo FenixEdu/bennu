@@ -24,7 +24,7 @@ public class HostResource extends DomainObjectResource<VirtualHost> {
 
     @Override
     public Collection<VirtualHost> all() {
-        return Bennu.getInstance().getVirtualHosts();
+        return Bennu.getInstance().getVirtualHostsSet();
     }
 
     @Override

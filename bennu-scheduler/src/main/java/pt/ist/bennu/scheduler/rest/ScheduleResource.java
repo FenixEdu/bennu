@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response.Status;
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.bennu.scheduler.domain.TaskSchedule;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 @Path("/schedule")
 public class ScheduleResource extends BennuRestResource {
@@ -24,7 +24,7 @@ public class ScheduleResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getSchedule() {
         accessControl("#managers");
-        return view(SchedulerSystem.getInstance().getTaskSchedule(), "schedule");
+        return view(SchedulerSystem.getInstance().getTaskScheduleSet(), "schedule");
     }
 
     @GET
@@ -58,7 +58,7 @@ public class ScheduleResource extends BennuRestResource {
         return Response.status(Status.OK).build();
     }
 
-    @Service
+    @Atomic
     public void clear(TaskSchedule task) {
         task.delete();
     }

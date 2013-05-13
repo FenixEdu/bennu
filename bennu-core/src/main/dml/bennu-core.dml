@@ -56,6 +56,15 @@ valueType java.util.Locale as Locale {
 class Bennu {
 }
 
+relation DomainRootBennu {
+	.pt.ist.fenixframework.DomainRoot playsRole root {
+		multiplicity 1..1;
+	}
+	Bennu playsRole bennu {
+		multiplicity 0..1;
+	}
+}
+
 class User {
 	String username  (REQUIRED);
 	String password;

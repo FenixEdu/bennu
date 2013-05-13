@@ -5,8 +5,8 @@ import pt.ist.bennu.io.domain.FileStorage;
 import pt.ist.bennu.io.domain.FileStorageConfiguration;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
-import pt.ist.bennu.service.Service;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.FenixFramework;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -22,7 +22,7 @@ public class FileStorageConfigurationAdapter implements JsonAdapter<FileStorageC
      * ]
      */
     @Override
-    @Service
+    @Atomic
     public FileStorageConfiguration create(JsonElement el, JsonBuilder ctx) {
         final JsonArray configs = el.getAsJsonArray();
         for (JsonElement configEl : configs) {
@@ -46,7 +46,7 @@ public class FileStorageConfigurationAdapter implements JsonAdapter<FileStorageC
         if ("null".equals(oid)) {
             return null;
         }
-        return AbstractDomainObject.fromExternalId(oid);
+        return FenixFramework.getDomainObject(oid);
     }
 
     @Override

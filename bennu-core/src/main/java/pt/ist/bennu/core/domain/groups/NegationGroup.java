@@ -24,7 +24,7 @@ import org.joda.time.DateTime;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.i18n.BundleUtil;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
 
@@ -81,7 +81,7 @@ public class NegationGroup extends NegationGroup_Base {
 
     @Override
     protected void gc() {
-        removeNegated();
+        setNegated(null);
         super.gc();
     }
 
@@ -91,7 +91,7 @@ public class NegationGroup extends NegationGroup_Base {
      * @param group the group to inverse
      * @return singleton {@link NegationGroup} instance
      */
-    @Service
+    @Atomic
     public static NegationGroup getInstance(final BennuGroup group) {
         NegationGroup negated = select(NegationGroup.class, new Predicate<NegationGroup>() {
             @Override

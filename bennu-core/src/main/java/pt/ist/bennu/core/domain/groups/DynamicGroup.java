@@ -24,7 +24,7 @@ import org.joda.time.DateTime;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
 
@@ -88,7 +88,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
         if (when.isAfter(getCreated())) {
             return getGroup();
         }
-        if (hasPrevious()) {
+        if (getPrevious() != null) {
             return getPrevious().getGroup(when);
         }
         return null;
@@ -96,7 +96,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
 
     private void pushHistory() {
         DynamicGroup old = new DynamicGroup();
-        old.removeHost();
+        old.setHost(null);
         old.setName(getName());
         old.setCreated(getCreated());
         old.setCreator(getCreator());
@@ -156,7 +156,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
         return false;
     }
 
-    @Service
+    @Atomic
     public static BennuGroup getInstance(final String name) {
         DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
             @Override
@@ -170,7 +170,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
         throw BennuCoreDomainException.dynamicGroupNotFound(name);
     }
 
-    @Service
+    @Atomic
     public static BennuGroup initialize(final String name, BennuGroup overridingGroup) {
         DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
             @Override

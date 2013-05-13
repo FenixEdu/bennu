@@ -24,10 +24,9 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 
-import pt.ist.fenixframework.pstm.RequestInfo;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 public class CloseTransactionFilter implements Filter {
 
@@ -40,20 +39,9 @@ public class CloseTransactionFilter implements Filter {
     }
 
     @Override
+    @Atomic(mode = TxMode.READ)
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
-        if (request instanceof HttpServletRequest) {
-            RequestInfo.setRequestURI(((HttpServletRequest) request).getRequestURI());
-        }
-
-        try {
-            Transaction.begin(true);
-            Transaction.currentFenixTransaction().setReadOnly();
-            chain.doFilter(request, response);
-        } finally {
-            Transaction.forceFinish();
-            RequestInfo.clear();
-        }
+        chain.doFilter(request, response);
     }
-
 }

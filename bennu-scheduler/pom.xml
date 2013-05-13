@@ -4,29 +4,23 @@
 
 	<parent>
 		<groupId>pt.ist.bennu</groupId>
-		<artifactId>bennu-project</artifactId>
+		<artifactId>bennu</artifactId>
 		<version>2.0-SNAPSHOT</version>
-		<relativePath></relativePath>
 	</parent>
 
 	<artifactId>bennu-scheduler</artifactId>
 	<name>Bennu Scheduler</name>
 
-	<properties>
-		<version.pt.ist.bennu.bennu-core>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-core>
-		<version.pt.ist.bennu.bennu-io>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-io>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>pt.ist.bennu</groupId>
 			<artifactId>bennu-core</artifactId>
-			<version>${version.pt.ist.bennu.bennu-core}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pt.ist.bennu</groupId>
 			<artifactId>bennu-io</artifactId>
-			<version>${version.pt.ist.bennu.bennu-io}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -35,7 +29,6 @@
 		<dependency>
 			<groupId>net.sf.cron4j</groupId>
 			<artifactId>cron4j</artifactId>
-			<version>2.2.5</version>
 		</dependency>
 	</dependencies>
 
@@ -43,10 +36,6 @@
 		<repository>
 			<id>fenix-ashes-maven-repository</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
-		</repository>
-		<repository>
-			<id>nuxeo</id>
-			<url>https://maven-us.nuxeo.org/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
 </project>

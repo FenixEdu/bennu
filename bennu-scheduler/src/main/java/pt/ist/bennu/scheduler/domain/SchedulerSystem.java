@@ -10,8 +10,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import jvstm.TransactionalCommand;
-
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +17,8 @@ import org.slf4j.LoggerFactory;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.scheduler.annotation.Task;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 public class SchedulerSystem extends SchedulerSystem_Base {
 
@@ -70,12 +69,13 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     public static SchedulerSystem getInstance() {
-        if (!Bennu.getInstance().hasSchedulerSystem()) {
+        if (Bennu.getInstance().getSchedulerSystem() == null) {
             Bennu.getInstance().setSchedulerSystem(new SchedulerSystem());
         }
         return Bennu.getInstance().getSchedulerSystem();
     }
 
+    @Atomic(mode = TxMode.WRITE)
     private Boolean shouldRun() {
         if (isLeaseExpired()) {
             lease();
@@ -108,22 +108,10 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
             @Override
             public void run() {
-                Transaction.withTransaction(false, new TransactionalCommand() {
-
-                    @Override
-                    public void doIt() {
-                        setShouldRun(SchedulerSystem.getInstance().shouldRun());
-                    }
-                });
+                setShouldRun(SchedulerSystem.getInstance().shouldRun());
                 if (shouldRun) {
                     LOG.debug("Running bootstrap");
-                    Transaction.withTransaction(false, new TransactionalCommand() {
-
-                        @Override
-                        public void doIt() {
-                            bootstrap();
-                        }
-                    });
+                    bootstrap();
                 } else {
                     LOG.debug("Lease is not gone. Wait for it ...");
                 }
@@ -138,6 +126,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     }
 
+    @Atomic(mode = TxMode.WRITE)
     private static void bootstrap() {
         if (scheduler == null) {
             scheduler = new Scheduler();
@@ -162,7 +151,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     private static void cleanNonExistingSchedules() {
-        for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskSchedule()) {
+        for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskScheduleSet()) {
             if (!tasks.containsKey(schedule.getTaskClassName())) {
                 LOG.warn("Class {} is no longer available. schedule {} - {} - {} deleted. ", schedule.getTaskClassName(),
                         schedule.getExternalId(), schedule.getTaskClassName(), schedule.getSchedule());
@@ -173,21 +162,16 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     private static void initSchedules() {
-        for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskSchedule()) {
+        for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskScheduleSet()) {
             schedule(schedule);
         }
 
         scheduler.schedule(String.format("*/%d * * * *", getLeaseTimeMinutes() / 2), new Runnable() {
             @Override
+            @Atomic(mode = TxMode.WRITE)
             public void run() {
-                Transaction.withTransaction(false, new TransactionalCommand() {
-
-                    @Override
-                    public void doIt() {
-                        final DateTime lease = SchedulerSystem.getInstance().lease();
-                        LOG.info("Leasing until {}", lease);
-                    }
-                });
+                final DateTime lease = SchedulerSystem.getInstance().lease();
+                LOG.info("Leasing until {}", lease);
             }
         });
     }
@@ -224,15 +208,10 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         tasks.put(className, taskAnnotation);
     }
 
+    @Atomic(mode = TxMode.WRITE)
     public static void destroy() {
-        Transaction.withTransaction(false, new TransactionalCommand() {
-
-            @Override
-            public void doIt() {
-                LOG.info("Revert lease to null");
-                SchedulerSystem.getInstance().setLease(null);
-            }
-        });
+        LOG.info("Revert lease to null");
+        SchedulerSystem.getInstance().setLease(null);
     }
 
     public static Map<String, Task> getTasks() {

@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.core.AbstractDomainObject;
 
 public abstract class DomainObjectResource<T extends AbstractDomainObject> extends BennuRestResource {
 

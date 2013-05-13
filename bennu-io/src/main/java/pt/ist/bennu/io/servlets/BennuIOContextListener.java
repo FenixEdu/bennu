@@ -6,13 +6,13 @@ import javax.servlet.annotation.WebListener;
 
 import pt.ist.bennu.io.FileDeleterThread;
 import pt.ist.bennu.io.domain.FileSupport;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 @WebListener
 public class BennuIOContextListener implements ServletContextListener {
     private static boolean initialized = false;
 
-    @Service
+    @Atomic
     public void initialize() {
         if (!initialized) {
             FileSupport.getInstance();

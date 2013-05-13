@@ -216,7 +216,7 @@ public abstract class BennuGroup extends BennuGroup_Base {
      * Delete the object from the system. Assume true in {@link #isGarbageCollectable()} since it is tested before invoking this.
      */
     protected void gc() {
-        removeHost();
+        setHost(null);
         deleteDomainObject();
     }
 

@@ -53,33 +53,35 @@ public class BennuMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException {
         if (mavenProject.getArtifact().getType().equals("jar")) {
-            try {
-                if (webFragment.exists()) {
-                    String template = Files.toString(webFragment, Charsets.UTF_8);
-                    int start = template.indexOf(TEMPLATE_START);
-                    if (start != -1) {
-                        int end = template.indexOf(TEMPLATE_END, start);
-                        if (end != -1) {
-                            StringBuilder output = new StringBuilder();
-                            output.append(template.substring(0, start + TEMPLATE_START.length()));
-                            output.append(NEW_LINE_CHAR);
-                            fillModuleDependencies(output, getIndentation(template, start));
-                            output.append(template.substring(end));
-                            File metaInf =
-                                    new File(mavenProject.getBuild().getOutputDirectory() + File.separatorChar + "META-INF");
-                            metaInf.mkdirs();
-                            Files.write(output.toString(), new File(metaInf, "web-fragment.xml"), Charsets.UTF_8);
+            if (webFragment.exists()) {
+                try {
+                    if (webFragment.exists()) {
+                        String template = Files.toString(webFragment, Charsets.UTF_8);
+                        int start = template.indexOf(TEMPLATE_START);
+                        if (start != -1) {
+                            int end = template.indexOf(TEMPLATE_END, start);
+                            if (end != -1) {
+                                StringBuilder output = new StringBuilder();
+                                output.append(template.substring(0, start + TEMPLATE_START.length()));
+                                output.append(NEW_LINE_CHAR);
+                                fillModuleDependencies(output, getIndentation(template, start));
+                                output.append(template.substring(end));
+                                File metaInf =
+                                        new File(mavenProject.getBuild().getOutputDirectory() + File.separatorChar + "META-INF");
+                                metaInf.mkdirs();
+                                Files.write(output.toString(), new File(metaInf, "web-fragment.xml"), Charsets.UTF_8);
+                            } else {
+                                throw new MojoExecutionException("Missing template end comment: " + TEMPLATE_END);
+                            }
                         } else {
-                            throw new MojoExecutionException("Missing template end comment: " + TEMPLATE_END);
+                            throw new MojoExecutionException("Missing template start comment: " + TEMPLATE_START);
                         }
                     } else {
-                        throw new MojoExecutionException("Missing template start comment: " + TEMPLATE_START);
+                        getLog().info("File: " + webFragment.getAbsolutePath() + " not found. No depency injection could be made");
                     }
-                } else {
-                    getLog().info("File: " + webFragment.getAbsolutePath() + " not found. No depency injection could be made");
+                } catch (IOException e) {
+                    throw new MojoExecutionException(null, e);
                 }
-            } catch (IOException e) {
-                throw new MojoExecutionException(null, e);
             }
 
             try {
@@ -108,7 +110,6 @@ public class BennuMojo extends AbstractMojo {
             } catch (IOException e) {
                 throw new MojoExecutionException(null, e);
             }
-
         }
     }
 

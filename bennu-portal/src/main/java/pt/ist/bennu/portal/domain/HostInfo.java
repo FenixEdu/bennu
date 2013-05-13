@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.i18n.InternationalString;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 public class HostInfo extends HostInfo_Base {
 
@@ -17,12 +17,12 @@ public class HostInfo extends HostInfo_Base {
         setHost(virtualHost);
     }
 
-    @Service
+    @Atomic
     public void delete() {
         final VirtualHost host = getHost();
-        host.removeInfo();
+        host.setInfo(null);
         host.delete();
-        if (host.hasMenu()) {
+        if (host.getMenu() != null) {
             host.getMenu().delete();
         }
         deleteDomainObject();

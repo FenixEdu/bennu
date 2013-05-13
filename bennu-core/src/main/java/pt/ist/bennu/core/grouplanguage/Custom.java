@@ -18,8 +18,8 @@ package pt.ist.bennu.core.grouplanguage;
 
 import java.util.List;
 
-import pt.ist.bennu.core.domain.groups.CustomGroup;
 import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.CustomGroup;
 
 class Custom extends GroupToken {
     private final String operator;

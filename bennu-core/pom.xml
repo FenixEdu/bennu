@@ -1,93 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>pt.ist.bennu</groupId>
-		<artifactId>bennu-project</artifactId>
-		<version>2.0-SNAPSHOT</version>
-		<relativePath>../bennu-project</relativePath>
-	</parent>
+    <parent>
+        <groupId>pt.ist.bennu</groupId>
+        <artifactId>bennu</artifactId>
+        <version>2.0-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>bennu-core</artifactId>
-	<name>Bennu Framework Core</name>
+    <artifactId>bennu-core</artifactId>
+    <name>Bennu Framework Core</name>
 
-	<properties>
-		<version.pt.ist.fenix.framework.core>1.2.2</version.pt.ist.fenix.framework.core>
-		<version.pt.ist.bennu.bennu-service>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-service>
-		<version.pt.ist.bennu.bennu-json>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-json>
-	</properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr3-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.antlr</groupId>
-				<artifactId>antlr3-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
-	<dependencies>
-		<dependency>
-			<groupId>pt.ist</groupId>
-			<artifactId>fenix-framework-core</artifactId>
-			<version>${version.pt.ist.fenix.framework.core}</version>
-		</dependency>
-		<dependency>
-			<groupId>pt.ist.bennu</groupId>
-			<artifactId>bennu-service</artifactId>
-			<version>${version.pt.ist.bennu.bennu-service}</version>
-		</dependency>
-		<dependency>
-			<groupId>cas</groupId>
-			<artifactId>casclient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr-runtime</artifactId>
-		</dependency>
-		<dependency>
+    <dependencies>
+        <dependency>
+            <groupId>pt.ist.bennu</groupId>
+            <artifactId>bennu-json</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>fenix-framework-core-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>fenix-framework-core-consistency-predicates</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cas</groupId>
+            <artifactId>casclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr-runtime</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-servlet</artifactId>
         </dependency>
         <dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>pt.ist.bennu</groupId>
-			<artifactId>bennu-json</artifactId>
-			<version>${version.pt.ist.bennu.bennu-json}</version>
-		</dependency>
-		<dependency>
-  			<groupId>junit</groupId>
-  			<artifactId>junit</artifactId>
-  			<version>4.11</version>
-  			<scope>test</scope>
-  		</dependency>
-	</dependencies>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+        </dependency>
+    </dependencies>
 
-	<repositories>
-		<repository>
-			<id>fenix-ashes-maven-repository</id>
-			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+        </repository>
+    </repositories>
 </project>

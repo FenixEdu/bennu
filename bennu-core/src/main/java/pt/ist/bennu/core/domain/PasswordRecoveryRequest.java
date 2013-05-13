@@ -19,7 +19,7 @@ package pt.ist.bennu.core.domain;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.joda.time.DateTime;
 
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 public class PasswordRecoveryRequest extends PasswordRecoveryRequest_Base {
 
@@ -50,7 +50,7 @@ public class PasswordRecoveryRequest extends PasswordRecoveryRequest_Base {
         return builder.toString();
     }
 
-    @Service
+    @Atomic
     public Boolean consume(final String verificationHash) {
         if (getConsumed() == null) {
             setConsumed(new DateTime());

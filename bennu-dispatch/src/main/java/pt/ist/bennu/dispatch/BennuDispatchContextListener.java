@@ -1,6 +1,5 @@
 package pt.ist.bennu.dispatch;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -17,8 +16,7 @@ import pt.ist.bennu.dispatch.model.ApplicationInfo;
 import pt.ist.bennu.dispatch.model.Details;
 import pt.ist.bennu.dispatch.model.FunctionalityInfo;
 import pt.ist.bennu.dispatch.model.MultiLanguageDetails;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
+import pt.ist.fenixframework.core.Project;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -32,19 +30,14 @@ public class BennuDispatchContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        try {
-            for (FenixFrameworkArtifact artifact : ConfigurationManager.getArtifacts()) {
-                final JsonArray appsJson = getArtifactAppsJson(artifact.getName());
-                if (appsJson != null) {
-                    for (JsonElement appJson : appsJson) {
-                        parseApplicationInfo((JsonObject) appJson);
-                    }
+        for (Project artifact : ConfigurationManager.getArtifacts()) {
+            final JsonArray appsJson = getArtifactAppsJson(artifact.getName());
+            if (appsJson != null) {
+                for (JsonElement appJson : appsJson) {
+                    parseApplicationInfo((JsonObject) appJson);
                 }
             }
-        } catch (IOException | FenixFrameworkProjectException e) {
-            throw new Error(e);
         }
-
     }
 
     private void parseApplicationInfo(JsonObject appJson) {

@@ -1,0 +1,6 @@
+[submodule "bankai"]
+	path = bankai
+	url = git@github.com:ist-dsi/bankai.git
+[submodule "bennu-renderers"]
+	path = bennu-renderers
+	url = git@github.com:pedrosan7os/bennu-renderers.git

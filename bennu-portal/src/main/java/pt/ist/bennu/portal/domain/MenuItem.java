@@ -9,7 +9,7 @@ import pt.ist.bennu.core.domain.groups.BennuGroup;
 import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.dispatch.AppServer;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
@@ -33,11 +33,11 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     }
 
     private Integer getNextOrder() {
-        return getChild().size() + 1;
+        return getChildSet().size() + 1;
     }
 
     public Set<MenuItem> getOrderedChild() {
-        return Collections.unmodifiableSet(new TreeSet<>(getChild()));
+        return Collections.unmodifiableSet(new TreeSet<>(getChildSet()));
     }
 
     public Set<MenuItem> getUserMenu() {
@@ -55,13 +55,13 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
         return getOrd().compareTo(o.getOrd());
     }
 
-    @Service
+    @Atomic
     public void delete() {
         setParent(null);
-        if (hasHost()) {
-            removeHost();
+        if (getHost() != null) {
+            setHost(null);
         }
-        for (MenuItem child : getChild()) {
+        for (MenuItem child : getChildSet()) {
             child.delete();
         }
         deleteDomainObject();

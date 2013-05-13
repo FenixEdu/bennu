@@ -35,7 +35,7 @@ import pt.ist.bennu.core.domain.groups.UserGroup;
 import pt.ist.bennu.core.i18n.I18N;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.TransactionalThread;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 public class Authenticate {
     private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
@@ -60,7 +60,7 @@ public class Authenticate {
         return user;
     }
 
-    @Service
+    @Atomic
     private static UserSession internalLogin(String username, String password, boolean checkPassword) {
         User user = User.findByUsername(username);
         if (checkPassword && ConfigurationManager.getBooleanProperty("check.login.password", true)) {
@@ -69,7 +69,7 @@ public class Authenticate {
             }
         }
         if (user == null) {
-            if (VirtualHost.getVirtualHostForThread().isCasEnabled() || Bennu.getInstance().getUsersCount() == 0) {
+            if (VirtualHost.getVirtualHostForThread().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
                 user = new User(username);
             } else {
                 throw AuthorizationException.authenticationFailed();
@@ -78,7 +78,7 @@ public class Authenticate {
 
         UserSession userWrapper = new UserSession(user);
         setUser(userWrapper);
-        if (Bennu.getInstance().getUsersCount() == 1) {
+        if (Bennu.getInstance().getUsersSet().size() == 1) {
             DynamicGroup.initialize("managers", UserGroup.getInstance(user));
             logger.info("Bootstrapped #managers group to user: " + user.getUsername());
         }
@@ -97,7 +97,7 @@ public class Authenticate {
         setUser(null);
     }
 
-    @Service
+    @Atomic
     private static void internalLogout(User user) {
         user.setLastLogoutDateTime(new DateTime());
     }
