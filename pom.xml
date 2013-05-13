@@ -155,6 +155,7 @@
         <module>bennu-json</module>
         <module>bennu-portal</module>
         <module>bennu-project</module>
+        <module>bennu-email</module>
         <module>bennu-scheduler</module>
         <module>bennu-scheduler-ui</module>
         <module>bennu-search</module>
