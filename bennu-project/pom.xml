@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -450,93 +451,13 @@
                 <artifactId>axis</artifactId>
                 <version>${version.axis.axis}</version>
             </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${version.ch.qos.logback.logback.classic}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <profiles>
-        <profile>
-            <id>war</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>pt.ist</groupId>
-                        <artifactId>ff-maven-plugin</artifactId>
-                        <version>${version.pt.ist.ff.maven.plugin}</version>
-                        <configuration>
-                            <codeGeneratorClassName>pt.ist.bennu.backend.codeGenerator.VirtualHostAwareCodeGenerator</codeGeneratorClassName>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>pt.ist</groupId>
-                                <artifactId>fenix-framework-backend-jvstm-ojb-code-generator</artifactId>
-                                <version>${version.fenix.framework}</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>pt.ist</groupId>
-                                <artifactId>bennu-backend-util</artifactId>
-                                <version>${version.bennu.backend.util}</version>
-                            </dependency>
-                        </dependencies>
-                        <executions>
-                            <execution>
-                                <id>default</id>
-                                <goals>
-                                    <goal>ff-generate-domain</goal>
-                                    <goal>ff-post-compile</goal>
-                                    <goal>ff-process-atomic-annotations</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <version>${version.org.apache.maven.plugins.maven.war.plugin}</version>
-                        <configuration>
-                            <packagingExcludes>**/web-fragment.xml</packagingExcludes>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>package</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>war</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>pt.ist</groupId>
-                        <artifactId>bennu-maven-plugin</artifactId>
-                        <version>${version.pt.ist.bennu.maven.plugin}</version>
-                        <configuration>
-                            <webFragment>src/main/webapp/WEB-INF/web.xml</webFragment>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>update-web-fragment</goal>
-                                    <goal>post-compile</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                    <version>${version.ch.qos.logback.logback.classic}</version>
-                </dependency>
-                <dependency>
-                    <groupId>pt.ist</groupId>
-                    <artifactId>fenix-framework-backend-jvstm-ojb-runtime</artifactId>
-                    <version>${version.fenix.framework}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
     <repositories>
         <repository>
