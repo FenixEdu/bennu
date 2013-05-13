@@ -22,28 +22,19 @@
  *   along with the E-mail Module. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package pt.ist.emailNotifier.domain;
+package pt.ist.bennu.email.domain;
 
 import java.util.Collection;
 
-import pt.ist.bennu.scheduler.custom.WriteCustomTask;
-import pt.ist.emailNotifier.util.EmailSender;
+import pt.ist.bennu.email.util.EmailSender;
+import pt.ist.bennu.scheduler.CronTask;
 
 /**
  * 
  * @author Luis Cruz
  * 
  */
-public class ManualDispatcher extends WriteCustomTask {
-
-    @Override
-    protected void doService() {
-        System.out.println("Running Manual Send");
-        for (Email email : EmailNotifier.getInstance().getEmails()) {
-            deliver(email);
-            email.delete();
-        }
-    }
+public class ManualDispatcher extends CronTask {
 
     protected void deliver(final Email email) {
         final String fromName = email.getFromName();
@@ -81,6 +72,15 @@ public class ManualDispatcher extends WriteCustomTask {
             stringBuilder.append(bccAddresses.size());
         }
         System.out.println(stringBuilder.toString());
+    }
+
+    @Override
+    public void runTask() {
+        System.out.println("Running Manual Send");
+        for (Email email : EmailNotifier.getInstance().getEmailsSet()) {
+            deliver(email);
+            email.delete();
+        }
     }
 
 }

@@ -22,13 +22,11 @@
  *   along with the E-mail Module. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package pt.ist.emailNotifier.domain;
+package pt.ist.bennu.email.domain;
 
-import jvstm.TransactionalCommand;
 import pt.ist.bennu.scheduler.CronTask;
 import pt.ist.bennu.scheduler.annotation.Task;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * 
@@ -47,17 +45,8 @@ public class EmailTask extends CronTask {
 
         @Override
         public void run() {
-            try {
-                Transaction.withTransaction(false, new TransactionalCommand() {
-                    @Override
-                    public void doIt() {
-                        final Email email = AbstractDomainObject.fromExternalId(oid);
-                        email.deliver();
-                    }
-                });
-            } finally {
-                Transaction.forceFinish();
-            }
+            final Email email = FenixFramework.getDomainObject(oid);
+            email.deliver();
         }
     }
 

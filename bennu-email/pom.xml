@@ -4,16 +4,17 @@
 
 	<parent>
 		<groupId>pt.ist.bennu</groupId>
-		<artifactId>bennu-project</artifactId>
+		<artifactId>bennu</artifactId>
 		<version>2.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>email-dispatch</artifactId>
+	<artifactId>bennu-email</artifactId>
 	<name>Bennu Email Dispatching</name>
 
 	<properties>
 		<version.pt.ist.bennu.bennu-core>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-core>
 		<version.pt.ist.bennu.scheduler>2.0-SNAPSHOT</version.pt.ist.bennu.scheduler>
+		<version.javax.mail.mail>1.4.7</version.javax.mail.mail>
 	</properties>
 
 	<dependencies>
@@ -30,6 +31,7 @@
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
+			<version>${version.javax.mail.mail}</version>	
 		</dependency>
 	</dependencies>
 

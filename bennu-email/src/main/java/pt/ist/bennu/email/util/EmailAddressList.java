@@ -22,7 +22,7 @@
  *   along with the E-mail Module. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package pt.ist.emailNotifier.util;
+package pt.ist.bennu.email.util;
 
 import java.io.Serializable;
 import java.util.ArrayList;

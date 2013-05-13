@@ -22,7 +22,7 @@
  *   along with the E-mail Module. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package pt.ist.emailNotifier.domain;
+package pt.ist.bennu.email.domain;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -48,7 +48,7 @@ import javax.mail.internet.MimeUtility;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.util.ConfigurationManager;
-import pt.ist.emailNotifier.util.EmailAddressList;
+import pt.ist.bennu.email.util.EmailAddressList;
 
 import com.google.common.base.Joiner;
 
@@ -115,7 +115,7 @@ public class Email extends Email_Base {
         for (final MessageId messageId : getMessageIdsSet()) {
             messageId.delete();
         }
-        removeEmailNotifier();
+        setEmailNotifier(null);
         super.deleteDomainObject();
     }
 
@@ -431,7 +431,7 @@ public class Email extends Email_Base {
         }
 
         if (!hasAnyRecipients()) {
-            removeEmailNotifier();
+            setEmailNotifier(null);
         }
 //	}
     }

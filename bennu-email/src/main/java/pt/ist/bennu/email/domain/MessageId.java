@@ -22,7 +22,7 @@
  *   along with the E-mail Module. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package pt.ist.emailNotifier.domain;
+package pt.ist.bennu.email.domain;
 
 import org.joda.time.DateTime;
 
@@ -40,7 +40,7 @@ public class MessageId extends MessageId_Base {
     }
 
     public void delete() {
-        removeEmail();
+        setEmail(null);
         deleteDomainObject();
     }
 

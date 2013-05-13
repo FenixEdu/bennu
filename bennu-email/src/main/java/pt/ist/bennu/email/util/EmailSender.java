@@ -1,4 +1,4 @@
-package pt.ist.emailNotifier.util;
+package pt.ist.bennu.email.util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;

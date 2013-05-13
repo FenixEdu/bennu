@@ -1,13 +1,13 @@
-package pt.ist.emailNotifier.domain;
+package pt.ist.bennu.email.domain;
 
 import pt.ist.bennu.core.domain.Bennu;
-import pt.ist.bennu.service.Service;
+import pt.ist.fenixframework.Atomic;
 
 public class EmailNotifier extends EmailNotifier_Base {
 
     private static EmailNotifier instance = null;
 
-    @Service
+    @Atomic
     public synchronized static void initialize() {
         final Bennu bennu = Bennu.getInstance();
         instance = bennu.getEmailNotifier();
