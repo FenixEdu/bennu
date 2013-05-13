@@ -1,8 +1,5 @@
 package pt.ist.emailNotifier.domain;
 
-
-
-
 valueType pt.ist.emailNotifier.util.EmailAddressList as EmailAddressList {
     externalizeWith {
         String toString();
@@ -37,9 +34,6 @@ class MessageId {
 	DateTime sendTime;
 }
 
-class EmailTask extends .pt.ist.fenixframework.plugins.scheduler.domain.Task { }
-
-
 relation EmailNotifierEmail {
 	EmailNotifier playsRole emailNotifier;
 	Email playsRole emails {
@@ -59,4 +53,9 @@ relation EmailMessageTransportResult {
 	MessageTransportResult playsRole messageTransportResult {
 		multiplicity *;
 	}
+}
+
+relation MyOrgEmailNotifier {
+	.pt.ist.bennu.core.domain.Bennu playsRole bennu;
+	EmailNotifier playsRole emailNotifier;
 }

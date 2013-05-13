@@ -24,7 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>pt.ist.bennu</groupId>
-			<artifactId>scheduler</artifactId>
+			<artifactId>bennu-scheduler</artifactId>
 			<version>${version.pt.ist.bennu.bennu-core}</version>
 		</dependency>
 		<dependency>

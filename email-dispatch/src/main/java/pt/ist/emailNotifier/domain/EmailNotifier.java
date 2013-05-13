@@ -1,7 +1,7 @@
 package pt.ist.emailNotifier.domain;
 
-import pt.ist.bennu.core.domain.MyOrg;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.bennu.core.domain.Bennu;
+import pt.ist.bennu.service.Service;
 
 public class EmailNotifier extends EmailNotifier_Base {
 
@@ -9,11 +9,11 @@ public class EmailNotifier extends EmailNotifier_Base {
 
     @Service
     public synchronized static void initialize() {
-        final MyOrg myOrg = MyOrg.getInstance();
-        instance = myOrg.getEmailNotifier();
+        final Bennu bennu = Bennu.getInstance();
+        instance = bennu.getEmailNotifier();
         if (instance == null) {
             instance = new EmailNotifier();
-            myOrg.setEmailNotifier(instance);
+            bennu.setEmailNotifier(instance);
         }
     }
 

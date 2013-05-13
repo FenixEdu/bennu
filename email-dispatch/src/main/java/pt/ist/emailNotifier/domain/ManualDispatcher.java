@@ -26,8 +26,8 @@ package pt.ist.emailNotifier.domain;
 
 import java.util.Collection;
 
-import pt.ist.bennu.core.domain.scheduler.WriteCustomTask;
-import pt.utl.ist.fenix.tools.smtp.EmailSender;
+import pt.ist.bennu.scheduler.custom.WriteCustomTask;
+import pt.ist.emailNotifier.util.EmailSender;
 
 /**
  * 

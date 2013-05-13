@@ -25,6 +25,8 @@
 package pt.ist.emailNotifier.domain;
 
 import jvstm.TransactionalCommand;
+import pt.ist.bennu.scheduler.CronTask;
+import pt.ist.bennu.scheduler.annotation.Task;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 
@@ -33,7 +35,8 @@ import pt.ist.fenixframework.pstm.Transaction;
  * @author Luis Cruz
  * 
  */
-public class EmailTask extends EmailTask_Base {
+@Task(englishTitle = "Send emails")
+public class EmailTask extends CronTask {
 
     private static class SingleEmailDispatcher extends Thread {
         private final String oid;
