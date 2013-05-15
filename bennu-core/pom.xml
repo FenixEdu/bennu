@@ -29,11 +29,7 @@
         </dependency>
         <dependency>
             <groupId>pt.ist</groupId>
-            <artifactId>fenix-framework-core-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>pt.ist</groupId>
-            <artifactId>fenix-framework-core-consistency-predicates</artifactId>
+            <artifactId>dsi-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>cas</groupId>

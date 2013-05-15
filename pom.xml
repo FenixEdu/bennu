@@ -4,14 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>pt.ist.bennu</groupId>
-        <artifactId>bennu-project</artifactId>
-        <version>2.0-SNAPSHOT</version>
-        <relativePath>bennu-project</relativePath>
+        <groupId>pt.ist</groupId>
+        <artifactId>fenix-framework-project</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>pt.ist.bennu</groupId>
     <artifactId>bennu</artifactId>
     <name>Bennu Framework</name>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -21,8 +22,6 @@
         <!-- ************************************************************************************************ -->
         <version.org.antlr.antlr.runtime>3.4</version.org.antlr.antlr.runtime>
         <version.cas.casclient>2.1.1</version.cas.casclient>
-        <version.com.google.guava.guava>14.0-rc3</version.com.google.guava.guava>
-        <version.com.google.code.gson.gson>2.2.2</version.com.google.code.gson.gson>
         <version.com.sun.jersey.contribs.jersey.multipart>1.14</version.com.sun.jersey.contribs.jersey.multipart>
         <version.com.sun.jersey.jersey.client>1.14</version.com.sun.jersey.jersey.client>
         <version.com.sun.jersey.jersey.server>1.14</version.com.sun.jersey.jersey.server>
@@ -31,8 +30,8 @@
         <version.joda.time.joda.time>1.5.2</version.joda.time.joda.time>
         <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
         <version.org.apache.lucene.lucene.core>3.6.1</version.org.apache.lucene.lucene.core>
-        <version.org.apache.tomcat.tomcat.jsp.api>7.0.28</version.org.apache.tomcat.tomcat.jsp.api>
         <version.pt.ist.bankai>0.0.1-SNAPSHOT</version.pt.ist.bankai>
+        <version.pt.ist.dsi.commons>1.0.0-SNAPSHOT</version.pt.ist.dsi.commons>
 
         <!-- ************************************************************************************************ -->
         <!-- * PLUGIN VERSIONS * -->
@@ -48,6 +47,17 @@
     </scm>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/webapp</directory>
+                <targetPath>META-INF/resources</targetPath>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -66,17 +76,20 @@
         </pluginManagement>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>pt.ist</groupId>
-                <artifactId>fenix-framework-core-api</artifactId>
-                <version>${version.pt.ist.fenix.framework}</version>
-            </dependency>
-            <dependency>
-                <groupId>pt.ist</groupId>
-                <artifactId>fenix-framework-core-consistency-predicates</artifactId>
-                <version>${version.pt.ist.fenix.framework}</version>
+                <artifactId>dsi-commons</artifactId>
+                <version>${version.pt.ist.dsi.commons}</version>
             </dependency>
             <dependency>
                 <groupId>cas</groupId>
@@ -88,16 +101,6 @@
                         <artifactId>servlet-api</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${version.com.google.guava.guava}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${version.com.google.code.gson.gson}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
@@ -147,21 +150,27 @@
         </dependencies>
     </dependencyManagement>
 
+    <repositories>
+        <!-- TODO: this should be proxied in nexus -->
+        <repository>
+            <id>nuxeo</id>
+            <url>https://maven-us.nuxeo.org/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+
     <modules>
+        <module>bankai</module>
         <module>bennu-admin</module>
         <module>bennu-core</module>
         <module>bennu-dispatch</module>
+        <module>bennu-email</module>
         <module>bennu-io</module>
+        <module>bennu-io-ui</module>
         <module>bennu-json</module>
         <module>bennu-portal</module>
-        <module>bennu-project</module>
-        <module>bennu-email</module>
+        <module>bennu-renderers</module>
         <module>bennu-scheduler</module>
         <module>bennu-scheduler-ui</module>
         <module>bennu-search</module>
-        <module>bennu-renderers</module>
-        <module>bankai</module>
-        <module>maven/bennu-maven-plugin</module>
-        <module>maven/bennu-project-archetype</module>
     </modules>
 </project>
