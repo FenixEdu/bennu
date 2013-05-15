@@ -1,5 +1,0 @@
-package module.fileSupport.domain;
-
-
-class TestFile extends .pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile {
-}
