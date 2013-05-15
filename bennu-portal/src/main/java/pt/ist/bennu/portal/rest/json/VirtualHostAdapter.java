@@ -5,12 +5,12 @@ import org.apache.commons.codec.binary.Base64;
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.rest.json.DomainObjectViewer;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.portal.domain.HostInfo;
 import pt.ist.bennu.portal.domain.MenuItem;
+import pt.ist.dsi.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.google.gson.JsonElement;
@@ -43,16 +43,16 @@ public class VirtualHostAdapter implements JsonAdapter<VirtualHost> {
 
     private void setHostInfo(VirtualHost obj, JsonObject jsonObj, HostInfo info, JsonBuilder ctx) {
         if (jsonObj.has("applicationCopyright")) {
-            info.setApplicationCopyright(InternationalString.fromJson(jsonObj.get("applicationCopyright").getAsJsonObject()));
+            info.setApplicationCopyright(LocalizedString.fromJson(jsonObj.get("applicationCopyright").getAsJsonObject()));
         }
         if (jsonObj.has("applicationTitle")) {
-            info.setApplicationTitle(InternationalString.fromJson(jsonObj.get("applicationTitle").getAsJsonObject()));
+            info.setApplicationTitle(LocalizedString.fromJson(jsonObj.get("applicationTitle").getAsJsonObject()));
         }
         if (jsonObj.has("htmlTitle")) {
-            info.setHtmlTitle(InternationalString.fromJson(jsonObj.get("htmlTitle").getAsJsonObject()));
+            info.setHtmlTitle(LocalizedString.fromJson(jsonObj.get("htmlTitle").getAsJsonObject()));
         }
         if (jsonObj.has("applicationSubTitle")) {
-            info.setApplicationSubTitle(InternationalString.fromJson(jsonObj.get("applicationSubTitle").getAsJsonObject()));
+            info.setApplicationSubTitle(LocalizedString.fromJson(jsonObj.get("applicationSubTitle").getAsJsonObject()));
         }
         if (jsonObj.has("supportEmailAddress")) {
             info.setSupportEmailAddress(jsonObj.get("supportEmailAddress").getAsString());

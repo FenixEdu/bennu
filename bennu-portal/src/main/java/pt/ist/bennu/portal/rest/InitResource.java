@@ -17,12 +17,12 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.i18n.InternationalString;
-import pt.ist.bennu.core.i18n.InternationalString.Builder;
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.portal.domain.HostInfo;
 import pt.ist.bennu.portal.domain.MenuItem;
+import pt.ist.dsi.commons.i18n.LocalizedString;
+import pt.ist.dsi.commons.i18n.LocalizedString.Builder;
 import pt.ist.fenixframework.Atomic;
 
 import com.google.gson.JsonArray;
@@ -101,10 +101,10 @@ public class InitResource extends BennuRestResource {
         }
     }
 
-    private InternationalString getIS(String content) {
+    private LocalizedString getIS(String content) {
         Builder builder = new Builder();
         for (Locale locale : ConfigurationManager.getSupportedLocales()) {
-            builder.append(new InternationalString(locale, content));
+            builder.append(new LocalizedString(locale, content));
         }
         return builder.build();
     }
@@ -128,8 +128,8 @@ public class InitResource extends BennuRestResource {
         return Base64.decode(base64JsonElement.getAsString());
     }
 
-    private InternationalString mls(JsonObject json, String attr) {
-        return InternationalString.fromJson(json.get(attr).getAsJsonObject());
+    private LocalizedString mls(JsonObject json, String attr) {
+        return LocalizedString.fromJson(json.get(attr).getAsJsonObject());
     }
 
     private String get(JsonObject obj, String attr) {

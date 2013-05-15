@@ -12,8 +12,6 @@ import javax.ws.rs.core.Response.Status;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.i18n.InternationalString;
-import pt.ist.bennu.core.i18n.InternationalString.Builder;
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.core.rest.json.UserSessionViewer;
 import pt.ist.bennu.core.security.Authenticate;
@@ -21,6 +19,8 @@ import pt.ist.bennu.core.security.UserSession;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.portal.domain.HostInfo;
 import pt.ist.bennu.portal.rest.json.HostMenuViewer;
+import pt.ist.dsi.commons.i18n.LocalizedString;
+import pt.ist.dsi.commons.i18n.LocalizedString.Builder;
 import pt.ist.fenixframework.Atomic;
 
 import com.google.gson.JsonObject;
@@ -52,7 +52,7 @@ public class HostMenuResource extends BennuRestResource {
         return toJson(hostMenuView);
     }
 
-    private InternationalString getIS(String content) {
+    private LocalizedString getIS(String content) {
         Builder builder = new Builder();
         for (Locale locale : ConfigurationManager.getSupportedLocales()) {
             builder.with(locale, content);

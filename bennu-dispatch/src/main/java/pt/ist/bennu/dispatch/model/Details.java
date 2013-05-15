@@ -2,13 +2,13 @@ package pt.ist.bennu.dispatch.model;
 
 import java.io.Serializable;
 
-import pt.ist.bennu.core.i18n.InternationalString;
+import pt.ist.dsi.commons.i18n.LocalizedString;
 
 public abstract class Details implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public abstract InternationalString getTitle();
+    public abstract LocalizedString getTitle();
 
-    public abstract InternationalString getDescription();
+    public abstract LocalizedString getDescription();
 }

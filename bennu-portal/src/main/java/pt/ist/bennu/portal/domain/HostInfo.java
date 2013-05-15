@@ -3,7 +3,7 @@ package pt.ist.bennu.portal.domain;
 import org.apache.commons.lang.StringUtils;
 
 import pt.ist.bennu.core.domain.VirtualHost;
-import pt.ist.bennu.core.i18n.InternationalString;
+import pt.ist.dsi.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.Atomic;
 
 public class HostInfo extends HostInfo_Base {
@@ -28,22 +28,22 @@ public class HostInfo extends HostInfo_Base {
         deleteDomainObject();
     }
 
-    private InternationalString mls(InternationalString mls) {
-        return mls == null ? new InternationalString() : mls;
+    private LocalizedString mls(LocalizedString mls) {
+        return mls == null ? new LocalizedString() : mls;
     }
 
     @Override
-    public void setApplicationCopyright(InternationalString applicationCopyright) {
+    public void setApplicationCopyright(LocalizedString applicationCopyright) {
         super.setApplicationCopyright(mls(applicationCopyright));
     }
 
     @Override
-    public void setApplicationSubTitle(InternationalString applicationSubTitle) {
+    public void setApplicationSubTitle(LocalizedString applicationSubTitle) {
         super.setApplicationSubTitle(mls(applicationSubTitle));
     }
 
     @Override
-    public void setHtmlTitle(InternationalString htmlTitle) {
+    public void setHtmlTitle(LocalizedString htmlTitle) {
         super.setHtmlTitle(mls(htmlTitle));
     }
 

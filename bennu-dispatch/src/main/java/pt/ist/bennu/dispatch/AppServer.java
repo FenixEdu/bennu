@@ -17,10 +17,10 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.dispatch.model.ApplicationInfo;
 import pt.ist.bennu.dispatch.model.FunctionalityInfo;
+import pt.ist.dsi.commons.i18n.LocalizedString;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -67,7 +67,7 @@ public class AppServer {
         throw new WebApplicationException(Status.NOT_FOUND);
     }
 
-    public static InternationalString getTitle(String path) {
+    public static LocalizedString getTitle(String path) {
         final FunctionalityInfo functionalityInfo = pathFunctionalityMap.get(path);
         if (functionalityInfo != null) {
             return functionalityInfo.getTitle();
@@ -75,7 +75,7 @@ public class AppServer {
         return null;
     }
 
-    public static InternationalString getDescription(String path) {
+    public static LocalizedString getDescription(String path) {
         final FunctionalityInfo functionalityInfo = pathFunctionalityMap.get(path);
         if (functionalityInfo != null) {
             return functionalityInfo.getDescription();

@@ -14,11 +14,11 @@ import javax.ws.rs.core.Response;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.domain.groups.LoggedGroup;
-import pt.ist.bennu.core.i18n.I18N;
 import pt.ist.bennu.core.rest.json.UserSessionViewer;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.security.UserSession;
 import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.dsi.commons.i18n.I18N;
 
 @Path("profile")
 public class ProfileResource extends BennuRestResource {

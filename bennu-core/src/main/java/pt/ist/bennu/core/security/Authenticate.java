@@ -32,9 +32,9 @@ import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.groups.DynamicGroup;
 import pt.ist.bennu.core.domain.groups.UserGroup;
-import pt.ist.bennu.core.i18n.I18N;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.TransactionalThread;
+import pt.ist.dsi.commons.i18n.I18N;
 import pt.ist.fenixframework.Atomic;
 
 public class Authenticate {

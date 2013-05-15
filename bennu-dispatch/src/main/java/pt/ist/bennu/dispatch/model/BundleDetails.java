@@ -1,7 +1,7 @@
 package pt.ist.bennu.dispatch.model;
 
 import pt.ist.bennu.core.i18n.BundleUtil;
-import pt.ist.bennu.core.i18n.InternationalString;
+import pt.ist.dsi.commons.i18n.LocalizedString;
 
 public class BundleDetails extends Details {
 
@@ -20,12 +20,12 @@ public class BundleDetails extends Details {
     }
 
     @Override
-    public InternationalString getDescription() {
+    public LocalizedString getDescription() {
         return BundleUtil.getInternationalString(bundle, description);
     }
 
     @Override
-    public InternationalString getTitle() {
+    public LocalizedString getTitle() {
         return BundleUtil.getInternationalString(bundle, title);
     }
 

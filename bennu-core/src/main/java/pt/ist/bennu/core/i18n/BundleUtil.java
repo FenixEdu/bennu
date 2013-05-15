@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.dsi.commons.i18n.I18N;
+import pt.ist.dsi.commons.i18n.LocalizedString;
 
 public class BundleUtil {
     private static final Logger logger = LoggerFactory.getLogger(BundleUtil.class);
@@ -45,8 +47,8 @@ public class BundleUtil {
         }
     }
 
-    public static InternationalString getInternationalString(final String bundle, final String key, String... args) {
-        InternationalString i18NString = new InternationalString();
+    public static LocalizedString getInternationalString(final String bundle, final String key, String... args) {
+        LocalizedString i18NString = new LocalizedString();
         for (Locale locale : ConfigurationManager.getSupportedLocales()) {
             String message = getString(bundle, locale, key, args);
             i18NString = i18NString.with(locale, message);

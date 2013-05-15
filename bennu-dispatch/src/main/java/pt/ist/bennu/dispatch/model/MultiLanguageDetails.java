@@ -1,27 +1,27 @@
 package pt.ist.bennu.dispatch.model;
 
-import pt.ist.bennu.core.i18n.InternationalString;
+import pt.ist.dsi.commons.i18n.LocalizedString;
 
 public class MultiLanguageDetails extends Details {
 
     private static final long serialVersionUID = 1L;
 
-    private final InternationalString title;
-    private final InternationalString description;
+    private final LocalizedString title;
+    private final LocalizedString description;
 
-    public MultiLanguageDetails(InternationalString title, InternationalString description) {
+    public MultiLanguageDetails(LocalizedString title, LocalizedString description) {
         super();
         this.title = title;
         this.description = description;
     }
 
     @Override
-    public InternationalString getTitle() {
+    public LocalizedString getTitle() {
         return title;
     }
 
     @Override
-    public InternationalString getDescription() {
+    public LocalizedString getDescription() {
         return description;
     }
 

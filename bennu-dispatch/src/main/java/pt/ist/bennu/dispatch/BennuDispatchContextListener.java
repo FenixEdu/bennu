@@ -10,12 +10,12 @@ import javax.servlet.annotation.WebListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.dispatch.model.ApplicationInfo;
 import pt.ist.bennu.dispatch.model.Details;
 import pt.ist.bennu.dispatch.model.FunctionalityInfo;
 import pt.ist.bennu.dispatch.model.MultiLanguageDetails;
+import pt.ist.dsi.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.core.Project;
 
 import com.google.gson.JsonArray;
@@ -58,8 +58,8 @@ public class BennuDispatchContextListener implements ServletContextListener {
     }
 
     public Details getDetails(JsonObject functionality) {
-        final InternationalString title = InternationalString.fromJson(functionality.get("title"));
-        final InternationalString description = InternationalString.fromJson(functionality.get("description"));
+        final LocalizedString title = LocalizedString.fromJson(functionality.get("title"));
+        final LocalizedString description = LocalizedString.fromJson(functionality.get("description"));
         Details details = new MultiLanguageDetails(title, description);
         return details;
     }

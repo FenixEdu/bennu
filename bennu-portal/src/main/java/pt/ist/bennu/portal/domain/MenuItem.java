@@ -6,9 +6,9 @@ import java.util.TreeSet;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.groups.BennuGroup;
-import pt.ist.bennu.core.i18n.InternationalString;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.dispatch.AppServer;
+import pt.ist.dsi.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
@@ -19,7 +19,7 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     public MenuItem() {
         super();
         setOrd(1);
-        setDescription(new InternationalString());
+        setDescription(new LocalizedString());
     }
 
     @Override
@@ -68,8 +68,8 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     }
 
     @Override
-    public InternationalString getDescription() {
-        final InternationalString description = super.getDescription();
+    public LocalizedString getDescription() {
+        final LocalizedString description = super.getDescription();
         if (description == null) {
             return AppServer.getDescription(getPath());
         }
@@ -77,8 +77,8 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     }
 
     @Override
-    public InternationalString getTitle() {
-        final InternationalString title = super.getTitle();
+    public LocalizedString getTitle() {
+        final LocalizedString title = super.getTitle();
         if (title == null) {
             return AppServer.getTitle(getPath());
         }
@@ -86,14 +86,14 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     }
 
     @Override
-    public void setTitle(InternationalString title) {
+    public void setTitle(LocalizedString title) {
         if (!isFunctionalityLink()) {
             super.setTitle(title);
         }
     }
 
     @Override
-    public void setDescription(InternationalString description) {
+    public void setDescription(LocalizedString description) {
         if (!isFunctionalityLink()) {
             super.setDescription(description);
         }
