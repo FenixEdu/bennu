@@ -1,6 +1,7 @@
 package pt.ist.bennu.scheduler.example;
 
-import org.joda.time.DateTime;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 import pt.ist.bennu.scheduler.CronTask;
 import pt.ist.bennu.scheduler.annotation.Task;
@@ -8,9 +9,25 @@ import pt.ist.bennu.scheduler.annotation.Task;
 @Task(englishTitle = "This task runs every minutes")
 public class ExampleTask extends CronTask {
 
+    private SecureRandom random = new SecureRandom();
+
     @Override
     public void runTask() {
-        System.out.println("Esta corre todos os minutos : " + new DateTime());
+        final int randInt = random.nextInt(100);
+        if (randInt > 50) {
+            throw new AssertionError("Random Int Exception: " + randInt, new Exception("Just a cause"));
+        }
+        for (int i = 0; i < 32; i++) {
+            output(next(), new Integer(i).toString().getBytes());
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
+    private String next() {
+        return new BigInteger(130, random).toString(32) + ".txt";
+    }
 }

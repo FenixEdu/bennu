@@ -1,9 +1,14 @@
 define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 		'models/Schedule', 'collections/Schedule', 'views/ScheduleList',
-		'collections/Task', 'views/TaskList', 'views/ScheduleCreate' ],
+		'collections/Task', 'views/TaskList', 
+		'views/ScheduleCreate',
+		'collections/Log','models/Log', 'views/LogList', 'views/Log'  
+		],
 		function($, _, Mustache, Backbone, Marionette, App, ScheduleModel,
 				ScheduleCollection, ScheduleList, TaskCollection, TaskListView,
-				ScheduleCreateView) {
+				ScheduleCreateView,
+				LogCollection, LogModel,LogList, LogView
+				) {
 
 			var Router = Backbone.Marionette.AppRouter.extend({
 
@@ -21,7 +26,10 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 					"" : "showTasks",
 					"tasks" : "showTasks",
 					"schedules" : "showSchedules",
-					"schedule/:type" : "prepareCreateSchedule"
+					"schedule/:type" : "prepareCreateSchedule",
+					"logs" : "showLogs",
+					"logs/:id" : "showLogs",
+					
 				},
 
 				controller : {
@@ -59,7 +67,26 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 						App.page.show(new ScheduleCreateView({
 							model : scheduleModel
 						}));
-					}
+					},
+					
+					showLogs : function(id) {
+						
+						if (id) {
+							var log = new LogModel({id : id});
+							log.fetch({success: function() {
+								App.page.show(new LogView({
+									model : log
+								}));
+							}});
+							return;
+						}
+						var logsCollection = new LogCollection();
+						logsCollection.fetch({success : function() {
+								App.page.show(new LogList({
+									collection : logsCollection
+								}));
+						}});
+					},
 				}
 			});
 

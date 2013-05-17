@@ -17,7 +17,11 @@ class ProcessQueue implements Runnable {
                 LOG.info("queue : {}", SchedulerSystem.queue.toString());
                 final TaskRunner task = SchedulerSystem.queue.take();
                 if (task != null) {
+                    LOG.info("Add to running tasks : {}", task.getTaskName());
+                    SchedulerSystem.runningTasks.add(task);
                     task.run();
+                    LOG.info("Remove from running tasks : {}", task.getTaskName());
+                    SchedulerSystem.runningTasks.remove(task);
                 }
 
             } catch (InterruptedException e) {

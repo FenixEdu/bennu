@@ -2,10 +2,13 @@ package pt.ist.bennu.scheduler.domain;
 
 import it.sauronsoftware.cron4j.Scheduler;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -27,12 +30,19 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     private static Scheduler scheduler;
     public static LinkedBlockingQueue<TaskRunner> queue;
+    public static Set<TaskRunner> runningTasks;
 
     private static final Integer DEFAULT_LEASE_TIME_MINUTES = 5;
     private static final Integer DEFAULT_QUEUE_THREADS_NUMBER = 2;
 
+    private static transient Integer leaseTime;
+    private static transient Integer queueThreadsNumber;
+
     static {
         queue = new LinkedBlockingQueue<>();
+        runningTasks = Collections.newSetFromMap(new ConcurrentHashMap<TaskRunner, Boolean>());
+        getLeaseTimeMinutes();
+        getQueueThreadsNumber();
     }
 
     /**
@@ -42,10 +52,14 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * @return reattempt scheduler initialization time (in minutes)
      */
     private static Integer getLeaseTimeMinutes() {
-        final Integer leaseTime =
-                ConfigurationManager.getIntegerProperty("scheduler.lease.time.minutes", DEFAULT_LEASE_TIME_MINUTES);
-        if (leaseTime < 2) {
-            throw new Error("property scheduler.lease.time.minutes must be a positive integer greater than 1.");
+        if (leaseTime == null) {
+            final Integer leaseTimeProperty =
+                    ConfigurationManager.getIntegerProperty("scheduler.lease.time.minutes", DEFAULT_LEASE_TIME_MINUTES);
+            if (leaseTimeProperty < 2) {
+                throw new Error("property scheduler.lease.time.minutes must be a positive integer greater than 1.");
+            }
+            LOG.info("scheduler.lease.time.minutes: {}", leaseTimeProperty);
+            leaseTime = leaseTimeProperty;
         }
         return leaseTime;
     }
@@ -56,22 +70,24 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * @return number of threads
      */
     private static Integer getQueueThreadsNumber() {
-        final Integer queueThreadsNumber =
-                ConfigurationManager.getIntegerProperty("scheduler.queue.threads.number", DEFAULT_QUEUE_THREADS_NUMBER);
-        if (queueThreadsNumber < 1) {
-            throw new Error("property scheduler.queue.threads.number must be a positive integer greater than 0.");
+        if (queueThreadsNumber == null) {
+            final Integer queueThreadsNumberProperty =
+                    ConfigurationManager.getIntegerProperty("scheduler.queue.threads.number", DEFAULT_QUEUE_THREADS_NUMBER);
+            if (queueThreadsNumberProperty < 1) {
+                throw new Error("property scheduler.queue.threads.number must be a positive integer greater than 0.");
+            }
+            LOG.info("scheduler.queue.threads.number: {}", queueThreadsNumberProperty);
+            queueThreadsNumber = queueThreadsNumberProperty;
         }
         return queueThreadsNumber;
     }
 
     private SchedulerSystem() {
         super();
+        setBennu(Bennu.getInstance());
     }
 
     public static SchedulerSystem getInstance() {
-        if (Bennu.getInstance().getSchedulerSystem() == null) {
-            Bennu.getInstance().setSchedulerSystem(new SchedulerSystem());
-        }
         return Bennu.getInstance().getSchedulerSystem();
     }
 
@@ -101,12 +117,13 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * This method starts the scheduler if lease is expired.
      * */
     public static void init() {
-
+        ensureSchedulerSystem();
         new Timer(true).scheduleAtFixedRate(new TimerTask() {
 
             Boolean shouldRun = false;
 
             @Override
+            @Atomic(mode = TxMode.READ)
             public void run() {
                 setShouldRun(SchedulerSystem.getInstance().shouldRun());
                 if (shouldRun) {
@@ -126,6 +143,13 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     }
 
+    @Atomic
+    private static void ensureSchedulerSystem() {
+        if (Bennu.getInstance().getSchedulerSystem() == null) {
+            new SchedulerSystem();
+        }
+    }
+
     @Atomic(mode = TxMode.WRITE)
     private static void bootstrap() {
         if (scheduler == null) {
@@ -135,9 +159,23 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         if (!scheduler.isStarted()) {
             cleanNonExistingSchedules();
             initSchedules();
+            spawnLeaseTimerTask();
             spawnConsumers();
             scheduler.start();
         }
+    }
+
+    private static void spawnLeaseTimerTask() {
+        new Timer(true).scheduleAtFixedRate(new TimerTask() {
+            @Override
+            @Atomic(mode = TxMode.WRITE)
+            public void run() {
+                if (scheduler.isStarted()) {
+                    final DateTime lease = SchedulerSystem.getInstance().lease();
+                    LOG.info("Leasing until {}", lease);
+                }
+            }
+        }, 0, getLeaseTimeMinutes() * 60 * 1000 / 2);
     }
 
     private static void spawnConsumers() {
@@ -165,17 +203,15 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskScheduleSet()) {
             schedule(schedule);
         }
-
-        scheduler.schedule(String.format("*/%d * * * *", getLeaseTimeMinutes() / 2), new Runnable() {
-            @Override
-            @Atomic(mode = TxMode.WRITE)
-            public void run() {
-                final DateTime lease = SchedulerSystem.getInstance().lease();
-                LOG.info("Leasing until {}", lease);
-            }
-        });
     }
 
+    /**
+     * Schedules a task.
+     * If the task is not already queued and is not running add it to the processing queue.
+     * ProcessQueue threads will pop and run pending tasks.
+     * 
+     * @param schedule
+     */
     public static void schedule(final TaskSchedule schedule) {
         LOG.info("schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
         schedule.setTaskId(scheduler.schedule(schedule.getSchedule(), new Runnable() {
@@ -186,8 +222,12 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                     try {
                         final TaskRunner taskRunner = schedule.getTaskRunner();
                         if (!queue.contains(taskRunner)) {
-                            LOG.info("Add to queue {}", taskRunner.getTaskName());
-                            queue.put(taskRunner);
+                            if (!runningTasks.contains(taskRunner)) {
+                                LOG.info("Add to queue {}", taskRunner.getTaskName());
+                                queue.put(taskRunner);
+                            } else {
+                                LOG.info("Don't add to queue. Task is running {}", taskRunner.getTaskName());
+                            }
                         } else {
                             LOG.info("Don't add to queue. Already exists {}", taskRunner.getTaskName());
                         }

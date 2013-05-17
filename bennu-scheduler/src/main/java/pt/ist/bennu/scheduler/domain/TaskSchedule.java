@@ -1,10 +1,10 @@
 package pt.ist.bennu.scheduler.domain;
 
 import pt.ist.bennu.scheduler.CronTask;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 public class TaskSchedule extends TaskSchedule_Base {
-
-    private TaskRunner runner;
 
     private TaskSchedule(final String taskClassName) {
         super();
@@ -24,16 +24,16 @@ public class TaskSchedule extends TaskSchedule_Base {
         super.deleteDomainObject();
     }
 
+    @Atomic(mode = TxMode.READ)
     public TaskRunner getTaskRunner() {
+        Class<? extends CronTask> taskClass;
         try {
-            if (runner == null) {
-                Class<? extends CronTask> taskClass = (Class<? extends CronTask>) Class.forName(getTaskClassName());
-                runner = new TaskRunner(taskClass.newInstance());
-            }
-        } catch (Exception e) {
+            taskClass = (Class<? extends CronTask>) Class.forName(getTaskClassName());
+            return new TaskRunner(taskClass.newInstance());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
+            return null;
         }
-        return runner;
     }
 
     public String getTaskId() {

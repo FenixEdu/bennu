@@ -1,0 +1,27 @@
+<td>{{taskName}}</td>
+<td>{{start}}</td>
+<td>{{end}}</td>
+<td>
+{{#finished}}
+{{#success}}
+	<i class="icon-ok-circle"><div style='display:none;'>2</div></i>
+{{/success}}
+{{^success}}
+	<i class="icon-ban-circle"><div style='display:none;'>3</div</i>
+{{/success}}	
+{{/finished}}
+{{^finished}}
+	<i class="icon-play"><div style='display:none;'>1</div</i>
+{{/finished}}
+<td>
+<!-- 	<table> -->
+<!-- 	{{#files}} -->
+<!-- 	<tr> -->
+<!-- 		<td> -->
+<!-- 			<a href='{{url}}'>{{name}}</a> -->
+<!-- 		</td> -->
+<!-- 	</tr> -->
+<!-- 	{{/files}} -->
+<!-- 	</table> -->
+	<a href="#logs/{{id}}" id="show-log-details" class="btn btn-success">details</a>
+</td>

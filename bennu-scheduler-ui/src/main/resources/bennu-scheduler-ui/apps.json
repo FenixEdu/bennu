@@ -16,6 +16,12 @@
 			  "description" : {"en-GB" : "Task schedules", "pt-PT" : "Agendamento de tarefas"},
 			  "path" : "#schedules",
 			  "accessExpression" : "#managers"
+			},
+			{ 
+   			  "title" : {"en-GB" : "Task Logs", "pt-PT" : "Execuções de Agendamentos"},
+			  "description" : {"en-GB" : "Task logs", "pt-PT" : "Execuções Agendamento de tarefas"},
+			  "path" : "#logs",
+			  "accessExpression" : "#managers"
 			}
 		]
 }]}

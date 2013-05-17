@@ -1,0 +1,60 @@
+<table class="table">
+	<tbody>
+		<tr>
+			<td>TaskName</td>
+			<td>{{taskName}}</td>
+		</tr>
+		<tr>
+			<td>Start Time</td>
+			<td>{{start}}</td>
+		</tr>
+		<tr>
+			<td>End Time</td>
+			<td>{{end}}</td>
+		</tr>
+		<tr>
+			<td>Status</td>
+			<td>
+			{{#finished}}
+				{{#success}}
+					<i class="icon-ok-circle"></i>
+				{{/success}}
+				{{^success}}
+					<i class="icon-ban-circle"></i>
+				{{/success}}	
+			{{/finished}}
+			{{^finished}}
+				<i class="icon-play"></i>
+			{{/finished}}
+			</td>
+		</tr>
+		{{#success}}
+			<tr>
+				<td>Files</td>
+				<td>
+					<ul>
+					{{#files}}
+						<li><a href="{{url}}">{{name}}</a>
+					{{/files}}
+					</ul>
+				</td>
+			</tr>
+		{{/success}}
+		{{#finished}}
+		{{^success}}
+			<tr>
+				<td>stacktrace</td>
+				<td>
+					<pre>{{stackTrace}}</pre>
+				</td>
+			</tr>
+		{{/success}}
+		{{/finished}}
+			<tr>
+				<td>log</td>
+				<td>
+					<pre id="logs"></pre>
+				</td>
+			</tr>
+	</tbody>
+</table>

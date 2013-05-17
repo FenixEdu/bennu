@@ -2,6 +2,8 @@ package pt.ist.bennu.scheduler.domain;
 
 import pt.ist.bennu.scheduler.CronTask;
 
+import com.google.common.base.Objects;
+
 class TaskRunner implements Runnable {
 
     CronTask task;
@@ -40,5 +42,10 @@ class TaskRunner implements Runnable {
 
     public CronTask getTask() {
         return task;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getTaskName());
     }
 }
