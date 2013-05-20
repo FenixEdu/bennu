@@ -93,6 +93,10 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     @Atomic(mode = TxMode.WRITE)
     private Boolean shouldRun() {
+        if (getLoggingStorage() == null) {
+            LOG.error("Please configure scheduler logging storage.");
+            return false;
+        }
         if (isLeaseExpired()) {
             lease();
             return true;
@@ -264,5 +268,13 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             return taskAnnotation.englishTitle();
         }
         return null;
+    }
+
+    @Atomic(mode = TxMode.READ)
+    public static String getLogsPath() {
+        if (getInstance().getLoggingStorage() == null) {
+            throw new Error("Please add logging storage");
+        }
+        return getInstance().getLoggingStorage().getAbsolutePath();
     }
 }

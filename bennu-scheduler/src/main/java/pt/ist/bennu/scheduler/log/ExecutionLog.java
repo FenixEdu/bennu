@@ -12,6 +12,8 @@ import java.util.UUID;
 
 import org.joda.time.DateTime;
 
+import pt.ist.bennu.scheduler.domain.SchedulerSystem;
+
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,7 +37,7 @@ public class ExecutionLog {
     private String stackTrace;
     private Set<String> files;
 
-    public static final String LOG_JSON_PATH = "/tmp/executionLog.json";
+    public static final String LOG_JSON_FILENAME = "executionLog.json";
 
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -135,14 +137,19 @@ public class ExecutionLog {
         if (Strings.isNullOrEmpty(json)) {
             return;
         }
-        synchronized (LOG_JSON_PATH) {
-            try (FileOutputStream fos = new FileOutputStream(new File(LOG_JSON_PATH), true)) {
+        synchronized (LOG_JSON_FILENAME) {
+            try (FileOutputStream fos =
+                    new FileOutputStream(new File(getLogFilePath()), true)) {
                 fos.write(json.getBytes());
                 fos.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static String getLogFilePath() {
+        return SchedulerSystem.getLogsPath().concat(LOG_JSON_FILENAME);
     }
 
     public void persist() {

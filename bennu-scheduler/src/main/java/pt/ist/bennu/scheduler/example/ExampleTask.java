@@ -18,7 +18,9 @@ public class ExampleTask extends CronTask {
             throw new AssertionError("Random Int Exception: " + randInt, new Exception("Just a cause"));
         }
         for (int i = 0; i < 32; i++) {
-            output(next(), new Integer(i).toString().getBytes());
+            final String filename = next();
+            taskLog("Writing number %d to file %s\n", i, filename);
+            output(filename, new Integer(i).toString().getBytes());
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {

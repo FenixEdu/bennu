@@ -74,6 +74,9 @@ public abstract class BennuRestResource extends JsonAwareResource {
     protected <T extends DomainObject> T readDomainObject(final String externalId) {
         boolean error = false;
         try {
+            if (externalId == null || "null".equals(externalId)) {
+                return null;
+            }
             T obj = FenixFramework.getDomainObject(externalId);
             if (obj == null) {
                 error = true;

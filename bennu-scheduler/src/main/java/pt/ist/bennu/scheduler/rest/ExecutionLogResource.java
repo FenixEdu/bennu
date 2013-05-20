@@ -121,7 +121,7 @@ public class ExecutionLogResource {
     }
 
     private synchronized static void updateLogMap() {
-        final File file = new File(ExecutionLog.LOG_JSON_PATH);
+        final File file = new File(ExecutionLog.getLogFilePath());
         if (file.exists() && hasChanged(file)) {
             try (FileReader fileReader = new FileReader(file)) {
                 JsonStreamParser parser = new JsonStreamParser(fileReader);

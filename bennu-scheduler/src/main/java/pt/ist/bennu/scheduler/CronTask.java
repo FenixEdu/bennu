@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.bennu.scheduler.log.ExecutionLog;
@@ -17,7 +16,6 @@ import com.google.common.base.Joiner;
 
 public abstract class CronTask implements Runnable {
     private Logger logger;
-    private static final String TASK_PATH = "/tmp";
     private transient ExecutionLog log;
 
     public String getLocalizedName() {
@@ -30,9 +28,7 @@ public abstract class CronTask implements Runnable {
 
     public Logger getLogger() {
         if (logger == null) {
-            MDC.clear();
-            MDC.put("tasklog", getClassName().replace('.', '_').concat("/").concat(log.getId().replace('-', '_')));
-            logger = LoggerFactory.getLogger("crontask");
+            logger = LoggerFactory.getLogger(getClassName());
             log.addFile("log");
         }
         return logger;
@@ -43,7 +39,6 @@ public abstract class CronTask implements Runnable {
     @Override
     public void run() {
         log = new ExecutionLog(getClassName());
-        getLogger().info("Start at {}", log.getStart());
         log.persist();
         try {
             innerAtomicRun();
@@ -55,8 +50,6 @@ public abstract class CronTask implements Runnable {
         } finally {
             log.setEnd(new DateTime());
             log.persist();
-            getLogger().info("End at {}", log.getEnd());
-            MDC.clear();
             logger = null;
         }
     }
@@ -77,7 +70,7 @@ public abstract class CronTask implements Runnable {
     }
 
     public static String getAbsolutePath(String filename, String className, String id) {
-        return Joiner.on("/").join(TASK_PATH, className.replace('.', '_'), id.replace('-', '_'), filename);
+        return Joiner.on("/").join(SchedulerSystem.getLogsPath(), className.replace('.', '_'), id.replace('-', '_'), filename);
     }
 
     public File output(String filename, byte[] fileContent, boolean append) {
@@ -98,5 +91,13 @@ public abstract class CronTask implements Runnable {
 
     public File output(String filename, byte[] fileContent) {
         return output(filename, fileContent, false);
+    }
+
+    protected final void taskLog(String format, Object... args) {
+        output("log", String.format(format, args).getBytes(), true);
+    }
+
+    protected final void taskLog(String log) {
+        output("log", log.getBytes(), true);
     }
 }

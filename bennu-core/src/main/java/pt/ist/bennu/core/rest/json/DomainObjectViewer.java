@@ -14,7 +14,7 @@ public class DomainObjectViewer implements JsonViewer<AbstractDomainObject> {
     @Override
     public JsonElement view(AbstractDomainObject obj, JsonBuilder ctx) {
         final JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("id", obj.getExternalId());
+        jsonObject.addProperty("id", obj == null ? "null" : obj.getExternalId());
         return jsonObject;
     }
 

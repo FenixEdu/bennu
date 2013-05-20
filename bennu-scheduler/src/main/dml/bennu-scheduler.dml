@@ -24,3 +24,9 @@ relation TaskTaskSchedule {
 		multiplicity *;
 	}
 }
+
+
+relation SchedulerSystemLocalFileSystemStorage {
+	SchedulerSystem playsRole schedulerSystem; 
+	.pt.ist.bennu.io.domain.LocalFileSystemStorage playsRole loggingStorage;
+}

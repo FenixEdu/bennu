@@ -108,6 +108,11 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         return path;
     }
 
+    public String getAbsolutePath() {
+        final String physicalPath = getPhysicalPath(getPath());
+        return physicalPath.endsWith(PATH_SEPARATOR) ? physicalPath : physicalPath.concat(PATH_SEPARATOR);
+    }
+
     private String transformIDInPath(final String uniqueIdentification) {
         final Integer directoriesNameLength = getTreeDirectoriesNameLength();
 

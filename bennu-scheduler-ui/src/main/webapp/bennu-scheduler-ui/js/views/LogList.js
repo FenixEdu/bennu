@@ -17,9 +17,6 @@ define([
             'destroy': 'render'
             },
         
-        initialize: function() {
-        },
-        
         onShow: function() {
         	$("table").dataTable( {
         		"bFilter": false,
