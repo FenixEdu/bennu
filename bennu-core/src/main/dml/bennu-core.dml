@@ -109,31 +109,31 @@ relation DeletedHosts {
 
 /* Authorization Groups */
 
-class groups.BennuGroup {
+class groups.Group {
 }
 
 relation Groups {
 	VirtualHost playsRole host {
 		multiplicity 0..1;
 	}
-	groups.BennuGroup playsRole groups {
+	groups.Group playsRole groups {
 		multiplicity *;
 	}
 }
 
-class groups.NobodyGroup extends groups.BennuGroup {
+class groups.NobodyGroup extends groups.Group {
 }
 
-class groups.AnyoneGroup extends groups.BennuGroup {
+class groups.AnyoneGroup extends groups.Group {
 }
 
-class groups.AnonymousGroup extends groups.BennuGroup {
+class groups.AnonymousGroup extends groups.Group {
 }
 
-class groups.LoggedGroup extends groups.BennuGroup {
+class groups.LoggedGroup extends groups.Group {
 }
 
-class groups.UserGroup extends groups.BennuGroup {
+class groups.UserGroup extends groups.Group {
 }
 
 relation UserGroupMembers {
@@ -145,11 +145,11 @@ relation UserGroupMembers {
 	}
 }
 
-class groups.CompositionGroup extends groups.BennuGroup {
+class groups.CompositionGroup extends groups.Group {
 }
 
 relation GroupComposition {
-	groups.BennuGroup playsRole children {
+	groups.Group playsRole children {
 		multiplicity 1..*;
 	}
 	groups.CompositionGroup playsRole compositions {
@@ -166,7 +166,7 @@ class groups.IntersectionGroup extends groups.CompositionGroup {
 class groups.DifferenceGroup extends groups.CompositionGroup {
 }
 
-class groups.NegationGroup extends groups.BennuGroup {
+class groups.NegationGroup extends groups.Group {
 }
 
 relation NegationGroups {
@@ -179,7 +179,7 @@ relation NegationGroups {
 }
 
 relation GroupNegationGroup {
-	groups.BennuGroup playsRole negated {
+	groups.Group playsRole negated {
 		multiplicity 1..1;
 	}
 	groups.NegationGroup playsRole negation {
@@ -187,10 +187,10 @@ relation GroupNegationGroup {
 	}
 }
 
-class groups.CustomGroup extends groups.BennuGroup {
+class groups.CustomGroup extends groups.Group {
 }
 
-class groups.DynamicGroup extends groups.BennuGroup {
+class groups.DynamicGroup extends groups.Group {
 	String name (REQUIRED);
 	DateTime created (REQUIRED);
 }
@@ -208,7 +208,7 @@ relation DynamicGroupWrapper {
 	groups.DynamicGroup playsRole dynamicGroup {
 		multiplicity *;
 	}
-	groups.BennuGroup playsRole group {
+	groups.Group playsRole group {
 		multiplicity 1..1;
 	}
 }

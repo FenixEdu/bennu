@@ -32,10 +32,10 @@ import com.google.common.collect.Iterables;
 /**
  * Difference composition group. Can be read as members of first group except members of the remaining ones.
  * 
- * @see BennuGroup
+ * @see Group
  */
 public class DifferenceGroup extends DifferenceGroup_Base {
-    protected DifferenceGroup(Set<BennuGroup> children) {
+    protected DifferenceGroup(Set<Group> children) {
         super();
         init(children);
     }
@@ -48,7 +48,7 @@ public class DifferenceGroup extends DifferenceGroup_Base {
     @Override
     public Set<User> getMembers() {
         final Set<User> users = new HashSet<>();
-        Iterator<BennuGroup> iterator = getChildrenSet().iterator();
+        Iterator<Group> iterator = getChildrenSet().iterator();
         if (iterator.hasNext()) {
             users.addAll(iterator.next().getMembers());
             while (iterator.hasNext()) {
@@ -60,7 +60,7 @@ public class DifferenceGroup extends DifferenceGroup_Base {
 
     @Override
     public boolean isMember(final User user) {
-        Iterator<BennuGroup> iterator = getChildrenSet().iterator();
+        Iterator<Group> iterator = getChildrenSet().iterator();
         if (iterator.hasNext()) {
             if (!iterator.next().isMember(user)) {
                 return false;
@@ -79,7 +79,7 @@ public class DifferenceGroup extends DifferenceGroup_Base {
     @Override
     public Set<User> getMembers(DateTime when) {
         final Set<User> users = new HashSet<>();
-        Iterator<BennuGroup> iterator = getChildrenSet().iterator();
+        Iterator<Group> iterator = getChildrenSet().iterator();
         if (iterator.hasNext()) {
             users.addAll(iterator.next().getMembers(when));
             while (iterator.hasNext()) {
@@ -91,7 +91,7 @@ public class DifferenceGroup extends DifferenceGroup_Base {
 
     @Override
     public boolean isMember(User user, DateTime when) {
-        Iterator<BennuGroup> iterator = getChildrenSet().iterator();
+        Iterator<Group> iterator = getChildrenSet().iterator();
         if (iterator.hasNext()) {
             if (!iterator.next().isMember(user, when)) {
                 return false;
@@ -108,8 +108,8 @@ public class DifferenceGroup extends DifferenceGroup_Base {
     }
 
     @Override
-    public BennuGroup minus(BennuGroup group) {
-        Set<BennuGroup> children = new HashSet<>(getChildrenSet());
+    public Group minus(Group group) {
+        Set<Group> children = new HashSet<>(getChildrenSet());
         children.add(group);
         return DifferenceGroup.getInstance(children);
     }
@@ -118,7 +118,7 @@ public class DifferenceGroup extends DifferenceGroup_Base {
      * @see #getInstance(Set)
      */
     @Atomic
-    public static DifferenceGroup getInstance(final BennuGroup... children) {
+    public static DifferenceGroup getInstance(final Group... children) {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }
 
@@ -130,7 +130,7 @@ public class DifferenceGroup extends DifferenceGroup_Base {
      * @return singleton {@link DifferenceGroup} instance
      */
     @Atomic
-    public static DifferenceGroup getInstance(final Set<BennuGroup> children) {
+    public static DifferenceGroup getInstance(final Set<Group> children) {
         DifferenceGroup group = select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
             @Override
             public boolean apply(DifferenceGroup input) {

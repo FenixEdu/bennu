@@ -17,11 +17,11 @@
 package pt.ist.bennu.core.grouplanguage;
 
 import pt.ist.bennu.core.domain.groups.AnonymousGroup;
-import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 class Anonymous extends GroupToken {
     @Override
-    public BennuGroup group() {
+    public Group group() {
         return AnonymousGroup.getInstance();
     }
 }

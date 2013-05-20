@@ -34,7 +34,7 @@ import com.google.common.collect.Sets;
 /**
  * Groups of specific users.
  * 
- * @see BennuGroup
+ * @see Group
  */
 public class UserGroup extends UserGroup_Base {
     protected UserGroup(Set<User> users) {

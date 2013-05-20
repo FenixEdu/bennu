@@ -25,19 +25,19 @@ import com.google.common.collect.Iterables;
 /**
  * N-ary group composition.
  * 
- * @see BennuGroup
+ * @see Group
  */
 public abstract class CompositionGroup extends CompositionGroup_Base {
     protected CompositionGroup() {
     }
 
-    protected void init(Set<BennuGroup> children) {
+    protected void init(Set<Group> children) {
         getChildrenSet().addAll(children);
     }
 
-    private class PresentationNameTransformer implements Function<BennuGroup, String> {
+    private class PresentationNameTransformer implements Function<Group, String> {
         @Override
-        public String apply(BennuGroup input) {
+        public String apply(Group input) {
             return input.getPresentationName();
         }
     }
@@ -49,9 +49,9 @@ public abstract class CompositionGroup extends CompositionGroup_Base {
                         .join(Iterables.transform(getChildrenSet(), new PresentationNameTransformer())) + ")";
     }
 
-    private class ExpressionTransformer implements Function<BennuGroup, String> {
+    private class ExpressionTransformer implements Function<Group, String> {
         @Override
-        public String apply(BennuGroup input) {
+        public String apply(Group input) {
             return input.expression();
         }
     }

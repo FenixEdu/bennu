@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.UserGroup;
 
 class Users extends GroupToken {
@@ -32,7 +32,7 @@ class Users extends GroupToken {
     }
 
     @Override
-    public BennuGroup group() {
+    public Group group() {
         Set<User> users = new HashSet<>();
         for (String username : usernames) {
             User user = User.findByUsername(username);

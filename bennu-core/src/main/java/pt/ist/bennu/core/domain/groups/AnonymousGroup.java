@@ -28,7 +28,7 @@ import pt.ist.fenixframework.Atomic;
 /**
  * Group for unauthenticated users.
  * 
- * @see BennuGroup
+ * @see Group
  */
 public class AnonymousGroup extends AnonymousGroup_Base {
     protected AnonymousGroup() {
@@ -66,7 +66,7 @@ public class AnonymousGroup extends AnonymousGroup_Base {
     }
 
     @Override
-    public BennuGroup not() {
+    public Group not() {
         return LoggedGroup.getInstance();
     }
 

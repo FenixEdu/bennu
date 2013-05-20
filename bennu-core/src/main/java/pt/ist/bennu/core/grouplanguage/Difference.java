@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.DifferenceGroup;
 
 class Difference extends GroupToken {
@@ -31,8 +31,8 @@ class Difference extends GroupToken {
     }
 
     @Override
-    public BennuGroup group() {
-        Set<BennuGroup> groups = new HashSet<>();
+    public Group group() {
+        Set<Group> groups = new HashSet<>();
         for (GroupToken groupToken : children) {
             groups.add(groupToken.group());
         }

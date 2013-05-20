@@ -29,7 +29,7 @@ import pt.ist.fenixframework.Atomic;
 /**
  * Authenticated users group.
  * 
- * @see BennuGroup
+ * @see Group
  */
 public class LoggedGroup extends LoggedGroup_Base {
     protected LoggedGroup() {
@@ -67,7 +67,7 @@ public class LoggedGroup extends LoggedGroup_Base {
     }
 
     @Override
-    public BennuGroup not() {
+    public Group not() {
         return AnonymousGroup.getInstance();
     }
 

@@ -31,10 +31,10 @@ import com.google.common.base.Predicate;
 /**
  * Inverse group of another group.
  * 
- * @see BennuGroup
+ * @see Group
  */
 public class NegationGroup extends NegationGroup_Base {
-    protected NegationGroup(BennuGroup negated) {
+    protected NegationGroup(Group negated) {
         super();
         setNegationVirtualHost(getHost());
         setNegated(negated);
@@ -75,7 +75,7 @@ public class NegationGroup extends NegationGroup_Base {
     }
 
     @Override
-    public BennuGroup not() {
+    public Group not() {
         return getNegated();
     }
 
@@ -92,7 +92,7 @@ public class NegationGroup extends NegationGroup_Base {
      * @return singleton {@link NegationGroup} instance
      */
     @Atomic
-    public static NegationGroup getInstance(final BennuGroup group) {
+    public static NegationGroup getInstance(final Group group) {
         NegationGroup negated = select(NegationGroup.class, new Predicate<NegationGroup>() {
             @Override
             public boolean apply(NegationGroup input) {

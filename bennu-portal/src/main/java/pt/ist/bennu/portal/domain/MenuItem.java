@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.dispatch.AppServer;
 import pt.ist.dsi.commons.i18n.LocalizedString;
@@ -104,6 +104,6 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     }
 
     public Boolean isAvailable(User user) {
-        return BennuGroup.parse(getAccessExpression()).isMember(user);
+        return Group.parse(getAccessExpression()).isMember(user);
     }
 }

@@ -93,7 +93,7 @@ import com.google.common.base.Joiner;
  * 
  * </p>
  * 
- * @see BennuGroup
+ * @see Group
  */
 public abstract class CustomGroup extends CustomGroup_Base {
     private static final Logger logger = LoggerFactory.getLogger(CustomGroup.class);
@@ -162,9 +162,9 @@ public abstract class CustomGroup extends CustomGroup_Base {
             return params.isEmpty() ? operator : operator + "(" + Joiner.on(", ").join(params) + ")";
         }
 
-        public Set<BennuGroup> groupsForUser(User user) {
+        public Set<Group> groupsForUser(User user) {
             try {
-                return (Set<BennuGroup>) groupsForUser.invoke(null, user);
+                return (Set<Group>) groupsForUser.invoke(null, user);
             } catch (InvocationTargetException e) {
                 if (e.getCause() instanceof RuntimeException) {
                     throw (RuntimeException) e.getCause();
@@ -239,8 +239,8 @@ public abstract class CustomGroup extends CustomGroup_Base {
         return (T) getOperator(operator).parse(parameters);
     }
 
-    public static Set<BennuGroup> groupsForUser(User user) {
-        Set<BennuGroup> groups = new HashSet<>();
+    public static Set<Group> groupsForUser(User user) {
+        Set<Group> groups = new HashSet<>();
         for (Operator<?> operator : operators.values()) {
             groups.addAll(operator.groupsForUser(user));
         }

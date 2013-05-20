@@ -13,7 +13,7 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.domain.exceptions.DomainException;
-import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.security.UserSession;
@@ -91,7 +91,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
         return null;
     }
 
-    protected User accessControl(BennuGroup group) {
+    protected User accessControl(Group group) {
         final User user = Authenticate.getUser();
         if (group.isMember(user)) {
             return user;
@@ -101,7 +101,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
 
     protected User accessControl(String accessExpression) {
         try {
-            final BennuGroup group = BennuGroup.parse(accessExpression);
+            final Group group = Group.parse(accessExpression);
             return accessControl(group);
         } catch (DomainException e) {
             throw AuthorizationException.unauthorized();

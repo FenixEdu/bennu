@@ -26,7 +26,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.fenixframework.FenixFramework;
 
 public class UserSession implements Serializable, Principal {
@@ -42,7 +42,7 @@ public class UserSession implements Serializable, Principal {
 
     private final Set<String> groupExpressions = new HashSet<>();
 
-    private transient Set<BennuGroup> groups = null;
+    private transient Set<Group> groups = null;
 
     UserSession(final User user) {
         userExternalId = user.getExternalId();
@@ -62,7 +62,7 @@ public class UserSession implements Serializable, Principal {
 
         lastLogoutDateTime = user.getLastLogoutDateTime();
 
-        for (BennuGroup group : user.accessibleGroups()) {
+        for (Group group : user.accessibleGroups()) {
             groupExpressions.add(group.expression());
         }
     }
@@ -97,11 +97,11 @@ public class UserSession implements Serializable, Principal {
         return lastLogoutDateTime;
     }
 
-    public Set<BennuGroup> accessibleGroups() {
+    public Set<Group> accessibleGroups() {
         if (groups == null) {
             groups = new HashSet<>();
             for (String expression : groupExpressions) {
-                groups.add(BennuGroup.parse(expression));
+                groups.add(Group.parse(expression));
             }
         }
         return groups;

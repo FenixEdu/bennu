@@ -28,7 +28,7 @@ import pt.ist.fenixframework.Atomic;
 /**
  * Group that always returns false.
  * 
- * @see BennuGroup
+ * @see Group
  */
 public class NobodyGroup extends NobodyGroup_Base {
     protected NobodyGroup() {
@@ -66,22 +66,22 @@ public class NobodyGroup extends NobodyGroup_Base {
     }
 
     @Override
-    public BennuGroup and(BennuGroup group) {
+    public Group and(Group group) {
         return this;
     }
 
     @Override
-    public BennuGroup or(BennuGroup group) {
+    public Group or(Group group) {
         return group;
     }
 
     @Override
-    public BennuGroup minus(BennuGroup group) {
+    public Group minus(Group group) {
         return this;
     }
 
     @Override
-    public BennuGroup not() {
+    public Group not() {
         return AnyoneGroup.getInstance();
     }
 

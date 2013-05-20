@@ -18,7 +18,7 @@ package pt.ist.bennu.core.grouplanguage;
 
 import java.util.List;
 
-import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.CustomGroup;
 
 class Custom extends GroupToken {
@@ -32,7 +32,7 @@ class Custom extends GroupToken {
     }
 
     @Override
-    public BennuGroup group() {
+    public Group group() {
         return CustomGroup.parse(operator, args.toArray(new String[0]));
     }
 }
