@@ -4,6 +4,7 @@ import it.sauronsoftware.cron4j.Scheduler;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -31,6 +32,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     private static Scheduler scheduler;
     public static LinkedBlockingQueue<TaskRunner> queue;
     public static Set<TaskRunner> runningTasks;
+    public static Set<TaskSchedule> scheduledTasks;
 
     private static final Integer DEFAULT_LEASE_TIME_MINUTES = 5;
     private static final Integer DEFAULT_QUEUE_THREADS_NUMBER = 2;
@@ -41,6 +43,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     static {
         queue = new LinkedBlockingQueue<>();
         runningTasks = Collections.newSetFromMap(new ConcurrentHashMap<TaskRunner, Boolean>());
+        scheduledTasks = Collections.newSetFromMap(new ConcurrentHashMap<TaskSchedule, Boolean>());
         getLeaseTimeMinutes();
         getQueueThreadsNumber();
     }
@@ -91,6 +94,22 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         return Bennu.getInstance().getSchedulerSystem();
     }
 
+    /**
+     * 
+     * @return true if scheduler is running in this server instance.
+     */
+    public static Boolean isRunning() {
+        return isActive() && scheduler.isStarted();
+    }
+
+    /**
+     * 
+     * @return true if this server instance is responsible for running the scheduler.
+     */
+    public static Boolean isActive() {
+        return scheduler != null;
+    }
+
     @Atomic(mode = TxMode.WRITE)
     private Boolean shouldRun() {
         if (getLoggingStorage() == null) {
@@ -104,11 +123,21 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         return false;
     }
 
+    /**
+     * Set's lease time
+     * 
+     * @return
+     */
     private DateTime lease() {
         setLease(new DateTime());
         return getLease();
     }
 
+    /**
+     * True if lease is expired
+     * 
+     * @return
+     */
     private boolean isLeaseExpired() {
         final DateTime lease = getLease();
         if (lease == null) {
@@ -131,10 +160,9 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             public void run() {
                 setShouldRun(SchedulerSystem.getInstance().shouldRun());
                 if (shouldRun) {
-                    LOG.debug("Running bootstrap");
                     bootstrap();
                 } else {
-                    LOG.debug("Lease is not gone. Wait for it ...");
+                    LOG.info("Lease is not gone. Wait for it ...");
                 }
                 setShouldRun(false);
             }
@@ -154,8 +182,12 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         }
     }
 
+    /**
+     * Initializes the scheduler.
+     */
     @Atomic(mode = TxMode.WRITE)
     private static void bootstrap() {
+        LOG.info("Running Scheduler bootstrap");
         if (scheduler == null) {
             scheduler = new Scheduler();
             scheduler.setDaemon(true);
@@ -163,23 +195,56 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         if (!scheduler.isStarted()) {
             cleanNonExistingSchedules();
             initSchedules();
-            spawnLeaseTimerTask();
             spawnConsumers();
+            spawnLeaseTimerTask();
+            spawnRefreshSchedulesTask();
             scheduler.start();
         }
     }
 
+    /**
+     * If the scheduler is initialized schedules the task that updates the lease time every getLeaseTimeMinutes() / 2 minutes
+     */
     private static void spawnLeaseTimerTask() {
         new Timer(true).scheduleAtFixedRate(new TimerTask() {
-            @Override
             @Atomic(mode = TxMode.WRITE)
+            @Override
             public void run() {
-                if (scheduler.isStarted()) {
-                    final DateTime lease = SchedulerSystem.getInstance().lease();
-                    LOG.info("Leasing until {}", lease);
-                }
+                final DateTime lease = SchedulerSystem.getInstance().lease();
+                LOG.info("Leasing until {}", lease);
             }
+
         }, 0, getLeaseTimeMinutes() * 60 * 1000 / 2);
+    }
+
+    /**
+     * Schedules or unschedules task schedules if created or deleted not in this server instance.
+     * Runs every minute.
+     */
+    private static void spawnRefreshSchedulesTask() {
+        new Timer(true).scheduleAtFixedRate(new TimerTask() {
+
+            @Override
+            @Atomic(mode = TxMode.READ)
+            public void run() {
+                LOG.info("Running refresh schedules");
+                Set<TaskSchedule> domainSchedules = new HashSet<>(getInstance().getTaskScheduleSet());
+                for (TaskSchedule schedule : domainSchedules) {
+                    if (!schedule.isScheduled()) {
+                        LOG.info("New schedule not scheduled before {} {}", schedule.getExternalId(), schedule.getTaskClassName());
+                        schedule(schedule);
+                    }
+                }
+                for (TaskSchedule schedule : scheduledTasks) {
+                    if (!domainSchedules.contains(schedule)) {
+                        LOG.info("schedule disappeared not unscheduled before {} {}", schedule.getExternalId());
+                        unschedule(schedule);
+                    }
+                }
+                LOG.info("Refresh schedules done");
+            }
+
+        }, 0, 1 * 60 * 1000);
     }
 
     private static void spawnConsumers() {
@@ -189,9 +254,12 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             LOG.info("Launching queue consumer {}", i);
             threadPool.execute(new ProcessQueue());
         }
-
     }
 
+    /**
+     * If some task was deleted of the codebase, delete current schedules referencing it.
+     */
+    @Atomic(mode = TxMode.WRITE)
     private static void cleanNonExistingSchedules() {
         for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskScheduleSet()) {
             if (!tasks.containsKey(schedule.getTaskClassName())) {
@@ -203,6 +271,9 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     }
 
+    /**
+     * Add to scheduler all existing tasks schedules.
+     */
     private static void initSchedules() {
         for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskScheduleSet()) {
             schedule(schedule);
@@ -212,39 +283,55 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     /**
      * Schedules a task.
      * If the task is not already queued and is not running add it to the processing queue.
-     * ProcessQueue threads will pop and run pending tasks.
+     * ProcessQueue threads will run pending tasks.
      * 
      * @param schedule
      */
+    @Atomic(mode = TxMode.READ)
     public static void schedule(final TaskSchedule schedule) {
-        LOG.info("schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
-        schedule.setTaskId(scheduler.schedule(schedule.getSchedule(), new Runnable() {
+        if (isActive()) {
+            LOG.info("schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+            schedule.setTaskId(scheduler.schedule(schedule.getSchedule(), new Runnable() {
 
-            @Override
-            public void run() {
-                synchronized (queue) {
-                    try {
-                        final TaskRunner taskRunner = schedule.getTaskRunner();
-                        if (!queue.contains(taskRunner)) {
-                            if (!runningTasks.contains(taskRunner)) {
-                                LOG.info("Add to queue {}", taskRunner.getTaskName());
-                                queue.put(taskRunner);
+                @Override
+                public void run() {
+                    synchronized (queue) {
+                        try {
+                            final TaskRunner taskRunner = schedule.getTaskRunner();
+                            if (!queue.contains(taskRunner)) {
+                                if (!runningTasks.contains(taskRunner)) {
+                                    LOG.info("Add to queue {}", taskRunner.getTaskName());
+                                    queue.put(taskRunner);
+                                } else {
+                                    LOG.info("Don't add to queue. Task is running {}", taskRunner.getTaskName());
+                                }
                             } else {
-                                LOG.info("Don't add to queue. Task is running {}", taskRunner.getTaskName());
+                                LOG.info("Don't add to queue. Already exists {}", taskRunner.getTaskName());
                             }
-                        } else {
-                            LOG.info("Don't add to queue. Already exists {}", taskRunner.getTaskName());
+                        } catch (InterruptedException e) {
                         }
-                    } catch (InterruptedException e) {
                     }
                 }
-            }
-        }));
+            }));
+            scheduledTasks.add(schedule);
+        } else {
+            LOG.info("don't schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+        }
     }
 
+    /**
+     * Remove schedule from the scheduler. This will not delete the TaskSchedule, only removes the scheduling.
+     * 
+     * @param schedule
+     */
     public static void unschedule(TaskSchedule schedule) {
-        LOG.info("unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
-        scheduler.deschedule(schedule.getTaskId());
+        if (isActive()) {
+            LOG.info("unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+            scheduler.deschedule(schedule.getTaskId());
+            scheduledTasks.remove(schedule);
+        } else {
+            LOG.info("don't unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+        }
     }
 
     public static final void addTask(String className, Task taskAnnotation) {
@@ -252,6 +339,10 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         tasks.put(className, taskAnnotation);
     }
 
+    /**
+     * When context is gracefully destroyed, set the lease time to null so that any other server instance
+     * can start the scheduler.
+     */
     @Atomic(mode = TxMode.WRITE)
     public static void destroy() {
         LOG.info("Revert lease to null");
@@ -269,6 +360,12 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         }
         return null;
     }
+
+    /**
+     * Used by CronTask to store tasks' output files and custom logging.
+     * 
+     * @return the physical absolute path of the logging storage.
+     */
 
     @Atomic(mode = TxMode.READ)
     public static String getLogsPath() {

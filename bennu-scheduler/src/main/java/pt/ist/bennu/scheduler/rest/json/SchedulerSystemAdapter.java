@@ -18,6 +18,7 @@ public class SchedulerSystemAdapter implements JsonViewer<SchedulerSystem> {
     @Override
     public JsonElement view(SchedulerSystem obj, JsonBuilder ctx) {
         final JsonObject json = new JsonObject();
+        json.addProperty("running", SchedulerSystem.isRunning());
         json.add("loggingStorage", ctx.view(obj.getLoggingStorage(), LocalFileSystemStorage.class, DomainObjectViewer.class));
         json.add(
                 "availableStorages",

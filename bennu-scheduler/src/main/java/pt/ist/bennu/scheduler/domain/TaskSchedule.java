@@ -6,6 +6,12 @@ import pt.ist.fenixframework.Atomic.TxMode;
 
 public class TaskSchedule extends TaskSchedule_Base {
 
+    private transient TaskRunner taskRunner;
+
+    {
+        taskRunner = null;
+    }
+
     private TaskSchedule(final String taskClassName) {
         super();
         setTaskClassName(taskClassName);
@@ -26,10 +32,14 @@ public class TaskSchedule extends TaskSchedule_Base {
 
     @Atomic(mode = TxMode.READ)
     public TaskRunner getTaskRunner() {
+
         Class<? extends CronTask> taskClass;
         try {
-            taskClass = (Class<? extends CronTask>) Class.forName(getTaskClassName());
-            return new TaskRunner(taskClass.newInstance());
+            if (taskRunner == null) {
+                taskClass = (Class<? extends CronTask>) Class.forName(getTaskClassName());
+                taskRunner = new TaskRunner(taskClass.newInstance());
+            }
+            return taskRunner;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             return null;
@@ -46,5 +56,9 @@ public class TaskSchedule extends TaskSchedule_Base {
 
     public CronTask getTask() {
         return getTaskRunner().getTask();
+    }
+
+    public Boolean isScheduled() {
+        return taskRunner != null && getTaskRunner().getTaskId() != null;
     }
 }
