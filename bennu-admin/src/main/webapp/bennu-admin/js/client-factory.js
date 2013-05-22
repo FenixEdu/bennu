@@ -7,15 +7,17 @@ define([
     'models/Menu',
     'models/App',
     'models/Theme',
+    'models/SystemInfo',
     'views/HostCreate',
     'views/HostList',
     'views/SingleMenu',
     'views/Menu',
     'views/MenuCreate',
     'views/App',
+    'views/SystemInfo',
 ], function(HostCollection, MenuCollection, AppCollection,ThemeCollection,
-			HostModel, MenuModel, AppModel, ThemeModel, 
-			HostCreateView, HostListView, SingleMenuView, MenuView, MenuCreateView,AppView) {
+			HostModel, MenuModel, AppModel, ThemeModel, SystemInfoModel,
+			HostCreateView, HostListView, SingleMenuView, MenuView, MenuCreateView,AppView, SystemInfoView) {
 	var MenuManager = MenuManager || {};
 	MenuManager.DB = MenuManager.DB || {};
 
@@ -30,6 +32,7 @@ define([
 	MenuManager.Models.Menu = MenuModel || {};
 	MenuManager.Models.App = AppModel || {};
 	MenuManager.Models.Theme = ThemeModel || {};
+	MenuManager.Models.SystemInfo = SystemInfoModel || {};
 	
 	MenuManager.Views = MenuManager.Views || {};
 	MenuManager.Views.HostCreate = HostCreateView || {};
@@ -38,6 +41,7 @@ define([
 	MenuManager.Views.SingleMenu = SingleMenuView || {};
 	MenuManager.Views.MenuCreate = MenuCreateView || {};
 	MenuManager.Views.App = AppView || {};
+    MenuManager.Views.SystemInfo = SystemInfoView || {};
 	
 	MenuManager.Router = MenuManager.Router || {};
 	MenuManager.Layout = MenuManager.Layout || {};

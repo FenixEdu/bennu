@@ -1,21 +1,55 @@
-{"apps" : [{
-"title" :  {"pt-PT" : "Gestão de Menus", "en-GB" : "Menu Manager"},
-"description" : {"pt-PT" : "Gestão de Menus", "en-GB" : "Menu Manager"},
-"accessExpression" : "#managers",
-"path" : "bennu-admin/",
-"functionalities" : 
-		[
-			{ 
-   			  "title" : {"pt-PT" : "Gestão de Hosts", "en-GB": "Host Management"},
-			  "description" : {"pt-PT" : "Gestão das propriedades e menu de cada host", "en-GB" : "Host info and menu management"},
-			  "path" : "#hosts",
-			  "accessExpression" : "#managers"
-			},
-			{ 
-   			  "title" : {"pt-PT" : "Criar Host", "en-GB": "Create Host"},
-			  "description" : {"pt-PT" : "Criação de um novo host", "en-GB": "Create new host"},
-			  "path" : "#hosts/create",
-			  "accessExpression" : "#managers"
-			}
-		]
-}]}
+{
+    "apps": [
+        {
+            "title": {
+                "pt-PT": "Gestão de Menus",
+                "en-GB": "Menu Manager"
+            },
+            "description": {
+                "pt-PT": "Gestão de Menus",
+                "en-GB": "Menu Manager"
+            },
+            "accessExpression": "#managers",
+            "path": "bennu-admin/",
+            "functionalities": [
+                {
+                    "title": {
+                        "pt-PT": "Gestão de Hosts",
+                        "en-GB": "Host Management"
+                    },
+                    "description": {
+                        "pt-PT": "Gestão das propriedades e menu de cada host",
+                        "en-GB": "Host info and menu management"
+                    },
+                    "path": "#hosts",
+                    "accessExpression": "#managers"
+                },
+                {
+                    "title": {
+                        "pt-PT": "Criar Host",
+                        "en-GB": "Create Host"
+                    },
+                    "description": {
+                        "pt-PT": "Criação de um novo host",
+                        "en-GB": "Create new host"
+                    },
+                    "path": "#hosts/create",
+                    "accessExpression": "#managers"
+                }
+            ]
+        },
+        {
+            "title": {
+                "pt-PT": "Informação de Sistema",
+                "en-GB": "System Information"
+            },
+            "description": {
+                "pt-PT": "Informação de Sistema",
+                "en-GB": "System Information"
+            },
+            "accessExpression": "#managers",
+            "path": "bennu-admin#system/info",
+            "functionalities": []
+        }
+    ]
+}

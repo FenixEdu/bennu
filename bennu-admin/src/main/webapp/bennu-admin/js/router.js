@@ -17,6 +17,11 @@ define([
 				App.themes = new MenuManager.Collections.Theme();
     			App.themes.fetch();
 			}
+			if (!App.systemInfo) {
+			    App.systemInfo = new MenuManager.Models.SystemInfo();
+			    App.systemInfo.fetch({async:false});
+			}
+			
         },
         
         appRoutes: {
@@ -25,6 +30,7 @@ define([
     		"hosts/edit/:hostname" : "editHost",
     		"hosts/create": "createHost",
     		"menu/:id" : "showMenu",
+    		"system/info" : "systemInfo"
     	},
     	
     	controller: {
@@ -85,6 +91,10 @@ define([
     					App.page.show(new MenuManager.Views.HostCreate({model : hostModel}));
     				}
     			});
+    		},
+    		
+    		systemInfo : function() {
+    		            App.page.show(new MenuManager.Views.SystemInfo({model: App.systemInfo }));
     		}
     	}
     });
