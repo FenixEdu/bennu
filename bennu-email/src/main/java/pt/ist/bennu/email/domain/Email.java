@@ -29,8 +29,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Properties;
 
 import javax.mail.Address;
 import javax.mail.BodyPart;
@@ -47,7 +45,7 @@ import javax.mail.internet.MimeUtility;
 
 import org.joda.time.DateTime;
 
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.email.EmailSystem;
 import pt.ist.bennu.email.util.EmailAddressList;
 
 import com.google.common.base.Joiner;
@@ -64,18 +62,8 @@ public class Email extends Email_Base {
     private static int MAX_MAIL_RECIPIENTS;
 
     private static synchronized Session init() {
-        final Properties properties = new Properties();
-        properties.put("mail.smtp.host", ConfigurationManager.getProperty("mail.smtp.host"));
-        properties.put("mail.smtp.name", ConfigurationManager.getProperty("mail.smtp.name"));
-        properties.put("mailSender.max.recipients", ConfigurationManager.getProperty("mailSender.max.recipients"));
-        properties.put("mailingList.host.name", ConfigurationManager.getProperty("mailingList.host.name"));
-        properties.put("mail.debug", "true");
-        final Session tempSession = Session.getDefaultInstance(properties, null);
-        for (final Entry<Object, Object> entry : tempSession.getProperties().entrySet()) {
-            System.out.println("key: " + entry.getKey() + "   value: " + entry.getValue());
-        }
-        MAX_MAIL_RECIPIENTS = Integer.parseInt(properties.getProperty("mailSender.max.recipients"));
-        SESSION = tempSession;
+        SESSION = EmailSystem.emailSession();
+        MAX_MAIL_RECIPIENTS = Integer.parseInt(SESSION.getProperty("mailSender.max.recipients"));
         return SESSION;
     }
 

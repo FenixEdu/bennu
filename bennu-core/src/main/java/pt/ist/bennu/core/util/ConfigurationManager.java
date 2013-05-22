@@ -269,4 +269,8 @@ public class ConfigurationManager {
     public static Properties rawProperties() {
         return (Properties) properties.clone();
     }
+
+    public static String getDefaultSupportEmailAddress() {
+        return getProperty("default.support.email.address");
+    }
 }

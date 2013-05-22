@@ -100,20 +100,13 @@ public class SystemResource extends BennuRestResource {
                 .view(ConfigurationManager.rawProperties(), Properties.class, KeyValuePropertiesViewer.class));
 
         return Response.ok(toJson(json)).build();
-        // build version
-
-        //included ff modules and their versions 
-
-        //hostname
-        //actual application server
-
-        // system properties
-
-        // environment properties
-
-        //http headers
-
-        // configuration properties
-
     }
+
+    @GET
+    @Path("error")
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response error() {
+        throw new Error("oi?");
+    }
+
 }

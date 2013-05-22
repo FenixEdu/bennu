@@ -70,6 +70,14 @@ public class VirtualHost extends VirtualHost_Base {
         NobodyGroup.getInstance();
     }
 
+    @Override
+    public String getSupportEmailAddress() {
+        if (super.getSupportEmailAddress() != null) {
+            return super.getSupportEmailAddress();
+        }
+        return ConfigurationManager.getDefaultSupportEmailAddress();
+    }
+
     public void delete() {
         if (!VirtualHost.getVirtualHostForThread().equals(this)) {
             setBennu(null);

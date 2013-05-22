@@ -14,7 +14,7 @@ define({
 	"Create Host": "Criar Host",
 	"Support Email": "Email de Suporte",
 	"System Email": "Email de Sistema",
-	"Theme": "Tema",.
+	"Theme": "Tema",
 	"Logo": "Logo",
 	"Confirm": "Confirmar",
 	"Cancel": "Cancelar",

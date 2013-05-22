@@ -94,8 +94,8 @@ define([
     		},
     		
     		systemInfo : function() {
-    		            App.page.show(new MenuManager.Views.SystemInfo({model: App.systemInfo }));
-    		}
+    		    App.page.show(new MenuManager.Views.SystemInfo({model: App.systemInfo }));
+    		},
     	}
     });
     

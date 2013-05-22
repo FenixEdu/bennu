@@ -9,6 +9,21 @@ db.alias=//<dbhost>:3306/<dbname>?useUnicode=true&amp;characterEncoding=UTF-8&am
 db.user=<user>
 db.pass=<pass>
 
+# Default email address for support requests.
+default.support.email.address=support@support.com
+
+# SMTP configuration
+mail.smtp.auth = true
+mail.smtp.auth.username = 
+mail.smtp.auth.password = 
+mail.smtp.starttls.enable = true
+mail.smtp.host=
+mail.smtp.name=
+mail.smtp.port=
+
+mailSender.max.recipients=50
+mailingList.host.name=fenix.ist.utl.pt
+
 # For extra goodies, turn this on (only in development mode)
 development.mode=true
 

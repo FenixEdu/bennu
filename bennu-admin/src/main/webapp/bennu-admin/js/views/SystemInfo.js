@@ -5,6 +5,11 @@ function($, Backbone, Marionette, App, tpl) {
         template : tpl,
 
         events : {
+            'click .btn-error' : 'triggerError',
         },
+        
+        triggerError: function(e) {
+            $.get('../api/bennu-core/system/error', null);  
+        }
     });
 });

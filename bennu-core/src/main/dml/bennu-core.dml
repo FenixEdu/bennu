@@ -86,7 +86,8 @@ relation SystemUsers {
 
 /* Virtual Hosting */
 class VirtualHost {
-	String hostname;
+	String hostname (REQUIRED);
+	String supportEmailAddress;
 }
 
 relation SystemHosts {

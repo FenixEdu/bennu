@@ -42,7 +42,7 @@ public class DomainException extends RuntimeException {
     private final Status status;
 
     protected DomainException(String bundle, String key, String... args) {
-        this(Status.INTERNAL_SERVER_ERROR, bundle, key, args);
+        this(Status.PRECONDITION_FAILED, bundle, key, args);
     }
 
     protected DomainException(Status status, String bundle, String key, String... args) {
