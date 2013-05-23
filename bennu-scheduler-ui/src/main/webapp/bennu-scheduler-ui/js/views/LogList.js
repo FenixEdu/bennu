@@ -17,6 +17,10 @@ define([
             'destroy': 'render'
             },
         
+        customLog: function() {
+        	return false;
+        },
+        
         onShow: function() {
         	$("table").dataTable( {
         		"bFilter": false,
@@ -29,7 +33,7 @@ define([
         		              { "sType": "html" },
         		              null]
         	});
-        }
+        },
         
     });
 });

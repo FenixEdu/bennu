@@ -2,12 +2,14 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 		'models/Schedule', 'collections/Schedule', 'views/ScheduleList',
 		'collections/Task', 'views/TaskList', 
 		'views/ScheduleCreate',
-		'collections/Log','models/Log', 'views/LogList', 'views/Log'  
+		'collections/Log','models/Log', 'views/LogList', 'views/Log', 
+		'collections/CustomLog','models/CustomLog', 'views/CustomLogList', 'views/AddCustomTask',
 		],
 		function($, _, Mustache, Backbone, Marionette, App, ScheduleModel,
 				ScheduleCollection, ScheduleList, TaskCollection, TaskListView,
 				ScheduleCreateView,
-				LogCollection, LogModel,LogList, LogView
+				LogCollection, LogModel,LogList, LogView, 
+				CustomLogCollection, CustomLogModel,CustomLogList, AddCustomTaskView
 				) {
 
 			var Router = Backbone.Marionette.AppRouter.extend({
@@ -29,16 +31,12 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 					"schedule/:type" : "prepareCreateSchedule",
 					"logs" : "showLogs",
 					"logs/:id" : "showLogs",
-					
+					"custom/add": "addCustomTask",
+					"custom": "customTasks",
+					"custom/:id": "customTasks",
 				},
 
 				controller : {
-					
-					
-					getTasks: function() {
-						var tasks = new TaskCollection();
-						
-					},
 					
 					showSchedules : function() {
 						var scheduleCollection = new ScheduleCollection();
@@ -86,6 +84,28 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 									collection : logsCollection
 								}));
 						}});
+					},
+					
+					customTasks: function(id) {
+						if (id) {
+							var log = new CustomLogModel({id : id});
+							log.fetch({success: function() {
+								App.page.show(new LogView({
+									model : log
+								}));
+							}});
+							return;
+						}
+						var logsCollection = new CustomLogCollection();
+						logsCollection.fetch({success : function() {
+								App.page.show(new CustomLogList({
+									collection : logsCollection,
+								}));
+						}});
+					},
+					
+					addCustomTask: function() {
+						App.page.show(new AddCustomTaskView());
 					},
 				}
 			});

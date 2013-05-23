@@ -22,6 +22,12 @@
 			  "description" : {"en-GB" : "Task logs", "pt-PT" : "Execuções Agendamento de tarefas"},
 			  "path" : "#logs",
 			  "accessExpression" : "#managers"
+			},
+			{ 
+   			  "title" : {"en-GB" : "Custom Tasks", "pt-PT" : "Tarefas Manuais"},
+			  "description" : {"en-GB" : "Submit Custom Tasks", "pt-PT" : "Executar Tarefas Manuais"},
+			  "path" : "#custom",
+			  "accessExpression" : "#managers"
 			}
 		]
 }]}

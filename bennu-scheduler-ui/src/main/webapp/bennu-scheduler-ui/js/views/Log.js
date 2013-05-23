@@ -4,8 +4,9 @@ define([
     'marionette',
     'moment',
     'app',
+    'views/AddCustomTask',
     'text!templates/Log.html'
-], function($, Backbone, Marionette, moment, App, tpl) {
+], function($, Backbone, Marionette, moment, App, AddCustomTaskView, tpl) {
 
     return Backbone.Marionette.ItemView.extend({
 
@@ -15,6 +16,10 @@ define([
         	"change" : "render"
         },
         
+        events: {
+        	"click .btn-load-code": "loadCode",
+        },
+        
         onClose: function() {
         	if (this.logging != 0) {
         		console.log("Clear " + this.logging);
@@ -22,18 +27,43 @@ define([
         	}
         },
         
+        onShow: function() {
+        	if (this.model.get("javaCode") != undefined) {
+            	require(['codemirror'], function(CodeMirror) {
+            		require(['codemirror-clike'], function(CLike) {
+            			var codeArea = $('#code')[0];
+            			CodeMirror.fromTextArea(codeArea, {lineNumbers : true, mode:"text/x-java", theme:"eclipse", viewportMargin: Infinity, readOnly: "nocursor"});
+            		});
+    			});
+        	}
+        },
+        
+        url: function() {
+        	var url = "../api/bennu-scheduler/";
+        	if (this.model.get("javaCode") == undefined) {
+        		return url + "log/";
+        	} 
+        	return url + "custom/"; 
+        },
+        
         refreshLog: function() {
         	var id = this.model.get("id");
-        	$.get("../api/bennu-scheduler/log/cat/" + id, null, function(log) {
+        	$.get( this.url() + "cat/" + id, null, function(log) {
 				$("#logs").html(log);
 				});
+        },
+        
+        loadCode: function() {
+        	var model = this.model;
+        	App.page.show(new AddCustomTaskView({model : model}));
         },
         
         initialize: function() {
         	var that = this;
         	this.logging = 0;
         	this.refreshLog();
-        	if (this.model.get("end") == undefined) {
+        	
+        	if (this.model.get("end") === undefined) {
         		this.logging = setInterval(
         				function() {
         					that.refreshLog();
@@ -44,12 +74,12 @@ define([
         
         serializeData: function() {
         	var data = this.model.toJSON();
-        	
+        	var that = this;
         	if (data.files) {
         		files = new Array();
             	$(data.files).each(function(i,e) {
             		var file = {};
-            		file.url = "../api/bennu-scheduler/log/" + data.id + "/" + e;
+            		file.url = that.url() + data.id + "/" + e;
             		file.name = e;
             		files.push(file);
             	});
@@ -69,6 +99,8 @@ define([
         	
         	return data;
         }
+        
+        
         
     });
 });

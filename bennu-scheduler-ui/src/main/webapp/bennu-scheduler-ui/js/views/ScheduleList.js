@@ -44,6 +44,7 @@ define([
          		});
          		$("#loggingStorage").val(data.loggingStorage.id);
          	});
-         }
+         },
+         
     });
 });

@@ -3,6 +3,8 @@ package pt.ist.bennu.scheduler.domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.bennu.scheduler.TaskRunner;
+
 class ProcessQueue implements Runnable {
     private Logger LOG = LoggerFactory.getLogger(ProcessQueue.class);
 

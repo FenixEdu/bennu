@@ -1,10 +1,8 @@
-package pt.ist.bennu.scheduler.domain;
-
-import pt.ist.bennu.scheduler.CronTask;
+package pt.ist.bennu.scheduler;
 
 import com.google.common.base.Objects;
 
-class TaskRunner implements Runnable {
+public class TaskRunner implements Runnable {
 
     CronTask task;
     String taskId;

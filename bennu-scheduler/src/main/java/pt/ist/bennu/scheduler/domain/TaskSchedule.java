@@ -1,6 +1,7 @@
 package pt.ist.bennu.scheduler.domain;
 
 import pt.ist.bennu.scheduler.CronTask;
+import pt.ist.bennu.scheduler.TaskRunner;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 

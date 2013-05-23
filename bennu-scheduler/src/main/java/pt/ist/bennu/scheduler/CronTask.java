@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.bennu.scheduler.log.ExecutionLog;
 import pt.ist.fenixframework.Atomic;
@@ -16,13 +18,13 @@ import com.google.common.base.Joiner;
 
 public abstract class CronTask implements Runnable {
     private Logger logger;
-    private transient ExecutionLog log;
+    protected transient ExecutionLog log;
 
     public String getLocalizedName() {
         return SchedulerSystem.getTaskName(getClassName());
     }
 
-    private String getClassName() {
+    public String getClassName() {
         return this.getClass().getName();
     }
 
@@ -37,21 +39,29 @@ public abstract class CronTask implements Runnable {
     public abstract void runTask();
 
     @Override
-    public void run() {
-        log = new ExecutionLog(getClassName());
-        log.persist();
+    public final void run() {
+        getExecutionLog().setStart(new DateTime());
+        getExecutionLog().persist();
         try {
+            if (getServerName() != null) {
+                VirtualHost.setVirtualHostForThread(getServerName().toLowerCase());
+            }
             innerAtomicRun();
-            log.setSuccess(true);
+            getExecutionLog().setSuccess(true);
         } catch (Throwable t) {
             t.printStackTrace();
-            log.setSuccess(false);
-            log.setError(t);
+            getExecutionLog().setSuccess(false);
+            getExecutionLog().setError(t);
         } finally {
-            log.setEnd(new DateTime());
-            log.persist();
+            VirtualHost.releaseVirtualHostFromThread();
+            getExecutionLog().setEnd(new DateTime());
+            getExecutionLog().persist();
             logger = null;
         }
+    }
+
+    public ExecutionLog createLog() {
+        return new ExecutionLog(getClassName());
     }
 
     @Atomic
@@ -94,10 +104,30 @@ public abstract class CronTask implements Runnable {
     }
 
     protected final void taskLog(String format, Object... args) {
+        if (!StringUtils.endsWith(format, "\n")) {
+            format = format.concat("\n");
+        }
         output("log", String.format(format, args).getBytes(), true);
     }
 
     protected final void taskLog(String log) {
-        output("log", log.getBytes(), true);
+        taskLog(log, new Object[0]);
+    }
+
+    /**
+     * Convenience method to more easily use VirtualHosts in these tasks
+     * 
+     * @return the String with the server name of the VirtualHost to use when
+     *         executing this task
+     */
+    public String getServerName() {
+        return null;
+    }
+
+    public <T extends ExecutionLog> T getExecutionLog() {
+        if (log == null) {
+            log = createLog();
+        }
+        return (T) log;
     }
 }

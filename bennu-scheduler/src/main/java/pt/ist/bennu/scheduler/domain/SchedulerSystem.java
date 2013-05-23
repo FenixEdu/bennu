@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.scheduler.TaskRunner;
 import pt.ist.bennu.scheduler.annotation.Task;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -294,23 +295,10 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             schedule.setTaskId(scheduler.schedule(schedule.getSchedule(), new Runnable() {
 
                 @Override
+                @Atomic(mode = TxMode.READ)
                 public void run() {
-                    synchronized (queue) {
-                        try {
-                            final TaskRunner taskRunner = schedule.getTaskRunner();
-                            if (!queue.contains(taskRunner)) {
-                                if (!runningTasks.contains(taskRunner)) {
-                                    LOG.info("Add to queue {}", taskRunner.getTaskName());
-                                    queue.put(taskRunner);
-                                } else {
-                                    LOG.info("Don't add to queue. Task is running {}", taskRunner.getTaskName());
-                                }
-                            } else {
-                                LOG.info("Don't add to queue. Already exists {}", taskRunner.getTaskName());
-                            }
-                        } catch (InterruptedException e) {
-                        }
-                    }
+                    final TaskRunner taskRunner = schedule.getTaskRunner();
+                    queue(taskRunner);
                 }
             }));
             scheduledTasks.add(schedule);
@@ -373,5 +361,26 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             throw new Error("Please add logging storage");
         }
         return getInstance().getLoggingStorage().getAbsolutePath();
+    }
+
+    @Atomic(mode = TxMode.READ)
+    public static void queue(final TaskRunner taskRunner) {
+        synchronized (queue) {
+            if (!queue.contains(taskRunner)) {
+                if (!runningTasks.contains(taskRunner)) {
+                    LOG.info("Add to queue {}", taskRunner.getTaskName());
+                    try {
+                        queue.put(taskRunner);
+                    } catch (InterruptedException e) {
+                        LOG.warn("Thread was interrupted.");
+                        Thread.currentThread().interrupt();
+                    }
+                } else {
+                    LOG.info("Don't add to queue. Task is running {}", taskRunner.getTaskName());
+                }
+            } else {
+                LOG.info("Don't add to queue. Already exists {}", taskRunner.getTaskName());
+            }
+        }
     }
 }

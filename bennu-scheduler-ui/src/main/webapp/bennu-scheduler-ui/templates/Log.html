@@ -1,3 +1,7 @@
+{{#javaCode}}
+<link href="/xpto/js/libs/codemirror/codemirror.css" rel="stylesheet">
+<link href="/xpto/js/libs/codemirror/theme/eclipse.css" rel="stylesheet">
+{{/javaCode}}
 <table class="table">
 	<tbody>
 		<tr>
@@ -28,6 +32,23 @@
 			{{/finished}}
 			</td>
 		</tr>
+		{{#javaCode}}
+		<tr>
+			<td>Code</td>
+			<td>
+				<div class="control-group">
+					<div class="controls">
+						<textarea id="code">{{javaCode}}</textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<button class="btn btn-success btn-load-code">Load</button>
+					</div>
+				</div>
+			</td>
+		</tr>
+		{{/javaCode}}
 		{{#success}}
 			<tr>
 				<td>Files</td>
@@ -50,11 +71,13 @@
 			</tr>
 		{{/success}}
 		{{/finished}}
+		{{#files}}
 			<tr>
 				<td>log</td>
 				<td>
 					<pre id="logs"></pre>
 				</td>
 			</tr>
+		{{/files}}
 	</tbody>
 </table>

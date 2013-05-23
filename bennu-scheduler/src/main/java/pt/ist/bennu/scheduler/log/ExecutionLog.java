@@ -133,13 +133,12 @@ public class ExecutionLog {
         this.success = success;
     }
 
-    private static void writeJson(String json) {
+    private void writeJson(String json) {
         if (Strings.isNullOrEmpty(json)) {
             return;
         }
-        synchronized (LOG_JSON_FILENAME) {
-            try (FileOutputStream fos =
-                    new FileOutputStream(new File(getLogFilePath()), true)) {
+        synchronized (getLock()) {
+            try (FileOutputStream fos = new FileOutputStream(new File(getLogFilePath()), true)) {
                 fos.write(json.getBytes());
                 fos.flush();
             } catch (IOException e) {
@@ -148,7 +147,7 @@ public class ExecutionLog {
         }
     }
 
-    public static String getLogFilePath() {
+    protected String getLogFilePath() {
         return SchedulerSystem.getLogsPath().concat(LOG_JSON_FILENAME);
     }
 
@@ -173,6 +172,10 @@ public class ExecutionLog {
             files = new HashSet<String>();
         }
         files.add(filename);
+    }
+
+    protected Object getLock() {
+        return LOG_JSON_FILENAME;
     }
 
 }

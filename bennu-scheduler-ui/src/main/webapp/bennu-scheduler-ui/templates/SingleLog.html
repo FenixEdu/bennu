@@ -14,14 +14,10 @@
 	<i class="icon-play"><div style='display:none;'>1</div</i>
 {{/finished}}
 <td>
-<!-- 	<table> -->
-<!-- 	{{#files}} -->
-<!-- 	<tr> -->
-<!-- 		<td> -->
-<!-- 			<a href='{{url}}'>{{name}}</a> -->
-<!-- 		</td> -->
-<!-- 	</tr> -->
-<!-- 	{{/files}} -->
-<!-- 	</table> -->
-	<a href="#logs/{{id}}" id="show-log-details" class="btn btn-success">details</a>
+{{#customLog}}
+		<a href="#custom/{{id}}" class="btn btn-success">details</a>
+{{/customLog}}
+{{^customLog}}
+		<a href="#logs/{{id}}" class="btn btn-success">details</a>
+{{/customLog}}
 </td>
