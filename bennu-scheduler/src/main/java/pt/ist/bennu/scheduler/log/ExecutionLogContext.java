@@ -19,10 +19,11 @@ import com.google.gson.JsonStreamParser;
 public class ExecutionLogContext {
     private static final Logger LOG = LoggerFactory.getLogger(ExecutionLogContext.class);
 
-    private ConcurrentHashMap<String, JsonObject> logsMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, JsonObject> logsMap;
     private Long lastModified;
 
     public ExecutionLogContext() {
+        logsMap = new ConcurrentHashMap<>();
     }
 
     private synchronized boolean hasChanged(File file) {
@@ -42,22 +43,26 @@ public class ExecutionLogContext {
 
     private synchronized void updateLogMap() {
         final File file = new File(getLogFilePath());
-        if (file.exists() && hasChanged(file)) {
-            try (FileReader fileReader = new FileReader(file)) {
-                JsonStreamParser parser = new JsonStreamParser(fileReader);
-                while (parser.hasNext()) {
-                    final JsonObject jsonLog = parser.next().getAsJsonObject();
-                    final String jsonLogId = jsonLog.get("id").getAsString();
-                    final JsonObject jsonLogFromMap = logsMap.get(jsonLogId);
-                    if (jsonLogFromMap != null) {
-                        update(jsonLog, jsonLogFromMap);
-                    } else {
-                        logsMap.put(jsonLogId, jsonLog);
+        if (file.exists()) {
+            if (hasChanged(file)) {
+                try (FileReader fileReader = new FileReader(file)) {
+                    JsonStreamParser parser = new JsonStreamParser(fileReader);
+                    while (parser.hasNext()) {
+                        final JsonObject jsonLog = parser.next().getAsJsonObject();
+                        final String jsonLogId = jsonLog.get("id").getAsString();
+                        final JsonObject jsonLogFromMap = logsMap.get(jsonLogId);
+                        if (jsonLogFromMap != null) {
+                            update(jsonLog, jsonLogFromMap);
+                        } else {
+                            logsMap.put(jsonLogId, jsonLog);
+                        }
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } else {
+            logsMap.clear();
         }
     }
 

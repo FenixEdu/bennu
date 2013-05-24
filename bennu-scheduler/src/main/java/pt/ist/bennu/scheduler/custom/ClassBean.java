@@ -272,8 +272,8 @@ public class ClassBean implements Serializable {
             final Class<? extends CustomTask> clazz =
                     (Class<? extends CustomTask>) Class.forName(getClassName(), true, urlClassLoader);
             task = clazz.newInstance();
-            CustomExecutionLog log = task.getExecutionLog();
-            log.setJavaCode(contents);
+            task.<CustomExecutionLog>getExecutionLog().setJavaCode(contents);
+            task.<CustomExecutionLog>getExecutionLog().start();
             task.run();
         }
 

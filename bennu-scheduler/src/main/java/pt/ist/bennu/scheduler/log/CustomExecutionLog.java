@@ -29,4 +29,11 @@ public class CustomExecutionLog extends ExecutionLog {
         return LOG_JSON_FILENAME;
     }
 
+    @Override
+    public void end() {
+        /* There is no need to persist javaCode again since it is already in the file when start runs */
+        setJavaCode(null);
+        super.end();
+    }
+
 }

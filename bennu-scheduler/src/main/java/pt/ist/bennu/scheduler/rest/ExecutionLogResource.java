@@ -13,10 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pt.ist.bennu.scheduler.CronTask;
 import pt.ist.bennu.scheduler.log.ExecutionLog;
 import pt.ist.bennu.scheduler.log.ExecutionLogContext;
@@ -29,7 +25,6 @@ import com.google.gson.JsonObject;
 @Path("log")
 public class ExecutionLogResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExecutionLogResource.class);
     private static final ExecutionLogContext context = new ExecutionLogContext();
 
     public ExecutionLogContext getContext() {
@@ -64,17 +59,18 @@ public class ExecutionLogResource {
     @GET
     @Path("cat/{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String logging(@PathParam("id") String id) {
+    public Response logging(@PathParam("id") String id) {
         final JsonObject jsonLog = getContext().get(id);
         if (jsonLog != null) {
-            if (hasFile(jsonLog, "log")) {
-                try {
-                    return Files.toString(getFile(jsonLog, "log"), Charset.defaultCharset());
-                } catch (IOException e) {
-                    throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+            try {
+                final File file = getFile(jsonLog, "log");
+                if (file.exists()) {
+                    return Response.ok(Files.toString(file, Charset.defaultCharset())).build();
+                } else {
+                    return Response.status(Status.NO_CONTENT).build();
                 }
-            } else {
-                return StringUtils.EMPTY;
+            } catch (IOException e) {
+                return Response.status(Status.NO_CONTENT).build();
             }
         }
         throw new WebApplicationException(Status.NOT_FOUND);

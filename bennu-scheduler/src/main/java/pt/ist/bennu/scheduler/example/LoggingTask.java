@@ -14,7 +14,7 @@ public class LoggingTask extends CronTask {
         DateTime timestamp;
         do {
             timestamp = new DateTime();
-            getLogger().info(timestamp.toString());
+            taskLog(timestamp.toString());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

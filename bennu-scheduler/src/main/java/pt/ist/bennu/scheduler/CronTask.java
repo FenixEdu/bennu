@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,6 @@ public abstract class CronTask implements Runnable {
     public Logger getLogger() {
         if (logger == null) {
             logger = LoggerFactory.getLogger(getClassName());
-            log.addFile("log");
         }
         return logger;
     }
@@ -40,8 +38,7 @@ public abstract class CronTask implements Runnable {
 
     @Override
     public final void run() {
-        getExecutionLog().setStart(new DateTime());
-        getExecutionLog().persist();
+        getExecutionLog().start();
         try {
             if (getServerName() != null) {
                 VirtualHost.setVirtualHostForThread(getServerName().toLowerCase());
@@ -54,10 +51,14 @@ public abstract class CronTask implements Runnable {
             getExecutionLog().setError(t);
         } finally {
             VirtualHost.releaseVirtualHostFromThread();
-            getExecutionLog().setEnd(new DateTime());
-            getExecutionLog().persist();
-            logger = null;
+            getExecutionLog().end();
+            resetLoggers();
         }
+    }
+
+    private void resetLoggers() {
+        logger = null;
+        log = null;
     }
 
     public ExecutionLog createLog() {

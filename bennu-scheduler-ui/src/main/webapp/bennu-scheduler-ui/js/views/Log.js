@@ -1,12 +1,12 @@
 define([
-    'jquery',
+    'jquery-scroll',
     'backbone',
     'marionette',
     'moment',
     'app',
     'views/AddCustomTask',
     'text!templates/Log.html'
-], function($, Backbone, Marionette, moment, App, AddCustomTaskView, tpl) {
+], function(jq, Backbone, Marionette, moment, App, AddCustomTaskView, tpl) {
 
     return Backbone.Marionette.ItemView.extend({
 
@@ -48,9 +48,21 @@ define([
         
         refreshLog: function() {
         	var id = this.model.get("id");
-        	$.get( this.url() + "cat/" + id, null, function(log) {
-				$("#logs").html(log);
-				});
+        	$.ajax({
+        		type:"GET",
+        		url: this.url() + "cat/" + id,
+        		success: function(log, status) {
+        			if (status === "nocontent") {
+        				$("#logContainer").hide();
+        			} else {
+        				$("#logContainer").show();
+        				$("#logs").html(log);
+        			}
+        		},
+        		error: function (xhr, status) {
+        			console.log(status);
+        		},
+        		datatype: "text"});
         },
         
         loadCode: function() {
@@ -67,6 +79,7 @@ define([
         		this.logging = setInterval(
         				function() {
         					that.refreshLog();
+        					$.scrollTo("#logAnchor");
         				}, 3000);
         		console.log("setInterval: " + this.logging);
         	}
@@ -74,6 +87,7 @@ define([
         
         serializeData: function() {
         	var data = this.model.toJSON();
+        	data.hasLog = false;
         	var that = this;
         	if (data.files) {
         		files = new Array();
@@ -81,6 +95,9 @@ define([
             		var file = {};
             		file.url = that.url() + data.id + "/" + e;
             		file.name = e;
+            		if (file.name === "log") {
+            			data.hasLog = true;
+            		}
             		files.push(file);
             	});
             	data.files = files;

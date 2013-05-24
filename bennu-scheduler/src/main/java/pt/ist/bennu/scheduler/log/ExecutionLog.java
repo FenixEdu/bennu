@@ -36,6 +36,7 @@ public class ExecutionLog {
     private String taskName;
     private String stackTrace;
     private Set<String> files;
+    private Boolean started = false;
 
     public static final String LOG_JSON_FILENAME = "executionLog.json";
 
@@ -176,6 +177,19 @@ public class ExecutionLog {
 
     protected Object getLock() {
         return LOG_JSON_FILENAME;
+    }
+
+    public void start() {
+        if (!started) {
+            setStart(new DateTime());
+            persist();
+            started = true;
+        }
+    }
+
+    public void end() {
+        setEnd(new DateTime());
+        persist();
     }
 
 }

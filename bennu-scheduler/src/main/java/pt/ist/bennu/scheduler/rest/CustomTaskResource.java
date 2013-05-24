@@ -12,7 +12,7 @@ import pt.ist.bennu.scheduler.log.ExecutionLogContext;
 @Path("custom")
 public class CustomTaskResource extends ExecutionLogResource {
 
-    private static final ExecutionLogContext context = new CustomExecutionLogContext();
+    private static final CustomExecutionLogContext context = new CustomExecutionLogContext();
 
     @POST
     public Response addCustomTask(@FormParam("name") String name, @FormParam("code") String code) {

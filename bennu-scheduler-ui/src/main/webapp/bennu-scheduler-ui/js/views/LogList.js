@@ -23,7 +23,7 @@ define([
         
         onShow: function() {
         	$("table").dataTable( {
-        		"bFilter": false,
+        		"bFilter": true,
         		"bScrollInfinite": true,
         		"sScrollY": "400px",
         		"aoColumns": [
