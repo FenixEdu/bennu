@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>bennu-backend-util</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0-SNAPSHOT</version>
     <name>Fenix Framework Backend-specific Features for Bennu</name>
 
     <properties>
