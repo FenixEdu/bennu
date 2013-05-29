@@ -30,9 +30,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import pt.ist.fenixframework.FenixFramework;
-import dml.DomainModel;
-import dml.ExternalizationElement;
-import dml.ValueType;
+import pt.ist.fenixframework.dml.DomainModel;
+import pt.ist.fenixframework.dml.ExternalizationElement;
+import pt.ist.fenixframework.dml.ValueType;
 
 /**
  * 

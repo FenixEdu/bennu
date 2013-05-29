@@ -33,8 +33,8 @@ import org.apache.struts.action.ActionMapping;
 
 import pt.ist.bennu.core.presentationTier.actions.ContextBaseAction;
 import pt.ist.fenixWebFramework.renderers.utils.RenderUtils;
-import pt.ist.fenixWebFramework.services.Service;
 import pt.ist.fenixWebFramework.struts.annotations.Mapping;
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.plugins.fileSupport.domain.FileStorageConfiguration;
 import pt.ist.fenixframework.plugins.fileSupport.domain.FileSupport;
 
@@ -58,7 +58,7 @@ public class StorageConfigurationManagement extends ContextBaseAction {
         return forward(request, "/fileSupport/storageConfigurationManagement.jsp");
     }
 
-    @Service
+    @Atomic
     private void createMissingConfigurations() {
         FileStorageConfiguration.createMissingStorageConfigurations();
     }

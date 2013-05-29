@@ -21,7 +21,7 @@ public class ClientHost extends ClientHost_Base {
 
     @Override
     protected void removeHostSystem() {
-        removeClientHostSystem();
+        setClientHostSystem(null);
     }
 
     @Override

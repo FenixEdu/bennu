@@ -114,7 +114,7 @@ public class Email extends Email_Base {
         for (final MessageId messageId : getMessageIdsSet()) {
             messageId.delete();
         }
-        removeEmailNotifier();
+        setEmailNotifier(null);
         super.deleteDomainObject();
     }
 
@@ -402,8 +402,8 @@ public class Email extends Email_Base {
     }
 
     public void deliver() {
-//	if (hasMessage() && getMessage().getCreated().plusDays(5).isBeforeNow()) {
-//	    removeEmailNotifier();
+//	if ((getMessage() != null) && getMessage().getCreated().plusDays(5).isBeforeNow()) {
+//	    setEmailNotifier(null);
 //	} else {
         final EmailAddressList toAddresses = getToAddresses();
         final EmailAddressList ccAddresses = getCcAddresses();
@@ -428,7 +428,7 @@ public class Email extends Email_Base {
         }
 
         if (!hasAnyRecipients()) {
-            removeEmailNotifier();
+            setEmailNotifier(null);
         }
 //	}
     }
@@ -439,6 +439,16 @@ public class Email extends Email_Base {
 
     private boolean hasAnyRecipients(final EmailAddressList emailAddressList) {
         return emailAddressList != null && !emailAddressList.isEmpty();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.emailNotifier.domain.MessageId> getMessageIds() {
+        return getMessageIdsSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.emailNotifier.domain.MessageTransportResult> getMessageTransportResult() {
+        return getMessageTransportResultSet();
     }
 
 }

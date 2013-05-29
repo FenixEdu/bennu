@@ -40,15 +40,25 @@ abstract public class FileStorage extends FileStorage_Base {
     public void delete() {
         if (isCanBeDeleted()) {
             getConfigurations().clear();
-            removeFileSupport();
+            setFileSupport(null);
             deleteDomainObject();
         }
     }
 
     public boolean isCanBeDeleted() {
-        return getFilesCount() == 0;
+        return getFiles().size() == 0;
     }
 
     // abstract public Collection<Pair<String, String>>
     // getPresentationDetails();
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile> getFiles() {
+        return getFilesSet();
+    }
+
+    @Deprecated
+    public java.util.Set<pt.ist.fenixframework.plugins.fileSupport.domain.FileStorageConfiguration> getConfigurations() {
+        return getConfigurationsSet();
+    }
+
 }

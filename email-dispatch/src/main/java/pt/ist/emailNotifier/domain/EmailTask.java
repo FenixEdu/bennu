@@ -24,9 +24,8 @@
  */
 package pt.ist.emailNotifier.domain;
 
-import jvstm.TransactionalCommand;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * 
@@ -42,19 +41,11 @@ public class EmailTask extends EmailTask_Base {
             this.oid = email.getExternalId();
         }
 
+        @Atomic
         @Override
         public void run() {
-            try {
-                Transaction.withTransaction(false, new TransactionalCommand() {
-                    @Override
-                    public void doIt() {
-                        final Email email = AbstractDomainObject.fromExternalId(oid);
-                        email.deliver();
-                    }
-                });
-            } finally {
-                Transaction.forceFinish();
-            }
+            final Email email = FenixFramework.getDomainObject(oid);
+            email.deliver();
         }
     }
 

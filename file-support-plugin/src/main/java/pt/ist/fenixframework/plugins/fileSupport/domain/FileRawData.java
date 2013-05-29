@@ -21,7 +21,7 @@ public class FileRawData extends FileRawData_Base {
     }
 
     public void delete() {
-        removeFileSupport();
+        setFileSupport(null);
         deleteDomainObject();
     }
 }

@@ -25,11 +25,17 @@
 
 package pt.ist.bennu.core.domain.scheduler;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
 public abstract class ReadCustomTask extends TransactionalCustomTask {
 
     @Override
-    protected boolean readOnly() {
-        return true;
+    @Atomic(mode = TxMode.READ)
+    protected void runTask() {
+        doIt();
     }
+
+    protected abstract void doIt();
 
 }

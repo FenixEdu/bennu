@@ -42,8 +42,8 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.DomainException;
 import pt.ist.bennu.core.domain.groups.Role;
-import pt.ist.fenixWebFramework.services.Service;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * 
@@ -119,7 +119,7 @@ public class Authenticate implements Serializable {
             final User user = User.findByUsername(username);
             if (user == null) {
                 final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
-                if ((virtualHost != null && virtualHost.isCasEnabled()) || MyOrg.getInstance().getUserCount() == 0) {
+                if ((virtualHost != null && virtualHost.isCasEnabled()) || MyOrg.getInstance().getUserSet().size() == 0) {
                     return new User(username);
                 }
                 return new User(username);
@@ -154,7 +154,7 @@ public class Authenticate implements Serializable {
         }
 
         private User readUser() {
-            return userExternalId == null ? null : (User) AbstractDomainObject.fromExternalId(userExternalId);
+            return userExternalId == null ? null : (User) FenixFramework.getDomainObject(userExternalId);
         }
 
         @Override
@@ -193,7 +193,7 @@ public class Authenticate implements Serializable {
         return userView == null ? null : userView.getUser();
     }
 
-    @Service
+    @Atomic
     public static UserView authenticate(final String username, final String password, final boolean checkPassword) {
         if (checkPassword) {
             check(username, password);
@@ -213,7 +213,7 @@ public class Authenticate implements Serializable {
         }
     }
 
-    @Service
+    @Atomic
     public static UserView authenticate(final User user) {
         final UserView userView = new UserView(user);
         authenticate(userView);
@@ -231,7 +231,7 @@ public class Authenticate implements Serializable {
         }
 
         final Role role = Role.getRole(RoleType.MANAGER);
-        if (role.getUsersCount() == 0) {
+        if (role.getUsersSet().size() == 0) {
             user.addPeopleGroups(role);
         }
     }

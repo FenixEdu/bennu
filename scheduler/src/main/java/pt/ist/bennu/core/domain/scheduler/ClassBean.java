@@ -54,13 +54,12 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
-import jvstm.TransactionalCommand;
-
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.plugins.fileSupport.domain.GenericFile;
-import pt.ist.fenixframework.pstm.Transaction;
 
 /**
  * 
@@ -69,7 +68,7 @@ import pt.ist.fenixframework.pstm.Transaction;
  */
 public class ClassBean implements Serializable {
 
-    public static final Logger LOGGER = Logger.getLogger(ClassBean.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(ClassBean.class);
 
     public static class JavaSourceFromString extends SimpleJavaFileObject {
 
@@ -194,17 +193,10 @@ public class ClassBean implements Serializable {
 
         public class ExecutionLogger extends Thread {
 
+            @Atomic
             @Override
             public void run() {
-                Transaction.withTransaction(false, new TransactionalCommand() {
-
-                    @Override
-                    public void doIt() {
-                        new CustomTaskLog(getClassName(), getContents(), uploadTime, taskStart, taskEnd, out.toString(),
-                                outputFiles);
-                    }
-
-                });
+                new CustomTaskLog(getClassName(), getContents(), uploadTime, taskStart, taskEnd, out.toString(), outputFiles);
             }
         }
 
@@ -212,8 +204,8 @@ public class ClassBean implements Serializable {
 
         private DateTime taskStart;
         private DateTime taskEnd;
-        private Writer out = new StringWriter();
-        private Set<GenericFile> outputFiles = new HashSet<GenericFile>();
+        private final Writer out = new StringWriter();
+        private final Set<GenericFile> outputFiles = new HashSet<GenericFile>();
 
         public Executer() {
             runningExecuters.add(this);

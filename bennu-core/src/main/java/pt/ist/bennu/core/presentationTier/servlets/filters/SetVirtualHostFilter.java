@@ -33,7 +33,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.applicationTier.Authenticate.UserView;
 import pt.ist.bennu.core.domain.User;
@@ -47,7 +48,7 @@ import pt.ist.bennu.core.domain.VirtualHost;
  */
 public class SetVirtualHostFilter implements Filter {
 
-    private static final Logger logger = Logger.getLogger(SetVirtualHostFilter.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SetVirtualHostFilter.class.getName());
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {

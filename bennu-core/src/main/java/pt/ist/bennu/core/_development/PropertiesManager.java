@@ -26,21 +26,13 @@
 package pt.ist.bennu.core._development;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import pt.ist.bennu.core.domain.MyOrg;
 import pt.ist.fenixWebFramework.Config;
 import pt.ist.fenixWebFramework.Config.CasConfig;
-import pt.ist.fenixframework.FenixFrameworkPlugin;
-import pt.ist.fenixframework.artifact.FenixFrameworkArtifact;
-import pt.ist.fenixframework.project.DmlFile;
-import pt.ist.fenixframework.project.exception.FenixFrameworkProjectException;
 import pt.utl.ist.fenix.tools.util.MultiProperty;
 
 /**
@@ -62,8 +54,6 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
     private static final Properties properties = new MultiProperty();
 
     private static Config config = null;
-
-    private static List<URL> urls = null;
 
     static {
         try {
@@ -91,53 +81,19 @@ public class PropertiesManager extends pt.utl.ist.fenix.tools.util.PropertiesMan
 
             config = new Config() {
                 {
-                    domainModelPaths = new String[0];
-                    dbAlias = getProperty("db.alias");
-                    dbUsername = getProperty("db.user");
-                    dbPassword = getProperty("db.pass");
-                    appName = getProperty("app.name");
                     appContext = getProperty("app.context");
                     filterRequestWithDigest = getBooleanProperty("filter.request.with.digest");
                     tamperingRedirect = getProperty("digest.tampering.url");
-                    errorIfChangingDeletedObject = getBooleanProperty("error.if.changing.deleted.object");
-                    canCreateDomainMetaObjects = getBooleanProperty("can.create.domain.meta.objects");
                     defaultLanguage = getProperty("language");
                     defaultLocation = getProperty("location");
                     defaultVariant = getProperty("variant");
-                    updateRepositoryStructureIfNeeded = true;
                     casConfigByHost = Collections.unmodifiableMap(casConfigMap);
-                    rootClass = MyOrg.class;
                     javascriptValidationEnabled = true;
-                    errorfIfDeletingObjectNotDisconnected = true;
-                    plugins = new FenixFrameworkPlugin[0];
-                }
-
-                @Override
-                public List<URL> getDomainModelURLs() {
-                    return getUrls();
                 }
             };
         } catch (IOException e) {
             throw new RuntimeException("Unable to load properties files.", e);
         }
-    }
-
-    public synchronized static List<URL> getUrls() {
-        if (urls == null) {
-            urls = new ArrayList<>();
-            try {
-                URL remote = Thread.currentThread().getContextClassLoader().getResource("remote.dml");
-                for (DmlFile dml : FenixFrameworkArtifact.fromName(getProperty("app.name")).getFullDmlSortedList()) {
-                    urls.add(dml.getUrl());
-                    if (remote != null && dml.getUrl().toExternalForm().endsWith("remote-plugin.dml")) {
-                        urls.add(remote);
-                    }
-                }
-            } catch (FenixFrameworkProjectException | IOException e) {
-                throw new Error(e);
-            }
-        }
-        return urls;
     }
 
     public static String getProperty(final String key) {

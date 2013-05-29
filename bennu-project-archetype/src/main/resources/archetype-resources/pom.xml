@@ -5,10 +5,8 @@
 
 	<parent>
 		<groupId>pt.ist</groupId>
-		<artifactId>bennu-project#if($privateProject == "true" || $privateProject == "t" ||
-	$privateProject == "yes" || $privateProject == "YES" || $privateProject
-	== "y" || $privateProject == "Y" || $privateProject == "TRUE")-private#end</artifactId>
-		<version>1.0.0</version>
+		<artifactId>bennu-project</artifactId>
+		<version>${parentVersion}</version>
 	</parent>
 
 	<groupId>${groupId}</groupId>
@@ -18,33 +16,23 @@
 
 	<name>${UpperCamelCaseProjectName}</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
-	<organization>
-		<name>Instituto Superior Técnico</name>
-		<url>www.ist.utl.pt</url>
-	</organization>
-	
 	<dependencies>
-		<!--  PLACE YOUR BENNU PROJECT DEPENDENCIES HERE -->
+		<!-- PLACE YOUR BENNU PROJECT DEPENDENCIES HERE -->
 	</dependencies>
 
 	<repositories>
-#if($privateProject == "true" || $privateProject == "t" ||
-	$privateProject == "yes" || $privateProject == "YES" || $privateProject
-	== "y" || $privateProject == "Y" || $privateProject == "TRUE")
+		#if($privateProject == "true" || $privateProject == "t" ||
+		$privateProject == "yes" || $privateProject == "YES" || $privateProject
+		== "y" || $privateProject == "Y" || $privateProject == "TRUE")
 		<repository>
 			<id>fenix-ashes-private</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-private</url>
 		</repository>
-#else
+		#else
 		<repository>
 			<id>fenix-ashes-maven-repository</id>
 			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
 		</repository>
-#end
+		#end
 	</repositories>
-	
 </project>

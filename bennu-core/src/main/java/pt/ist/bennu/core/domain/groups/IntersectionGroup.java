@@ -33,7 +33,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.fenixWebFramework.services.Service;
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -62,7 +62,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     @Override
     public Set<User> getMembers() {
         final Set<User> users = new HashSet<User>();
-        if (hasAnyPersistentGroups()) {
+        if ((!getPersistentGroupsSet().isEmpty())) {
             users.addAll(getPersistentGroupsSet().iterator().next().getMembers());
             for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
                 users.retainAll(persistentGroup.getMembers());
@@ -74,7 +74,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     @Override
     public String getName() {
         List<String> names = new ArrayList<String>();
-        for (PersistentGroup group : getPersistentGroups()) {
+        for (PersistentGroup group : getPersistentGroupsSet()) {
             names.add("(" + group.getName() + ")");
         }
         return "Intersection of: ".concat(StringUtils.join(names, " AND "));
@@ -82,7 +82,7 @@ public class IntersectionGroup extends IntersectionGroup_Base {
 
     @Override
     public boolean isMember(final User user) {
-        if (getPersistentGroupsCount() == 0) {
+        if (getPersistentGroupsSet().size() == 0) {
             return false;
         }
         for (final PersistentGroup persistentGroup : getPersistentGroupsSet()) {
@@ -93,8 +93,13 @@ public class IntersectionGroup extends IntersectionGroup_Base {
         return true;
     }
 
-    @Service
+    @Atomic
     public static IntersectionGroup createIntersectionGroup(final PersistentGroup... persistentGroups) {
         return new IntersectionGroup(persistentGroups);
     }
+    @Deprecated
+    public java.util.Set<pt.ist.bennu.core.domain.groups.PersistentGroup> getPersistentGroups() {
+        return getPersistentGroupsSet();
+    }
+
 }

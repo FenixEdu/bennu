@@ -64,7 +64,7 @@ public class TaskSchedule extends TaskSchedule_Base {
     }
 
     public void delete() {
-        removeTask();
+        setTask(null);
         super.deleteDomainObject();
     }
 

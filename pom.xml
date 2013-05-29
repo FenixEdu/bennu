@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>pt.ist</groupId>
+        <artifactId>ist-dsi-project</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>bennu</artifactId>
+    <name>Bennu Framework</name>
+    <version>1.1.0</version>
+    <packaging>pom</packaging>
+
+    <scm>
+        <connection>scm:git:git@github.com:ist-dsi/bennu.git</connection>
+        <developerConnection>scm:git:git@github.com:ist-dsi/bennu.git</developerConnection>
+        <url>http://ist-dsi.github.io/bennu/</url>
+        <tag>v1.1.0</tag>
+    </scm>
+
+    <modules>
+        <module>bennu-backend-util</module>
+        <module>bennu-plugin</module>
+        <module>bennu-project</module>
+        <module>bennu-core</module>
+        <module>file-support-plugin</module>
+        <module>file-support</module>
+        <module>scheduler-plugin</module>
+        <module>scheduler</module>
+        <module>lucene-indexing-plugin</module>
+        <module>lucene</module>
+        <module>email-dispatch</module>
+        <module>web-service-utils</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+        </repository>
+    </repositories>
+
+</project>

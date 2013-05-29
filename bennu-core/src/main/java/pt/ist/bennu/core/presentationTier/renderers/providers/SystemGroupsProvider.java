@@ -42,7 +42,7 @@ public class SystemGroupsProvider implements DataProvider {
 
     @Override
     public Object provide(Object arg0, Object arg1) {
-        return MyOrg.getInstance().getSystemGroups();
+        return MyOrg.getInstance().getSystemGroupsSet();
     }
 
 }

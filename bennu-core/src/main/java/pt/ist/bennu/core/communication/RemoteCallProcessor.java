@@ -32,8 +32,8 @@ import java.lang.reflect.Method;
 import pt.ist.bennu.core.communication.transport.RemoteCallReply;
 import pt.ist.bennu.core.communication.transport.RemoteCallRequest;
 import pt.ist.fenixframework.DomainObject;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.fenixframework.pstm.VersionNotAvailableException;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.core.AbstractDomainObject;
 
 /**
  * 
@@ -80,7 +80,7 @@ public class RemoteCallProcessor {
 
     public static Object invokeMethod(String externalId, String methodName, Class[] classes, Object[] objects) {
 
-        DomainObject someObject = AbstractDomainObject.fromExternalId(externalId);
+        DomainObject someObject = FenixFramework.getDomainObject(externalId);
         try {
             Method methodToCall = someObject.getClass().getMethod(methodName, classes);
 
@@ -103,9 +103,6 @@ public class RemoteCallProcessor {
             e.printStackTrace();
             throw new RemoteCallException(e);
         } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof VersionNotAvailableException) {
-                throw (VersionNotAvailableException) e.getCause();
-            }
             e.printStackTrace();
             throw new RemoteCallException(e);
         }

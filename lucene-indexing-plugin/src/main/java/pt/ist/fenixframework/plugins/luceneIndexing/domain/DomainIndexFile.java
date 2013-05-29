@@ -16,8 +16,8 @@ public class DomainIndexFile extends DomainIndexFile_Base implements IndexFile {
     }
 
     public void delete() {
-        removeDirectory();
-        removePluginRoot();
+        setDirectory(null);
+        setPluginRoot(null);
         DomainIndexContent storedFile = getStoredFile();
         if (storedFile != null) {
             storedFile.delete();

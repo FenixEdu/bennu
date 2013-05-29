@@ -42,13 +42,14 @@ import org.joda.time.DateTime;
 
 import pt.ist.bennu.core._development.PropertiesManager;
 import pt.ist.fenixWebFramework.FenixWebFramework;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.dml.DomainClass;
+import pt.ist.fenixframework.dml.DomainEntity;
+import pt.ist.fenixframework.dml.DomainModel;
+import pt.ist.fenixframework.dml.DomainRelation;
+import pt.ist.fenixframework.dml.Role;
+import pt.ist.fenixframework.dml.Slot;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
-import dml.DomainClass;
-import dml.DomainEntity;
-import dml.DomainModel;
-import dml.DomainRelation;
-import dml.Role;
-import dml.Slot;
 
 /**
  * 
@@ -63,7 +64,7 @@ public class OidSqlGenerator {
     private static class DomainClassEntry {
         private DomainClassEntry superDomainClassEntry;
         private final DomainClass domainClass;
-        private Set<DomainClassEntry> subDomainClassEntries = new HashSet<DomainClassEntry>();
+        private final Set<DomainClassEntry> subDomainClassEntries = new HashSet<DomainClassEntry>();
 
         public DomainClassEntry(final DomainClass domainClass) {
             final DomainClassEntry domainClassEntry = findDomainClassEntry(domainClass);
@@ -344,7 +345,7 @@ public class OidSqlGenerator {
     }
 
     private static void generate() throws IOException {
-        domainModel = FenixWebFramework.getDomainModel();
+        domainModel = FenixFramework.getDomainModel();
 
         for (final DomainClass domainClass : domainModel.getDomainClasses()) {
             new DomainClassEntry(domainClass);

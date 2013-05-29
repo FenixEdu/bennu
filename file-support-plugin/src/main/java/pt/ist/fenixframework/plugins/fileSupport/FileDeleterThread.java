@@ -2,18 +2,17 @@ package pt.ist.fenixframework.plugins.fileSupport;
 
 import java.util.ArrayList;
 
-import jvstm.TransactionalCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.log4j.Logger;
-
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.plugins.fileSupport.domain.FileSupport;
 import pt.ist.fenixframework.plugins.fileSupport.domain.LocalFileToDelete;
-import pt.ist.fenixframework.pstm.Transaction;
 
 public class FileDeleterThread implements Runnable {
 
     private static final long SLEEP_TIME = 300000;
-    private static final Logger logger = Logger.getLogger(FileDeleterThread.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(FileDeleterThread.class.getName());
 
     @Override
     public void run() {
@@ -27,23 +26,16 @@ public class FileDeleterThread implements Runnable {
         }
     }
 
+    @Atomic
     private void process() {
-        Transaction.withTransaction(new TransactionalCommand() {
-
-            @Override
-            public void doIt() {
-                for (final LocalFileToDelete localFileToDelete : new ArrayList<LocalFileToDelete>(FileSupport.getInstance()
-                        .getLocalFilesToDelete())) {
-                    logger.info("Deleting: " + localFileToDelete.getFilePath());
-                    try {
-                        localFileToDelete.delete();
-                    } catch (Exception e) {
-                        logger.debug("Failed to delete file", e);
-                    }
-                }
-
+        for (final LocalFileToDelete localFileToDelete : new ArrayList<LocalFileToDelete>(FileSupport.getInstance()
+                .getLocalFilesToDelete())) {
+            logger.info("Deleting: " + localFileToDelete.getFilePath());
+            try {
+                localFileToDelete.delete();
+            } catch (Exception e) {
+                logger.debug("Failed to delete file", e);
             }
-
-        });
+        }
     }
 }
