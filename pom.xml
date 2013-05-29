@@ -5,7 +5,7 @@
     <parent>
         <groupId>pt.ist</groupId>
         <artifactId>ist-dsi-project</artifactId>
-        <version>1.0.0-rc1</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>bennu</artifactId>

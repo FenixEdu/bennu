@@ -4,7 +4,7 @@
     <parent>
         <groupId>pt.ist</groupId>
         <artifactId>ist-dsi-project</artifactId>
-        <version>1.0.0-rc1</version>
+        <version>1.0.0</version>
         <relativePath />
     </parent>
 
@@ -14,7 +14,7 @@
 
     <properties>
         <fenix.framework.backend>fenix-framework-backend-jvstm-ojb</fenix.framework.backend>
-        <version.fenix.framework.backend>2.1.0-rc2</version.fenix.framework.backend>
+        <version.fenix.framework.backend>2.1.0</version.fenix.framework.backend>
     </properties>
 
     <dependencies>

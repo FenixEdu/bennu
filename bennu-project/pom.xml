@@ -6,7 +6,7 @@
     <parent>
         <groupId>pt.ist</groupId>
         <artifactId>fenix-framework-project</artifactId>
-        <version>1.0.0-rc1</version>
+        <version>1.0.0</version>
         <relativePath />
     </parent>
 
@@ -55,7 +55,7 @@
         <version.commons.logging.commons.logging>1.1.1</version.commons.logging.commons.logging>
         <version.bennu.backend.util>1.1.0-SNAPSHOT</version.bennu.backend.util>
         <version.ch.qos.logback.logback.classic>1.0.12</version.ch.qos.logback.logback.classic>
-        <version.fenix.framework>2.1.0-rc2</version.fenix.framework>
+        <version.fenix.framework>2.1.0</version.fenix.framework>
         <version.informa.informa>1.0</version.informa.informa>
         <version.javax.mail.mail>1.4.2</version.javax.mail.mail>
         <version.javax.servlet.jstl>1.2</version.javax.servlet.jstl>
@@ -85,7 +85,7 @@
         <!-- ************************************************************************************************ -->
         <version.com.alexnederlof.jasperreports.plugin>1.5.1</version.com.alexnederlof.jasperreports.plugin>
         <version.pt.ist.bennu.maven.plugin>1.1.0-SNAPSHOT</version.pt.ist.bennu.maven.plugin>
-        <version.pt.ist.ff.maven.plugin>2.1.0-rc2</version.pt.ist.ff.maven.plugin>
+        <version.pt.ist.ff.maven.plugin>2.1.0</version.pt.ist.ff.maven.plugin>
         <version.org.apache.maven.plugins.maven.enforcer.plugin>1.1.1</version.org.apache.maven.plugins.maven.enforcer.plugin>
         <version.org.apache.maven.plugins.maven.resources.plugin>2.5</version.org.apache.maven.plugins.maven.resources.plugin>
         <version.org.apache.maven.plugins.maven.surefire.plugin>2.12.4</version.org.apache.maven.plugins.maven.surefire.plugin>

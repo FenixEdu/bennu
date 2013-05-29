@@ -12,7 +12,7 @@
     <name>Bennu Web-Service Utils</name>
 
     <properties>
-        <version.pt.ist.bennu.vaadin>1.1.0-rc2</version.pt.ist.bennu.vaadin>
+        <version.pt.ist.bennu.vaadin>1.1.0</version.pt.ist.bennu.vaadin>
     </properties>
 
     <dependencies>
