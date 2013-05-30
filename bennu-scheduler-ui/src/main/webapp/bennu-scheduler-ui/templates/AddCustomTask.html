@@ -7,7 +7,11 @@
     <textarea id="code" name="code">{{javaCode}}</textarea>
     <button class="btn btn-success btn-compile">Compile</button>
     <button class="btn btn-success btn-run">Run</button>
+    <button class="btn btn-success btn-upload">Upload</button>
+    <input type="file" style="display: none;" id="javaCodeFile"/>
   </fieldset>
 </form>
-<div id="result">
+<div>
+	<legend>Output</legend>
+	<pre id="result"></pre>
 </div>

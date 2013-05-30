@@ -58,6 +58,8 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.scheduler.log.CustomExecutionLog;
 
+import com.google.gson.JsonObject;
+
 /**
  * 
  * @author Luis Cruz
@@ -272,8 +274,8 @@ public class ClassBean implements Serializable {
             final Class<? extends CustomTask> clazz =
                     (Class<? extends CustomTask>) Class.forName(getClassName(), true, urlClassLoader);
             task = clazz.newInstance();
-            task.<CustomExecutionLog>getExecutionLog().setJavaCode(contents);
-            task.<CustomExecutionLog>getExecutionLog().start();
+            task.<CustomExecutionLog> getExecutionLog().setJavaCode(contents);
+            task.<CustomExecutionLog> getExecutionLog().start();
             task.run();
         }
 
@@ -303,7 +305,8 @@ public class ClassBean implements Serializable {
             }
         }
 
-        public String runCompile() {
+        public JsonObject runCompile() {
+            final JsonObject result;
             Boolean compiledSuccessfully = false;
             try {
                 createDirs();
@@ -317,10 +320,12 @@ public class ClassBean implements Serializable {
             } finally {
                 cleanup();
             }
-            if (compiledSuccessfully) {
-                return "Compilation was succcessful";
+            result = new JsonObject();
+            result.addProperty("compileOK", compiledSuccessfully);
+            if (!compiledSuccessfully) {
+                result.addProperty("error", out.toString());
             }
-            return out.toString();
+            return result;
         }
 
         private void cleanup() {
@@ -352,7 +357,7 @@ public class ClassBean implements Serializable {
         executer.start();
     }
 
-    public String compile() {
+    public JsonObject compile() {
         final Executer executer = new Executer();
         return executer.runCompile();
     }

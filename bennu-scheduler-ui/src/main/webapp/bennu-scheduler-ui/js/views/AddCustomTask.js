@@ -18,9 +18,37 @@ define([
         events: {
         	"click .btn-run" : "runTask",
         	"click .btn-compile": "compileTask",
+        	"click .btn-upload" : "triggerUploadJavaCodeFile",
+        	"change #javaCodeFile": "uploadJavaCodeFile",
         },
         
         codeMirror: undefined,
+        
+        triggerUploadJavaCodeFile: function(e) {
+        	e.preventDefault();
+        	$("#javaCodeFile").click();
+        },
+        
+        uploadJavaCodeFile: function(e) {
+        	e.preventDefault();
+        	var files = e.target.files; // FileList object
+        	var that = this;
+        	for ( var i = 0; i < files.length; i++) {
+				var file = files[i];
+				if (!file.type.match("text.*")) {
+					continue;
+				}
+
+				var reader = new FileReader();
+				reader.onload = (function(f) {
+					return function(e) {
+						that.codeMirror.setValue(e.target.result);
+					};
+				})(file);
+
+				reader.readAsText(file);
+			}
+        },
         
         onShow: function () {
         	var that = this;
@@ -28,8 +56,14 @@ define([
         		require(['codemirror-clike'], function(CLike) {
         			var codeArea = $('#code')[0];
         			that.codeMirror = CodeMirror.fromTextArea(codeArea, {lineNumbers : true, mode:"text/x-java", theme:"eclipse", viewportMargin: Infinity});
+        			that.codeMirror.on("change", function() {
+        				$(".btn-compile").attr('disabled', false);
+        				$(".btn-run").attr('disabled', true);
+        			});
         		});
 			});
+        	$(".btn-run").attr('disabled', true);
+        	$(".btn-compile").attr('disabled', false);
         },
         
         compileTask: function(e) {
@@ -44,10 +78,18 @@ define([
         		url : "../api/bennu-scheduler/custom/compile", 
         		data: {name : fqn, code : javaCode},
         		async: false,
-        		success: function(data) {
-        			$("#result").html("<pre>" + data + "</pre>");
+        		success: function(result) {
+        			var output;
+        			if (result.compileOK) {
+        				output = "The compilation was successful!";
+        				$(".btn-run").attr('disabled', false);
+        				$(".btn-compile").attr('disabled', true);
+        			} else {
+        				output = result.error;
+        			}
+        			$("#result").html(output);
         		},
-        		dataType:"text"
+        		dataType:"json"
         	});
         },
         

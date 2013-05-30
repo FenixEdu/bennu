@@ -7,7 +7,5 @@ define([
         url: "../api/bennu-scheduler/custom/",
         
         
-        onShow: function() {
-        }
     });
 });

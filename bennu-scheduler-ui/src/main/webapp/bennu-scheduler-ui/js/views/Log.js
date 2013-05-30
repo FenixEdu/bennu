@@ -13,11 +13,17 @@ define([
         template: tpl,
         
         modelEvents: {
-        	"change" : "render"
+        	"change" : "xrender"
         },
         
         events: {
         	"click .btn-load-code": "loadCode",
+        },
+        
+        
+        xrender: function() {
+        	this.onClose();
+        	this.render();
         },
         
         onClose: function() {
@@ -25,9 +31,13 @@ define([
         		console.log("Clear " + this.logging);
         		clearInterval(this.logging);
         	}
+        	if (this.refreshIntervalId != 0) {
+        		console.log("Clear refresh" + this.refreshIntervalId);
+        		clearInterval(this.refreshIntervalId);
+        	}
         },
         
-        onShow: function() {
+        onDomRefresh: function() {
         	if (this.model.get("javaCode") != undefined) {
             	require(['codemirror'], function(CodeMirror) {
             		require(['codemirror-clike'], function(CLike) {
@@ -36,6 +46,7 @@ define([
             		});
     			});
         	}
+        	this.refreshLog();
         },
         
         url: function() {
@@ -44,6 +55,10 @@ define([
         		return url + "log/";
         	} 
         	return url + "custom/"; 
+        },
+        
+        refreshContent: function() {
+        	this.model.fetch();
         },
         
         refreshLog: function() {
@@ -73,7 +88,6 @@ define([
         initialize: function() {
         	var that = this;
         	this.logging = 0;
-        	this.refreshLog();
         	
         	if (this.model.get("end") === undefined) {
         		this.logging = setInterval(
@@ -81,8 +95,11 @@ define([
         					that.refreshLog();
         					$.scrollTo("#logAnchor");
         				}, 3000);
-        		console.log("setInterval: " + this.logging);
+        		this.refreshIntervalId = setInterval(function() {
+        					that.refreshContent();
+        				}, 3000);
         	}
+        	
         },
         
         serializeData: function() {

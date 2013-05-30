@@ -7,6 +7,7 @@ import javax.ws.rs.core.Response;
 
 import pt.ist.bennu.scheduler.custom.ClassBean;
 import pt.ist.bennu.scheduler.log.CustomExecutionLogContext;
+import pt.ist.bennu.scheduler.log.ExecutionLog;
 import pt.ist.bennu.scheduler.log.ExecutionLogContext;
 
 @Path("custom")
@@ -24,7 +25,7 @@ public class CustomTaskResource extends ExecutionLogResource {
     @POST
     @Path("compile")
     public Response compileCustomTask(@FormParam("name") String name, @FormParam("code") String code) {
-        return Response.ok(new ClassBean(name, code).compile()).build();
+        return Response.ok(ExecutionLog.getGson().toJson(new ClassBean(name, code).compile())).build();
     }
 
     @Override
