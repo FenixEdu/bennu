@@ -21,8 +21,11 @@ import java.util.Set;
 import jvstm.cps.ConsistencyPredicate;
 import pt.ist.bennu.core.domain.groups.AnonymousGroup;
 import pt.ist.bennu.core.domain.groups.AnyoneGroup;
+import pt.ist.bennu.core.domain.groups.DynamicGroup;
 import pt.ist.bennu.core.domain.groups.LoggedGroup;
 import pt.ist.bennu.core.domain.groups.NobodyGroup;
+import pt.ist.bennu.core.domain.groups.UserGroup;
+import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
 
@@ -68,6 +71,9 @@ public class VirtualHost extends VirtualHost_Base {
         LoggedGroup.getInstance();
         AnonymousGroup.getInstance();
         NobodyGroup.getInstance();
+        if (Authenticate.hasUser()) {
+            DynamicGroup.initialize("managers", UserGroup.getInstance(Authenticate.getUser()));
+        }
     }
 
     @Override

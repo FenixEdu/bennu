@@ -14,11 +14,11 @@
     <servlet>
         <servlet-name>Jersey Web Application</servlet-name>
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-        <!--<init-param>
+        <init-param>
             <param-name>javax.ws.rs.Application</param-name>
             <param-value>pt.ist.bennu.core.servlets.BennuJerseyRestApplication</param-value>
         </init-param>
-        <init-param>
+        <!-- <init-param>
   			<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
   			<param-value>com.sun.jersey.api.container.filter.LoggingFilter</param-value>
 		</init-param>
