@@ -17,6 +17,7 @@ public class CustomTaskResource extends ExecutionLogResource {
 
     @POST
     public Response addCustomTask(@FormParam("name") String name, @FormParam("code") String code) {
+        accessControl("#managers");
         final ClassBean classBean = new ClassBean(name, code);
         classBean.run();
         return Response.ok().build();
@@ -25,6 +26,7 @@ public class CustomTaskResource extends ExecutionLogResource {
     @POST
     @Path("compile")
     public Response compileCustomTask(@FormParam("name") String name, @FormParam("code") String code) {
+        accessControl("#managers");
         return Response.ok(ExecutionLog.getGson().toJson(new ClassBean(name, code).compile())).build();
     }
 

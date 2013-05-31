@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.scheduler.CronTask;
 import pt.ist.bennu.scheduler.log.ExecutionLog;
 import pt.ist.bennu.scheduler.log.ExecutionLogContext;
@@ -23,7 +24,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 @Path("log")
-public class ExecutionLogResource {
+public class ExecutionLogResource extends BennuRestResource {
 
     private static final ExecutionLogContext context = new ExecutionLogContext();
 
@@ -34,6 +35,7 @@ public class ExecutionLogResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String view() {
+        accessControl("#managers");
         final JsonObject view = new JsonObject();
         final JsonArray logs = new JsonArray();
         if (!getContext().isEmpty()) {
@@ -49,6 +51,7 @@ public class ExecutionLogResource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String view(@PathParam("id") String id) {
+        accessControl("#managers");
         final JsonObject jsonLog = getContext().get(id);
         if (jsonLog != null) {
             return ExecutionLog.getGson().toJson(jsonLog);
@@ -60,6 +63,7 @@ public class ExecutionLogResource {
     @Path("cat/{id}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response logging(@PathParam("id") String id) {
+        accessControl("#managers");
         final JsonObject jsonLog = getContext().get(id);
         if (jsonLog != null) {
             try {
@@ -80,6 +84,7 @@ public class ExecutionLogResource {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Path("{id}/{filename}")
     public Response downloadFile(@PathParam("id") String id, @PathParam("filename") String filename) {
+        accessControl("#managers");
         final JsonObject jsonLog = getContext().get(id);
         if (jsonLog != null && hasFile(jsonLog, filename)) {
             return Response.ok(getFile(jsonLog, filename)).build();
