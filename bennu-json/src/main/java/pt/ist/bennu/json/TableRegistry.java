@@ -80,7 +80,7 @@ class TableRegistry<T> {
     private T get(Class<?> objectClass) {
         final Class<? extends T> defaultValue = internalGet(objectClass);
         if (defaultValue == null) {
-            throw new DefaultNotAvailableException();
+            throw new DefaultNotAvailableException(objectClass);
         }
         return get(objectClass, defaultValue);
     }
