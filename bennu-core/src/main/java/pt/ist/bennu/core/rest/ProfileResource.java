@@ -19,6 +19,8 @@ import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.security.UserSession;
 import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.dsi.commons.i18n.I18N;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 @Path("profile")
 public class ProfileResource extends BennuRestResource {
@@ -55,11 +57,20 @@ public class ProfileResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeLocale(@PathParam("tag") String localeTag) {
         if (ConfigurationManager.isSupportedLanguage(localeTag)) {
-            I18N.setLocale(request.getSession(true), Locale.forLanguageTag(localeTag));
+            final Locale locale = Locale.forLanguageTag(localeTag);
+            I18N.setLocale(request.getSession(true), locale);
+            if (Authenticate.hasUser()) {
+                setPreferredLocale(locale);
+            }
             return Response.ok(view(Authenticate.getUserSession(), UserSession.class, UserSessionViewer.class)).build();
         } else {
             throw BennuCoreDomainException.resourceNotFound(localeTag);
         }
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private void setPreferredLocale(Locale locale) {
+        Authenticate.getUser().setPreferredLocale(locale);
     }
 
     @POST
