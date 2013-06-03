@@ -39,7 +39,7 @@ define([
         		"bFilter": true,
         		"bScrollInfinite": true,
         		"sScrollY": "400px",
-        		"aaSorting": [[2, "desc"]],
+        		"aaSorting": [[1, "desc"]],
         		"aoColumns": [
         		              null,
         		              null,
