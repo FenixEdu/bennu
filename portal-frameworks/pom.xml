@@ -9,26 +9,9 @@
         <version>2.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bennu-portal</artifactId>
-    <name>Bennu Portal</name>
-
-    <dependencies>
-        <dependency>
-            <groupId>pt.ist.bennu</groupId>
-            <artifactId>bennu-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>pt.ist.bennu</groupId>
-            <artifactId>bennu-email</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>pt.ist.bennu</groupId>
-            <artifactId>bennu-json</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+    <artifactId>bennu-portal-frameworks</artifactId>
+    <name>Bennu Framework Portal Client Frameworks</name>
+    <packaging>pom</packaging>
 
     <repositories>
         <repository>
@@ -36,4 +19,10 @@
             <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
         </repository>
     </repositories>
+
+    <modules>
+        <module>bankai</module>
+        <module>bennu-renderers</module>
+        <!-- module>bennu-vaadin</module -->
+    </modules>
 </project>

@@ -4,10 +4,10 @@ import java.util.Locale;
 
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.util.ConfigurationManager;
-import pt.ist.bennu.dispatch.AppServer;
-import pt.ist.bennu.dispatch.model.FunctionalityInfo;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
+import pt.ist.bennu.portal.AppServer;
+import pt.ist.bennu.portal.domain.FunctionalityInfo;
 import pt.ist.bennu.portal.domain.MenuItem;
 import pt.ist.dsi.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.FenixFramework;

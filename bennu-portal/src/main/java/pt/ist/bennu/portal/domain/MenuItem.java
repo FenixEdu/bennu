@@ -7,7 +7,7 @@ import java.util.TreeSet;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.dispatch.AppServer;
+import pt.ist.bennu.portal.AppServer;
 import pt.ist.dsi.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.Atomic;
 

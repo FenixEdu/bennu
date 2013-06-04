@@ -6,7 +6,7 @@
     <parent>
         <groupId>pt.ist</groupId>
         <artifactId>fenix-framework-project</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>pt.ist.bennu</groupId>
@@ -32,6 +32,8 @@
         <version.org.apache.lucene.lucene.core>3.6.1</version.org.apache.lucene.lucene.core>
         <version.pt.ist.bankai>0.0.1-SNAPSHOT</version.pt.ist.bankai>
         <version.pt.ist.dsi.commons>1.0.0-SNAPSHOT</version.pt.ist.dsi.commons>
+        <version.com.google.code.gson.gson>2.2.3</version.com.google.code.gson.gson>
+        <version.com.google.guava.guava>14.0.1</version.com.google.guava.guava>
 
         <!-- ************************************************************************************************ -->
         <!-- * PLUGIN VERSIONS * -->
@@ -47,17 +49,6 @@
     </scm>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/webapp</directory>
-                <targetPath>META-INF/resources</targetPath>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -76,16 +67,18 @@
         </pluginManagement>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${version.com.google.code.gson.gson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${version.com.google.guava.guava}</version>
+            </dependency>
             <dependency>
                 <groupId>pt.ist</groupId>
                 <artifactId>dsi-commons</artifactId>
@@ -151,6 +144,10 @@
     </dependencyManagement>
 
     <repositories>
+        <repository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+        </repository>
         <!-- TODO: this should be proxied in nexus -->
         <repository>
             <id>nuxeo</id>
@@ -159,18 +156,9 @@
     </repositories>
 
     <modules>
-        <module>bankai</module>
-        <module>bennu-admin</module>
-        <module>bennu-core</module>
-        <module>bennu-dispatch</module>
-        <module>bennu-email</module>
-        <module>bennu-io</module>
-        <module>bennu-io-ui</module>
-        <module>bennu-json</module>
         <module>bennu-portal</module>
-        <module>bennu-renderers</module>
-        <module>bennu-scheduler</module>
-        <module>bennu-scheduler-ui</module>
-        <module>bennu-search</module>
+        <module>client</module>
+        <module>portal-frameworks</module>
+        <module>server</module>
     </modules>
 </project>
