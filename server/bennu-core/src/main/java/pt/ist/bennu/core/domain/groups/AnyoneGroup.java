@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 
+import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.i18n.BundleUtil;
 import pt.ist.fenixframework.Atomic;
@@ -47,7 +48,7 @@ public class AnyoneGroup extends AnyoneGroup_Base {
 
     @Override
     public Set<User> getMembers() {
-        return Collections.emptySet();
+        return Collections.unmodifiableSet(Bennu.getInstance().getUsersSet());
     }
 
     @Override

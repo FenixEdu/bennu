@@ -122,32 +122,32 @@ public final class DynamicGroup extends DynamicGroup_Base {
 
     @Override
     public Group and(Group group) {
-        return changeGroup(getGroup().and(group));
+        return getGroup().and(group);
     }
 
     @Override
     public Group or(Group group) {
-        return changeGroup(getGroup().or(group));
+        return getGroup().or(group);
     }
 
     @Override
     public Group minus(Group group) {
-        return changeGroup(getGroup().minus(group));
+        return getGroup().minus(group);
     }
 
     @Override
     public Group not() {
-        return changeGroup(getGroup().not());
+        return getGroup().not();
     }
 
     @Override
     public Group grant(User user) {
-        return changeGroup(getGroup().grant(user));
+        return getGroup().grant(user);
     }
 
     @Override
     public Group revoke(User user) {
-        return changeGroup(getGroup().revoke(user));
+        return getGroup().revoke(user);
     }
 
     @Override

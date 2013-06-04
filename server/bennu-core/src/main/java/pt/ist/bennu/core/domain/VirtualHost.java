@@ -73,6 +73,8 @@ public class VirtualHost extends VirtualHost_Base {
         NobodyGroup.getInstance();
         if (Authenticate.hasUser()) {
             DynamicGroup.initialize("managers", UserGroup.getInstance(Authenticate.getUser()));
+        } else {
+            DynamicGroup.initialize("managers", NobodyGroup.getInstance());
         }
     }
 

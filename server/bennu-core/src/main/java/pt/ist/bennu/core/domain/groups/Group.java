@@ -58,7 +58,7 @@ import com.google.common.collect.Iterables;
  * @see DynamicGroup
  * @see CustomGroup
  */
-public abstract class Group extends Group_Base {
+public abstract class Group extends Group_Base implements Comparable<Group> {
     protected Group() {
         super();
         setHost(VirtualHost.getVirtualHostForThread());
@@ -316,5 +316,14 @@ public abstract class Group extends Group_Base {
         Predicate<? super Group> realPredicate =
                 Predicates.and(Predicates.instanceOf(type), (Predicate<? super Group>) predicate);
         return (T) Iterables.tryFind(VirtualHost.getVirtualHostForThread().getGroupsSet(), realPredicate).orNull();
+    }
+
+    @Override
+    public int compareTo(Group other) {
+        int byname = getPresentationName().compareTo(other.getPresentationName());
+        if (byname != 0) {
+            return byname;
+        }
+        return getExternalId().compareTo(other.getExternalId());
     }
 }
