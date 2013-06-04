@@ -52,8 +52,8 @@ define([
         
         onShow: function () {
         	var that = this;
-        	require(['codemirror'], function(CodeMirror) {
-        		require(['codemirror-clike'], function(CLike) {
+        	require(['appLibs/codemirror/clike'], function(CodeMirror) {
+        		require([], function() {
         			var codeArea = $('#code')[0];
         			that.codeMirror = CodeMirror.fromTextArea(codeArea, {lineNumbers : true, mode:"text/x-java", theme:"eclipse", viewportMargin: Infinity});
         			that.codeMirror.on("change", function() {

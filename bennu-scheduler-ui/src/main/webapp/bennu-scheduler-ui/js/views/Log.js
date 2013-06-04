@@ -39,8 +39,8 @@ define([
         
         onDomRefresh: function() {
         	if (this.model.get("javaCode") != undefined) {
-            	require(['codemirror'], function(CodeMirror) {
-            		require(['codemirror-clike'], function(CLike) {
+        		require(['appLibs/codemirror/clike'], function(CodeMirror) {
+            		require([], function() {
             			var codeArea = $('#code')[0];
             			CodeMirror.fromTextArea(codeArea, {lineNumbers : true, mode:"text/x-java", theme:"eclipse", viewportMargin: Infinity, readOnly: "nocursor"});
             		});
