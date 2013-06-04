@@ -4,10 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.CommitListener;
 import pt.ist.fenixframework.DomainObject;
@@ -15,17 +11,12 @@ import pt.ist.fenixframework.Transaction;
 import pt.ist.fenixframework.txintrospector.TxIntrospector;
 
 public class IndexListener implements CommitListener {
-    private static Logger logger = LoggerFactory.getLogger(IndexListener.class);
+//    private static Logger logger = LoggerFactory.getLogger(IndexListener.class);
 
     @Override
     public void beforeCommit(Transaction transaction) {
-    }
-
-    @Override
-    public void afterCommit(Transaction transaction) {
         TxIntrospector introspector = transaction.getTxIntrospector();
         if (introspector.isWriteTransaction()) {
-            long t1 = System.currentTimeMillis();
             Map<Class<? extends Indexable>, Collection<IndexDocument>> newIndexes = new HashMap<>();
 
             for (DomainObject domainObject : new HashSet<>(introspector.getNewObjects())) {
@@ -54,20 +45,16 @@ public class IndexListener implements CommitListener {
                 }
             }
 
-            if (!newIndexes.isEmpty()) {
-                long t2 = System.currentTimeMillis();
-                DomainIndexer.getInstance().indexDomainObjects(newIndexes);
-                long t3 = System.currentTimeMillis();
-                if (logger.isDebugEnabled()) {
-                    for (Entry<Class<? extends Indexable>, Collection<IndexDocument>> entry : newIndexes.entrySet()) {
-                        logger.debug("Indexed {} {} objects. Took {}ms. (tx fetch: {}, writing index: {})", entry.getValue()
-                                .size(), entry.getKey().getSimpleName(), t3 - t1, t2 - t1, t3 - t2);
-                        logger.debug("indexed " + newIndexes.size() + " objects in: " + (t3 - t1) + " (" + (t2 - t1) + ", "
-                                + (t3 - t2) + ") ms.");
-                    }
-                }
-            }
+            transaction.putInContext("indexes", newIndexes);
         }
     }
 
+    @Override
+    public void afterCommit(Transaction transaction) {
+        Map<Class<? extends Indexable>, Collection<IndexDocument>> newIndexes =
+                (Map<Class<? extends Indexable>, Collection<IndexDocument>>) transaction.getFromContext("indexes");
+        if (newIndexes != null && !newIndexes.isEmpty()) {
+            DomainIndexer.getInstance().indexDomainObjects(newIndexes);
+        }
+    }
 }
