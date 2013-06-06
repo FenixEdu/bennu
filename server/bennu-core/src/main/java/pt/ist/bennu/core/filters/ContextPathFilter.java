@@ -25,10 +25,13 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import pt.ist.bennu.core.util.CookieReaderUtils;
 
 /**
  * 
@@ -36,8 +39,11 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class ContextPathFilter implements Filter {
+    
     private static final Logger logger = LoggerFactory.getLogger(ContextPathFilter.class);
 
+    private static final String CONTEXT_PATH_COOKIE_NAME = "contextPath";
+    
     @Override
     public void init(final FilterConfig config) throws ServletException {
     }
@@ -49,10 +55,16 @@ public class ContextPathFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
+        final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         final String contextPath = request.getServletContext().getContextPath();
         logger.info(contextPath);
-        httpServletResponse.addCookie(new Cookie("contextPath", contextPath));
+        Cookie cookie = CookieReaderUtils.getCookieForName("contextPath", httpServletRequest);
+        if(cookie == null) {
+            Cookie newCookie = new Cookie(CONTEXT_PATH_COOKIE_NAME, contextPath);
+            newCookie.setPath("/");
+            httpServletResponse.addCookie(newCookie);
+        }
         chain.doFilter(request, response);
     }
 }

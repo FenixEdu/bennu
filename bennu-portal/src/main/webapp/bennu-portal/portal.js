@@ -35,6 +35,8 @@ function loadScript(url, callback) {
 
 	var contextPath = readCookie("contextPath") || "/";
 	window.contextPath = contextPath;
+	
+	var developmentMode = readCookie("developmentMode");
 
 	$("body").hide();
 	$.ajax({
@@ -136,9 +138,13 @@ function loadScript(url, callback) {
 								var old_body = $('body').html();
 								$('body').html(new_body);
 								$("#content")[0].innerHTML = old_body;
-								$("head").prepend('<link rel="stylesheet/css" href="less/style.css" />');
-								$("head").prepend('<link href="' + styles_url + '" rel="stylesheet">');
-								$("head").append("<script type='text/javascript' src='" + contextPath + "/js/libs/less/less.js" + "'></script>");
+								if(developmentMode) {
+									$("head").prepend("<link rel='stylesheet/less' type='text/css' href='"+contextPath+"/less/style.less' />");
+									$("head").append("<script type='text/javascript' src='" + contextPath +"/bennu-portal/js/less.min.js" + "'></script>");
+
+								} else {
+									$("head").append('<link rel="stylesheet" href="' + styles_url + '" rel="stylesheet" />');
+								}
 								$("body").show();
 							}
 
