@@ -21,12 +21,12 @@ public class BundleDetails extends Details {
 
     @Override
     public LocalizedString getDescription() {
-        return BundleUtil.getInternationalString(bundle, description);
+        return BundleUtil.getLocalizedString(bundle, description);
     }
 
     @Override
     public LocalizedString getTitle() {
-        return BundleUtil.getInternationalString(bundle, title);
+        return BundleUtil.getLocalizedString(bundle, title);
     }
 
 }

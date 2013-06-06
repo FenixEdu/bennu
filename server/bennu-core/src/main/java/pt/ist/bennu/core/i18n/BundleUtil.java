@@ -47,7 +47,7 @@ public class BundleUtil {
         }
     }
 
-    public static LocalizedString getInternationalString(final String bundle, final String key, String... args) {
+    public static LocalizedString getLocalizedString(final String bundle, final String key, String... args) {
         LocalizedString i18NString = new LocalizedString();
         for (Locale locale : ConfigurationManager.getSupportedLocales()) {
             String message = getString(bundle, locale, key, args);
