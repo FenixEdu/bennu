@@ -31,6 +31,9 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.bennu.core.security.Authenticate;
 
 import com.google.gson.Gson;
@@ -41,6 +44,8 @@ import com.sun.jersey.spi.resource.Singleton;
 @Singleton
 @Provider
 public class ThrowableExceptionMapper implements ExceptionMapper<Throwable> {
+    private static Logger logger = LoggerFactory.getLogger(ThrowableExceptionMapper.class);
+
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @Context
@@ -59,6 +64,10 @@ public class ThrowableExceptionMapper implements ExceptionMapper<Throwable> {
         StringWriter errors = new StringWriter();
         exception.printStackTrace(new PrintWriter(errors));
         json.addProperty("stacktrace", errors.toString());
+
+        if (logger.isDebugEnabled()) {
+            exception.printStackTrace();
+        }
 
         return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON_TYPE).entity(gson.toJson(json))
                 .build();
