@@ -9,17 +9,21 @@ public class CookieReaderUtils {
 
     /**
      * Searches for a cookie within a HttpServletRequest.
+     * 
      * @param name the name of the cookie.
      * @param request the HttpServletRequest to find the cookie on.
-     * @return 
+     * @return
      */
     public static Cookie getCookieForName(String name, HttpServletRequest request) {
-        for(Cookie cookie : request.getCookies()) {
-            if(StringUtils.equalsIgnoreCase(cookie.getName(), name)) {
+        if (request.getCookies() == null) {
+            return null;
+        }
+        for (Cookie cookie : request.getCookies()) {
+            if (StringUtils.equalsIgnoreCase(cookie.getName(), name)) {
                 return cookie;
             }
         }
         return null;
     }
-    
+
 }
