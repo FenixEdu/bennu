@@ -28,11 +28,9 @@ define([
         
         onClose: function() {
         	if (this.logging != 0) {
-        		console.log("Clear " + this.logging);
         		clearInterval(this.logging);
         	}
         	if (this.refreshIntervalId != 0) {
-        		console.log("Clear refresh" + this.refreshIntervalId);
         		clearInterval(this.refreshIntervalId);
         	}
         },
@@ -75,7 +73,6 @@ define([
         			}
         		},
         		error: function (xhr, status) {
-        			console.log(status);
         		},
         		datatype: "text"});
         },

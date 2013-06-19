@@ -23,7 +23,6 @@ define([
         	var id = e.target.id;
         	var scheduleModel = this.model.collection.get(id);
         	scheduleModel.destroy({success : function() {
-        		console.log("delete schedule " + id);
         	}});
         }
         

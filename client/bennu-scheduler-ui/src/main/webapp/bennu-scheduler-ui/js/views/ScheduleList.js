@@ -29,7 +29,6 @@ define([
             		  url: "../api/bennu-scheduler/config/" + id,
             		  data: null,
             		  success: function(data) {
-            			  console.log("uhuh settings logging storage " + JSON.stringify(data));
             		  },
             		  dataType: "json"
             		});

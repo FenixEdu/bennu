@@ -30,7 +30,6 @@ define([
         },
         
         xrender: function() {
-        	console.log("it will render");
         	this.render();
         },
         
@@ -56,7 +55,6 @@ define([
         
         clearRefresh: function() {
         	if (this.interval != undefined) {
-        		console.log("clear refresh");
     			clearInterval(this.interval);
     			this.interval = undefined;
     			$("#refresh").attr('checked',false);
@@ -66,9 +64,7 @@ define([
         activateRefresh: function() {
         	if (this.interval === undefined) {
         		var that = this;
-        		console.log("activate refresh");
     			this.interval = setInterval(function() {
-    				console.log("running refresh");
     				that.collection.fetch();
     				that.render();
     			}, 3000);

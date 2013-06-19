@@ -72,7 +72,6 @@ define([
         	var packageName = new RegExp("package (.*);").exec(javaCode)[1];
         	var className = new RegExp("public class (.*) extends").exec(javaCode)[1];
         	var fqn = packageName + "." + className;
-        	console.log("FQN : " + fqn);
         	$.ajax( {
         		type: "POST",
         		url : "../api/bennu-scheduler/custom/compile", 
@@ -99,7 +98,6 @@ define([
         	var packageName = new RegExp("package (.*);").exec(javaCode)[1];
         	var className = new RegExp("public class (.*) extends").exec(javaCode)[1];
         	var fqn = packageName + "." + className;
-        	console.log("FQN : " + fqn);
         	$.ajax( {
         		type: "POST",
         		url : "../api/bennu-scheduler/custom", 

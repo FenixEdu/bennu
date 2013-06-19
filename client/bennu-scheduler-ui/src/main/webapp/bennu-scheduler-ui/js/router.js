@@ -15,11 +15,9 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 			var Router = Backbone.Marionette.AppRouter.extend({
 
 				initialize : function() {
-					console.log("initialize controller ...");
 					App.tasks = new TaskCollection();
 					App.tasks.fetch({async: false,
 						success : function(data) {
-							console.log("Loading tasks ...");
 						}
 					});
 				},
