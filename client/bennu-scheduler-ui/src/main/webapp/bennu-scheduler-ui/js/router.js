@@ -108,6 +108,6 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 				}
 			});
 
-			Bankai.setRouter(Router);
+			return Router;
 
 		});

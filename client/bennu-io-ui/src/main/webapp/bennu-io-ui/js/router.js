@@ -41,6 +41,6 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette',
 				}
 			});
 
-			Bankai.setRouter(Router);
+			return Router;
 
 		});

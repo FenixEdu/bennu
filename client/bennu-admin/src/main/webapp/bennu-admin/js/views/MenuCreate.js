@@ -1,6 +1,6 @@
 define([
-    'jquery-bootstrap',
-    'bootstrap-notify',
+    'jquery.bootstrap',
+    'bootstrap.notify',
     'backbone',
     'marionette',
     'app',

@@ -52,7 +52,7 @@ define([
         
         onShow: function () {
         	var that = this;
-        	require(['appLibs/codemirror/clike'], function(CodeMirror) {
+        	require(['libs/codemirror/clike'], function(CodeMirror) {
         		require([], function() {
         			var codeArea = $('#code')[0];
         			that.codeMirror = CodeMirror.fromTextArea(codeArea, {lineNumbers : true, mode:"text/x-java", theme:"eclipse", viewportMargin: Infinity});
@@ -103,7 +103,7 @@ define([
         		url : "../api/bennu-scheduler/custom", 
         		data: {name : fqn, code : javaCode},
         		success: function(data) {
-        			Bankai.router.navigate("#custom", true);
+        			App.Router.navigate("custom", true);
         		},
         		dataType:"text"
         	});

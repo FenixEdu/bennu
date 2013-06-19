@@ -1,5 +1,5 @@
 define([
-    'jquery-ui',
+    'jquery.ui',
     'backbone',
     'marionette',
     'views/SingleTask',

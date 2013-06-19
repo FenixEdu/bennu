@@ -121,6 +121,7 @@ function loadScript(url, callback) {
 							}
 						}
 					}
+					$.ajaxSetup({ cache: true });
 					$.ajax({
 						type: "GET",
 						url: theme_url,
@@ -146,6 +147,7 @@ function loadScript(url, callback) {
 									$("head").append('<link rel="stylesheet" href="' + styles_url + '" rel="stylesheet" />');
 								}
 								$("body").show();
+								$.ajaxSetup({ cache: false });
 							}
 
 							$.ajax({

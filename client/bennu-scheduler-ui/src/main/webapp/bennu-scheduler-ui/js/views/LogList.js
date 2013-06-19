@@ -1,6 +1,6 @@
 define([
-    'jquery-datatables',
-    'jquery-ui',
+    'jquery.datatables',
+    'jquery.ui',
     'backbone',
     'marionette',
     'views/SingleLog',

@@ -1,5 +1,5 @@
 define([
-    'jquery-ui',
+    'jquery.ui',
     'backbone',
     'marionette',
     'app',
@@ -32,7 +32,7 @@ define([
         	});
         	console.log(JSON.stringify(configs));
         	$.post("../api/bennu-io/storage/config", {model : JSON.stringify(configs)}, function(data) {
-        		Bankai.router.navigate("configuration", {trigger: true});
+        		App.Router.navigate("configuration", {trigger: true});
         	});
         }
             

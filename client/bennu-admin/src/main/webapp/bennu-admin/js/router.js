@@ -60,21 +60,13 @@ define([
     			menuModel.fetch({
     				success: function() {
     					menuModel.initialize();
-    					/*var menu = menuModel.get("menu");
-    					var menuCollection = new MenuManager.Collections.Menu(menu);
-    					menuCollection.parent = menuModel;
-    					menuTree = new MenuManager.Views.Menu({collection : menuCollection });
-    					menuModel.unset("menu");
-    					App.Layout.menuLayout.tree.show(menuTree);*/
     					var menuTree = new MenuManager.Views.SingleMenu({model : menuModel });	
     					App.menuLayout.tree.show(menuTree);
     					
     					if (!App.appsView) {
     						App.apps = new MenuManager.Collections.App();
     						App.apps.fetch();
-//    						App.appsView = new MenuManager.Views.App({collection : App.apps});
     					}
-//    					App.Layout.menuLayout.functionalities.show(App.appsView);
     				},
     			});
     			
@@ -99,6 +91,6 @@ define([
     	}
     });
     
-    Bankai.setRouter(Router);
+    return Router;
     
 });

@@ -1,4 +1,4 @@
-define(['appLibs/codemirror/codemirror'], function(CodeMirror) {
+define(['libs/codemirror/codemirror'], function(CodeMirror) {
 	CodeMirror.defineMode("clike", function(config, parserConfig) {
 	  var indentUnit = config.indentUnit,
 	      statementIndentUnit = parserConfig.statementIndentUnit || indentUnit,

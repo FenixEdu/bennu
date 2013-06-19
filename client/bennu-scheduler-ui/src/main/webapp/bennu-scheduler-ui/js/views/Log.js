@@ -1,5 +1,5 @@
 define([
-    'jquery-scroll',
+    'jquery.scroll',
     'backbone',
     'marionette',
     'moment',
@@ -37,7 +37,7 @@ define([
         
         onDomRefresh: function() {
         	if (this.model.get("javaCode") != undefined) {
-        		require(['appLibs/codemirror/clike'], function(CodeMirror) {
+        		require(['libs/codemirror/clike'], function(CodeMirror) {
             		require([], function() {
             			var codeArea = $('#code')[0];
             			CodeMirror.fromTextArea(codeArea, {lineNumbers : true, mode:"text/x-java", theme:"eclipse", viewportMargin: Infinity, readOnly: "nocursor"});

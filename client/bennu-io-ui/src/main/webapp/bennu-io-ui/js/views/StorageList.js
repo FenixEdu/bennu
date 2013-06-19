@@ -1,5 +1,5 @@
 define([
-    'jquery-bootstrap',
+    'jquery.bootstrap',
     'backbone',
     'marionette',
     'views/SingleStorage',

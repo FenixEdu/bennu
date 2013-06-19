@@ -1,7 +1,9 @@
 package pt.ist.bennu.portal;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Enumeration;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -10,13 +12,11 @@ import javax.servlet.annotation.WebListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.portal.domain.ApplicationInfo;
 import pt.ist.bennu.portal.domain.Details;
 import pt.ist.bennu.portal.domain.FunctionalityInfo;
 import pt.ist.bennu.portal.domain.MultiLanguageDetails;
 import pt.ist.dsi.commons.i18n.LocalizedString;
-import pt.ist.fenixframework.core.Project;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -30,14 +30,36 @@ public class BennuDispatchContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        for (Project artifact : ConfigurationManager.getArtifacts()) {
-            final JsonArray appsJson = getArtifactAppsJson(artifact.getName());
+        try {
+            LOGGER.info("Init portal initialization, reading apps.json");
+            initAppsJsonFromJars(getClass().getClassLoader());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        LOGGER.info("portal initialization done.");
+    }
+
+    private void initAppsJsonFromJars(final ClassLoader classLoader) throws IOException {
+
+        final Enumeration<URL> resources = classLoader.getResources("apps.json");
+
+        final JsonParser parse = new JsonParser();
+
+        while (resources.hasMoreElements()) {
+            URL appsJsonURL = resources.nextElement();
+            final InputStreamReader appJsonReader = new InputStreamReader(appsJsonURL.openStream());
+            final String url = appsJsonURL.toExternalForm();
+            LOGGER.info("parsing apps.json for {}", url);
+            JsonArray appsJson = parse.parse(appJsonReader).getAsJsonObject().get("apps").getAsJsonArray();
             if (appsJson != null) {
                 for (JsonElement appJson : appsJson) {
                     parseApplicationInfo((JsonObject) appJson);
                 }
+            } else {
+                LOGGER.info("No apps.json found in {}", url);
             }
         }
+
     }
 
     private void parseApplicationInfo(JsonObject appJson) {
@@ -64,20 +86,6 @@ public class BennuDispatchContextListener implements ServletContextListener {
         final LocalizedString description = LocalizedString.fromJson(functionality.get("description"));
         Details details = new MultiLanguageDetails(title, description);
         return details;
-    }
-
-    public JsonArray getArtifactAppsJson(String modulePath) {
-        final String appJsonPath = String.format("/%s/apps.json", modulePath);
-        final InputStream appJsonStream = BennuDispatchContextListener.class.getResourceAsStream(appJsonPath);
-        if (appJsonStream != null) {
-            final InputStreamReader appJsonReader = new InputStreamReader(appJsonStream);
-            JsonParser parse = new JsonParser();
-            LOGGER.info("parsing apps.json for {}", modulePath);
-            return parse.parse(appJsonReader).getAsJsonObject().get("apps").getAsJsonArray();
-
-        }
-        LOGGER.info("No apps.json found in {}", modulePath);
-        return null;
     }
 
     @Override
