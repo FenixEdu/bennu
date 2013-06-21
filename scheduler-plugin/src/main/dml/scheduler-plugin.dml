@@ -26,6 +26,11 @@ class TaskLog {
 }
 
 
+relation SchedulerSystemDomainRoot {
+    .pt.ist.fenixframework.DomainRoot playsRole domainRoot;
+    SchedulerSystem playsRole schedulerSystem;
+}
+
 relation SchedulerSystemTask {
 	SchedulerSystem playsRole schedulerSystem;
 	Task playsRole task {
