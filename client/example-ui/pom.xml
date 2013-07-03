@@ -10,21 +10,15 @@
 		<relativePath></relativePath>
 	</parent>
 
+	<properties>
+		<bankai.skip.js.optimization>false</bankai.skip.js.optimization>
+	</properties>
+
 	<artifactId>example-ui</artifactId>
 	<name>Bennu Example UI</name>
 	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-			</plugin>
-			
-			<plugin>
-				<groupId>com.github.mcheely</groupId>
-				<artifactId>requirejs-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>					
-   
+	<properties>
+		<r.js.skip>true</r.js.skip>
+	</properties>
+
 </project>
