@@ -7,7 +7,7 @@
         <groupId>pt.ist</groupId>
         <artifactId>bankai-project</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-		<relativePath></relativePath>
+	<relativePath>../../portal-frameworks/bankai/bankai-project</relativePath>
     </parent>
 	
 	<properties>
