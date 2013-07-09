@@ -2,6 +2,7 @@ package pt.ist.bennu.scheduler.domain;
 
 import it.sauronsoftware.cron4j.Scheduler;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.io.domain.LocalFileSystemStorage;
 import pt.ist.bennu.scheduler.TaskRunner;
 import pt.ist.bennu.scheduler.annotation.Task;
 import pt.ist.fenixframework.Atomic;
@@ -113,10 +115,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     @Atomic(mode = TxMode.WRITE)
     private Boolean shouldRun() {
-        if (getLoggingStorage() == null) {
-            LOG.error("Please configure scheduler logging storage.");
-            return false;
-        }
         if (isLeaseExpired()) {
             lease();
             return true;
@@ -183,6 +181,36 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         }
     }
 
+    @Atomic
+    private static void ensureLoggingStorage() {
+
+        if (getInstance().getLoggingStorage() == null) {
+            final String tmpDir =
+                    new StringBuilder(System.getProperty("java.io.tmpdir")).append(File.separatorChar).append("schedulerSystem")
+                            .toString();
+            LOG.info("Create sensible default {} for logging storage", tmpDir);
+            getInstance().setLoggingStorage(new LocalFileSystemStorage("schedulerSystemLoggingStorage", tmpDir, 0));
+        }
+
+    }
+
+    private void ensureLoggingStorageDirExists(final LocalFileSystemStorage loggingStorage) {
+        if (loggingStorage != null) {
+            final String loggingStoragePath = loggingStorage.getPath();
+            File tmpDirFile = new File(loggingStoragePath);
+            if (!tmpDirFile.exists()) {
+                LOG.info("Logging storage {} doesn't exist in filesystem, run mkdir.", loggingStoragePath);
+                tmpDirFile.mkdir();
+            }
+        }
+    }
+
+    @Override
+    public void setLoggingStorage(LocalFileSystemStorage loggingStorage) {
+        super.setLoggingStorage(loggingStorage);
+        ensureLoggingStorageDirExists(loggingStorage);
+    }
+
     /**
      * Initializes the scheduler.
      */
@@ -194,6 +222,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             scheduler.setDaemon(true);
         }
         if (!scheduler.isStarted()) {
+            ensureLoggingStorage();
             cleanNonExistingSchedules();
             initSchedules();
             spawnConsumers();
