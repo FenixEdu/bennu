@@ -1,7 +1,7 @@
 package pt.ist.bennu.portal.rest;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -30,8 +30,9 @@ public class MenuResource extends BennuRestResource {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(@FormParam("model") final String jsonData) {
+    public String create(final String jsonData) {
         accessControl("#managers");
         return innerCreate(jsonData);
     }
@@ -43,8 +44,9 @@ public class MenuResource extends BennuRestResource {
 
     @Path("{oid}")
     @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String update(@PathParam("oid") final String oid, @FormParam("model") final String jsonData) {
+    public String update(final String jsonData, @PathParam("oid") final String oid) {
         accessControl("#managers");
         return view(innerUpdate((MenuItem) readDomainObject(oid), jsonData));
     }

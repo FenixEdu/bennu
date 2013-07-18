@@ -27,7 +27,7 @@ import java.util.List;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
-import javax.ws.rs.FormParam;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -50,8 +50,9 @@ public class SupportFormResource extends BennuRestResource {
 
     @POST
     @Path("errorreport")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void errorReport(@FormParam("model") final String json) {
+    public void errorReport(final String json) {
         try {
             JsonObject model = new JsonParser().parse(json).getAsJsonObject();
 

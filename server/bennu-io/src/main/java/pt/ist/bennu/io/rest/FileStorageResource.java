@@ -1,7 +1,7 @@
 package pt.ist.bennu.io.rest;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -32,8 +32,9 @@ public class FileStorageResource extends BennuRestResource {
 
     @POST
     @Path("/lfs")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String createLFSStorage(@FormParam("model") String json) {
+    public String createLFSStorage(String json) {
         accessControl("#managers");
         return view(create(json, LocalFileSystemStorage.class));
     }

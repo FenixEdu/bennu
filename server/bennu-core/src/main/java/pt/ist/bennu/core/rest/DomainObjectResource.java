@@ -2,8 +2,8 @@ package pt.ist.bennu.core.rest;
 
 import java.util.Collection;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -49,14 +49,17 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
 
     @PUT
     @Path("{oid}")
-    public String update(@PathParam("oid") String oid, @FormParam("model") String jsonData) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String update(String jsonData, @PathParam("oid") String oid) {
         accessControl(getAccessExpression());
         return view(update(jsonData, readDomainObject(oid)));
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(@FormParam("model") String jsonData) {
+    public String create(String jsonData) {
         accessControl(getAccessExpression());
         return view(create(jsonData, type()));
     }

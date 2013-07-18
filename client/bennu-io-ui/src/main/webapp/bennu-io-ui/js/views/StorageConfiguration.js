@@ -31,9 +31,17 @@ define([
         		configs.push(config);
         	});
         	console.log(JSON.stringify(configs));
-        	$.post("../api/bennu-io/storage/config", {model : JSON.stringify(configs)}, function(data) {
-        		App.Router.navigate("configuration", {trigger: true});
-        	});
+            $.ajax({
+                url : '../api/bennu-io/storage/config',
+                contentType : 'application/json',
+                data : JSON.stringify(configs),
+                dataType : 'json',
+                success : function(data) {
+                    App.Router.navigate("configuration", {trigger: true});
+                },
+                processData : false,
+                type : 'POST',
+            });
         }
             
     });

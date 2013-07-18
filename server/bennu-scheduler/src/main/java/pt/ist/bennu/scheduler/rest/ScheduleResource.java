@@ -1,7 +1,7 @@
 package pt.ist.bennu.scheduler.rest;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -36,16 +36,18 @@ public class ScheduleResource extends BennuRestResource {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String addSchedule(@FormParam("model") String configJson) {
+    public String addSchedule(String configJson) {
         accessControl("#managers");
         return view(create(configJson, TaskSchedule.class));
     }
 
     @PUT
     @Path("{oid}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String changeSchedule(@PathParam("oid") String taskScheduleOid, @FormParam("model") String taskScheduleJson) {
+    public String changeSchedule(String taskScheduleJson, @PathParam("oid") String taskScheduleOid) {
         accessControl("#managers");
         return view(update(taskScheduleJson, readDomainObject(taskScheduleOid)));
     }
