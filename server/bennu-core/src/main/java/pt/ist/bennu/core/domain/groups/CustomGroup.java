@@ -269,7 +269,7 @@ public abstract class CustomGroup extends CustomGroup_Base {
         operators.put(operator.operator, operator);
         types.put(type, operator);
         if (logger.isInfoEnabled()) {
-            logger.info("Registering group language operator: " + operator.operator);
+            logger.debug("Registering group language operator: " + operator.operator);
         }
     }
 }

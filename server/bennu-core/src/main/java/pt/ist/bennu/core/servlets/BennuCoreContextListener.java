@@ -79,7 +79,7 @@ public class BennuCoreContextListener implements ServletContextListener {
             if (loader != null && loader.equals(this.thisClassLoader)) {
                 try {
                     DriverManager.deregisterDriver(driver);
-                    logger.info("Successfully deregistered JDBC driver " + driver);
+                    logger.debug("Successfully deregistered JDBC driver " + driver);
                 } catch (SQLException e) {
                     logger.warn("Failed to deregister JDBC driver " + driver + ". This may cause a potential leak.", e);
                 }

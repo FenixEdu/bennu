@@ -74,7 +74,7 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
         if (!delete(readDomainObject)) {
             throw BennuCoreDomainException.errorOnDeleteDomainObject();
         }
-        LOG.info("Object {} was deleted: {}", oid, jsonRep);
+        LOG.trace("Object {} was deleted: {}", oid, jsonRep);
         return jsonRep;
     }
 }

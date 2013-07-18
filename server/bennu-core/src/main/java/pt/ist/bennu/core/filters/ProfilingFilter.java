@@ -45,7 +45,7 @@ public class ProfilingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
-        if (logger.isInfoEnabled()) {
+        if (logger.isDebugEnabled()) {
             final long start = System.currentTimeMillis();
             try {
                 chain.doFilter(request, response);
@@ -58,6 +58,6 @@ public class ProfilingFilter implements Filter {
     }
 
     private void log(String uri, Duration duration) {
-        logger.info(String.format("[%s] - %s", ISOPeriodFormat.standard().print(duration.toPeriod()), uri));
+        logger.debug(String.format("[%s] - %s", ISOPeriodFormat.standard().print(duration.toPeriod()), uri));
     }
 }

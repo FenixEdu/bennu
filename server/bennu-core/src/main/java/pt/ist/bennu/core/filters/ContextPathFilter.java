@@ -39,11 +39,11 @@ import pt.ist.bennu.core.util.CookieReaderUtils;
  * 
  */
 public class ContextPathFilter implements Filter {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(ContextPathFilter.class);
 
     private static final String CONTEXT_PATH_COOKIE_NAME = "contextPath";
-    
+
     @Override
     public void init(final FilterConfig config) throws ServletException {
     }
@@ -58,9 +58,8 @@ public class ContextPathFilter implements Filter {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         final String contextPath = request.getServletContext().getContextPath();
-        logger.info(contextPath);
         Cookie cookie = CookieReaderUtils.getCookieForName("contextPath", httpServletRequest);
-        if(cookie == null) {
+        if (cookie == null) {
             Cookie newCookie = new Cookie(CONTEXT_PATH_COOKIE_NAME, contextPath);
             newCookie.setPath("/");
             httpServletResponse.addCookie(newCookie);

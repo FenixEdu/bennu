@@ -55,7 +55,7 @@ public class Authenticate {
         }
 
         fireLoginListeners(user.getUser());
-        logger.info("Logged in user: " + user.getUsername());
+        logger.debug("Logged in user: " + user.getUsername());
 
         return user;
     }
