@@ -17,9 +17,9 @@ import com.sun.jersey.core.spi.scanning.ScannerListener;
 
 public class BennuJerseyRestApplication extends ScanningResourceConfig {
     private static Set<Class<?>> types = new HashSet<>();
-    private static Map<String,Object> modulePathResource = new HashMap<>();
+    private static Map<String, Object> modulePathResource = new HashMap<>();
     private static Logger LOG = LoggerFactory.getLogger(BennuJerseyRestApplication.class);
-    
+
     public BennuJerseyRestApplication() {
         super();
         init(new Scanner() {

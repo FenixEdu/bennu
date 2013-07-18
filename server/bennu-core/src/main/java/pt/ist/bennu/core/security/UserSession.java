@@ -40,7 +40,7 @@ public class UserSession implements Serializable, Principal {
 
     private final DateTime lastLogoutDateTime;
 
-    private final Set<String> groupExpressions = new HashSet<>();
+    private Set<String> groupExpressions = null;
 
     private transient Set<Group> groups = null;
 
@@ -61,10 +61,6 @@ public class UserSession implements Serializable, Principal {
         privateConstantForDigestCalculation = user.getUsername() + user.getPassword() + random.nextLong();
 
         lastLogoutDateTime = user.getLastLogoutDateTime();
-
-        for (Group group : user.accessibleGroups()) {
-            groupExpressions.add(group.expression());
-        }
     }
 
     @Override
@@ -100,6 +96,12 @@ public class UserSession implements Serializable, Principal {
     public Set<Group> accessibleGroups() {
         if (groups == null) {
             groups = new HashSet<>();
+            if (groupExpressions == null) {
+                groupExpressions = new HashSet<>();
+                for (Group group : getUser().accessibleGroups()) {
+                    groupExpressions.add(group.expression());
+                }
+            }
             for (String expression : groupExpressions) {
                 groups.add(Group.parse(expression));
             }
