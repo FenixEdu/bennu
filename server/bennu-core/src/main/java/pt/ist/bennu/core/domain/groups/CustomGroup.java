@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import org.slf4j.Logger;
@@ -180,19 +181,20 @@ public abstract class CustomGroup extends CustomGroup_Base {
 
         private Vector<Argument<Object, G>> findArguments() {
             try {
-                Vector<Argument<Object, G>> arguments = new Vector<>();
+                Map<Integer, Argument<Object, G>> arguments = new TreeMap<>();
                 for (Method method : type.getMethods()) {
                     CustomGroupArgument annotation = method.getAnnotation(CustomGroupArgument.class);
                     if (annotation != null) {
-                        arguments.ensureCapacity(annotation.index());
-                        if (arguments.get(annotation.index() - 1) != null) {
+                        if (arguments.get(annotation.index()) != null) {
                             throw new Error("CustomGroup: " + type.getName()
                                     + " duplicate index, please set index property in @CustomGroupArgument annotations");
                         }
-                        arguments.set(annotation.index() - 1, (Argument<Object, G>) method.invoke(null));
+                        arguments.put(annotation.index(), (Argument<Object, G>) method.invoke(null));
                     }
                 }
-                return arguments;
+                final Vector<Argument<Object, G>> argsVector = new Vector<>();
+                argsVector.addAll(arguments.values());
+                return argsVector;
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new Error("CustomGroup: " + type.getName() + " failed to access it's arguments", e);
             }

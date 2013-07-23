@@ -79,4 +79,12 @@ public class DomainException extends RuntimeException {
         json.addProperty("message", getLocalizedMessage());
         return json;
     }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String[] getArgs() {
+        return args;
+    }
 }
