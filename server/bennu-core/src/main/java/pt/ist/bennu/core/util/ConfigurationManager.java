@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
@@ -48,7 +47,7 @@ public class ConfigurationManager {
 
     private static final Properties properties = new Properties();
 
-    private static Map<String, CasConfig> casConfigByHost;
+    private static CasConfig casConfig;
 
     private static Map<String, String> resourceModuleMap = new HashMap<>();
 
@@ -66,6 +65,7 @@ public class ConfigurationManager {
             properties.load(inputStream);
 
             initializeLocales();
+            initializeCasConfig();
 
             for (Project artifact : getArtifacts()) {
                 String projectResource = "/" + artifact.getName() + "/project.properties";
@@ -77,12 +77,9 @@ public class ConfigurationManager {
                     resourceModuleMap.put(url.replace(projectResource, ""), artifact.getName());
                 }
             }
-
-            casConfigByHost = new HashMap<>();
             serverHosts = new HashMap<>();
             for (final Object key : properties.keySet()) {
                 final String property = (String) key;
-                initializeCasConfig(property);
                 initializeRestServerHosts(property);
             }
 
@@ -124,22 +121,15 @@ public class ConfigurationManager {
         return FenixFramework.getProject().getProjects();
     }
 
-    public static void initializeCasConfig(final String property) {
-        int i = property.indexOf(".cas.enable");
-        if (i >= 0) {
-            final String hostname = property.substring(0, i);
-            if (getBooleanProperty(property, false)) {
-                final String casLoginUrl = getProperty(hostname + ".cas.loginUrl");
-                final String casLogoutUrl = getProperty(hostname + ".cas.logoutUrl");
-                final String casValidateUrl = getProperty(hostname + ".cas.ValidateUrl");
-                final String serviceUrl = getProperty(hostname + ".cas.serviceUrl");
-
-                final CasConfig casConfig = new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
-                casConfigByHost.put(hostname, casConfig);
-            } else {
-                final CasConfig casConfig = new CasConfig();
-                casConfigByHost.put(hostname, casConfig);
-            }
+    public static void initializeCasConfig() {
+        if (getBooleanProperty("cas.enable", false)) {
+            final String casLoginUrl = getProperty("cas.loginUrl");
+            final String casLogoutUrl = getProperty("cas.logoutUrl");
+            final String casValidateUrl = getProperty("cas.ValidateUrl");
+            final String serviceUrl = getProperty("cas.serviceUrl");
+            casConfig = new CasConfig(casLoginUrl, casLogoutUrl, casValidateUrl, serviceUrl);
+        } else {
+            casConfig = new CasConfig();
         }
     }
 
@@ -236,13 +226,8 @@ public class ConfigurationManager {
         }
     }
 
-    public static CasConfig getCasConfig(String hostname) {
-        for (final Entry<String, CasConfig> entry : casConfigByHost.entrySet()) {
-            if (entry.getKey().startsWith(hostname)) {
-                return entry.getValue();
-            }
-        }
-        return null;
+    public static CasConfig getCasConfig() {
+        return casConfig;
     }
 
     public static String getModuleOf(Class<?> type) {

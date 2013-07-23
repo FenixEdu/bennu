@@ -58,9 +58,7 @@ public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
     @Atomic
     public void delete() {
         setParent(null);
-        if (getHost() != null) {
-            setHost(null);
-        }
+        setConfiguration(null);
         for (MenuItem child : getChildSet()) {
             child.delete();
         }

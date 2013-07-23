@@ -84,37 +84,13 @@ relation SystemUsers {
 	}
 }
 
-/* Virtual Hosting */
-class VirtualHost {
-	String hostname (REQUIRED);
-	String supportEmailAddress;
-}
-
-relation SystemHosts {
-	Bennu playsRole bennu {
-		multiplicity 0..1;
-	}
-	VirtualHost playsRole virtualHosts {
-		multiplicity *;
-	}
-}
-
-relation DeletedHosts {
-    Bennu playsRole deletedFromBennu {
-        multiplicity 0..1;
-    }
-    VirtualHost playsRole deletedVirtualHosts {
-        multiplicity *;
-    }
-}
-
 /* Authorization Groups */
 
 class groups.Group {
 }
 
 relation Groups {
-	VirtualHost playsRole host {
+	Bennu playsRole root {
 		multiplicity 0..1;
 	}
 	groups.Group playsRole groups {
@@ -171,7 +147,7 @@ class groups.NegationGroup extends groups.Group {
 }
 
 relation NegationGroups {
-    VirtualHost playsRole negationVirtualHost {
+    Bennu playsRole negationRoot {
         multiplicity 1..1;
     }
     groups.NegationGroup playsRole negation {
@@ -221,21 +197,4 @@ relation DynamicGroupHistoric {
 	groups.DynamicGroup playsRole next {
 		multiplicity 0..1;
 	}
-}
-
-/* Password Recovery */
-class PasswordRecoveryRequest {
-	DateTime requested;
-	String verificationHash;
-	DateTime consumed;
-}
-
-relation UserPasswordRecoveryRequest {
-	User playsRole user;
-	PasswordRecoveryRequest playsRole passwordRecoveryRequest;
-}
-
-relation PasswordRecoveryRequestPasswordRecoveryRequest {
-	PasswordRecoveryRequest playsRole previous;
-	PasswordRecoveryRequest playsRole next;
 }

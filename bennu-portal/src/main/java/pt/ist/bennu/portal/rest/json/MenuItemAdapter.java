@@ -1,9 +1,6 @@
 package pt.ist.bennu.portal.rest.json;
 
-import java.util.Locale;
-
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
-import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.json.JsonAdapter;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.portal.AppServer;
@@ -69,12 +66,8 @@ public class MenuItemAdapter implements JsonAdapter<MenuItem> {
         json.addProperty("path", obj.getPath());
         json.addProperty("functionality", obj.isFunctionalityLink());
         json.addProperty("accessExpression", obj.getAccessExpression());
-        if (obj.getHost() != null) {
-            LocalizedString mls = new LocalizedString();
-            for (Locale locale : ConfigurationManager.getSupportedLocales()) {
-                mls = mls.with(locale, obj.getHost().getHostname());
-            }
-            json.add("title", ctx.view(mls));
+        if (obj.getConfiguration() != null) {
+            json.add("title", ctx.view(obj.getConfiguration().getApplicationTitle()));
         } else {
             json.add("title", ctx.view(obj.getTitle()));
         }

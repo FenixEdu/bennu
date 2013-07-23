@@ -34,7 +34,7 @@ public class ProfileResource extends BennuRestResource {
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(@FormParam("username") String username, @FormParam("password") String password) {
-        if (!isCasEnabled()) {
+        if (!ConfigurationManager.getCasConfig().isCasEnabled()) {
             return Response.ok(view(login(username, password, false))).build();
         }
         throw AuthorizationException.authenticationFailed();
@@ -45,7 +45,7 @@ public class ProfileResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response logout() {
         accessControl(LoggedGroup.getInstance());
-        if (!isCasEnabled()) {
+        if (!ConfigurationManager.getCasConfig().isCasEnabled()) {
             Authenticate.logout(request.getSession(false));
             return Response.ok(view(null, UserSession.class, UserSessionViewer.class)).build();
         }

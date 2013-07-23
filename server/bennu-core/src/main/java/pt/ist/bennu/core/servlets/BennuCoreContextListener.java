@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
-import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
@@ -57,10 +56,6 @@ public class BennuCoreContextListener implements ServletContextListener {
     private void ensureModelBootstrap() {
         if (Bennu.getInstance() == null) {
             new Bennu();
-        }
-        if (Bennu.getInstance().getVirtualHostsSet().isEmpty()) {
-            logger.info("Bootstrapping bennu application");
-            new VirtualHost("localhost");
         }
     }
 

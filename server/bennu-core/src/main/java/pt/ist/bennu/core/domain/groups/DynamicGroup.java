@@ -96,7 +96,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
 
     private void pushHistory() {
         DynamicGroup old = new DynamicGroup();
-        old.setHost(null);
+        old.setRoot(null);
         old.setName(getName());
         old.setCreated(getCreated());
         old.setCreator(getCreator());

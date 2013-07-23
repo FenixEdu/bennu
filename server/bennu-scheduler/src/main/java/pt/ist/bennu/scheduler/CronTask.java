@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.bennu.scheduler.log.ExecutionLog;
 import pt.ist.fenixframework.Atomic;
@@ -40,9 +39,6 @@ public abstract class CronTask implements Runnable {
     public final void run() {
         getExecutionLog().start();
         try {
-            if (getServerName() != null) {
-                VirtualHost.setVirtualHostForThread(getServerName().toLowerCase());
-            }
             innerAtomicRun();
             getExecutionLog().setSuccess(true);
         } catch (Throwable t) {
@@ -50,7 +46,6 @@ public abstract class CronTask implements Runnable {
             getExecutionLog().setSuccess(false);
             getExecutionLog().setError(t);
         } finally {
-            VirtualHost.releaseVirtualHostFromThread();
             getExecutionLog().end();
             resetLoggers();
         }
@@ -113,16 +108,6 @@ public abstract class CronTask implements Runnable {
 
     protected final void taskLog(String log) {
         taskLog(log, new Object[0]);
-    }
-
-    /**
-     * Convenience method to more easily use VirtualHosts in these tasks
-     * 
-     * @return the String with the server name of the VirtualHost to use when
-     *         executing this task
-     */
-    public String getServerName() {
-        return null;
     }
 
     public <T extends ExecutionLog> T getExecutionLog() {

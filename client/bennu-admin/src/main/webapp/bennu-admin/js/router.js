@@ -25,10 +25,11 @@ define([
         },
         
         appRoutes: {
-    		"" : "showHosts",
-    		"hosts": "showHosts",
-    		"hosts/edit/:hostname" : "editHost",
-    		"hosts/create": "createHost",
+            "" : "portalConfig",
+//    		"" : "showHosts",
+//    		"hosts": "showHosts",
+//    		"hosts/edit/:hostname" : "editHost",
+//    		"hosts/create": "createHost",
     		"menu/:id" : "showMenu",
     		"system/info" : "systemInfo"
     	},
@@ -37,21 +38,32 @@ define([
     		initialize : function() {
     		},
 
-    		showHosts : function() {
-    			var hostCollection = new MenuManager.Collections.Host();
-    			hostCollection.fetch({
-    				success : function() {
-    					App.page.show(new MenuManager.Views.HostList({
-    						collection : hostCollection
-    					}));
-    				}
-    			});
+    		portalConfig : function() {
+    		    new MenuManager.Models.PortalConfiguration().fetch({
+    		        success : function(model) {
+                        App.page.show(new MenuManager.Views.PortalConfiguration({
+                            model : model
+                        }));
+    		        }
+    		    });
     		},
+
+
+    		//    		showHosts : function() {
+//    			var hostCollection = new MenuManager.Collections.Host();
+//    			hostCollection.fetch({
+//    				success : function() {
+//    					App.page.show(new MenuManager.Views.HostList({
+//    						collection : hostCollection
+//    					}));
+//    				}
+//    			});
+//    		},
+//    		
     		
     		
-    		
-    		showMenu: function (topMenuId) {
-    			var menuModel = new MenuManager.Models.Menu({id : topMenuId});
+    		showMenu: function (id) {
+    			var menuModel = new MenuManager.Models.Menu({id : id});
     			
     			App.menuLayout = new MenuLayout();
     			

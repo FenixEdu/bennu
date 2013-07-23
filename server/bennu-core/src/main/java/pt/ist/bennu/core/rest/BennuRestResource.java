@@ -33,15 +33,8 @@ public abstract class BennuRestResource extends JsonAwareResource {
         return Authenticate.login(request.getSession(true), username, password, checkPassword);
     }
 
-    protected CasConfig getCasConfig() {
-        if (request != null) {
-            return ConfigurationManager.getCasConfig(request.getServerName());
-        }
-        return null;
-    }
-
     protected CasConfigContext getCasConfigContext() {
-        return new CasConfigContext(getCasConfig(), request);
+        return new CasConfigContext(ConfigurationManager.getCasConfig(), request);
     }
 
     public class CasConfigContext {
@@ -61,14 +54,6 @@ public abstract class BennuRestResource extends JsonAwareResource {
         public HttpServletRequest getRequest() {
             return request;
         }
-    }
-
-    protected boolean isCasEnabled() {
-        CasConfig casConfig = getCasConfig();
-        if (casConfig != null) {
-            return casConfig.isCasEnabled();
-        }
-        return false;
     }
 
     protected <T extends DomainObject> T readDomainObject(final String externalId) {

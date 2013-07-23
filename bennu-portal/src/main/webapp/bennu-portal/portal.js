@@ -41,7 +41,7 @@ function loadScript(url, callback) {
 	$("body").hide();
 	$.ajax({
 		type: "GET",
-		url: contextPath + "/api/bennu-portal/hostmenu/" + window.location.hostname,
+		url: contextPath + "/api/bennu-portal/data",
 		dataType: "json",
 		success: function(hostJson, status, response) {
 			var theme_base = contextPath + "/themes/" + hostJson.theme;

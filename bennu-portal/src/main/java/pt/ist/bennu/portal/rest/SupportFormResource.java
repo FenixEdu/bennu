@@ -36,10 +36,10 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.email.EmailSystem;
+import pt.ist.bennu.portal.domain.PortalConfiguration;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -76,8 +76,7 @@ public class SupportFormResource extends BennuRestResource {
                 from = new InternetAddress(Authenticate.getUser().getEmail(), Authenticate.getUser().getPresentationName());
             }
             List<InternetAddress> to =
-                    Collections
-                            .singletonList(new InternetAddress(VirtualHost.getVirtualHostForThread().getSupportEmailAddress()));
+                    Collections.singletonList(new InternetAddress(PortalConfiguration.getInstance().getSupportEmailAddress()));
             MimeBodyPart part = new MimeBodyPart();
             part.setText(builder.toString());
 
