@@ -10,6 +10,7 @@ import pt.ist.bennu.core.rest.json.UserSessionViewer;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.security.UserSession;
 import pt.ist.bennu.portal.domain.PortalConfiguration;
+import pt.ist.bennu.portal.rest.json.PortalMenuViewer;
 
 import com.google.gson.JsonObject;
 
@@ -19,9 +20,7 @@ public class PortalDataResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getMenu() {
         final JsonObject hostMenuView = new JsonObject();
-        JsonObject asJsonObject = getBuilder().view(PortalConfiguration.getInstance()).getAsJsonObject();
-        asJsonObject.add("menu", getBuilder().view(PortalConfiguration.getInstance().getMenu()));
-        merge(hostMenuView, asJsonObject);
+        merge(hostMenuView, getBuilder().view(PortalConfiguration.getInstance(), PortalMenuViewer.class).getAsJsonObject());
         merge(hostMenuView, getBuilder().view(getCasConfigContext()).getAsJsonObject());
         merge(hostMenuView, getBuilder().view(Authenticate.getUserSession(), UserSession.class, UserSessionViewer.class)
                 .getAsJsonObject());

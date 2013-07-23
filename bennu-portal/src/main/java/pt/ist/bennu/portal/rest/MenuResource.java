@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.portal.domain.MenuItem;
-import pt.ist.fenixframework.Atomic;
 
 @Path("menu")
 public class MenuResource extends BennuRestResource {
@@ -22,7 +21,7 @@ public class MenuResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getMenu(@PathParam("oid") final String menuOid) {
         accessControl("#managers");
-        return viewMenu((MenuItem) readDomainObject(menuOid));
+        return viewMenu(getMenuItem(menuOid));
     }
 
     private String viewMenu(MenuItem menuItem) {
@@ -32,28 +31,18 @@ public class MenuResource extends BennuRestResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(final String jsonData) {
+    public String createMenu(final String jsonData) {
         accessControl("#managers");
-        return innerCreate(jsonData);
-    }
-
-    @Atomic
-    public String innerCreate(final String jsonData) {
         return view(create(jsonData, MenuItem.class));
     }
 
-    @Path("{oid}")
     @PUT
+    @Path("{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String update(final String jsonData, @PathParam("oid") final String oid) {
+    public String updateMenu(final String jsonData, @PathParam("oid") final String oid) {
         accessControl("#managers");
-        return view(innerUpdate((MenuItem) readDomainObject(oid), jsonData));
-    }
-
-    @Atomic
-    public MenuItem innerUpdate(final MenuItem menuItem, final String jsonData) {
-        return update(jsonData, menuItem);
+        return view(update(jsonData, getMenuItem(oid)));
     }
 
     @Path("{oid}")
@@ -61,9 +50,13 @@ public class MenuResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteMenu(@PathParam("oid") final String menuOid) {
         accessControl("#managers");
-        final MenuItem menuItem = (MenuItem) readDomainObject(menuOid);
+        final MenuItem menuItem = getMenuItem(menuOid);
         final String rsp = viewMenu(menuItem);
         menuItem.delete();
         return rsp;
+    }
+
+    private MenuItem getMenuItem(String oid) {
+        return readDomainObject(oid);
     }
 }

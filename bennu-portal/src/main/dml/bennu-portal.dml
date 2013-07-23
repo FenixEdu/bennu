@@ -31,7 +31,7 @@ class MenuItem {
 
 relation ApplicationMenu {
     PortalConfiguration playsRole configuration {
-        multiplicity 1..1;
+        multiplicity 0..1;
     }
     MenuItem playsRole menu {
         multiplicity 1..1;

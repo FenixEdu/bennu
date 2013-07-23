@@ -33,7 +33,6 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
             object.addProperty("logoType", new String(configuration.getLogoType()));
         }
         object.add("menu", ctx.view(configuration.getMenu(), DomainObjectViewer.class));
-//        object.add("menu", ctx.view(configuration.getMenu()));
         return object;
     }
 
