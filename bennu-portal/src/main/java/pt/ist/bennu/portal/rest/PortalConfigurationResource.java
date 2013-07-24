@@ -16,14 +16,14 @@ import pt.ist.bennu.portal.domain.PortalConfiguration;
 public class PortalConfigurationResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String view() {
+    public String viewConfig() {
         return view(PortalConfiguration.getInstance());
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(final String json) {
+    public String createConfig(final String json) {
         accessControl("#managers");
         return view(create(json, PortalConfiguration.class));
     }
@@ -32,7 +32,7 @@ public class PortalConfigurationResource extends BennuRestResource {
     @Path("{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String update(String jsonData, @PathParam("oid") String oid) {
+    public String updateConfig(String jsonData, @PathParam("oid") String oid) {
         accessControl("#managers");
         return view(update(jsonData, readDomainObject(oid)));
     }

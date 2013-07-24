@@ -29,6 +29,9 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.groups.legacy.PeopleUserLog;
 import pt.ist.bennu.core.domain.groups.legacy.PersistentGroup;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.DomainRoot;
 import pt.ist.fenixframework.FenixFramework;
 
 /**
@@ -43,10 +46,19 @@ public class MyOrg extends MyOrg_Base {
     private static final Logger logger = LoggerFactory.getLogger(MyOrg.class.getName());
 
     public static MyOrg getInstance() {
-        return FenixFramework.getDomainRoot().getMyOrg();
+        final DomainRoot domainRoot = FenixFramework.getDomainRoot();
+        if (domainRoot.getMyOrg() == null) {
+            initMyOrg();
+        }
+        return domainRoot.getMyOrg();
     }
 
-    public MyOrg() {
+    @Atomic(mode = TxMode.WRITE)
+    private static void initMyOrg() {
+        new MyOrg();
+    }
+
+    private MyOrg() {
         super();
         checkIfIsSingleton();
         FenixFramework.getDomainRoot().setMyOrg(this);

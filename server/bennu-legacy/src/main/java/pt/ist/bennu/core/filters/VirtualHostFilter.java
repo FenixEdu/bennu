@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.domain.VirtualHostAwarePortalConfiguration;
 import pt.ist.bennu.core.security.Authenticate;
 
 /**
@@ -57,6 +58,7 @@ public class VirtualHostFilter implements Filter {
         final String serverName = request.getServerName();
         try {
             final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(serverName.toLowerCase());
+            VirtualHostAwarePortalConfiguration.ensure();
             if (logger.isDebugEnabled()) {
                 final String hostname = virtualHost == null ? null : virtualHost.getHostname();
                 final User user = Authenticate.getUser();

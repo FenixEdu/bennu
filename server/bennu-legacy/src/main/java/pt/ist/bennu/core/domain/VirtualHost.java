@@ -24,10 +24,14 @@
  */
 package pt.ist.bennu.core.domain;
 
+import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
 
 import pt.ist.bennu.portal.domain.PortalConfiguration;
 import pt.ist.fenixframework.Atomic;
+import pt.utl.ist.fenix.tools.util.i18n.Language;
 
 /**
  * 
@@ -91,4 +95,15 @@ public class VirtualHost extends VirtualHost_Base {
     public void setHostname(final String hostname) {
         super.setHostname(hostname.toLowerCase());
     }
+
+    public Set<Language> getSupportedLanguagesSet() {
+        Set<Language> languages = new HashSet<>();
+        if (StringUtils.isNotBlank(getSupportedLanguages())) {
+            for (String code : getSupportedLanguages().split(":")) {
+                languages.add(Language.valueOf(code));
+            }
+        }
+        return languages;
+    }
+
 }

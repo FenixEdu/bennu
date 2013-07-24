@@ -109,6 +109,7 @@ class groups.legacy.PeopleUserLog {
 
 class VirtualHost {
     String hostname;
+    String supportedLanguages;
 }
 
 class VirtualHostAwarePortalConfiguration extends .pt.ist.bennu.portal.domain.PortalConfiguration;

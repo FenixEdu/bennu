@@ -29,4 +29,10 @@ public class PortalConfiguration extends PortalConfiguration_Base {
         PortalConfiguration config = new PortalConfiguration();
         config.setRoot(Bennu.getInstance());
     }
+
+    @Atomic(mode = TxMode.WRITE)
+    public void delete() {
+        setRoot(null);
+        deleteDomainObject();
+    }
 }

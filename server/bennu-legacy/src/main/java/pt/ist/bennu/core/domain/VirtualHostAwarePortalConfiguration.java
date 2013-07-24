@@ -3,10 +3,28 @@ package pt.ist.bennu.core.domain;
 import pt.ist.bennu.portal.domain.MenuItem;
 import pt.ist.bennu.portal.domain.PortalConfiguration;
 import pt.ist.dsi.commons.i18n.LocalizedString;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 public class VirtualHostAwarePortalConfiguration extends VirtualHostAwarePortalConfiguration_Base {
     protected VirtualHostAwarePortalConfiguration() {
         super();
+        setRoot(Bennu.getInstance());
+    }
+
+    public static void ensure() {
+        PortalConfiguration currentConfig = Bennu.getInstance().getConfiguration();
+        if (currentConfig == null || !currentConfig.getClass().equals(VirtualHostAwarePortalConfiguration.class)) {
+            initVirtualHostAwarePortalConfiguration(currentConfig);
+        }
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static void initVirtualHostAwarePortalConfiguration(PortalConfiguration currentConfig) {
+        if (currentConfig != null) {
+            currentConfig.delete();
+        }
+        new VirtualHostAwarePortalConfiguration();
     }
 
     private PortalConfiguration getVirtualHostConfiguration() {
@@ -106,5 +124,10 @@ public class VirtualHostAwarePortalConfiguration extends VirtualHostAwarePortalC
     @Override
     public MenuItem getMenu() {
         return getVirtualHostConfiguration().getMenu();
+    }
+
+    @Override
+    public void setMenu(MenuItem menu) {
+        getVirtualHostConfiguration().setMenu(menu);
     }
 }
