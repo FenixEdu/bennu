@@ -1,8 +1,8 @@
 define({
     "root": {
     	"Path" : "Path",
-		"Create": "Create",
-		"Create Menu": "Create Menu",
+		"Save": "Save",
+		"Manage Menu": "Manage Menu",
 		"Edit": "Edit",
 		"Menu": "Menu",
 		"Menu Manager": "Menu Manager",
@@ -26,7 +26,7 @@ define({
 		"Do you wish to delete the menu?": "Do you wish to delete the menu?",
 		"Yes": "Yes",
 		"No": "No",
-		'title.host.create': "Manage ",
+		'title.portal.configuration': "Portal Configuration",
 		'cancel': 'Cancel',
 		'Access Expression':'Access Expression',
 		'yes': 'Yes',
