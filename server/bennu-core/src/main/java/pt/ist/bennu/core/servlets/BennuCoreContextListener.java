@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
-import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
@@ -58,10 +57,6 @@ public class BennuCoreContextListener implements ServletContextListener {
         if (Bennu.getInstance() == null) {
             new Bennu();
         }
-        if (Bennu.getInstance().getVirtualHostsSet().isEmpty()) {
-            logger.info("Bootstrapping bennu application");
-            new VirtualHost("localhost");
-        }
     }
 
     @Override
@@ -79,7 +74,7 @@ public class BennuCoreContextListener implements ServletContextListener {
             if (loader != null && loader.equals(this.thisClassLoader)) {
                 try {
                     DriverManager.deregisterDriver(driver);
-                    logger.info("Successfully deregistered JDBC driver " + driver);
+                    logger.debug("Successfully deregistered JDBC driver " + driver);
                 } catch (SQLException e) {
                     logger.warn("Failed to deregister JDBC driver " + driver + ". This may cause a potential leak.", e);
                 }

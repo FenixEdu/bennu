@@ -37,9 +37,9 @@ class TableRegistry<T> {
     }
 
     private synchronized T register(Class<?> objectClass, Class<? extends T> recordClass) {
-        if (!defaultValues.containsKey(objectClass)) {
-            defaultValues.put(objectClass, recordClass);
-        }
+        //if (!defaultValues.containsKey(objectClass)) {
+        //    defaultValues.put(objectClass, recordClass);
+        //}
 
         if (wrapped.contains(objectClass, recordClass)) {
             return wrapped.get(objectClass, recordClass);

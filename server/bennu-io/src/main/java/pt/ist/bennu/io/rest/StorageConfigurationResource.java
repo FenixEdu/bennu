@@ -1,6 +1,6 @@
 package pt.ist.bennu.io.rest;
 
-import javax.ws.rs.FormParam;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -29,8 +29,9 @@ public class StorageConfigurationResource extends BennuRestResource {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String post(@FormParam("model") String json) {
+    public String post(String json) {
         accessControl("#managers");
         create(json, FileStorageConfiguration.class);
         return all();

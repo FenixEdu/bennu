@@ -16,8 +16,6 @@
  */
 package pt.ist.bennu.core.domain;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.fenixframework.FenixFramework;
 
 /**
@@ -33,17 +31,5 @@ public class Bennu extends Bennu_Base {
     public Bennu() {
         super();
         FenixFramework.getDomainRoot().setBennu(this);
-    }
-
-    public VirtualHost getVirtualHost(String hostname) {
-        if (StringUtils.isBlank(hostname)) {
-            return null;
-        }
-        for (VirtualHost host : getVirtualHostsSet()) {
-            if (hostname.equals(host.getHostname())) {
-                return host;
-            }
-        }
-        return null;
     }
 }

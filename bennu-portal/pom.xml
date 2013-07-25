@@ -26,8 +26,6 @@
 							<charset>utf-8</charset>
 							<jsSourceDir>bennu-portal</jsSourceDir>
 							<jsSourceFiles>
-								<jsSourceFile>js/jquery.min.js</jsSourceFile>
-								<jsSourceFile>js/mustache.min.js</jsSourceFile>
 								<jsSourceFile>portal.js</jsSourceFile>
 							</jsSourceFiles>
 							<webappTargetDir>${project.build.outputDirectory}/META-INF/resources</webappTargetDir>

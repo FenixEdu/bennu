@@ -96,7 +96,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
 
     private void pushHistory() {
         DynamicGroup old = new DynamicGroup();
-        old.setHost(null);
+        old.setRoot(null);
         old.setName(getName());
         old.setCreated(getCreated());
         old.setCreator(getCreator());
@@ -157,7 +157,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
     }
 
     @Atomic
-    public static Group getInstance(final String name) {
+    public static DynamicGroup getInstance(final String name) {
         DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
             @Override
             public boolean apply(DynamicGroup input) {
@@ -171,7 +171,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
     }
 
     @Atomic
-    public static Group initialize(final String name, Group overridingGroup) {
+    public static DynamicGroup initialize(final String name, Group overridingGroup) {
         DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
             @Override
             public boolean apply(DynamicGroup input) {

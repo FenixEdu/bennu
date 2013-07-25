@@ -1,0 +1,85 @@
+<div class="row-fluid">
+<div class="span12">
+    <h2>{{#_i18n}}title.portal.configuration{{/_i18n}}</h2>
+    <span class="error" id="error"></span>
+    <form class="form-horizontal">
+      <fieldset>
+        <div class="control-group">
+            <label class="control-label" for="applicationTitle">{{#_i18n}}Title{{/_i18n}}</label>
+            <div class="controls">
+                {{#locales}}
+                <div class="input-append">
+                    <input type="text" lang="{{tag}}" id="applicationTitle" name="applicationTitle" value="{{#_mlsLocale}}applicationTitle{{/_mlsLocale}}" placeholder="{{#_i18n}}Title{{/_i18n}}" required>
+                    <span class="add-on">{{tag}}</span>
+                </div>
+                {{/locales}}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="applicationSubTitle">{{#_i18n}}Subtitle{{/_i18n}}</label>
+            <div class="controls">
+                {{#locales}}
+                <div class="input-append">
+                    <input type="text" lang="{{tag}}" id="applicationSubTitle" name="applicationSubTitle" value="{{#_mlsLocale}}applicationSubTitle{{/_mlsLocale}}" placeholder="{{#_i18n}}Subtitle{{/_i18n}}" required>
+                    <span class="add-on">{{tag}}</span>
+                </div>
+                {{/locales}}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="htmlTitle">{{#_i18n}}HTML Title{{/_i18n}}</label>
+            <div class="controls">
+                {{#locales}}
+                <div class="input-append">
+                    <input type="text" lang="{{tag}}" id="htmlTitle" name="htmlTitle" value="{{#_mlsLocale}}htmlTitle{{/_mlsLocale}}" placeholder="{{#_i18n}}HTML Title{{/_i18n}}" required>
+                    <span class="add-on">{{tag}}</span>
+                </div>
+                {{/locales}}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="applicationCopyright">{{#_i18n}}Copyright{{/_i18n}}</label>
+            <div class="controls">
+                {{#locales}}
+                <div class="input-append">
+                    <input type="text" lang="{{tag}}" id="applicationCopyright" name="applicationCopyright" value="{{#_mlsLocale}}applicationCopyright{{/_mlsLocale}}" placeholder="{{#_i18n}}Copyright{{/_i18n}}" required>
+                    <span class="add-on">{{tag}}</span>
+                </div>
+                {{/locales}}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="supportEmailAddress">{{#_i18n}}Support Email{{/_i18n}}</label>
+            <div class="controls">
+                <input type="email" id="supportEmailAddress" name="supportEmailAddress" value="{{supportEmailAddress}}" placeholder="Support Email" required>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="systemEmailAddress">{{#_i18n}}System Email{{/_i18n}}</label>
+            <div class="controls">
+                <input type="email" id="systemEmailAddress" name="systemEmailAddress" value="{{systemEmailAddress}}" placeholder="System Email" required>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="systemEmailAddress">{{#_i18n}}Theme{{/_i18n}}</label>
+            <div class="controls">
+                <select id="theme">
+                {{#themes}}
+                    <option value="{{name}}"{{#selected}}selected{{/selected}}>{{name}}</option>
+                {{/themes}}
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="logo">{{#_i18n}}Logo{{/_i18n}}</label>
+            <div class="controls">
+                <input type="file" id="logo" name="logo"/>
+                <img id="image-logo" width="200px" height="200px" src="data:{{logoType}};base64,{{logo}}"></img>
+            </div>
+        </div>
+        <button id='confirm' class="btn btn-small btn-success">{{#_i18n}}Save{{/_i18n}}</button>
+        <a href="#menu/{{menu.id}}" class="btn btn-small">{{#_i18n}}Manage Menu{{/_i18n}}</a>
+      </fieldset>
+    </form>
+</div>
+</div>

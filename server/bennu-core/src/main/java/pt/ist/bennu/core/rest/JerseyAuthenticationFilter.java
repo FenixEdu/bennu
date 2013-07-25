@@ -38,9 +38,9 @@ public class JerseyAuthenticationFilter implements Filter {
     public void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws IOException, ServletException {
         if (isPublicRequest(request)) {
-            LOG.info("Request is public");
+            LOG.debug("Request is public");
             if (Authenticate.getUser() != null) {
-                LOG.info("User is logged in {}", Authenticate.getUser().getUsername());
+                LOG.debug("User is logged in {}", Authenticate.getUser().getUsername());
             }
             filterChain.doFilter(request, response);
         } else {
@@ -50,13 +50,13 @@ public class JerseyAuthenticationFilter implements Filter {
             }
             try {
                 if (!StringUtils.isEmpty(userToLogin)) {
-                    LOG.info("login user {}", userToLogin);
+                    LOG.debug("login user {}", userToLogin);
                     Authenticate.login(request.getSession(true), userToLogin, "", false);
                 }
                 filterChain.doFilter(request, response);
             } finally {
                 if (!StringUtils.isEmpty(userToLogin)) {
-                    LOG.info("logout user {}", userToLogin);
+                    LOG.debug("logout user {}", userToLogin);
                     Authenticate.logout(request.getSession(false));
                 }
             }
@@ -82,7 +82,7 @@ public class JerseyAuthenticationFilter implements Filter {
         final String username = decodedUserPass[0];
         final String password = decodedUserPass[1];
         if (password.equals(ConfigurationManager.getThisServerSecret())) {
-            LOG.info("Rest secret is known, login mock user {}", username);
+            LOG.debug("Rest secret is known, login mock user {}", username);
             return username;
         } else {
             return null;

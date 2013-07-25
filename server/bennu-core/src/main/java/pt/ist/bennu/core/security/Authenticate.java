@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.groups.DynamicGroup;
 import pt.ist.bennu.core.domain.groups.UserGroup;
@@ -55,7 +54,7 @@ public class Authenticate {
         }
 
         fireLoginListeners(user.getUser());
-        logger.info("Logged in user: " + user.getUsername());
+        logger.debug("Logged in user: " + user.getUsername());
 
         return user;
     }
@@ -69,7 +68,7 @@ public class Authenticate {
             }
         }
         if (user == null) {
-            if (VirtualHost.getVirtualHostForThread().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
+            if (ConfigurationManager.getCasConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
                 user = new User(username);
             } else {
                 throw AuthorizationException.authenticationFailed();
@@ -151,18 +150,12 @@ public class Authenticate {
     }
 
     private static void fireLoginListeners(final User user) {
-        final VirtualHost virtualHost = VirtualHost.getVirtualHostForThread();
         if (authenticationListeners != null) {
             for (final AuthenticationListener listener : authenticationListeners) {
                 final TransactionalThread thread = new TransactionalThread() {
                     @Override
                     public void transactionalRun() {
-                        try {
-                            VirtualHost.setVirtualHostForThread(virtualHost);
-                            listener.afterLogin(user);
-                        } finally {
-                            VirtualHost.releaseVirtualHostFromThread();
-                        }
+                        listener.afterLogin(user);
                     }
                 };
                 thread.start();

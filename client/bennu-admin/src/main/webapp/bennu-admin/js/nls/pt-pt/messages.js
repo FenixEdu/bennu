@@ -1,7 +1,7 @@
 define({
 	"Path" : "Caminho",
-	"Create": "Criar",
-	"Create Menu": "Criar Menu",
+	"Save": "Guardar",
+	"Manage Menu": "Gerir Menu",
 	"Edit": "Editar",
 	"Menu": "Menu",
 	"Menu Manager": "Menu Manager",
@@ -25,7 +25,7 @@ define({
 	"Do you wish to delete the menu?": "Deseja apagar o menu?",
 	"Yes": "Yes",
 	"No": "No",
-	'title.host.create': "Gerir ",
+	'title.portal.configuration': "Configurar Portal",
 	'cancel': 'Cancelar',
 	'Access Expression':'Expressão Disponibilidade',
 	'yes': 'Sim',

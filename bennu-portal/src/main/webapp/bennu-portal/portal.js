@@ -41,7 +41,7 @@ function loadScript(url, callback) {
 	$("body").hide();
 	$.ajax({
 		type: "GET",
-		url: contextPath + "/api/bennu-portal/hostmenu/" + window.location.hostname,
+		url: contextPath + "/api/bennu-portal/data",
 		dataType: "json",
 		success: function(hostJson, status, response) {
 			var theme_base = contextPath + "/themes/" + hostJson.theme;
@@ -140,7 +140,7 @@ function loadScript(url, callback) {
 								$('body').html(new_body);
 								$("#content")[0].innerHTML = old_body;
 								if(developmentMode) {
-									$("head").prepend("<link rel='stylesheet/less' type='text/css' href='"+contextPath+"/less/style.less' />");
+									$("head").prepend("<link rel='stylesheet/less' type='text/css' href='"+theme_base+"/less/style.less' />");
 									$("head").append("<script type='text/javascript' src='" + contextPath +"/bennu-portal/js/less.min.js" + "'></script>");
 
 								} else {

@@ -24,12 +24,14 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.bennu.core.domain.VirtualHostAwarePortalConfiguration;
 import pt.ist.bennu.core.security.Authenticate;
 
 /**
@@ -38,6 +40,7 @@ import pt.ist.bennu.core.security.Authenticate;
  * @author Luis Cruz
  * 
  */
+@WebFilter("/*")
 public class VirtualHostFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(VirtualHostFilter.class);
 
@@ -55,6 +58,7 @@ public class VirtualHostFilter implements Filter {
         final String serverName = request.getServerName();
         try {
             final VirtualHost virtualHost = VirtualHost.setVirtualHostForThread(serverName.toLowerCase());
+            VirtualHostAwarePortalConfiguration.ensure();
             if (logger.isDebugEnabled()) {
                 final String hostname = virtualHost == null ? null : virtualHost.getHostname();
                 final User user = Authenticate.getUser();

@@ -24,8 +24,8 @@ import java.util.Set;
 import org.antlr.runtime.RecognitionException;
 import org.joda.time.DateTime;
 
+import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
-import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.grouplanguage.GroupExpressionParser;
@@ -61,7 +61,7 @@ import com.google.common.collect.Iterables;
 public abstract class Group extends Group_Base implements Comparable<Group> {
     protected Group() {
         super();
-        setHost(VirtualHost.getVirtualHostForThread());
+        setRoot(Bennu.getInstance());
     }
 
     /**
@@ -216,7 +216,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      * Delete the object from the system. Assume true in {@link #isGarbageCollectable()} since it is tested before invoking this.
      */
     protected void gc() {
-        setHost(null);
+        setRoot(null);
         deleteDomainObject();
     }
 
@@ -242,13 +242,13 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
         Set<Group> ignored = new HashSet<>();
         processAccessibleGroups(groups, ignored, AnyoneGroup.getInstance(), user);
         processAccessibleGroups(groups, ignored, LoggedGroup.getInstance(), user);
-        for (UserGroup group : user.usersGroups()) {
+        for (UserGroup group : user.getUserGroupSet()) {
             processAccessibleGroups(groups, ignored, group, user);
         }
         for (Group group : CustomGroup.groupsForUser(user)) {
             processAccessibleGroups(groups, ignored, group, user);
         }
-        for (NegationGroup group : VirtualHost.getVirtualHostForThread().getNegationSet()) {
+        for (NegationGroup group : Bennu.getInstance().getNegationSet()) {
             if (group.isMember(user)) {
                 processAccessibleGroups(groups, ignored, group, user);
             }
@@ -281,8 +281,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
     }
 
     public static void garbageCollect() {
-        VirtualHost host = VirtualHost.getVirtualHostForThread();
-        for (Group group : host.getGroupsSet()) {
+        for (Group group : Bennu.getInstance().getGroupsSet()) {
             if (group.isGarbageCollectable()) {
                 group.gc();
             }
@@ -298,7 +297,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      * @return group instance.
      */
     protected static <T extends Group> T select(final Class<? extends T> type) {
-        return (T) Iterables.tryFind(VirtualHost.getVirtualHostForThread().getGroupsSet(), Predicates.instanceOf(type)).orNull();
+        return (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), Predicates.instanceOf(type)).orNull();
     }
 
     /**
@@ -315,7 +314,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
         @SuppressWarnings("unchecked")
         Predicate<? super Group> realPredicate =
                 Predicates.and(Predicates.instanceOf(type), (Predicate<? super Group>) predicate);
-        return (T) Iterables.tryFind(VirtualHost.getVirtualHostForThread().getGroupsSet(), realPredicate).orNull();
+        return (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), realPredicate).orNull();
     }
 
     @Override

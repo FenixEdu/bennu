@@ -17,9 +17,9 @@ import com.sun.jersey.core.spi.scanning.ScannerListener;
 
 public class BennuJerseyRestApplication extends ScanningResourceConfig {
     private static Set<Class<?>> types = new HashSet<>();
-    private static Map<String,Object> modulePathResource = new HashMap<>();
+    private static Map<String, Object> modulePathResource = new HashMap<>();
     private static Logger LOG = LoggerFactory.getLogger(BennuJerseyRestApplication.class);
-    
+
     public BennuJerseyRestApplication() {
         super();
         init(new Scanner() {
@@ -36,22 +36,22 @@ public class BennuJerseyRestApplication extends ScanningResourceConfig {
                 }
             }
         });
-        LOG.info("Registering Bennu REST entrypoints:");
+        LOG.debug("Registering Bennu REST entrypoints:");
     }
 
     public static void register(Class<?> type) {
         types.add(type);
     }
-    
+
+    @Override
     public Map<String, Object> getExplicitRootResources() {
-    	return modulePathResource;
+        return modulePathResource;
     }
-    
+
     public static void registerEndpoint(String moduleName, String path, Class<?> type) {
-    	final String completePath = path.startsWith("/") ? moduleName.concat(path) : moduleName.concat("/").concat(path);
-    	modulePathResource.put(completePath, type);
-    	LOG.info("\t{} mapped on '{}'", type.getName(), completePath);
+        final String completePath = path.startsWith("/") ? moduleName.concat(path) : moduleName.concat("/").concat(path);
+        modulePathResource.put(completePath, type);
+        LOG.debug("\t{} mapped on '{}'", type.getName(), completePath);
     }
-    
 
 }

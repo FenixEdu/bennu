@@ -78,7 +78,7 @@ public class JsonAwareResource {
 
     @SuppressWarnings("unchecked")
     public <T> T create(String jsonData, Class<T> clazz, Class<? extends JsonCreator<? extends T>> jsonCreatorClass) {
-        LOG.info("Create instance of {} with data {}", clazz.getSimpleName(), jsonData);
+        LOG.trace("Create instance of {} with data {}", clazz.getSimpleName(), jsonData);
         return (T) innerCreate(jsonData, clazz, jsonCreatorClass);
     }
 
@@ -94,7 +94,7 @@ public class JsonAwareResource {
 
     @SuppressWarnings("unchecked")
     public <T> T update(String jsonData, T object, Class<? extends JsonUpdater<? extends T>> jsonUpdaterClass) {
-        LOG.info("Update instance {} with data {}", object.toString(), jsonData);
+        LOG.trace("Update instance {} with data {}", object.toString(), jsonData);
         return (T) innerUpdate(jsonData, object, jsonUpdaterClass);
     }
 
