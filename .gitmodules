@@ -4,3 +4,6 @@
 [submodule "bennu-renderers"]
 	path = portal-frameworks/bennu-renderers
 	url = https://github.com/pedrosan7os/bennu-renderers.git
+[submodule "portal-frameworks/dsi-commons"]
+	path = portal-frameworks/dsi-commons
+	url = git@github.com:ist-dsi/dsi-commons.git

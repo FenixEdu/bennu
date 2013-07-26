@@ -23,6 +23,7 @@
     <modules>
         <module>bankai</module>
         <module>bennu-renderers</module>
+        <module>dsi-commons</module>
         <!-- module>bennu-vaadin</module -->
     </modules>
 </project>
