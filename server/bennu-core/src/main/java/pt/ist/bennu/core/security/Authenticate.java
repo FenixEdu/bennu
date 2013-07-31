@@ -41,7 +41,7 @@ public class Authenticate {
 
     private static final String USER_SESSION_ATTRIBUTE = "USER_SESSION_ATTRIBUTE";
 
-    private static final ThreadLocal<UserSession> wrapper = new ThreadLocal<>();
+    private static final InheritableThreadLocal<UserSession> wrapper = new InheritableThreadLocal<>();
 
     private static Set<AuthenticationListener> authenticationListeners;
 

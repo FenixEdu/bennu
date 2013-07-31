@@ -45,7 +45,7 @@ import pt.utl.ist.fenix.tools.util.i18n.Language;
  */
 public class VirtualHost extends VirtualHost_Base {
 
-    private static final ThreadLocal<VirtualHost> threadVirtualHost = new ThreadLocal<>();
+    private static final InheritableThreadLocal<VirtualHost> threadVirtualHost = new InheritableThreadLocal<>();
 
     public static VirtualHost getVirtualHostForThread() {
         return threadVirtualHost.get();
