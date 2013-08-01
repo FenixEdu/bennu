@@ -32,6 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.VirtualHost;
+import pt.ist.dsi.commons.i18n.LocalizedString;
+import pt.ist.dsi.commons.i18n.LocalizedString.Builder;
 import pt.utl.ist.fenix.tools.util.i18n.Language;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
@@ -89,4 +91,13 @@ public class BundleUtil {
 //        }
 //        return someClass.getName();
 //    }
+
+    public static LocalizedString getLocalizedString(MultiLanguageString mls) {
+        final Builder builder = new LocalizedString.Builder();
+        for (Language language : mls.getAllLanguages()) {
+            final String content = mls.getContent(language);
+            builder.with(Locale.forLanguageTag(language.toString()), content);
+        }
+        return builder.build();
+    }
 }

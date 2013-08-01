@@ -61,43 +61,43 @@ class MyOrg {
 class groups.legacy.PersistentGroup {
 }
 
-    class groups.legacy.EmptyGroup extends groups.legacy.PersistentGroup {
-    }
+class groups.legacy.EmptyGroup extends groups.legacy.PersistentGroup {
+}
 
-    class groups.legacy.AnonymousGroup extends groups.legacy.PersistentGroup {
-    }
+class groups.legacy.AnonymousGroup extends groups.legacy.PersistentGroup {
+}
 
-    class groups.legacy.AnyoneGroup extends groups.legacy.PersistentGroup {
-    }
+class groups.legacy.AnyoneGroup extends groups.legacy.PersistentGroup {
+}
 
-    class groups.legacy.UserGroup extends groups.legacy.PersistentGroup {
-    }
+class groups.legacy.UserGroup extends groups.legacy.PersistentGroup {
+}
 
-    class groups.legacy.SingleUserGroup extends groups.legacy.PersistentGroup {
-    }
+class groups.legacy.SingleUserGroup extends groups.legacy.PersistentGroup {
+}
 
-    class groups.legacy.People extends groups.legacy.PersistentGroup {
-    }
+class groups.legacy.People extends groups.legacy.PersistentGroup {
+}
 
-        class groups.legacy.NamedGroup extends groups.legacy.People {
-            String groupName;
-        }
+class groups.legacy.NamedGroup extends groups.legacy.People {
+    String groupName;
+}
 
-            class groups.legacy.Role extends groups.legacy.NamedGroup {
-            }
+class groups.legacy.Role extends groups.legacy.NamedGroup {
+}
 
-    class groups.legacy.UnionGroup extends groups.legacy.PersistentGroup {
-    }
+class groups.legacy.UnionGroup extends groups.legacy.PersistentGroup {
+}
 
-    class groups.legacy.IntersectionGroup extends groups.legacy.PersistentGroup {
-    }
+class groups.legacy.IntersectionGroup extends groups.legacy.PersistentGroup {
+}
 
-        class groups.legacy.IntersectionNamedGroup extends groups.legacy.IntersectionGroup {
-            String groupName;
-        }
+class groups.legacy.IntersectionNamedGroup extends groups.legacy.IntersectionGroup {
+    String groupName;
+}
 
-    class groups.legacy.NegationGroup extends groups.legacy.PersistentGroup {
-    }
+class groups.legacy.NegationGroup extends groups.legacy.PersistentGroup {
+}
 
 class groups.legacy.PeopleUserLog {
     DateTime operationDate;
@@ -113,6 +113,7 @@ class VirtualHost {
 }
 
 class VirtualHostAwarePortalConfiguration extends .pt.ist.bennu.portal.domain.PortalConfiguration;
+
 
 relation VirtualHostPortalConfiguration {
     VirtualHost playsRole host {
@@ -203,3 +204,4 @@ relation UserSingleUserGroup {
     groups.legacy.SingleUserGroup playsRole singleUserGroup;
     User playsRole user;
 }
+

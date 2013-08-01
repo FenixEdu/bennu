@@ -120,7 +120,4 @@ public class User extends User_Base {
         strategy = newStrategy;
     }
 
-    public boolean hasRole(String role) {
-        return false;
-    }
 }
