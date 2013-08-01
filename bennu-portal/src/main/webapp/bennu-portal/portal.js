@@ -1,20 +1,5 @@
-function loadScript(url, callback) {
-	// adding the script tag to the head as suggested before
-	var head = document.getElementsByTagName('head')[0];
-	var script = document.createElement('script');
-	script.type = 'text/javascript';
-	script.src = url;
-
-	// then bind the event to the callback function 
-	// there are several events for cross browser compatibility
-	script.onreadystatechange = callback;
-	script.onload = callback;
-
-	// fire the loading
-	head.appendChild(script);
-}
-
-(function() {
+$(function() {
+	
 	var cookies = null;
 
 	function readCookie(name, c, C, i) {
@@ -38,7 +23,6 @@ function loadScript(url, callback) {
 	
 	var developmentMode = readCookie("developmentMode");
 
-	$("body").hide();
 	$.ajax({
 		type: "GET",
 		url: contextPath + "/api/bennu-portal/data",
@@ -59,16 +43,21 @@ function loadScript(url, callback) {
 					return locale;
 				})(hostJson.locale.tag),
 				addMls: function(model) {
-					var lang = this.locale.tag;
+					var completeLanguage = this.locale.tag;
+					var currentLanguage = completeLanguage;
 					model['_mls'] = function() {
 						return function(val) {
 							if (this[val]) {
-								return this[val][lang];
+								if (this[val][completeLanguage]) {
+									return this[val][completeLanguage];
+								}
+								currentLanguage = BennuPortal.lang; 
+								return this[val][currentLanguage];
 							}
 							return "_mls!!" + val + "!!";
 						};
 					};
-					model["_lang"] = lang;
+					model["_lang"] = currentLanguage;
 				},
 				
 				login: function(user, pass, callback) {
@@ -136,9 +125,9 @@ function loadScript(url, callback) {
 								}
 								var new_body = Mustache.to_html(layoutTemplate,
 								hostJson);
-								var old_body = $('body').html();
-								$('body').html(new_body);
-								$("#content")[0].innerHTML = old_body;
+								$('body').append(new_body);
+								$("#portal-container").appendTo("#content");
+								$('body').show();
 								if(developmentMode) {
 									$("head").prepend("<link rel='stylesheet/less' type='text/css' href='"+theme_base+"/less/style.less' />");
 									$("head").append("<script type='text/javascript' src='" + contextPath +"/bennu-portal/js/less.min.js" + "'></script>");
@@ -154,6 +143,7 @@ function loadScript(url, callback) {
 								type: "GET",
 								url: json_handler_url,
 								dataType: "script",
+								async: false,
 							}).done(function(script, textStatus) {
 								applyLayout(hostJson);
 							}).fail(function(jqxhr, settings, exception) {
@@ -165,4 +155,4 @@ function loadScript(url, callback) {
 			});
 		}
 	});
-})();
+});
