@@ -32,19 +32,47 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
 
     public abstract String getAccessExpression();
 
+    public boolean canList() {
+        return true;
+    }
+
+    public boolean canCreate() {
+        return true;
+    }
+
+    public boolean canUpdate() {
+        return true;
+    }
+
+    public boolean canView() {
+        return true;
+    }
+
+    public boolean canDelete() {
+        return true;
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String view() {
-        accessControl(getAccessExpression());
-        return view(all(), collectionKey());
+        if (canList()) {
+            accessControl(getAccessExpression());
+            return view(all(), collectionKey());
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @GET
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String view(@PathParam("oid") String oid) {
-        accessControl(getAccessExpression());
-        return view(readDomainObject(oid));
+        if (canView()) {
+            accessControl(getAccessExpression());
+            return view(readDomainObject(oid));
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @PUT
@@ -52,29 +80,41 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String update(String jsonData, @PathParam("oid") String oid) {
-        accessControl(getAccessExpression());
-        return view(update(jsonData, readDomainObject(oid)));
+        if (canUpdate()) {
+            accessControl(getAccessExpression());
+            return view(update(jsonData, readDomainObject(oid)));
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String create(String jsonData) {
-        accessControl(getAccessExpression());
-        return view(create(jsonData, type()));
+        if (canCreate()) {
+            accessControl(getAccessExpression());
+            return view(create(jsonData, type()));
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @DELETE
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String delete(@PathParam("oid") String oid) {
-        accessControl(getAccessExpression());
-        final T readDomainObject = readDomainObject(oid);
-        final String jsonRep = view(readDomainObject);
-        if (!delete(readDomainObject)) {
-            throw BennuCoreDomainException.errorOnDeleteDomainObject();
+        if (canDelete()) {
+            accessControl(getAccessExpression());
+            final T readDomainObject = readDomainObject(oid);
+            final String jsonRep = view(readDomainObject);
+            if (!delete(readDomainObject)) {
+                throw BennuCoreDomainException.errorOnDeleteDomainObject();
+            }
+            LOG.trace("Object {} was deleted: {}", oid, jsonRep);
+            return jsonRep;
+        } else {
+            throw new UnsupportedOperationException();
         }
-        LOG.trace("Object {} was deleted: {}", oid, jsonRep);
-        return jsonRep;
     }
 }

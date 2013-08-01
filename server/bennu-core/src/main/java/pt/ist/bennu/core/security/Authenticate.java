@@ -93,7 +93,7 @@ public class Authenticate {
             session.removeAttribute(USER_SESSION_ATTRIBUTE);
             session.invalidate();
         }
-        setUser(null);
+        setUser((UserSession)null);
     }
 
     @Atomic
@@ -111,6 +111,10 @@ public class Authenticate {
 
     public static void setUser(UserSession user) {
         wrapper.set(user);
+    }
+    
+    public static void setUser(User user){
+        setUser(new UserSession(user));
     }
 
     public static boolean hasUser() {
