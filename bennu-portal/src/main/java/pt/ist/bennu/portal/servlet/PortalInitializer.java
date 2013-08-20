@@ -1,6 +1,7 @@
 package pt.ist.bennu.portal.servlet;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,8 +22,11 @@ public class PortalInitializer implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         logger.trace("Initialize");
-        for (String themePath : sce.getServletContext().getResourcePaths("/themes/")) {
-            themes.add(themePath.substring("/themes/".length(), themePath.length() - 1));
+        Collection<String> themePaths = sce.getServletContext().getResourcePaths("/themes/");
+        if (themePaths != null) {
+            for (String themePath : themePaths) {
+                themes.add(themePath.substring("/themes/".length(), themePath.length() - 1));
+            }
         }
         logger.info("Available Themes : " + Arrays.toString(themes.toArray()));
     }

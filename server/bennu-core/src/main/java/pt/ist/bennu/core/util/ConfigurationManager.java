@@ -183,6 +183,10 @@ public class ConfigurationManager {
         properties.setProperty(key, value);
     }
 
+    public static Properties getProperties() {
+        return properties;
+    }
+
     public static class CasConfig {
 
         protected boolean casEnabled = false;
@@ -212,6 +216,10 @@ public class ConfigurationManager {
 
         public String getCasLoginUrl(HttpServletRequest request) {
             return casLoginUrl + "https://" + request.getServerName();
+        }
+
+        public String getCasLoginUrl() {
+            return casLoginUrl;
         }
 
         public String getCasLogoutUrl() {
