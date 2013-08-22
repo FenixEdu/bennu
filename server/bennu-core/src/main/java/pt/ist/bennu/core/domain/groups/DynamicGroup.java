@@ -25,8 +25,10 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 
 /**
  * <p>
@@ -156,32 +158,28 @@ public final class DynamicGroup extends DynamicGroup_Base {
         return false;
     }
 
-    @Atomic
     public static DynamicGroup getInstance(final String name) {
-        DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
+        return select(DynamicGroup.class, new Predicate<DynamicGroup>() {
             @Override
             public boolean apply(DynamicGroup input) {
                 return input.getName().equals(name);
             }
+        }, new Supplier<DynamicGroup>() {
+            @Override
+            public DynamicGroup get() {
+                throw BennuCoreDomainException.dynamicGroupNotFound(name);
+            }
         });
-        if (group != null) {
-            return group;
-        }
-        throw BennuCoreDomainException.dynamicGroupNotFound(name);
     }
 
-    @Atomic
+    @Atomic(mode = TxMode.WRITE)
     public static DynamicGroup initialize(final String name, Group overridingGroup) {
-        DynamicGroup group = select(DynamicGroup.class, new Predicate<DynamicGroup>() {
-            @Override
-            public boolean apply(DynamicGroup input) {
-                return input.getName().equals(name);
-            }
-        });
-        if (group != null) {
+        try {
+            DynamicGroup group = getInstance(name);
             group.changeGroup(overridingGroup);
             return group;
+        } catch (BennuCoreDomainException e) {
+            return new DynamicGroup(name, overridingGroup);
         }
-        return new DynamicGroup(name, overridingGroup);
     }
 }

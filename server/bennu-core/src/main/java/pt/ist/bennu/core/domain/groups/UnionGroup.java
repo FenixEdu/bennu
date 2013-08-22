@@ -26,6 +26,7 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
 /**
@@ -104,14 +105,17 @@ public class UnionGroup extends UnionGroup_Base {
      *            the groups to make a {@link UnionGroup} on.
      * @return {@link UnionGroup} instance
      */
-    @Atomic
     public static UnionGroup getInstance(final Set<Group> children) {
-        UnionGroup group = select(UnionGroup.class, new Predicate<UnionGroup>() {
+        return select(UnionGroup.class, new Predicate<UnionGroup>() {
             @Override
             public boolean apply(UnionGroup input) {
                 return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
             }
+        }, new Supplier<UnionGroup>() {
+            @Override
+            public UnionGroup get() {
+                return new UnionGroup(children);
+            }
         });
-        return group != null ? group : new UnionGroup(children);
     }
 }

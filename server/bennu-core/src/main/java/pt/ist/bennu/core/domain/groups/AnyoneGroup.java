@@ -24,7 +24,8 @@ import org.joda.time.DateTime;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.i18n.BundleUtil;
-import pt.ist.fenixframework.Atomic;
+
+import com.google.common.base.Supplier;
 
 /**
  * Group that always returns <code>true</code> on membership tests.
@@ -82,9 +83,12 @@ public class AnyoneGroup extends AnyoneGroup_Base {
      * 
      * @return singleton {@link AnyoneGroup} instance
      */
-    @Atomic
     public static AnyoneGroup getInstance() {
-        AnyoneGroup group = select(AnyoneGroup.class);
-        return group == null ? new AnyoneGroup() : group;
+        return select(AnyoneGroup.class, new Supplier<AnyoneGroup>() {
+            @Override
+            public AnyoneGroup get() {
+                return new AnyoneGroup();
+            }
+        });
     }
 }

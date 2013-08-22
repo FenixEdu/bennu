@@ -24,7 +24,8 @@ import org.joda.time.DateTime;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.i18n.BundleUtil;
-import pt.ist.fenixframework.Atomic;
+
+import com.google.common.base.Supplier;
 
 /**
  * Authenticated users group.
@@ -82,9 +83,12 @@ public class LoggedGroup extends LoggedGroup_Base {
      * 
      * @return singleton {@link LoggedGroup} instance
      */
-    @Atomic
     public static LoggedGroup getInstance() {
-        LoggedGroup group = select(LoggedGroup.class);
-        return group == null ? new LoggedGroup() : group;
+        return select(LoggedGroup.class, new Supplier<LoggedGroup>() {
+            @Override
+            public LoggedGroup get() {
+                return new LoggedGroup();
+            }
+        });
     }
 }

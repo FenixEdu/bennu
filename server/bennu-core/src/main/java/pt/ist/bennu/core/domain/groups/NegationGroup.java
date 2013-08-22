@@ -24,9 +24,9 @@ import org.joda.time.DateTime;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.i18n.BundleUtil;
-import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 
 /**
  * Inverse group of another group.
@@ -91,14 +91,17 @@ public class NegationGroup extends NegationGroup_Base {
      * @param group the group to inverse
      * @return singleton {@link NegationGroup} instance
      */
-    @Atomic
     public static NegationGroup getInstance(final Group group) {
-        NegationGroup negated = select(NegationGroup.class, new Predicate<NegationGroup>() {
+        return select(NegationGroup.class, new Predicate<NegationGroup>() {
             @Override
             public boolean apply(NegationGroup input) {
                 return input.getNegated().equals(group);
             }
+        }, new Supplier<NegationGroup>() {
+            @Override
+            public NegationGroup get() {
+                return new NegationGroup(group);
+            }
         });
-        return negated != null ? negated : new NegationGroup(negated);
     }
 }

@@ -30,9 +30,12 @@ import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.grouplanguage.GroupExpressionParser;
 import pt.ist.bennu.core.security.Authenticate;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 
 /**
@@ -296,8 +299,9 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      *            the wanted type
      * @return group instance.
      */
-    protected static <T extends Group> T select(final Class<? extends T> type) {
-        return (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), Predicates.instanceOf(type)).orNull();
+    protected static <T extends Group> T select(final Class<? extends T> type, Supplier<T> maker) {
+        T group = (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), Predicates.instanceOf(type)).orNull();
+        return group == null ? (maker != null ? transactionalMake(maker) : null) : group;
     }
 
     /**
@@ -310,11 +314,18 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      *            the predicate to apply to group instances
      * @return group instance.
      */
-    protected static <T extends Group> T select(final Class<? extends T> type, final Predicate<? super T> predicate) {
+    protected static <T extends Group> T select(final Class<? extends T> type, final Predicate<? super T> predicate,
+            Supplier<T> maker) {
         @SuppressWarnings("unchecked")
         Predicate<? super Group> realPredicate =
                 Predicates.and(Predicates.instanceOf(type), (Predicate<? super Group>) predicate);
-        return (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), realPredicate).orNull();
+        T group = (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), realPredicate).orNull();
+        return group == null ? (maker != null ? transactionalMake(maker) : null) : group;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static <T extends Group> T transactionalMake(Supplier<T> maker) {
+        return maker.get();
     }
 
     @Override

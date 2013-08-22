@@ -28,6 +28,7 @@ import pt.ist.fenixframework.Atomic;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
@@ -121,14 +122,17 @@ public class UserGroup extends UserGroup_Base {
      *            the users to be part of the group
      * @return {@link UserGroup} instance
      */
-    @Atomic
     public static UserGroup getInstance(final Set<User> users) {
-        UserGroup group = select(UserGroup.class, new Predicate<UserGroup>() {
+        return select(UserGroup.class, new Predicate<UserGroup>() {
             @Override
             public boolean apply(UserGroup input) {
                 return Sets.symmetricDifference(input.getMemberSet(), users).isEmpty();
             }
+        }, new Supplier<UserGroup>() {
+            @Override
+            public UserGroup get() {
+                return new UserGroup(users);
+            }
         });
-        return group != null ? group : new UserGroup(users);
     }
 }

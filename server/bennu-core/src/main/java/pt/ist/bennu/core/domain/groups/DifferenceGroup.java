@@ -27,6 +27,7 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 
 /**
@@ -129,14 +130,17 @@ public class DifferenceGroup extends DifferenceGroup_Base {
      *            the groups to make a {@link DifferenceGroup} on.
      * @return singleton {@link DifferenceGroup} instance
      */
-    @Atomic
     public static DifferenceGroup getInstance(final Set<Group> children) {
-        DifferenceGroup group = select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
+        return select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
             @Override
             public boolean apply(DifferenceGroup input) {
                 return Iterables.elementsEqual(input.getChildrenSet(), children);
             }
+        }, new Supplier<DifferenceGroup>() {
+            @Override
+            public DifferenceGroup get() {
+                return new DifferenceGroup(children);
+            }
         });
-        return group != null ? group : new DifferenceGroup(children);
     }
 }

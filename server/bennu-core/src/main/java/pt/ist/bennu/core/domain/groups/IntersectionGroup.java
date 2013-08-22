@@ -27,6 +27,7 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
 /**
@@ -119,14 +120,17 @@ public class IntersectionGroup extends IntersectionGroup_Base {
      *            the groups to make a {@link IntersectionGroup} on.
      * @return singleton {@link IntersectionGroup} instance
      */
-    @Atomic
     public static IntersectionGroup getInstance(final Set<Group> children) {
-        IntersectionGroup group = select(IntersectionGroup.class, new Predicate<IntersectionGroup>() {
+        return select(IntersectionGroup.class, new Predicate<IntersectionGroup>() {
             @Override
             public boolean apply(IntersectionGroup input) {
                 return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
             }
+        }, new Supplier<IntersectionGroup>() {
+            @Override
+            public IntersectionGroup get() {
+                return new IntersectionGroup(children);
+            }
         });
-        return group != null ? group : new IntersectionGroup(children);
     }
 }
