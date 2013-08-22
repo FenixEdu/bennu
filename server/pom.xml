@@ -20,6 +20,26 @@
         </repository>
     </repositories>
 
+		<dependencies>
+ <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>fenix-framework-backend-jvstm-common-runtime</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>fenix-framework-core-api</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>fenix-framework-core-consistency-predicates</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
+		</dependencies>
+
+
     <modules>
         <module>bennu-core</module>
         <module>bennu-email</module>
