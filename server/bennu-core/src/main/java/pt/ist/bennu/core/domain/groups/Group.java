@@ -301,7 +301,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      */
     protected static <T extends Group> T select(final Class<? extends T> type, Supplier<T> maker) {
         T group = (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), Predicates.instanceOf(type)).orNull();
-        return group == null ? (maker != null ? transactionalMake(maker) : null) : group;
+        return group == null ? (maker != null ? transactionalMake(Predicates.instanceOf(type), maker) : null) : group;
     }
 
     /**
@@ -320,12 +320,12 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
         Predicate<? super Group> realPredicate =
                 Predicates.and(Predicates.instanceOf(type), (Predicate<? super Group>) predicate);
         T group = (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), realPredicate).orNull();
-        return group == null ? (maker != null ? transactionalMake(maker) : null) : group;
+        return group == null ? (maker != null ? transactionalMake(realPredicate, maker) : null) : group;
     }
 
     @Atomic(mode = TxMode.WRITE)
-    private static <T extends Group> T transactionalMake(Supplier<T> maker) {
-        return maker.get();
+    private static <T extends Group> T transactionalMake(Predicate<? super Group> predicate, Supplier<T> maker) {
+        return (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), predicate).or(maker);
     }
 
     @Override
