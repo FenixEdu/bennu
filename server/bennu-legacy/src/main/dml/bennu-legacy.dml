@@ -114,6 +114,23 @@ class VirtualHost {
 
 class VirtualHostAwarePortalConfiguration extends .pt.ist.bennu.portal.domain.PortalConfiguration;
 
+class contents.legacy.Node {
+	Integer nodeOrder;
+}
+
+	class contents.legacy.ActionNode extends contents.legacy.Node {
+		String path;
+		String method;
+		String linkBundle;
+		String linkKey;
+	}
+
+	class contents.legacy.LinkNode extends contents.legacy.Node {
+		String url;
+		String linkBundle;
+		String linkKey;
+	}
+
 
 relation VirtualHostPortalConfiguration {
     VirtualHost playsRole host {
@@ -203,5 +220,33 @@ relation MyOrgPeopleUserLog {
 relation UserSingleUserGroup {
     groups.legacy.SingleUserGroup playsRole singleUserGroup;
     User playsRole user;
+}
+
+relation MyOrgNode {
+	MyOrg playsRole myOrg;
+	contents.legacy.Node playsRole nodes {
+		multiplicity *;
+	}
+}
+
+relation VirtualHostTopLevelNode {
+	VirtualHost playsRole virtualHost;
+	contents.legacy.Node playsRole topLevelNodes {
+		multiplicity *;
+	}
+}
+
+relation NodeNode {
+	contents.legacy.Node playsRole parentNode;
+	contents.legacy.Node playsRole childNodes {
+		multiplicity *;
+	}
+}
+
+relation NodePersistentGroup {
+	contents.legacy.Node playsRole nodes {
+		multiplicity *;
+	}
+	groups.legacy.PersistentGroup playsRole accessibilityGroup;
 }
 
