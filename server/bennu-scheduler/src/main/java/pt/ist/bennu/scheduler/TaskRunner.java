@@ -7,6 +7,17 @@ public class TaskRunner implements Runnable {
     CronTask task;
     String taskId;
 
+    public TaskRunner(String cronTaskClassName) throws Exception {
+        Class<? extends CronTask> taskClass;
+        try {
+            taskClass = (Class<? extends CronTask>) Class.forName(cronTaskClassName);
+            this.task = taskClass.newInstance();
+            setTaskId(null);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            throw e;
+        }
+    }
+
     public TaskRunner(CronTask task) {
         this.task = task;
         setTaskId(null);

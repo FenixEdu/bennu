@@ -33,18 +33,14 @@ public class TaskSchedule extends TaskSchedule_Base {
 
     @Atomic(mode = TxMode.READ)
     public TaskRunner getTaskRunner() {
-
-        Class<? extends CronTask> taskClass;
-        try {
-            if (taskRunner == null) {
-                taskClass = (Class<? extends CronTask>) Class.forName(getTaskClassName());
-                taskRunner = new TaskRunner(taskClass.newInstance());
+        if (taskRunner == null) {
+            try {
+                taskRunner = new TaskRunner(getTaskClassName());
+            } catch (Exception e) {
+                throw new Error(e);
             }
-            return taskRunner;
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
         }
+        return taskRunner;
     }
 
     public String getTaskId() {

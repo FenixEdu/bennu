@@ -351,6 +351,10 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         }
     }
 
+    public static void runNow(final String taskClassName) throws Exception {
+        queue(new TaskRunner(taskClassName));
+    }
+
     public static final void addTask(String className, Task taskAnnotation) {
         LOG.info("Register Task : {} with name {}", className, taskAnnotation.englishTitle());
         tasks.put(className, taskAnnotation);
