@@ -25,7 +25,7 @@
 package pt.ist.bennu.core.domain;
 
 import pt.ist.bennu.core.domain.groups.legacy.IRoleEnum;
-import pt.ist.bennu.core.util.legacy.BundleUtil;
+import pt.ist.bennu.core.util.legacy.LegacyBundleUtil;
 
 /**
  * 
@@ -40,7 +40,7 @@ public enum RoleType implements IRoleEnum {
 
     @Override
     public String getPresentationName() {
-        return BundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.roleType.name."
+        return LegacyBundleUtil.getStringFromResourceBundle("resources/MyorgResources", "label.persistent.group.roleType.name."
                 + name());
     }
 

@@ -45,8 +45,8 @@ import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
  * @author Luis Cruz
  * 
  */
-public class BundleUtil {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(BundleUtil.class);
+public class LegacyBundleUtil {
+    protected static final Logger LOGGER = LoggerFactory.getLogger(LegacyBundleUtil.class);
 
     public static String getStringFromResourceBundle(final String bundle, final String key) throws MissingResourceException {
         return getStringFromResourceBundle(bundle, Language.getLocale(), key);
@@ -106,7 +106,7 @@ public class BundleUtil {
         ClassNameBundle annotation = someClass.getAnnotation(ClassNameBundle.class);
         if (annotation != null) {
             String key = annotation.key();
-            return BundleUtil.getFormattedStringFromResourceBundle(annotation.bundle(),
+            return LegacyBundleUtil.getFormattedStringFromResourceBundle(annotation.bundle(),
                     !StringUtils.isEmpty(key) ? key : "label." + someClass.getName());
         }
         return someClass.getName();

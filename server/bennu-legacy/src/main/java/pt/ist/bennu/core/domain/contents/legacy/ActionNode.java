@@ -28,7 +28,7 @@ import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.groups.legacy.PersistentGroup;
 import pt.ist.bennu.core.presentationTier.servlets.filters.FunctionalityFilter;
 import pt.ist.bennu.core.presentationTier.servlets.filters.FunctionalityFilter.FunctionalityInfo;
-import pt.ist.bennu.core.util.legacy.BundleUtil;
+import pt.ist.bennu.core.util.legacy.LegacyBundleUtil;
 import pt.ist.fenixframework.Atomic;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
@@ -105,7 +105,7 @@ public class ActionNode extends ActionNode_Base {
         final String bundle = getLinkBundle();
         final String key = getLinkKey();
         try {
-            return BundleUtil.getMultilanguageString(bundle, key);
+            return LegacyBundleUtil.getMultilanguageString(bundle, key);
         } catch (java.util.MissingResourceException e) {
             e.printStackTrace();
             return new MultiLanguageString(getLinkKey());

@@ -26,7 +26,7 @@ package pt.ist.bennu.core.domain.contents.legacy;
 
 import pt.ist.bennu.core.domain.VirtualHost;
 import pt.ist.bennu.core.domain.groups.legacy.PersistentGroup;
-import pt.ist.bennu.core.util.legacy.BundleUtil;
+import pt.ist.bennu.core.util.legacy.LegacyBundleUtil;
 import pt.ist.fenixframework.Atomic;
 import pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString;
 
@@ -67,7 +67,7 @@ public class LinkNode extends LinkNode_Base {
     public MultiLanguageString getLink() {
         final String bundle = getLinkBundle();
         final String key = getLinkKey();
-        return BundleUtil.getMultilanguageString(bundle, key);
+        return LegacyBundleUtil.getMultilanguageString(bundle, key);
     }
 
     @Override
