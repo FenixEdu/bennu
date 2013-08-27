@@ -16,6 +16,7 @@
  */
 package pt.ist.bennu.core.domain;
 
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 
 /**
@@ -25,11 +26,27 @@ import pt.ist.fenixframework.FenixFramework;
  */
 public class Bennu extends Bennu_Base {
     public static Bennu getInstance() {
+        if (FenixFramework.getDomainRoot().getBennu() == null) {
+            initialize();
+        }
         return FenixFramework.getDomainRoot().getBennu();
+    }
+
+    @Atomic
+    private static void initialize() {
+        new Bennu();
+    }
+
+    private void checkIsSingleton() {
+        Bennu bennu = Bennu.getInstance();
+        if (bennu != null && bennu != this) {
+            throw new Error("There can only be one! (instance of Bennu)");
+        }
     }
 
     public Bennu() {
         super();
+        checkIsSingleton();
         FenixFramework.getDomainRoot().setBennu(this);
     }
 }
