@@ -67,5 +67,4 @@ public class BennuCoreDomainException extends DomainException {
     public static BennuCoreDomainException dynamicGroupNotFound(String name) {
         return new BennuCoreDomainException("error.bennu.core.dynamic.group.not.found", name);
     }
-
 }

@@ -14,11 +14,15 @@ import com.google.gson.JsonPrimitive;
 public class BigIntegerJsonAdapter implements JsonViewer<BigInteger>, JsonCreator<BigInteger> {
     @Override
     public BigInteger create(JsonElement json, JsonBuilder ctx) {
-        return new BigInteger(json.getAsString());
+        try {
+            return json.getAsBigInteger();
+        } catch (NumberFormatException e) {
+            throw BennuCoreJsonException.valueIsNotAnInteger(json.toString());
+        }
     }
 
     @Override
     public JsonElement view(BigInteger obj, JsonBuilder ctx) {
-        return new JsonPrimitive(obj.toString());
+        return new JsonPrimitive(obj);
     }
 }
