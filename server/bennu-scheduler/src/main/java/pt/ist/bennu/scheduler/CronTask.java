@@ -1,10 +1,11 @@
 package pt.ist.bennu.scheduler;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ import com.google.common.base.Joiner;
 public abstract class CronTask implements Runnable {
     private Logger logger;
     protected transient ExecutionLog log;
+    private PrintWriter taskLogWriter;
 
     public String getLocalizedName() {
         return SchedulerSystem.getTaskName(getClassName());
@@ -31,6 +33,18 @@ public abstract class CronTask implements Runnable {
             logger = LoggerFactory.getLogger(getClassName());
         }
         return logger;
+    }
+
+    public PrintWriter getTaskLogWriter() {
+        if (taskLogWriter == null) {
+            try {
+                File logFile = createFile("log");
+                taskLogWriter = new PrintWriter(logFile);
+            } catch (FileNotFoundException e) {
+                throw new Error(e);
+            }
+        }
+        return taskLogWriter;
     }
 
     public abstract void runTask();
@@ -54,6 +68,7 @@ public abstract class CronTask implements Runnable {
     private void resetLoggers() {
         logger = null;
         log = null;
+        taskLogWriter = null;
     }
 
     public ExecutionLog createLog() {
@@ -79,11 +94,15 @@ public abstract class CronTask implements Runnable {
         return Joiner.on("/").join(SchedulerSystem.getLogsPath(), className.replace('.', '_'), id.replace('-', '_'), filename);
     }
 
-    public File output(String filename, byte[] fileContent, boolean append) {
+    private File createFile(String filename) {
         final String absPath = getAbsolutePath(filename);
         final File file = new File(absPath);
         file.getParentFile().mkdirs();
-        getLogger().debug("Write to {}", absPath);
+        return file;
+    }
+
+    public File output(String filename, byte[] fileContent, boolean append) {
+        File file = createFile(filename);
         try (FileOutputStream fos = new FileOutputStream(file, append)) {
             fos.write(fileContent);
             fos.flush();
@@ -100,14 +119,11 @@ public abstract class CronTask implements Runnable {
     }
 
     protected final void taskLog(String format, Object... args) {
-        if (!StringUtils.endsWith(format, "\n")) {
-            format = format.concat("\n");
-        }
-        output("log", String.format(format, args).getBytes(), true);
+        getTaskLogWriter().printf(format, args);
     }
 
-    protected final void taskLog(String log) {
-        taskLog(log, new Object[0]);
+    protected final void taskLog() {
+        getTaskLogWriter().println();
     }
 
     public <T extends ExecutionLog> T getExecutionLog() {
