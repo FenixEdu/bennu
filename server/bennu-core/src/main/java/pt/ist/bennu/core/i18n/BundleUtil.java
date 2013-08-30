@@ -20,6 +20,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import java.util.regex.Matcher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +40,7 @@ public class BundleUtil {
         try {
             String message = ResourceBundle.getBundle(bundle, locale).getString(key);
             for (int i = 0; i < args.length; i++) {
-                message = message.replaceAll("\\{" + i + "\\}", args[i] == null ? "" : args[i]);
+                message = message.replaceAll("\\{" + i + "\\}", args[i] == null ? "" : Matcher.quoteReplacement(args[i]));
             }
             return message;
         } catch (MissingResourceException e) {
