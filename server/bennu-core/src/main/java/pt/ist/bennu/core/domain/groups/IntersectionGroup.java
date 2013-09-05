@@ -24,7 +24,6 @@ import java.util.Set;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -108,7 +107,6 @@ public class IntersectionGroup extends IntersectionGroup_Base {
     /**
      * @see #getInstance(Set)
      */
-    @Atomic
     public static IntersectionGroup getInstance(final Group... children) {
         return getInstance(new HashSet<>(Arrays.asList(children)));
     }

@@ -17,6 +17,7 @@
 package pt.ist.bennu.core.domain;
 
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 
 /**
@@ -35,7 +36,7 @@ public class Bennu extends Bennu_Base {
         return FenixFramework.getDomainRoot().getBennu();
     }
 
-    @Atomic
+    @Atomic(mode = TxMode.WRITE)
     private static void initialize() {
         if (FenixFramework.getDomainRoot().getBennu() == null) {
             new Bennu();

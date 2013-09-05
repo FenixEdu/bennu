@@ -23,7 +23,6 @@ import java.util.Set;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.domain.User;
-import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -110,7 +109,6 @@ public class UserGroup extends UserGroup_Base {
     /**
      * @see #getInstance(Set)
      */
-    @Atomic
     public static UserGroup getInstance(User... users) {
         return getInstance(new HashSet<>(Arrays.asList(users)));
     }

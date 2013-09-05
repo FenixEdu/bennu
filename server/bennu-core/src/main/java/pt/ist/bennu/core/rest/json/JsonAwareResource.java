@@ -11,6 +11,7 @@ import pt.ist.bennu.json.JsonCreator;
 import pt.ist.bennu.json.JsonUpdater;
 import pt.ist.bennu.json.JsonViewer;
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
@@ -82,7 +83,7 @@ public class JsonAwareResource {
         return (T) innerCreate(jsonData, clazz, jsonCreatorClass);
     }
 
-    @Atomic
+    @Atomic(mode = TxMode.WRITE)
     private Object innerCreate(String jsonData, Class<?> clazz, Class<? extends JsonCreator<?>> jsonCreatorClass) {
         final JsonElement parse = parse(jsonData);
         return BUILDER.create(parse, clazz, jsonCreatorClass);
@@ -98,7 +99,7 @@ public class JsonAwareResource {
         return (T) innerUpdate(jsonData, object, jsonUpdaterClass);
     }
 
-    @Atomic
+    @Atomic(mode = TxMode.WRITE)
     private Object innerUpdate(String jsonData, Object object, Class<? extends JsonUpdater<?>> jsonUpdaterClass) {
         final JsonElement parse = parse(jsonData);
         return BUILDER.update(parse, object, jsonUpdaterClass);
