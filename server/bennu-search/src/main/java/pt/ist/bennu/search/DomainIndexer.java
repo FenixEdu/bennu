@@ -101,10 +101,10 @@ public class DomainIndexer {
     public void indexDomainObjects(Collection<IndexDocument> documents) {
         Map<Class<? extends Indexable>, Collection<IndexDocument>> map = new HashMap<>();
         for (IndexDocument document : documents) {
-            if (!map.containsKey(document.getClass())) {
+            if (!map.containsKey(document.getIndexableClass())) {
                 map.put(document.getIndexableClass(), new ArrayList<IndexDocument>());
             }
-            map.get(document.getClass()).add(document);
+            map.get(document.getIndexableClass()).add(document);
         }
         indexDomainObjects(map);
     }
@@ -131,13 +131,17 @@ public class DomainIndexer {
     }
 
     public void unindexDomainObject(IndexDocument document) {
-        try (FSDirectory directory = getLuceneDomainDirectory(document.getIndexableClass(), false)) {
+        unindexDomainObject(document.getIndexableClass(), document.getIndexId());
+    }
+
+    public void unindexDomainObject(Class<? extends Indexable> type, String oid) {
+        try (FSDirectory directory = getLuceneDomainDirectory(type, false)) {
             if (directory != null) {
                 try (StandardAnalyzer analyser = new StandardAnalyzer(VERSION)) {
                     try (IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(VERSION, analyser))) {
                         QueryParser parser =
                                 new QueryParser(VERSION, DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), analyser);
-                        writer.deleteDocuments(parser.parse(document.getIndexId()));
+                        writer.deleteDocuments(parser.parse(oid));
                     }
                 }
             }
@@ -146,6 +150,23 @@ public class DomainIndexer {
         } catch (IOException e) {
             throw new DomainIndexException(e);
         }
+    }
+
+    public void reindexType(Collection<IndexDocument> documents, Collection<Class<? extends Indexable>> types) {
+        for (Class<? extends Indexable> type : types) {
+            try (FSDirectory directory = getLuceneDomainDirectory(type, false)) {
+                if (directory != null) {
+                    try (StandardAnalyzer analyser = new StandardAnalyzer(VERSION)) {
+                        try (IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(VERSION, analyser))) {
+                            writer.deleteAll();
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                throw new DomainIndexException(e);
+            }
+        }
+        indexDomainObjects(documents);
     }
 
     public <T extends Indexable> List<T> search(Class<T> indexedClass, IndexableField defaultField, String query, int maxHits) {
