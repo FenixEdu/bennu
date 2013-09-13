@@ -4,36 +4,38 @@ import java.lang.reflect.Modifier;
 
 import org.joda.time.DateTime;
 
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.fenixframework.pstm.PersistentRoot;
-import pt.ist.fenixframework.pstm.Transaction;
-import dml.DomainClass;
-import dml.DomainModel;
+import pt.ist.fenixframework.dml.DomainClass;
+import pt.ist.fenixframework.dml.DomainModel;
 
 public class SchedulerSystem extends SchedulerSystem_Base {
 
-    private static SchedulerSystem instance = null;
-
     private SchedulerSystem() {
         super();
-        final SchedulerSystem root = PersistentRoot.getRoot(SchedulerSystem.class.getName());
+        final SchedulerSystem root = FenixFramework.getDomainRoot().getSchedulerSystem();
         if (root != null && root != this) {
             throw new Error("Trying to create a 2nd instance of SchedulerSystemRoot! There can only be one!");
         }
     }
 
-    public static SchedulerSystem getInstance() {
-        if (instance == null) {
-            instance = PersistentRoot.getRoot(SchedulerSystem.class.getName());
-            if (instance == null) {
-                instance = new SchedulerSystem();
-                PersistentRoot.addRoot(SchedulerSystem.class.getName(), instance);
-            }
-            instance.initTasks();
+    @Atomic
+    public static void initialize() {
+        if (FenixFramework.getDomainRoot().getSchedulerSystem() == null) {
+            FenixFramework.getDomainRoot().setSchedulerSystem(new SchedulerSystem());
         }
-        return instance;
+        FenixFramework.getDomainRoot().getSchedulerSystem().initTasks();
     }
 
+    public static SchedulerSystem getInstance() {
+        SchedulerSystem system = FenixFramework.getDomainRoot().getSchedulerSystem();
+        if (system == null) {
+            initialize();
+        }
+        return FenixFramework.getDomainRoot().getSchedulerSystem();
+    }
+
+    @Atomic
     public static void queueTasks() {
         final SchedulerSystem schedulerSystem = getInstance();
         for (final Task task : schedulerSystem.getTaskSet()) {
@@ -44,7 +46,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     private void queueTasks(final Task task) {
-        if (hasPendingTask()) {
+        if (getPendingTask() != null) {
             getPendingTask().queue(task);
         } else {
             setPendingTask(task);
@@ -106,27 +108,9 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         }
     }
 
+    @Atomic
     private static Task popPendingTaskService() {
-        Task result = null;
-        boolean committed = false;
-        try {
-            if (jvstm.Transaction.current() != null) {
-                jvstm.Transaction.commit();
-            }
-            Transaction.begin();
-
-            result = SchedulerSystem.getInstance().popPendingTask();
-
-            jvstm.Transaction.checkpoint();
-            committed = true;
-        } finally {
-            if (!committed) {
-                Transaction.abort();
-                Transaction.begin();
-            }
-            Transaction.currentFenixTransaction().setReadOnly();
-        }
-        return result;
+        return SchedulerSystem.getInstance().popPendingTask();
     }
 
     private Task popPendingTask() {
