@@ -50,7 +50,7 @@ abstract public class GenericFile extends GenericFile_Base {
         super.setContentType(guessContentType(normalizedFilename));
     }
 
-    public void setContent(byte[] content) {
+    private void setContent(byte[] content) {
         long size = (content == null) ? 0 : content.length;
         setSize(Long.valueOf(size));
         final FileStorage fileStorage = getFileStorage();
