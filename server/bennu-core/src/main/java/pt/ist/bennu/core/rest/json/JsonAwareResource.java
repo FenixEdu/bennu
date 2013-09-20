@@ -1,5 +1,6 @@
 package pt.ist.bennu.core.rest.json;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
@@ -70,6 +71,28 @@ public class JsonAwareResource {
     public final String view(Object object, Class<?> objectClass, String collectionKey, Class<? extends JsonViewer<?>> viewerClass) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add(collectionKey, BUILDER.view(object, objectClass, viewerClass));
+        return GSON.toJson(jsonObject);
+    }
+
+    public final String viewPaginated(List<?> object, String collectionKey, int skip, int pageSize) {
+        return viewPaginated(object, collectionKey, null, skip, pageSize);
+    }
+
+    public final String viewPaginated(List<?> object, String collectionKey, Class<? extends JsonViewer<?>> viewerClass, int skip,
+            int pageSize) {
+        if (object == null) {
+            return viewPaginated(object, (Class<?>) null, collectionKey, viewerClass, skip, pageSize);
+        }
+        return viewPaginated(object, object.getClass(), collectionKey, viewerClass, skip, pageSize);
+    }
+
+    public final String viewPaginated(List<?> object, Class<?> objectClass, String collectionKey,
+            Class<? extends JsonViewer<?>> viewerClass, int skip, int pageSize) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add(collectionKey,
+                BUILDER.view(object.subList(Math.min(object.size(), skip), Math.min(object.size(), skip + pageSize)),
+                        objectClass, viewerClass));
+        jsonObject.addProperty("total", object.size());
         return GSON.toJson(jsonObject);
     }
 
