@@ -31,11 +31,11 @@ public class BuildingState extends DSLState {
             appendToBuffer(":");
         }
         int indexOfSpace = value.indexOf(EMPTY_SPACE);
-        if (indexOfSpace > 0) {
+        if (!value.startsWith("[") && indexOfSpace > 0) {
             appendToBuffer("\"");
         }
         appendToBuffer(value);
-        if (indexOfSpace > 0) {
+        if (!value.startsWith("[") && indexOfSpace > 0) {
             appendToBuffer("\"");
         }
     }
@@ -57,6 +57,16 @@ public class BuildingState extends DSLState {
 
     public SearchState wildCardMatch(IndexableField field, String wildCardedValue) {
         write(null, field, wildCardedValue);
+        return new SearchState(this);
+    }
+
+    public SearchState rangeMatch(String from, String to) {
+        write(null, null, "[" + QueryParser.escape(from) + " TO " + QueryParser.escape(to) + "]");
+        return new SearchState(this);
+    }
+
+    public SearchState rangeMatch(IndexableField field, String from, String to) {
+        write(null, field, "[" + QueryParser.escape(from) + " TO " + QueryParser.escape(to) + "]");
         return new SearchState(this);
     }
 
