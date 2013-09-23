@@ -25,13 +25,6 @@ package pt.ist.bennu.core.domain;
  * 
  */
 
-valueType com.google.gson.JsonElement as JsonElement {
-    externalizeWith {
-        String toString();
-    }
-    internalizeWith pt.ist.bennu.core.util.JsonImporter.importJson();
-}
-
 valueType pt.ist.dsi.commons.i18n.LocalizedString as LocalizedString {
     externalizeWith {
         JsonElement json();
