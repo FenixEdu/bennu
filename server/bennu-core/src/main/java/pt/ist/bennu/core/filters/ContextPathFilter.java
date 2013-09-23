@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.util.CookieReaderUtils;
 
+import com.google.common.base.Strings;
+
 /**
  * 
  * @author Luis Cruz
@@ -60,9 +62,11 @@ public class ContextPathFilter implements Filter {
         final String contextPath = request.getServletContext().getContextPath();
         Cookie cookie = CookieReaderUtils.getCookieForName("contextPath", httpServletRequest);
         if (cookie == null) {
-            Cookie newCookie = new Cookie(CONTEXT_PATH_COOKIE_NAME, contextPath);
-            newCookie.setPath("/");
-            httpServletResponse.addCookie(newCookie);
+            if (!Strings.isNullOrEmpty(contextPath)) {
+                Cookie newCookie = new Cookie(CONTEXT_PATH_COOKIE_NAME, contextPath);
+                newCookie.setPath("/");
+                httpServletResponse.addCookie(newCookie);
+            }
         }
         chain.doFilter(request, response);
     }

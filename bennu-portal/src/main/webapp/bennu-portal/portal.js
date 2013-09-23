@@ -18,7 +18,7 @@ $(function() {
 		return cookies[name];
 	}
 
-	var contextPath = readCookie("contextPath") || "/";
+	var contextPath = readCookie("contextPath") || "";
 	window.contextPath = contextPath;
 	
 	var developmentMode = readCookie("developmentMode");
