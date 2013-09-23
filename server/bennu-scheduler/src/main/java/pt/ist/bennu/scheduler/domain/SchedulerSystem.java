@@ -196,7 +196,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     private void ensureLoggingStorageDirExists(final LocalFileSystemStorage loggingStorage) {
         if (loggingStorage != null) {
-            final String loggingStoragePath = loggingStorage.getPath();
+            final String loggingStoragePath = loggingStorage.getAbsolutePath();
             File tmpDirFile = new File(loggingStoragePath);
             if (!tmpDirFile.exists()) {
                 LOG.info("Logging storage {} doesn't exist in filesystem, run mkdir.", loggingStoragePath);
