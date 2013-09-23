@@ -1,24 +1,31 @@
 define([ 'jquery', 'backbone', 'marionette', 'app', 'text!templates/SingleTask.html' ], function($, Backbone,
-        Marionette, App, tpl) {
+		Marionette, App, tpl) {
 
-    return Backbone.Marionette.ItemView.extend({
+	return Backbone.Marionette.ItemView.extend({
 
-        template : tpl,
-        tagName : 'tr',
+		template : tpl,
+		tagName : 'tr',
 
-        modelEvents : {
-            "change" : "render"
-        },
+		modelEvents : {
+			"change" : "render"
+		},
 
-        events : {
-            "click #run-now" : "runNow",
-        },
+		events : {
+			"click #run-now" : "runNow",
+		},
 
-        runNow : function() {
-            var taskName = this.model.get("type");
-            $.post("../api/bennu-scheduler/tasks/" + taskName).always(function() {
-                App.Router.navigate("#logs", true);
-            });
-        },
-    });
+		runNow : function() {
+			var taskName = this.model.get("type");
+			var runNowURL = "../api/bennu-scheduler/tasks/" + taskName;
+			$.post({
+				url : runNowURL,
+				async : false,
+				cache : false,
+				success : function() {
+					App.navigate("#logs", true);
+				}
+			});
+		}
+
+	});
 });
