@@ -48,6 +48,6 @@ public class TaskResource extends BennuRestResource {
         } catch (Exception e) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
-        return Response.status(Status.NO_CONTENT).build();
+        return Response.status(Status.OK).build();
     }
 }

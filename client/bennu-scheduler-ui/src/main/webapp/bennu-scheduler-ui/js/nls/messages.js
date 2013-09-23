@@ -7,7 +7,8 @@ define({
     	'customtaskloglist':'Custom Tasks Logs',
     	'schedules':'schedules',
     	'Task logging configuration':'Task logging configuration',
-    	'taskloglist':'Scheduled Tasks Logs'
+    	'taskloglist':'Scheduled Tasks Logs',
+    	'action.run.now':'Run Now'
     },
     "pt-pt": true
 });
