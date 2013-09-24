@@ -16,17 +16,14 @@
  */
 package pt.ist.bennu.core.servlets;
 
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Enumeration;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * 
@@ -48,25 +45,9 @@ public class BennuCoreContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
+        FenixFramework.shutdown();
         this.thisClassLoader = this.getClass().getClassLoader();
         interruptThreads();
-        deregisterJDBCDrivers();
-    }
-
-    private void deregisterJDBCDrivers() {
-        Enumeration<Driver> drivers = DriverManager.getDrivers();
-        while (drivers.hasMoreElements()) {
-            Driver driver = drivers.nextElement();
-            ClassLoader loader = driver.getClass().getClassLoader();
-            if (loader != null && loader.equals(this.thisClassLoader)) {
-                try {
-                    DriverManager.deregisterDriver(driver);
-                    logger.debug("Successfully deregistered JDBC driver " + driver);
-                } catch (SQLException e) {
-                    logger.warn("Failed to deregister JDBC driver " + driver + ". This may cause a potential leak.", e);
-                }
-            }
-        }
     }
 
     private void interruptThreads() {
