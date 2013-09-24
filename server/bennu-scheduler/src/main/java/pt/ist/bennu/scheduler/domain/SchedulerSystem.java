@@ -215,7 +215,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     /**
      * Initializes the scheduler.
      */
-    @Atomic(mode = TxMode.WRITE)
     private static void bootstrap() {
         LOG.info("Running Scheduler bootstrap");
         if (scheduler == null) {
@@ -227,8 +226,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             cleanNonExistingSchedules();
             initSchedules();
             spawnConsumers();
-            spawnLeaseTimerTask();
             spawnRefreshSchedulesTask();
+            spawnLeaseTimerTask();
             scheduler.start();
         }
     }
@@ -237,15 +236,18 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * If the scheduler is initialized schedules the task that updates the lease time every getLeaseTimeMinutes() / 2 minutes
      */
     private static void spawnLeaseTimerTask() {
+        int period = getLeaseTimeMinutes() * 60 * 1000 / 2;
         new Timer(true).scheduleAtFixedRate(new TimerTask() {
             @Atomic(mode = TxMode.WRITE)
             @Override
             public void run() {
-                final DateTime lease = SchedulerSystem.getInstance().lease();
-                LOG.info("Leasing until {}", lease);
+                if (isRunning()) {
+                    final DateTime lease = SchedulerSystem.getInstance().lease();
+                    LOG.info("Leasing until {}", lease);
+                }
             }
 
-        }, 0, getLeaseTimeMinutes() * 60 * 1000 / 2);
+        }, 0, period);
     }
 
     /**
@@ -305,6 +307,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     /**
      * Add to scheduler all existing tasks schedules.
      */
+    @Atomic(mode = TxMode.READ)
     private static void initSchedules() {
         for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskScheduleSet()) {
             schedule(schedule);
