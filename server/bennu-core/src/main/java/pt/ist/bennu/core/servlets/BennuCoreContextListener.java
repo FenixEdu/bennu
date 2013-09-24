@@ -20,9 +20,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pt.ist.fenixframework.FenixFramework;
 
 /**
@@ -34,9 +31,6 @@ import pt.ist.fenixframework.FenixFramework;
  */
 @WebListener
 public class BennuCoreContextListener implements ServletContextListener {
-
-    private static final Logger logger = LoggerFactory.getLogger(BennuCoreContextListener.class);
-
     private ClassLoader thisClassLoader;
 
     @Override
