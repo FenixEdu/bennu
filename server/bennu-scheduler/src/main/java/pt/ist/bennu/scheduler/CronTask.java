@@ -5,13 +5,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.bennu.scheduler.annotation.Task;
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.bennu.scheduler.log.ExecutionLog;
+import pt.ist.esw.advice.pt.ist.fenixframework.AtomicInstance;
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.base.Joiner;
 
@@ -19,6 +24,12 @@ public abstract class CronTask implements Runnable {
     private Logger logger;
     protected transient ExecutionLog log;
     private PrintWriter taskLogWriter;
+    private Atomic atomic;
+
+    public CronTask() {
+        Task annotation = this.getClass().getAnnotation(Task.class);
+        atomic = new AtomicInstance(annotation.readOnly() ? TxMode.READ : TxMode.WRITE, true);
+    }
 
     public String getLocalizedName() {
         return SchedulerSystem.getTaskName(getClassName());
@@ -75,9 +86,16 @@ public abstract class CronTask implements Runnable {
         return new ExecutionLog(getClassName());
     }
 
-    @Atomic
-    private void innerAtomicRun() {
-        runTask();
+    private void innerAtomicRun() throws Exception {
+        FenixFramework.getTransactionManager().withTransaction(new Callable<Void>() {
+
+            @Override
+            public Void call() throws Exception {
+                runTask();
+                return null;
+            }
+
+        }, atomic);
     }
 
     /**

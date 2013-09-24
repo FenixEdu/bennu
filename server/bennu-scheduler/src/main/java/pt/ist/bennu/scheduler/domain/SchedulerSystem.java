@@ -3,16 +3,16 @@ package pt.ist.bennu.scheduler.domain;
 import it.sauronsoftware.cron4j.Scheduler;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.joda.time.DateTime;
@@ -36,6 +36,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     public static LinkedBlockingQueue<TaskRunner> queue;
     public static Set<TaskRunner> runningTasks;
     public static Set<TaskSchedule> scheduledTasks;
+    private static final List<Thread> activeConsumers = new ArrayList<Thread>();
 
     private static final Integer DEFAULT_LEASE_TIME_MINUTES = 5;
     private static final Integer DEFAULT_QUEUE_THREADS_NUMBER = 2;
@@ -278,11 +279,11 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     private static void spawnConsumers() {
-        final ExecutorService threadPool = Executors.newFixedThreadPool(getQueueThreadsNumber());
-
         for (int i = 1; i <= getQueueThreadsNumber(); i++) {
             LOG.info("Launching queue consumer {}", i);
-            threadPool.execute(new ProcessQueue());
+            Thread thread = new Thread(new ProcessQueue());
+            thread.start();
+            activeConsumers.add(thread);
         }
     }
 
@@ -364,10 +365,23 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * When context is gracefully destroyed, set the lease time to null so that any other server instance
      * can start the scheduler.
      */
+
     @Atomic(mode = TxMode.WRITE)
-    public static void destroy() {
-        LOG.info("Revert lease to null");
+    private static void resetLease() {
+        LOG.info("Reset lease to null");
         SchedulerSystem.getInstance().setLease(null);
+    }
+
+    public static void destroy() {
+        if (isActive()) {
+            LOG.info("stopping scheduler");
+            scheduler.stop();
+            for (final Thread consumer : activeConsumers) {
+                LOG.info("interrupted consumer thread {}", consumer.getName());
+                consumer.interrupt();
+            }
+            resetLease();
+        }
     }
 
     public static Map<String, Task> getTasks() {
