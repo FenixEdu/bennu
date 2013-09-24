@@ -33,7 +33,7 @@ public class ExecutionLogContext {
             return true;
         }
         final boolean result = modified > lastModified;
-        LOG.debug("File has changed ? : {}", result);
+        LOG.trace("File has changed ? : {}", result);
         if (result) {
             lastModified = modified;
             return true;

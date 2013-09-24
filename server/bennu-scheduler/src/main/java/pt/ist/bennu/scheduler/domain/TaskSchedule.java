@@ -26,8 +26,19 @@ public class TaskSchedule extends TaskSchedule_Base {
         SchedulerSystem.schedule(this);
     }
 
-    public void delete() {
+    public TaskSchedule(final String taskClassName, Boolean runOnce) {
+        this(taskClassName);
+        setRunOnce(runOnce);
+        SchedulerSystem.schedule(this);
+    }
+
+    public void unscheduleAndDelete() {
         SchedulerSystem.unschedule(this);
+        delete();
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public void delete() {
         setSchedulerSystem(null);
         super.deleteDomainObject();
     }

@@ -12,8 +12,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.lang.StringUtils;
-
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.scheduler.annotation.Task;
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
@@ -58,8 +56,7 @@ public class TaskResource extends BennuRestResource {
 
     @Atomic(mode = TxMode.WRITE)
     private TaskSchedule createRunOnceTaskSchedule(String name) {
-        TaskSchedule taskSchedule = new TaskSchedule(name, StringUtils.EMPTY);
-        taskSchedule.setRunOnce(true);
+        TaskSchedule taskSchedule = new TaskSchedule(name, Boolean.TRUE);
         return taskSchedule;
     }
 

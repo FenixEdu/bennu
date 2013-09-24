@@ -162,7 +162,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                 if (shouldRun) {
                     bootstrap();
                 } else {
-                    LOG.info("Lease is not gone. Wait for it ...");
+                    LOG.debug("Lease is not gone. Wait for it ...");
                 }
                 setShouldRun(false);
             }
@@ -192,24 +192,17 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             LOG.info("Create sensible default {} for logging storage", tmpDir);
             getInstance().setLoggingStorage(new LocalFileSystemStorage("schedulerSystemLoggingStorage", tmpDir, 0));
         }
-
     }
 
-    private void ensureLoggingStorageDirExists(final LocalFileSystemStorage loggingStorage) {
-        if (loggingStorage != null) {
-            final String loggingStoragePath = loggingStorage.getAbsolutePath();
+    private static void ensureLoggingStorageDirExists() {
+        if (getInstance().getLoggingStorage() != null) {
+            final String loggingStoragePath = getInstance().getLoggingStorage().getAbsolutePath();
             File tmpDirFile = new File(loggingStoragePath);
             if (!tmpDirFile.exists()) {
-                LOG.info("Logging storage {} doesn't exist in filesystem, run mkdir.", loggingStoragePath);
+                LOG.debug("Logging storage {} doesn't exist in filesystem, running mkdir.", loggingStoragePath);
                 tmpDirFile.mkdir();
             }
         }
-    }
-
-    @Override
-    public void setLoggingStorage(LocalFileSystemStorage loggingStorage) {
-        super.setLoggingStorage(loggingStorage);
-        ensureLoggingStorageDirExists(loggingStorage);
     }
 
     /**
@@ -223,6 +216,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         }
         if (!scheduler.isStarted()) {
             ensureLoggingStorage();
+            ensureLoggingStorageDirExists();
             cleanNonExistingSchedules();
             initSchedules();
             spawnConsumers();
@@ -238,13 +232,17 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     private static void spawnLeaseTimerTask() {
         int period = getLeaseTimeMinutes() * 60 * 1000 / 2;
         new Timer(true).scheduleAtFixedRate(new TimerTask() {
-            @Atomic(mode = TxMode.WRITE)
             @Override
             public void run() {
                 if (isRunning()) {
-                    final DateTime lease = SchedulerSystem.getInstance().lease();
-                    LOG.info("Leasing until {}", lease);
+                    lease();
                 }
+            }
+
+            @Atomic(mode = TxMode.WRITE)
+            private void lease() {
+                final DateTime lease = SchedulerSystem.getInstance().lease();
+                LOG.debug("Leasing until {}", lease);
             }
 
         }, 0, period);
@@ -260,21 +258,22 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             @Override
             @Atomic(mode = TxMode.READ)
             public void run() {
-                LOG.info("Running refresh schedules");
+                LOG.debug("Running refresh schedules");
                 Set<TaskSchedule> domainSchedules = new HashSet<>(getInstance().getTaskScheduleSet());
                 for (TaskSchedule schedule : domainSchedules) {
                     if (!schedule.isScheduled()) {
-                        LOG.info("New schedule not scheduled before {} {}", schedule.getExternalId(), schedule.getTaskClassName());
+                        LOG.debug("New schedule not scheduled before {} {}", schedule.getExternalId(),
+                                schedule.getTaskClassName());
                         schedule(schedule);
                     }
                 }
                 for (TaskSchedule schedule : scheduledTasks) {
                     if (!domainSchedules.contains(schedule)) {
-                        LOG.info("schedule disappeared not unscheduled before {} {}", schedule.getExternalId());
+                        LOG.debug("schedule disappeared not unscheduled before {} {}", schedule.getExternalId());
                         unschedule(schedule);
                     }
                 }
-                LOG.info("Refresh schedules done");
+                LOG.debug("Refresh schedules done");
             }
 
         }, 0, 1 * 60 * 1000);
@@ -294,7 +293,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      */
     @Atomic(mode = TxMode.WRITE)
     private static void cleanNonExistingSchedules() {
-        for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskScheduleSet()) {
+        Set<TaskSchedule> scheduleSet = new HashSet<TaskSchedule>(SchedulerSystem.getInstance().getTaskScheduleSet());
+        for (TaskSchedule schedule : scheduleSet) {
             if (!tasks.containsKey(schedule.getTaskClassName())) {
                 LOG.warn("Class {} is no longer available. schedule {} - {} - {} deleted. ", schedule.getTaskClassName(),
                         schedule.getExternalId(), schedule.getTaskClassName(), schedule.getSchedule());
@@ -326,7 +326,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             if (schedule.isRunOnce()) {
                 runNow(schedule);
             } else {
-                LOG.info("schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+                LOG.debug("schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
                 schedule.setTaskId(scheduler.schedule(schedule.getSchedule(), new Runnable() {
 
                     @Override
@@ -339,7 +339,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                 scheduledTasks.add(schedule);
             }
         } else {
-            LOG.info("don't schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+            LOG.debug("don't schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
         }
     }
 
@@ -351,27 +351,27 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     public static void unschedule(TaskSchedule schedule) {
         if (isActive()) {
             if (schedule.isRunOnce()) {
-                LOG.info("unschedule run once {}. delete it.", schedule.getTaskClassName());
+                LOG.debug("unschedule run once {}. delete it.", schedule.getTaskClassName());
                 schedule.delete();
             } else {
-                LOG.info("unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+                LOG.debug("unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
                 scheduler.deschedule(schedule.getTaskId());
                 scheduledTasks.remove(schedule);
             }
         } else {
-            LOG.info("don't unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+            LOG.debug("don't unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
         }
     }
 
     @Atomic(mode = TxMode.WRITE)
     private static void runNow(TaskSchedule schedule) {
-        LOG.info("run once schedule {}", schedule.getTaskClassName());
+        LOG.debug("run once schedule {}", schedule.getTaskClassName());
         queue(schedule.getTaskRunner());
         unschedule(schedule);
     }
 
     public static final void addTask(String className, Task taskAnnotation) {
-        LOG.info("Register Task : {} with name {}", className, taskAnnotation.englishTitle());
+        LOG.debug("Register Task : {} with name {}", className, taskAnnotation.englishTitle());
         tasks.put(className, taskAnnotation);
     }
 
@@ -382,7 +382,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     @Atomic(mode = TxMode.WRITE)
     private static void resetLease() {
-        LOG.info("Reset lease to null");
+        LOG.debug("Reset lease to null");
         SchedulerSystem.getInstance().setLease(null);
     }
 
@@ -429,7 +429,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         synchronized (queue) {
             if (!queue.contains(taskRunner)) {
                 if (!runningTasks.contains(taskRunner)) {
-                    LOG.info("Add to queue {}", taskRunner.getTaskName());
+                    LOG.debug("Add to queue {}", taskRunner.getTaskName());
                     try {
                         queue.put(taskRunner);
                     } catch (InterruptedException e) {
@@ -437,10 +437,10 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                         Thread.currentThread().interrupt();
                     }
                 } else {
-                    LOG.info("Don't add to queue. Task is running {}", taskRunner.getTaskName());
+                    LOG.debug("Don't add to queue. Task is running {}", taskRunner.getTaskName());
                 }
             } else {
-                LOG.info("Don't add to queue. Already exists {}", taskRunner.getTaskName());
+                LOG.debug("Don't add to queue. Already exists {}", taskRunner.getTaskName());
             }
         }
     }

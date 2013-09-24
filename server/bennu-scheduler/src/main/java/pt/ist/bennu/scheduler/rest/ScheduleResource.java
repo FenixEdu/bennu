@@ -15,7 +15,6 @@ import javax.ws.rs.core.Response.Status;
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.bennu.scheduler.domain.TaskSchedule;
-import pt.ist.fenixframework.Atomic;
 
 @Path("/schedule")
 public class ScheduleResource extends BennuRestResource {
@@ -60,9 +59,8 @@ public class ScheduleResource extends BennuRestResource {
         return Response.status(Status.OK).build();
     }
 
-    @Atomic
-    public void clear(TaskSchedule task) {
-        task.delete();
+    private void clear(TaskSchedule task) {
+        task.unscheduleAndDelete();
     }
 
 }

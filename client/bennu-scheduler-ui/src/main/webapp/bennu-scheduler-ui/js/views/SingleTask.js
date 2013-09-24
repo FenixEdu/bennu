@@ -15,17 +15,11 @@ define([ 'jquery', 'backbone', 'marionette', 'app', 'text!templates/SingleTask.h
 		},
 
 		runNow : function() {
-			var taskName = this.model.get("type");
-			var runNowURL = "../api/bennu-scheduler/tasks/" + taskName;
-			$.post({
-				url : runNowURL,
-				async : false,
-				cache : false,
-				success : function() {
-					App.navigate("#logs", true);
-				}
-			});
-		}
+	           var taskName = this.model.get("type");
+	           $.post("../api/bennu-scheduler/tasks/" + taskName).always(function() {
+	               App.Router.navigate("#logs", true);
+	           });
+	       }
 
 	});
 });

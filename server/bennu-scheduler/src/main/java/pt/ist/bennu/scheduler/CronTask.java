@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.Callable;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public abstract class CronTask implements Runnable {
         if (taskLogWriter == null) {
             try {
                 File logFile = createFile("log");
-                taskLogWriter = new PrintWriter(logFile);
+                taskLogWriter = new PrintWriter(new FileOutputStream(logFile, true), true);
             } catch (FileNotFoundException e) {
                 throw new Error(e);
             }
@@ -115,8 +116,23 @@ public abstract class CronTask implements Runnable {
     private File createFile(String filename) {
         final String absPath = getAbsolutePath(filename);
         final File file = new File(absPath);
-        file.getParentFile().mkdirs();
-        return file;
+        try {
+            File dir = file.getParentFile();
+            if (!dir.exists()) {
+                getLogger().debug("create log dir {}", dir.getAbsolutePath());
+                dir.mkdirs();
+            }
+
+            if (!file.exists()) {
+                getLogger().debug("create log file {}", file.getAbsolutePath());
+                file.createNewFile();
+            }
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     public File output(String filename, byte[] fileContent, boolean append) {
@@ -137,11 +153,16 @@ public abstract class CronTask implements Runnable {
     }
 
     protected final void taskLog(String format, Object... args) {
-        getTaskLogWriter().printf(format, args);
+        PrintWriter writer = getTaskLogWriter();
+        if (args == null || args.length < 1) {
+            writer.println(format);
+        } else {
+            writer.printf(format, args);
+        }
     }
 
     protected final void taskLog() {
-        getTaskLogWriter().println();
+        taskLog(StringUtils.EMPTY);
     }
 
     public <T extends ExecutionLog> T getExecutionLog() {

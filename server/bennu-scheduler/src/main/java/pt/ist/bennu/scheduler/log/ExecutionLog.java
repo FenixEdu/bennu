@@ -8,7 +8,6 @@ import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import org.joda.time.DateTime;
 
@@ -80,7 +79,7 @@ public class ExecutionLog {
     }
 
     public ExecutionLog(String taskName) {
-        setId(UUID.randomUUID().toString());
+        setId(new DateTime().toString("MMddyyyy-kkmmss"));
         setSuccess(false);
         setStart(new DateTime());
         setTaskName(taskName);
@@ -139,13 +138,21 @@ public class ExecutionLog {
             return;
         }
         synchronized (getLock()) {
-            try (FileOutputStream fos = new FileOutputStream(new File(getLogFilePath()), true)) {
+            try (FileOutputStream fos = getLogFileOutputStream()) {
                 fos.write(json.getBytes());
                 fos.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public FileOutputStream getLogFileOutputStream() throws IOException {
+        File file = new File(getLogFilePath());
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        return new FileOutputStream(file, true);
     }
 
     protected String getLogFilePath() {

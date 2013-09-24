@@ -20,6 +20,6 @@ public class LoggingTask extends CronTask {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        } while (timestamp.isBefore(now.plusMinutes(3)));
+        } while (timestamp.isBefore(now.plusMinutes(1)));
     }
 }
