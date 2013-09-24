@@ -12,9 +12,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.lang.StringUtils;
+
 import pt.ist.bennu.core.rest.BennuRestResource;
 import pt.ist.bennu.scheduler.annotation.Task;
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
+import pt.ist.bennu.scheduler.domain.TaskSchedule;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -44,10 +49,18 @@ public class TaskResource extends BennuRestResource {
     public Response runTaskNow(@PathParam("name") String name) {
         accessControl("#managers");
         try {
-            SchedulerSystem.runNow(name);
+            createRunOnceTaskSchedule(name);
         } catch (Exception e) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
         return Response.status(Status.OK).build();
     }
+
+    @Atomic(mode = TxMode.WRITE)
+    private TaskSchedule createRunOnceTaskSchedule(String name) {
+        TaskSchedule taskSchedule = new TaskSchedule(name, StringUtils.EMPTY);
+        taskSchedule.setRunOnce(true);
+        return taskSchedule;
+    }
+
 }

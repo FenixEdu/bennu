@@ -301,7 +301,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                 schedule.delete();
             }
         }
-
     }
 
     /**
@@ -324,17 +323,21 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     @Atomic(mode = TxMode.READ)
     public static void schedule(final TaskSchedule schedule) {
         if (isActive()) {
-            LOG.info("schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
-            schedule.setTaskId(scheduler.schedule(schedule.getSchedule(), new Runnable() {
+            if (schedule.isRunOnce()) {
+                runNow(schedule);
+            } else {
+                LOG.info("schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+                schedule.setTaskId(scheduler.schedule(schedule.getSchedule(), new Runnable() {
 
-                @Override
-                @Atomic(mode = TxMode.READ)
-                public void run() {
-                    final TaskRunner taskRunner = schedule.getTaskRunner();
-                    queue(taskRunner);
-                }
-            }));
-            scheduledTasks.add(schedule);
+                    @Override
+                    @Atomic(mode = TxMode.READ)
+                    public void run() {
+                        final TaskRunner taskRunner = schedule.getTaskRunner();
+                        queue(taskRunner);
+                    }
+                }));
+                scheduledTasks.add(schedule);
+            }
         } else {
             LOG.info("don't schedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
         }
@@ -347,16 +350,24 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      */
     public static void unschedule(TaskSchedule schedule) {
         if (isActive()) {
-            LOG.info("unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
-            scheduler.deschedule(schedule.getTaskId());
-            scheduledTasks.remove(schedule);
+            if (schedule.isRunOnce()) {
+                LOG.info("unschedule run once {}. delete it.", schedule.getTaskClassName());
+                schedule.delete();
+            } else {
+                LOG.info("unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
+                scheduler.deschedule(schedule.getTaskId());
+                scheduledTasks.remove(schedule);
+            }
         } else {
             LOG.info("don't unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
         }
     }
 
-    public static void runNow(final String taskClassName) throws Exception {
-        queue(new TaskRunner(taskClassName));
+    @Atomic(mode = TxMode.WRITE)
+    private static void runNow(TaskSchedule schedule) {
+        LOG.info("run once schedule {}", schedule.getTaskClassName());
+        queue(schedule.getTaskRunner());
+        unschedule(schedule);
     }
 
     public static final void addTask(String className, Task taskAnnotation) {

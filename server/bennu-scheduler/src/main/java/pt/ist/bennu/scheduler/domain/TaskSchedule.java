@@ -17,6 +17,7 @@ public class TaskSchedule extends TaskSchedule_Base {
         super();
         setTaskClassName(taskClassName);
         setSchedulerSystem(SchedulerSystem.getInstance());
+        setRunOnce(Boolean.FALSE);
     }
 
     public TaskSchedule(final String taskClassName, final String schedule) {
@@ -57,5 +58,9 @@ public class TaskSchedule extends TaskSchedule_Base {
 
     public Boolean isScheduled() {
         return taskRunner != null && getTaskRunner().getTaskId() != null;
+    }
+
+    public Boolean isRunOnce() {
+        return getRunOnce() != null && getRunOnce();
     }
 }
