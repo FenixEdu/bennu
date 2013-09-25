@@ -1,5 +1,14 @@
 package pt.ist.bennu.scheduler;
 
+import pt.ist.bennu.scheduler.annotation.Task;
+import pt.ist.bennu.scheduler.domain.SchedulerSystem;
+import pt.ist.bennu.scheduler.log.ExecutionLog;
+import pt.ist.esw.advice.pt.ist.fenixframework.AtomicInstance;
+
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,14 +20,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.scheduler.annotation.Task;
-import pt.ist.bennu.scheduler.domain.SchedulerSystem;
-import pt.ist.bennu.scheduler.log.ExecutionLog;
-import pt.ist.esw.advice.pt.ist.fenixframework.AtomicInstance;
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-import pt.ist.fenixframework.FenixFramework;
-
 import com.google.common.base.Joiner;
 
 public abstract class CronTask implements Runnable {
@@ -28,8 +29,12 @@ public abstract class CronTask implements Runnable {
     private Atomic atomic;
 
     public CronTask() {
+        atomic = new AtomicInstance(getTxMode(), true);
+    }
+
+    protected TxMode getTxMode() {
         Task annotation = this.getClass().getAnnotation(Task.class);
-        atomic = new AtomicInstance(annotation.readOnly() ? TxMode.READ : TxMode.WRITE, true);
+        return annotation == null || annotation.readOnly() ? TxMode.READ : TxMode.WRITE;
     }
 
     public String getLocalizedName() {

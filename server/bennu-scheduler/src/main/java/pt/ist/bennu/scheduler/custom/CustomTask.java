@@ -29,11 +29,18 @@ import pt.ist.bennu.scheduler.CronTask;
 import pt.ist.bennu.scheduler.log.CustomExecutionLog;
 import pt.ist.bennu.scheduler.log.ExecutionLog;
 
+import pt.ist.fenixframework.Atomic.TxMode;
+
 public abstract class CustomTask extends CronTask {
 
     @Override
     public ExecutionLog createLog() {
         return new CustomExecutionLog(getClassName());
+    }
+
+    @Override
+    public TxMode getTxMode() {
+        return TxMode.WRITE;
     }
 
 }
