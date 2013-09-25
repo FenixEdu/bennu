@@ -38,9 +38,9 @@ public class JerseyAuthenticationFilter implements Filter {
     public void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws IOException, ServletException {
         if (isPublicRequest(request)) {
-            LOG.debug("Request is public");
+            LOG.trace("Request is public");
             if (Authenticate.getUser() != null) {
-                LOG.debug("User is logged in {}", Authenticate.getUser().getUsername());
+                LOG.trace("User is logged in {}", Authenticate.getUser().getUsername());
             }
             filterChain.doFilter(request, response);
         } else {
@@ -50,13 +50,13 @@ public class JerseyAuthenticationFilter implements Filter {
             }
             try {
                 if (!StringUtils.isEmpty(userToLogin)) {
-                    LOG.debug("login user {}", userToLogin);
+                    LOG.trace("login user {}", userToLogin);
                     Authenticate.login(request.getSession(true), userToLogin, "", false);
                 }
                 filterChain.doFilter(request, response);
             } finally {
                 if (!StringUtils.isEmpty(userToLogin)) {
-                    LOG.debug("logout user {}", userToLogin);
+                    LOG.trace("logout user {}", userToLogin);
                     Authenticate.logout(request.getSession(false));
                 }
             }

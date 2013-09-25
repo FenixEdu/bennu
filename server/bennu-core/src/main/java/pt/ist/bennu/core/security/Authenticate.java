@@ -93,7 +93,7 @@ public class Authenticate {
             session.removeAttribute(USER_SESSION_ATTRIBUTE);
             session.invalidate();
         }
-        setUser((UserSession)null);
+        setUser((UserSession) null);
     }
 
     @Atomic
@@ -112,8 +112,8 @@ public class Authenticate {
     public static void setUser(UserSession user) {
         wrapper.set(user);
     }
-    
-    public static void setUser(User user){
+
+    public static void setUser(User user) {
         setUser(new UserSession(user));
     }
 
@@ -131,7 +131,7 @@ public class Authenticate {
             final DateTime lastLogoutDateTime = user.getLastLogoutDateTime();
             if (lastLogoutDateTime == null || user.getUserCreationDateTime().isAfter(lastLogoutDateTime)) {
                 wrapper.set(user);
-                logger.debug("Set thread's user to: {}", user.getUsername());
+                logger.trace("Set thread's user to: {}", user.getUsername());
             } else {
                 wrapper.set(null);
             }

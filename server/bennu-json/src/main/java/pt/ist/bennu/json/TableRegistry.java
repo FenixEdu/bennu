@@ -49,13 +49,13 @@ class TableRegistry<T> {
     }
 
     private synchronized T register(Class<?> objectClass, Class<? extends T> recordClass, T record) {
-        LOGGER.info("record : objectClass {} recordClass {} record {}", objectClass, recordClass, record);
+        LOGGER.trace("record : objectClass {} recordClass {} record {}", objectClass, recordClass, record);
         wrapped.put(objectClass, recordClass, record);
         return record;
     }
 
     public T setDefault(Class<?> objectClass, Class<? extends T> recordClass) {
-        LOGGER.info("setDefault : objectClass {} recordClass {}", objectClass, recordClass);
+        LOGGER.trace("setDefault : objectClass {} recordClass {}", objectClass, recordClass);
 
         defaultValues.put(objectClass, recordClass);
 
