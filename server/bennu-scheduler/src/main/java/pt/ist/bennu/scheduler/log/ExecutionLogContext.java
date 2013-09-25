@@ -24,17 +24,13 @@ public class ExecutionLogContext {
 
     public ExecutionLogContext() {
         logsMap = new ConcurrentHashMap<>();
+        lastModified = Long.MIN_VALUE;
     }
 
-    private synchronized boolean hasChanged(File file) {
+    private boolean hasChanged(File file) {
         final long modified = file.lastModified();
-        if (lastModified == null) {
-            lastModified = modified;
-            return true;
-        }
-        final boolean result = modified > lastModified;
-        LOG.trace("File has changed ? : {}", result);
-        if (result) {
+        if (modified > lastModified) {
+            LOG.debug("Execution log was modified : before {} now {}", lastModified, modified);
             lastModified = modified;
             return true;
         }
@@ -45,6 +41,7 @@ public class ExecutionLogContext {
         final File file = new File(getLogFilePath());
         if (file.exists()) {
             if (hasChanged(file)) {
+                LOG.debug("update map from file");
                 try (FileReader fileReader = new FileReader(file)) {
                     JsonStreamParser parser = new JsonStreamParser(fileReader);
                     while (parser.hasNext()) {
