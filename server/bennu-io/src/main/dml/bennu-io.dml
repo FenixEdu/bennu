@@ -44,11 +44,6 @@ relation BennuFileSupport {
 	}
 }
 
-relation DomainRootHasFileSupport {
-	.pt.ist.fenixframework.DomainRoot playsRole domainRoot;
-	FileSupport playsRole fileSupport;
-}
-	
 relation FileStorageFile {
 	GenericFile playsRole files {
 		multiplicity *;

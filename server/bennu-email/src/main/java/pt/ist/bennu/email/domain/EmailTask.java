@@ -43,7 +43,6 @@ public class EmailTask extends CronTask {
             this.oid = email.getExternalId();
         }
 
-        @Atomic
         @Override
         public void run() {
             final Email email = FenixFramework.getDomainObject(oid);

@@ -432,14 +432,4 @@ public class Email extends Email_Base {
         return emailAddressList != null && !emailAddressList.isEmpty();
     }
 
-    @Deprecated
-    public java.util.Set<pt.ist.emailNotifier.domain.MessageId> getMessageIds() {
-        return getMessageIdsSet();
-    }
-
-    @Deprecated
-    public java.util.Set<pt.ist.emailNotifier.domain.MessageTransportResult> getMessageTransportResult() {
-        return getMessageTransportResultSet();
-    }
-
 }

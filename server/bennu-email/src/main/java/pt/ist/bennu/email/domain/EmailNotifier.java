@@ -28,9 +28,4 @@ public class EmailNotifier extends EmailNotifier_Base {
         super();
     }
 
-    @Deprecated
-    public java.util.Set<pt.ist.emailNotifier.domain.Email> getEmails() {
-        return getEmailsSet();
-    }
-
 }
