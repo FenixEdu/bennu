@@ -1,0 +1,118 @@
+<div class="container">
+    <button class="btn btn-error">cenas</button>
+
+    <ul class="nav nav-pills">
+        <li class="active"><a href="#projects" data-toggle="tab">{{#_i18n}}Fenix Framework Projects{{/_i18n}}</a></li>
+        <li><a href="#libraries" data-toggle="tab">{{#_i18n}}Libraries{{/_i18n}}</a></li>
+        <li><a href="#system" data-toggle="tab">{{#_i18n}}System Properties{{/_i18n}}</a></li>
+        <li><a href="#environment" data-toggle="tab">{{#_i18n}}Environment Properties{{/_i18n}}</a></li>
+        <li><a href="#http" data-toggle="tab">{{#_i18n}}HTTP Headers{{/_i18n}}</a></li>
+        <li><a href="#conf" data-toggle="tab">{{#_i18n}}Static Configurations{{/_i18n}}</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="projects">
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{{#_i18n}}GroupId{{/_i18n}}</th>
+                    <th>{{#_i18n}}ArtifactId{{/_i18n}}</th>
+                    <th>{{#_i18n}}Name{{/_i18n}}</th>
+                    <th>{{#_i18n}}Version{{/_i18n}}</th>
+                    <th>{{#_i18n}}Creation Date{{/_i18n}}</th>
+                    <th>{{#_i18n}}Jdk Version{{/_i18n}}</th>
+                    <th>{{#_i18n}}Built By{{/_i18n}}</th>
+                </tr>
+                {{#projects}}
+                <tr>
+                    <td>{{groupId}}</td>
+                    <td>{{artifactId}}</td>
+                    <td>{{Implementation-Title}}</td>
+                    <td>{{version}}</td>
+                    <td>{{creation}}</td>
+                    <td>{{Build-Jdk}}</td>
+                    <td>{{Built-By}}</td>
+                </tr>
+                {{/projects}}
+            </table>
+        </div>
+        <div class="tab-pane" id="libraries">
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{{#_i18n}}GroupId{{/_i18n}}</th>
+                    <th>{{#_i18n}}ArtifactId{{/_i18n}}</th>
+                    <th>{{#_i18n}}Name{{/_i18n}}</th>
+                    <th>{{#_i18n}}Version{{/_i18n}}</th>
+                    <th>{{#_i18n}}Creation Date{{/_i18n}}</th>
+                    <th>{{#_i18n}}Jdk Version{{/_i18n}}</th>
+                    <th>{{#_i18n}}Built By{{/_i18n}}</th>
+                </tr>
+                {{#libraries}}
+                <tr>
+                    <td>{{groupId}}</td>
+                    <td>{{artifactId}}</td>
+                    <td>{{Implementation-Title}}</td>
+                    <td>{{version}}</td>
+                    <td>{{creation}}</td>
+                    <td>{{Build-Jdk}}</td>
+                    <td>{{Built-By}}</td>
+                </tr>
+                {{/libraries}}
+            </table>
+        </div>
+        <div class="tab-pane" id="system">
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{{#_i18n}}Property{{/_i18n}}</th>
+                    <th>{{#_i18n}}Value{{/_i18n}}</th>
+                </tr>
+                {{#sys}}
+                <tr>
+                    <td>{{key}}</td>
+                    <td>{{value}}</td>
+                </tr>
+                {{/sys}}
+            </table>
+        </div>
+        <div class="tab-pane" id="environment">
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{{#_i18n}}Property{{/_i18n}}</th>
+                    <th>{{#_i18n}}Value{{/_i18n}}</th>
+                </tr>
+                {{#env}}
+                <tr>
+                    <td>{{key}}</td>
+                    <td>{{value}}</td>
+                </tr>
+                {{/env}}
+            </table>
+        </div>
+        <div class="tab-pane" id="http">
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{{#_i18n}}Property{{/_i18n}}</th>
+                    <th>{{#_i18n}}Value{{/_i18n}}</th>
+                </tr>
+                {{#http}}
+                <tr>
+                    <td>{{key}}</td>
+                    <td>{{value}}</td>
+                </tr>
+                {{/http}}
+            </table>
+        </div>
+        <div class="tab-pane" id="conf">
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{{#_i18n}}Property{{/_i18n}}</th>
+                    <th>{{#_i18n}}Value{{/_i18n}}</th>
+                </tr>
+                {{#conf}}
+                <tr>
+                    <td>{{key}}</td>
+                    <td>{{value}}</td>
+                </tr>
+                {{/conf}}
+            </table>
+        </div>
+    </div>
+</div>

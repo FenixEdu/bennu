@@ -1,0 +1,82 @@
+{{#javaCode}}
+<link href="js/libs/codemirror/codemirror.css" rel="stylesheet">
+<link href="js/libs/codemirror/theme/eclipse.css" rel="stylesheet">
+{{/javaCode}}
+<table class="table">
+	<tbody>
+		<tr>
+			<td>TaskName</td>
+			<td>{{taskName}}</td>
+		</tr>
+		<tr>
+			<td>Start Time</td>
+			<td>{{start}}</td>
+		</tr>
+		<tr>
+			<td>End Time</td>
+			<td>{{end}}</td>
+		</tr>
+		<tr>
+			<td>Status</td>
+			<td>
+			{{#finished}}
+				{{#success}}
+					<i class="icon-ok-circle"></i>
+				{{/success}}
+				{{^success}}
+					<i class="icon-ban-circle"></i>
+				{{/success}}	
+			{{/finished}}
+			{{^finished}}
+				<i class="icon-play"></i>
+			{{/finished}}
+			</td>
+		</tr>
+		{{#javaCode}}
+		<tr>
+			<td>Code</td>
+			<td>
+				<div class="control-group">
+					<div class="controls">
+						<textarea id="code">{{javaCode}}</textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<button class="btn btn-success btn-load-code">Load</button>
+					</div>
+				</div>
+			</td>
+		</tr>
+		{{/javaCode}}
+		{{#success}}
+			<tr>
+				<td>Files</td>
+				<td>
+					<ul>
+					{{#files}}
+						<li><a href="{{url}}">{{name}}</a>
+					{{/files}}
+					</ul>
+				</td>
+			</tr>
+		{{/success}}
+		{{#finished}}
+		{{^success}}
+			<tr>
+				<td>stacktrace</td>
+				<td>
+					<pre>{{stackTrace}}</pre>
+				</td>
+			</tr>
+		{{/success}}
+		{{/finished}}
+			<tr id="logContainer">
+				<td>log</td>
+				<td>
+					<pre id="logs"></pre>
+					<div id="logAnchor"></div>
+				</td>
+			</tr>
+	</tbody>
+</table>

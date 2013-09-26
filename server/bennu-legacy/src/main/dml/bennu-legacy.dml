@@ -1,0 +1,265 @@
+package pt.ist.bennu.core.domain;
+
+/*
+ * @(#)domain_model.dml
+ *
+ * Copyright 2009 Instituto Superior Tecnico
+ * Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
+ * 
+ *      https://fenix-ashes.ist.utl.pt/
+ * 
+ *   This file is part of the MyOrg web application infrastructure.
+ *
+ *   MyOrg is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU Lesser General Public License as published
+ *   by the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.*
+ *
+ *   MyOrg is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU Lesser General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Lesser General Public License
+ *   along with MyOrg. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
+enum pt.ist.bennu.core.domain.RoleType as RoleType;
+
+
+valueType pt.ist.bennu.core.domain.util.Money as Money {
+    externalizeWith {
+        String exportAsString();
+    }
+
+    internalizeWith importFromString();
+}
+
+valueType pt.utl.ist.fenix.tools.util.i18n.MultiLanguageString as MultiLanguageString {
+    externalizeWith {
+        String exportAsString();
+    }
+
+    internalizeWith importFromString();
+}
+
+valueType pt.utl.ist.fenix.tools.util.Strings as Strings {
+    externalizeWith {
+        String exportAsString();
+    }
+
+    internalizeWith importFromString();
+}
+
+valueType pt.utl.ist.fenix.tools.util.ByteArray as ByteArray {
+    externalizeWith {
+        bytearray getBytes();
+    }
+}
+
+valueType java.math.BigDecimal as BigDecimal {
+    externalizeWith {
+        String toString();
+    }
+}
+
+class MyOrg {
+}
+
+class groups.legacy.PersistentGroup {
+}
+
+class groups.legacy.EmptyGroup extends groups.legacy.PersistentGroup {
+}
+
+class groups.legacy.AnonymousGroup extends groups.legacy.PersistentGroup {
+}
+
+class groups.legacy.AnyoneGroup extends groups.legacy.PersistentGroup {
+}
+
+class groups.legacy.UserGroup extends groups.legacy.PersistentGroup {
+}
+
+class groups.legacy.SingleUserGroup extends groups.legacy.PersistentGroup {
+}
+
+class groups.legacy.People extends groups.legacy.PersistentGroup {
+}
+
+class groups.legacy.NamedGroup extends groups.legacy.People {
+    String groupName;
+}
+
+class groups.legacy.Role extends groups.legacy.NamedGroup {
+}
+
+class groups.legacy.UnionGroup extends groups.legacy.PersistentGroup {
+}
+
+class groups.legacy.IntersectionGroup extends groups.legacy.PersistentGroup {
+}
+
+class groups.legacy.IntersectionNamedGroup extends groups.legacy.IntersectionGroup {
+    String groupName;
+}
+
+class groups.legacy.NegationGroup extends groups.legacy.PersistentGroup {
+}
+
+class groups.legacy.PeopleUserLog {
+    DateTime operationDate;
+    String operation;
+    String username;
+    String groupName;
+    String executor;
+}
+
+class VirtualHost {
+    String hostname;
+    String supportedLanguages;
+}
+
+class VirtualHostAwarePortalConfiguration extends .pt.ist.bennu.portal.domain.PortalConfiguration;
+
+class contents.legacy.Node {
+	Integer nodeOrder;
+}
+
+	class contents.legacy.ActionNode extends contents.legacy.Node {
+		String path;
+		String method;
+		String linkBundle;
+		String linkKey;
+	}
+
+	class contents.legacy.LinkNode extends contents.legacy.Node {
+		String url;
+		String linkBundle;
+		String linkKey;
+	}
+	
+	class contents.legacy.VaadinNode extends contents.legacy.ActionNode {
+		String argument;
+	}
+
+
+relation VirtualHostPortalConfiguration {
+    VirtualHost playsRole host {
+        multiplicity 0..1;
+    }
+    .pt.ist.bennu.portal.domain.PortalConfiguration playsRole configuration {
+        multiplicity 1..1;
+    }
+}
+
+relation DomainRootHasMyOrg {
+    .pt.ist.fenixframework.DomainRoot playsRole domainRoot;
+    MyOrg playsRole myOrg;
+}
+
+relation MyOrgVirtualHost {
+    MyOrg playsRole myOrg {
+        multiplicity 1..1;
+    }
+    VirtualHost playsRole virtualHosts {
+        multiplicity *;
+    }
+}
+
+relation MyOrgPersistentGroup {
+    MyOrg playsRole myOrg;
+    groups.legacy.PersistentGroup playsRole persistentGroups {
+        multiplicity *;
+    }
+}
+
+relation MyOrgSystemGroup {
+    MyOrg playsRole systemGroupMyOrg;
+    groups.legacy.PersistentGroup playsRole systemGroups {
+        multiplicity *;
+    }
+}
+
+relation MyOrgUserGroup {
+    User playsRole groupOwner;
+    groups.legacy.PersistentGroup playsRole userGroups {
+        multiplicity *;
+    }
+}
+
+relation PersistentGroupUnionGroup {
+    groups.legacy.PersistentGroup playsRole persistentGroups {
+        multiplicity *;
+    }
+    groups.legacy.UnionGroup playsRole unionGroups {
+        multiplicity *;
+    }
+}
+
+relation PersistentGroupIntersectionGroup {
+    groups.legacy.PersistentGroup playsRole persistentGroups {
+        multiplicity *;
+    }
+    groups.legacy.IntersectionGroup playsRole intersectionGroups {
+        multiplicity *;
+    }
+}
+
+relation PersistentGroupNegationGroup {
+    groups.legacy.PersistentGroup playsRole persistentGroup;
+    groups.legacy.NegationGroup playsRole negationGroups {
+        multiplicity *;
+    }
+}
+
+relation UserPeople {
+    groups.legacy.People playsRole peopleGroups {
+        multiplicity *;
+    }
+    User playsRole users {
+        multiplicity *;
+    }
+}
+
+relation MyOrgPeopleUserLog {
+    MyOrg playsRole myOrg;
+    groups.legacy.PeopleUserLog playsRole peopleUserLog {
+        multiplicity *;
+    }
+}
+
+relation UserSingleUserGroup {
+    groups.legacy.SingleUserGroup playsRole singleUserGroup;
+    User playsRole user;
+}
+
+relation MyOrgNode {
+	MyOrg playsRole myOrg;
+	contents.legacy.Node playsRole nodes {
+		multiplicity *;
+	}
+}
+
+relation VirtualHostTopLevelNode {
+	VirtualHost playsRole virtualHost;
+	contents.legacy.Node playsRole topLevelNodes {
+		multiplicity *;
+	}
+}
+
+relation NodeNode {
+	contents.legacy.Node playsRole parentNode;
+	contents.legacy.Node playsRole childNodes {
+		multiplicity *;
+	}
+}
+
+relation NodePersistentGroup {
+	contents.legacy.Node playsRole nodes {
+		multiplicity *;
+	}
+	groups.legacy.PersistentGroup playsRole accessibilityGroup;
+}
+

@@ -1,8 +1,0 @@
-class pt.ist.emailNotifier.domain.EmailDispatcher extends pt.ist.bennu.core.domain.scheduler.Task {
-}
-
-relation MyOrgEmailNotifier {
-	pt.ist.bennu.core.domain.MyOrg playsRole myOrg;
-	pt.ist.emailNotifier.domain.EmailNotifier playsRole emailNotifier;
-}
-

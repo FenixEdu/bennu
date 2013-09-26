@@ -1,0 +1,17 @@
+{
+    "apps": [
+        {
+            "title": {
+                "en-GB": "Example UI",
+                "pt-PT": "Example UI"
+            },
+            "description": {
+                "en-GB": "Bankai example",
+                "pt-PT": "Exemplo de app em Bankai"
+            },
+            "accessExpression": "anyone",
+            "path": "example-ui/",
+            "functionalities": []
+        }
+    ]
+}

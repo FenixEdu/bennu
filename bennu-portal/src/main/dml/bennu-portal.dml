@@ -1,0 +1,48 @@
+package pt.ist.bennu.portal.domain;
+
+class PortalConfiguration {
+	LocalizedString applicationTitle (REQUIRED);
+	LocalizedString htmlTitle (REQUIRED);
+	LocalizedString applicationSubTitle (REQUIRED);
+	LocalizedString applicationCopyright (REQUIRED);
+	String theme (REQUIRED);
+	String supportEmailAddress;
+	String systemEmailAddress;
+	bytearray logo;
+	String logoType;
+}
+
+relation BennuPortalConfiguration {
+    .pt.ist.bennu.core.domain.Bennu playsRole root {
+        multiplicity 0..1;
+    }
+    PortalConfiguration playsRole configuration {
+        multiplicity 0..1;
+    }
+}
+
+class MenuItem {
+	Integer ord;
+	LocalizedString title;
+	LocalizedString description;
+	String path;
+	String accessExpression;
+}
+
+relation ApplicationMenu {
+    PortalConfiguration playsRole configuration {
+        multiplicity 0..1;
+    }
+    MenuItem playsRole menu {
+        multiplicity 1..1;
+    }
+}
+
+relation MenuItemComposition {
+	MenuItem playsRole parent {
+        multiplicity 0..1;
+	}
+	MenuItem playsRole child {
+		multiplicity *;
+	}
+}

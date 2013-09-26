@@ -1,0 +1,30 @@
+{
+    "apps": [
+        {
+            "title": {
+                "pt-PT": "Gestão do Portal",
+                "en-GB": "Portal Manager"
+            },
+            "description": {
+                "pt-PT": "Gestão do Portal",
+                "en-GB": "Portal Manager"
+            },
+            "accessExpression": "#managers",
+            "path": "bennu-admin/",
+            "functionalities": []
+        },
+        {
+            "title": {
+                "pt-PT": "Informação de Sistema",
+                "en-GB": "System Information"
+            },
+            "description": {
+                "pt-PT": "Informação de Sistema",
+                "en-GB": "System Information"
+            },
+            "accessExpression": "#managers",
+            "path": "bennu-admin#system/info",
+            "functionalities": []
+        }
+    ]
+}

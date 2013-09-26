@@ -1,0 +1,193 @@
+package pt.ist.bennu.core.domain;
+
+/*
+ * @(#)bennu-core.dml
+ *
+ * Copyright 2009 Instituto Superior Tecnico
+ * Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
+ * 
+ *      https://fenix-ashes.ist.utl.pt/
+ * 
+ *   This file is part of the Bennu web application infrastructure.
+ *
+ *   Bennu is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU Lesser General Public License as published
+ *   by the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.*
+ *
+ *   Bennu is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU Lesser General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Lesser General Public License
+ *   along with Bennu. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
+valueType pt.ist.dsi.commons.i18n.LocalizedString as LocalizedString {
+    externalizeWith {
+        JsonElement json();
+    }
+    internalizeWith fromJson();
+}
+
+valueType java.lang.Class as Class {
+	externalizeWith {
+		String getName();
+	}
+	internalizeWith pt.ist.bennu.core.util.ClassInternalizer.internalize();
+}
+
+valueType java.util.Locale as Locale {
+	externalizeWith {
+		String toLanguageTag();
+	}
+	internalizeWith forLanguageTag();
+}
+
+class Bennu {
+}
+
+relation DomainRootBennu {
+	.pt.ist.fenixframework.DomainRoot playsRole root {
+		multiplicity 1..1;
+	}
+	Bennu playsRole bennu {
+		multiplicity 0..1;
+	}
+}
+
+class User {
+	String username  (REQUIRED);
+	String password;
+	DateTime created;
+	DateTime lastLogoutDateTime;
+	DateTime expiration;
+	String email;
+	Locale preferredLocale;
+}
+
+relation SystemUsers {
+	Bennu playsRole bennu {
+		multiplicity 1..1;
+	}
+	User playsRole users {
+		multiplicity *;
+	}
+}
+
+/* Authorization Groups */
+
+class groups.Group {
+}
+
+relation Groups {
+	Bennu playsRole root {
+		multiplicity 0..1;
+	}
+	groups.Group playsRole groups {
+		multiplicity *;
+	}
+}
+
+class groups.NobodyGroup extends groups.Group {
+}
+
+class groups.AnyoneGroup extends groups.Group {
+}
+
+class groups.AnonymousGroup extends groups.Group {
+}
+
+class groups.LoggedGroup extends groups.Group {
+}
+
+class groups.UserGroup extends groups.Group {
+}
+
+relation UserGroupMembers {
+	groups.UserGroup playsRole userGroup {
+		multiplicity *;
+	}
+	User playsRole member {
+		multiplicity *;
+	}
+}
+
+class groups.CompositionGroup extends groups.Group {
+}
+
+relation GroupComposition {
+	groups.Group playsRole children {
+		multiplicity 1..*;
+	}
+	groups.CompositionGroup playsRole compositions {
+		multiplicity *;
+	}
+}
+
+class groups.UnionGroup extends groups.CompositionGroup {
+}
+
+class groups.IntersectionGroup extends groups.CompositionGroup {
+}
+
+class groups.DifferenceGroup extends groups.CompositionGroup {
+}
+
+class groups.NegationGroup extends groups.Group {
+}
+
+relation NegationGroups {
+    Bennu playsRole negationRoot {
+        multiplicity 1..1;
+    }
+    groups.NegationGroup playsRole negation {
+        multiplicity 0..*;
+    }
+}
+
+relation GroupNegationGroup {
+	groups.Group playsRole negated {
+		multiplicity 1..1;
+	}
+	groups.NegationGroup playsRole negation {
+		multiplicity 0..1;
+	}
+}
+
+class groups.CustomGroup extends groups.Group {
+}
+
+class groups.DynamicGroup extends groups.Group {
+	String name (REQUIRED);
+	DateTime created (REQUIRED);
+}
+
+relation DynamicGroupCreator {
+	groups.DynamicGroup playsRole {
+		multiplicity *;
+	}
+	User playsRole creator {
+		multiplicity 0..1;
+	}
+}
+
+relation DynamicGroupWrapper {
+	groups.DynamicGroup playsRole dynamicGroup {
+		multiplicity *;
+	}
+	groups.Group playsRole group {
+		multiplicity 1..1;
+	}
+}
+
+relation DynamicGroupHistoric {
+	groups.DynamicGroup playsRole previous {
+		multiplicity 0..1;
+	}
+	groups.DynamicGroup playsRole next {
+		multiplicity 0..1;
+	}
+}
