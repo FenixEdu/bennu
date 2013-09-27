@@ -37,6 +37,7 @@ $(function() {
 				username: hostJson.username,
 				locales: hostJson.locales,
 				locale: hostJson.locale,
+				groups: hostJson.groups,
 				lang: (function(locale) {
 					if (locale.indexOf("-") != -1) {
 						return locale.split("-")[0];
