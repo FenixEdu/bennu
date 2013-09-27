@@ -34,6 +34,7 @@ $(function() {
 			var json_handler_url = theme_base + "/js/jsonHandler.js";
 
 			BennuPortal = {
+				username: hostJson.username,
 				locales: hostJson.locales,
 				locale: hostJson.locale,
 				lang: (function(locale) {
