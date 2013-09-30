@@ -45,23 +45,38 @@ $(function() {
 					return locale;
 				})(hostJson.locale.tag),
 				addMls: function(model) {
-					var completeLanguage = this.locale.tag;
-					var currentLanguage = completeLanguage;
-					model['_mls'] = function() {
-						return function(val) {
-							if (this[val]) {
-								if (this[val][completeLanguage]) {
-									return this[val][completeLanguage];
-								}
-								currentLanguage = BennuPortal.lang; 
-								return this[val][currentLanguage];
-							}
-							return "_mls!!" + val + "!!";
-						};
-					};
-					model["_lang"] = currentLanguage;
-				},
-				
+                    var completeLanguage = this.locale.tag;
+                    var currentLanguage = completeLanguage;
+                    var langs = this.locales;
+                    model['_mls'] = function() {
+                        return function(val) {
+                            if (this[val]) {
+                                if (this[val][completeLanguage]) {
+                                    return this[val][completeLanguage];
+                                }
+                                currentLanguage = BennuPortal.lang;
+                                if (this[val][currentLanguage]) {
+                                    return this[val][currentLanguage];
+                                }
+                                
+                                //search for other specific currentLanguage
+                                var fallbackLanguage = undefined;
+                                $(langs).each(function() {
+                                    var eachlang = this.tag;
+                                    if (eachlang != completeLanguage && eachlang.indexOf(currentLanguage) === 0) {
+                                        fallbackLanguage = eachlang;
+                                        return false;
+                                    }
+                                });
+                                if (fallbackLanguage != undefined && this[val][fallbackLanguage] != undefined) {
+                                    return this[val][fallbackLanguage];
+                                }
+                            }
+                            return "_mls!!" + val + "!!";
+                        };
+                    };
+                    model["_lang"] = currentLanguage;
+                },				
 				login: function(user, pass, callback) {
 					$.post(contextPath + "/api/bennu-core/profile/login", {
 						username: user,
