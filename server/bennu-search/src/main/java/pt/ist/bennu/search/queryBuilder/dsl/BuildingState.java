@@ -1,6 +1,6 @@
 package pt.ist.bennu.search.queryBuilder.dsl;
 
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
 
 import pt.ist.bennu.search.IndexableField;
 
