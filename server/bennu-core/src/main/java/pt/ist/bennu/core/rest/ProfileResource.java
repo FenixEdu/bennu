@@ -1,6 +1,8 @@
 package pt.ist.bennu.core.rest;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
@@ -35,11 +37,11 @@ public class ProfileResource extends BennuRestResource {
 
     @GET
     @Path("caslogin")
-    public void caslogin(@Context HttpServletResponse response) {
+    public Response caslogin() {
         if (ConfigurationManager.getCasConfig().isCasEnabled()) {
             try {
-                response.sendRedirect(ConfigurationManager.getCasConfig().getCasLoginUrl(request));
-            } catch (IOException e) {
+                return Response.temporaryRedirect(new URI(ConfigurationManager.getCasConfig().getCasLoginUrl(request))).build();
+            } catch (URISyntaxException e) {
             }
         }
         throw AuthorizationException.authenticationFailed();
@@ -61,7 +63,15 @@ public class ProfileResource extends BennuRestResource {
     public Response logout(@Context HttpServletResponse response) {
         accessControl(LoggedGroup.getInstance());
         Authenticate.logout(request.getSession(false));
-        return Response.ok(view(null, UserSession.class, UserSessionViewer.class)).build();
+        if (ConfigurationManager.getCasConfig().isCasEnabled()) {
+            try {
+                response.sendRedirect(ConfigurationManager.getCasConfig().getCasLogoutUrl());
+            } catch (IOException e) {
+            }
+        } else {
+            return Response.ok(view(null, UserSession.class, UserSessionViewer.class)).build();
+        }
+        throw AuthorizationException.authenticationFailed();
     }
 
     @POST
