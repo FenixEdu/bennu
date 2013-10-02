@@ -39,6 +39,7 @@ import pt.ist.fenixframework.core.Project;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
 
 public class ConfigurationManager {
@@ -97,24 +98,29 @@ public class ConfigurationManager {
             throw new Error("Please add locales property to configuration.properties");
         }
 
-        locales = new HashSet<Locale>();
+        locales = new HashSet<>();
+        String defaultLocaleString = getProperty("locale.default");
+        if (!Strings.isNullOrEmpty(defaultLocaleString)) {
+            Locale.setDefault(Locale.forLanguageTag(defaultLocaleString.trim()));
+        }
+
         Locale defaultLocale = Locale.getDefault();
-        for (String locale : localesString.split(",")) {
+        for (String locale : localesString.trim().split("\\s*,\\s*")) {
             locales.add(Locale.forLanguageTag(locale));
         }
         if (!locales.contains(defaultLocale)) {
-            throw new Error(String.format("Please add default locale %s to supported locales in configuration.properties",
+            throw new Error(String.format(
+                    "Please make sure the defaultLocale: %s is part of the supported locales in configuration.properties",
                     defaultLocale));
         }
 
         logger.info("Supported Locales : {}",
                 Joiner.on(",").join(FluentIterable.from(locales).transform(new Function<Locale, String>() {
-
                     @Override
                     public String apply(Locale input) {
                         return input.toLanguageTag();
                     }
-                }).toArray(String.class)));;
+                }).toArray(String.class)));
     }
 
     public static List<Project> getArtifacts() {
