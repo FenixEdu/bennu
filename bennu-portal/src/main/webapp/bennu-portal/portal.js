@@ -1,7 +1,8 @@
-$(function() {
-	
+(function() {
+	var root = this;
 	var cookies = null;
-
+	console.log("run portal");
+	
 	function readCookie(name, c, C, i) {
 		if (cookies) {
 			return cookies[name];
@@ -22,10 +23,11 @@ $(function() {
 	window.contextPath = contextPath;
 	
 	var developmentMode = readCookie("developmentMode");
-
+	
 	$.ajax({
 		type: "GET",
 		url: contextPath + "/api/bennu-portal/data",
+		async: false,
 		dataType: "json",
 		success: function(hostJson, status, response) {
 			var theme_base = contextPath + "/themes/" + hostJson.theme;
@@ -33,7 +35,7 @@ $(function() {
 			var styles_url = theme_base + "/css/style.css";
 			var json_handler_url = theme_base + "/js/jsonHandler.js";
 
-			BennuPortal = {
+			root.BennuPortal = {
 				username: hostJson.username,
 				locales: hostJson.locales,
 				locale: hostJson.locale,
@@ -172,4 +174,4 @@ $(function() {
 			});
 		}
 	});
-});
+}).call(this);
