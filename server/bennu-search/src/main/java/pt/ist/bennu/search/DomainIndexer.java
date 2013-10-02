@@ -3,7 +3,9 @@ package pt.ist.bennu.search;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +36,8 @@ public class DomainIndexer {
     public static final Version VERSION = Version.LUCENE_44;
 
     public static final int DEFAULT_MAX_SIZE = Integer.MAX_VALUE;
+
+    static final String FORCE_REINDEX_LIST = "force-reindex";
 
     public static enum DefaultIndexFields implements IndexableField {
         DEFAULT_FIELD("all"), IDENTIFIER_FIELD("OID");
@@ -74,6 +78,15 @@ public class DomainIndexer {
             init();
         }
         return singletonInstance;
+    }
+
+    public void registerForReindex(Set<Indexable> indexable) {
+        Set<Indexable> reindex = FenixFramework.getTransaction().getFromContext(FORCE_REINDEX_LIST);
+        if (reindex == null) {
+            reindex = new HashSet<>();
+        }
+        reindex.addAll(indexable);
+        FenixFramework.getTransaction().putInContext(FORCE_REINDEX_LIST, reindex);
     }
 
     public <T extends Indexable> List<T> search(Class<T> indexedClass, Query query, int maxHits) {

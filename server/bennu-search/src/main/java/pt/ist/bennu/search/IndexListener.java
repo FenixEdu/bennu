@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.transaction.Status;
 import javax.transaction.SystemException;
@@ -22,6 +23,7 @@ import pt.ist.bennu.search.DomainIndexer.DefaultIndexFields;
 import pt.ist.bennu.search.DomainIndexer.DomainIndexException;
 import pt.ist.fenixframework.CommitListener;
 import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.Transaction;
 import pt.ist.fenixframework.txintrospector.TxIntrospector;
 
@@ -65,6 +67,17 @@ public class IndexListener implements CommitListener {
                         }
                     }
                 }
+                Set<Indexable> reindex = FenixFramework.getTransaction().getFromContext(DomainIndexer.FORCE_REINDEX_LIST);
+                if (reindex != null) {
+                    for (Indexable indexableObject : reindex) {
+                        IndexDocument document = indexableObject.getDocumentToIndex();
+                        IndexWriter writer = getWriterFor(writers, indexableObject.getClass());
+                        writer.deleteDocuments(new Term(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), indexableObject
+                                .getExternalId()));
+                        writer.addDocument(document.getLuceneDocument());
+                        indexed++;
+                    }
+                }
                 if (!writers.isEmpty()) {
                     for (IndexWriter writer : writers.values()) {
                         writer.prepareCommit();
@@ -91,15 +104,15 @@ public class IndexListener implements CommitListener {
                         writer.commit();
                         writer.close();
                         transaction.putInContext("writers", null);
-                        logger.debug("Indexed: {} Unindexed {}", indexed, unindexed);
                     }
+                    logger.debug("Indexed: {} Unindexed {}", indexed, unindexed);
                 } else if (transaction.getStatus() == Status.STATUS_ROLLEDBACK) {
                     for (IndexWriter writer : writers) {
                         writer.rollback();
                         writer.close();
                         transaction.putInContext("writers", null);
-                        logger.debug("Aborted Indexation");
                     }
+                    logger.debug("Aborted Indexation");
                 }
             } catch (IOException | SystemException e) {
                 throw new Error(e);
