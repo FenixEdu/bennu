@@ -23,6 +23,9 @@ import java.util.Set;
 
 import org.antlr.runtime.RecognitionException;
 import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
@@ -62,6 +65,8 @@ import com.google.common.collect.Iterables;
  * @see CustomGroup
  */
 public abstract class Group extends Group_Base implements Comparable<Group> {
+    private static Logger logger = LoggerFactory.getLogger(Group.class);
+
     protected Group() {
         super();
         setRoot(Bennu.getInstance());
@@ -241,6 +246,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
     }
 
     public static Set<Group> userAccessibleGroups(User user) {
+        long start = System.currentTimeMillis();
         Set<Group> groups = new HashSet<>();
         Set<Group> ignored = new HashSet<>();
         processAccessibleGroups(groups, ignored, AnyoneGroup.getInstance(), user);
@@ -256,6 +262,8 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
                 processAccessibleGroups(groups, ignored, group, user);
             }
         }
+        logger.debug("Accessible groups processing for user {} took {}", user.getUsername(),
+                new Period(System.currentTimeMillis() - start).toString());
         return groups;
     }
 
@@ -263,7 +271,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
     // unless used in some context.
     private static Set<Class<? extends Group>> IGNORES = new HashSet<>(Arrays.asList(AnonymousGroup.class, AnyoneGroup.class,
             NobodyGroup.class, LoggedGroup.class, DifferenceGroup.class, IntersectionGroup.class, NegationGroup.class,
-            UnionGroup.class));
+            UnionGroup.class, UserGroup.class));
 
     private static void processAccessibleGroups(Set<Group> groups, Set<Group> ignored, Group group, User user) {
         if (!groups.contains(group) && !ignored.contains(group)) {
