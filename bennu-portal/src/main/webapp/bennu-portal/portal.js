@@ -122,6 +122,7 @@
 					console.log("Loaded " + theme_messages_url + " successfully!");
 					hostJson["_i18n"] = function() {
 						return function(val) {
+	                        val = Mustache.to_html(val, this);
 							if (messagesJson[val]) {
 								return messagesJson[val];
 							} else {
