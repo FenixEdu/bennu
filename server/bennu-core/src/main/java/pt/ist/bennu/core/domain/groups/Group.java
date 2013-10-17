@@ -281,7 +281,9 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
                 groups.add(group);
             }
             for (DynamicGroup dynamic : group.getDynamicGroupSet()) {
-                processAccessibleGroups(groups, ignored, dynamic, user);
+                if (dynamic.getNext() == null) {
+                    processAccessibleGroups(groups, ignored, dynamic, user);
+                }
             }
             for (CompositionGroup composition : group.getCompositionsSet()) {
                 if (composition instanceof UnionGroup || composition.isMember(user)) {
