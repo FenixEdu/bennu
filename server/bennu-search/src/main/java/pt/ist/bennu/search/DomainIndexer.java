@@ -2,6 +2,8 @@ package pt.ist.bennu.search;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -112,7 +114,7 @@ public class DomainIndexer {
     public <T extends Indexable> List<T> search(Class<T> indexedClass, IndexableField defaultField, String query, int maxHits) {
         try (StandardAnalyzer analyser = new StandardAnalyzer(VERSION)) {
             QueryParser parser = new QueryParser(VERSION, defaultField.getFieldName(), analyser);
-            return search(indexedClass, parser.parse(query), maxHits);
+            return search(indexedClass, parser.parse(normalize(query)), maxHits);
         } catch (ParseException e) {
             throw new DomainIndexException(e);
         }
@@ -144,6 +146,10 @@ public class DomainIndexer {
 
     public <T extends Indexable> List<T> search(Class<T> indexedClass, DSLState query) {
         return search(indexedClass, DefaultIndexFields.DEFAULT_FIELD, query.finish(), DEFAULT_MAX_SIZE);
+    }
+
+    public static String normalize(String text) {
+        return Normalizer.normalize(text, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
     public static FSDirectory getLuceneDomainDirectory(Class<? extends Indexable> indexableClass, boolean create)
