@@ -1,13 +1,20 @@
 package pt.ist.bennu.search;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.LongField;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
+import org.joda.time.Partial;
+import org.joda.time.format.DateTimeFormatter;
 
 import pt.ist.bennu.search.DomainIndexer.DefaultIndexFields;
+
+import com.google.common.base.Joiner;
 
 /**
  * This represents a set of lucene indexes for a given domain object. Adding
@@ -19,67 +26,66 @@ import pt.ist.bennu.search.DomainIndexer.DefaultIndexFields;
  * @author Paulo Abrantes
  */
 public class IndexDocument {
-    private Map<IndexableField, String> values;
+    private final String id;
 
-    private String indexId;
+    private final Document document = new Document();
 
-    private Class<? extends Indexable> indexableClass;
+    private final List<String> accumulated = new ArrayList<>();
 
     public IndexDocument(Indexable indexable) {
-        this.indexId = indexable.getExternalId();
-        this.indexableClass = indexable.getClass();
-        this.values = new HashMap<>();
+        id = indexable.getExternalId();
+        document.add(new StringField(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), id, Field.Store.YES));
     }
 
-    public void indexField(IndexableField field, String value) {
-        values.put(field, value);
+    public IndexDocument indexString(IndexableField field, String value, Store store) {
+        document.add(new StringField(field.getFieldName(), DomainIndexer.normalize(value), store));
+        accumulate(value);
+        return this;
     }
 
-    public Set<IndexableField> getIndexableFields() {
-        return values.keySet();
+    public IndexDocument indexString(IndexableField field, String value) {
+        return indexString(field, value, Store.NO);
     }
 
-    public String getValueForField(IndexableField field) {
-        return values.get(field);
+    public IndexDocument indexText(IndexableField field, String value, Store store) {
+        document.add(new TextField(field.getFieldName(), DomainIndexer.normalize(value), store));
+        accumulate(value);
+        return this;
     }
 
-    public String getIndexId() {
-        return this.indexId;
+    public IndexDocument indexText(IndexableField field, String value) {
+        return indexText(field, value, Store.NO);
     }
 
-    public Class<? extends Indexable> getIndexableClass() {
-        return this.indexableClass;
+    public IndexDocument indexDate(IndexableField field, Partial date, DateTimeFormatter format) {
+        return indexString(field, date.toString(format));
+    }
+
+    public IndexDocument indexNumber(IndexableField field, long value) {
+        document.add(new LongField(field.getFieldName(), value, Store.NO));
+        return this;
     }
 
     public Document getLuceneDocument() {
-        Document doc = new Document();
-        StringBuilder builder = new StringBuilder();
+        document.add(new TextField(DefaultIndexFields.DEFAULT_FIELD.getFieldName(), Joiner.on(' ').join(accumulated),
+                Field.Store.NO));
+        return document;
+    }
 
-        doc.add(new Field(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), getIndexId(), Field.Store.YES,
-                Field.Index.NOT_ANALYZED));
-
-        for (IndexableField indexableField : getIndexableFields()) {
-            String value = getValueForField(indexableField);
-            doc.add(new Field(indexableField.getFieldName(), value, Field.Store.NO, Field.Index.ANALYZED));
-            builder.append(value);
-            builder.append(" ");
-        }
-        doc.add(new Field(DefaultIndexFields.DEFAULT_FIELD.getFieldName(), builder.toString(), Field.Store.NO,
-                Field.Index.ANALYZED));
-        return doc;
+    private void accumulate(String value) {
+        accumulated.add(DomainIndexer.normalize(value));
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof IndexDocument) {
-            IndexDocument otherDocument = (IndexDocument) obj;
-            return indexId.equals(otherDocument.getIndexId());
+            return id.equals(((IndexDocument) obj).id);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return this.indexId.hashCode();
+        return id.hashCode();
     }
 }

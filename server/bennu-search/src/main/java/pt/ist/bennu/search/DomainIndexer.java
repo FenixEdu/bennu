@@ -18,12 +18,12 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import pt.ist.bennu.core.util.ConfigurationManager;
-import pt.ist.bennu.search.queryBuilder.dsl.DSLState;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.base.CharMatcher;
@@ -91,6 +91,36 @@ public class DomainIndexer {
         FenixFramework.getTransaction().putInContext(FORCE_REINDEX_LIST, reindex);
     }
 
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, Query query, int maxHits, Sort sort) {
+        List<T> indexables = new ArrayList<>();
+        try (StandardAnalyzer analyser = new StandardAnalyzer(VERSION)) {
+            try (Directory directory = getLuceneDomainDirectory(indexedClass, false)) {
+                if (directory != null) {
+                    try (DirectoryReader reader = DirectoryReader.open(directory)) {
+                        IndexSearcher searcher = new IndexSearcher(reader);
+                        for (ScoreDoc doc : searcher.search(query, maxHits, sort).scoreDocs) {
+                            String OID = searcher.doc(doc.doc).get(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName());
+                            indexables.add(FenixFramework.<T> getDomainObject(OID));
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                throw new DomainIndexException(e);
+            }
+        }
+        return indexables;
+    }
+
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, IndexableField defaultField, String query, int maxHits,
+            Sort sort) {
+        try (StandardAnalyzer analyser = new StandardAnalyzer(VERSION)) {
+            QueryParser parser = new QueryParser(VERSION, defaultField.getFieldName(), analyser);
+            return search(indexedClass, parser.parse(normalize(query)), maxHits, sort);
+        } catch (ParseException e) {
+            throw new DomainIndexException(e);
+        }
+    }
+
     public <T extends Indexable> List<T> search(Class<T> indexedClass, Query query, int maxHits) {
         List<T> indexables = new ArrayList<>();
         try (StandardAnalyzer analyser = new StandardAnalyzer(VERSION)) {
@@ -98,7 +128,7 @@ public class DomainIndexer {
                 if (directory != null) {
                     try (DirectoryReader reader = DirectoryReader.open(directory)) {
                         IndexSearcher searcher = new IndexSearcher(reader);
-                        for (ScoreDoc doc : searcher.search(query, null, maxHits).scoreDocs) {
+                        for (ScoreDoc doc : searcher.search(query, maxHits).scoreDocs) {
                             String OID = searcher.doc(doc.doc).get(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName());
                             indexables.add(FenixFramework.<T> getDomainObject(OID));
                         }
@@ -120,32 +150,12 @@ public class DomainIndexer {
         }
     }
 
-    public <T extends Indexable> List<T> search(Class<T> indexedClass, IndexableField defaultField, String query) {
-        return search(indexedClass, defaultField, query, DEFAULT_MAX_SIZE);
+    public <T extends Indexable> List<T> search(Class<T> indexedClass, String query, int maxHits, Sort sort) {
+        return search(indexedClass, DefaultIndexFields.DEFAULT_FIELD, query, maxHits, sort);
     }
 
     public <T extends Indexable> List<T> search(Class<T> indexedClass, String query, int maxHits) {
         return search(indexedClass, DefaultIndexFields.DEFAULT_FIELD, query, maxHits);
-    }
-
-    public <T extends Indexable> List<T> search(Class<T> indexedClass, String query) {
-        return search(indexedClass, DefaultIndexFields.DEFAULT_FIELD, query, DEFAULT_MAX_SIZE);
-    }
-
-    public <T extends Indexable> List<T> search(Class<T> indexedClass, IndexableField defaultField, DSLState query, int maxHits) {
-        return search(indexedClass, defaultField, query.finish(), maxHits);
-    }
-
-    public <T extends Indexable> List<T> search(Class<T> indexedClass, IndexableField defaultField, DSLState query) {
-        return search(indexedClass, defaultField, query.finish(), DEFAULT_MAX_SIZE);
-    }
-
-    public <T extends Indexable> List<T> search(Class<T> indexedClass, DSLState query, int maxHits) {
-        return search(indexedClass, DefaultIndexFields.DEFAULT_FIELD, query.finish(), maxHits);
-    }
-
-    public <T extends Indexable> List<T> search(Class<T> indexedClass, DSLState query) {
-        return search(indexedClass, DefaultIndexFields.DEFAULT_FIELD, query.finish(), DEFAULT_MAX_SIZE);
     }
 
     public static String normalize(String text) {
