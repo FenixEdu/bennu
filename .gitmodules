@@ -3,4 +3,4 @@
 	url = https://github.com/ist-dsi/bankai.git
 [submodule "bennu-renderers"]
 	path = portal-frameworks/bennu-renderers
-	url = https://github.com/pedrosan7os/bennu-renderers.git
+	url = https://github.com/ist-dsi/bennu-renderers.git
