@@ -28,7 +28,6 @@ define([
         	
     	onRender: function() {
     		this.makeSortable();
-    		//console.log("show ...");
     	},
         
     });

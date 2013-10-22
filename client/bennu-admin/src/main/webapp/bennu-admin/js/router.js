@@ -12,7 +12,6 @@ define([
     var Router = Backbone.Marionette.AppRouter.extend({
 
         initialize: function() {
-            console.log("initialize controller ...");
 			if (!App.themes) {
 				App.themes = new MenuManager.Collections.Theme();
     			App.themes.fetch();

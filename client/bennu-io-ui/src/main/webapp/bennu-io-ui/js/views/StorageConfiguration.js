@@ -30,7 +30,6 @@ define([
         		config.fileStorageId = $(option).val();
         		configs.push(config);
         	});
-        	console.log(JSON.stringify(configs));
             $.ajax({
                 url : '../api/bennu-io/storage/config',
                 contentType : 'application/json',

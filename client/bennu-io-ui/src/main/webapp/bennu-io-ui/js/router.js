@@ -7,10 +7,6 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette',
 
 			var Router = Backbone.Marionette.AppRouter.extend({
 
-				initialize : function() {
-					console.log("initialize controller ...");
-				},
-
 				appRoutes : {
 					"" : "showStorages",
 					"storage" : "showStorages",

@@ -54,17 +54,12 @@ define([
         				changed = true;
         			}
         			model.set({order : order});
-        			//console.log("prev: " + modelOrder + " new: " + order);
         		}
         	});
         	
         	collection.sort();
         	var parentMenu = collection.parent;
-        	//console.log("before set ");
-        	//console.log(parentMenu.toJSON());
         	parentMenu.set({menu : collection.toJSON()});
-        	//console.log("after set ");
-        	//console.log(parentMenu.toJSON());
         	if (changed) {
         		parentMenu.save(null,
             		{ success : function() {

@@ -56,8 +56,6 @@ define([
 	    		}
 	    	});
 	    	
-	    	console.log(this.model.toJSON());
-	    	
 	    	this.model.save(null,{ success : function () {
 	    		$('.top-right').notify({
 	    		    message: { text: 'Ok!' }
@@ -68,7 +66,6 @@ define([
 	    deleteMenu : function(e) {
 	    	var that = this;
 	    	this.model.destroy({ success : function() {
-	    		console.log("deleted " + that.model.get("id"));
 	    		that.remove();
 	    	}});
 	    },

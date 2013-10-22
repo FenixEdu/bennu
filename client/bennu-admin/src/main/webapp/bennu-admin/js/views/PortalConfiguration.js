@@ -64,8 +64,6 @@ function($, Backbone, Marionette, App, tpl) {
 
             this.model.set("theme", $("#theme").val());
 
-            console.log(this.model.toJSON());
-
             this.model.save(null, {
                 success : function() {
                     Backbone.history.navigate("hosts", true);

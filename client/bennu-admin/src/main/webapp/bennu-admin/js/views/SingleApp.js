@@ -15,8 +15,6 @@ define([
     	},
     
     	drop : function(e, ui) {
-    		console.log(e);
-    		console.log(ui);
     	},
     	
     	onRender: function() {

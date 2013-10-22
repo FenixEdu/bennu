@@ -1,7 +1,6 @@
 (function() {
 	var root = this;
 	var cookies = null;
-	console.log("run portal");
 	
 	function readCookie(name, c, C, i) {
 		if (cookies) {
@@ -107,7 +106,6 @@
 				load: function(scripts) {
 					$(scripts).each(function(i, e) {
 						$.getScript(contextPath + e, function() {
-							console.log("Loading " + e);
 						});
 					});
 				}
@@ -119,7 +117,6 @@
 				url: theme_messages_url,
 				dataType: "json",
 				success: function(messagesJson, status, response) {
-					console.log("Loaded " + theme_messages_url + " successfully!");
 					hostJson["_i18n"] = function() {
 						return function(val) {
 	                        val = Mustache.to_html(val, this);
@@ -163,7 +160,7 @@
 								type: "GET",
 								url: json_handler_url,
 								dataType: "script",
-								async: false,
+								async: false
 							}).done(function(script, textStatus) {
 								applyLayout(hostJson);
 							}).fail(function(jqxhr, settings, exception) {

@@ -31,7 +31,6 @@ define([
         		  type: 'PUT',
         		  url: "../api/bennu-io/storage/convert/" + this.model.id,
         		  success: function(model, response) {
-              				console.log("done!");
               			   },	
         		  dataType: 'json',
         		  async:false
