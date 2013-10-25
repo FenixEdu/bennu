@@ -39,7 +39,7 @@ public class CloseTransactionFilter implements Filter {
     }
 
     @Override
-    @Atomic(mode = TxMode.READ)
+    @Atomic(mode = TxMode.READ, flattenNested = false)
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
         chain.doFilter(request, response);
