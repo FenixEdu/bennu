@@ -87,7 +87,7 @@ public class IndexListener implements CommitListener {
                     transaction.putInContext("unindexed", unindexed);
                 }
             } catch (IOException e) {
-                throw new Error(e);
+                logger.error("Before commit: something crashed", e);
             }
         }
     }
@@ -102,20 +102,47 @@ public class IndexListener implements CommitListener {
                 if (transaction.getStatus() == Status.STATUS_COMMITTED || transaction.getStatus() == Status.STATUS_ACTIVE) {
                     for (IndexWriter writer : writers) {
                         writer.commit();
-                        writer.close();
+                        try {
+                            writer.close();
+                        } finally {
+                            if (IndexWriter.isLocked(writer.getDirectory())) {
+                                IndexWriter.unlock(writer.getDirectory());
+                            }
+                        }
                         transaction.putInContext("writers", null);
                     }
                     logger.debug("Indexed: {} Unindexed {}", indexed, unindexed);
                 } else if (transaction.getStatus() == Status.STATUS_ROLLEDBACK) {
                     for (IndexWriter writer : writers) {
                         writer.rollback();
-                        writer.close();
+                        try {
+                            writer.close();
+                        } finally {
+                            if (IndexWriter.isLocked(writer.getDirectory())) {
+                                IndexWriter.unlock(writer.getDirectory());
+                            }
+                        }
                         transaction.putInContext("writers", null);
                     }
                     logger.debug("Aborted Indexation");
                 }
             } catch (IOException | SystemException e) {
-                throw new Error(e);
+                logger.error("Error after commit indexes", e);
+            } finally {
+                for (IndexWriter writer : writers) {
+                    try {
+                        try {
+                            writer.close();
+                        } finally {
+                            if (IndexWriter.isLocked(writer.getDirectory())) {
+                                logger.error("I'm trying to unlock something that should be already unlocked");
+                                IndexWriter.unlock(writer.getDirectory());
+                            }
+                        }
+                    } catch (IOException e) {
+                        logger.error("AfterCommit: Something went really REALLY bad, finally writer closed", e);
+                    }
+                }
             }
         }
     }
