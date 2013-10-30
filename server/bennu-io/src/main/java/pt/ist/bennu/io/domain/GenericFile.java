@@ -1,5 +1,7 @@
 package pt.ist.bennu.io.domain;
 
+import pt.ist.fenixframework.Atomic;
+
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,8 +16,6 @@ import org.apache.commons.codec.binary.Hex;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Strings;
 

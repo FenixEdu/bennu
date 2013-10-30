@@ -22,12 +22,10 @@
 
     <modules>
         <module>bennu-core</module>
-        <module>bennu-email</module>
         <module>bennu-io</module>
         <module>bennu-json</module>
         <module>bennu-scheduler</module>
         <module>bennu-search</module>
-        <module>bennu-legacy</module>
         <module>bundle</module>
     </modules>
 </project>

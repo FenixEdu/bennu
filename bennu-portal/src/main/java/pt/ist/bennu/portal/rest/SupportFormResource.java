@@ -20,13 +20,9 @@
  */
 package pt.ist.bennu.portal.rest;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Collections;
-import java.util.List;
+import pt.ist.bennu.core.rest.BennuRestResource;
+import pt.ist.bennu.core.security.Authenticate;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -36,11 +32,6 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.rest.BennuRestResource;
-import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.email.EmailSystem;
-import pt.ist.bennu.portal.domain.PortalConfiguration;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -48,41 +39,60 @@ import com.google.gson.JsonParser;
 public class SupportFormResource extends BennuRestResource {
     private static final Logger logger = LoggerFactory.getLogger(SupportFormResource.class);
 
+    public static interface SupportFormStrategy {
+
+        public void processSupportForm(StringBuilder formText);
+
+    }
+
+    private static SupportFormStrategy supportFormStrategy = new SupportFormStrategy() {
+
+        @Override
+        public void processSupportForm(StringBuilder formText) {
+            logger.info(formText.toString());
+        }
+
+    };
+
+    public static final void registerSupportFormStrategy(SupportFormStrategy supportFormStrategy) {
+        SupportFormResource.supportFormStrategy = supportFormStrategy;
+    }
+
     @POST
     @Path("errorreport")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public void errorReport(final String json) {
-        try {
-            JsonObject model = new JsonParser().parse(json).getAsJsonObject();
+//        try {
+        JsonObject model = new JsonParser().parse(json).getAsJsonObject();
 
-            StringBuilder builder = new StringBuilder();
-            builder.append(model.get("comment").getAsString());
+        StringBuilder builder = new StringBuilder();
+        builder.append(model.get("comment").getAsString());
 
-            builder.append("\n\n- - - - - - - - - - - Error Origin - - - - - - - - - - -\n");
-            builder.append("[UserLoggedIn] " + (Authenticate.getUser() != null ? Authenticate.getUser().getUsername() : "none")
-                    + "\n");
-            builder.append("[RequestURI] " + (model.has("request-uri") ? model.get("request-uri").getAsString() : "unkown")
-                    + "\n");
-            builder.append("[RequestURL] " + (model.has("request-url") ? model.get("request-url").getAsString() : "unknown")
-                    + "\n");
-            builder.append("[QueryString] "
-                    + (model.has("requestq-query") ? model.get("request-query").getAsString() : "unknown") + "\n");
+        builder.append("\n\n- - - - - - - - - - - Error Origin - - - - - - - - - - -\n");
+        builder.append("[UserLoggedIn] " + (Authenticate.getUser() != null ? Authenticate.getUser().getUsername() : "none")
+                + "\n");
+        builder.append("[RequestURI] " + (model.has("request-uri") ? model.get("request-uri").getAsString() : "unkown") + "\n");
+        builder.append("[RequestURL] " + (model.has("request-url") ? model.get("request-url").getAsString() : "unknown") + "\n");
+        builder.append("[QueryString] " + (model.has("requestq-query") ? model.get("request-query").getAsString() : "unknown")
+                + "\n");
 
-            builder.append("[StackTrace] " + (model.has("stacktrace") ? model.get("stacktrace").getAsString() : "unknown") + "\n");
+        builder.append("[StackTrace] " + (model.has("stacktrace") ? model.get("stacktrace").getAsString() : "unknown") + "\n");
 
-            InternetAddress from = null;
-            if (Authenticate.getUser() != null && Authenticate.getUser().getEmail() != null) {
-                from = new InternetAddress(Authenticate.getUser().getEmail(), Authenticate.getUser().getPresentationName());
-            }
-            List<InternetAddress> to =
-                    Collections.singletonList(new InternetAddress(PortalConfiguration.getInstance().getSupportEmailAddress()));
-            MimeBodyPart part = new MimeBodyPart();
-            part.setText(builder.toString());
+        supportFormStrategy.processSupportForm(builder);
 
-            EmailSystem.send(EmailSystem.message(EmailSystem.emailSession(), from, to, null, null, "[Excepção]", part));
-        } catch (UnsupportedEncodingException | MessagingException e) {
-            logger.error("Could not send support email", e);
-        }
+//            InternetAddress from = null;
+//            if (Authenticate.getUser() != null && Authenticate.getUser().getEmail() != null) {
+//                from = new InternetAddress(Authenticate.getUser().getEmail(), Authenticate.getUser().getPresentationName());
+//            }
+//            List<InternetAddress> to =
+//                    Collections.singletonList(new InternetAddress(PortalConfiguration.getInstance().getSupportEmailAddress()));
+//            MimeBodyPart part = new MimeBodyPart();
+//            part.setText(builder.toString());
+//
+//            EmailSystem.send(EmailSystem.message(EmailSystem.emailSession(), from, to, null, null, "[Excepção]", part));
+//        } catch (UnsupportedEncodingException | MessagingException e) {
+//            logger.error("Could not send support email", e);
+//        }
     }
 }

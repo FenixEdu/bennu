@@ -20,11 +20,6 @@
         </dependency>
         <dependency>
             <groupId>pt.ist.bennu</groupId>
-            <artifactId>bennu-email</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>pt.ist.bennu</groupId>
             <artifactId>bennu-io</artifactId>
             <version>${project.version}</version>
         </dependency>
