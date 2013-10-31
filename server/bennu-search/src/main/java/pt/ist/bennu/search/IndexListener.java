@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.search.DomainIndexer.DefaultIndexFields;
-import pt.ist.bennu.search.DomainIndexer.DomainIndexException;
 import pt.ist.fenixframework.CommitListener;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
@@ -149,17 +148,27 @@ public class IndexListener implements CommitListener {
 
     @SuppressWarnings("resource")
     private IndexWriter getWriterFor(Map<Class<? extends Indexable>, IndexWriter> writers, Class<? extends Indexable> type) {
+        Directory directory = null;
         try {
             if (!writers.containsKey(type)) {
-                Directory directory = DomainIndexer.getLuceneDomainDirectory(type, true);
+                directory = DomainIndexer.getLuceneDomainDirectory(type, true);
                 Analyzer analyzer = new StandardAnalyzer(DomainIndexer.VERSION);
                 IndexWriterConfig config = new IndexWriterConfig(DomainIndexer.VERSION, analyzer);
                 config.setWriteLockTimeout(10 * 1000);
                 writers.put(type, new IndexWriter(directory, config));
             }
-            return writers.get(type);
         } catch (IOException e) {
-            throw new DomainIndexException(e);
+            logger.error("Error after getWriterFor", e);
+        } finally {
+            try {
+                if (IndexWriter.isLocked(directory)) {
+                    logger.error("I'm trying to unlock something that should be already unlocked");
+                    IndexWriter.unlock(directory);
+                }
+            } catch (IOException e) {
+                logger.error("AfterCommit: Something went really REALLY bad, finally writer closed", e);
+            }
         }
+        return writers.get(type);
     }
 }
