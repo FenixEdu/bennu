@@ -161,7 +161,7 @@ public class IndexListener implements CommitListener {
             logger.error("Error after getWriterFor", e);
         } finally {
             try {
-                if (IndexWriter.isLocked(directory)) {
+                if (directory != null && IndexWriter.isLocked(directory)) {
                     logger.error("I'm trying to unlock something that should be already unlocked");
                     IndexWriter.unlock(directory);
                 }
