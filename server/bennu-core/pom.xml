@@ -24,8 +24,8 @@
     <dependencies>
         <dependency>
             <groupId>pt.ist.bennu</groupId>
-            <artifactId>bennu-json</artifactId>
-            <version>${project.version}</version>
+			<artifactId>bennu-json</artifactId>
+			<version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>pt.ist</groupId>

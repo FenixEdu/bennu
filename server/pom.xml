@@ -23,7 +23,6 @@
     <modules>
         <module>bennu-core</module>
         <module>bennu-io</module>
-        <module>bennu-json</module>
         <module>bennu-scheduler</module>
         <module>bennu-search</module>
         <module>bundle</module>
