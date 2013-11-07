@@ -25,11 +25,6 @@
         </dependency>
         <dependency>
             <groupId>pt.ist.bennu</groupId>
-            <artifactId>bennu-json</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>pt.ist.bennu</groupId>
             <artifactId>bennu-scheduler</artifactId>
             <version>${project.version}</version>
         </dependency>
