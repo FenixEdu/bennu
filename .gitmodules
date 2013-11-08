@@ -4,3 +4,6 @@
 [submodule "bennu-renderers"]
 	path = portal-frameworks/bennu-renderers
 	url = https://github.com/ist-dsi/bennu-renderers.git
+[submodule "portal-frameworks/bennu-vaadin"]
+	path = portal-frameworks/bennu-vaadin
+	url = git://github.com/ist-dsi/bennu-vaadin.git
