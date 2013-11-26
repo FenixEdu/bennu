@@ -28,9 +28,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pt.ist.bennu.core.util.CookieReaderUtils;
 
 import com.google.common.base.Strings;
@@ -41,9 +38,6 @@ import com.google.common.base.Strings;
  * 
  */
 public class ContextPathFilter implements Filter {
-
-    private static final Logger logger = LoggerFactory.getLogger(ContextPathFilter.class);
-
     private static final String CONTEXT_PATH_COOKIE_NAME = "contextPath";
 
     @Override

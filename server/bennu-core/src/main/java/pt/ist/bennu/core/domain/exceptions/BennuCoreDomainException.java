@@ -22,6 +22,8 @@ import javax.ws.rs.core.Response.Status;
  * Factory class for bennu-core expected errors.
  */
 public class BennuCoreDomainException extends DomainException {
+    private static final long serialVersionUID = 2072331768593389420L;
+
     protected static final String BUNDLE = "resources.BennuResources";
 
     protected BennuCoreDomainException(String key, String... args) {

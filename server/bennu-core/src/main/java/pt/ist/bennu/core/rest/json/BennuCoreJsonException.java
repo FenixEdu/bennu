@@ -25,6 +25,8 @@ import javax.ws.rs.core.Response.Status;
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 
 public class BennuCoreJsonException extends BennuCoreDomainException {
+    private static final long serialVersionUID = 895004129903164510L;
+
     public static BennuCoreJsonException valueIsNotAnInteger(String value) {
         return new BennuCoreJsonException("error.bennu.core.valueIsNotAnInteger", value);
     }

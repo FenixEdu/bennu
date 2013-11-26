@@ -20,6 +20,8 @@ import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.NegationGroup;
 
 class Negation extends GroupToken {
+    private static final long serialVersionUID = 1061552966860514924L;
+
     private final GroupToken groupToken;
 
     public Negation(GroupToken groupToken) {

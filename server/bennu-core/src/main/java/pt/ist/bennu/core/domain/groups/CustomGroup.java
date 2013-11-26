@@ -99,26 +99,28 @@ import com.google.common.base.Joiner;
 public abstract class CustomGroup extends CustomGroup_Base {
     private static final Logger logger = LoggerFactory.getLogger(CustomGroup.class);
 
-    protected static interface Argument<A, G extends CustomGroup> extends Serializable {
+    protected static interface Argument<A> extends Serializable {
         public A parse(String argument);
 
         public Class<? extends A> getType();
     }
 
-    protected static interface SimpleArgument<A, G extends CustomGroup> extends Argument<A, G> {
+    protected static interface SimpleArgument<A, G extends CustomGroup> extends Argument<A> {
         public String extract(G group);
     }
 
-    protected static interface MultiArgument<A, G extends CustomGroup> extends Argument<A, G> {
+    protected static interface MultiArgument<A, G extends CustomGroup> extends Argument<A> {
         public Set<String> extract(G group);
     }
 
     private static class Operator<G extends CustomGroup> implements Serializable {
+        private static final long serialVersionUID = 1746924894935208630L;
+
         private final String operator;
 
         private final Class<? extends G> type;
 
-        private final Vector<Argument<Object, G>> arguments;
+        private final Vector<Argument<Object>> arguments;
 
         private final Method instantiator;
 
@@ -144,16 +146,17 @@ public abstract class CustomGroup extends CustomGroup_Base {
             }
         }
 
-        private Argument<Object, G> getArgumentForArgumentIndex(int i) {
+        private Argument<Object> getArgumentForArgumentIndex(int i) {
             if (i >= arguments.size()) {
                 return arguments.get(arguments.size() - 1);
             }
             return arguments.get(i);
         }
 
+        @SuppressWarnings("unchecked")
         public String expression(G customGroup) {
             List<String> params = new ArrayList<>();
-            for (Argument<Object, G> argument : arguments) {
+            for (Argument<Object> argument : arguments) {
                 if (argument instanceof SimpleArgument) {
                     params.add(((SimpleArgument<Object, G>) argument).extract(customGroup));
                 } else {
@@ -179,21 +182,21 @@ public abstract class CustomGroup extends CustomGroup_Base {
             }
         }
 
-        private Vector<Argument<Object, G>> findArguments() {
+        private Vector<Argument<Object>> findArguments() {
             try {
-                Map<Integer, Argument<Object, G>> arguments = new TreeMap<>();
+                Map<Integer, Argument<Object>> args = new TreeMap<>();
                 for (Method method : type.getMethods()) {
                     CustomGroupArgument annotation = method.getAnnotation(CustomGroupArgument.class);
                     if (annotation != null) {
-                        if (arguments.get(annotation.index()) != null) {
+                        if (args.get(annotation.index()) != null) {
                             throw new Error("CustomGroup: " + type.getName()
                                     + " duplicate index, please set index property in @CustomGroupArgument annotations");
                         }
-                        arguments.put(annotation.index(), (Argument<Object, G>) method.invoke(null));
+                        args.put(annotation.index(), (Argument<Object>) method.invoke(null));
                     }
                 }
-                final Vector<Argument<Object, G>> argsVector = new Vector<>();
-                argsVector.addAll(arguments.values());
+                final Vector<Argument<Object>> argsVector = new Vector<>();
+                argsVector.addAll(args.values());
                 return argsVector;
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new Error("CustomGroup: " + type.getName() + " failed to access it's arguments", e);

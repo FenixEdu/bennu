@@ -20,6 +20,8 @@ import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.NobodyGroup;
 
 class Nobody extends GroupToken {
+    private static final long serialVersionUID = -9084094706828369507L;
+
     @Override
     public Group group() {
         return NobodyGroup.getInstance();

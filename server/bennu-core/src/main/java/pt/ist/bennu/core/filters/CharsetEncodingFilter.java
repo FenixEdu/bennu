@@ -37,11 +37,11 @@ public class CharsetEncodingFilter implements Filter {
 
     @Override
     public void init(final FilterConfig config) throws ServletException {
-        final String defaultCharset = config.getInitParameter("defaultCharset");
-        if (defaultCharset != null && !defaultCharset.isEmpty() && Charset.forName(defaultCharset) != null) {
-            CharsetEncodingFilter.defaultCharset = defaultCharset;
+        final String initParamCharset = config.getInitParameter("defaultCharset");
+        if (initParamCharset != null && !initParamCharset.isEmpty() && Charset.forName(initParamCharset) != null) {
+            defaultCharset = initParamCharset;
         }
-        logger.trace("Charset : {}", defaultCharset);
+        logger.trace("Charset : {}", initParamCharset);
     }
 
     @Override

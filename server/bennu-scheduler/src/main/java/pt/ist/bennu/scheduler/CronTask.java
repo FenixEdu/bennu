@@ -160,11 +160,12 @@ public abstract class CronTask implements Runnable {
     }
 
     protected final void taskLog(String format, Object... args) {
-        PrintWriter writer = getTaskLogWriter();
-        if (args == null || args.length < 1) {
-            writer.println(format);
-        } else {
-            writer.printf(format, args);
+        try (PrintWriter writer = getTaskLogWriter()) {
+            if (args == null || args.length < 1) {
+                writer.println(format);
+            } else {
+                writer.printf(format, args);
+            }
         }
     }
 
@@ -172,6 +173,7 @@ public abstract class CronTask implements Runnable {
         taskLog(StringUtils.EMPTY);
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends ExecutionLog> T getExecutionLog() {
         if (log == null) {
             log = createLog();

@@ -16,10 +16,12 @@
  */
 package pt.ist.bennu.core.grouplanguage;
 
-import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.DynamicGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 class Dynamic extends GroupToken {
+    private static final long serialVersionUID = -900666569896434895L;
+
     private final String name;
 
     public Dynamic(String name) {

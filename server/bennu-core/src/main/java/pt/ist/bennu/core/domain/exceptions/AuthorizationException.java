@@ -22,6 +22,8 @@ import javax.ws.rs.core.Response.Status;
  * Group access authorization exception.
  */
 public class AuthorizationException extends BennuCoreDomainException {
+    private static final long serialVersionUID = -5511692317966073944L;
+
     private AuthorizationException(String key, String... args) {
         super(Status.UNAUTHORIZED, key, args);
     }

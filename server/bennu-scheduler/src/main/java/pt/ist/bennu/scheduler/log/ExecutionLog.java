@@ -177,7 +177,7 @@ public class ExecutionLog {
 
     public void addFile(String filename) {
         if (files == null) {
-            files = new HashSet<String>();
+            files = new HashSet<>();
         }
         files.add(filename);
     }

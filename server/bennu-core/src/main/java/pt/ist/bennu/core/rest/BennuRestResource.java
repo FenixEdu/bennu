@@ -34,17 +34,15 @@ public abstract class BennuRestResource extends JsonAwareResource {
     }
 
     protected CasConfigContext getCasConfigContext() {
-        return new CasConfigContext(ConfigurationManager.getCasConfig(), request);
+        return new CasConfigContext(ConfigurationManager.getCasConfig());
     }
 
     public class CasConfigContext {
 
         private final CasConfig casConfig;
-        private final HttpServletRequest request;
 
-        public CasConfigContext(CasConfig casConfig, HttpServletRequest request) {
+        public CasConfigContext(CasConfig casConfig) {
             this.casConfig = casConfig;
-            this.request = request;
         }
 
         public CasConfig getCasConfig() {

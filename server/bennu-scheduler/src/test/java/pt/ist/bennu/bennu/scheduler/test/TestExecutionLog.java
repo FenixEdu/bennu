@@ -47,6 +47,7 @@ public class TestExecutionLog {
     private static Object JSON_FILE_LOCK = new Object();
 
     @BeforeClass
+    @SuppressWarnings("unchecked")
     public static void setup() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(DateTime.class, new JsonSerializer<DateTime>() {
@@ -191,12 +192,13 @@ public class TestExecutionLog {
         final long millis = new DateTime().getMillis();
         final File file = new File("/tmp/test");
         file.createNewFile();
-        final FileOutputStream fos = new FileOutputStream(file);
-        fos.write(Strings.repeat("A", 1024 * 1024 * 50).getBytes());
-        fos.flush();
-        fos.close();
-        final long millis2 = new DateTime().getMillis();
-        System.out.println(millis2 - millis);
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            fos.write(Strings.repeat("A", 1024 * 1024 * 50).getBytes());
+            fos.flush();
+            fos.close();
+            final long millis2 = new DateTime().getMillis();
+            System.out.println(millis2 - millis);
+        }
     }
 
     //@Test

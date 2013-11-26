@@ -25,6 +25,8 @@ import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.UserGroup;
 
 class Users extends GroupToken {
+    private static final long serialVersionUID = -5398543347335086187L;
+
     private final List<String> usernames;
 
     public Users(List<String> usernames) {

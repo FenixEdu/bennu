@@ -20,9 +20,6 @@
  */
 package pt.ist.bennu.portal.rest;
 
-import pt.ist.bennu.core.rest.BennuRestResource;
-import pt.ist.bennu.core.security.Authenticate;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -31,6 +28,9 @@ import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import pt.ist.bennu.core.rest.BennuRestResource;
+import pt.ist.bennu.core.security.Authenticate;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

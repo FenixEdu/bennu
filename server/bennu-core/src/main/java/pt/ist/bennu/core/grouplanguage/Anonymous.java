@@ -20,6 +20,8 @@ import pt.ist.bennu.core.domain.groups.AnonymousGroup;
 import pt.ist.bennu.core.domain.groups.Group;
 
 class Anonymous extends GroupToken {
+    private static final long serialVersionUID = -8985895863330868757L;
+
     @Override
     public Group group() {
         return AnonymousGroup.getInstance();

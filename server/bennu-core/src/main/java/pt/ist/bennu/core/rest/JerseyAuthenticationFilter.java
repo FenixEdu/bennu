@@ -84,9 +84,8 @@ public class JerseyAuthenticationFilter implements Filter {
         if (password.equals(ConfigurationManager.getThisServerSecret())) {
             LOG.debug("Rest secret is known, login mock user {}", username);
             return username;
-        } else {
-            return null;
         }
+        return null;
     }
 
     @Override

@@ -20,10 +20,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.DifferenceGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 class Difference extends GroupToken {
+    private static final long serialVersionUID = -5432713796834101478L;
+
     private final List<GroupToken> children;
 
     public Difference(List<GroupToken> children) {

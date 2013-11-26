@@ -70,9 +70,8 @@ public class ExecutionLogResource extends BennuRestResource {
                 final File file = getFile(jsonLog, "log");
                 if (file.exists()) {
                     return Response.ok(Files.toString(file, Charset.defaultCharset())).build();
-                } else {
-                    return Response.status(Status.NO_CONTENT).build();
                 }
+                return Response.status(Status.NO_CONTENT).build();
             } catch (IOException e) {
                 return Response.status(Status.NO_CONTENT).build();
             }

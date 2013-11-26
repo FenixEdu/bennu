@@ -21,5 +21,7 @@ import java.io.Serializable;
 import pt.ist.bennu.core.domain.groups.Group;
 
 abstract class GroupToken implements Serializable {
+    private static final long serialVersionUID = 473824016559738057L;
+
     public abstract Group group();
 }

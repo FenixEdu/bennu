@@ -37,6 +37,7 @@ public class Bennu extends Bennu_Base {
     }
 
     @Atomic(mode = TxMode.WRITE)
+    @SuppressWarnings("unused")
     private static void initialize() {
         if (FenixFramework.getDomainRoot().getBennu() == null) {
             new Bennu();

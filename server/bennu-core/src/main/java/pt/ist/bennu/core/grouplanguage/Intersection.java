@@ -24,6 +24,8 @@ import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.IntersectionGroup;
 
 class Intersection extends GroupToken {
+    private static final long serialVersionUID = -3778953237451848624L;
+
     private final List<GroupToken> children;
 
     public Intersection(List<GroupToken> children) {

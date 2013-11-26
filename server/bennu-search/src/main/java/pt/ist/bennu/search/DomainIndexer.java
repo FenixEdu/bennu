@@ -58,6 +58,7 @@ public class DomainIndexer {
     }
 
     public static class DomainIndexException extends RuntimeException {
+        private static final long serialVersionUID = -4885892671487406190L;
 
         public DomainIndexException(Exception e) {
             super(e);

@@ -20,6 +20,8 @@ import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.LoggedGroup;
 
 class Logged extends GroupToken {
+    private static final long serialVersionUID = -26315756431544241L;
+
     @Override
     public Group group() {
         return LoggedGroup.getInstance();

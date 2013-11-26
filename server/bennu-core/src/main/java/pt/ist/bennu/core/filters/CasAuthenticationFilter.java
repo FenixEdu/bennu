@@ -56,14 +56,13 @@ public class CasAuthenticationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
-        final String serverName = request.getServerName();
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final String ticket = httpServletRequest.getParameter("ticket");
         if (ticket != null) {
             Authenticate.logout(httpServletRequest.getSession());
             final String requestURL = "https://" + request.getServerName();
             try {
-                final CASReceipt receipt = getCASReceipt(serverName, ticket, requestURL);
+                final CASReceipt receipt = getCASReceipt(ticket, requestURL);
                 final String username = receipt.getUserName();
                 Authenticate.login(httpServletRequest.getSession(), username, null, false);
             } catch (CASAuthenticationException e) {
@@ -73,8 +72,8 @@ public class CasAuthenticationFilter implements Filter {
         chain.doFilter(request, response);
     }
 
-    public static CASReceipt getCASReceipt(final String serverName, final String casTicket, final String requestURL)
-            throws UnsupportedEncodingException, CASAuthenticationException {
+    public static CASReceipt getCASReceipt(final String casTicket, final String requestURL) throws UnsupportedEncodingException,
+            CASAuthenticationException {
         String casValidateUrl = ConfigurationManager.getCasConfig().getCasValidateUrl();
         String casServiceUrl = URLEncoder.encode(requestURL.replace("http://", "https://").replace(":8080", ""), "UTF-8");
 

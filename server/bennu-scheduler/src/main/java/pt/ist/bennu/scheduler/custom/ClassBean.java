@@ -33,7 +33,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -112,6 +111,7 @@ public class ClassBean implements Serializable {
         }
 
         @Override
+        @SuppressWarnings("resource")
         public InputStream getResourceAsStream(final String name) {
             final InputStream inputStream = parent.getResourceAsStream(name);
             return inputStream == null ? super.getResourceAsStream(name) : inputStream;
@@ -119,12 +119,10 @@ public class ClassBean implements Serializable {
 
         @Override
         public Enumeration<URL> getResources(final String name) throws IOException {
-            final List<URL> urls = new ArrayList<URL>();
+            final List<URL> urls = new ArrayList<>();
             for (final Enumeration<URL> e = super.getResources(name); e.hasMoreElements(); urls.add(e.nextElement())) {
-                ;
             }
             for (final Enumeration<URL> e = parent.getResources(name); e.hasMoreElements(); urls.add(e.nextElement())) {
-                ;
             }
             return Collections.enumeration(urls);
         }
@@ -222,7 +220,7 @@ public class ClassBean implements Serializable {
             return getBaseFileName() + ".java";
         }
 
-        private void createDirs() throws IOException {
+        private void createDirs() {
             final String filename = getJavaFileName();
             final File file = new File(filename);
             file.getParentFile().mkdirs();
@@ -234,49 +232,46 @@ public class ClassBean implements Serializable {
             final Method method = classLoader.getClass().getMethod("getURLs", new Class[0]);
             final URL[] urls = (URL[]) method.invoke(classLoader, new Object[0]);
 
-            final List<File> files = new ArrayList<File>();
+            final List<File> files = new ArrayList<>();
             for (final URL url : urls) {
                 files.add(new File(url.toURI()));
             }
 
             final JavaSourceFromString javaSourceFromString = new JavaSourceFromString(getClassName(), getContents());
             final JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
-            final StandardJavaFileManager standardJavaFileManager = javaCompiler.getStandardFileManager(null, null, null);
+            try (StandardJavaFileManager standardJavaFileManager = javaCompiler.getStandardFileManager(null, null, null)) {
 
-            standardJavaFileManager.setLocation(StandardLocation.CLASS_OUTPUT,
-                    Collections.singleton(new File(getBaseClassPathDirName())));
-            standardJavaFileManager.setLocation(StandardLocation.CLASS_PATH, files);
+                standardJavaFileManager.setLocation(StandardLocation.CLASS_OUTPUT,
+                        Collections.singleton(new File(getBaseClassPathDirName())));
+                standardJavaFileManager.setLocation(StandardLocation.CLASS_PATH, files);
 
-            final Collection<JavaFileObject> javaFileObjects = new ArrayList<JavaFileObject>();
-            javaFileObjects.add(javaSourceFromString);
+                final Collection<JavaFileObject> javaFileObjects = new ArrayList<>();
+                javaFileObjects.add(javaSourceFromString);
 
-            final CompilationTask compilationTask =
-                    javaCompiler.getTask(out, standardJavaFileManager, null, null, null, javaFileObjects);
-            try {
+                final CompilationTask compilationTask =
+                        javaCompiler.getTask(out, standardJavaFileManager, null, null, null, javaFileObjects);
                 if (compilationTask.call() == false) {
                     return false;
                 }
                 return true;
-            } finally {
-                standardJavaFileManager.close();
             }
         }
 
-        private void runTask() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
-                MalformedURLException, SecurityException, NoSuchMethodException, IllegalArgumentException,
-                InvocationTargetException, InterruptedException {
+        private void runTask() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SecurityException,
+                IllegalArgumentException, IOException {
             final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             final URL[] urls = new URL[] { new File(getBaseClassPathDirName()).toURI().toURL() };
-            final MyClassLoader urlClassLoader = new MyClassLoader(urls, classLoader);
+            try (MyClassLoader urlClassLoader = new MyClassLoader(urls, classLoader)) {
 
-            urlClassLoader.loadClass(getClassName());
+                urlClassLoader.loadClass(getClassName());
 
-            final Class<? extends CustomTask> clazz =
-                    (Class<? extends CustomTask>) Class.forName(getClassName(), true, urlClassLoader);
-            task = clazz.newInstance();
-            task.<CustomExecutionLog> getExecutionLog().setJavaCode(contents);
-            task.<CustomExecutionLog> getExecutionLog().start();
-            task.run();
+                final Class<? extends CustomTask> clazz =
+                        (Class<? extends CustomTask>) Class.forName(getClassName(), true, urlClassLoader);
+                task = clazz.newInstance();
+                task.<CustomExecutionLog> getExecutionLog().setJavaCode(contents);
+                task.<CustomExecutionLog> getExecutionLog().start();
+                task.run();
+            }
         }
 
         @Override
@@ -293,7 +288,7 @@ public class ClassBean implements Serializable {
                         runTask();
                     } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                             | InvocationTargetException | SecurityException | NoSuchMethodException | IOException
-                            | URISyntaxException | ClassNotFoundException | InterruptedException e) {
+                            | URISyntaxException | ClassNotFoundException e) {
                         throw new Error(e);
                     } finally {
                     }
@@ -313,10 +308,9 @@ public class ClassBean implements Serializable {
                 compiledSuccessfully = compileFile();
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException
                     | NoSuchMethodException | IOException | URISyntaxException e) {
-                final PrintWriter pout = new PrintWriter(out);
-                e.printStackTrace(pout);
-                pout.flush();
-                pout.close();
+                try (PrintWriter pout = new PrintWriter(out)) {
+                    e.printStackTrace(pout);
+                }
             } finally {
                 cleanup();
             }

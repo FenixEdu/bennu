@@ -36,7 +36,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     public static LinkedBlockingQueue<TaskRunner> queue;
     public static Set<TaskRunner> runningTasks;
     public static Set<TaskSchedule> scheduledTasks;
-    private static final List<Thread> activeConsumers = new ArrayList<Thread>();
+    private static final List<Thread> activeConsumers = new ArrayList<>();
 
     private static final Integer DEFAULT_LEASE_TIME_MINUTES = 5;
     private static final Integer DEFAULT_QUEUE_THREADS_NUMBER = 2;
@@ -176,6 +176,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     @Atomic
+    @SuppressWarnings("unused")
     private static void ensureSchedulerSystem() {
         if (Bennu.getInstance().getSchedulerSystem() == null) {
             new SchedulerSystem();
@@ -293,7 +294,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      */
     @Atomic(mode = TxMode.WRITE)
     private static void cleanNonExistingSchedules() {
-        Set<TaskSchedule> scheduleSet = new HashSet<TaskSchedule>(SchedulerSystem.getInstance().getTaskScheduleSet());
+        Set<TaskSchedule> scheduleSet = new HashSet<>(SchedulerSystem.getInstance().getTaskScheduleSet());
         for (TaskSchedule schedule : scheduleSet) {
             if (!tasks.containsKey(schedule.getTaskClassName())) {
                 LOG.warn("Class {} is no longer available. schedule {} - {} - {} deleted. ", schedule.getTaskClassName(),

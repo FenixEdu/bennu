@@ -4,7 +4,7 @@ import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 
 public class CustomExecutionLog extends ExecutionLog {
 
-    public final static String LOG_JSON_FILENAME = "customExecutionLog.json";
+    public final static String CUSTOMLOG_JSON_FILENAME = "customExecutionLog.json";
     private String javaCode;
 
     public CustomExecutionLog(String taskName) {
@@ -21,12 +21,12 @@ public class CustomExecutionLog extends ExecutionLog {
 
     @Override
     protected String getLogFilePath() {
-        return SchedulerSystem.getLogsPath().concat(LOG_JSON_FILENAME);
+        return SchedulerSystem.getLogsPath().concat(CUSTOMLOG_JSON_FILENAME);
     }
 
     @Override
     protected Object getLock() {
-        return LOG_JSON_FILENAME;
+        return CUSTOMLOG_JSON_FILENAME;
     }
 
     @Override

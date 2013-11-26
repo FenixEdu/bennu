@@ -24,7 +24,7 @@ public class DomainStorage extends DomainStorage_Base {
     @Override
     public String store(String uniqueIdentification, byte[] content) {
         final DomainObject existingRawData = FenixFramework.getDomainObject(uniqueIdentification);
-        if (existingRawData instanceof FileRawData && existingRawData != null) {
+        if (existingRawData != null && existingRawData instanceof FileRawData) {
             ((FileRawData) existingRawData).delete();
         }
 

@@ -19,7 +19,6 @@ package pt.ist.bennu.core.i18n;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import java.util.regex.Matcher;
 
 import org.slf4j.Logger;

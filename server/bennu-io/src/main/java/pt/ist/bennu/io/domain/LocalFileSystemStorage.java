@@ -54,6 +54,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     @Override
+    @SuppressWarnings("unused")
     public String store(String uniqueIdentification, byte[] content) {
 
         final String fullPath = getFullPath(uniqueIdentification);

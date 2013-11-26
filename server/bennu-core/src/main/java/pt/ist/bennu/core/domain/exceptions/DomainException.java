@@ -33,6 +33,8 @@ import com.google.gson.JsonObject;
  * </p>
  */
 public class DomainException extends RuntimeException {
+    private static final long serialVersionUID = 3292374361672788603L;
+
     private final String key;
 
     private final String[] args;

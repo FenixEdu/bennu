@@ -18,10 +18,12 @@ package pt.ist.bennu.core.grouplanguage;
 
 import java.util.List;
 
-import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.CustomGroup;
+import pt.ist.bennu.core.domain.groups.Group;
 
 class Custom extends GroupToken {
+    private static final long serialVersionUID = 835981709248895861L;
+
     private final String operator;
 
     private final List<String> args;

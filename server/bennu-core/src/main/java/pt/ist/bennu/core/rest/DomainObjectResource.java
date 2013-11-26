@@ -58,9 +58,8 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
         if (canList()) {
             accessControl(getAccessExpression());
             return view(all(), collectionKey());
-        } else {
-            throw new UnsupportedOperationException();
         }
+        throw new UnsupportedOperationException();
     }
 
     @GET
@@ -70,9 +69,8 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
         if (canView()) {
             accessControl(getAccessExpression());
             return view(readDomainObject(oid));
-        } else {
-            throw new UnsupportedOperationException();
         }
+        throw new UnsupportedOperationException();
     }
 
     @PUT
@@ -83,9 +81,8 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
         if (canUpdate()) {
             accessControl(getAccessExpression());
             return view(update(jsonData, readDomainObject(oid)));
-        } else {
-            throw new UnsupportedOperationException();
         }
+        throw new UnsupportedOperationException();
     }
 
     @POST
@@ -95,9 +92,8 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
         if (canCreate()) {
             accessControl(getAccessExpression());
             return view(create(jsonData, type()));
-        } else {
-            throw new UnsupportedOperationException();
         }
+        throw new UnsupportedOperationException();
     }
 
     @DELETE
@@ -113,8 +109,7 @@ public abstract class DomainObjectResource<T extends AbstractDomainObject> exten
             }
             LOG.trace("Object {} was deleted: {}", oid, jsonRep);
             return jsonRep;
-        } else {
-            throw new UnsupportedOperationException();
         }
+        throw new UnsupportedOperationException();
     }
 }

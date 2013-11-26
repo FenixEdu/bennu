@@ -31,6 +31,7 @@ public class FileStorageConfiguration extends FileStorageConfiguration_Base {
         return null;
     }
 
+    @SuppressWarnings("unused")
     public static void createMissingStorageConfigurations() {
         final HashSet<String> existingFileTypes = new HashSet<>();
         for (final FileStorageConfiguration fileStorageConfiguration : FileSupport.getInstance()

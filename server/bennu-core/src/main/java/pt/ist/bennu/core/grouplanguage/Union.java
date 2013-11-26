@@ -24,6 +24,8 @@ import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.domain.groups.UnionGroup;
 
 class Union extends GroupToken {
+    private static final long serialVersionUID = -318802978629380124L;
+
     private final List<GroupToken> children;
 
     public Union(List<GroupToken> children) {

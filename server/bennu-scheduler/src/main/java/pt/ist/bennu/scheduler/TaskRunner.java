@@ -32,9 +32,8 @@ public class TaskRunner implements Runnable {
     public boolean equals(Object obj) {
         if (obj instanceof TaskRunner) {
             return ((TaskRunner) obj).getTaskName().equals(getTaskName());
-        } else {
-            return false;
         }
+        return false;
     }
 
     public String getTaskName() {
