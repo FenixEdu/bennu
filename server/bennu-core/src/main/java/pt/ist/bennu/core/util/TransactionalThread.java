@@ -54,7 +54,7 @@ public abstract class TransactionalThread extends Thread {
 
     public void addExceptionListener(ExceptionListener listener) {
         if (listeners == null) {
-            listeners = new ArrayList<ExceptionListener>();
+            listeners = new ArrayList<>();
         }
         listeners.add(listener);
     }

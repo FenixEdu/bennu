@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.core.util.CoreConfiguration;
 import pt.ist.dsi.commons.i18n.I18N;
 import pt.ist.dsi.commons.i18n.LocalizedString;
 
@@ -50,7 +50,7 @@ public class BundleUtil {
 
     public static LocalizedString getLocalizedString(final String bundle, final String key, String... args) {
         LocalizedString i18NString = new LocalizedString();
-        for (Locale locale : ConfigurationManager.getSupportedLocales()) {
+        for (Locale locale : CoreConfiguration.supportedLocales()) {
             String message = getString(bundle, locale, key, args);
             i18NString = i18NString.with(locale, message);
         }

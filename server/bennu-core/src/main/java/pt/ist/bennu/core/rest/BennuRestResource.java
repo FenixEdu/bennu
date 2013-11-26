@@ -17,8 +17,8 @@ import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.security.UserSession;
-import pt.ist.bennu.core.util.ConfigurationManager;
-import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
+import pt.ist.bennu.core.util.CoreConfiguration;
+import pt.ist.bennu.core.util.CoreConfiguration.CasConfig;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 
@@ -34,7 +34,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
     }
 
     protected CasConfigContext getCasConfigContext() {
-        return new CasConfigContext(ConfigurationManager.getCasConfig());
+        return new CasConfigContext(CoreConfiguration.casConfig());
     }
 
     public class CasConfigContext {

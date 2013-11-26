@@ -22,7 +22,7 @@ import pt.ist.bennu.core.domain.groups.LoggedGroup;
 import pt.ist.bennu.core.rest.json.UserSessionViewer;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.security.UserSession;
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.core.util.CoreConfiguration;
 import pt.ist.dsi.commons.i18n.I18N;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -38,9 +38,10 @@ public class ProfileResource extends BennuRestResource {
     @GET
     @Path("caslogin")
     public Response caslogin() {
-        if (ConfigurationManager.getCasConfig().isCasEnabled()) {
+        if (CoreConfiguration.casConfig().isCasEnabled()) {
             try {
-                return Response.temporaryRedirect(new URI(ConfigurationManager.getCasConfig().getCasLoginUrl(request))).build();
+                return Response.temporaryRedirect(
+                        new URI(CoreConfiguration.casConfig().getCasLoginUrl(request))).build();
             } catch (URISyntaxException e) {
             }
         }
@@ -51,7 +52,7 @@ public class ProfileResource extends BennuRestResource {
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(@FormParam("username") String username, @FormParam("password") String password) {
-        if (!ConfigurationManager.getCasConfig().isCasEnabled()) {
+        if (!CoreConfiguration.casConfig().isCasEnabled()) {
             return Response.ok(view(login(username, password, false))).build();
         }
         throw AuthorizationException.authenticationFailed();
@@ -63,9 +64,9 @@ public class ProfileResource extends BennuRestResource {
     public Response logout(@Context HttpServletResponse response) {
         accessControl(LoggedGroup.getInstance());
         Authenticate.logout(request.getSession(false));
-        if (ConfigurationManager.getCasConfig().isCasEnabled()) {
+        if (CoreConfiguration.casConfig().isCasEnabled()) {
             try {
-                response.sendRedirect(ConfigurationManager.getCasConfig().getCasLogoutUrl());
+                response.sendRedirect(CoreConfiguration.casConfig().getCasLogoutUrl());
             } catch (IOException e) {
             }
         } else {
@@ -78,7 +79,7 @@ public class ProfileResource extends BennuRestResource {
     @Path("locale/{tag}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeLocale(@PathParam("tag") String localeTag) {
-        if (ConfigurationManager.isSupportedLanguage(localeTag)) {
+        if (CoreConfiguration.supportedLocales().contains(Locale.forLanguageTag(localeTag))) {
             final Locale locale = Locale.forLanguageTag(localeTag);
             I18N.setLocale(request.getSession(true), locale);
             if (Authenticate.isLogged()) {
@@ -99,7 +100,7 @@ public class ProfileResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePreferredLocale(@PathParam("tag") String localeTag) {
         accessControl(LoggedGroup.getInstance());
-        if (ConfigurationManager.isSupportedLanguage(localeTag)) {
+        if (CoreConfiguration.supportedLocales().contains(Locale.forLanguageTag(localeTag))) {
             Locale locale = Locale.forLanguageTag(localeTag);
             Authenticate.getUser().setPreferredLocale(locale);
             I18N.setLocale(request.getSession(true), locale);

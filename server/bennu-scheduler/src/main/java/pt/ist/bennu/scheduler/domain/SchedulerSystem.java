@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.Bennu;
-import pt.ist.bennu.core.util.ConfigurationManager;
 import pt.ist.bennu.io.domain.LocalFileSystemStorage;
+import pt.ist.bennu.scheduler.SchedulerConfiguration;
 import pt.ist.bennu.scheduler.TaskRunner;
 import pt.ist.bennu.scheduler.annotation.Task;
 import pt.ist.fenixframework.Atomic;
@@ -37,9 +37,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     public static Set<TaskRunner> runningTasks;
     public static Set<TaskSchedule> scheduledTasks;
     private static final List<Thread> activeConsumers = new ArrayList<>();
-
-    private static final Integer DEFAULT_LEASE_TIME_MINUTES = 5;
-    private static final Integer DEFAULT_QUEUE_THREADS_NUMBER = 2;
 
     private static transient Integer leaseTime;
     private static transient Integer queueThreadsNumber;
@@ -60,8 +57,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      */
     private static Integer getLeaseTimeMinutes() {
         if (leaseTime == null) {
-            final Integer leaseTimeProperty =
-                    ConfigurationManager.getIntegerProperty("scheduler.lease.time.minutes", DEFAULT_LEASE_TIME_MINUTES);
+            final Integer leaseTimeProperty = SchedulerConfiguration.getConfiguration().leaseTimeMinutes();
             if (leaseTimeProperty < 2) {
                 throw new Error("property scheduler.lease.time.minutes must be a positive integer greater than 1.");
             }
@@ -78,8 +74,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      */
     private static Integer getQueueThreadsNumber() {
         if (queueThreadsNumber == null) {
-            final Integer queueThreadsNumberProperty =
-                    ConfigurationManager.getIntegerProperty("scheduler.queue.threads.number", DEFAULT_QUEUE_THREADS_NUMBER);
+            final Integer queueThreadsNumberProperty = SchedulerConfiguration.getConfiguration().queueThreadsNumber();
             if (queueThreadsNumberProperty < 1) {
                 throw new Error("property scheduler.queue.threads.number must be a positive integer greater than 0.");
             }

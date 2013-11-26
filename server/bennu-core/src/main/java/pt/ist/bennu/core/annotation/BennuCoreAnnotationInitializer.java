@@ -28,7 +28,7 @@ import javax.ws.rs.ext.Provider;
 import pt.ist.bennu.core.domain.groups.CustomGroup;
 import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.core.servlets.BennuJerseyRestApplication;
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.core.util.ModuleMapper;
 
 @HandlesTypes({ CustomGroupOperator.class, Path.class, Provider.class, DefaultJsonAdapter.class })
 public class BennuCoreAnnotationInitializer implements ServletContainerInitializer {
@@ -43,8 +43,7 @@ public class BennuCoreAnnotationInitializer implements ServletContainerInitializ
                 }
                 Path restEndpoint = type.getAnnotation(Path.class);
                 if (restEndpoint != null) {
-                    BennuJerseyRestApplication.registerEndpoint(ConfigurationManager.getModuleOf(type), restEndpoint.value(),
-                            type);
+                    BennuJerseyRestApplication.registerEndpoint(ModuleMapper.getModuleOf(type), restEndpoint.value(), type);
                 }
                 Provider restProvider = type.getAnnotation(Provider.class);
                 if (restProvider != null) {

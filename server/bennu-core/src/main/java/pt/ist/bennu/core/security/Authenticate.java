@@ -31,7 +31,8 @@ import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.groups.DynamicGroup;
 import pt.ist.bennu.core.domain.groups.UserGroup;
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.core.util.CoreConfiguration;
+import pt.ist.bennu.core.util.CoreConfiguration.ConfigurationProperties;
 import pt.ist.bennu.core.util.TransactionalThread;
 import pt.ist.dsi.commons.i18n.I18N;
 import pt.ist.fenixframework.Atomic;
@@ -62,13 +63,13 @@ public class Authenticate {
     @Atomic
     private static UserSession internalLogin(String username, String password, boolean checkPassword) {
         User user = User.findByUsername(username);
-        if (checkPassword && ConfigurationManager.getBooleanProperty("check.login.password", true)) {
+        if (checkPassword && CoreConfiguration.getConfiguration().checkLoginPassword()) {
             if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
                 throw AuthorizationException.authenticationFailed();
             }
         }
         if (user == null) {
-            if (ConfigurationManager.getCasConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
+            if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
                 user = new User(username);
             } else {
                 throw AuthorizationException.authenticationFailed();
@@ -101,8 +102,8 @@ public class Authenticate {
         user.setLastLogoutDateTime(new DateTime());
     }
 
-    public static void mock(String username) {
-        setUser(new UserSession(User.findByUsername(username)));
+    public static void mock(User user) {
+        setUser(new UserSession(user));
     }
 
     public static void unmock() {

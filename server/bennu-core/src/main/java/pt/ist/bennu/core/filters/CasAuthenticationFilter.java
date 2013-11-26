@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.core.util.CoreConfiguration;
 import edu.yale.its.tp.cas.client.CASAuthenticationException;
 import edu.yale.its.tp.cas.client.CASReceipt;
 import edu.yale.its.tp.cas.client.ProxyTicketValidator;
@@ -74,7 +74,7 @@ public class CasAuthenticationFilter implements Filter {
 
     public static CASReceipt getCASReceipt(final String casTicket, final String requestURL) throws UnsupportedEncodingException,
             CASAuthenticationException {
-        String casValidateUrl = ConfigurationManager.getCasConfig().getCasValidateUrl();
+        String casValidateUrl = CoreConfiguration.casConfig().getCasValidateUrl();
         String casServiceUrl = URLEncoder.encode(requestURL.replace("http://", "https://").replace(":8080", ""), "UTF-8");
 
         ProxyTicketValidator pv = new ProxyTicketValidator();

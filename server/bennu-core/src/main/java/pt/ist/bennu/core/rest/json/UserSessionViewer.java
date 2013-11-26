@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.security.UserSession;
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.core.util.CoreConfiguration;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.json.JsonViewer;
 import pt.ist.dsi.commons.i18n.I18N;
@@ -25,7 +25,7 @@ public class UserSessionViewer implements JsonViewer<UserSession> {
         }
         final Locale currentLocale = I18N.getLocale();
         json.add("locale", ctx.view(currentLocale));
-        json.add("locales", ctx.view(ConfigurationManager.getSupportedLocales()));
+        json.add("locales", ctx.view(CoreConfiguration.supportedLocales()));
         return json;
     }
 }

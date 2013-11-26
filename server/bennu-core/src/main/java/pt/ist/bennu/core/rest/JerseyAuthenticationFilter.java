@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.core.util.BennuCoreConfiguration;
 
 import com.sun.jersey.core.util.Base64;
 
@@ -81,7 +81,7 @@ public class JerseyAuthenticationFilter implements Filter {
         final String[] decodedUserPass = Base64.base64Decode(userPass).split(":");
         final String username = decodedUserPass[0];
         final String password = decodedUserPass[1];
-        if (password.equals(ConfigurationManager.getThisServerSecret())) {
+        if (password.equals(BennuCoreConfiguration.getConfiguration().thisServerRestSecret())) {
             LOG.debug("Rest secret is known, login mock user {}", username);
             return username;
         }

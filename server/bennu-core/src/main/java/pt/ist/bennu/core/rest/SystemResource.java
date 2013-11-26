@@ -38,7 +38,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import pt.ist.bennu.core.rest.json.KeyValuePropertiesViewer;
-import pt.ist.bennu.core.util.ConfigurationManager;
+import pt.ist.bennu.core.util.ConfigurationInvocationHandler;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.google.gson.JsonArray;
@@ -96,8 +96,10 @@ public class SystemResource extends BennuRestResource {
         }
         json.add("http", headers);
 
-        json.add("conf", getBuilder()
-                .view(ConfigurationManager.rawProperties(), Properties.class, KeyValuePropertiesViewer.class));
+        json.add(
+                "conf",
+                getBuilder().view(ConfigurationInvocationHandler.rawProperties(), Properties.class,
+                        KeyValuePropertiesViewer.class));
 
         return Response.ok(toJson(json)).build();
     }

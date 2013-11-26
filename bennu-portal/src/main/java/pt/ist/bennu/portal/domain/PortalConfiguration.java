@@ -1,6 +1,7 @@
 package pt.ist.bennu.portal.domain;
 
 import pt.ist.bennu.core.domain.Bennu;
+import pt.ist.bennu.core.util.CoreConfiguration;
 import pt.ist.dsi.commons.i18n.I18N;
 import pt.ist.dsi.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.Atomic;
@@ -22,6 +23,12 @@ public class PortalConfiguration extends PortalConfiguration_Base {
             initialize();
         }
         return Bennu.getInstance().getConfiguration();
+    }
+
+    @Override
+    public String getSupportEmailAddress() {
+        return super.getSupportEmailAddress() != null ? super.getSupportEmailAddress() : CoreConfiguration
+                .getConfiguration().defaultSupportEmailAddress();
     }
 
     @Atomic(mode = TxMode.WRITE)

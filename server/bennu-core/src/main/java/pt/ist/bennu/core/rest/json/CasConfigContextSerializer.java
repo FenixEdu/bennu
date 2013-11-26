@@ -2,7 +2,7 @@ package pt.ist.bennu.core.rest.json;
 
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.rest.BennuRestResource.CasConfigContext;
-import pt.ist.bennu.core.util.ConfigurationManager.CasConfig;
+import pt.ist.bennu.core.util.CoreConfiguration.CasConfig;
 import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.json.JsonViewer;
 
