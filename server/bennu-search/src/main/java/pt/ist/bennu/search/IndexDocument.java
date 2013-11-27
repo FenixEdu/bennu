@@ -12,20 +12,31 @@ import org.apache.lucene.document.TextField;
 import org.joda.time.Partial;
 import org.joda.time.format.DateTimeFormatter;
 
-import pt.ist.bennu.search.DomainIndexer.DefaultIndexFields;
+import pt.ist.bennu.search.domain.DomainIndexSystem;
 
 import com.google.common.base.Joiner;
 
 /**
- * This represents a set of lucene indexes for a given domain object. Adding
- * indexFields to this object can be done using the ones already given by
- * pt.ist.fenixframework.plugins.luceneIndexing.DomainIndexer.DefaultIndexFields
- * Although implementations of IndexableField can be created to give more
- * expressiveness to the indexes.
+ * This represents a set of lucene indexes for a given domain object.
  * 
  * @author Paulo Abrantes
  */
 public class IndexDocument {
+    public static enum DefaultIndexFields implements IndexableField {
+        DEFAULT_FIELD("all"), IDENTIFIER_FIELD("OID");
+
+        private String fieldName;
+
+        private DefaultIndexFields(String fieldName) {
+            this.fieldName = fieldName;
+        }
+
+        @Override
+        public String getFieldName() {
+            return fieldName;
+        }
+    }
+
     private final String id;
 
     private final Document document = new Document();
@@ -38,7 +49,7 @@ public class IndexDocument {
     }
 
     public IndexDocument indexString(IndexableField field, String value, Store store) {
-        document.add(new StringField(field.getFieldName(), DomainIndexer.normalize(value), store));
+        document.add(new StringField(field.getFieldName(), DomainIndexSystem.normalize(value), store));
         accumulate(value);
         return this;
     }
@@ -48,7 +59,7 @@ public class IndexDocument {
     }
 
     public IndexDocument indexText(IndexableField field, String value, Store store) {
-        document.add(new TextField(field.getFieldName(), DomainIndexer.normalize(value), store));
+        document.add(new TextField(field.getFieldName(), DomainIndexSystem.normalize(value), store));
         accumulate(value);
         return this;
     }
@@ -73,7 +84,7 @@ public class IndexDocument {
     }
 
     private void accumulate(String value) {
-        accumulated.add(DomainIndexer.normalize(value));
+        accumulated.add(DomainIndexSystem.normalize(value));
     }
 
     @Override

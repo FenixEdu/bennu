@@ -23,40 +23,104 @@ package pt.ist.bennu.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.FuzzyQuery;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
+import org.apache.lucene.search.WildcardQuery;
 
-import pt.ist.bennu.search.DomainIndexer.DefaultIndexFields;
-
-import com.google.common.base.Joiner;
+import pt.ist.bennu.search.IndexDocument.DefaultIndexFields;
+import pt.ist.bennu.search.domain.DomainIndexSystem;
 
 public class Search {
-    List<String> terms = new ArrayList<>();
+    private BooleanQuery query = new BooleanQuery();
 
-    List<SortField> sort = new ArrayList<>();
+    private List<SortField> sort = new ArrayList<>();
 
     public Search() {
     }
 
-    public Search must(String... values) {
-        return must(DefaultIndexFields.DEFAULT_FIELD, values);
-    }
-
-    public Search must(IndexableField field, String... values) {
-        for (String value : values) {
-            terms.add("+" + field.getFieldName() + ":" + DomainIndexer.normalize(QueryParser.escape(value)));
+    public Search tokens(IndexableField field, String text, Occur occur) {
+        List<Term> terms = makeTerm(field, text);
+        for (Term term : terms) {
+            query.add(new TermQuery(term), occur);
         }
         return this;
     }
 
-    public Search range(IndexableField field, String start, String end, boolean inclusive) {
-        if (inclusive) {
-            terms.add(field.getFieldName() + ":[" + start + " TO " + end + "]");
+    public Search tokens(String text, Occur occur) {
+        return tokens(DefaultIndexFields.DEFAULT_FIELD, text, occur);
+    }
+
+    public Search phrase(IndexableField field, String phrase, Occur occur) {
+        List<Term> terms = makeTerm(field, phrase);
+        if (terms.size() > 1) {
+            PhraseQuery phraseQuery = new PhraseQuery();
+            for (Term term : terms) {
+                phraseQuery.add(term);
+            }
+            query.add(phraseQuery, occur);
         } else {
-            terms.add(field.getFieldName() + ":{" + start + " TO " + end + "}");
+            query.add(new TermQuery(terms.iterator().next()), occur);
         }
         return this;
+    }
+
+    public Search phrase(String phrase, Occur occur) {
+        return phrase(DefaultIndexFields.DEFAULT_FIELD, phrase, occur);
+    }
+
+    public Search wildcard(IndexableField field, String pattern, Occur occur) {
+        List<Term> terms = makeTerm(field, pattern);
+        for (Term term : terms) {
+            query.add(new WildcardQuery(term), occur);
+        }
+        return this;
+    }
+
+    public Search wildcard(String pattern, Occur occur) {
+        return wildcard(DefaultIndexFields.DEFAULT_FIELD, pattern, occur);
+    }
+
+    public Search fuzzy(IndexableField field, String pattern, Occur occur) {
+        List<Term> terms = makeTerm(field, pattern);
+        for (Term term : terms) {
+            query.add(new FuzzyQuery(term), occur);
+        }
+        return this;
+    }
+
+    public Search fuzzy(String pattern, Occur occur) {
+        return fuzzy(DefaultIndexFields.DEFAULT_FIELD, pattern, occur);
+    }
+
+    public Search range(IndexableField field, String lower, String upper, boolean includeLower, boolean includeUpper, Occur occur) {
+        TermRangeQuery range = TermRangeQuery.newStringRange(field.getFieldName(), lower, upper, includeLower, includeUpper);
+        query.add(range, occur);
+        return this;
+    }
+
+    public Search range(String lower, String upper, boolean includeLower, boolean includeUpper, Occur occur) {
+        return range(DefaultIndexFields.DEFAULT_FIELD, lower, upper, includeLower, includeUpper, occur);
+    }
+
+    public Search subquery(Search search, Occur occur) {
+        query.add(search.query, occur);
+        return this;
+    }
+
+    private List<Term> makeTerm(IndexableField field, String text) {
+        List<Term> terms = new ArrayList<>();
+        List<String> tokens = DomainIndexSystem.tokenizeString(field, text);
+        for (String token : tokens) {
+            terms.add(new Term(field.getFieldName(), token));
+        }
+        return terms;
     }
 
     public Search sort(IndexableField field, boolean reverse) {
@@ -66,10 +130,9 @@ public class Search {
 
     public <T extends Indexable> List<T> search(Class<T> type, int maxHits) {
         if (sort.isEmpty()) {
-            return DomainIndexer.getInstance().search(type, Joiner.on(' ').join(terms), maxHits);
+            return DomainIndexSystem.search(type, query, maxHits);
         }
-        return DomainIndexer.getInstance().search(type, Joiner.on(' ').join(terms), maxHits,
-                new Sort(sort.toArray(new SortField[0])));
+        return DomainIndexSystem.search(type, query, maxHits, new Sort(sort.toArray(new SortField[0])));
     }
 
     public <T extends Indexable> List<T> search(Class<T> type) {
