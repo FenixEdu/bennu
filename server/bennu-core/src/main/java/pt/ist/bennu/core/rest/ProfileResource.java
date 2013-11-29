@@ -81,7 +81,7 @@ public class ProfileResource extends BennuRestResource {
         if (ConfigurationManager.isSupportedLanguage(localeTag)) {
             final Locale locale = Locale.forLanguageTag(localeTag);
             I18N.setLocale(request.getSession(true), locale);
-            if (Authenticate.hasUser()) {
+            if (Authenticate.isLogged()) {
                 setPreferredLocale(locale);
             }
             return Response.ok(view(Authenticate.getUserSession(), UserSession.class, UserSessionViewer.class)).build();

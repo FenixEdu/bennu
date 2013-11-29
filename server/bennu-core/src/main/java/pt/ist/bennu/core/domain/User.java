@@ -65,11 +65,15 @@ public class User extends User_Base {
 
     private static UserPresentationStrategy strategy = defaultStrategy;
 
-    public User(final String username) {
+    public User() {
         super();
-        setUsername(username);
         setBennu(Bennu.getInstance());
         setCreated(new DateTime());
+    }
+
+    public User(final String username) {
+        this();
+        setUsername(username);
     }
 
     public static User findByUsername(final String username) {
@@ -81,9 +85,10 @@ public class User extends User_Base {
         return null;
     }
 
-    public void generatePassword() {
+    public String generatePassword() {
         final String password = RandomStringUtils.randomAlphanumeric(10);
         setPassword(password);
+        return password;
     }
 
     @Override

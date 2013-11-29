@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.core.security.UserSession;
 import pt.ist.bennu.scheduler.annotation.Task;
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.bennu.scheduler.log.ExecutionLog;
@@ -80,7 +79,7 @@ public abstract class CronTask implements Runnable {
         } finally {
             getExecutionLog().end();
             resetLoggers();
-            Authenticate.setUser((UserSession) null);
+            Authenticate.unmock();
         }
     }
 

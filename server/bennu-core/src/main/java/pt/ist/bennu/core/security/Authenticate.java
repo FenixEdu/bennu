@@ -93,12 +93,20 @@ public class Authenticate {
             session.removeAttribute(USER_SESSION_ATTRIBUTE);
             session.invalidate();
         }
-        setUser((UserSession) null);
+        setUser(null);
     }
 
     @Atomic
     private static void internalLogout(User user) {
         user.setLastLogoutDateTime(new DateTime());
+    }
+
+    public static void mock(String username) {
+        setUser(new UserSession(User.findByUsername(username)));
+    }
+
+    public static void unmock() {
+        setUser(null);
     }
 
     public static UserSession getUserSession() {
@@ -109,16 +117,12 @@ public class Authenticate {
         return wrapper.get() != null ? wrapper.get().getUser() : null;
     }
 
-    public static void setUser(UserSession user) {
-        wrapper.set(user);
-    }
-
-    public static void setUser(User user) {
-        setUser(new UserSession(user));
-    }
-
-    public static boolean hasUser() {
+    public static boolean isLogged() {
         return wrapper.get() != null;
+    }
+
+    static void setUser(UserSession user) {
+        wrapper.set(user);
     }
 
     public static String getPrivateConstantForDigestCalculation() {
