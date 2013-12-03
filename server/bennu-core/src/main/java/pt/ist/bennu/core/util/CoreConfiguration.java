@@ -2,14 +2,12 @@ package pt.ist.bennu.core.util;
 
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import pt.ist.bennu.core.annotation.ConfigurationManager;
 import pt.ist.bennu.core.annotation.ConfigurationProperty;
-import pt.ist.bennu.core.util.rest.RestHost;
 
 import com.google.common.base.Strings;
 
@@ -78,16 +76,10 @@ public class CoreConfiguration {
                 defaultValue = "false")
         public Boolean developmentMode();
 
-        @ConfigurationProperty(key = "*.rest.url,*.rest.secret")
-        public Map<String, RestHost> serverHosts();
-
         @ConfigurationProperty(key = "locales.supported",
                 description = "Locales that should be supported in ResourceBundles and other I18N mechanisms.",
                 defaultValue = "en-GB")
         public String supportedLocales();
-
-        @ConfigurationProperty(key = "rest.secret")
-        public String thisServerRestSecret();
 
         @ConfigurationProperty(key = "cas.enabled", defaultValue = "false")
         public Boolean casEnabled();
