@@ -13,7 +13,7 @@ public class PortalConfiguration extends PortalConfiguration_Base {
         setApplicationSubTitle(new LocalizedString(I18N.getLocale(), "Application Subtitle"));
         setApplicationCopyright(new LocalizedString(I18N.getLocale(), "Organization Copyright"));
         setHtmlTitle(getApplicationTitle());
-        setTheme("dot");
+        setTheme("default");
         setMenu(new MenuItem());
     }
 
