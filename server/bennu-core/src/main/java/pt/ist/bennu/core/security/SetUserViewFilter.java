@@ -26,6 +26,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.MDC;
+
 public class SetUserViewFilter implements Filter {
     @Override
     public void init(FilterConfig config) {
@@ -40,9 +42,13 @@ public class SetUserViewFilter implements Filter {
             ServletException {
         try {
             Authenticate.updateFromSession(((HttpServletRequest) request).getSession(false));
+            if (Authenticate.isLogged()) {
+                MDC.put("user", Authenticate.getUser().getUsername());
+            }
             chain.doFilter(request, response);
         } finally {
-            Authenticate.setUser((UserSession) null);
+            MDC.remove("user");
+            Authenticate.setUser(null);
         }
     }
 }

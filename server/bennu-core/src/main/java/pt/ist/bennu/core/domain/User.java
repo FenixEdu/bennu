@@ -65,14 +65,10 @@ public class User extends User_Base {
 
     private static UserPresentationStrategy strategy = defaultStrategy;
 
-    public User() {
+    public User(final String username) {
         super();
         setBennu(Bennu.getInstance());
         setCreated(new DateTime());
-    }
-
-    public User(final String username) {
-        this();
         setUsername(username);
     }
 
