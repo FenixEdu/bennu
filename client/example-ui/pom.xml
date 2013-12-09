@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>pt.ist</groupId>
 		<artifactId>bankai-project</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-M1</version>
 		<relativePath></relativePath>
 	</parent>
 
