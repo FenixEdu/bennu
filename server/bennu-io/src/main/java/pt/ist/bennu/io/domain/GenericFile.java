@@ -1,7 +1,5 @@
 package pt.ist.bennu.io.domain;
 
-import pt.ist.fenixframework.Atomic;
-
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -16,6 +14,8 @@ import org.apache.commons.codec.binary.Hex;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Strings;
 
@@ -148,7 +148,7 @@ abstract public class GenericFile extends GenericFile_Base {
         setContent(getContent());
     }
 
-    private FileStorage getFileStorage() {
+    protected FileStorage getFileStorage() {
         final FileStorage fileStorage = FileStorageConfiguration.readFileStorageByFileType(getClass().getName());
         if (fileStorage == null) {
             throw new RuntimeException("error.fileStorage.notDefinedForClassType");

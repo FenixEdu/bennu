@@ -1,14 +1,5 @@
 package pt.ist.bennu.scheduler;
 
-import pt.ist.bennu.scheduler.annotation.Task;
-import pt.ist.bennu.scheduler.domain.SchedulerSystem;
-import pt.ist.bennu.scheduler.log.ExecutionLog;
-import pt.ist.esw.advice.pt.ist.fenixframework.AtomicInstance;
-
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-import pt.ist.fenixframework.FenixFramework;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,6 +10,16 @@ import java.util.concurrent.Callable;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import pt.ist.bennu.core.security.Authenticate;
+import pt.ist.bennu.core.security.UserSession;
+import pt.ist.bennu.scheduler.annotation.Task;
+import pt.ist.bennu.scheduler.domain.SchedulerSystem;
+import pt.ist.bennu.scheduler.log.ExecutionLog;
+import pt.ist.esw.advice.pt.ist.fenixframework.AtomicInstance;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.base.Joiner;
 
@@ -64,7 +65,7 @@ public abstract class CronTask implements Runnable {
         return taskLogWriter;
     }
 
-    public abstract void runTask();
+    public abstract void runTask() throws Exception;
 
     @Override
     public final void run() {
@@ -79,6 +80,7 @@ public abstract class CronTask implements Runnable {
         } finally {
             getExecutionLog().end();
             resetLoggers();
+            Authenticate.setUser((UserSession) null);
         }
     }
 
