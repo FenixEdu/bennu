@@ -168,7 +168,6 @@
     <modules>
         <module>bennu-portal</module>
         <module>client</module>
-        <module>portal-frameworks</module>
         <module>server</module>
         <module>theme</module>
     </modules>
