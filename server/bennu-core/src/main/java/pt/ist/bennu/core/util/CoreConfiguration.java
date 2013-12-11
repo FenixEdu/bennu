@@ -34,7 +34,7 @@ public class CoreConfiguration {
         }
 
         public String getCasLoginUrl(HttpServletRequest request) {
-            return getCasLoginUrl("https://" + request.getRequestURL());
+            return getCasLoginUrl("https://" + request.getServerName());
         }
 
         public String getCasLoginUrl() {
