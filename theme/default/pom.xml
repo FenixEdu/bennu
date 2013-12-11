@@ -2,9 +2,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>pt.ist.bennu</groupId>
+    <parent>
+	    <groupId>pt.ist.bennu</groupId>
+        <artifactId>bennu-theme-aggregator</artifactId>
+		<version>2.0.0-M1</version>
+    </parent>
+
 	<artifactId>default-theme</artifactId>
-	<version>2.0.0-M1</version>
 	<packaging>jar</packaging>
 
 	<name>Bennu Default Theme</name>
