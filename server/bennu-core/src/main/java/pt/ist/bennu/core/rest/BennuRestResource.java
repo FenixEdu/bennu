@@ -16,7 +16,6 @@ import pt.ist.bennu.core.domain.exceptions.DomainException;
 import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.core.security.UserSession;
 import pt.ist.bennu.core.util.CoreConfiguration;
 import pt.ist.bennu.core.util.CoreConfiguration.CasConfig;
 import pt.ist.fenixframework.DomainObject;
@@ -28,10 +27,6 @@ public abstract class BennuRestResource extends JsonAwareResource {
 
     @Context
     HttpServletRequest request;
-
-    protected UserSession login(String username, String password, boolean checkPassword) {
-        return Authenticate.login(request.getSession(true), username, password, checkPassword);
-    }
 
     protected CasConfigContext getCasConfigContext() {
         return new CasConfigContext(CoreConfiguration.casConfig());

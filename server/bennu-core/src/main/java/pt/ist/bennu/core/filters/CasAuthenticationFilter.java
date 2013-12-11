@@ -64,7 +64,7 @@ public class CasAuthenticationFilter implements Filter {
             try {
                 final CASReceipt receipt = getCASReceipt(ticket, requestURL);
                 final String username = receipt.getUserName();
-                Authenticate.login(httpServletRequest.getSession(), username, null, false);
+                Authenticate.login(httpServletRequest.getSession(), username);
             } catch (CASAuthenticationException e) {
                 e.printStackTrace();
             }

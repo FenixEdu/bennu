@@ -29,13 +29,14 @@ import org.slf4j.LoggerFactory;
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
+import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.domain.groups.DynamicGroup;
 import pt.ist.bennu.core.domain.groups.UserGroup;
 import pt.ist.bennu.core.util.CoreConfiguration;
-import pt.ist.bennu.core.util.CoreConfiguration.ConfigurationProperties;
 import pt.ist.bennu.core.util.TransactionalThread;
 import pt.ist.dsi.commons.i18n.I18N;
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 public class Authenticate {
     private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
@@ -46,43 +47,75 @@ public class Authenticate {
 
     private static Set<AuthenticationListener> authenticationListeners;
 
-    public static UserSession login(HttpSession session, String username, String password, boolean checkPassword) {
-        UserSession user = internalLogin(username, password, checkPassword);
-        session.setAttribute(USER_SESSION_ATTRIBUTE, user);
-        final Locale preferredLocale = user.getUser().getPreferredLocale();
-        if (preferredLocale != null) {
-            I18N.setLocale(session, preferredLocale);
-        }
-
-        fireLoginListeners(user.getUser());
-        logger.debug("Logged in user: " + user.getUsername());
-
-        return user;
+    /**
+     * Login user with the specified username, intended for use with an external user authentication mechanism, local password is
+     * ignored. For password based authentication use: {@link #login(HttpSession, String, String)}.
+     * 
+     * @param session session on with to log the user
+     * @param username username of the user to login
+     * @return user wrapper of user logged in.
+     */
+    public static UserSession login(HttpSession session, String username) {
+        return internalLogin(session, username, null, false);
     }
 
-    @Atomic
-    private static UserSession internalLogin(String username, String password, boolean checkPassword) {
+    /**
+     * Login user with the specified username and password, intended for password based authentication. For external
+     * authentication mechanisms use: {@link #login(HttpSession, String)}.
+     * 
+     * @param session session on with to log the user
+     * @param username username of the user to login
+     * @param password password of the user to login
+     * @return user wrapper of user logged in.
+     */
+    public static UserSession login(HttpSession session, String username, String password) {
+        return internalLogin(session, username, password, true);
+    }
+
+    private static UserSession internalLogin(HttpSession session, String username, String password, boolean checkPassword) {
         User user = User.findByUsername(username);
-        if (checkPassword && CoreConfiguration.getConfiguration().checkLoginPassword()) {
+        if (checkPassword && !CoreConfiguration.getConfiguration().developmentMode()) {
             if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
                 throw AuthorizationException.authenticationFailed();
             }
         }
-        if (user == null) {
-            if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
-                user = new User(username);
-            } else {
-                throw AuthorizationException.authenticationFailed();
-            }
+        if (user == null && (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty())) {
+            user = attemptBootstrapUser(username);
         }
 
         UserSession userWrapper = new UserSession(user);
         setUser(userWrapper);
-        if (Bennu.getInstance().getUsersSet().size() == 1) {
-            DynamicGroup.initialize("managers", UserGroup.getInstance(user));
-            logger.info("Bootstrapped #managers group to user: " + user.getUsername());
+        session.setAttribute(USER_SESSION_ATTRIBUTE, userWrapper);
+        final Locale preferredLocale = user.getPreferredLocale();
+        if (preferredLocale != null) {
+            I18N.setLocale(session, preferredLocale);
         }
+
+        fireLoginListeners(user);
+        logger.debug("Logged in user: " + user.getUsername());
+
         return userWrapper;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static User attemptBootstrapUser(String username) {
+        try {
+            if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
+                User user = new User(username);
+                try {
+                    DynamicGroup.getInstance("managers");
+                    // Managers groups already initialized.
+                } catch (BennuCoreDomainException e) {
+                    setUser(new UserSession(user));
+                    DynamicGroup.initialize("managers", UserGroup.getInstance(user));
+                    logger.info("Bootstrapped #managers group to user: " + user.getUsername());
+                }
+                return user;
+            }
+            throw AuthorizationException.authenticationFailed();
+        } finally {
+            setUser(null);
+        }
     }
 
     public static void logout(HttpSession session) {

@@ -40,8 +40,7 @@ public class ProfileResource extends BennuRestResource {
     public Response caslogin() {
         if (CoreConfiguration.casConfig().isCasEnabled()) {
             try {
-                return Response.temporaryRedirect(
-                        new URI(CoreConfiguration.casConfig().getCasLoginUrl(request))).build();
+                return Response.temporaryRedirect(new URI(CoreConfiguration.casConfig().getCasLoginUrl(request))).build();
             } catch (URISyntaxException e) {
             }
         }
@@ -53,7 +52,7 @@ public class ProfileResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(@FormParam("username") String username, @FormParam("password") String password) {
         if (!CoreConfiguration.casConfig().isCasEnabled()) {
-            return Response.ok(view(login(username, password, false))).build();
+            return Response.ok(view(Authenticate.login(request.getSession(true), username, password))).build();
         }
         throw AuthorizationException.authenticationFailed();
     }

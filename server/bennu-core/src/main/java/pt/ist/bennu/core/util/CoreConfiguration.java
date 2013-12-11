@@ -56,10 +56,6 @@ public class CoreConfiguration {
 
     @ConfigurationManager(description = "Bennu Core Configurations")
     public interface ConfigurationProperties {
-        @ConfigurationProperty(key = "check.login.password",
-                description = "Whether the system should verify password on non CAS authentication.", defaultValue = "true")
-        public Boolean checkLoginPassword();
-
         @ConfigurationProperty(
                 key = "locale.default",
                 description = "Default System Locale. If empty falls back to java system default. Must be included in locales.supported")
