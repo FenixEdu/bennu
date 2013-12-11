@@ -153,7 +153,7 @@ public class DomainIndexSystem extends DomainIndexSystem_Base {
 
     public static FSDirectory getLuceneDomainDirectory(Class<? extends Indexable> indexableClass, boolean create)
             throws IOException {
-        String path = DomainIndexSystem.getInstance().getStorage().getAbsolutePath();
+        String path = DomainIndexSystem.getInstance().getStorage().getAbsolutePath() + "indexes/";
         File file = new File(path + indexableClass.getName());
         if (!file.isDirectory()) {
             if (!create) {
