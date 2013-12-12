@@ -82,6 +82,9 @@ public class Authenticate {
         if (user == null && (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty())) {
             user = attemptBootstrapUser(username);
         }
+        if (user.getExpiration() != null && user.getExpiration().isBefore(new DateTime())) {
+            throw AuthorizationException.authenticationFailed();
+        }
 
         UserSession userWrapper = new UserSession(user);
         setUser(userWrapper);
@@ -100,8 +103,12 @@ public class Authenticate {
     @Atomic(mode = TxMode.WRITE)
     private static User attemptBootstrapUser(String username) {
         try {
+            User user = User.findByUsername(username);
+            if (user != null) {
+                return user;
+            }
             if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
-                User user = new User(username);
+                user = new User(username);
                 try {
                     DynamicGroup.getInstance("managers");
                     // Managers groups already initialized.
