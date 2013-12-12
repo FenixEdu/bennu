@@ -86,7 +86,11 @@ public abstract class CronTask implements Runnable {
     private void resetLoggers() {
         logger = null;
         log = null;
-        taskLogWriter = null;
+        if (taskLogWriter != null) {
+            taskLogWriter.close();
+            taskLogWriter = null;
+        }
+
     }
 
     public ExecutionLog createLog() {
@@ -159,12 +163,11 @@ public abstract class CronTask implements Runnable {
     }
 
     protected final void taskLog(String format, Object... args) {
-        try (PrintWriter writer = getTaskLogWriter()) {
-            if (args == null || args.length < 1) {
-                writer.println(format);
-            } else {
-                writer.printf(format, args);
-            }
+        PrintWriter writer = getTaskLogWriter();
+        if (args == null || args.length < 1) {
+            writer.println(format);
+        } else {
+            writer.printf(format, args);
         }
     }
 
