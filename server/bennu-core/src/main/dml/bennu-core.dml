@@ -63,7 +63,7 @@ class User {
 	String password;
 	DateTime created;
 	DateTime lastLogoutDateTime;
-	DateTime expiration;
+	LocalDate expiration;
 	String email;
 	Locale preferredLocale;
 }

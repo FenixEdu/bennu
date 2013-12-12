@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +87,7 @@ public class Authenticate {
                 throw AuthorizationException.authenticationFailed();
             }
         }
-        if (user.getExpiration() != null && user.getExpiration().isBefore(new DateTime())) {
+        if (user.getExpiration() != null && new LocalDate().isAfter(user.getExpiration())) {
             throw AuthorizationException.authenticationFailed();
         }
 
