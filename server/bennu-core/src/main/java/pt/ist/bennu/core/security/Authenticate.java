@@ -79,8 +79,12 @@ public class Authenticate {
                 throw AuthorizationException.authenticationFailed();
             }
         }
-        if (user == null && (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty())) {
-            user = attemptBootstrapUser(username);
+        if (user == null) {
+            if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
+                user = attemptBootstrapUser(username);
+            } else {
+                throw AuthorizationException.authenticationFailed();
+            }
         }
         if (user.getExpiration() != null && user.getExpiration().isBefore(new DateTime())) {
             throw AuthorizationException.authenticationFailed();
