@@ -249,8 +249,6 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
         long start = System.currentTimeMillis();
         Set<Group> groups = new HashSet<>();
         Set<Group> ignored = new HashSet<>();
-        processAccessibleGroups(groups, ignored, AnyoneGroup.getInstance(), user);
-        processAccessibleGroups(groups, ignored, LoggedGroup.getInstance(), user);
         for (UserGroup group : user.getUserGroupSet()) {
             processAccessibleGroups(groups, ignored, group, user);
         }
