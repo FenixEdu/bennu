@@ -16,6 +16,8 @@
  */
 package pt.ist.bennu.core.domain;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Comparator;
 import java.util.Set;
 
@@ -28,11 +30,23 @@ import org.slf4j.LoggerFactory;
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.domain.groups.Group;
 
+import com.google.common.base.Charsets;
+
 /**
  * The application end user.
  */
 public class User extends User_Base {
     private static final Logger logger = LoggerFactory.getLogger(User.class);
+
+    private static SecureRandom prng = null;
+
+    static {
+        try {
+            prng = SecureRandom.getInstance("SHA1PRNG");
+        } catch (NoSuchAlgorithmException e) {
+            throw new Error("Please provide SHA1PRNG implementation", e);
+        }
+    }
 
     public interface UserPresentationStrategy {
         public String present(User user);
@@ -89,16 +103,21 @@ public class User extends User_Base {
 
     @Override
     public void setPassword(final String password) {
-        final String newHash = DigestUtils.sha512Hex(password);
-        final String oldHash = getPassword();
-        if (newHash.equals(oldHash)) {
-            throw BennuCoreDomainException.badOldPassword();
+        if (getPassword() != null) {
+            String newHashWithOldSalt = DigestUtils.sha512Hex(getSalt() + password);
+            if (newHashWithOldSalt.equals(getPassword())) {
+                throw BennuCoreDomainException.badOldPassword();
+            }
         }
-        super.setPassword(newHash);
+        byte salt[] = new byte[64];
+        prng.nextBytes(salt);
+        setSalt(new String(salt, Charsets.UTF_8));
+        String hash = DigestUtils.sha512Hex(getSalt() + password);
+        super.setPassword(hash);
     }
 
     public boolean matchesPassword(final String password) {
-        final String hash = DigestUtils.sha512Hex(password);
+        final String hash = DigestUtils.sha512Hex(getSalt() + password);
         return hash.equals(getPassword());
     }
 

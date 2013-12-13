@@ -61,6 +61,7 @@ relation DomainRootBennu {
 class User {
 	String username  (REQUIRED);
 	String password;
+	String salt;
 	DateTime created;
 	DateTime lastLogoutDateTime;
 	LocalDate expiration;
