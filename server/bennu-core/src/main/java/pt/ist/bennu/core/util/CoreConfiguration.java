@@ -6,12 +6,18 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.bennu.core.annotation.ConfigurationManager;
 import pt.ist.bennu.core.annotation.ConfigurationProperty;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 
 public class CoreConfiguration {
+    private static final Logger logger = LoggerFactory.getLogger(CoreConfiguration.class);
+
     public static class CasConfig {
         protected CasConfig(Boolean casEnabled, String casServerUrl, String casServiceUrl) {
             this.casEnabled = casEnabled;
@@ -72,9 +78,9 @@ public class CoreConfiguration {
                 defaultValue = "false")
         public Boolean developmentMode();
 
-        @ConfigurationProperty(key = "locales.supported",
-                description = "Locales that should be supported in ResourceBundles and other I18N mechanisms.",
-                defaultValue = "en-GB")
+        @ConfigurationProperty(
+                key = "locales.supported",
+                description = "Locales that should be supported in ResourceBundles and other I18N mechanisms. If not specified falls back to a list with only the java system default.")
         public String supportedLocales();
 
         @ConfigurationProperty(key = "cas.enabled", defaultValue = "false")
@@ -93,17 +99,31 @@ public class CoreConfiguration {
     private static Set<Locale> supportedLocales = new HashSet<>();
 
     static {
-        for (String locale : getConfiguration().supportedLocales().split("\\s*,\\s*")) {
-            supportedLocales.add(Locale.forLanguageTag(locale));
+        String supportedLocalesString = getConfiguration().supportedLocales();
+        if (!Strings.isNullOrEmpty(supportedLocalesString)) {
+            for (String locale : supportedLocalesString.split("\\s*,\\s*")) {
+                supportedLocales.add(Locale.forLanguageTag(locale));
+            }
+        } else {
+            supportedLocales.add(Locale.getDefault());
         }
         String defaultLocale = getConfiguration().defaultLocale();
         if (!Strings.isNullOrEmpty(defaultLocale)) {
-            Locale.setDefault(Locale.forLanguageTag(defaultLocale));
+            Locale locale = Locale.forLanguageTag(defaultLocale);
+            if (supportedLocales.contains(locale)) {
+                Locale.setDefault(locale);
+            } else {
+                logger.error(
+                        "Specified default.locale: {} not part of the supported locales: {}. Keeping java's system default: {}",
+                        locale.toLanguageTag(), Joiner.on(',').join(supportedLocales()), Locale.getDefault().toLanguageTag());
+            }
         }
         if (!supportedLocales().contains(Locale.getDefault())) {
-            throw new Error(String.format(
-                    "Please make sure the defaultLocale: %s is part of the supported locales in configuration.properties",
-                    Locale.getDefault()));
+            logger.error(
+                    "Current java's default locale: {} not part of the supported locales: {}. Choosing first of the list: {}.",
+                    Locale.getDefault().toLanguageTag(), Joiner.on(',').join(supportedLocales()), supportedLocales().iterator()
+                            .next().toLanguageTag());
+            Locale.setDefault(supportedLocales().iterator().next());
         }
     }
 
