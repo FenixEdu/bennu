@@ -141,11 +141,6 @@
                 <version>${version.org.apache.lucene.lucene.core}</version>
             </dependency>
             <dependency>
-                <groupId>pt.ist</groupId>
-                <artifactId>bankai</artifactId>
-                <version>${version.pt.ist.bankai}</version>
-            </dependency>
-            <dependency>
                 <groupId>net.sf.cron4j</groupId>
                 <artifactId>cron4j</artifactId>
                 <version>${version.net.sf.cron4j.cron4j}</version>
@@ -168,6 +163,7 @@
     <modules>
         <module>bennu-portal</module>
         <module>client</module>
+        <module>maven</module>
         <module>server</module>
         <module>theme</module>
     </modules>
