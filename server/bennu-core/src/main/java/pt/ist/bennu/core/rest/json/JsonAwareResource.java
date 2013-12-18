@@ -3,14 +3,14 @@ package pt.ist.bennu.core.rest.json;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.fenixedu.commons.json.JsonBuilder;
+import org.fenixedu.commons.json.JsonCreator;
+import org.fenixedu.commons.json.JsonUpdater;
+import org.fenixedu.commons.json.JsonViewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
-import pt.ist.bennu.json.JsonBuilder;
-import pt.ist.bennu.json.JsonCreator;
-import pt.ist.bennu.json.JsonUpdater;
-import pt.ist.bennu.json.JsonViewer;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 

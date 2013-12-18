@@ -2,7 +2,7 @@ package pt.ist.bennu.portal.domain;
 
 import java.io.Serializable;
 
-import pt.ist.dsi.commons.i18n.LocalizedString;
+import org.fenixedu.commons.i18n.LocalizedString;
 
 import com.google.gson.JsonObject;
 

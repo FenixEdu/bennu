@@ -22,6 +22,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import org.fenixedu.commons.i18n.I18N;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -35,7 +36,6 @@ import pt.ist.bennu.core.domain.groups.DynamicGroup;
 import pt.ist.bennu.core.domain.groups.UserGroup;
 import pt.ist.bennu.core.util.CoreConfiguration;
 import pt.ist.bennu.core.util.TransactionalThread;
-import pt.ist.dsi.commons.i18n.I18N;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 

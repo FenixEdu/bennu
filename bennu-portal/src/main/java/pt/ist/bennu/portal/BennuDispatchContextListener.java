@@ -9,6 +9,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,6 @@ import pt.ist.bennu.portal.domain.ApplicationInfo;
 import pt.ist.bennu.portal.domain.Details;
 import pt.ist.bennu.portal.domain.FunctionalityInfo;
 import pt.ist.bennu.portal.domain.MultiLanguageDetails;
-import pt.ist.dsi.commons.i18n.LocalizedString;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

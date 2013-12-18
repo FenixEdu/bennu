@@ -1,12 +1,13 @@
 package pt.ist.bennu.portal.rest.json;
 
+import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.commons.json.JsonAdapter;
+import org.fenixedu.commons.json.JsonBuilder;
+
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
-import pt.ist.bennu.json.JsonAdapter;
-import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.portal.AppServer;
 import pt.ist.bennu.portal.domain.FunctionalityInfo;
 import pt.ist.bennu.portal.domain.MenuItem;
-import pt.ist.dsi.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.google.gson.JsonArray;

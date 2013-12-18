@@ -1,6 +1,6 @@
 package pt.ist.bennu.portal.domain;
 
-import pt.ist.dsi.commons.i18n.LocalizedString;
+import org.fenixedu.commons.i18n.LocalizedString;
 
 public class MultiLanguageDetails extends Details {
 

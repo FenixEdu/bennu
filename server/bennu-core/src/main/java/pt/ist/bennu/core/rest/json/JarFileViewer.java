@@ -29,11 +29,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import org.fenixedu.commons.json.JsonBuilder;
+import org.fenixedu.commons.json.JsonViewer;
 import org.joda.time.DateTime;
 
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
-import pt.ist.bennu.json.JsonBuilder;
-import pt.ist.bennu.json.JsonViewer;
 
 import com.google.gson.JsonElement;
 

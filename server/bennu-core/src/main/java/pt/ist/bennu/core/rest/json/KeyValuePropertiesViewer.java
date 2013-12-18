@@ -23,8 +23,8 @@ package pt.ist.bennu.core.rest.json;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import pt.ist.bennu.json.JsonBuilder;
-import pt.ist.bennu.json.JsonViewer;
+import org.fenixedu.commons.json.JsonBuilder;
+import org.fenixedu.commons.json.JsonViewer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

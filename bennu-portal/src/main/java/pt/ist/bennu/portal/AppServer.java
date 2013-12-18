@@ -14,13 +14,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.rest.json.JsonAwareResource;
 import pt.ist.bennu.portal.domain.ApplicationInfo;
 import pt.ist.bennu.portal.domain.FunctionalityInfo;
-import pt.ist.dsi.commons.i18n.LocalizedString;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

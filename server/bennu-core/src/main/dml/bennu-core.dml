@@ -25,7 +25,7 @@ package pt.ist.bennu.core.domain;
  * 
  */
 
-valueType pt.ist.dsi.commons.i18n.LocalizedString as LocalizedString {
+valueType org.fenixedu.commons.i18n.LocalizedString as LocalizedString {
     externalizeWith {
         JsonElement json();
     }

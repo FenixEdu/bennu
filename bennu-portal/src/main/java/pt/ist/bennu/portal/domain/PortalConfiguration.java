@@ -1,9 +1,10 @@
 package pt.ist.bennu.portal.domain;
 
+import org.fenixedu.commons.i18n.I18N;
+import org.fenixedu.commons.i18n.LocalizedString;
+
 import pt.ist.bennu.core.domain.Bennu;
 import pt.ist.bennu.core.util.CoreConfiguration;
-import pt.ist.dsi.commons.i18n.I18N;
-import pt.ist.dsi.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 

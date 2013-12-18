@@ -1,10 +1,11 @@
 package pt.ist.bennu.io.rest.json;
 
+import org.fenixedu.commons.json.JsonAdapter;
+import org.fenixedu.commons.json.JsonBuilder;
+
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.io.domain.FileStorage;
 import pt.ist.bennu.io.domain.FileStorageConfiguration;
-import pt.ist.bennu.json.JsonAdapter;
-import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 

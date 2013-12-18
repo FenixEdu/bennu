@@ -16,6 +16,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.fenixedu.commons.i18n.I18N;
+
 import pt.ist.bennu.core.domain.exceptions.AuthorizationException;
 import pt.ist.bennu.core.domain.exceptions.BennuCoreDomainException;
 import pt.ist.bennu.core.domain.groups.LoggedGroup;
@@ -23,7 +25,6 @@ import pt.ist.bennu.core.rest.json.UserSessionViewer;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.core.security.UserSession;
 import pt.ist.bennu.core.util.CoreConfiguration;
-import pt.ist.dsi.commons.i18n.I18N;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 

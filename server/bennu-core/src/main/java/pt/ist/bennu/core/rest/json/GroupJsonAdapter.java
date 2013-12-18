@@ -1,10 +1,11 @@
 package pt.ist.bennu.core.rest.json;
 
+import org.fenixedu.commons.json.JsonAdapter;
+import org.fenixedu.commons.json.JsonBuilder;
+
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.security.Authenticate;
-import pt.ist.bennu.json.JsonAdapter;
-import pt.ist.bennu.json.JsonBuilder;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

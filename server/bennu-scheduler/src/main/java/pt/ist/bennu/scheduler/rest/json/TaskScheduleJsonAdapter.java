@@ -1,9 +1,10 @@
 package pt.ist.bennu.scheduler.rest.json;
 
+import org.fenixedu.commons.json.JsonAdapter;
+import org.fenixedu.commons.json.JsonBuilder;
+
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
 import pt.ist.bennu.core.domain.exceptions.InvalidJsonException;
-import pt.ist.bennu.json.JsonAdapter;
-import pt.ist.bennu.json.JsonBuilder;
 import pt.ist.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.bennu.scheduler.domain.TaskSchedule;
 

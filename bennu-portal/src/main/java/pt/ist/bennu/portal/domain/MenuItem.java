@@ -4,11 +4,12 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.fenixedu.commons.i18n.LocalizedString;
+
 import pt.ist.bennu.core.domain.User;
 import pt.ist.bennu.core.domain.groups.Group;
 import pt.ist.bennu.core.security.Authenticate;
 import pt.ist.bennu.portal.AppServer;
-import pt.ist.dsi.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;

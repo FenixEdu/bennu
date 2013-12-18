@@ -1,8 +1,9 @@
 package pt.ist.bennu.core.rest.json;
 
+import org.fenixedu.commons.json.JsonBuilder;
+import org.fenixedu.commons.json.JsonViewer;
+
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
-import pt.ist.bennu.json.JsonBuilder;
-import pt.ist.bennu.json.JsonViewer;
 import pt.ist.fenixframework.core.AbstractDomainObject;
 
 import com.google.gson.JsonElement;

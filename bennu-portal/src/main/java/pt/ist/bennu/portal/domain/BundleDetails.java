@@ -1,7 +1,8 @@
 package pt.ist.bennu.portal.domain;
 
+import org.fenixedu.commons.i18n.LocalizedString;
+
 import pt.ist.bennu.core.i18n.BundleUtil;
-import pt.ist.dsi.commons.i18n.LocalizedString;
 
 public class BundleDetails extends Details {
 

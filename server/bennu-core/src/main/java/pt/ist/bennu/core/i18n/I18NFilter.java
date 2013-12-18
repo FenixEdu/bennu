@@ -27,7 +27,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import pt.ist.dsi.commons.i18n.I18N;
+import org.fenixedu.commons.i18n.I18N;
 
 /**
  * Ensures the session {@link Locale} is available in {@link I18N#getLocale()}

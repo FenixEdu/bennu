@@ -21,12 +21,12 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 
+import org.fenixedu.commons.i18n.I18N;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.bennu.core.util.CoreConfiguration;
-import pt.ist.dsi.commons.i18n.I18N;
-import pt.ist.dsi.commons.i18n.LocalizedString;
 
 public class BundleUtil {
     private static final Logger logger = LoggerFactory.getLogger(BundleUtil.class);

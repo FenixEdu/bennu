@@ -1,9 +1,10 @@
 package pt.ist.bennu.core.rest.json;
 
+import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.commons.json.JsonAdapter;
+import org.fenixedu.commons.json.JsonBuilder;
+
 import pt.ist.bennu.core.annotation.DefaultJsonAdapter;
-import pt.ist.bennu.json.JsonAdapter;
-import pt.ist.bennu.json.JsonBuilder;
-import pt.ist.dsi.commons.i18n.LocalizedString;
 
 import com.google.gson.JsonElement;
 
