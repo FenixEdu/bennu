@@ -1,4 +1,4 @@
-package pt.ist.bennu.io.domain;
+package org.fenixedu.bennu.io.domain;
 
 class GenericFile {
 	Long size;
@@ -39,7 +39,7 @@ relation BennuFileSupport {
 	FileSupport playsRole fileSupport {
 		multiplicity 0..1;
 	}
-	.pt.ist.bennu.core.domain.Bennu playsRole bennu {
+	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
 		multiplicity 1..1;
 	}
 }

@@ -1,4 +1,4 @@
-package pt.ist.bennu.core.domain;
+package org.fenixedu.bennu.core.domain;
 
 /*
  * @(#)bennu-core.dml
@@ -36,7 +36,7 @@ valueType java.lang.Class as Class {
 	externalizeWith {
 		String getName();
 	}
-	internalizeWith pt.ist.bennu.core.util.ClassInternalizer.internalize();
+	internalizeWith org.fenixedu.bennu.core.util.ClassInternalizer.internalize();
 }
 
 valueType java.util.Locale as Locale {

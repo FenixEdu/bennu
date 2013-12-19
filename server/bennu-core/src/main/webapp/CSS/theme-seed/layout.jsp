@@ -3,8 +3,8 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
-<%@page import="pt.ist.bennu.core.presentationTier.LayoutContext"%>
-<%@page import="pt.ist.bennu.core.presentationTier.actions.ContextBaseAction"%>
+<%@page import="org.fenixedu.bennu.core.presentationTier.LayoutContext"%>
+<%@page import="org.fenixedu.bennu.core.presentationTier.actions.ContextBaseAction"%>
 <html:html xhtml="true">
 
 <%

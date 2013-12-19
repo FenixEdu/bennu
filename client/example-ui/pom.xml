@@ -13,7 +13,6 @@
         <bankai.skip.js.optimization>false</bankai.skip.js.optimization>
     </properties>
 
-    <groupId>pt.ist.bennu</groupId>
     <artifactId>example-ui</artifactId>
     <name>Bennu Example UI</name>
 

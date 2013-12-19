@@ -20,13 +20,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.fenixedu.bennu.core.annotation.ConfigurationManager;
+import org.fenixedu.bennu.core.annotation.ConfigurationProperty;
+import org.fenixedu.bennu.core.util.ConfigurationInvocationHandler;
 import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
-
-import pt.ist.bennu.core.annotation.ConfigurationManager;
-import pt.ist.bennu.core.annotation.ConfigurationProperty;
-import pt.ist.bennu.core.util.ConfigurationInvocationHandler;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Sets;

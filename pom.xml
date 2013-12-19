@@ -9,7 +9,6 @@
         <version>1.2.0</version>
     </parent>
 
-    <groupId>pt.ist.bennu</groupId>
     <artifactId>bennu</artifactId>
     <name>Bennu Framework</name>
     <version>2.0.0-M5</version>
@@ -42,9 +41,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git@github.com:ist-dsi/bennu.git</connection>
-        <developerConnection>scm:git:git@github.com:ist-dsi/bennu.git</developerConnection>
-        <url>http://ist-dsi.github.io/bennu</url>
+        <connection>scm:git:git@github.com:fenixedu/bennu.git</connection>
+        <developerConnection>scm:git:git@github.com:fenixedu/bennu.git</developerConnection>
+        <url>http://fenixedu.github.io/bennu</url>
     </scm>
 
     <build>

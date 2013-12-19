@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>pt.ist.bennu</groupId>
+        <groupId>org.fenixedu</groupId>
         <artifactId>bennu-maven</artifactId>
         <version>2.0.0-M5</version>
     </parent>
@@ -74,7 +74,7 @@
             <version>0.9.9-RC1</version>
         </dependency>
         <dependency>
-            <groupId>pt.ist.bennu</groupId>
+            <groupId>org.fenixedu</groupId>
             <artifactId>bennu-core</artifactId>
             <version>${project.version}</version>
         </dependency>
