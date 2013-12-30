@@ -4,7 +4,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import org.fenixedu.bennu.io.FileDeleterThread;
+import org.fenixedu.bennu.io.domain.FileDeleterThread;
 import org.fenixedu.bennu.io.domain.FileSupport;
 
 import pt.ist.fenixframework.Atomic;

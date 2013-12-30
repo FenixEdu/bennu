@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.fenixedu.bennu.core.domain.Bennu;
-import org.fenixedu.bennu.io.domain.LocalFileSystemStorage;
+import org.fenixedu.bennu.io.domain.FileStorage;
 import org.fenixedu.bennu.scheduler.SchedulerConfiguration;
 import org.fenixedu.bennu.scheduler.TaskRunner;
 import org.fenixedu.bennu.scheduler.annotation.Task;
@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+
+import com.google.common.io.Files;
 
 public class SchedulerSystem extends SchedulerSystem_Base {
 
@@ -87,10 +89,30 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     private SchedulerSystem() {
         super();
         setBennu(Bennu.getInstance());
+        File tmp = Files.createTempDir();
+        setLoggingStorage(FileStorage.createNewFileSystemStorage("schedulerSystemLoggingStorage", tmp.getAbsolutePath(), 0));
+        LOG.info("Create sensible default {} for logging storage", tmp.getAbsolutePath());
     }
 
     public static SchedulerSystem getInstance() {
+        if (Bennu.getInstance().getSchedulerSystem() == null) {
+            return initialize();
+        }
         return Bennu.getInstance().getSchedulerSystem();
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static SchedulerSystem initialize() {
+        if (Bennu.getInstance().getSchedulerSystem() == null) {
+            return new SchedulerSystem();
+        }
+        return Bennu.getInstance().getSchedulerSystem();
+    }
+
+    @Override
+    public Set<TaskSchedule> getTaskScheduleSet() {
+        // FIXME: remove when the framework support read-only slots
+        return super.getTaskScheduleSet();
     }
 
     /**
@@ -145,7 +167,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * This method starts the scheduler if lease is expired.
      * */
     public static void init() {
-        ensureSchedulerSystem();
         new Timer(true).scheduleAtFixedRate(new TimerTask() {
 
             Boolean shouldRun = false;
@@ -170,37 +191,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     }
 
-    @Atomic
-    @SuppressWarnings("unused")
-    private static void ensureSchedulerSystem() {
-        if (Bennu.getInstance().getSchedulerSystem() == null) {
-            new SchedulerSystem();
-        }
-    }
-
-    @Atomic
-    private static void ensureLoggingStorage() {
-
-        if (getInstance().getLoggingStorage() == null) {
-            final String tmpDir =
-                    new StringBuilder(System.getProperty("java.io.tmpdir")).append(File.separatorChar).append("schedulerSystem")
-                            .toString();
-            LOG.info("Create sensible default {} for logging storage", tmpDir);
-            getInstance().setLoggingStorage(new LocalFileSystemStorage("schedulerSystemLoggingStorage", tmpDir, 0));
-        }
-    }
-
-    private static void ensureLoggingStorageDirExists() {
-        if (getInstance().getLoggingStorage() != null) {
-            final String loggingStoragePath = getInstance().getLoggingStorage().getAbsolutePath();
-            File tmpDirFile = new File(loggingStoragePath);
-            if (!tmpDirFile.exists()) {
-                LOG.debug("Logging storage {} doesn't exist in filesystem, running mkdir.", loggingStoragePath);
-                tmpDirFile.mkdir();
-            }
-        }
-    }
-
     /**
      * Initializes the scheduler.
      */
@@ -211,8 +201,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             scheduler.setDaemon(true);
         }
         if (!scheduler.isStarted()) {
-            ensureLoggingStorage();
-            ensureLoggingStorageDirExists();
             cleanNonExistingSchedules();
             initSchedules();
             spawnConsumers();

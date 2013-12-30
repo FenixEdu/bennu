@@ -30,7 +30,7 @@ import com.google.common.base.Supplier;
  * 
  * @see Group
  */
-public class NobodyGroup extends NobodyGroup_Base {
+public final class NobodyGroup extends NobodyGroup_Base {
     protected NobodyGroup() {
         super();
     }

@@ -31,7 +31,7 @@ import com.google.common.base.Supplier;
  * 
  * @see Group
  */
-public class LoggedGroup extends LoggedGroup_Base {
+public final class LoggedGroup extends LoggedGroup_Base {
     protected LoggedGroup() {
         super();
     }
@@ -48,7 +48,7 @@ public class LoggedGroup extends LoggedGroup_Base {
 
     @Override
     public Set<User> getMembers() {
-        return Collections.unmodifiableSet(Bennu.getInstance().getUsersSet());
+        return Collections.unmodifiableSet(Bennu.getInstance().getUserSet());
     }
 
     @Override

@@ -31,8 +31,6 @@ import org.fenixedu.bennu.core.domain.groups.UserGroup;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.core.util.TransactionalThread;
 import org.fenixedu.commons.i18n.I18N;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,18 +74,18 @@ public class Authenticate {
     private static UserSession internalLogin(HttpSession session, String username, String password, boolean checkPassword) {
         User user = User.findByUsername(username);
         if (checkPassword && !CoreConfiguration.getConfiguration().developmentMode()) {
-            if (user == null || user.getPassword() == null || !user.matchesPassword(password)) {
+            if (user == null || !user.matchesPassword(password)) {
                 throw AuthorizationException.authenticationFailed();
             }
         }
         if (user == null) {
-            if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
+            if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUserSet().isEmpty()) {
                 user = attemptBootstrapUser(username);
             } else {
                 throw AuthorizationException.authenticationFailed();
             }
         }
-        if (user.getExpiration() != null && new LocalDate().isAfter(user.getExpiration())) {
+        if (user.isLoginExpired()) {
             throw AuthorizationException.authenticationFailed();
         }
 
@@ -112,7 +110,7 @@ public class Authenticate {
             if (user != null) {
                 return user;
             }
-            if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUsersSet().isEmpty()) {
+            if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUserSet().isEmpty()) {
                 user = new User(username);
                 try {
                     DynamicGroup.getInstance("managers");
@@ -134,17 +132,12 @@ public class Authenticate {
         if (session != null) {
             final UserSession userWrapper = (UserSession) session.getAttribute(USER_SESSION_ATTRIBUTE);
             if (userWrapper != null) {
-                internalLogout(userWrapper.getUser());
+                userWrapper.getUser().markLogoutTime();
             }
             session.removeAttribute(USER_SESSION_ATTRIBUTE);
             session.invalidate();
         }
         setUser(null);
-    }
-
-    @Atomic
-    private static void internalLogout(User user) {
-        user.setLastLogoutDateTime(new DateTime());
     }
 
     public static void mock(User user) {
@@ -171,20 +164,10 @@ public class Authenticate {
         wrapper.set(user);
     }
 
-    public static String getPrivateConstantForDigestCalculation() {
-        return wrapper.get() != null ? wrapper.get().getPrivateConstantForDigestCalculation() : null;
-    }
-
     static void updateFromSession(HttpSession session) {
         UserSession user = (UserSession) (session == null ? null : session.getAttribute(USER_SESSION_ATTRIBUTE));
-        if (user != null) {
-            final DateTime lastLogoutDateTime = user.getLastLogoutDateTime();
-            if (lastLogoutDateTime == null || user.getUserCreationDateTime().isAfter(lastLogoutDateTime)) {
-                wrapper.set(user);
-                logger.trace("Set thread's user to: {}", user.getUsername());
-            } else {
-                wrapper.set(null);
-            }
+        if (user != null && user.isSessionStillValid()) {
+            wrapper.set(user);
         } else {
             wrapper.set(null);
         }

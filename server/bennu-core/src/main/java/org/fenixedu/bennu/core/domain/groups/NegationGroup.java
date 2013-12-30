@@ -32,7 +32,7 @@ import com.google.common.base.Supplier;
  * 
  * @see Group
  */
-public class NegationGroup extends NegationGroup_Base {
+public final class NegationGroup extends NegationGroup_Base {
     protected NegationGroup(Group negated) {
         super();
         setNegationRoot(Bennu.getInstance());
@@ -51,7 +51,7 @@ public class NegationGroup extends NegationGroup_Base {
 
     @Override
     public Set<User> getMembers() {
-        Set<User> users = new HashSet<>(Bennu.getInstance().getUsersSet());
+        Set<User> users = new HashSet<>(Bennu.getInstance().getUserSet());
         users.removeAll(getNegated().getMembers());
         return users;
     }
@@ -63,7 +63,7 @@ public class NegationGroup extends NegationGroup_Base {
 
     @Override
     public Set<User> getMembers(DateTime when) {
-        Set<User> users = new HashSet<>(Bennu.getInstance().getUsersSet());
+        Set<User> users = new HashSet<>(Bennu.getInstance().getUserSet());
         users.removeAll(getNegated().getMembers(when));
         return users;
     }

@@ -17,9 +17,7 @@
 package org.fenixedu.bennu.core.security;
 
 import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
-import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,11 +32,7 @@ public class UserSession implements Serializable, Principal {
 
     private final String userExternalId;
 
-    private final String privateConstantForDigestCalculation;
-
     private final DateTime userViewCreationDateTime = new DateTime();
-
-    private final DateTime lastLogoutDateTime;
 
     private Set<String> groupExpressions = null;
 
@@ -46,21 +40,6 @@ public class UserSession implements Serializable, Principal {
 
     UserSession(final User user) {
         userExternalId = user.getExternalId();
-
-        SecureRandom random = null;
-
-        try {
-            random = SecureRandom.getInstance("SHA1PRNG");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            throw new Error("No secure algorithm available.");
-        }
-
-        random.setSeed(System.currentTimeMillis());
-
-        privateConstantForDigestCalculation = user.getUsername() + user.getPassword() + random.nextLong();
-
-        lastLogoutDateTime = user.getLastLogoutDateTime();
     }
 
     @Override
@@ -77,20 +56,8 @@ public class UserSession implements Serializable, Principal {
         return userExternalId == null ? null : (User) FenixFramework.getDomainObject(userExternalId);
     }
 
-    public String getUsername() {
-        return getUser() != null ? getUser().getUsername() : null;
-    }
-
-    public String getPrivateConstantForDigestCalculation() {
-        return privateConstantForDigestCalculation;
-    }
-
-    public DateTime getUserCreationDateTime() {
-        return userViewCreationDateTime;
-    }
-
-    public DateTime getLastLogoutDateTime() {
-        return lastLogoutDateTime;
+    public boolean isSessionStillValid() {
+        return !getUser().isBeforeLastLogoutTime(userViewCreationDateTime);
     }
 
     public Set<Group> accessibleGroups() {

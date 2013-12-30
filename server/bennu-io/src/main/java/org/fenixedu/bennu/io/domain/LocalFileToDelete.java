@@ -7,7 +7,7 @@ import java.io.File;
  * @author Shezad Anavarali Date: Aug 12, 2009
  * 
  */
-public class LocalFileToDelete extends LocalFileToDelete_Base {
+final class LocalFileToDelete extends LocalFileToDelete_Base {
     public LocalFileToDelete() {
         super();
         setFileSupport(FileSupport.getInstance());
@@ -16,6 +16,12 @@ public class LocalFileToDelete extends LocalFileToDelete_Base {
     public LocalFileToDelete(String path) {
         this();
         setFilePath(path);
+    }
+
+    @Override
+    public String getFilePath() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getFilePath();
     }
 
     public void delete() {

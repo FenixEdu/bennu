@@ -1,22 +1,22 @@
 package org.fenixedu.bennu.search.domain;
 
-class DomainIndexSystem {
+public class DomainIndexSystem {
 }
 
 relation DomainIndexSystemRoot {
-	DomainIndexSystem playsRole indexSystem {
+	public DomainIndexSystem playsRole indexSystem {
 		multiplicity 0..1;
 	}
-	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+	protected .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
 		multiplicity 1..1;
 	}
 }
 
 relation DomainIndexSystemStorage {
-	DomainIndexSystem playsRole indexSystem {
+	protected DomainIndexSystem playsRole indexSystem {
 		multiplicity 0..1;
 	}
-	.org.fenixedu.bennu.io.domain.LocalFileSystemStorage playsRole storage {
+	protected .org.fenixedu.bennu.io.domain.LocalFileSystemStorage playsRole storage {
 		multiplicity 1..1;
 	}
 }

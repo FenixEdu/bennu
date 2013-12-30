@@ -69,4 +69,8 @@ public abstract class CompositionGroup extends CompositionGroup_Base {
     }
 
     protected abstract String operator();
+
+    public static Set<CompositionGroup> compositionsContainingGroup(Group group) {
+        return group.getCompositionSet();
+    }
 }

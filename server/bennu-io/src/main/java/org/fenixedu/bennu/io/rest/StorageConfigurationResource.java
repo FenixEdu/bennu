@@ -21,7 +21,7 @@ public class StorageConfigurationResource extends BennuRestResource {
     public String all() {
         accessControl("#managers");
         createMissingConfigurations();
-        return view(FileSupport.getInstance().getFileStorageConfigurationsSet(), "storageConfigurations");
+        return view(FileSupport.getInstance().getConfigurationSet(), "storageConfigurations");
     }
 
     @Atomic

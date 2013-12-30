@@ -30,7 +30,7 @@ import com.google.common.base.Supplier;
  * 
  * @see Group
  */
-public class AnonymousGroup extends AnonymousGroup_Base {
+public final class AnonymousGroup extends AnonymousGroup_Base {
     protected AnonymousGroup() {
         super();
     }

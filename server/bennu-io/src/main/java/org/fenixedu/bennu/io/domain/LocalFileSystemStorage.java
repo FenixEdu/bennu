@@ -13,6 +13,9 @@ import java.util.regex.Pattern;
 
 import jvstm.PerTxBox;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.CharMatcher;
 import com.google.common.io.Files;
 
@@ -21,8 +24,9 @@ import com.google.common.io.Files;
  * @author Shezad Anavarali Date: Jul 16, 2009
  * 
  */
-
 public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
+    private static final Logger logger = LoggerFactory.getLogger(LocalFileSystemStorage.class);
+
     private PerTxBox<Map<String, FileWriteIntention>> fileIntentions;
 
     private static class FileWriteIntention {
@@ -40,21 +44,26 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         }
     }
 
-    private static final String PATH_SEPARATOR = "/";
-
-    public LocalFileSystemStorage() {
+    LocalFileSystemStorage(String name, String path, Integer treeDirectoriesNameLength) {
         super();
-    }
-
-    public LocalFileSystemStorage(String name, String path, Integer treeDirectoriesNameLength) {
-        this();
         setName(name);
         setPath(path);
         setTreeDirectoriesNameLength(treeDirectoriesNameLength);
     }
 
     @Override
-    @SuppressWarnings("unused")
+    public String getPath() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getPath();
+    }
+
+    @Override
+    public Integer getTreeDirectoriesNameLength() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getTreeDirectoriesNameLength();
+    }
+
+    @Override
     public String store(String uniqueIdentification, byte[] content) {
 
         final String fullPath = getFullPath(uniqueIdentification);
@@ -87,11 +96,11 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     private String getFullPath(final String uniqueIdentification) {
-        final String path = getPath().endsWith(PATH_SEPARATOR) ? getPath() : getPath() + PATH_SEPARATOR;
-        return getPhysicalPath(path) + transformIDInPath(uniqueIdentification) + PATH_SEPARATOR;
+        return getAbsolutePath() + transformIDInPath(uniqueIdentification) + File.pathSeparator;
     }
 
-    private String getPhysicalPath(final String path) {
+    public String getAbsolutePath() {
+        String path = getPath();
         if (path.indexOf("{") != -1 && path.indexOf("}") != -1) {
             // Compile regular expression
             Matcher matcher = Pattern.compile("(\\{.+?\\})").matcher(path);
@@ -103,15 +112,17 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
                 matcher.appendReplacement(result, System.getProperty(replaceStr));
             }
             matcher.appendTail(result);
-
-            return result.toString();
+            path = result.toString();
+        }
+        if (!path.endsWith(File.pathSeparator)) {
+            path = path + File.pathSeparator;
+        }
+        File dir = new File(path);
+        if (!dir.exists()) {
+            logger.debug("Filesystem storage {} directory does not exist, creating: {}", getName(), path);
+            dir.mkdir();
         }
         return path;
-    }
-
-    public String getAbsolutePath() {
-        final String physicalPath = getPhysicalPath(getPath());
-        return physicalPath.endsWith(PATH_SEPARATOR) ? physicalPath : physicalPath.concat(PATH_SEPARATOR);
     }
 
     private String transformIDInPath(final String uniqueIdentification) {
@@ -122,7 +133,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         char[] idArray = uniqueIdentification.toCharArray();
         for (int i = 0; i < idArray.length; i++) {
             if (i > 0 && i % directoriesNameLength == 0 && ((i + directoriesNameLength) < uniqueIdentification.length())) {
-                result.append(PATH_SEPARATOR);
+                result.append(File.pathSeparator);
             } else if ((i + directoriesNameLength) >= uniqueIdentification.length()) {
                 break;
             }

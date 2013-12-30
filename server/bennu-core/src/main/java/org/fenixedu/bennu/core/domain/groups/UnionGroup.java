@@ -32,7 +32,7 @@ import com.google.common.collect.Sets;
  * 
  * @see Group
  */
-public class UnionGroup extends UnionGroup_Base {
+public final class UnionGroup extends UnionGroup_Base {
     protected UnionGroup(Set<Group> children) {
         super();
         init(children);

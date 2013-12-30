@@ -31,7 +31,7 @@ import com.google.common.base.Supplier;
  * 
  * @see Group
  */
-public class AnyoneGroup extends AnyoneGroup_Base {
+public final class AnyoneGroup extends AnyoneGroup_Base {
     protected AnyoneGroup() {
         super();
     }
@@ -48,7 +48,7 @@ public class AnyoneGroup extends AnyoneGroup_Base {
 
     @Override
     public Set<User> getMembers() {
-        return Collections.unmodifiableSet(Bennu.getInstance().getUsersSet());
+        return Collections.unmodifiableSet(Bennu.getInstance().getUserSet());
     }
 
     @Override

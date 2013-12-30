@@ -1,16 +1,42 @@
 package org.fenixedu.bennu.io.domain;
 
+import java.util.Set;
+
 import org.fenixedu.bennu.core.domain.Bennu;
 
-public class FileSupport extends FileSupport_Base {
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
+public final class FileSupport extends FileSupport_Base {
     private FileSupport() {
         super();
+        setBennu(Bennu.getInstance());
     }
 
     public static FileSupport getInstance() {
         if (Bennu.getInstance().getFileSupport() == null) {
-            Bennu.getInstance().setFileSupport(new FileSupport());
+            return initialize();
         }
         return Bennu.getInstance().getFileSupport();
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static FileSupport initialize() {
+        if (Bennu.getInstance().getFileSupport() == null) {
+            return new FileSupport();
+        }
+        return Bennu.getInstance().getFileSupport();
+    }
+
+    @Override
+    public Set<FileStorage> getFileStorageSet() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getFileStorageSet();
+    }
+
+    @Override
+    public Set<FileStorageConfiguration> getConfigurationSet() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getConfigurationSet();
     }
 }

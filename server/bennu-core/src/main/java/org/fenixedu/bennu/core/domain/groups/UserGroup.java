@@ -17,6 +17,7 @@
 package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,7 +36,7 @@ import com.google.common.collect.Sets;
  * 
  * @see Group
  */
-public class UserGroup extends UserGroup_Base {
+public final class UserGroup extends UserGroup_Base {
     protected UserGroup(Set<User> users) {
         super();
         getMemberSet().addAll(users);
@@ -67,7 +68,7 @@ public class UserGroup extends UserGroup_Base {
 
     @Override
     public Set<User> getMembers() {
-        return getMemberSet();
+        return Collections.unmodifiableSet(getMemberSet());
     }
 
     @Override

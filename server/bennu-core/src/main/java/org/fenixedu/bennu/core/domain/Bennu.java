@@ -16,6 +16,11 @@
  */
 package org.fenixedu.bennu.core.domain;
 
+import java.util.Set;
+
+import org.fenixedu.bennu.core.domain.groups.Group;
+import org.fenixedu.bennu.core.domain.groups.NegationGroup;
+
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
@@ -23,24 +28,42 @@ import pt.ist.fenixframework.FenixFramework;
 /**
  * Root class of the domain.
  */
-public class Bennu extends Bennu_Base {
+public final class Bennu extends Bennu_Base {
     private Bennu() {
         super();
-        FenixFramework.getDomainRoot().setBennu(this);
+        setRoot(FenixFramework.getDomainRoot());
     }
 
     public static Bennu getInstance() {
         if (FenixFramework.getDomainRoot().getBennu() == null) {
-            initialize();
+            return initialize();
         }
         return FenixFramework.getDomainRoot().getBennu();
     }
 
     @Atomic(mode = TxMode.WRITE)
-    @SuppressWarnings("unused")
-    private static void initialize() {
+    private static Bennu initialize() {
         if (FenixFramework.getDomainRoot().getBennu() == null) {
-            new Bennu();
+            return new Bennu();
         }
+        return FenixFramework.getDomainRoot().getBennu();
+    }
+
+    @Override
+    public Set<User> getUserSet() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getUserSet();
+    }
+
+    @Override
+    public Set<Group> getGroupSet() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getGroupSet();
+    }
+
+    @Override
+    public Set<NegationGroup> getNegationSet() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getNegationSet();
     }
 }

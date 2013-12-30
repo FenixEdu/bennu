@@ -1,95 +1,109 @@
 package org.fenixedu.bennu.io.domain;
 
-class GenericFile {
-	Long size;
-	DateTime creationDate;
-	String filename;
-	String displayName;
-	String contentType;
-	String contentKey;
+public class GenericFile {
+	protected Long size;
+	protected DateTime creationDate;
+	public String filename;
+	public String displayName;
+	protected String contentType;
+	protected String contentKey;
 }
 
 class FileRawData {
-	String contentKey;
-	bytearray content;
+	protected String contentKey;
+	protected bytearray content;
 }
 
 class LocalFileToDelete {
-	String filePath;
+	protected String filePath;
 }
 
-class FileStorage {
-	String name;
+public class FileStorage {
+	protected String name;
 }
-	class DomainStorage extends FileStorage{
+
+	public class DomainStorage extends FileStorage{
 	}
 
-	class LocalFileSystemStorage extends FileStorage{
-		String path;
-		Integer treeDirectoriesNameLength;
+	public class LocalFileSystemStorage extends FileStorage{
+		protected String path;
+		protected Integer treeDirectoriesNameLength;
 	}	
 
-class FileStorageConfiguration {
-	String fileType;
+public class FileStorageConfiguration {
+	protected String fileType;
 }
 
-class FileSupport;
+public class FileSupport;
 
 relation BennuFileSupport {
-	FileSupport playsRole fileSupport {
+	public FileSupport playsRole fileSupport {
 		multiplicity 0..1;
 	}
-	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+	protected .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
 		multiplicity 1..1;
 	}
 }
 
 relation FileStorageFile {
-	GenericFile playsRole files {
+	protected FileStorage playsRole storage {
+	    multiplicity 1..1;
+	}
+	protected GenericFile playsRole file {
 		multiplicity *;
 	}	
-	FileStorage playsRole storage;
 }
 
 relation FileStorageConfigurationFileStorage {
-	FileStorageConfiguration playsRole configurations{
-		multiplicity *;
-	} 
-	FileStorage playsRole storage; 
-} 
-
-relation FilePluginRootGenericFile {
-	FileSupport playsRole fileSupport;
-	GenericFile playsRole genericFiles {
+	public FileStorage playsRole storage {
+        multiplicity 0..1;
+	}
+	protected FileStorageConfiguration playsRole configuration {
 		multiplicity *;
 	}
 }
 
-relation FilePluginRootFileRawDatat {
-	FileSupport playsRole fileSupport;
-	FileRawData playsRole fileRawDatas {
+relation GenericFiles {
+	protected FileSupport playsRole fileSupport {
+        multiplicity 1..1;
+	}
+	protected GenericFile playsRole file {
 		multiplicity *;
 	}
 }
 
-relation FilePluginRootFileStorage {
-	FileSupport playsRole fileSupport;
-	FileStorage playsRole fileStorages {
+relation FileRawDatas {
+	protected FileSupport playsRole fileSupport {
+        multiplicity 1..1;
+	}
+	protected FileRawData playsRole fileRawData {
 		multiplicity *;
 	}
 }
 
-relation FilePluginRootStorageConfiguration {
-	FileSupport playsRole fileSupport;
-	FileStorageConfiguration playsRole fileStorageConfigurations {
+relation FileStorages {
+	protected FileSupport playsRole fileSupport {
+        multiplicity 1..1;
+	}
+	protected FileStorage playsRole fileStorage {
 		multiplicity *;
 	}
 }
 
-relation FilePluginRootLocalFileToDelete {
-	FileSupport playsRole fileSupport;
-	LocalFileToDelete playsRole localFilesToDelete {
+relation FileStorageConfigurations {
+    protected FileSupport playsRole fileSupport {
+        multiplicity 1..1;
+    }
+	protected FileStorageConfiguration playsRole configuration {
 		multiplicity *;
 	}
 }
 
+relation LocalFilesToDelete {
+    protected FileSupport playsRole fileSupport {
+        multiplicity 1..1;
+    }
+	protected LocalFileToDelete playsRole delete {
+		multiplicity *;
+	}
+}

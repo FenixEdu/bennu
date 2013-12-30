@@ -24,7 +24,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.fenixedu.bennu.core.domain.Bennu;
-import org.fenixedu.bennu.io.domain.LocalFileSystemStorage;
+import org.fenixedu.bennu.io.domain.FileStorage;
 import org.fenixedu.bennu.search.IndexDocument.DefaultIndexFields;
 import org.fenixedu.bennu.search.Indexable;
 import org.fenixedu.bennu.search.IndexableField;
@@ -34,6 +34,8 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
+
+import com.google.common.io.Files;
 
 public class DomainIndexSystem extends DomainIndexSystem_Base {
     private static Logger logger = LoggerFactory.getLogger(DomainIndexSystem.class);
@@ -53,9 +55,9 @@ public class DomainIndexSystem extends DomainIndexSystem_Base {
     private DomainIndexSystem() {
         super();
         setBennu(Bennu.getInstance());
-        logger.info("Bootstrapped Indexing System");
-        setStorage(new LocalFileSystemStorage("indexStorage", System.getProperty("java.io.tmpdir") + File.separatorChar
-                + "indexStorage", 3));
+        File tmp = Files.createTempDir();
+        setStorage(FileStorage.createNewFileSystemStorage("indexStorage", tmp.getAbsolutePath(), 0));
+        logger.info("Create sensible default {} for indexing storage", tmp.getAbsolutePath());
     }
 
     public static DomainIndexSystem getInstance() {

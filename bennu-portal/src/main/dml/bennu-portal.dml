@@ -1,48 +1,48 @@
 package org.fenixedu.bennu.portal.domain;
 
-class PortalConfiguration {
-	LocalizedString applicationTitle (REQUIRED);
-	LocalizedString htmlTitle (REQUIRED);
-	LocalizedString applicationSubTitle (REQUIRED);
-	LocalizedString applicationCopyright (REQUIRED);
-	String theme (REQUIRED);
-	String supportEmailAddress;
-	String systemEmailAddress;
-	bytearray logo;
-	String logoType;
+public class PortalConfiguration {
+	public LocalizedString applicationTitle (REQUIRED);
+	public LocalizedString htmlTitle (REQUIRED);
+	public LocalizedString applicationSubTitle (REQUIRED);
+	public LocalizedString applicationCopyright (REQUIRED);
+	public String theme (REQUIRED);
+	public String supportEmailAddress;
+	public String systemEmailAddress;
+	public bytearray logo;
+	public String logoType;
 }
 
 relation BennuPortalConfiguration {
-    .org.fenixedu.bennu.core.domain.Bennu playsRole root {
-        multiplicity 0..1;
+    protected .org.fenixedu.bennu.core.domain.Bennu playsRole root {
+        multiplicity 1..1;
     }
-    PortalConfiguration playsRole configuration {
+    public PortalConfiguration playsRole configuration {
         multiplicity 0..1;
     }
 }
 
-class MenuItem {
-	Integer ord;
-	LocalizedString title;
-	LocalizedString description;
-	String path;
-	String accessExpression;
+public class MenuItem {
+	public Integer ord;
+	public LocalizedString title;
+	public LocalizedString description;
+	public String path;
+	public String accessExpression;
 }
 
 relation ApplicationMenu {
-    PortalConfiguration playsRole configuration {
+    public PortalConfiguration playsRole configuration {
         multiplicity 0..1;
     }
-    MenuItem playsRole menu {
+    public MenuItem playsRole menu {
         multiplicity 1..1;
     }
 }
 
 relation MenuItemComposition {
-	MenuItem playsRole parent {
+	public MenuItem playsRole parent {
         multiplicity 0..1;
 	}
-	MenuItem playsRole child {
+	public MenuItem playsRole child {
 		multiplicity *;
 	}
 }

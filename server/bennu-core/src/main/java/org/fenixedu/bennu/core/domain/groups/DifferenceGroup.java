@@ -33,7 +33,7 @@ import com.google.common.collect.Iterables;
  * 
  * @see Group
  */
-public class DifferenceGroup extends DifferenceGroup_Base {
+public final class DifferenceGroup extends DifferenceGroup_Base {
     protected DifferenceGroup(Set<Group> children) {
         super();
         init(children);

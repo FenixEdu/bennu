@@ -1,33 +1,38 @@
 package org.fenixedu.bennu.scheduler.domain;
 
-class SchedulerSystem {
-	DateTime lease;
+public class SchedulerSystem {
+	protected DateTime lease;
 }
 
-class TaskSchedule {
-	String taskClassName;
-	String schedule;
-	Boolean runOnce;
+public class TaskSchedule {
+	public String taskClassName;
+	public String schedule;
+	public Boolean runOnce;
 }
 
 relation SchedulerSystemSchedulerSystem {
-	SchedulerSystem playsRole schedulerSystem {
+	public SchedulerSystem playsRole schedulerSystem {
 		multiplicity 0..1;
 	}
-	.org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+	protected .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
 		multiplicity 1..1;
 	}
 }
 
 relation TaskTaskSchedule {
-	SchedulerSystem playsRole schedulerSystem;
-	TaskSchedule playsRole taskSchedule {
+	protected SchedulerSystem playsRole schedulerSystem {
+        multiplicity 1..1;
+    }
+	protected TaskSchedule playsRole taskSchedule {
 		multiplicity *;
 	}
 }
 
-
 relation SchedulerSystemLocalFileSystemStorage {
-	SchedulerSystem playsRole schedulerSystem; 
-	.org.fenixedu.bennu.io.domain.LocalFileSystemStorage playsRole loggingStorage;
+	public SchedulerSystem playsRole schedulerSystem {
+        multiplicity 0..1;
+    }
+	public .org.fenixedu.bennu.io.domain.LocalFileSystemStorage playsRole loggingStorage {
+        multiplicity 1..1;
+	}
 }

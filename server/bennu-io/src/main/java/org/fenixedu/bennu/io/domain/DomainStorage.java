@@ -11,13 +11,9 @@ import pt.ist.fenixframework.FenixFramework;
  * @author Shezad Anavarali Date: Jul 16, 2009
  * 
  */
-public class DomainStorage extends DomainStorage_Base {
-    public DomainStorage() {
+public final class DomainStorage extends DomainStorage_Base {
+    DomainStorage(String name) {
         super();
-    }
-
-    public DomainStorage(String name) {
-        this();
         setName(name);
     }
 

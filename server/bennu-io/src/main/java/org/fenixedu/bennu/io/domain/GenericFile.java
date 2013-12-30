@@ -21,7 +21,7 @@ import com.google.common.base.Strings;
  * @author Shezad Anavarali Date: Jul 15, 2009
  * 
  */
-abstract public class GenericFile extends GenericFile_Base {
+public abstract class GenericFile extends GenericFile_Base {
     private static final Logger logger = LoggerFactory.getLogger(GenericFile.class);
 
     public GenericFile() {
@@ -37,6 +37,24 @@ abstract public class GenericFile extends GenericFile_Base {
         setDisplayName(displayName);
         setFilename(filename);
         setContent(content);
+    }
+
+    @Override
+    public DateTime getCreationDate() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getCreationDate();
+    }
+
+    @Override
+    public Long getSize() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getSize();
+    }
+
+    @Override
+    public String getContentType() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getContentType();
     }
 
     @Override
@@ -73,7 +91,7 @@ abstract public class GenericFile extends GenericFile_Base {
     public static void convertFileStorages(final FileStorage fileStorageToUpdate) {
         if (fileStorageToUpdate != null) {
             try {
-                for (final GenericFile genericFile : FileSupport.getInstance().getGenericFilesSet()) {
+                for (final GenericFile genericFile : FileSupport.getInstance().getFileSet()) {
                     if (fileStorageToUpdate == genericFile.getFileStorage() && fileStorageToUpdate != genericFile.getStorage()) {
                         genericFile.updateFileStorage();
                     }
@@ -113,7 +131,7 @@ abstract public class GenericFile extends GenericFile_Base {
     @SuppressWarnings("unchecked")
     public static <T extends GenericFile> List<T> getFiles(final Class<T> clazz) {
         final List<T> files = new ArrayList<>();
-        for (final GenericFile file : FileSupport.getInstance().getGenericFilesSet()) {
+        for (final GenericFile file : FileSupport.getInstance().getFileSet()) {
             if (file.getClass().equals(clazz)) {
                 files.add((T) file);
             }

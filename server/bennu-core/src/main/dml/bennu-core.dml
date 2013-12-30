@@ -46,149 +46,149 @@ valueType java.util.Locale as Locale {
 	internalizeWith forLanguageTag();
 }
 
-class Bennu {
+public class Bennu {
 }
 
 relation DomainRootBennu {
-	.pt.ist.fenixframework.DomainRoot playsRole root {
+	protected .pt.ist.fenixframework.DomainRoot playsRole root {
 		multiplicity 1..1;
 	}
-	Bennu playsRole bennu {
+	public Bennu playsRole bennu {
 		multiplicity 0..1;
 	}
 }
 
-class User {
-	String username  (REQUIRED);
-	String password;
-	String salt;
-	DateTime created;
-	DateTime lastLogoutDateTime;
-	LocalDate expiration;
-	String email;
-	Locale preferredLocale;
+public class User {
+	protected String username  (REQUIRED);
+	protected String password;
+	protected String salt;
+	protected DateTime created;
+	protected DateTime lastLogoutDateTime;
+	public LocalDate expiration;
+	public String email;
+	public Locale preferredLocale;
 }
 
 relation SystemUsers {
-	Bennu playsRole bennu {
+	protected Bennu playsRole bennu {
 		multiplicity 1..1;
 	}
-	User playsRole users {
+	protected User playsRole user {
 		multiplicity *;
 	}
 }
 
 /* Authorization Groups */
 
-class groups.Group {
+public class groups.Group {
 }
 
 relation Groups {
-	Bennu playsRole root {
+	protected Bennu playsRole root {
 		multiplicity 0..1;
 	}
-	groups.Group playsRole groups {
+	protected groups.Group playsRole group {
 		multiplicity *;
 	}
 }
 
-class groups.NobodyGroup extends groups.Group {
+public class groups.NobodyGroup extends groups.Group {
 }
 
-class groups.AnyoneGroup extends groups.Group {
+public class groups.AnyoneGroup extends groups.Group {
 }
 
-class groups.AnonymousGroup extends groups.Group {
+public class groups.AnonymousGroup extends groups.Group {
 }
 
-class groups.LoggedGroup extends groups.Group {
+public class groups.LoggedGroup extends groups.Group {
 }
 
-class groups.UserGroup extends groups.Group {
+public class groups.UserGroup extends groups.Group {
 }
 
 relation UserGroupMembers {
-	groups.UserGroup playsRole userGroup {
+	protected groups.UserGroup playsRole userGroup {
 		multiplicity *;
 	}
-	User playsRole member {
+	protected User playsRole member {
 		multiplicity *;
 	}
 }
 
-class groups.CompositionGroup extends groups.Group {
+public class groups.CompositionGroup extends groups.Group {
 }
 
 relation GroupComposition {
-	groups.Group playsRole children {
+	protected groups.Group playsRole children {
 		multiplicity 1..*;
 	}
-	groups.CompositionGroup playsRole compositions {
+	protected groups.CompositionGroup playsRole composition {
 		multiplicity *;
 	}
 }
 
-class groups.UnionGroup extends groups.CompositionGroup {
+public class groups.UnionGroup extends groups.CompositionGroup {
 }
 
-class groups.IntersectionGroup extends groups.CompositionGroup {
+public class groups.IntersectionGroup extends groups.CompositionGroup {
 }
 
-class groups.DifferenceGroup extends groups.CompositionGroup {
+public class groups.DifferenceGroup extends groups.CompositionGroup {
 }
 
-class groups.NegationGroup extends groups.Group {
+public class groups.NegationGroup extends groups.Group {
 }
 
 relation NegationGroups {
-    Bennu playsRole negationRoot {
+    protected Bennu playsRole negationRoot {
         multiplicity 1..1;
     }
-    groups.NegationGroup playsRole negation {
+    protected groups.NegationGroup playsRole negation {
         multiplicity 0..*;
     }
 }
 
 relation GroupNegationGroup {
-	groups.Group playsRole negated {
+	protected groups.Group playsRole negated {
 		multiplicity 1..1;
 	}
-	groups.NegationGroup playsRole negation {
+	protected groups.NegationGroup playsRole negation {
 		multiplicity 0..1;
 	}
 }
 
-class groups.CustomGroup extends groups.Group {
+public class groups.CustomGroup extends groups.Group {
 }
 
-class groups.DynamicGroup extends groups.Group {
-	String name (REQUIRED);
-	DateTime created (REQUIRED);
+public class groups.DynamicGroup extends groups.Group {
+	protected String name (REQUIRED);
+	protected DateTime created (REQUIRED);
 }
 
 relation DynamicGroupCreator {
-	groups.DynamicGroup playsRole {
+    protected groups.DynamicGroup playsRole createdDynamicGroup {
 		multiplicity *;
 	}
-	User playsRole creator {
+	protected User playsRole creator {
 		multiplicity 0..1;
 	}
 }
 
 relation DynamicGroupWrapper {
-	groups.DynamicGroup playsRole dynamicGroup {
+	protected groups.DynamicGroup playsRole dynamicGroup {
 		multiplicity *;
 	}
-	groups.Group playsRole group {
+	protected groups.Group playsRole group {
 		multiplicity 1..1;
 	}
 }
 
 relation DynamicGroupHistoric {
-	groups.DynamicGroup playsRole previous {
+	protected groups.DynamicGroup playsRole previous {
 		multiplicity 0..1;
 	}
-	groups.DynamicGroup playsRole next {
+	protected groups.DynamicGroup playsRole next {
 		multiplicity 0..1;
 	}
 }

@@ -17,6 +17,7 @@
 package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.User;
@@ -181,5 +182,15 @@ public final class DynamicGroup extends DynamicGroup_Base {
         } catch (BennuCoreDomainException e) {
             return new DynamicGroup(name, overridingGroup);
         }
+    }
+
+    public static Set<DynamicGroup> dynamicGroupsContainingGroup(Group group) {
+        Set<DynamicGroup> dynamics = new HashSet<>();
+        for (DynamicGroup dynamic : group.getDynamicGroupSet()) {
+            if (dynamic.getNext() == null) {
+                dynamics.add(dynamic);
+            }
+        }
+        return dynamics;
     }
 }

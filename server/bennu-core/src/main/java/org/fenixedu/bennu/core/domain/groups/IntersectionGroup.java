@@ -33,7 +33,7 @@ import com.google.common.collect.Sets;
  * 
  * @see Group
  */
-public class IntersectionGroup extends IntersectionGroup_Base {
+public final class IntersectionGroup extends IntersectionGroup_Base {
     protected IntersectionGroup(Set<Group> children) {
         super();
         init(children);

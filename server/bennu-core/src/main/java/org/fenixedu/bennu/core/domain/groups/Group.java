@@ -17,7 +17,6 @@
 package org.fenixedu.bennu.core.domain.groups;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,9 +28,6 @@ import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.grouplanguage.GroupExpressionParser;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -65,8 +61,6 @@ import com.google.common.collect.Iterables;
  * @see CustomGroup
  */
 public abstract class Group extends Group_Base implements Comparable<Group> {
-    private static Logger logger = LoggerFactory.getLogger(Group.class);
-
     protected Group() {
         super();
         setRoot(Bennu.getInstance());
@@ -217,7 +211,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      * @return {@code true} if can be discarded, {@code false} otherwise
      */
     protected boolean isGarbageCollectable() {
-        return getNegation() == null && getCompositionsSet().isEmpty() && getDynamicGroupSet().isEmpty();
+        return getNegation() == null && getCompositionSet().isEmpty() && getDynamicGroupSet().isEmpty();
     }
 
     /**
@@ -245,54 +239,8 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
         }
     }
 
-    public static Set<Group> userAccessibleGroups(User user) {
-        long start = System.currentTimeMillis();
-        Set<Group> groups = new HashSet<>();
-        Set<Group> ignored = new HashSet<>();
-        for (UserGroup group : user.getUserGroupSet()) {
-            processAccessibleGroups(groups, ignored, group, user);
-        }
-        for (Group group : CustomGroup.groupsForUser(user)) {
-            processAccessibleGroups(groups, ignored, group, user);
-        }
-        for (NegationGroup group : Bennu.getInstance().getNegationSet()) {
-            if (group.isMember(user)) {
-                processAccessibleGroups(groups, ignored, group, user);
-            }
-        }
-        logger.debug("Accessible groups processing for user {} took {}", user.getUsername(),
-                new Period(System.currentTimeMillis() - start).toString());
-        return groups;
-    }
-
-    // These we are not interested to see listed as accessible groups, either because they are obvious, or because they are meaningless
-    // unless used in some context.
-    private static Set<Class<? extends Group>> IGNORES = new HashSet<>(Arrays.asList(AnonymousGroup.class, AnyoneGroup.class,
-            NobodyGroup.class, LoggedGroup.class, DifferenceGroup.class, IntersectionGroup.class, NegationGroup.class,
-            UnionGroup.class, UserGroup.class));
-
-    private static void processAccessibleGroups(Set<Group> groups, Set<Group> ignored, Group group, User user) {
-        if (!groups.contains(group) && !ignored.contains(group)) {
-            if (IGNORES.contains(group.getClass())) {
-                ignored.add(group);
-            } else {
-                groups.add(group);
-            }
-            for (DynamicGroup dynamic : group.getDynamicGroupSet()) {
-                if (dynamic.getNext() == null) {
-                    processAccessibleGroups(groups, ignored, dynamic, user);
-                }
-            }
-            for (CompositionGroup composition : group.getCompositionsSet()) {
-                if (composition instanceof UnionGroup || composition.isMember(user)) {
-                    processAccessibleGroups(groups, ignored, composition, user);
-                }
-            }
-        }
-    }
-
     public static void garbageCollect() {
-        for (Group group : Bennu.getInstance().getGroupsSet()) {
+        for (Group group : Bennu.getInstance().getGroupSet()) {
             if (group.isGarbageCollectable()) {
                 group.gc();
             }
@@ -308,7 +256,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      * @return group instance.
      */
     protected static <T extends Group> T select(final Class<? extends T> type, Supplier<T> maker) {
-        T group = (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), Predicates.instanceOf(type)).orNull();
+        T group = (T) Iterables.tryFind(Bennu.getInstance().getGroupSet(), Predicates.instanceOf(type)).orNull();
         return group == null ? (maker != null ? transactionalMake(Predicates.instanceOf(type), maker) : null) : group;
     }
 
@@ -327,13 +275,13 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
         @SuppressWarnings("unchecked")
         Predicate<? super Group> realPredicate =
                 Predicates.and(Predicates.instanceOf(type), (Predicate<? super Group>) predicate);
-        T group = (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), realPredicate).orNull();
+        T group = (T) Iterables.tryFind(Bennu.getInstance().getGroupSet(), realPredicate).orNull();
         return group == null ? (maker != null ? transactionalMake(realPredicate, maker) : null) : group;
     }
 
     @Atomic(mode = TxMode.WRITE)
     private static <T extends Group> T transactionalMake(Predicate<? super Group> predicate, Supplier<T> maker) {
-        return (T) Iterables.tryFind(Bennu.getInstance().getGroupsSet(), predicate).or(maker);
+        return (T) Iterables.tryFind(Bennu.getInstance().getGroupSet(), predicate).or(maker);
     }
 
     @Override

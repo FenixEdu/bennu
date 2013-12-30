@@ -7,10 +7,16 @@ import java.io.InputStream;
  * @author Shezad Anavarali Date: Jul 15, bb2009
  * 
  */
-abstract public class FileStorage extends FileStorage_Base {
-    public FileStorage() {
+public abstract class FileStorage extends FileStorage_Base {
+    protected FileStorage() {
         super();
         setFileSupport(FileSupport.getInstance());
+    }
+
+    @Override
+    public String getName() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getName();
     }
 
     abstract public String store(String uniqueIdentification, byte[] content);
@@ -29,7 +35,7 @@ abstract public class FileStorage extends FileStorage_Base {
 
     public Boolean delete() {
         if (isCanBeDeleted()) {
-            getConfigurationsSet().clear();
+            getConfigurationSet().clear();
             setFileSupport(null);
             deleteDomainObject();
             return true;
@@ -38,6 +44,6 @@ abstract public class FileStorage extends FileStorage_Base {
     }
 
     public boolean isCanBeDeleted() {
-        return getFilesSet().isEmpty();
+        return getFileSet().isEmpty();
     }
 }

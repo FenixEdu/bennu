@@ -16,7 +16,7 @@ public class UserResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers() {
         verifyAndGetRequestAuthor();
-        return Response.ok(view(Bennu.getInstance().getUsersSet(), "users")).build();
+        return Response.ok(view(Bennu.getInstance().getUserSet(), "users")).build();
     }
 
     @GET

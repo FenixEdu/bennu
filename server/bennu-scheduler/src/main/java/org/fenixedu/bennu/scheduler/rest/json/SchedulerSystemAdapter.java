@@ -22,7 +22,7 @@ public class SchedulerSystemAdapter implements JsonViewer<SchedulerSystem> {
         json.add("loggingStorage", ctx.view(obj.getLoggingStorage(), LocalFileSystemStorage.class, DomainObjectViewer.class));
         json.add(
                 "availableStorages",
-                ctx.view(FluentIterable.from(FileSupport.getInstance().getFileStoragesSet()).filter(LocalFileSystemStorage.class)
+                ctx.view(FluentIterable.from(FileSupport.getInstance().getFileStorageSet()).filter(LocalFileSystemStorage.class)
                         .toSet()));
         return json;
     }

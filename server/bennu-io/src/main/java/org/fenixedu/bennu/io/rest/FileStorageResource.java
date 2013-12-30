@@ -44,7 +44,7 @@ public class FileStorageResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String all() {
         accessControl("#managers");
-        return view(FileSupport.getInstance().getFileStoragesSet(), "storages");
+        return view(FileSupport.getInstance().getFileStorageSet(), "storages");
     }
 
     @Atomic
