@@ -9,6 +9,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.fenixedu.bennu.core.annotation.ConfigurationManager;
 import org.fenixedu.bennu.core.annotation.ConfigurationProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +104,13 @@ public class ConfigurationInvocationHandler extends AbstractInvocationHandler {
         return (Properties) properties.clone();
     }
 
+    /**
+     * Creates an instance of the class annotated with {@link ConfigurationManager} that resolves properties to the
+     * configuration.properties file.
+     * 
+     * @param propertiesType class annotated with {@link ConfigurationManager}.
+     * @return A proxy implementation of the given type.
+     */
     public static <T> T getConfiguration(Class<T> propertiesType) {
         if (!configs.containsKey(propertiesType)) {
             configs.put(propertiesType, Reflection.newProxy(propertiesType, new ConfigurationInvocationHandler()));

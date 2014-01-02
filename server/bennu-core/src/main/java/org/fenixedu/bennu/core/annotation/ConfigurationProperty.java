@@ -7,6 +7,12 @@ import java.lang.annotation.Target;
 
 import org.fenixedu.bennu.core.util.ConfigurationInvocationHandler;
 
+/**
+ * Binds the annotated method to the property with the <code>key()</code> in the configuration.properties file.
+ * 
+ * @see {@link ConfigurationManager}
+ * @author Pedro Santos (pedro.miguel.santos@ist.utl.pt)
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
 public @interface ConfigurationProperty {
