@@ -17,6 +17,7 @@
 package org.fenixedu.bennu.core.domain;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -53,7 +54,7 @@ import com.google.common.hash.Hashing;
 /**
  * The application end user.
  */
-public final class User extends User_Base {
+public final class User extends User_Base implements Principal {
     private static final Logger logger = LoggerFactory.getLogger(User.class);
 
     private static SecureRandom prng = null;
@@ -114,6 +115,11 @@ public final class User extends User_Base {
     public DateTime getCreated() {
         //FIXME: remove when the framework enables read-only slots
         return super.getCreated();
+    }
+
+    @Override
+    public String getName() {
+        return getUsername();
     }
 
     public String generatePassword() {

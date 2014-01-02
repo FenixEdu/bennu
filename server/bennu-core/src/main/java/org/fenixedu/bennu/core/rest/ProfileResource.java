@@ -19,9 +19,8 @@ import javax.ws.rs.core.Response;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.groups.LoggedGroup;
-import org.fenixedu.bennu.core.rest.json.UserSessionViewer;
+import org.fenixedu.bennu.core.rest.json.AuthenticatedUserViewer;
 import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.bennu.core.security.UserSession;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.I18N;
 
@@ -32,8 +31,8 @@ import pt.ist.fenixframework.Atomic.TxMode;
 public class ProfileResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProfile() {
-        return Response.ok(view(Authenticate.getUserSession(), UserSession.class, UserSessionViewer.class)).build();
+    public String getProfile() {
+        return view(null, AuthenticatedUserViewer.class);
     }
 
     @GET
@@ -51,9 +50,10 @@ public class ProfileResource extends BennuRestResource {
     @POST
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(@FormParam("username") String username, @FormParam("password") String password) {
+    public String login(@FormParam("username") String username, @FormParam("password") String password) {
         if (!CoreConfiguration.casConfig().isCasEnabled()) {
-            return Response.ok(view(Authenticate.login(request.getSession(true), username, password))).build();
+            Authenticate.login(request.getSession(true), username, password);
+            return view(null, AuthenticatedUserViewer.class);
         }
         throw AuthorizationException.authenticationFailed();
     }
@@ -61,7 +61,7 @@ public class ProfileResource extends BennuRestResource {
     @GET
     @Path("logout")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response logout(@Context HttpServletResponse response) {
+    public String logout(@Context HttpServletResponse response) {
         accessControl(LoggedGroup.getInstance());
         Authenticate.logout(request.getSession(false));
         if (CoreConfiguration.casConfig().isCasEnabled()) {
@@ -70,7 +70,7 @@ public class ProfileResource extends BennuRestResource {
             } catch (IOException e) {
             }
         } else {
-            return Response.ok(view(null, UserSession.class, UserSessionViewer.class)).build();
+            return view(null, AuthenticatedUserViewer.class);
         }
         throw AuthorizationException.authenticationFailed();
     }
@@ -78,14 +78,14 @@ public class ProfileResource extends BennuRestResource {
     @POST
     @Path("locale/{tag}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeLocale(@PathParam("tag") String localeTag) {
+    public String changeLocale(@PathParam("tag") String localeTag) {
         if (CoreConfiguration.supportedLocales().contains(Locale.forLanguageTag(localeTag))) {
             final Locale locale = Locale.forLanguageTag(localeTag);
             I18N.setLocale(request.getSession(true), locale);
             if (Authenticate.isLogged()) {
                 setPreferredLocale(locale);
             }
-            return Response.ok(view(Authenticate.getUserSession(), UserSession.class, UserSessionViewer.class)).build();
+            return view(null, AuthenticatedUserViewer.class);
         }
         throw BennuCoreDomainException.resourceNotFound(localeTag);
     }
@@ -98,13 +98,13 @@ public class ProfileResource extends BennuRestResource {
     @POST
     @Path("preferred-locale/{tag}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changePreferredLocale(@PathParam("tag") String localeTag) {
+    public String changePreferredLocale(@PathParam("tag") String localeTag) {
         accessControl(LoggedGroup.getInstance());
         if (CoreConfiguration.supportedLocales().contains(Locale.forLanguageTag(localeTag))) {
             Locale locale = Locale.forLanguageTag(localeTag);
             Authenticate.getUser().setPreferredLocale(locale);
             I18N.setLocale(request.getSession(true), locale);
-            return Response.ok(view(Authenticate.getUserSession(), UserSession.class, UserSessionViewer.class)).build();
+            return view(null, AuthenticatedUserViewer.class);
         }
         throw BennuCoreDomainException.resourceNotFound(localeTag);
     }

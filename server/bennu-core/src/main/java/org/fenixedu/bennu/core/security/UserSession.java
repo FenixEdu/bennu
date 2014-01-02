@@ -17,20 +17,18 @@
 package org.fenixedu.bennu.core.security;
 
 import java.io.Serializable;
-import java.security.Principal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.Group;
 import org.joda.time.DateTime;
 
-import pt.ist.fenixframework.FenixFramework;
-
-public class UserSession implements Serializable, Principal {
+class UserSession implements Serializable {
     private static final long serialVersionUID = -16953310282144136L;
 
-    private final String userExternalId;
+    private final User user;
 
     private final DateTime userViewCreationDateTime = new DateTime();
 
@@ -39,21 +37,21 @@ public class UserSession implements Serializable, Principal {
     private transient Set<Group> groups = null;
 
     UserSession(final User user) {
-        userExternalId = user.getExternalId();
+        this.user = Objects.requireNonNull(user);
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof UserSession && userExternalId.equals(((UserSession) obj).userExternalId);
+        return obj instanceof UserSession && user.equals(((UserSession) obj).user);
     }
 
     @Override
     public int hashCode() {
-        return userExternalId.hashCode();
+        return user.hashCode();
     }
 
     public User getUser() {
-        return userExternalId == null ? null : (User) FenixFramework.getDomainObject(userExternalId);
+        return user;
     }
 
     public boolean isSessionStillValid() {
@@ -74,10 +72,5 @@ public class UserSession implements Serializable, Principal {
             }
         }
         return groups;
-    }
-
-    @Override
-    public String getName() {
-        return getUser().getPresentationName();
     }
 }

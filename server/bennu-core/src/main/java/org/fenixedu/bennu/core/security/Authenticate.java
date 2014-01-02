@@ -16,6 +16,7 @@
  */
 package org.fenixedu.bennu.core.security;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -27,6 +28,7 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.groups.DynamicGroup;
+import org.fenixedu.bennu.core.domain.groups.Group;
 import org.fenixedu.bennu.core.domain.groups.UserGroup;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.core.util.TransactionalThread;
@@ -40,7 +42,9 @@ import pt.ist.fenixframework.Atomic.TxMode;
 public class Authenticate {
     private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
 
-    private static final String USER_SESSION_ATTRIBUTE = "USER_SESSION_ATTRIBUTE";
+    private static final String USER_SESSION_ATTRIBUTE = "lzsWdyqswo";
+
+    public static final String LOGGED_USER_ATTRIBUTE = "LOGGED_USER_ATTRIBUTE";
 
     private static final InheritableThreadLocal<UserSession> wrapper = new InheritableThreadLocal<>();
 
@@ -52,9 +56,9 @@ public class Authenticate {
      * 
      * @param session session on with to log the user
      * @param username username of the user to login
-     * @return user wrapper of user logged in.
+     * @return user user logged in.
      */
-    public static UserSession login(HttpSession session, String username) {
+    public static User login(HttpSession session, String username) {
         return internalLogin(session, username, null, false);
     }
 
@@ -65,13 +69,13 @@ public class Authenticate {
      * @param session session on with to log the user
      * @param username username of the user to login
      * @param password password of the user to login
-     * @return user wrapper of user logged in.
+     * @return user user logged in.
      */
-    public static UserSession login(HttpSession session, String username, String password) {
+    public static User login(HttpSession session, String username, String password) {
         return internalLogin(session, username, password, true);
     }
 
-    private static UserSession internalLogin(HttpSession session, String username, String password, boolean checkPassword) {
+    private static User internalLogin(HttpSession session, String username, String password, boolean checkPassword) {
         User user = User.findByUsername(username);
         if (checkPassword && !CoreConfiguration.getConfiguration().developmentMode()) {
             if (user == null || !user.matchesPassword(password)) {
@@ -90,8 +94,9 @@ public class Authenticate {
         }
 
         UserSession userWrapper = new UserSession(user);
-        setUser(userWrapper);
+        wrapper.set(userWrapper);
         session.setAttribute(USER_SESSION_ATTRIBUTE, userWrapper);
+        session.setAttribute(LOGGED_USER_ATTRIBUTE, user);
         final Locale preferredLocale = user.getPreferredLocale();
         if (preferredLocale != null) {
             I18N.setLocale(session, preferredLocale);
@@ -100,7 +105,7 @@ public class Authenticate {
         fireLoginListeners(user);
         logger.debug("Logged in user: " + user.getUsername());
 
-        return userWrapper;
+        return user;
     }
 
     @Atomic(mode = TxMode.WRITE)
@@ -116,7 +121,7 @@ public class Authenticate {
                     DynamicGroup.getInstance("managers");
                     // Managers groups already initialized.
                 } catch (BennuCoreDomainException e) {
-                    setUser(new UserSession(user));
+                    wrapper.set(new UserSession(user));
                     DynamicGroup.initialize("managers", UserGroup.getInstance(user));
                     logger.info("Bootstrapped #managers group to user: " + user.getUsername());
                 }
@@ -124,7 +129,7 @@ public class Authenticate {
             }
             throw AuthorizationException.authenticationFailed();
         } finally {
-            setUser(null);
+            wrapper.set(null);
         }
     }
 
@@ -137,31 +142,27 @@ public class Authenticate {
             session.removeAttribute(USER_SESSION_ATTRIBUTE);
             session.invalidate();
         }
-        setUser(null);
+        wrapper.set(null);
     }
 
     public static void mock(User user) {
-        setUser(new UserSession(user));
+        wrapper.set(new UserSession(user));
     }
 
     public static void unmock() {
-        setUser(null);
-    }
-
-    public static UserSession getUserSession() {
-        return wrapper.get();
+        wrapper.set(null);
     }
 
     public static User getUser() {
         return wrapper.get() != null ? wrapper.get().getUser() : null;
     }
 
-    public static boolean isLogged() {
-        return wrapper.get() != null;
+    public static Set<Group> accessibleGroups() {
+        return wrapper.get() != null ? wrapper.get().accessibleGroups() : Collections.<Group> emptySet();
     }
 
-    static void setUser(UserSession user) {
-        wrapper.set(user);
+    public static boolean isLogged() {
+        return wrapper.get() != null;
     }
 
     static void updateFromSession(HttpSession session) {
@@ -171,6 +172,10 @@ public class Authenticate {
         } else {
             wrapper.set(null);
         }
+    }
+
+    static void clear() {
+        wrapper.set(null);
     }
 
     public static void addAuthenticationListener(AuthenticationListener listener) {

@@ -6,9 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.fenixedu.bennu.core.rest.BennuRestResource;
-import org.fenixedu.bennu.core.rest.json.UserSessionViewer;
-import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.bennu.core.security.UserSession;
+import org.fenixedu.bennu.core.rest.json.AuthenticatedUserViewer;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.bennu.portal.rest.json.PortalMenuViewer;
 
@@ -22,8 +20,7 @@ public class PortalDataResource extends BennuRestResource {
         final JsonObject hostMenuView = new JsonObject();
         merge(hostMenuView, getBuilder().view(PortalConfiguration.getInstance(), PortalMenuViewer.class).getAsJsonObject());
         merge(hostMenuView, getBuilder().view(getCasConfigContext()).getAsJsonObject());
-        merge(hostMenuView, getBuilder().view(Authenticate.getUserSession(), UserSession.class, UserSessionViewer.class)
-                .getAsJsonObject());
+        merge(hostMenuView, getBuilder().view(null, AuthenticatedUserViewer.class).getAsJsonObject());
         return toJson(hostMenuView);
     }
 }

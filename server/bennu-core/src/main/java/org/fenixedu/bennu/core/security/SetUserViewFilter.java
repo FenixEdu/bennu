@@ -48,7 +48,7 @@ public class SetUserViewFilter implements Filter {
             chain.doFilter(request, response);
         } finally {
             MDC.remove("user");
-            Authenticate.setUser(null);
+            Authenticate.clear();
         }
     }
 }
