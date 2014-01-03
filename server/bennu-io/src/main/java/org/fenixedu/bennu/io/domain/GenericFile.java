@@ -1,8 +1,6 @@
 package org.fenixedu.bennu.io.domain;
 
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
@@ -10,7 +8,6 @@ import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
-import org.apache.commons.codec.binary.Hex;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,60 +68,6 @@ abstract public class GenericFile extends GenericFile_Base {
 
     public InputStream getStream() {
         return getStorage().readAsInputStream(getContentKey());
-    }
-
-    /**
-     * 
-     * @param algorithm
-     *            the String identifying the algorithm to use. This method uses
-     *            the {@link MessageDigest} class, thus you should take a look
-     *            at {@linkplain http
-     *            ://download.oracle.com/javase/6/docs/technotes
-     *            /guides/security/StandardNames.html#MessageDigest} for more
-     *            information
-     */
-    public byte[] getMessageDigest(String algorithm) {
-        MessageDigest messageDigest;
-        try {
-            messageDigest = MessageDigest.getInstance(algorithm);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        return messageDigest.digest(getContent());
-    }
-
-    /**
-     * Convenience method
-     * 
-     * @return the SHA-256 digest of the file content
-     */
-    public byte[] getSHA256MessageDigest() {
-        return getMessageDigest("SHA-256");
-    }
-
-    public byte[] getSHA1MessageDigest() {
-        return getMessageDigest("SHA-1");
-    }
-
-    /**
-     * Convenience method for {@link #getSHA256MessageDigest()} to retrieve the
-     * content in hexadecimal
-     * 
-     * @return hexadecimal representation of the SHA256 digest
-     */
-    public String getHexSHA256MessageDigest() {
-        return Hex.encodeHexString(getSHA256MessageDigest());
-
-    }
-
-    /**
-     * Convenience method for {@link #getSHA1MessageDigest()} to retrieve the
-     * content in hexadecimal
-     * 
-     * @return hexadecimal representation of the SHA1 digest
-     */
-    public String getHexSHA1MessageDigest() {
-        return Hex.encodeHexString(getSHA1MessageDigest());
     }
 
     public static void convertFileStorages(final FileStorage fileStorageToUpdate) {

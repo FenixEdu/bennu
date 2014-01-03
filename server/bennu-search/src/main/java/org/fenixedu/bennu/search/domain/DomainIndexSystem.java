@@ -38,7 +38,7 @@ import pt.ist.fenixframework.FenixFramework;
 public class DomainIndexSystem extends DomainIndexSystem_Base {
     private static Logger logger = LoggerFactory.getLogger(DomainIndexSystem.class);
 
-    public static final Version VERSION = Version.LUCENE_44;
+    public static final Version VERSION = Version.LUCENE_46;
 
     public static final String FORCE_REINDEX_LIST = "force-reindex";
 

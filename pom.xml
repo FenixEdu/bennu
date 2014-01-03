@@ -19,25 +19,24 @@
         <!-- * DEPENDENCIES VERSIONS * -->
         <!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
         <!-- ************************************************************************************************ -->
-        <version.org.antlr.antlr.runtime>3.4</version.org.antlr.antlr.runtime>
+        <version.org.antlr.antlr.runtime>3.5.1</version.org.antlr.antlr.runtime>
         <version.cas.casclient>2.1.1</version.cas.casclient>
-        <version.com.sun.jersey.contribs.jersey.multipart>1.14</version.com.sun.jersey.contribs.jersey.multipart>
-        <version.com.sun.jersey.jersey.client>1.14</version.com.sun.jersey.jersey.client>
-        <version.com.sun.jersey.jersey.server>1.14</version.com.sun.jersey.jersey.server>
-        <version.com.sun.jersey.jersey.servlet>1.14</version.com.sun.jersey.jersey.servlet>
-        <version.commons.codec.commons.codec>1.6</version.commons.codec.commons.codec>
-        <version.joda.time.joda.time>1.5.2</version.joda.time.joda.time>
+        <version.com.sun.jersey.contribs.jersey.multipart>1.18</version.com.sun.jersey.contribs.jersey.multipart>
+        <version.com.sun.jersey.jersey.client>1.18</version.com.sun.jersey.jersey.client>
+        <version.com.sun.jersey.jersey.server>1.18</version.com.sun.jersey.jersey.server>
+        <version.com.sun.jersey.jersey.servlet>1.18</version.com.sun.jersey.jersey.servlet>
+        <version.joda.time.joda.time>2.3</version.joda.time.joda.time>
         <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
-        <version.org.apache.lucene.lucene.core>4.4.0</version.org.apache.lucene.lucene.core>
-        <version.org.fenixedu.fenixedu.commons>1.0.0-M2</version.org.fenixedu.fenixedu.commons>
-        <version.com.google.code.gson.gson>2.2.3</version.com.google.code.gson.gson>
-        <version.com.google.guava.guava>14.0.1</version.com.google.guava.guava>
+        <version.org.apache.lucene.lucene.core>4.6.0</version.org.apache.lucene.lucene.core>
+        <version.org.fenixedu.fenixedu.commons>1.0.0-M3</version.org.fenixedu.fenixedu.commons>
+        <version.com.google.code.gson.gson>2.2.4</version.com.google.code.gson.gson>
+        <version.com.google.guava.guava>15.0</version.com.google.guava.guava>
 
         <!-- ************************************************************************************************ -->
         <!-- * PLUGIN VERSIONS * -->
         <!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
         <!-- ************************************************************************************************ -->
-        <version.org.antlr.antlr3.maven.plugin>3.4</version.org.antlr.antlr3.maven.plugin>
+        <version.org.antlr.antlr3.maven.plugin>3.5.1</version.org.antlr.antlr3.maven.plugin>
     </properties>
 
     <scm>
@@ -92,11 +91,6 @@
                         <artifactId>servlet-api</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-                <version>${version.commons.codec.commons.codec}</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>

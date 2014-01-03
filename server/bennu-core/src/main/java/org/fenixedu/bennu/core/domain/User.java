@@ -21,7 +21,6 @@ import java.security.SecureRandom;
 import java.util.Comparator;
 import java.util.Set;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.groups.Group;
@@ -30,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 
 /**
  * The application end user.
@@ -103,7 +103,7 @@ public class User extends User_Base {
     @Override
     public void setPassword(final String password) {
         if (getPassword() != null) {
-            String newHashWithOldSalt = DigestUtils.sha512Hex(getSalt() + password);
+            String newHashWithOldSalt = Hashing.sha512().hashString(getSalt() + password, Charsets.UTF_8).toString();
             if (newHashWithOldSalt.equals(getPassword())) {
                 throw BennuCoreDomainException.badOldPassword();
             }
@@ -111,12 +111,12 @@ public class User extends User_Base {
         byte salt[] = new byte[64];
         prng.nextBytes(salt);
         setSalt(new String(salt, Charsets.UTF_8));
-        String hash = DigestUtils.sha512Hex(getSalt() + password);
+        String hash = Hashing.sha512().hashString(getSalt() + password, Charsets.UTF_8).toString();
         super.setPassword(hash);
     }
 
     public boolean matchesPassword(final String password) {
-        final String hash = DigestUtils.sha512Hex(getSalt() + password);
+        final String hash = Hashing.sha512().hashString(getSalt() + password, Charsets.UTF_8).toString();
         return hash.equals(getPassword());
     }
 

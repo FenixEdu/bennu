@@ -1,6 +1,5 @@
 package org.fenixedu.bennu.portal.rest.json;
 
-import org.apache.commons.codec.binary.Base64;
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
 import org.fenixedu.bennu.core.rest.json.DomainObjectViewer;
 import org.fenixedu.bennu.portal.domain.MenuItem;
@@ -12,8 +11,10 @@ import org.fenixedu.commons.json.JsonViewer;
 
 import pt.ist.fenixframework.FenixFramework;
 
+import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.sun.jersey.core.util.Base64;
 
 @DefaultJsonAdapter(PortalConfiguration.class)
 public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguration>, JsonUpdater<PortalConfiguration> {
@@ -29,7 +30,7 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         object.addProperty("systemEmailAddress", configuration.getSystemEmailAddress());
         object.addProperty("theme", configuration.getTheme());
         if (configuration.getLogo() != null) {
-            object.addProperty("logo", Base64.encodeBase64String(configuration.getLogo()));
+            object.addProperty("logo", BaseEncoding.base64().encode(configuration.getLogo()));
             object.addProperty("logoType", new String(configuration.getLogoType()));
         }
         object.add("menu", ctx.view(configuration.getMenu(), DomainObjectViewer.class));
@@ -61,7 +62,7 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
             configuration.setTheme(object.get("theme").getAsString());
         }
         if (object.has("logo")) {
-            configuration.setLogo(Base64.decodeBase64(object.get("logo").getAsString()));
+            configuration.setLogo(BaseEncoding.base64().decode(object.get("logo").getAsString()));
         }
         if (object.has("logoType")) {
             configuration.setLogoType(object.get("logoType").getAsString());
