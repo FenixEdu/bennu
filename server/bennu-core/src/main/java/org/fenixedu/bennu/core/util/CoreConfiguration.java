@@ -74,7 +74,7 @@ public class CoreConfiguration {
         @ConfigurationProperty(
                 key = "development.mode",
                 description = "Whether development mode is on. Throughout the application the behaviour can change according to this setting.",
-                defaultValue = "false")
+                defaultValue = "true")
         public Boolean developmentMode();
 
         @ConfigurationProperty(
