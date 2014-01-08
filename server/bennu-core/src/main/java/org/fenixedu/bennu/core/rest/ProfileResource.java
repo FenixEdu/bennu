@@ -32,7 +32,7 @@ public class ProfileResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getProfile() {
-        return view(null, AuthenticatedUserViewer.class);
+        return view(null, Void.class, AuthenticatedUserViewer.class);
     }
 
     @GET
@@ -53,7 +53,7 @@ public class ProfileResource extends BennuRestResource {
     public String login(@FormParam("username") String username, @FormParam("password") String password) {
         if (!CoreConfiguration.casConfig().isCasEnabled()) {
             Authenticate.login(request.getSession(true), username, password);
-            return view(null, AuthenticatedUserViewer.class);
+            return view(null, Void.class, AuthenticatedUserViewer.class);
         }
         throw AuthorizationException.authenticationFailed();
     }
@@ -70,7 +70,7 @@ public class ProfileResource extends BennuRestResource {
             } catch (IOException e) {
             }
         } else {
-            return view(null, AuthenticatedUserViewer.class);
+            return view(null, Void.class, AuthenticatedUserViewer.class);
         }
         throw AuthorizationException.authenticationFailed();
     }
@@ -85,7 +85,7 @@ public class ProfileResource extends BennuRestResource {
             if (Authenticate.isLogged()) {
                 setPreferredLocale(locale);
             }
-            return view(null, AuthenticatedUserViewer.class);
+            return view(null, Void.class, AuthenticatedUserViewer.class);
         }
         throw BennuCoreDomainException.resourceNotFound(localeTag);
     }
@@ -104,7 +104,7 @@ public class ProfileResource extends BennuRestResource {
             Locale locale = Locale.forLanguageTag(localeTag);
             Authenticate.getUser().setPreferredLocale(locale);
             I18N.setLocale(request.getSession(true), locale);
-            return view(null, AuthenticatedUserViewer.class);
+            return view(null, Void.class, AuthenticatedUserViewer.class);
         }
         throw BennuCoreDomainException.resourceNotFound(localeTag);
     }

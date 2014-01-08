@@ -20,7 +20,7 @@ public class PortalDataResource extends BennuRestResource {
         final JsonObject hostMenuView = new JsonObject();
         merge(hostMenuView, getBuilder().view(PortalConfiguration.getInstance(), PortalMenuViewer.class).getAsJsonObject());
         merge(hostMenuView, getBuilder().view(getCasConfigContext()).getAsJsonObject());
-        merge(hostMenuView, getBuilder().view(null, AuthenticatedUserViewer.class).getAsJsonObject());
+        merge(hostMenuView, getBuilder().view(null, Void.class, AuthenticatedUserViewer.class).getAsJsonObject());
         return toJson(hostMenuView);
     }
 }
