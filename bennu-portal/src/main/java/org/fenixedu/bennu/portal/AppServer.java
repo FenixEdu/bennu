@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.fenixedu.bennu.core.rest.json.JsonAwareResource;
+import org.fenixedu.bennu.core.rest.JsonAwareResource;
 import org.fenixedu.bennu.portal.domain.ApplicationInfo;
 import org.fenixedu.bennu.portal.domain.FunctionalityInfo;
 import org.fenixedu.commons.i18n.LocalizedString;

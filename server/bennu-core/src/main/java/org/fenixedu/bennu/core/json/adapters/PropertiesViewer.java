@@ -18,27 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with bennu-core.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fenixedu.bennu.core.rest.json;
+package org.fenixedu.bennu.core.json.adapters;
 
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.fenixedu.commons.json.JsonBuilder;
-import org.fenixedu.commons.json.JsonViewer;
+import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
+import org.fenixedu.bennu.core.json.JsonBuilder;
+import org.fenixedu.bennu.core.json.JsonViewer;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class KeyValuePropertiesViewer implements JsonViewer<Properties> {
+@DefaultJsonAdapter(Properties.class)
+public class PropertiesViewer implements JsonViewer<Properties> {
     @Override
     public JsonElement view(Properties properties, JsonBuilder ctx) {
-        JsonArray json = new JsonArray();
+        JsonObject json = new JsonObject();
         for (Entry<Object, Object> entry : properties.entrySet()) {
-            JsonObject object = new JsonObject();
-            object.addProperty("key", (String) entry.getKey());
-            object.addProperty("value", (String) entry.getValue());
-            json.add(object);
+            json.addProperty((String) entry.getKey(), (String) entry.getValue());
         }
         return json;
     }

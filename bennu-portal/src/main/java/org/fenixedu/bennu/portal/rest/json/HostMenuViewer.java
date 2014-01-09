@@ -2,8 +2,8 @@ package org.fenixedu.bennu.portal.rest.json;
 //package org.fenixedu.bennu.portal.rest.json;
 //
 //import org.fenixedu.bennu.core.domain.VirtualHost;
-//import org.fenixedu.commons.json.JsonBuilder;
-//import org.fenixedu.commons.json.JsonViewer;
+//import org.fenixedu.bennu.core.json.JsonBuilder;
+//import org.fenixedu.bennu.core.json.JsonViewer;
 //
 //import com.google.gson.JsonElement;
 //import com.google.gson.JsonObject;

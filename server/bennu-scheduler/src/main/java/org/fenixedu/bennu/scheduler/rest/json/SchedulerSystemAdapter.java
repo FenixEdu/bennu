@@ -1,12 +1,12 @@
 package org.fenixedu.bennu.scheduler.rest.json;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
-import org.fenixedu.bennu.core.rest.json.DomainObjectViewer;
+import org.fenixedu.bennu.core.json.JsonBuilder;
+import org.fenixedu.bennu.core.json.JsonViewer;
+import org.fenixedu.bennu.core.json.adapters.DomainObjectViewer;
 import org.fenixedu.bennu.io.domain.FileSupport;
 import org.fenixedu.bennu.io.domain.LocalFileSystemStorage;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
-import org.fenixedu.commons.json.JsonBuilder;
-import org.fenixedu.commons.json.JsonViewer;
 
 import com.google.common.collect.FluentIterable;
 import com.google.gson.JsonElement;

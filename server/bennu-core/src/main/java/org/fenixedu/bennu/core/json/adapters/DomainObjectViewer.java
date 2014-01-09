@@ -1,8 +1,8 @@
-package org.fenixedu.bennu.core.rest.json;
+package org.fenixedu.bennu.core.json.adapters;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
-import org.fenixedu.commons.json.JsonBuilder;
-import org.fenixedu.commons.json.JsonViewer;
+import org.fenixedu.bennu.core.json.JsonBuilder;
+import org.fenixedu.bennu.core.json.JsonViewer;
 
 import pt.ist.fenixframework.core.AbstractDomainObject;
 

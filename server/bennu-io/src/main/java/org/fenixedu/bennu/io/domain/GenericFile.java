@@ -1,13 +1,12 @@
 package org.fenixedu.bennu.io.domain;
 
 import java.io.InputStream;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import org.fenixedu.commons.StringNormalizer;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +59,7 @@ public abstract class GenericFile extends GenericFile_Base {
     @Override
     public void setFilename(String filename) {
         final String nicerFilename = filename.substring(filename.lastIndexOf('/') + 1);
-        final String normalizedFilename = Normalizer.normalize(nicerFilename, Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+        final String normalizedFilename = StringNormalizer.normalizePreservingCapitalizedLetters(nicerFilename);
         super.setFilename(normalizedFilename);
         super.setContentType(guessContentType(normalizedFilename));
     }

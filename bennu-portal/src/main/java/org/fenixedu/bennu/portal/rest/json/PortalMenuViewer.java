@@ -1,7 +1,7 @@
 package org.fenixedu.bennu.portal.rest.json;
 
+import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
-import org.fenixedu.commons.json.JsonBuilder;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

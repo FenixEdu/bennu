@@ -10,6 +10,7 @@ import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.fenixedu.bennu.search.domain.DomainIndexSystem;
+import org.fenixedu.commons.StringNormalizer;
 import org.joda.time.Partial;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -48,7 +49,7 @@ public class IndexDocument {
     }
 
     public IndexDocument indexString(IndexableField field, String value, Store store) {
-        document.add(new StringField(field.getFieldName(), DomainIndexSystem.normalize(value), store));
+        document.add(new StringField(field.getFieldName(), StringNormalizer.normalizeAndRemoveAccents(value), store));
         accumulate(value);
         return this;
     }
@@ -58,7 +59,7 @@ public class IndexDocument {
     }
 
     public IndexDocument indexText(IndexableField field, String value, Store store) {
-        document.add(new TextField(field.getFieldName(), DomainIndexSystem.normalize(value), store));
+        document.add(new TextField(field.getFieldName(), StringNormalizer.normalizeAndRemoveAccents(value), store));
         accumulate(value);
         return this;
     }
@@ -83,7 +84,7 @@ public class IndexDocument {
     }
 
     private void accumulate(String value) {
-        accumulated.add(DomainIndexSystem.normalize(value));
+        accumulated.add(StringNormalizer.normalizeAndRemoveAccents(value));
     }
 
     @Override

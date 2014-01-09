@@ -1,13 +1,13 @@
-package org.fenixedu.bennu.core.rest.json;
+package org.fenixedu.bennu.core.rest;
 
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
-import org.fenixedu.commons.json.JsonBuilder;
-import org.fenixedu.commons.json.JsonCreator;
-import org.fenixedu.commons.json.JsonUpdater;
-import org.fenixedu.commons.json.JsonViewer;
+import org.fenixedu.bennu.core.json.JsonBuilder;
+import org.fenixedu.bennu.core.json.JsonCreator;
+import org.fenixedu.bennu.core.json.JsonUpdater;
+import org.fenixedu.bennu.core.json.JsonViewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -26,7 +26,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
 
 import org.fenixedu.bennu.core.domain.groups.CustomGroup;
-import org.fenixedu.bennu.core.rest.json.JsonAwareResource;
+import org.fenixedu.bennu.core.rest.JsonAwareResource;
 import org.fenixedu.bennu.core.servlets.BennuJerseyRestApplication;
 import org.fenixedu.bennu.core.util.ModuleMapper;
 

@@ -3,8 +3,6 @@ package org.fenixedu.bennu.search.domain;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +26,7 @@ import org.fenixedu.bennu.io.domain.FileStorage;
 import org.fenixedu.bennu.search.IndexDocument.DefaultIndexFields;
 import org.fenixedu.bennu.search.Indexable;
 import org.fenixedu.bennu.search.IndexableField;
+import org.fenixedu.commons.StringNormalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,7 +126,7 @@ public class DomainIndexSystem extends DomainIndexSystem_Base {
     public static Query parse(String query, IndexableField defaultField) {
         try (StandardAnalyzer analyzer = new StandardAnalyzer(VERSION)) {
             QueryParser parser = new QueryParser(VERSION, defaultField.getFieldName(), analyzer);
-            return parser.parse(normalize(query));
+            return parser.parse(StringNormalizer.normalizeAndRemoveAccents(query));
         } catch (ParseException e) {
             throw new DomainIndexException(e);
         }
@@ -136,7 +135,7 @@ public class DomainIndexSystem extends DomainIndexSystem_Base {
     public static List<String> tokenizeString(IndexableField field, String string) {
         List<String> result = new ArrayList<>();
         try (StandardAnalyzer analyzer = new StandardAnalyzer(VERSION)) {
-            try (TokenStream stream = analyzer.tokenStream(field.getFieldName(), new StringReader(normalize(string)))) {
+            try (TokenStream stream = analyzer.tokenStream(field.getFieldName(), new StringReader(StringNormalizer.normalizeAndRemoveAccents(string)))) {
                 stream.reset();
                 while (stream.incrementToken()) {
                     result.add(stream.getAttribute(CharTermAttribute.class).toString());
@@ -147,10 +146,6 @@ public class DomainIndexSystem extends DomainIndexSystem_Base {
             }
         }
         return result;
-    }
-
-    public static String normalize(String text) {
-        return Normalizer.normalize(text, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
     public static FSDirectory getLuceneDomainDirectory(Class<? extends Indexable> indexableClass, boolean create)

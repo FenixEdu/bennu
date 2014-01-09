@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.groups.LoggedGroup;
-import org.fenixedu.bennu.core.rest.json.AuthenticatedUserViewer;
+import org.fenixedu.bennu.core.json.adapters.AuthenticatedUserViewer;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.I18N;

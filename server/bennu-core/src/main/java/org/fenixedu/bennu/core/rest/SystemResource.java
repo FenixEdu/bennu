@@ -37,8 +37,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.fenixedu.bennu.core.rest.json.KeyValuePropertiesViewer;
-import org.fenixedu.bennu.core.util.ConfigurationInvocationHandler;
+import org.fenixedu.bennu.core.json.adapters.KeyValuePropertiesViewer;
+import org.fenixedu.commons.configuration.ConfigurationInvocationHandler;
 
 import pt.ist.fenixframework.FenixFramework;
 

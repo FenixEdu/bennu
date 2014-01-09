@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.fenixedu.bennu.core.rest.json.JsonAwareResource;
+import org.fenixedu.bennu.core.rest.JsonAwareResource;
 import org.fenixedu.bennu.portal.servlet.PortalInitializer;
 
 import com.google.gson.JsonArray;

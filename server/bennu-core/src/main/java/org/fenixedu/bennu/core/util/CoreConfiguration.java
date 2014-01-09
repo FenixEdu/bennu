@@ -6,8 +6,9 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.fenixedu.bennu.core.annotation.ConfigurationManager;
-import org.fenixedu.bennu.core.annotation.ConfigurationProperty;
+import org.fenixedu.commons.configuration.ConfigurationInvocationHandler;
+import org.fenixedu.commons.configuration.ConfigurationManager;
+import org.fenixedu.commons.configuration.ConfigurationProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

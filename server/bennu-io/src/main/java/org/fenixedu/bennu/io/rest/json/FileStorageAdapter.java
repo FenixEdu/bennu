@@ -1,9 +1,9 @@
 package org.fenixedu.bennu.io.rest.json;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
+import org.fenixedu.bennu.core.json.JsonAdapter;
+import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.io.domain.FileStorage;
-import org.fenixedu.commons.json.JsonAdapter;
-import org.fenixedu.commons.json.JsonBuilder;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

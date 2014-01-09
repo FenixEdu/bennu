@@ -1,13 +1,13 @@
 package org.fenixedu.bennu.portal.rest.json;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
-import org.fenixedu.bennu.core.rest.json.DomainObjectViewer;
+import org.fenixedu.bennu.core.json.JsonBuilder;
+import org.fenixedu.bennu.core.json.JsonUpdater;
+import org.fenixedu.bennu.core.json.JsonViewer;
+import org.fenixedu.bennu.core.json.adapters.DomainObjectViewer;
 import org.fenixedu.bennu.portal.domain.MenuItem;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.LocalizedString;
-import org.fenixedu.commons.json.JsonBuilder;
-import org.fenixedu.commons.json.JsonUpdater;
-import org.fenixedu.commons.json.JsonViewer;
 
 import pt.ist.fenixframework.FenixFramework;
 

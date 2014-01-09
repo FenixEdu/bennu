@@ -5,8 +5,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.fenixedu.bennu.core.json.adapters.AuthenticatedUserViewer;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
-import org.fenixedu.bennu.core.rest.json.AuthenticatedUserViewer;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.bennu.portal.rest.json.PortalMenuViewer;
 
