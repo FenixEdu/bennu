@@ -12,7 +12,7 @@ define([
 		
 		template: tpl,
 		tagName: "div",
-		className: "modal hide fade",
+		className: "modal fade",
 		attributes: {
 			id: "modal-add-menu"
 		},

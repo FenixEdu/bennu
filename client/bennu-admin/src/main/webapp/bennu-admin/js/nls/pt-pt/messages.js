@@ -45,4 +45,5 @@ define({
     'Built By': 'Compilado por',
     'Property': 'Propriedade',
     'Value': 'Valor',
+    'Select an item from the menu on the left': 'Seleccione um item do menu à esquerda'
 });
