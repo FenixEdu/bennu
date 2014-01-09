@@ -96,7 +96,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     private String getFullPath(final String uniqueIdentification) {
-        return getAbsolutePath() + transformIDInPath(uniqueIdentification) + File.pathSeparator;
+        return getAbsolutePath() + transformIDInPath(uniqueIdentification) + File.separatorChar;
     }
 
     public String getAbsolutePath() {
@@ -114,8 +114,8 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
             matcher.appendTail(result);
             path = result.toString();
         }
-        if (!path.endsWith(File.pathSeparator)) {
-            path = path + File.pathSeparator;
+        if (!path.endsWith(File.separator)) {
+            path = path + File.separatorChar;
         }
         File dir = new File(path);
         if (!dir.exists()) {
@@ -133,7 +133,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         char[] idArray = uniqueIdentification.toCharArray();
         for (int i = 0; i < idArray.length; i++) {
             if (i > 0 && i % directoriesNameLength == 0 && ((i + directoriesNameLength) < uniqueIdentification.length())) {
-                result.append(File.pathSeparator);
+                result.append(File.separatorChar);
             } else if ((i + directoriesNameLength) >= uniqueIdentification.length()) {
                 break;
             }
