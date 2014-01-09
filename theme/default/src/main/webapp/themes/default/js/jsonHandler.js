@@ -27,8 +27,7 @@ function jsonHandler(hostJson) {
 		}
 	});
 
-	var path = location.href.replace(location.href.substring(0, location.href.indexOf(contextPath) + contextPath.length
-			+ 1), "");
+	var path = location.href.substring(location.origin.length).substring(contextPath.length + 1);
 	
 	var selectedMenu = false;
 	
