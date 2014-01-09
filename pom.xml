@@ -28,7 +28,7 @@
         <version.joda.time.joda.time>2.3</version.joda.time.joda.time>
         <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
         <version.org.apache.lucene.lucene.core>4.6.0</version.org.apache.lucene.lucene.core>
-        <version.org.fenixedu.fenixedu.commons>1.0.0-M3</version.org.fenixedu.fenixedu.commons>
+        <version.org.fenixedu.fenixedu.commons>1.0.0</version.org.fenixedu.fenixedu.commons>
         <version.com.google.code.gson.gson>2.2.4</version.com.google.code.gson.gson>
         <version.com.google.guava.guava>15.0</version.com.google.guava.guava>
 
@@ -43,6 +43,7 @@
         <connection>scm:git:git@github.com:fenixedu/bennu.git</connection>
         <developerConnection>scm:git:git@github.com:fenixedu/bennu.git</developerConnection>
         <url>http://fenixedu.github.io/bennu</url>
+        <tag>HEAD</tag>
     </scm>
 
     <build>
