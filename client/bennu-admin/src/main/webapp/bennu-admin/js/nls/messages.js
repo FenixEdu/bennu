@@ -46,6 +46,7 @@ define({
 		'Built By': 'Built By',
 		'Property': 'Property',
 		'Value': 'Value',
+		'Select an item from the menu on the left': 'Select an item from the menu on the left'
     },
     "pt-pt": true
 });
