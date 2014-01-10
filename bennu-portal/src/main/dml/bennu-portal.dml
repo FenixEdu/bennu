@@ -1,0 +1,48 @@
+package org.fenixedu.bennu.portal.domain;
+
+public class PortalConfiguration {
+	public LocalizedString applicationTitle (REQUIRED);
+	public LocalizedString htmlTitle (REQUIRED);
+	public LocalizedString applicationSubTitle (REQUIRED);
+	public LocalizedString applicationCopyright (REQUIRED);
+	public String theme (REQUIRED);
+	public String supportEmailAddress;
+	public String systemEmailAddress;
+	public bytearray logo;
+	public String logoType;
+}
+
+relation BennuPortalConfiguration {
+    protected .org.fenixedu.bennu.core.domain.Bennu playsRole root {
+        multiplicity 1..1;
+    }
+    public PortalConfiguration playsRole configuration {
+        multiplicity 0..1;
+    }
+}
+
+public class MenuItem {
+	public Integer ord;
+	public LocalizedString title;
+	public LocalizedString description;
+	public String path;
+	public String accessExpression;
+}
+
+relation ApplicationMenu {
+    public PortalConfiguration playsRole configuration {
+        multiplicity 0..1;
+    }
+    public MenuItem playsRole menu {
+        multiplicity 1..1;
+    }
+}
+
+relation MenuItemComposition {
+	public MenuItem playsRole parent {
+        multiplicity 0..1;
+	}
+	public MenuItem playsRole child {
+		multiplicity *;
+	}
+}

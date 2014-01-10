@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.fenixedu</groupId>
+		<artifactId>bennu</artifactId>
+		<version>2.0.0</version>
+	</parent>
+
+	<artifactId>bennu-portal</artifactId>
+	<name>Bennu Portal</name>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.samaxes.maven</groupId>
+				<artifactId>minify-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>default-minify</id>
+						<phase>compile</phase>
+						<configuration>
+							<charset>utf-8</charset>
+							<jsSourceDir>bennu-portal</jsSourceDir>
+							<jsSourceFiles>
+								<jsSourceFile>portal.js</jsSourceFile>
+							</jsSourceFiles>
+							<webappTargetDir>${project.build.outputDirectory}/META-INF/resources</webappTargetDir>
+							<jsTargetDir />
+							<jsFinalFile>portal.js</jsFinalFile>
+							<nosuffix>true</nosuffix>
+						</configuration>
+						<goals>
+							<goal>minify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.fenixedu</groupId>
+			<artifactId>bennu-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>fenix-ashes-maven-repository</id>
+			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+		</repository>
+	</repositories>
+</project>

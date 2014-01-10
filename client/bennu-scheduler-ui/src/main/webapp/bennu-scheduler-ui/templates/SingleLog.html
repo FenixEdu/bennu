@@ -1,0 +1,23 @@
+<td>{{taskName}}</td>
+<td>{{start}}</td>
+<td>{{end}}</td>
+<td>
+{{#finished}}
+{{#success}}
+	<i class="glyphicon glyphicon-ok"><div style='display:none;'>2</div></i>
+{{/success}}
+{{^success}}
+	<i class="glyphicon glyphicon-remove"><div style='display:none;'>3</div</i>
+{{/success}}	
+{{/finished}}
+{{^finished}}
+	<i class="glyphicon glyphicon-play"><div style='display:none;'>1</div</i>
+{{/finished}}
+<td>
+{{#customLog}}
+		<a href="#custom/{{id}}" class="btn btn-success">Details</a>
+{{/customLog}}
+{{^customLog}}
+		<a href="#logs/{{id}}" class="btn btn-success">Details</a>
+{{/customLog}}
+</td>

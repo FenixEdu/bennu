@@ -1,0 +1,56 @@
+<fieldset id="menu-form">
+	<div class="notifications top-right"></div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="title">{{#_i18n}}Title{{/_i18n}}</label>
+		<div class="controls">
+			{{#locales}}
+			<input type="text" lang="{{tag}}" id="title" name="title" value="{{#_mlsLocale}}title{{/_mlsLocale}}" placeholder="{{#_i18n}}Title{{/_i18n}}" required {{#functionality}}readonly{{/functionality}}> 
+			<span class="add-on">{{tag}}</span>
+			{{/locales}}
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="description">{{#_i18n}}Description{{/_i18n}}</label>
+		<div class="controls">
+			{{#locales}}
+			<input type="text" lang="{{tag}}" id="description" name="description"
+				value="{{#_mlsLocale}}description{{/_mlsLocale}}" placeholder="{{#_i18n}}Description{{/_i18n}}" required {{#functionality}}readonly{{/functionality}}>
+			<span class="add-on">{{tag}}</span>
+			{{/locales}}
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="path">{{#_i18n}}Path{{/_i18n}}</label>
+		<input type="text" name="path" value="{{path}}"
+			placeholder="Path" class="input-block-level" required {{#functionality}}readonly{{/functionality}}>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="accessExpression">{{#_i18n}}Access Expression{{/_i18n}}</label>
+			<input type="text" name="accessExpression" value="{{accessExpression}}" placeholder="{{#_i18n}}Access Expression{{/_i18n}}" class="input-xlarge" {{#functionality}}readonly{{/functionality}}>
+	</div>
+	<div class="col-sm-offset-2">
+		<button id='confirm' class="btn btn-success btn-sm">{{#_i18n}}Confirm{{/_i18n}}</button>
+		{{#id}}
+			<a href="#modal-delete-menu" role="button" class="btn btn-danger btn-sm" data-toggle="modal">{{#_i18n}}Delete{{/_i18n}}</a>
+		{{/id}}
+		<a id="add-menu" class="btn btn-primary btn-sm">{{#_i18n}}Add Menu{{/_i18n}}</a>
+	</div>
+</fieldset>
+
+<div id="modal-delete-menu" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		      <h3>{{#_i18n}}Delete Menu{{/_i18n}}</h3>
+		    </div>
+		    <div class="modal-body">
+		      <p>{{#_i18n}}Do you wish to delete the menu?{{/_i18n}}</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a id="delete" data-dismiss="modal" class="btn danger">{{#_i18n}}Yes{{/_i18n}}</a>
+		      <a data-dismiss="modal" class="btn secondary">{{#_i18n}}No{{/_i18n}}</a>
+		    </div>
+	    </div>
+    </div>
+</div>

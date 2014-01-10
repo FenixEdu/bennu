@@ -1,0 +1,194 @@
+package org.fenixedu.bennu.core.domain;
+
+/*
+ * @(#)bennu-core.dml
+ *
+ * Copyright 2009 Instituto Superior Tecnico
+ * Founding Authors: João Figueiredo, Luis Cruz, Paulo Abrantes, Susana Fernandes
+ * 
+ *      https://fenix-ashes.ist.utl.pt/
+ * 
+ *   This file is part of the Bennu web application infrastructure.
+ *
+ *   Bennu is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU Lesser General Public License as published
+ *   by the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.*
+ *
+ *   Bennu is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU Lesser General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Lesser General Public License
+ *   along with Bennu. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
+valueType org.fenixedu.commons.i18n.LocalizedString as LocalizedString {
+    externalizeWith {
+        JsonElement json();
+    }
+    internalizeWith fromJson();
+}
+
+valueType java.lang.Class as Class {
+	externalizeWith {
+		String getName();
+	}
+	internalizeWith org.fenixedu.bennu.core.util.ClassInternalizer.internalize();
+}
+
+valueType java.util.Locale as Locale {
+	externalizeWith {
+		String toLanguageTag();
+	}
+	internalizeWith forLanguageTag();
+}
+
+public class Bennu {
+}
+
+relation DomainRootBennu {
+	protected .pt.ist.fenixframework.DomainRoot playsRole root {
+		multiplicity 1..1;
+	}
+	public Bennu playsRole bennu {
+		multiplicity 0..1;
+	}
+}
+
+public class User {
+	protected String username  (REQUIRED);
+	protected String password;
+	protected String salt;
+	protected DateTime created;
+	protected DateTime lastLogoutDateTime;
+	public LocalDate expiration;
+	public String email;
+	public Locale preferredLocale;
+}
+
+relation SystemUsers {
+	protected Bennu playsRole bennu {
+		multiplicity 1..1;
+	}
+	protected User playsRole user {
+		multiplicity *;
+	}
+}
+
+/* Authorization Groups */
+
+public class groups.Group {
+}
+
+relation Groups {
+	protected Bennu playsRole root {
+		multiplicity 0..1;
+	}
+	protected groups.Group playsRole group {
+		multiplicity *;
+	}
+}
+
+public class groups.NobodyGroup extends groups.Group {
+}
+
+public class groups.AnyoneGroup extends groups.Group {
+}
+
+public class groups.AnonymousGroup extends groups.Group {
+}
+
+public class groups.LoggedGroup extends groups.Group {
+}
+
+public class groups.UserGroup extends groups.Group {
+}
+
+relation UserGroupMembers {
+	protected groups.UserGroup playsRole userGroup {
+		multiplicity *;
+	}
+	protected User playsRole member {
+		multiplicity *;
+	}
+}
+
+public class groups.CompositionGroup extends groups.Group {
+}
+
+relation GroupComposition {
+	protected groups.Group playsRole children {
+		multiplicity 1..*;
+	}
+	protected groups.CompositionGroup playsRole composition {
+		multiplicity *;
+	}
+}
+
+public class groups.UnionGroup extends groups.CompositionGroup {
+}
+
+public class groups.IntersectionGroup extends groups.CompositionGroup {
+}
+
+public class groups.DifferenceGroup extends groups.CompositionGroup {
+}
+
+public class groups.NegationGroup extends groups.Group {
+}
+
+relation NegationGroups {
+    protected Bennu playsRole negationRoot {
+        multiplicity 1..1;
+    }
+    protected groups.NegationGroup playsRole negation {
+        multiplicity 0..*;
+    }
+}
+
+relation GroupNegationGroup {
+	protected groups.Group playsRole negated {
+		multiplicity 1..1;
+	}
+	protected groups.NegationGroup playsRole negation {
+		multiplicity 0..1;
+	}
+}
+
+public class groups.CustomGroup extends groups.Group {
+}
+
+public class groups.DynamicGroup extends groups.Group {
+	protected String name (REQUIRED);
+	protected DateTime created (REQUIRED);
+}
+
+relation DynamicGroupCreator {
+    protected groups.DynamicGroup playsRole createdDynamicGroup {
+		multiplicity *;
+	}
+	protected User playsRole creator {
+		multiplicity 0..1;
+	}
+}
+
+relation DynamicGroupWrapper {
+	protected groups.DynamicGroup playsRole dynamicGroup {
+		multiplicity *;
+	}
+	protected groups.Group playsRole group {
+		multiplicity 1..1;
+	}
+}
+
+relation DynamicGroupHistoric {
+	protected groups.DynamicGroup playsRole previous {
+		multiplicity 0..1;
+	}
+	protected groups.DynamicGroup playsRole next {
+		multiplicity 0..1;
+	}
+}

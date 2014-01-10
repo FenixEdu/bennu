@@ -1,0 +1,54 @@
+<h3>{{#_i18n}}title.storages{{/_i18n}}</h3>
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>{{#_i18n}}repository.name{{/_i18n}}</th>
+			<th>{{#_i18n}}repository.type{{/_i18n}}</th>
+			<th>{{#_i18n}}repository.filecount{{/_i18n}}</th>
+			<th>{{#_i18n}}repository.operations{{/_i18n}}</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+<h3>{{#_i18n}}title.new.repository{{/_i18n}}</h3>
+<ul id="createNewRepoTab" class="nav nav-tabs">
+  <li class="active">
+    <a data-toggle="tab" href="#createDomainStorage">DomainStorage</a>
+  </li>
+  <li>
+  	<a data-toggle="tab" href="#createLocalFileSystemStorage">LocalFileSystemStorage</a>
+  </li>
+</ul>
+
+<div class="tab-content">
+	<div class="tab-pane active" id="createDomainStorage">
+		<form id="createDomainStorageForm" class="form-horizontal">
+		  <fieldset>
+		    <legend>{{#_i18n}}domainstorage.create.title{{/_i18n}}</legend>
+		    <label>{{#_i18n}}domainstorage.field.name.label{{/_i18n}}</label>
+		    <input field="name" type="text" placeholder="{{#_i18n}}domainstorage.field.name.label{{/_i18n}}">
+		    <label></label>
+		    <button type="submit" class="btn btn-success submit-domainstorage">{{#_i18n}}submit{{/_i18n}}</button>
+		  </fieldset>
+		</form>
+	</div>
+	<div class="tab-pane" id="createLocalFileSystemStorage">
+		<form id="createLFSStorageForm" class="form-horizontal">
+		  <fieldset>
+		    <legend>{{#_i18n}}lfsstorage.create.title{{/_i18n}}</legend>
+		    
+		    <label>{{#_i18n}}lfsstorage.field.name.label{{/_i18n}}</label>
+		    <input type="text" field="name" placeholder="{{#_i18n}}lfsstorage.field.name.label{{/_i18n}}">
+		    
+		    <label>{{#_i18n}}lfsstorage.field.path.label{{/_i18n}}</label>
+		    <input type="text" field="path" placeholder="{{#_i18n}}lfsstorage.field.path.label{{/_i18n}}">
+		    
+		    <label>{{#_i18n}}lfsstorage.field.treeDirectoriesNameLength.label{{/_i18n}}</label>
+		    <input type="text" field="treeDirectoriesNameLength" placeholder="{{#_i18n}}lfsstorage.field.treeDirectoriesNameLength.label{{/_i18n}}">
+			<label></label>
+			<button type="submit" class="btn btn-success submit-lfsstorage">{{#_i18n}}submit{{/_i18n}}</button>
+		  </fieldset>
+		</form>
+	</div>
+</div>

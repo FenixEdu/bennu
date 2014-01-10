@@ -1,0 +1,11 @@
+{
+	"username": "Utilizador",
+	"password": "Password",
+	"settings": "Configuração",
+	"admin": "Admin",
+	"logout": "Sair",
+	"login": "Entrar",
+	"Language" : "Lingua",
+	"pt-PT" : "Português",
+	"en-GB" : "Inglês"
+}
