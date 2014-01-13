@@ -7,7 +7,7 @@ import java.io.File;
  * @author Shezad Anavarali Date: Aug 12, 2009
  * 
  */
-final class LocalFileToDelete extends LocalFileToDelete_Base {
+public final class LocalFileToDelete extends LocalFileToDelete_Base {
     public LocalFileToDelete() {
         super();
         setFileSupport(FileSupport.getInstance());
