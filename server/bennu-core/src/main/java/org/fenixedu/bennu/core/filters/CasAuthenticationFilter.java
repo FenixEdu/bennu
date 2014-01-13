@@ -17,8 +17,6 @@
 package org.fenixedu.bennu.core.filters;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -60,9 +58,8 @@ public class CasAuthenticationFilter implements Filter {
         final String ticket = httpServletRequest.getParameter("ticket");
         if (ticket != null) {
             Authenticate.logout(httpServletRequest.getSession());
-            final String requestURL = "https://" + request.getServerName();
             try {
-                final CASReceipt receipt = getCASReceipt(ticket, requestURL);
+                final CASReceipt receipt = getCASReceipt(ticket);
                 final String username = receipt.getUserName();
                 Authenticate.login(httpServletRequest.getSession(), username);
             } catch (CASAuthenticationException e) {
@@ -72,18 +69,19 @@ public class CasAuthenticationFilter implements Filter {
         chain.doFilter(request, response);
     }
 
-    public static CASReceipt getCASReceipt(final String casTicket, final String requestURL) throws UnsupportedEncodingException,
-            CASAuthenticationException {
+    public static CASReceipt getCASReceipt(final String casTicket) throws CASAuthenticationException {
         String casValidateUrl = CoreConfiguration.casConfig().getCasValidateUrl();
-        String casServiceUrl = URLEncoder.encode(requestURL.replace("http://", "https://").replace(":8080", ""), "UTF-8");
+        String casServiceUrl = CoreConfiguration.casConfig().getCasServiceUrl();
 
         ProxyTicketValidator pv = new ProxyTicketValidator();
         pv.setCasValidateUrl(casValidateUrl);
         pv.setServiceTicket(casTicket);
         pv.setService(casServiceUrl);
         pv.setRenew(false);
-        logger.debug(String.format("casValidateUrl : %s casTicket : %s casServiceUrl : %s", casValidateUrl, casTicket,
-                casServiceUrl));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("casValidateUrl : %s casTicket : %s casServiceUrl : %s", casValidateUrl, casTicket,
+                    casServiceUrl));
+        }
         return CASReceipt.getReceipt(pv);
     }
 }
