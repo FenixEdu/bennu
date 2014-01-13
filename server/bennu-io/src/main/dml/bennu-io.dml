@@ -9,12 +9,12 @@ public class GenericFile {
 	protected String contentKey;
 }
 
-class FileRawData {
+public class FileRawData {
 	protected String contentKey;
 	protected bytearray content;
 }
 
-class LocalFileToDelete {
+public class LocalFileToDelete {
 	protected String filePath;
 }
 

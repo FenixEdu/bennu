@@ -10,7 +10,7 @@
 
     <artifactId>bennu</artifactId>
     <name>Bennu Framework</name>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -21,6 +21,7 @@
         <version.org.antlr.antlr.runtime>3.5.1</version.org.antlr.antlr.runtime>
         <version.cas.casclient>2.1.1</version.cas.casclient>
         <version.com.sun.jersey.contribs.jersey.multipart>1.18</version.com.sun.jersey.contribs.jersey.multipart>
+        <version.com.sun.jersey.jersey.core>1.18</version.com.sun.jersey.jersey.core>
         <version.com.sun.jersey.jersey.client>1.18</version.com.sun.jersey.jersey.client>
         <version.com.sun.jersey.jersey.server>1.18</version.com.sun.jersey.jersey.server>
         <version.com.sun.jersey.jersey.servlet>1.18</version.com.sun.jersey.jersey.servlet>
@@ -42,7 +43,7 @@
         <connection>scm:git:git@github.com:fenixedu/bennu.git</connection>
         <developerConnection>scm:git:git@github.com:fenixedu/bennu.git</developerConnection>
         <url>http://fenixedu.github.io/bennu</url>
-        <tag>v2.0.0</tag>
+        <tag>v2.0.1</tag>
     </scm>
 
     <build>
@@ -101,6 +102,11 @@
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr-runtime</artifactId>
                 <version>${version.org.antlr.antlr.runtime}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-core</artifactId>
+                <version>${version.com.sun.jersey.jersey.core}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey</groupId>
