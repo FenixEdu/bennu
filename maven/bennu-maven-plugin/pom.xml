@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu-maven</artifactId>
-        <version>2.0.2</version>
+        <version>2.0.3</version>
     </parent>
 
     <artifactId>bennu-maven-plugin</artifactId>
