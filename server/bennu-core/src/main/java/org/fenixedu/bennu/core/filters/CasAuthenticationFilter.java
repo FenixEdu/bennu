@@ -18,6 +18,7 @@ package org.fenixedu.bennu.core.filters;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -31,6 +32,8 @@ import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Charsets;
 
 import edu.yale.its.tp.cas.client.CASAuthenticationException;
 import edu.yale.its.tp.cas.client.CASReceipt;
@@ -59,7 +62,7 @@ public class CasAuthenticationFilter implements Filter {
         final String ticket = httpServletRequest.getParameter("ticket");
         if (ticket != null) {
             Authenticate.logout(httpServletRequest.getSession());
-            final String requestURL = httpServletRequest.getRequestURL().toString();
+            final String requestURL = URLDecoder.decode(httpServletRequest.getRequestURL().toString(), Charsets.UTF_8.name());
             try {
                 final CASReceipt receipt = getCASReceipt(ticket, requestURL);
                 final String username = receipt.getUserName();
