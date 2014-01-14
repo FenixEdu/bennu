@@ -17,6 +17,7 @@
 package org.fenixedu.bennu.core.filters;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -58,20 +59,21 @@ public class CasAuthenticationFilter implements Filter {
         final String ticket = httpServletRequest.getParameter("ticket");
         if (ticket != null) {
             Authenticate.logout(httpServletRequest.getSession());
+            final String requestURL = httpServletRequest.getRequestURL().toString();
             try {
-                final CASReceipt receipt = getCASReceipt(ticket);
+                final CASReceipt receipt = getCASReceipt(ticket, requestURL);
                 final String username = receipt.getUserName();
                 Authenticate.login(httpServletRequest.getSession(), username);
             } catch (CASAuthenticationException e) {
-                e.printStackTrace();
+                logger.warn(e.getMessage(), e);
             }
         }
         chain.doFilter(request, response);
     }
 
-    public static CASReceipt getCASReceipt(final String casTicket) throws CASAuthenticationException {
+    public static CASReceipt getCASReceipt(final String casTicket, final String casServiceUrl)
+            throws UnsupportedEncodingException, CASAuthenticationException {
         String casValidateUrl = CoreConfiguration.casConfig().getCasValidateUrl();
-        String casServiceUrl = CoreConfiguration.casConfig().getCasServiceUrl();
 
         ProxyTicketValidator pv = new ProxyTicketValidator();
         pv.setCasValidateUrl(casValidateUrl);
