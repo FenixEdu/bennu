@@ -26,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -67,6 +68,10 @@ public class CasAuthenticationFilter implements Filter {
             try {
                 String username = validator.validate(ticket, requestURL).getPrincipal().getName();
                 Authenticate.login(httpServletRequest.getSession(), username);
+                // Redirect to the same page, to prevent replaying the ticket parameter
+                HttpServletResponse resp = (HttpServletResponse) response;
+                resp.sendRedirect(httpServletRequest.getRequestURL().toString());
+                return;
             } catch (TicketValidationException e) {
                 logger.warn(e.getMessage(), e);
             }
