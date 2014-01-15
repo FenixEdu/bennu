@@ -17,7 +17,6 @@
 package org.fenixedu.bennu.core.filters;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import javax.servlet.Filter;
@@ -30,14 +29,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+import org.jasig.cas.client.validation.TicketValidationException;
+import org.jasig.cas.client.validation.TicketValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
-
-import edu.yale.its.tp.cas.client.CASAuthenticationException;
-import edu.yale.its.tp.cas.client.CASReceipt;
-import edu.yale.its.tp.cas.client.ProxyTicketValidator;
 
 /**
  * 
@@ -46,6 +44,9 @@ import edu.yale.its.tp.cas.client.ProxyTicketValidator;
  */
 public class CasAuthenticationFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(CasAuthenticationFilter.class);
+
+    private final TicketValidator validator =
+            new Cas20ServiceTicketValidator(CoreConfiguration.getConfiguration().casServerUrl());
 
     @Override
     public void init(final FilterConfig config) throws ServletException {
@@ -64,29 +65,13 @@ public class CasAuthenticationFilter implements Filter {
             Authenticate.logout(httpServletRequest.getSession());
             final String requestURL = URLDecoder.decode(httpServletRequest.getRequestURL().toString(), Charsets.UTF_8.name());
             try {
-                final CASReceipt receipt = getCASReceipt(ticket, requestURL);
-                final String username = receipt.getUserName();
+                String username = validator.validate(ticket, requestURL).getPrincipal().getName();
                 Authenticate.login(httpServletRequest.getSession(), username);
-            } catch (CASAuthenticationException e) {
+            } catch (TicketValidationException e) {
                 logger.warn(e.getMessage(), e);
             }
         }
         chain.doFilter(request, response);
     }
 
-    public static CASReceipt getCASReceipt(final String casTicket, final String casServiceUrl)
-            throws UnsupportedEncodingException, CASAuthenticationException {
-        String casValidateUrl = CoreConfiguration.casConfig().getCasValidateUrl();
-
-        ProxyTicketValidator pv = new ProxyTicketValidator();
-        pv.setCasValidateUrl(casValidateUrl);
-        pv.setServiceTicket(casTicket);
-        pv.setService(casServiceUrl);
-        pv.setRenew(false);
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("casValidateUrl : %s casTicket : %s casServiceUrl : %s", casValidateUrl, casTicket,
-                    casServiceUrl));
-        }
-        return CASReceipt.getReceipt(pv);
-    }
 }

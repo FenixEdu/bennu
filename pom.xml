@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -19,7 +20,6 @@
         <!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
         <!-- ************************************************************************************************ -->
         <version.org.antlr.antlr.runtime>3.5.1</version.org.antlr.antlr.runtime>
-        <version.cas.casclient>2.1.1</version.cas.casclient>
         <version.com.sun.jersey.contribs.jersey.multipart>1.18</version.com.sun.jersey.contribs.jersey.multipart>
         <version.com.sun.jersey.jersey.core>1.18</version.com.sun.jersey.jersey.core>
         <version.com.sun.jersey.jersey.client>1.18</version.com.sun.jersey.jersey.client>
@@ -29,6 +29,7 @@
         <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
         <version.org.apache.lucene.lucene.core>4.6.0</version.org.apache.lucene.lucene.core>
         <version.org.fenixedu.fenixedu.commons>1.0.0</version.org.fenixedu.fenixedu.commons>
+        <version.org.jasig.cas.client.core>3.3.0</version.org.jasig.cas.client.core>
         <version.com.google.code.gson.gson>2.2.4</version.com.google.code.gson.gson>
         <version.com.google.guava.guava>15.0</version.com.google.guava.guava>
 
@@ -83,9 +84,9 @@
                 <version>${version.org.fenixedu.fenixedu.commons}</version>
             </dependency>
             <dependency>
-                <groupId>cas</groupId>
-                <artifactId>casclient</artifactId>
-                <version>${version.cas.casclient}</version>
+                <groupId>org.jasig.cas.client</groupId>
+                <artifactId>cas-client-core</artifactId>
+                <version>${version.org.jasig.cas.client.core}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>javax.servlet</groupId>
