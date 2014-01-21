@@ -86,7 +86,7 @@ public class CoreConfiguration {
         @ConfigurationProperty(key = "cas.enabled", defaultValue = "false")
         public Boolean casEnabled();
 
-        @ConfigurationProperty(key = "cas.serverUrl")
+        @ConfigurationProperty(key = "cas.serverUrl", defaultValue ="http://localhost:8080/cas")
         public String casServerUrl();
 
         @ConfigurationProperty(key = "cas.serviceUrl")
