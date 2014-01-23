@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Function;
@@ -73,7 +74,7 @@ public final class UserGroup extends UserGroup_Base {
 
     @Override
     public boolean isMember(User user) {
-        return getMemberSet().contains(user);
+        return user != null && getMemberSet().contains(user);
     }
 
     @Override
@@ -94,9 +95,12 @@ public final class UserGroup extends UserGroup_Base {
     }
 
     @Override
-    public UserGroup revoke(User user) {
+    public Group revoke(User user) {
         Set<User> users = new HashSet<>(getMemberSet());
         users.remove(user);
+        if (users.isEmpty()) {
+            return NobodyGroup.getInstance();
+        }
         return UserGroup.getInstance(users);
     }
 
@@ -121,6 +125,9 @@ public final class UserGroup extends UserGroup_Base {
      * @return {@link UserGroup} instance
      */
     public static UserGroup getInstance(final Set<User> users) {
+        if (users.isEmpty()) {
+            throw BennuCoreDomainException.creatingUserGroupsWithoutUsers();
+        }
         return select(UserGroup.class, new Predicate<UserGroup>() {
             @Override
             public boolean apply(UserGroup input) {
