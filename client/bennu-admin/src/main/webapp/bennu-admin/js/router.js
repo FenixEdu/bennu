@@ -20,7 +20,10 @@ define([
 			    App.systemInfo = new MenuManager.Models.SystemInfo();
 			    App.systemInfo.fetch({async:false});
 			}
-			
+            if (!App.logger) {
+                App.logger = new MenuManager.Models.Logger();
+                App.logger.fetch({async:false});
+             }
         },
         
         appRoutes: {
@@ -30,7 +33,8 @@ define([
 //    		"hosts/edit/:hostname" : "editHost",
 //    		"hosts/create": "createHost",
     		"menu/:id" : "showMenu",
-    		"system/info" : "systemInfo"
+    		"system/info" : "systemInfo",
+            "system/logger" : "showLoggers"
     	},
     	
     	controller: {
@@ -99,6 +103,10 @@ define([
     		systemInfo : function() {
     		    App.page.show(new MenuManager.Views.SystemInfo({model: App.systemInfo }));
     		},
+
+            showLoggers : function() {
+                App.page.show(new MenuManager.Views.Logger({model: App.logger }));
+            }
     	}
     });
     
