@@ -3,7 +3,9 @@ package org.fenixedu.bennu.core.rest;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.IllformedLocaleException;
 import java.util.Locale;
+import java.util.Locale.Builder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
@@ -79,13 +81,16 @@ public class ProfileResource extends BennuRestResource {
     @Path("locale/{tag}")
     @Produces(MediaType.APPLICATION_JSON)
     public String changeLocale(@PathParam("tag") String localeTag) {
-        if (CoreConfiguration.supportedLocales().contains(Locale.forLanguageTag(localeTag))) {
-            final Locale locale = Locale.forLanguageTag(localeTag);
-            I18N.setLocale(request.getSession(true), locale);
-            if (Authenticate.isLogged()) {
-                setPreferredLocale(locale);
+        try {
+            Locale locale = new Builder().setLanguageTag(localeTag).build();
+            if (CoreConfiguration.supportedLocales().contains(locale)) {
+                I18N.setLocale(request.getSession(true), locale);
+                if (Authenticate.isLogged()) {
+                    setPreferredLocale(locale);
+                }
+                return view(null, Void.class, AuthenticatedUserViewer.class);
             }
-            return view(null, Void.class, AuthenticatedUserViewer.class);
+        } catch (IllformedLocaleException e) {
         }
         throw BennuCoreDomainException.resourceNotFound(localeTag);
     }
@@ -100,11 +105,14 @@ public class ProfileResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String changePreferredLocale(@PathParam("tag") String localeTag) {
         accessControl(LoggedGroup.getInstance());
-        if (CoreConfiguration.supportedLocales().contains(Locale.forLanguageTag(localeTag))) {
-            Locale locale = Locale.forLanguageTag(localeTag);
-            Authenticate.getUser().setPreferredLocale(locale);
-            I18N.setLocale(request.getSession(true), locale);
-            return view(null, Void.class, AuthenticatedUserViewer.class);
+        try {
+            Locale locale = new Builder().setLanguageTag(localeTag).build();
+            if (CoreConfiguration.supportedLocales().contains(locale)) {
+                Authenticate.getUser().setPreferredLocale(locale);
+                I18N.setLocale(request.getSession(true), locale);
+                return view(null, Void.class, AuthenticatedUserViewer.class);
+            }
+        } catch (IllformedLocaleException e) {
         }
         throw BennuCoreDomainException.resourceNotFound(localeTag);
     }
