@@ -20,7 +20,7 @@ import org.fenixedu.bennu.io.domain.LocalFileSystemStorage;
 
 import pt.ist.fenixframework.Atomic;
 
-@Path("/storage")
+@Path("/bennu-io/storage")
 public class FileStorageResource extends BennuRestResource {
 
     @POST

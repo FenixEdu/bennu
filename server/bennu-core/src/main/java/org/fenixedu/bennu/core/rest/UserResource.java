@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 
-@Path("/users")
+@Path("/bennu-core/users")
 public class UserResource extends BennuRestResource {
 
     @GET

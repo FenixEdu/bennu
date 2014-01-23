@@ -23,7 +23,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-@Path("log")
+@Path("/bennu-scheduler/log")
 public class ExecutionLogResource extends BennuRestResource {
 
     private static final ExecutionLogContext context = new ExecutionLogContext();

@@ -14,7 +14,7 @@ import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
-@Path("config")
+@Path("/bennu-scheduler/config")
 public class SchedulerConfigResource extends BennuRestResource {
 
     @GET

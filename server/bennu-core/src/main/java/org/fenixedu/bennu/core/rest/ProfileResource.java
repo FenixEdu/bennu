@@ -29,7 +29,7 @@ import org.fenixedu.commons.i18n.I18N;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
-@Path("profile")
+@Path("/bennu-core/profile")
 public class ProfileResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)

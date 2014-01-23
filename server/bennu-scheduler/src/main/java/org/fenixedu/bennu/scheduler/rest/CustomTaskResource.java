@@ -10,7 +10,7 @@ import org.fenixedu.bennu.scheduler.log.CustomExecutionLogContext;
 import org.fenixedu.bennu.scheduler.log.ExecutionLog;
 import org.fenixedu.bennu.scheduler.log.ExecutionLogContext;
 
-@Path("custom")
+@Path("/bennu-scheduler/custom")
 public class CustomTaskResource extends ExecutionLogResource {
 
     private static final CustomExecutionLogContext context = new CustomExecutionLogContext();

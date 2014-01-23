@@ -13,7 +13,7 @@ import org.fenixedu.bennu.io.domain.FileSupport;
 
 import pt.ist.fenixframework.Atomic;
 
-@Path("/storage/config")
+@Path("/bennu-io/storage/config")
 public class StorageConfigurationResource extends BennuRestResource {
 
     @GET

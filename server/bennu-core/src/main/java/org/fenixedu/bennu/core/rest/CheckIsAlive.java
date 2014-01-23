@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 
-@Path("isAlive")
+@Path("/bennu-core/isAlive")
 public class CheckIsAlive extends BennuRestResource {
     @GET
     public Response isAlive() {

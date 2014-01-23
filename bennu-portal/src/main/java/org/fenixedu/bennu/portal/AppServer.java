@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-@Path("apps")
+@Path("/bennu-portal/apps")
 public class AppServer {
     private static Logger LOG = LoggerFactory.getLogger(AppServer.class);
     private static Set<ApplicationInfo> apps = new HashSet<>();

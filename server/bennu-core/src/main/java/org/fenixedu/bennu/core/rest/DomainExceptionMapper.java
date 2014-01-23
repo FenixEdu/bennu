@@ -7,9 +7,6 @@ import javax.ws.rs.ext.Provider;
 
 import org.fenixedu.bennu.core.domain.exceptions.DomainException;
 
-import com.sun.jersey.spi.resource.Singleton;
-
-@Singleton
 @Provider
 public class DomainExceptionMapper implements ExceptionMapper<DomainException> {
     @Override

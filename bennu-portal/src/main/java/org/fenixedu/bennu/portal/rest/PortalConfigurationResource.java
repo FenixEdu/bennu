@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 
-@Path("configuration")
+@Path("/bennu-portal/configuration")
 public class PortalConfigurationResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)

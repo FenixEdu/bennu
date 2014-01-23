@@ -1,17 +1,15 @@
 package org.fenixedu.bennu.core.rest;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import com.google.gson.JsonObject;
-import com.sun.jersey.api.NotFoundException;
-import com.sun.jersey.api.client.ClientResponse.Status;
-import com.sun.jersey.spi.resource.Singleton;
 
 @Provider
-@Singleton
 public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 
     @Override

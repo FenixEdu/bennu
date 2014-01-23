@@ -26,7 +26,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-@Path("/schedule")
+@Path("/bennu-scheduler/schedule")
 public class ScheduleResource extends BennuRestResource {
 
     @GET
