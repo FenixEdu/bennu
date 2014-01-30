@@ -81,7 +81,7 @@ define([
         },
         
         onShow: function() {
-        	this.activateRefresh();
+        	//this.activateRefresh();
     	},
     	
     	onClose: function() {

@@ -6,5 +6,7 @@ define({
 	'customtaskloglist':'Logs das Tarefas Manuais',
 	'Task logging configuration':'Configuração dos Logs das Tarefas',
 	'taskloglist':'Logs das Tarefas Agendadas',
-	'action.run.now':'Correr agora'
+	'action.run.now':'Correr agora',
+	'action.schedule.details': 'Detalhes',
+	'action.schedule.more': 'Todos'
 });

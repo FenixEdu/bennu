@@ -39,7 +39,7 @@ public class ExecutionLogResource extends BennuRestResource {
         final JsonObject view = new JsonObject();
         final JsonArray logs = new JsonArray();
         if (!getContext().isEmpty()) {
-            for (JsonObject obj : getContext().values()) {
+            for (JsonObject obj : getContext().last()) {
                 logs.add(obj);
             }
         }
@@ -48,11 +48,28 @@ public class ExecutionLogResource extends BennuRestResource {
     }
 
     @GET
-    @Path("{id}")
+    @Path("{taskname}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String view(@PathParam("id") String id) {
+    public String view(@PathParam("taskname") String taskname) {
         accessControl("#managers");
-        final JsonObject jsonLog = getContext().get(id);
+        final JsonObject view = new JsonObject();
+        final JsonArray logs = new JsonArray();
+
+        if (!getContext().isEmpty()) {
+            for (JsonObject obj : getContext().get(taskname)) {
+                logs.add(obj);
+            }
+        }
+        view.add("logs", logs);
+        return ExecutionLog.getGson().toJson(view);
+    }
+
+    @GET
+    @Path("{taskname}/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String view(@PathParam("taskname") String taskname, @PathParam("id") String id) {
+        accessControl("#managers");
+        final JsonObject jsonLog = getContext().get(taskname, id);
         if (jsonLog != null) {
             return ExecutionLog.getGson().toJson(jsonLog);
         }
@@ -60,11 +77,11 @@ public class ExecutionLogResource extends BennuRestResource {
     }
 
     @GET
-    @Path("cat/{id}")
+    @Path("cat/{taskname}/{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response logging(@PathParam("id") String id) {
+    public Response logging(@PathParam("taskname") String taskname, @PathParam("id") String id) {
         accessControl("#managers");
-        final JsonObject jsonLog = getContext().get(id);
+        final JsonObject jsonLog = getContext().get(taskname, id);
         if (jsonLog != null) {
             try {
                 final File file = getFile(jsonLog, "log");
@@ -81,10 +98,11 @@ public class ExecutionLogResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @Path("{id}/{filename}")
-    public Response downloadFile(@PathParam("id") String id, @PathParam("filename") String filename) {
+    @Path("{taskname}/{id}/{filename}")
+    public Response downloadFile(@PathParam("taskname") String taskname, @PathParam("id") String id,
+            @PathParam("filename") String filename) {
         accessControl("#managers");
-        final JsonObject jsonLog = getContext().get(id);
+        final JsonObject jsonLog = getContext().get(taskname, id);
         if (jsonLog != null && hasFile(jsonLog, filename)) {
             return Response.ok(getFile(jsonLog, filename)).build();
         }

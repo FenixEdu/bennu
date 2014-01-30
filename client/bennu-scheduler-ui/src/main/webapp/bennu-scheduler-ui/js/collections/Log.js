@@ -4,8 +4,21 @@ define([
     'models/Log',
 ], function(Backbone, moment, LogModel) {
 	return Backbone.Collection.extend({
-
-	    url: "../api/bennu-scheduler/log",
+		
+		initialize : function(models, options) {
+			if(options) {
+				this.taskName = options.taskName;
+			}
+		},
+		
+		baseUrl: "../api/bennu-scheduler/log/",
+		
+	    url: function() {
+	    	if (this.taskName) {
+	    		return  this.baseUrl + this.taskName;
+	    	}
+	    	return this.baseUrl;
+	    },
 
 	    model: LogModel,
 	    

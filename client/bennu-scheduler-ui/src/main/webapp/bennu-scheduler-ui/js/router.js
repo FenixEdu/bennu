@@ -29,9 +29,11 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 					"schedule/:type" : "prepareCreateSchedule",
 					"logs" : "showLogs",
 					"logs/:id" : "showLogs",
+					"logs/:id/:id" : "showLogs",
 					"custom/add": "addCustomTask",
 					"custom": "customTasks",
 					"custom/:id": "customTasks",
+					"custom/:id/:id": "customTasks",
 				},
 
 				controller : {
@@ -65,18 +67,27 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 						}));
 					},
 					
-					showLogs : function(id) {
+					showLogs : function(taskName, logId) {
 						
-						if (id) {
-							var log = new LogModel({id : id});
-							log.fetch({success: function() {
-								App.page.show(new LogView({
-									model : log
-								}));
-							}});
-							return;
+						
+						if (logId) {
+							 var log = new LogModel({id : logId, taskName: taskName});
+							 log.fetch({success: function() {
+								 App.page.show(new LogView({
+									 	model : log
+								 }));
+							 }});
+							 return;
 						}
-						var logsCollection = new LogCollection();
+						
+						var logsCollection;
+						
+						if (taskName) {
+							logsCollection = new LogCollection([], {taskName : taskName});
+						}else {
+							logsCollection = new LogCollection();
+						}
+						
 						logsCollection.fetch({success : function() {
 								App.page.show(new LogList({
 									collection : logsCollection
@@ -84,17 +95,25 @@ define([ 'jquery', 'underscore', 'mustache', 'backbone', 'marionette', 'app',
 						}});
 					},
 					
-					customTasks: function(id) {
-						if (id) {
-							var log = new CustomLogModel({id : id});
-							log.fetch({success: function() {
-								App.page.show(new LogView({
-									model : log
-								}));
-							}});
-							return;
+					customTasks: function(taskName, logId) {
+						var logsCollection;
+						
+						if (logId) {
+							 var log = new CustomLogModel({taskName : taskName, id : logId});
+							 log.fetch({success: function() {
+								 App.page.show(new LogView({
+									 	model : log
+								 }));
+							 }});
+							 return;
 						}
-						var logsCollection = new CustomLogCollection();
+						
+						if (taskName) {
+							logsCollection = new CustomLogCollection([], {taskName : taskName});
+						}else {
+							logsCollection = new CustomLogCollection();
+						}
+						
 						logsCollection.fetch({success : function() {
 								App.page.show(new CustomLogList({
 									collection : logsCollection,
