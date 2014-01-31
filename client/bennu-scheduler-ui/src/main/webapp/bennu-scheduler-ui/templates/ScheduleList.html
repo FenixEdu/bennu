@@ -9,6 +9,13 @@
     </div>
   </div>
 </form>
+<h3>Batch Operations</h3>
+<div class="btn-toolbar">
+  <button id="clear-schedules" class="btn btn-danger">clear all</button>
+  <a href="../api/bennu-scheduler/schedule/dump" class="btn btn-success">download</a>
+  <input type="file" id="input-load-dump-file" style="display:none;">
+  <button id="load-schedules" class="btn btn-success">load</button>
+</div>
 <h3>{{#_i18n}}schedules{{/_i18n}}</h3>
 <table class="table table-condensed">
 	<thead>

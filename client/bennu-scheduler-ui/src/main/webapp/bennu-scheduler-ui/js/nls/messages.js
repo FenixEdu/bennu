@@ -8,7 +8,10 @@ define({
     	'schedules':'schedules',
     	'Task logging configuration':'Task logging configuration',
     	'taskloglist':'Scheduled Tasks Logs',
-    	'action.run.now':'Run Now'
+    	'action.run.now':'Run Now',
+    	'action.schedule.details': 'Details',
+    	'action.schedule.more': 'All',
+    	'action.schedule.logs': 'Logs'
     },
     "pt-pt": true
 });

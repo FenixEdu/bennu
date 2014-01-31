@@ -47,12 +47,17 @@ define([
         	this.refreshLog();
         },
         
-        url: function() {
+        baseUrl: function() {
         	var url = "../api/bennu-scheduler/";
         	if (this.model.get("javaCode") == undefined) {
         		return url + "log/";
-        	} 
-        	return url + "custom/"; 
+        	}
+        	return url + "custom/";
+        },
+        
+        url: function() {
+        	var url = "../api/bennu-scheduler/";
+        	return this.baseUrl() + this.model.get("taskName") + "/";
         },
         
         refreshContent: function() {
@@ -61,9 +66,11 @@ define([
         
         refreshLog: function() {
         	var id = this.model.get("id");
+        	var taskName = this.model.get("taskName");
+        	var baseUrl = this.baseUrl();
         	$.ajax({
         		type:"GET",
-        		url: this.url() + "cat/" + id,
+        		url: baseUrl + "cat/" + taskName + "/" + id,
         		success: function(log, status) {
         			if (status === "nocontent") {
         				$("#logContainer").hide();

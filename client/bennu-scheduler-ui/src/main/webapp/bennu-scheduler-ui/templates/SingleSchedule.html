@@ -1,4 +1,7 @@
 <td>{{type}}</td>
 <td>{{name}}</td>
 <td>{{schedule}}</td>
-<td><button id="{{id}}" class="btn btn-danger delete-schedule">Delete</button></td>
+<td>
+	<button id="{{id}}" class="btn btn-danger delete-schedule">Delete</button>
+	<a href="#logs/{{type}}" class="btn btn-success">{{#_i18n}}action.schedule.logs{{/_i18n}}</a>
+</td>
