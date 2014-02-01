@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
+
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
 import org.joda.time.DateTime;
 
@@ -56,7 +58,10 @@ public class ExecutionLog {
                 return new DateTime(json.getAsString());
             }
         });
-        gsonBuilder.setPrettyPrinting();
+        
+        if (CoreConfiguration.getConfiguration().developmentMode()) {
+        	gsonBuilder.setPrettyPrinting();
+        }
 //        gsonBuilder.addSerializationExclusionStrategy(new ExclusionStrategy() {
 //
 //            @Override

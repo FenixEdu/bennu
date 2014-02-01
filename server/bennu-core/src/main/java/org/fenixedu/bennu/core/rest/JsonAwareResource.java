@@ -8,6 +8,7 @@ import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.json.JsonCreator;
 import org.fenixedu.bennu.core.json.JsonUpdater;
 import org.fenixedu.bennu.core.json.JsonViewer;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,11 @@ public class JsonAwareResource {
     static {
         PARSER = new JsonParser();
         BUILDER = new JsonBuilder();
-        GSON = new GsonBuilder().setPrettyPrinting().create();
+        if (CoreConfiguration.getConfiguration().developmentMode()) {
+        	GSON = new GsonBuilder().setPrettyPrinting().create();
+        } else {
+        	GSON = new GsonBuilder().create();
+        }
     }
 
     public static final JsonBuilder getBuilder() {
