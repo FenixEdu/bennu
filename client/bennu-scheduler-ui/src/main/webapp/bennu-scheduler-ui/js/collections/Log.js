@@ -23,7 +23,11 @@ define([
 	    model: LogModel,
 	    
 	    parse: function(response){
-	        return response.logs;
+	        var logs = response.logs;
+	        if (this.taskName === undefined) {
+	        	$(logs).each(function() { this.showDetails = true;});
+	        }
+	        return logs;
 	     },
 	     
 	     comparator: function (model) {
