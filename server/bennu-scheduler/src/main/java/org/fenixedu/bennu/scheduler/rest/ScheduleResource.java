@@ -109,12 +109,9 @@ public class ScheduleResource extends BennuRestResource {
     @Path("{oid}")
     public Response delete(@PathParam("oid") String taskOid) {
         accessControl("#managers");
-        clear((TaskSchedule) readDomainObject(taskOid));
+        TaskSchedule schedule = readDomainObject(taskOid);
+        schedule.delete();
         return Response.status(Status.OK).build();
-    }
-
-    private void clear(TaskSchedule task) {
-        task.unscheduleAndDelete();
     }
 
 }

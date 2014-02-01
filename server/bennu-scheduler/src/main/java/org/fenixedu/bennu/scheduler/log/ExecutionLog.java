@@ -8,7 +8,8 @@ import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
 import org.joda.time.DateTime;
 
@@ -77,11 +78,14 @@ public class ExecutionLog {
         return gson;
     }
 
+	private static final HashFunction hf = Hashing.md5();
+
     public ExecutionLog(String taskName) {
-        setId(new DateTime().toString("MMddyyyy-kkmmss"));
-        setSuccess(false);
-        setStart(new DateTime());
+		DateTime now = new DateTime();
+        setStart(now);
         setTaskName(taskName);
+        setId(hf.newHasher().putString(taskName).putLong(now.getMillis()).hash().toString());
+        setSuccess(false);
     }
 
     public ExecutionLog(JsonObject obj) {

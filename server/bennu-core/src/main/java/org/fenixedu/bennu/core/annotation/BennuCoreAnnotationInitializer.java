@@ -39,14 +39,6 @@ public class BennuCoreAnnotationInitializer implements ServletContainerInitializ
                 if (operator != null) {
                     CustomGroup.registerOperator((Class<? extends CustomGroup>) type);
                 }
-                Path restEndpoint = type.getAnnotation(Path.class);
-                if (restEndpoint != null) {
-//                    BennuJerseyRestApplication.registerEndpoint(ModuleMapper.getModuleOf(type), restEndpoint.value(), type);
-                }
-                Provider restProvider = type.getAnnotation(Provider.class);
-                if (restProvider != null) {
-//                    BennuJerseyRestApplication.register(type);
-                }
                 DefaultJsonAdapter defaultJsonAdapter = type.getAnnotation(DefaultJsonAdapter.class);
                 if (defaultJsonAdapter != null) {
                     JsonAwareResource.setDefault(defaultJsonAdapter.value(), type);

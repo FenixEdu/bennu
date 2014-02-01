@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.io.Files;
 
@@ -316,8 +317,10 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                     @Override
                     @Atomic(mode = TxMode.READ)
                     public void run() {
-                        final TaskRunner taskRunner = schedule.getTaskRunner();
-                        queue(taskRunner);
+                        if (FenixFramework.isDomainObjectValid(schedule)) {
+                            final TaskRunner taskRunner = schedule.getTaskRunner();
+                            queue(taskRunner);
+                        }
                     }
                 }));
                 scheduledTasks.add(schedule);
