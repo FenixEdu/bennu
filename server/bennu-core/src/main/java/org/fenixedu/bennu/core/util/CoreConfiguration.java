@@ -96,6 +96,10 @@ public class CoreConfiguration {
 
         @ConfigurationProperty(key = "cas.serviceUrl")
         public String casServiceUrl();
+
+        @ConfigurationProperty(key = "application.url", description = "Full application url",
+                defaultValue = "http://localhost:8080")
+        public String applicationUrl();
     }
 
     private static CasConfig casConfig = new CasConfig(getConfiguration().casEnabled(), getConfiguration().casServerUrl(),
