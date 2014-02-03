@@ -22,27 +22,46 @@ relation BennuPortalConfiguration {
 }
 
 public class MenuItem {
-	public Integer ord;
-	public LocalizedString title;
-	public LocalizedString description;
-	public String path;
-	public String accessExpression;
+	public Integer ord (REQUIRED);
+	public LocalizedString title (REQUIRED);
+	public LocalizedString description (REQUIRED);
+	protected String path (REQUIRED);
+	protected String fullPath (REQUIRED);
+	public Boolean visible (REQUIRED);
+	public String layout;
+}
+
+public class MenuContainer extends MenuItem {
+}
+
+public class MenuFunctionality extends MenuItem {
+    protected String itemKey;
+    protected String provider;
 }
 
 relation ApplicationMenu {
-    public PortalConfiguration playsRole configuration {
+    protected PortalConfiguration playsRole configuration {
         multiplicity 0..1;
     }
-    public MenuItem playsRole menu {
+    protected MenuContainer playsRole menu {
         multiplicity 1..1;
     }
 }
 
 relation MenuItemComposition {
-	public MenuItem playsRole parent {
+	protected MenuContainer playsRole parent {
         multiplicity 0..1;
 	}
-	public MenuItem playsRole child {
+	protected MenuItem playsRole child {
 		multiplicity *;
 	}
+}
+
+relation MenuItemGroup {
+    protected MenuItem playsRole menuItem {
+        multiplicity *;
+    }
+    public .org.fenixedu.bennu.core.domain.groups.Group playsRole accessGroup {
+        multiplicity 1..1;
+    }
 }
