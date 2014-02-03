@@ -14,7 +14,6 @@ import pt.ist.fenixframework.FenixFramework;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.sun.jersey.core.util.Base64;
 
 @DefaultJsonAdapter(PortalConfiguration.class)
 public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguration>, JsonUpdater<PortalConfiguration> {

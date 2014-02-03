@@ -1,6 +1,8 @@
 package org.fenixedu.bennu.io.domain;
 
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * 
@@ -17,6 +19,12 @@ public abstract class FileStorage extends FileStorage_Base {
     public String getName() {
         //FIXME: remove when the framework enables read-only slots
         return super.getName();
+    }
+
+    @Override
+    public Set<GenericFile> getFileSet() {
+        //FIXME: remove when the framework enables read-only slots
+        return Collections.unmodifiableSet(super.getFileSet());
     }
 
     abstract public String store(String uniqueIdentification, byte[] content);

@@ -15,9 +15,15 @@
 {{/finished}}
 <td>
 {{#customLog}}
-		<a href="#custom/{{id}}" class="btn btn-success">Details</a>
+		<a href="#custom/{{taskName}}/{{id}}" class="btn btn-success">{{#_i18n}}action.schedule.details{{/_i18n}}</a>
+		{{#showDetails}}
+			<a href="#custom/{{taskName}}" class="btn btn-success">{{#_i18n}}action.schedule.more{{/_i18n}}</a>
+		{{/showDetails}}
 {{/customLog}}
 {{^customLog}}
-		<a href="#logs/{{id}}" class="btn btn-success">Details</a>
+		<a href="#logs/{{taskName}}/{{id}}" class="btn btn-success">{{#_i18n}}action.schedule.details{{/_i18n}}</a>
+		{{#showDetails}}
+			<a href="#logs/{{taskName}}" class="btn btn-success">{{#_i18n}}action.schedule.more{{/_i18n}}</a>
+		{{/showDetails}}
 {{/customLog}}
 </td>

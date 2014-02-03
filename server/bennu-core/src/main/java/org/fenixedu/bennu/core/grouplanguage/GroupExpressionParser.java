@@ -25,15 +25,21 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.fenixedu.bennu.core.domain.groups.Group;
+import org.fenixedu.bennu.core.domain.groups.NobodyGroup;
+
+import com.google.common.base.Strings;
 
 public class GroupExpressionParser {
     public static Group parse(String expression) throws RecognitionException, IOException {
+        if (Strings.isNullOrEmpty(expression)) {
+            return NobodyGroup.getInstance();
+        }
         try (ByteArrayInputStream stream = new ByteArrayInputStream(expression.getBytes())) {
             ANTLRInputStream input = new ANTLRInputStream(stream);
             GroupLexer lexer = new GroupLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             GroupParser parser = new GroupParser(tokens);
-            CommonTree tree = (CommonTree) parser.definition().getTree();
+            CommonTree tree = parser.definition().getTree();
 
             CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
             GroupTree evaluator = new GroupTree(nodes);

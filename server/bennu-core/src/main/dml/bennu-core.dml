@@ -112,7 +112,7 @@ relation UserGroupMembers {
 		multiplicity *;
 	}
 	protected User playsRole member {
-		multiplicity *;
+		multiplicity 1..*;
 	}
 }
 

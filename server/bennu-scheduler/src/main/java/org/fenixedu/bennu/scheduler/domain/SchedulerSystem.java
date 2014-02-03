@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.io.Files;
 
@@ -39,12 +40,14 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     public static Set<TaskRunner> runningTasks;
     public static Set<TaskSchedule> scheduledTasks;
     private static final List<Thread> activeConsumers = new ArrayList<>();
+    private static Set<Timer> timers;
 
     private static transient Integer leaseTime;
     private static transient Integer queueThreadsNumber;
 
     static {
         queue = new LinkedBlockingQueue<>();
+        timers = new HashSet<>();
         runningTasks = Collections.newSetFromMap(new ConcurrentHashMap<TaskRunner, Boolean>());
         scheduledTasks = Collections.newSetFromMap(new ConcurrentHashMap<TaskSchedule, Boolean>());
         getLeaseTimeMinutes();
@@ -167,7 +170,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * This method starts the scheduler if lease is expired.
      * */
     public static void init() {
-        new Timer(true).scheduleAtFixedRate(new TimerTask() {
+        Timer waitingForLeaseTimer = new Timer("waitingForLeaseTimer", true);
+        waitingForLeaseTimer.scheduleAtFixedRate(new TimerTask() {
 
             Boolean shouldRun = false;
 
@@ -188,6 +192,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             }
 
         }, 0, getLeaseTimeMinutes() * 60 * 1000);
+
+        timers.add(waitingForLeaseTimer);
 
     }
 
@@ -215,7 +221,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      */
     private static void spawnLeaseTimerTask() {
         int period = getLeaseTimeMinutes() * 60 * 1000 / 2;
-        new Timer(true).scheduleAtFixedRate(new TimerTask() {
+        Timer leaseTimer = new Timer("leaseTimer", true);
+        leaseTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (isRunning()) {
@@ -230,6 +237,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             }
 
         }, 0, period);
+
+        timers.add(leaseTimer);
     }
 
     /**
@@ -237,7 +246,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * Runs every minute.
      */
     private static void spawnRefreshSchedulesTask() {
-        new Timer(true).scheduleAtFixedRate(new TimerTask() {
+        Timer refreshSchedulesTimer = new Timer("refreshSchedulesTimer", true);
+        refreshSchedulesTimer.scheduleAtFixedRate(new TimerTask() {
 
             @Override
             @Atomic(mode = TxMode.READ)
@@ -261,6 +271,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             }
 
         }, 0, 1 * 60 * 1000);
+
+        timers.add(refreshSchedulesTimer);
     }
 
     private static void spawnConsumers() {
@@ -316,8 +328,10 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                     @Override
                     @Atomic(mode = TxMode.READ)
                     public void run() {
-                        final TaskRunner taskRunner = schedule.getTaskRunner();
-                        queue(taskRunner);
+                        if (FenixFramework.isDomainObjectValid(schedule)) {
+                            final TaskRunner taskRunner = schedule.getTaskRunner();
+                            queue(taskRunner);
+                        }
                     }
                 }));
                 scheduledTasks.add(schedule);
@@ -379,6 +393,11 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                 consumer.interrupt();
             }
             resetLease();
+        }
+
+        for (final Timer timer : timers) {
+            LOG.info("interrupted timer thread {}", timer.toString());
+            timer.cancel();
         }
     }
 

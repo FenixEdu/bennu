@@ -45,7 +45,7 @@ import pt.ist.fenixframework.FenixFramework;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-@Path("system")
+@Path("/bennu-core/system")
 public class SystemResource extends BennuRestResource {
     @GET
     @Path("info")

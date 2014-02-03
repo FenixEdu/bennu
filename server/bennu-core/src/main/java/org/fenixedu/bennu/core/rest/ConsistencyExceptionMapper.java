@@ -9,9 +9,7 @@ import javax.ws.rs.ext.Provider;
 import jvstm.cps.ConsistencyException;
 
 import com.google.gson.JsonObject;
-import com.sun.jersey.spi.resource.Singleton;
 
-@Singleton
 @Provider
 public class ConsistencyExceptionMapper implements ExceptionMapper<ConsistencyException> {
     @Override

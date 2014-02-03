@@ -11,7 +11,7 @@ import org.fenixedu.bennu.portal.servlet.PortalInitializer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-@Path("themes")
+@Path("/bennu-portal/themes")
 public class ThemeResource {
 
     @GET

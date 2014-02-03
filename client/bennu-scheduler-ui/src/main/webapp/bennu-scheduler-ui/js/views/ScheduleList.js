@@ -18,7 +18,10 @@ define([
             },
         
             events: {
-            	"click .save-logging-storage" : "saveLoggingStorage"
+            	"click .save-logging-storage" : "saveLoggingStorage",
+            	"click #clear-schedules" : "clearAllSchedules",
+            	"click #load-schedules" : "loadSchedules",
+            	"change #input-load-dump-file" : "receiveSchedulesDump"
             },
             
             saveLoggingStorage: function(e) {
@@ -32,6 +35,40 @@ define([
             		  },
             		  dataType: "json"
             		});
+            },
+            
+            clearAllSchedules: function(e) {
+            	e.preventDefault();
+            	var r = window.confirm("Are you sure you want to clear all schedules?");
+            	
+            	if (r == true) {
+            		$.ajax(
+                    		{ url : "../api/bennu-scheduler/schedule", 
+                    		  type: 'DELETE', 
+                    		  success : function() { 
+                    			  			window.location.reload();
+                    			  		}
+                    		});
+            	}
+            },
+            
+            loadSchedules: function(e) {
+            	e.preventDefault();
+            	$("#input-load-dump-file").click();
+            },
+            
+            receiveSchedulesDump: function(e) {
+            	e.preventDefault();
+            	var file = e.target.files[0];
+            	var reader = new FileReader();
+            	reader.onload = function() {
+            		$.post("../api/bennu-scheduler/schedule/dump", 
+            			   {data : reader.result}, 
+            			   function(data) {
+            				   window.location.reload();
+            			   });
+            	};
+            	reader.readAsText(file);
             },
             
          onShow: function() {

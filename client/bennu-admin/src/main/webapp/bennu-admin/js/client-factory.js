@@ -7,15 +7,17 @@ define([
     'models/Theme',
     'models/PortalConfiguration',
     'models/SystemInfo',
+    'models/Logger',
     'views/SingleMenu',
     'views/Menu',
     'views/MenuCreate',
     'views/App',
     'views/PortalConfiguration',
     'views/SystemInfo',
+    'views/Logger',
 ], function(MenuCollection, AppCollection,ThemeCollection,
-			MenuModel, AppModel, ThemeModel, PortalConfigurationModel, SystemInfoModel,
-		    SingleMenuView, MenuView, MenuCreateView,AppView, PortalConfigurationView, SystemInfoView) {
+			MenuModel, AppModel, ThemeModel, PortalConfigurationModel, SystemInfoModel, LoggerModel,
+		    SingleMenuView, MenuView, MenuCreateView,AppView, PortalConfigurationView, SystemInfoView, LoggerView) {
 	var MenuManager = MenuManager || {};
 	MenuManager.DB = MenuManager.DB || {};
 
@@ -30,6 +32,7 @@ define([
 	MenuManager.Models.Theme = ThemeModel || {};
     MenuManager.Models.PortalConfiguration = PortalConfigurationModel || {};
 	MenuManager.Models.SystemInfo = SystemInfoModel || {};
+	MenuManager.Models.Logger = LoggerModel || {};
 	
 	MenuManager.Views = MenuManager.Views || {};
 	MenuManager.Views.Menu = MenuView || {};
@@ -38,6 +41,7 @@ define([
 	MenuManager.Views.App = AppView || {};
     MenuManager.Views.PortalConfiguration = PortalConfigurationView || {};
     MenuManager.Views.SystemInfo = SystemInfoView || {};
+    MenuManager.Views.Logger = LoggerView || {};
 	
 	MenuManager.Router = MenuManager.Router || {};
 	MenuManager.Layout = MenuManager.Layout || {};

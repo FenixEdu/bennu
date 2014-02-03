@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.portal.domain.MenuItem;
 
-@Path("menu")
+@Path("/bennu-portal/menu")
 public class MenuResource extends BennuRestResource {
 
     @Path("{oid}")

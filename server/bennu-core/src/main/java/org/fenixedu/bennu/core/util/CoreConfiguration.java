@@ -1,7 +1,10 @@
 package org.fenixedu.bennu.core.util;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.IllformedLocaleException;
 import java.util.Locale;
+import java.util.Locale.Builder;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +15,10 @@ import org.fenixedu.commons.configuration.ConfigurationProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 
 public class CoreConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(CoreConfiguration.class);
@@ -86,11 +91,15 @@ public class CoreConfiguration {
         @ConfigurationProperty(key = "cas.enabled", defaultValue = "false")
         public Boolean casEnabled();
 
-        @ConfigurationProperty(key = "cas.serverUrl")
+        @ConfigurationProperty(key = "cas.serverUrl", defaultValue = "http://localhost:8080/cas")
         public String casServerUrl();
 
         @ConfigurationProperty(key = "cas.serviceUrl")
         public String casServiceUrl();
+
+        @ConfigurationProperty(key = "application.url", description = "Full application url",
+                defaultValue = "http://localhost:8080")
+        public String applicationUrl();
     }
 
     private static CasConfig casConfig = new CasConfig(getConfiguration().casEnabled(), getConfiguration().casServerUrl(),
@@ -102,29 +111,47 @@ public class CoreConfiguration {
         String supportedLocalesString = getConfiguration().supportedLocales();
         if (!Strings.isNullOrEmpty(supportedLocalesString)) {
             for (String locale : supportedLocalesString.split("\\s*,\\s*")) {
-                supportedLocales.add(Locale.forLanguageTag(locale));
+                try {
+                    supportedLocales.add(new Builder().setLanguageTag(locale).build());
+                } catch (IllformedLocaleException e) {
+                    logger.error("Invalid supported locale: {}", locale);
+                }
             }
         } else {
             supportedLocales.add(Locale.getDefault());
         }
+        supportedLocales = Collections.unmodifiableSet(supportedLocales);
         String defaultLocale = getConfiguration().defaultLocale();
         if (!Strings.isNullOrEmpty(defaultLocale)) {
-            Locale locale = Locale.forLanguageTag(defaultLocale);
-            if (supportedLocales.contains(locale)) {
-                Locale.setDefault(locale);
-            } else {
-                logger.error(
-                        "Specified default.locale: {} not part of the supported locales: {}. Keeping java's system default: {}",
-                        locale.toLanguageTag(), Joiner.on(',').join(supportedLocales()), Locale.getDefault().toLanguageTag());
+            try {
+                Locale locale = new Builder().setLanguageTag(defaultLocale).build();
+                if (supportedLocales.contains(locale)) {
+                    Locale.setDefault(locale);
+                } else {
+                    logger.error(
+                            "Specified default.locale: {} not part of the supported locales: {}. Keeping java's system default: {}",
+                            locale.toLanguageTag(), formatSupportedLocales(), Locale.getDefault().toLanguageTag());
+                }
+            } catch (IllformedLocaleException e) {
+                logger.error("Invalid default locale: {}", defaultLocale);
             }
         }
         if (!supportedLocales().contains(Locale.getDefault())) {
             logger.error(
                     "Current java's default locale: {} not part of the supported locales: {}. Choosing first of the list: {}.",
-                    Locale.getDefault().toLanguageTag(), Joiner.on(',').join(supportedLocales()), supportedLocales().iterator()
-                            .next().toLanguageTag());
+                    Locale.getDefault().toLanguageTag(), formatSupportedLocales(), supportedLocales().iterator().next()
+                            .toLanguageTag());
             Locale.setDefault(supportedLocales().iterator().next());
         }
+    }
+
+    private static String formatSupportedLocales() {
+        return Joiner.on(',').join(Iterables.transform(supportedLocales(), new Function<Locale, String>() {
+            @Override
+            public String apply(Locale locale) {
+                return locale.toLanguageTag();
+            }
+        }));
     }
 
     public static CasConfig casConfig() {

@@ -23,7 +23,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-@Path("tasks")
+@Path("/bennu-scheduler/tasks")
 public class TaskResource extends BennuRestResource {
 
     @GET

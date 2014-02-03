@@ -25,6 +25,19 @@
             "accessExpression": "#managers",
             "path": "bennu-admin#system/info",
             "functionalities": []
+        },
+        {
+            "title": {
+                "pt-PT": "Gestão de Loggers",
+                "en-GB": "Logger Management"
+            },
+            "description": {
+                "pt-PT": "Gestão de Loggers",
+                "en-GB": "Logger Management"
+            },
+            "accessExpression": "#managers",
+            "path": "bennu-admin#system/logger",
+            "functionalities": []
         }
     ]
 }

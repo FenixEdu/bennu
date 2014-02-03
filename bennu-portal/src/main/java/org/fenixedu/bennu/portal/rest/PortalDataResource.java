@@ -12,7 +12,7 @@ import org.fenixedu.bennu.portal.rest.json.PortalMenuViewer;
 
 import com.google.gson.JsonObject;
 
-@Path("data")
+@Path("/bennu-portal/data")
 public class PortalDataResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
