@@ -42,10 +42,10 @@ suplying the database information as requested
 
 * __step 7__ Create a library project using
 ```
-mvn archetype:generate
-    -DarchetypeGroupId=org.fenixedu
-    -DarchetypeArtifactId=bennu-project-archetype
-    -DarchetypeVersion=2.1.0
+mvn archetype:generate \
+    -DarchetypeGroupId=org.fenixedu \
+    -DarchetypeArtifactId=bennu-project-archetype \
+    -DarchetypeVersion=2.1.0 \
     -DarchetypeRepository=https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository
 ```
 
