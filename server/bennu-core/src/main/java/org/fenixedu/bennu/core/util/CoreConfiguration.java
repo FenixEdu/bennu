@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.core.util;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.IllformedLocaleException;
 import java.util.Locale;
@@ -115,6 +116,7 @@ public class CoreConfiguration {
         } else {
             supportedLocales.add(Locale.getDefault());
         }
+        supportedLocales = Collections.unmodifiableSet(supportedLocales);
         String defaultLocale = getConfiguration().defaultLocale();
         if (!Strings.isNullOrEmpty(defaultLocale)) {
             try {
