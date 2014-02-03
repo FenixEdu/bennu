@@ -14,7 +14,7 @@ Bennu covers the following core features:
 * Theming
 * Internationalization
 
-## Create your own web application in X minutes
+## Create your own web application in 5 minutes
 
 ### Basic setup
 
