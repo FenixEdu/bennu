@@ -19,7 +19,7 @@ import ch.qos.logback.classic.LoggerContext;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-@Path("/system/logger")
+@Path("/bennu-core/system/logger")
 public class LogbackResource extends BennuRestResource {
 
     private static boolean available = checkIfIsAvailable();
