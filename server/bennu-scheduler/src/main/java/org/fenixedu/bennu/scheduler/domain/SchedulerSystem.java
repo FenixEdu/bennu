@@ -385,6 +385,12 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     public static void destroy() {
+
+        for (final Timer timer : timers) {
+            LOG.info("interrupted timer thread {}", timer.toString());
+            timer.cancel();
+        }
+
         if (isActive()) {
             LOG.info("stopping scheduler");
             scheduler.stop();
@@ -393,11 +399,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                 consumer.interrupt();
             }
             resetLease();
-        }
-
-        for (final Timer timer : timers) {
-            LOG.info("interrupted timer thread {}", timer.toString());
-            timer.cancel();
         }
     }
 
