@@ -350,7 +350,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         if (isActive()) {
             if (schedule.isRunOnce()) {
                 LOG.debug("unschedule run once {}. delete it.", schedule.getTaskClassName());
-                schedule.delete();
+                schedule.delete(false);
             } else {
                 LOG.debug("unschedule [{}] {}", schedule.getSchedule(), schedule.getTaskClassName());
                 scheduler.deschedule(schedule.getTaskId());
