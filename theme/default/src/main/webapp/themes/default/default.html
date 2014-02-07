@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="fenixedu">
+    <meta name="author" content="fenixedu">
+
+    <title>{% block title %}{{ functionality.title.content }}{% endblock %}</title>
+
+    <link href="{{contextPath}}/themes/default/css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+	<script src="{{contextPath}}/bennu-portal/js/jquery.min.js"></script>
+	<script src="{{contextPath}}/themes/default/js/bootstrap.min.js"></script>
+	<script> window.contextPath = "{{contextPath}}"; </script>
+	<script src="{{contextPath}}/themes/default/js/scripts.js"></script>
+  </head>
+
+  <body>
+	  {% block body %}
+	  <div class="container">
+	  	{% block topbar %}
+		<div class="row">
+			<div class="col-lg-12">
+				<nav class="navbar navbar-default" style="margin-top: 10px; margin-bottom: 5px">
+					  <div class="collapse navbar-collapse">
+					  	{% if loggedUser is null %}
+						<form class="col-lg-6 navbar-form navbar-right">
+							<div class="form-group input-group-sm">
+								<input name="username" type="text" class="form-control" placeholder="{{ i18n('resources.DefaultThemeResources', 'label.username')  }}" />
+							</div>
+							<div class="form-group input-group-sm">
+								<input name="password" type="password" class="form-control" placeholder="{{ i18n('resources.DefaultThemeResources', 'label.password') }}" />
+							</div>
+						</form>
+					 	{% else %}
+							<ul class="nav navbar-nav navbar-right">
+							  <li class="dropdown">
+							    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ i18n('resources.DefaultThemeResources', 'label.settings') }}<b class="caret"></b></a>
+							    <ul class="dropdown-menu">
+								  {% for locale in locales %}
+									{% if locale == currentLocale %}			
+										<li class="disabled" ><a href="#">{{ i18n('resources.DefaultThemeResources', locale) }}</a></li>
+									{% else %}
+										<li><a class="lang" href="#" data-lang="{{locale}}">{{ i18n('resources.DefaultThemeResources', locale) }}</a></li>
+									{% endif %}
+								  {% endfor %}
+							      <li><a href="#" id="logout">{{ i18n('resources.DefaultThemeResources', 'label.logout') }}</a></li>
+							    </ul>
+							  </li>
+							</ul>
+						{% endif %}
+					</div>
+				</nav>
+			</div>
+		</div>
+		{% endblock %}
+
+		{% block infobar %}
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="well well-sm">
+					<div class="media">
+					  <a class="pull-left" href="{{contextPath}}">
+					    <img class="media-object" width="44px" height="44px" 
+					    	 src="data:{{config.logoType}};base64,{{config.logo | base64}}" alt="{{config.applicationTitle.content}}">
+					  </a>
+					  <div class="media-body">
+					    <h4 class="media-heading">{{config.applicationTitle.content}}</h4>
+					    {{config.applicationSubTitle.content}}
+					  </div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		{% endblock %}
+
+		{% if not config.menu.userMenu is empty %}
+		<div class="row">
+			<div class="col-lg-12">
+				<div id="nav">
+					<ul class="nav nav-tabs">
+						{% for item in config.menu.userMenu %}
+						<li class="menu {% if item == selectedTopLevel %}active{% endif %}" menu="{{item.id}}">
+							<a href="{{contextPath}}/{{item.path}}" alt="{{item.description.content}}">{{item.title.content}}</a>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+
+		<div class="row">
+			<div class="col-lg-12">
+				<div id="subnav">
+					<ul class="nav nav-pills" menu="{{id}}">
+						{% for child in selectedTopLevel.userMenu %}
+						<li class="submenu {% if child is in(pathFromRoot) %}active{% endif %}">
+							<a href="{{contextPath}}{{child.fullPath}}" alt="{{ child.description.content }}"><span>{{ child.title.content }}</span></a>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12" id="content">
+				{{body}}
+			</div>
+		</div>
+
+		{% block footer %}
+		<div class="row">
+			<div class="col-lg-12 footer">
+				{{config.applicationCopyright.content}}
+			</div>
+		</div>
+		{% endblock %}
+		</div>
+
+		{% endblock %}
+	</body>
+</html>
