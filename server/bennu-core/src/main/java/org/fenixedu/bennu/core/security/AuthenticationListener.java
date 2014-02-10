@@ -21,8 +21,9 @@ import org.fenixedu.bennu.core.domain.User;
 /**
  * 
  * @author Luis Cruz
- * 
+ * @deprecated Use {@link UserAuthenticationListener} instead
  */
+@Deprecated
 public interface AuthenticationListener {
     public void afterLogin(final User user);
 }

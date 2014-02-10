@@ -50,6 +50,8 @@ public class Authenticate {
 
     private static Set<AuthenticationListener> authenticationListeners;
 
+    private static Set<UserAuthenticationListener> userAuthenticationListeners;
+
     /**
      * Login user with the specified username, intended for use with an external user authentication mechanism, local password is
      * ignored. For password based authentication use: {@link #login(HttpSession, String, String)}.
@@ -102,7 +104,7 @@ public class Authenticate {
             I18N.setLocale(session, preferredLocale);
         }
 
-        fireLoginListeners(user);
+        fireLoginListeners(session, user);
         logger.debug("Logged in user: " + user.getUsername());
 
         return user;
@@ -138,6 +140,7 @@ public class Authenticate {
             final UserSession userWrapper = (UserSession) session.getAttribute(USER_SESSION_ATTRIBUTE);
             if (userWrapper != null) {
                 userWrapper.getUser().markLogoutTime();
+                fireLogoutListeners(session, userWrapper.getUser());
             }
             session.removeAttribute(USER_SESSION_ATTRIBUTE);
             session.invalidate();
@@ -178,6 +181,7 @@ public class Authenticate {
         wrapper.set(null);
     }
 
+    @Deprecated
     public static void addAuthenticationListener(AuthenticationListener listener) {
         if (authenticationListeners == null) {
             authenticationListeners = new HashSet<>();
@@ -185,13 +189,27 @@ public class Authenticate {
         authenticationListeners.add(listener);
     }
 
+    @Deprecated
     public static void removeAuthenticationListener(AuthenticationListener listener) {
         if (authenticationListeners != null) {
             authenticationListeners.remove(listener);
         }
     }
 
-    private static void fireLoginListeners(final User user) {
+    public static void addUserAuthenticationListener(UserAuthenticationListener listener) {
+        if (userAuthenticationListeners == null) {
+            userAuthenticationListeners = new HashSet<>();
+        }
+        userAuthenticationListeners.add(listener);
+    }
+
+    public static void removeUserAuthenticationListener(UserAuthenticationListener listener) {
+        if (userAuthenticationListeners != null) {
+            userAuthenticationListeners.remove(listener);
+        }
+    }
+
+    private static void fireLoginListeners(HttpSession session, final User user) {
         if (authenticationListeners != null) {
             for (final AuthenticationListener listener : authenticationListeners) {
                 final TransactionalThread thread = new TransactionalThread() {
@@ -201,6 +219,19 @@ public class Authenticate {
                     }
                 };
                 thread.start();
+            }
+        }
+        if (userAuthenticationListeners != null) {
+            for (UserAuthenticationListener listener : userAuthenticationListeners) {
+                listener.onLogin(session, user);
+            }
+        }
+    }
+
+    private static void fireLogoutListeners(HttpSession session, final User user) {
+        if (userAuthenticationListeners != null) {
+            for (UserAuthenticationListener listener : userAuthenticationListeners) {
+                listener.onLogout(session, user);
             }
         }
     }
