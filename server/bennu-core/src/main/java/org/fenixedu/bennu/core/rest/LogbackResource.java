@@ -8,7 +8,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.slf4j.LoggerFactory;
 
@@ -46,12 +45,12 @@ public class LogbackResource extends BennuRestResource {
 
     @GET
     @Path("/{name}/{level}")
-    public Response setLogLevel(@PathParam("name") String loggerName, @PathParam("level") String level) {
+    public String setLogLevel(@PathParam("name") String loggerName, @PathParam("level") String level) {
         accessControl("#managers");
         if (available) {
             Holder.setLevel(loggerName, level);
         }
-        return Response.ok().build();
+        return getAllLoggers();
     }
 
     /*

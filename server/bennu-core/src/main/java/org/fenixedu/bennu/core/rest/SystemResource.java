@@ -22,9 +22,15 @@ package org.fenixedu.bennu.core.rest;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.Thread.State;
+import java.lang.management.ClassLoadingMXBean;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.jar.JarFile;
@@ -41,12 +47,14 @@ import org.fenixedu.bennu.core.json.adapters.KeyValuePropertiesViewer;
 import org.fenixedu.commons.configuration.ConfigurationInvocationHandler;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.core.SharedIdentityMap;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 @Path("/bennu-core/system")
 public class SystemResource extends BennuRestResource {
+
     @GET
     @Path("info")
     @Produces({ MediaType.APPLICATION_JSON })
@@ -63,9 +71,12 @@ public class SystemResource extends BennuRestResource {
             String libPath = request.getServletContext().getRealPath("/WEB-INF/lib");
             // in jetty this is not possible.
             if (libPath != null) {
-                for (File file : new File(libPath).listFiles()) {
-                    if (file.getName().endsWith(".jar")) {
-                        libraries.add(new JarFile(file));
+                File[] files = new File(libPath).listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (file.getName().endsWith(".jar")) {
+                            libraries.add(new JarFile(file));
+                        }
                     }
                 }
             }
@@ -102,14 +113,75 @@ public class SystemResource extends BennuRestResource {
                 getBuilder().view(ConfigurationInvocationHandler.rawProperties(), Properties.class,
                         KeyValuePropertiesViewer.class));
 
+        JsonObject metrics = new JsonObject();
+
+        metrics.addProperty("cacheSize", SharedIdentityMap.getCache().size());
+        metrics.addProperty("project", FenixFramework.getProject().getName());
+        metrics.addProperty("version", FenixFramework.getProject().getVersion());
+
+        MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+
+        metrics.addProperty("jvm.memory.total.used", memoryBean.getHeapMemoryUsage().getUsed()
+                + memoryBean.getNonHeapMemoryUsage().getUsed());
+        metrics.addProperty("jvm.memory.total.max", memoryBean.getHeapMemoryUsage().getMax()
+                + memoryBean.getNonHeapMemoryUsage().getMax());
+
+        metrics.addProperty("jvm.memory.heap.used", memoryBean.getHeapMemoryUsage().getUsed());
+        metrics.addProperty("jvm.memory.heap.max", memoryBean.getHeapMemoryUsage().getMax());
+
+        metrics.addProperty("jvm.memory.non-heap.used", memoryBean.getNonHeapMemoryUsage().getUsed());
+        metrics.addProperty("jvm.memory.non-heap.max", memoryBean.getNonHeapMemoryUsage().getMax());
+
+        ThreadMXBean threads = ManagementFactory.getThreadMXBean();
+        metrics.addProperty("jvm.threads.count", threads.getThreadCount());
+
+        ClassLoadingMXBean classLoading = ManagementFactory.getClassLoadingMXBean();
+        metrics.addProperty("jvm.classloading.loaded.total", classLoading.getTotalLoadedClassCount());
+        metrics.addProperty("jvm.classloading.loaded", classLoading.getLoadedClassCount());
+        metrics.addProperty("jvm.classloading.unloaded", classLoading.getUnloadedClassCount());
+
+        json.add("metrics", metrics);
+
         return Response.ok(toJson(json)).build();
     }
 
     @GET
-    @Path("error")
-    @Produces({ MediaType.APPLICATION_JSON })
-    public Response error() {
-        throw new Error("oi?");
+    @Path("thread-dump")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response threadDump() {
+        accessControl("#managers");
+        JsonObject json = new JsonObject();
+        JsonArray array = new JsonArray();
+
+        int total = 0;
+
+        Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
+
+        for (State state : State.values()) {
+            json.addProperty(state.name(), 0);
+        }
+
+        for (Entry<Thread, StackTraceElement[]> entry : threads.entrySet()) {
+            JsonObject thread = new JsonObject();
+            String state = entry.getKey().getState().name();
+            thread.addProperty("name", entry.getKey().toString());
+            thread.addProperty("state", state);
+            StringBuilder builder = new StringBuilder();
+            for (StackTraceElement element : entry.getValue()) {
+                builder.append(element);
+                builder.append("\n");
+            }
+            thread.addProperty("id", entry.getKey().getId());
+            thread.addProperty("stacktrace", builder.toString());
+            array.add(thread);
+
+            json.addProperty(state, json.get(state).getAsInt() + 1);
+            total++;
+        }
+
+        json.addProperty("totalThreads", total);
+        json.add("threads", array);
+        return Response.ok(toJson(json)).build();
     }
 
 }
