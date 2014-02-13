@@ -54,9 +54,9 @@ public class ContextPathFilter implements Filter {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         final String contextPath = request.getServletContext().getContextPath();
-        Cookie cookie = CookieReaderUtils.getCookieForName("contextPath", httpServletRequest);
-        if (cookie == null) {
-            if (!Strings.isNullOrEmpty(contextPath)) {
+        Cookie cookie = CookieReaderUtils.getCookieForName(CONTEXT_PATH_COOKIE_NAME, httpServletRequest);
+        if (!Strings.isNullOrEmpty(contextPath)) {
+            if (cookie == null || !contextPath.equals(cookie.getValue())) {
                 Cookie newCookie = new Cookie(CONTEXT_PATH_COOKIE_NAME, contextPath);
                 newCookie.setPath("/");
                 httpServletResponse.addCookie(newCookie);
