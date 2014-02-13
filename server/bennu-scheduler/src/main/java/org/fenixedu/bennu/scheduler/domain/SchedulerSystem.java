@@ -294,7 +294,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             if (!tasks.containsKey(schedule.getTaskClassName())) {
                 LOG.warn("Class {} is no longer available. schedule {} - {} - {} deleted. ", schedule.getTaskClassName(),
                         schedule.getExternalId(), schedule.getTaskClassName(), schedule.getSchedule());
-                schedule.delete();
+                schedule.delete(false);
             }
         }
     }
