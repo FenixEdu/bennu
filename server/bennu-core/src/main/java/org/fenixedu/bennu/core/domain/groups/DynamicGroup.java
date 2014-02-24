@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.security.Authenticate;
@@ -29,7 +31,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
+import com.google.common.collect.Iterables;
 
 /**
  * <p>
@@ -43,6 +45,30 @@ import com.google.common.base.Supplier;
  * @see Group
  */
 public final class DynamicGroup extends DynamicGroup_Base {
+    public static class DynamicGroupNotFoundException extends BennuCoreDomainException {
+        private static final long serialVersionUID = -4846817758476397587L;
+
+        public DynamicGroupNotFoundException(String key, String... args) {
+            super(key, args);
+        }
+
+        public static DynamicGroupNotFoundException dynamicGroupNotFound(String name) {
+            return new DynamicGroupNotFoundException("error.bennu.core.dynamic.group.not.found", name);
+        }
+    }
+
+    public static class DuplicateDynamicGroupException extends BennuCoreDomainException {
+        private static final long serialVersionUID = -4846817758476397587L;
+
+        public DuplicateDynamicGroupException(String key, String... args) {
+            super(key, args);
+        }
+
+        public static DuplicateDynamicGroupException duplicateDynamicGroup(String name) {
+            return new DuplicateDynamicGroupException("error.bennu.core.duplicate.dynamic.group", name);
+        }
+    }
+
     protected DynamicGroup() {
         super();
     }
@@ -53,6 +79,7 @@ public final class DynamicGroup extends DynamicGroup_Base {
         setCreated(new DateTime());
         setCreator(Authenticate.getUser());
         setGroup(group);
+        setRootForDynamicGroup(getRoot());
     }
 
     @Override
@@ -85,6 +112,18 @@ public final class DynamicGroup extends DynamicGroup_Base {
     public boolean isMember(User user, DateTime when) {
         Group group = getGroup(when);
         return group != null ? group.isMember(user) : false;
+    }
+
+    @Override
+    public String getName() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getName();
+    }
+
+    @Override
+    public Group getGroup() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getGroup();
     }
 
     public Group getGroup(DateTime when) {
@@ -160,26 +199,36 @@ public final class DynamicGroup extends DynamicGroup_Base {
     }
 
     public static DynamicGroup getInstance(final String name) {
-        return select(DynamicGroup.class, new Predicate<DynamicGroup>() {
-            @Override
-            public boolean apply(DynamicGroup input) {
-                return input.getName().equals(name);
+        try {
+            return BennuGroupIndex.getDynamic(name);
+        } catch (DynamicGroupNotFoundException e) {
+            // reuse of unlinked instances of bennu 2.1 or less
+            DynamicGroup instance = (DynamicGroup) Iterables.tryFind(Bennu.getInstance().getGroupSet(), new Predicate<Group>() {
+                @Override
+                public boolean apply(Group group) {
+                    return group instanceof DynamicGroup && ((DynamicGroup) group).getName().equals(name);
+                }
+            }).orNull();
+            if (instance != null) {
+                writeRootLink(instance);
+                return instance;
+            } else {
+                throw DynamicGroupNotFoundException.dynamicGroupNotFound(name);
             }
-        }, new Supplier<DynamicGroup>() {
-            @Override
-            public DynamicGroup get() {
-                throw BennuCoreDomainException.dynamicGroupNotFound(name);
-            }
-        });
+        }
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static void writeRootLink(DynamicGroup instance) {
+        instance.setRootForDynamicGroup(Bennu.getInstance());
     }
 
     @Atomic(mode = TxMode.WRITE)
     public static DynamicGroup initialize(final String name, Group overridingGroup) {
         try {
-            DynamicGroup group = getInstance(name);
-            group.changeGroup(overridingGroup);
-            return group;
-        } catch (BennuCoreDomainException e) {
+            getInstance(name);
+            throw DuplicateDynamicGroupException.duplicateDynamicGroup(name);
+        } catch (DynamicGroupNotFoundException e) {
             return new DynamicGroup(name, overridingGroup);
         }
     }

@@ -20,11 +20,16 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Supplier;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 
 /**
  * Group that always returns <code>true</code> on membership tests.
@@ -34,6 +39,7 @@ import com.google.common.base.Supplier;
 public final class AnyoneGroup extends AnyoneGroup_Base {
     protected AnyoneGroup() {
         super();
+        setRootForGroupConstant(getRoot());
     }
 
     @Override
@@ -67,6 +73,27 @@ public final class AnyoneGroup extends AnyoneGroup_Base {
     }
 
     @Override
+    public Group and(Group group) {
+        return group;
+    }
+
+    @Override
+    public Group or(Group group) {
+        return this;
+    }
+
+    @Override
+    public Group minus(Group group) {
+        if (group instanceof AnonymousGroup) {
+            return LoggedGroup.getInstance();
+        }
+        if (group instanceof LoggedGroup) {
+            return AnonymousGroup.getInstance();
+        }
+        return super.minus(group);
+    }
+
+    @Override
     public Group not() {
         return NobodyGroup.getInstance();
     }
@@ -83,11 +110,22 @@ public final class AnyoneGroup extends AnyoneGroup_Base {
      * @return singleton {@link AnyoneGroup} instance
      */
     public static AnyoneGroup getInstance() {
-        return select(AnyoneGroup.class, new Supplier<AnyoneGroup>() {
-            @Override
-            public AnyoneGroup get() {
-                return new AnyoneGroup();
+        AnyoneGroup instance = BennuGroupIndex.getAnyone();
+        if (instance == null) {
+            // reuse of unlinked instances of bennu 2.1 or less
+            instance =
+                    (AnyoneGroup) Iterables.tryFind(Bennu.getInstance().getGroupSet(), Predicates.instanceOf(AnyoneGroup.class))
+                            .orNull();
+            if (instance != null) {
+                instance.setRootForGroupConstant(Bennu.getInstance());
             }
-        });
+        }
+        return instance != null ? instance : create();
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static AnyoneGroup create() {
+        AnyoneGroup instance = BennuGroupIndex.getAnyone();
+        return instance != null ? instance : new AnyoneGroup();
     }
 }

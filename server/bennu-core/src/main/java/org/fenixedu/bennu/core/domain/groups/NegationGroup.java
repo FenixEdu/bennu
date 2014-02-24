@@ -24,8 +24,8 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 /**
  * Inverse group of another group.
@@ -91,16 +91,13 @@ public final class NegationGroup extends NegationGroup_Base {
      * @return singleton {@link NegationGroup} instance
      */
     public static NegationGroup getInstance(final Group group) {
-        return select(NegationGroup.class, new Predicate<NegationGroup>() {
-            @Override
-            public boolean apply(NegationGroup input) {
-                return input.getNegated().equals(group);
-            }
-        }, new Supplier<NegationGroup>() {
-            @Override
-            public NegationGroup get() {
-                return new NegationGroup(group);
-            }
-        });
+        NegationGroup instance = group.getNegation();
+        return instance != null ? instance : create(group);
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static NegationGroup create(final Group group) {
+        NegationGroup instance = group.getNegation();
+        return instance != null ? instance : new NegationGroup(group);
     }
 }

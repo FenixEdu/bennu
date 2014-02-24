@@ -66,10 +66,6 @@ public class BennuCoreDomainException extends DomainException {
         return new BennuCoreDomainException("error.bennu.core.cant.delete.domainObject");
     }
 
-    public static BennuCoreDomainException dynamicGroupNotFound(String name) {
-        return new BennuCoreDomainException("error.bennu.core.dynamic.group.not.found", name);
-    }
-
     public static BennuCoreDomainException creatingUserGroupsWithoutUsers() {
         return new BennuCoreDomainException("error.bennu.core.usergroup.creatingWithoutUsers");
     }
