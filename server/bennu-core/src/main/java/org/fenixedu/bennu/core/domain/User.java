@@ -101,6 +101,9 @@ public final class User extends User_Base implements Principal {
 
     public User(final String username) {
         super();
+        if (findByUsername(username) != null) {
+            throw BennuCoreDomainException.duplicateUsername(username);
+        }
         setBennu(Bennu.getInstance());
         setCreated(new DateTime());
         setUsername(username);
@@ -218,7 +221,7 @@ public final class User extends User_Base implements Principal {
 
     public static User findByUsername(final String username) {
         for (final User user : Bennu.getInstance().getUserSet()) {
-            if (user.getUsername().equalsIgnoreCase(username)) {
+            if (user.getUsername().equals(username)) {
                 return user;
             }
         }
