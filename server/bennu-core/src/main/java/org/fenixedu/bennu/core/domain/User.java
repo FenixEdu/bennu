@@ -50,6 +50,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
 
 /**
  * The application end user.
@@ -137,7 +138,7 @@ public final class User extends User_Base implements Principal {
         }
         byte salt[] = new byte[64];
         prng.nextBytes(salt);
-        setSalt(new String(salt, Charsets.UTF_8));
+        setSalt(BaseEncoding.base64().encode(salt));
         String hash = Hashing.sha512().hashString(getSalt() + password, Charsets.UTF_8).toString();
         setPassword(hash);
     }
