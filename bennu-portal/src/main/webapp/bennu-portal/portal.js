@@ -146,9 +146,15 @@
 								$("#portal-container").appendTo("#content");
 								$('body').show();
 								if(developmentMode) {
-									$("head").prepend("<link rel='stylesheet/less' type='text/css' href='"+theme_base+"/less/style.less' />");
-									$("head").append("<script type='text/javascript' src='" + contextPath +"/bennu-portal/js/less.min.js" + "'></script>");
-
+									$.get(theme_base + '/less/style.less', function(data) {
+										$("head").prepend("<link rel='stylesheet/less' type='text/css' href='"+theme_base+"/less/style.less' />");
+										$("head").append("<script type='text/javascript' src='" + contextPath +"/bennu-portal/js/less.min.js" + "'></script>");
+									}).fail(function() {
+										if (window.console) {
+											console.log("In development mode mapping the theme less directory in jetty or tomcat would enable less compilation")
+										}
+										$("head").append('<link rel="stylesheet" href="' + styles_url + '" rel="stylesheet" />');
+									});
 								} else {
 									$("head").append('<link rel="stylesheet" href="' + styles_url + '" rel="stylesheet" />');
 								}
