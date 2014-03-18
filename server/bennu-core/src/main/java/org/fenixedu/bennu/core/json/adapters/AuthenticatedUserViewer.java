@@ -19,7 +19,6 @@ public class AuthenticatedUserViewer implements JsonViewer<Void> {
         JsonObject json;
         if (user != null) {
             json = context.view(user).getAsJsonObject();
-            json.add("groups", context.view(Authenticate.accessibleGroups()));
         } else {
             json = new JsonObject();
         }

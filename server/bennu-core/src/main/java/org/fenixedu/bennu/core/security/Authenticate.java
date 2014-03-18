@@ -16,7 +16,6 @@
  */
 package org.fenixedu.bennu.core.security;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -28,7 +27,6 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.groups.DynamicGroup;
-import org.fenixedu.bennu.core.domain.groups.Group;
 import org.fenixedu.bennu.core.domain.groups.UserGroup;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.I18N;
@@ -41,11 +39,9 @@ import pt.ist.fenixframework.Atomic.TxMode;
 public class Authenticate {
     private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
 
-    private static final String USER_SESSION_ATTRIBUTE = "lzsWdyqswo";
-
     public static final String LOGGED_USER_ATTRIBUTE = "LOGGED_USER_ATTRIBUTE";
 
-    private static final InheritableThreadLocal<UserSession> wrapper = new InheritableThreadLocal<>();
+    private static final InheritableThreadLocal<User> loggedUser = new InheritableThreadLocal<>();
 
     private static Set<UserAuthenticationListener> userAuthenticationListeners;
 
@@ -92,9 +88,7 @@ public class Authenticate {
             throw AuthorizationException.authenticationFailed();
         }
 
-        UserSession userWrapper = new UserSession(user);
-        wrapper.set(userWrapper);
-        session.setAttribute(USER_SESSION_ATTRIBUTE, userWrapper);
+        loggedUser.set(user);
         session.setAttribute(LOGGED_USER_ATTRIBUTE, user);
         final Locale preferredLocale = user.getPreferredLocale();
         if (preferredLocale != null) {
@@ -120,7 +114,7 @@ public class Authenticate {
                     DynamicGroup.getInstance("managers");
                     // Managers groups already initialized.
                 } catch (BennuCoreDomainException e) {
-                    wrapper.set(new UserSession(user));
+                    loggedUser.set(user);
                     DynamicGroup.initialize("managers", UserGroup.getInstance(user));
                     logger.info("Bootstrapped #managers group to user: " + user.getUsername());
                 }
@@ -128,53 +122,49 @@ public class Authenticate {
             }
             throw AuthorizationException.authenticationFailed();
         } finally {
-            wrapper.set(null);
+            loggedUser.set(null);
         }
     }
 
     public static void logout(HttpSession session) {
         if (session != null) {
-            final UserSession userWrapper = (UserSession) session.getAttribute(USER_SESSION_ATTRIBUTE);
-            if (userWrapper != null) {
-                fireLogoutListeners(session, userWrapper.getUser());
+            User user = (User) session.getAttribute(LOGGED_USER_ATTRIBUTE);
+            if (user != null) {
+                fireLogoutListeners(session, user);
             }
-            session.removeAttribute(USER_SESSION_ATTRIBUTE);
+            session.removeAttribute(LOGGED_USER_ATTRIBUTE);
             session.invalidate();
         }
-        wrapper.set(null);
+        loggedUser.set(null);
     }
 
     public static void mock(User user) {
-        wrapper.set(new UserSession(user));
+        loggedUser.set(user);
     }
 
     public static void unmock() {
-        wrapper.set(null);
+        loggedUser.set(null);
     }
 
     public static User getUser() {
-        return wrapper.get() != null ? wrapper.get().getUser() : null;
-    }
-
-    public static Set<Group> accessibleGroups() {
-        return wrapper.get() != null ? wrapper.get().accessibleGroups() : Collections.<Group> emptySet();
+        return loggedUser.get();
     }
 
     public static boolean isLogged() {
-        return wrapper.get() != null;
+        return loggedUser.get() != null;
     }
 
     static void updateFromSession(HttpSession session) {
-        UserSession user = (UserSession) (session == null ? null : session.getAttribute(USER_SESSION_ATTRIBUTE));
-        if (user != null && user.isSessionStillValid()) {
-            wrapper.set(user);
+        User user = (User) (session == null ? null : session.getAttribute(LOGGED_USER_ATTRIBUTE));
+        if (user != null) {
+            loggedUser.set(user);
         } else {
-            wrapper.set(null);
+            loggedUser.set(null);
         }
     }
 
     static void clear() {
-        wrapper.set(null);
+        loggedUser.set(null);
     }
 
     public static void addUserAuthenticationListener(UserAuthenticationListener listener) {

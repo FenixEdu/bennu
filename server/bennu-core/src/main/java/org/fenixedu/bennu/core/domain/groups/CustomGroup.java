@@ -22,7 +22,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +30,6 @@ import java.util.Vector;
 
 import org.fenixedu.bennu.core.annotation.CustomGroupArgument;
 import org.fenixedu.bennu.core.annotation.CustomGroupOperator;
-import org.fenixedu.bennu.core.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,14 +121,11 @@ public abstract class CustomGroup extends CustomGroup_Base {
 
         private final Method instantiator;
 
-        private final Method groupsForUser;
-
         public Operator(Class<? extends G> type) {
             this.operator = type.getAnnotation(CustomGroupOperator.class).value();
             this.type = type;
             this.arguments = findArguments();
             this.instantiator = findInstantiator();
-            this.groupsForUser = findGroupsForUser();
         }
 
         public G parse(String[] parameters) {
@@ -163,22 +158,6 @@ public abstract class CustomGroup extends CustomGroup_Base {
                 }
             }
             return params.isEmpty() ? operator : operator + "(" + Joiner.on(", ").join(params) + ")";
-        }
-
-        public Set<Group> groupsForUser(User user) {
-            try {
-                return (Set<Group>) groupsForUser.invoke(null, user);
-            } catch (InvocationTargetException e) {
-                if (e.getCause() instanceof RuntimeException) {
-                    throw (RuntimeException) e.getCause();
-                }
-                if (e.getCause() instanceof Error) {
-                    throw (Error) e.getCause();
-                }
-                throw new Error(e.getCause());
-            } catch (IllegalAccessException | IllegalArgumentException e) {
-                throw new Error(e);
-            }
         }
 
         private Vector<Argument<Object>> findArguments() {
@@ -216,17 +195,6 @@ public abstract class CustomGroup extends CustomGroup_Base {
             }
             throw new Error("CustomGroup: " + type.getName() + " is missing getInstance(...) static method");
         }
-
-        private Method findGroupsForUser() {
-            try {
-                Method method = type.getDeclaredMethod("groupsForUser", User.class);
-                if (Modifier.isPublic(method.getModifiers()) && Modifier.isStatic(method.getModifiers())) {
-                    return method;
-                }
-            } catch (NoSuchMethodException | SecurityException e) {
-            }
-            throw new Error("CustomGroup: " + type.getName() + " is missing groupsForUser(User) static method");
-        }
     }
 
     protected CustomGroup() {
@@ -241,14 +209,6 @@ public abstract class CustomGroup extends CustomGroup_Base {
     @SuppressWarnings("unchecked")
     public static <T extends CustomGroup> T parse(String operator, String[] parameters) {
         return (T) getOperator(operator).parse(parameters);
-    }
-
-    public static Set<Group> groupsForUser(User user) {
-        Set<Group> groups = new HashSet<>();
-        for (Operator<?> operator : operators.values()) {
-            groups.addAll(operator.groupsForUser(user));
-        }
-        return groups;
     }
 
     /* CustomGroup language registry */
