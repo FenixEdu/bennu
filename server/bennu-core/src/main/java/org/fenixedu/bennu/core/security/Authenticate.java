@@ -31,7 +31,6 @@ import org.fenixedu.bennu.core.domain.groups.DynamicGroup;
 import org.fenixedu.bennu.core.domain.groups.Group;
 import org.fenixedu.bennu.core.domain.groups.UserGroup;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
-import org.fenixedu.bennu.core.util.TransactionalThread;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +46,6 @@ public class Authenticate {
     public static final String LOGGED_USER_ATTRIBUTE = "LOGGED_USER_ATTRIBUTE";
 
     private static final InheritableThreadLocal<UserSession> wrapper = new InheritableThreadLocal<>();
-
-    private static Set<AuthenticationListener> authenticationListeners;
 
     private static Set<UserAuthenticationListener> userAuthenticationListeners;
 
@@ -181,21 +178,6 @@ public class Authenticate {
         wrapper.set(null);
     }
 
-    @Deprecated
-    public static void addAuthenticationListener(AuthenticationListener listener) {
-        if (authenticationListeners == null) {
-            authenticationListeners = new HashSet<>();
-        }
-        authenticationListeners.add(listener);
-    }
-
-    @Deprecated
-    public static void removeAuthenticationListener(AuthenticationListener listener) {
-        if (authenticationListeners != null) {
-            authenticationListeners.remove(listener);
-        }
-    }
-
     public static void addUserAuthenticationListener(UserAuthenticationListener listener) {
         if (userAuthenticationListeners == null) {
             userAuthenticationListeners = new HashSet<>();
@@ -210,17 +192,6 @@ public class Authenticate {
     }
 
     private static void fireLoginListeners(HttpSession session, final User user) {
-        if (authenticationListeners != null) {
-            for (final AuthenticationListener listener : authenticationListeners) {
-                final TransactionalThread thread = new TransactionalThread() {
-                    @Override
-                    public void transactionalRun() {
-                        listener.afterLogin(user);
-                    }
-                };
-                thread.start();
-            }
-        }
         if (userAuthenticationListeners != null) {
             for (UserAuthenticationListener listener : userAuthenticationListeners) {
                 listener.onLogin(session, user);
