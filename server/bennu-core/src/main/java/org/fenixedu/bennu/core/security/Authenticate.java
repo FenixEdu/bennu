@@ -136,7 +136,6 @@ public class Authenticate {
         if (session != null) {
             final UserSession userWrapper = (UserSession) session.getAttribute(USER_SESSION_ATTRIBUTE);
             if (userWrapper != null) {
-                userWrapper.getUser().markLogoutTime();
                 fireLogoutListeners(session, userWrapper.getUser());
             }
             session.removeAttribute(USER_SESSION_ATTRIBUTE);

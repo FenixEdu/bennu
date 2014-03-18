@@ -45,9 +45,6 @@ import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
@@ -148,15 +145,6 @@ public final class User extends User_Base implements Principal {
 
     public boolean isLoginExpired() {
         return getExpiration() != null && new LocalDate().isAfter(getExpiration());
-    }
-
-    public boolean isBeforeLastLogoutTime(DateTime time) {
-        return getLastLogoutDateTime() != null && time.isBefore(getLastLogoutDateTime());
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    public void markLogoutTime() {
-        setLastLogoutDateTime(new DateTime());
     }
 
     public boolean matchesPassword(final String password) {

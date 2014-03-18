@@ -23,14 +23,11 @@ import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.Group;
-import org.joda.time.DateTime;
 
 class UserSession implements Serializable {
     private static final long serialVersionUID = -16953310282144136L;
 
     private final User user;
-
-    private final DateTime userViewCreationDateTime = new DateTime();
 
     private Set<String> groupExpressions = null;
 
@@ -52,10 +49,6 @@ class UserSession implements Serializable {
 
     public User getUser() {
         return user;
-    }
-
-    public boolean isSessionStillValid() {
-        return !getUser().isBeforeLastLogoutTime(userViewCreationDateTime);
     }
 
     public Set<Group> accessibleGroups() {

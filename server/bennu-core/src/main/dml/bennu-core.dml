@@ -63,7 +63,6 @@ public class User {
 	protected String password;
 	protected String salt;
 	protected DateTime created;
-	protected DateTime lastLogoutDateTime;
 	public LocalDate expiration;
 	public String email;
 	public Locale preferredLocale;
