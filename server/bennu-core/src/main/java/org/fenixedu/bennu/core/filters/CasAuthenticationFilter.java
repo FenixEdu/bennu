@@ -28,6 +28,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
@@ -72,7 +73,8 @@ public class CasAuthenticationFilter implements Filter {
                 HttpServletResponse resp = (HttpServletResponse) response;
                 resp.sendRedirect(httpServletRequest.getRequestURL().toString());
                 return;
-            } catch (TicketValidationException e) {
+            } catch (TicketValidationException | AuthorizationException e) {
+                // its ok, the user just won't have his session
                 logger.warn(e.getMessage(), e);
             }
         }

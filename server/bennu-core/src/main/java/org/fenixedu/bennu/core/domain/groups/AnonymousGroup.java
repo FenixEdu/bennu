@@ -19,11 +19,17 @@ package org.fenixedu.bennu.core.domain.groups;
 import java.util.Collections;
 import java.util.Set;
 
+import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Supplier;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 
 /**
  * Group for unauthenticated users.
@@ -33,6 +39,7 @@ import com.google.common.base.Supplier;
 public final class AnonymousGroup extends AnonymousGroup_Base {
     protected AnonymousGroup() {
         super();
+        setRootForGroupConstant(getRoot());
     }
 
     @Override
@@ -66,6 +73,30 @@ public final class AnonymousGroup extends AnonymousGroup_Base {
     }
 
     @Override
+    public Group and(Group group) {
+        if (group instanceof LoggedGroup) {
+            return NobodyGroup.getInstance();
+        }
+        return super.and(group);
+    }
+
+    @Override
+    public Group or(Group group) {
+        if (group instanceof LoggedGroup) {
+            return AnyoneGroup.getInstance();
+        }
+        return super.or(group);
+    }
+
+    @Override
+    public Group minus(Group group) {
+        if (group instanceof LoggedGroup) {
+            return this;
+        }
+        return super.minus(group);
+    }
+
+    @Override
     public Group not() {
         return LoggedGroup.getInstance();
     }
@@ -82,11 +113,22 @@ public final class AnonymousGroup extends AnonymousGroup_Base {
      * @return singleton {@link AnonymousGroup} instance
      */
     public static AnonymousGroup getInstance() {
-        return select(AnonymousGroup.class, new Supplier<AnonymousGroup>() {
-            @Override
-            public AnonymousGroup get() {
-                return new AnonymousGroup();
+        AnonymousGroup instance = BennuGroupIndex.getAnonymous();
+        if (instance == null) {
+            // reuse of unlinked instances of bennu 2.1 or less
+            instance =
+                    (AnonymousGroup) Iterables.tryFind(Bennu.getInstance().getGroupSet(),
+                            Predicates.instanceOf(AnonymousGroup.class)).orNull();
+            if (instance != null) {
+                instance.setRootForGroupConstant(Bennu.getInstance());
             }
-        });
+        }
+        return instance != null ? instance : create();
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static AnonymousGroup create() {
+        AnonymousGroup instance = BennuGroupIndex.getAnonymous();
+        return instance != null ? instance : new AnonymousGroup();
     }
 }

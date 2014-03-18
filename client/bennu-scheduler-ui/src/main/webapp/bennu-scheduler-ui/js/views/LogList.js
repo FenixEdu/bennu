@@ -32,24 +32,41 @@ define([
         xrender: function() {
         	this.render();
         },
+
+        initSortingMethod: function() {
+            $.extend( $.fn.dataTableExt.oSort, {
+                "schedule-date-pre": function ( date ) {
+                    return moment(date, "DD MMMM YYYY HH:mm:ss").format("X");
+                },
+ 
+                "schedule-date-asc": function ( a, b ) {
+                    return a - b;
+                },
+             
+                "schedule-date-desc": function ( a, b ) {
+                    return b - a;
+                }
+            } );
+        },
         
         enableDataTable : function() {
-        	$("table").dataTable( {
+            this.initSortingMethod();
+            $("table").dataTable( {
         		"bFilter": true,
         		"bScrollInfinite": true,
         		"sScrollY": "400px",
-        		"aaSorting": [[1, "desc"]],
+        		"aaSorting": [[2, "desc"]],
         		"aoColumns": [
         		              null,
-        		              null,
-        		              null,
+        		              { "sType": "schedule-date"},
+        		              { "sType": "schedule-date"},
         		              { "sType": "html" },
         		              null]
         	});
         },
         
         onDomRefresh: function() {
-        	this.enableDataTable();
+            this.enableDataTable();
         	$("#refresh").attr('checked', this.interval != undefined);
         },
         

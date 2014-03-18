@@ -24,9 +24,12 @@ import java.util.Set;
 import org.fenixedu.bennu.core.domain.User;
 import org.joda.time.DateTime;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.Sets;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Intersection composition group.
@@ -98,9 +101,16 @@ public final class IntersectionGroup extends IntersectionGroup_Base {
 
     @Override
     public Group and(Group group) {
-        Set<Group> children = new HashSet<>(getChildrenSet());
-        children.add(group);
-        return IntersectionGroup.getInstance(children);
+        if (this.equals(group)) {
+            return this;
+        }
+        if (group instanceof NobodyGroup) {
+            return NobodyGroup.getInstance();
+        }
+        if (group instanceof AnyoneGroup) {
+            return this;
+        }
+        return IntersectionGroup.getInstance(ImmutableSet.<Group> builder().addAll(getChildrenSet()).add(group).build());
     }
 
     /**
@@ -118,16 +128,40 @@ public final class IntersectionGroup extends IntersectionGroup_Base {
      * @return singleton {@link IntersectionGroup} instance
      */
     public static IntersectionGroup getInstance(final Set<Group> children) {
-        return select(IntersectionGroup.class, new Predicate<IntersectionGroup>() {
+        IntersectionGroup instance = select(children);
+        return instance != null ? instance : create(children);
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static IntersectionGroup create(final Set<Group> children) {
+        IntersectionGroup instance = select(children);
+        return instance != null ? instance : new IntersectionGroup(children);
+    }
+
+    private static IntersectionGroup select(final Set<Group> children) {
+        FluentIterable<IntersectionGroup> intersection = null;
+        Predicate<IntersectionGroup> sizePredicate = new Predicate<IntersectionGroup>() {
             @Override
-            public boolean apply(IntersectionGroup input) {
-                return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
+            public boolean apply(IntersectionGroup group) {
+                return group.getChildrenSet().size() == children.size();
             }
-        }, new Supplier<IntersectionGroup>() {
-            @Override
-            public IntersectionGroup get() {
-                return new IntersectionGroup(children);
+        };
+        for (final Group child : children) {
+            if (intersection == null) {
+                intersection =
+                        FluentIterable.from(child.getCompositionSet()).filter(IntersectionGroup.class).filter(sizePredicate);
+            } else {
+                intersection = intersection.filter(new Predicate<IntersectionGroup>() {
+                    @Override
+                    public boolean apply(IntersectionGroup group) {
+                        return group.getChildrenSet().contains(child);
+                    }
+                });
             }
-        });
+            if (intersection.isEmpty()) {
+                return null;
+            }
+        }
+        return intersection.first().orNull();
     }
 }

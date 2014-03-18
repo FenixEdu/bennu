@@ -19,11 +19,17 @@ package org.fenixedu.bennu.core.domain.groups;
 import java.util.Collections;
 import java.util.Set;
 
+import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Supplier;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 
 /**
  * Group that always returns false.
@@ -33,6 +39,7 @@ import com.google.common.base.Supplier;
 public final class NobodyGroup extends NobodyGroup_Base {
     protected NobodyGroup() {
         super();
+        setRootForGroupConstant(getRoot());
     }
 
     @Override
@@ -97,11 +104,22 @@ public final class NobodyGroup extends NobodyGroup_Base {
      * @return singleton {@link NobodyGroup} instance
      */
     public static NobodyGroup getInstance() {
-        return select(NobodyGroup.class, new Supplier<NobodyGroup>() {
-            @Override
-            public NobodyGroup get() {
-                return new NobodyGroup();
+        NobodyGroup instance = BennuGroupIndex.getNobody();
+        if (instance == null) {
+            // reuse of unlinked instances of bennu 2.1 or less
+            instance =
+                    (NobodyGroup) Iterables.tryFind(Bennu.getInstance().getGroupSet(), Predicates.instanceOf(NobodyGroup.class))
+                            .orNull();
+            if (instance != null) {
+                instance.setRootForGroupConstant(Bennu.getInstance());
             }
-        });
+        }
+        return instance != null ? instance : create();
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static NobodyGroup create() {
+        NobodyGroup instance = BennuGroupIndex.getNobody();
+        return instance != null ? instance : new NobodyGroup();
     }
 }

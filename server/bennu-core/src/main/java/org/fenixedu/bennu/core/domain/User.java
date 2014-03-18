@@ -50,6 +50,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
 
 /**
  * The application end user.
@@ -100,6 +101,9 @@ public final class User extends User_Base implements Principal {
 
     public User(final String username) {
         super();
+        if (findByUsername(username) != null) {
+            throw BennuCoreDomainException.duplicateUsername(username);
+        }
         setBennu(Bennu.getInstance());
         setCreated(new DateTime());
         setUsername(username);
@@ -124,7 +128,7 @@ public final class User extends User_Base implements Principal {
 
     public String generatePassword() {
         final String password = RandomStringUtils.randomAlphanumeric(10);
-        setPassword(password);
+        changePassword(password);
         return password;
     }
 
@@ -137,9 +141,9 @@ public final class User extends User_Base implements Principal {
         }
         byte salt[] = new byte[64];
         prng.nextBytes(salt);
-        setSalt(new String(salt, Charsets.UTF_8));
+        setSalt(BaseEncoding.base64().encode(salt));
         String hash = Hashing.sha512().hashString(getSalt() + password, Charsets.UTF_8).toString();
-        super.setPassword(hash);
+        setPassword(hash);
     }
 
     public boolean isLoginExpired() {
@@ -217,7 +221,7 @@ public final class User extends User_Base implements Principal {
 
     public static User findByUsername(final String username) {
         for (final User user : Bennu.getInstance().getUserSet()) {
-            if (user.getUsername().equalsIgnoreCase(username)) {
+            if (user.getUsername().equals(username)) {
                 return user;
             }
         }

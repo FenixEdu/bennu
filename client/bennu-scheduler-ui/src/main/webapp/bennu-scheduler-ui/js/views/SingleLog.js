@@ -23,9 +23,9 @@ define([
         		data.customLog = false;
         	}
         	$(data).each(function(i,e) {
-        		e.start = moment(e.start).format("MMMM Do YYYY, h:mm:ss a");
+        		e.start = moment(e.start).format("DD MMMM YYYY HH:mm:ss");
         		if (e.end) {
-        			e.end = moment(e.end).format("MMMM Do YYYY, h:mm:ss a");
+        			e.end = moment(e.end).format("DD MMMM YYYY HH:mm:ss");
         			e.finished = true;
         		} else {
         			e.end = "N/A";

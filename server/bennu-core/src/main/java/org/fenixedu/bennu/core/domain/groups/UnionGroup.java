@@ -23,9 +23,12 @@ import java.util.Set;
 import org.fenixedu.bennu.core.domain.User;
 import org.joda.time.DateTime;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.Sets;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Union composition group.
@@ -83,9 +86,16 @@ public final class UnionGroup extends UnionGroup_Base {
 
     @Override
     public Group or(Group group) {
-        Set<Group> children = new HashSet<>(getChildrenSet());
-        children.add(group);
-        return UnionGroup.getInstance(children);
+        if (this.equals(group)) {
+            return this;
+        }
+        if (group instanceof NobodyGroup) {
+            return this;
+        }
+        if (group instanceof AnyoneGroup) {
+            return AnyoneGroup.getInstance();
+        }
+        return UnionGroup.getInstance(ImmutableSet.<Group> builder().addAll(getChildrenSet()).add(group).build());
     }
 
     /**
@@ -103,16 +113,39 @@ public final class UnionGroup extends UnionGroup_Base {
      * @return {@link UnionGroup} instance
      */
     public static UnionGroup getInstance(final Set<Group> children) {
-        return select(UnionGroup.class, new Predicate<UnionGroup>() {
+        UnionGroup instance = select(children);
+        return instance != null ? instance : create(children);
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static UnionGroup create(final Set<Group> children) {
+        UnionGroup instance = select(children);
+        return instance != null ? instance : new UnionGroup(children);
+    }
+
+    private static UnionGroup select(final Set<Group> children) {
+        FluentIterable<UnionGroup> intersection = null;
+        Predicate<UnionGroup> sizePredicate = new Predicate<UnionGroup>() {
             @Override
-            public boolean apply(UnionGroup input) {
-                return Sets.symmetricDifference(input.getChildrenSet(), children).isEmpty();
+            public boolean apply(UnionGroup group) {
+                return group.getChildrenSet().size() == children.size();
             }
-        }, new Supplier<UnionGroup>() {
-            @Override
-            public UnionGroup get() {
-                return new UnionGroup(children);
+        };
+        for (final Group child : children) {
+            if (intersection == null) {
+                intersection = FluentIterable.from(child.getCompositionSet()).filter(UnionGroup.class).filter(sizePredicate);
+            } else {
+                intersection = intersection.filter(new Predicate<UnionGroup>() {
+                    @Override
+                    public boolean apply(UnionGroup group) {
+                        return group.getChildrenSet().contains(child);
+                    }
+                });
             }
-        });
+            if (intersection.isEmpty()) {
+                return null;
+            }
+        }
+        return intersection.first().orNull();
     }
 }

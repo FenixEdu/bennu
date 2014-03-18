@@ -24,9 +24,12 @@ import java.util.Set;
 import org.fenixedu.bennu.core.domain.User;
 import org.joda.time.DateTime;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Difference composition group. Can be read as members of first group except members of the remaining ones.
@@ -108,9 +111,16 @@ public final class DifferenceGroup extends DifferenceGroup_Base {
 
     @Override
     public Group minus(Group group) {
-        Set<Group> children = new HashSet<>(getChildrenSet());
-        children.add(group);
-        return DifferenceGroup.getInstance(children);
+        if (this.equals(group)) {
+            return NobodyGroup.getInstance();
+        }
+        if (group instanceof NobodyGroup) {
+            return this;
+        }
+        if (group instanceof AnyoneGroup) {
+            return NobodyGroup.getInstance();
+        }
+        return DifferenceGroup.getInstance(ImmutableSet.<Group> builder().addAll(getChildrenSet()).add(group).build());
     }
 
     /**
@@ -128,16 +138,39 @@ public final class DifferenceGroup extends DifferenceGroup_Base {
      * @return singleton {@link DifferenceGroup} instance
      */
     public static DifferenceGroup getInstance(final Set<Group> children) {
-        return select(DifferenceGroup.class, new Predicate<DifferenceGroup>() {
+        DifferenceGroup instance = select(children);
+        return instance != null ? instance : create(children);
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static DifferenceGroup create(Set<Group> children) {
+        DifferenceGroup instance = select(children);
+        return instance != null ? instance : new DifferenceGroup(children);
+    }
+
+    private static DifferenceGroup select(final Set<Group> children) {
+        FluentIterable<DifferenceGroup> intersection = null;
+        Predicate<DifferenceGroup> sizePredicate = new Predicate<DifferenceGroup>() {
             @Override
-            public boolean apply(DifferenceGroup input) {
-                return Iterables.elementsEqual(input.getChildrenSet(), children);
+            public boolean apply(DifferenceGroup group) {
+                return group.getChildrenSet().size() == children.size();
             }
-        }, new Supplier<DifferenceGroup>() {
-            @Override
-            public DifferenceGroup get() {
-                return new DifferenceGroup(children);
+        };
+        for (final Group child : children) {
+            if (intersection == null) {
+                intersection = FluentIterable.from(child.getCompositionSet()).filter(DifferenceGroup.class).filter(sizePredicate);
+            } else {
+                intersection = intersection.filter(new Predicate<DifferenceGroup>() {
+                    @Override
+                    public boolean apply(DifferenceGroup group) {
+                        return group.getChildrenSet().contains(child);
+                    }
+                });
             }
-        });
+            if (intersection.isEmpty()) {
+                return null;
+            }
+        }
+        return intersection.first().orNull();
     }
 }

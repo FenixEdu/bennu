@@ -104,6 +104,15 @@ public class groups.AnonymousGroup extends groups.Group {
 public class groups.LoggedGroup extends groups.Group {
 }
 
+relation GroupConstantRoot {
+    protected groups.Group playsRole groupConstant {
+        multiplicity *;
+    }
+    protected Bennu playsRole rootForGroupConstant {
+        multiplicity 0..1;
+    }
+}
+
 public class groups.UserGroup extends groups.Group {
 }
 
@@ -164,6 +173,15 @@ public class groups.CustomGroup extends groups.Group {
 public class groups.DynamicGroup extends groups.Group {
 	protected String name (REQUIRED);
 	protected DateTime created (REQUIRED);
+}
+
+relation DynamicGroups {
+    protected Bennu playsRole rootForDynamicGroup {
+        multiplicity 1..1;
+    }
+    protected groups.DynamicGroup playsRole dynamic {
+        multiplicity 0..*;
+    }
 }
 
 relation DynamicGroupCreator {

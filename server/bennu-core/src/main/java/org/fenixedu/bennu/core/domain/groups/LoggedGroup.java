@@ -20,11 +20,16 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Supplier;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 
 /**
  * Authenticated users group.
@@ -34,6 +39,7 @@ import com.google.common.base.Supplier;
 public final class LoggedGroup extends LoggedGroup_Base {
     protected LoggedGroup() {
         super();
+        setRootForGroupConstant(getRoot());
     }
 
     @Override
@@ -67,6 +73,30 @@ public final class LoggedGroup extends LoggedGroup_Base {
     }
 
     @Override
+    public Group and(Group group) {
+        if (group instanceof AnonymousGroup) {
+            return NobodyGroup.getInstance();
+        }
+        return super.and(group);
+    }
+
+    @Override
+    public Group or(Group group) {
+        if (group instanceof AnonymousGroup) {
+            return AnyoneGroup.getInstance();
+        }
+        return super.or(group);
+    }
+
+    @Override
+    public Group minus(Group group) {
+        if (group instanceof AnonymousGroup) {
+            return this;
+        }
+        return super.minus(group);
+    }
+
+    @Override
     public Group not() {
         return AnonymousGroup.getInstance();
     }
@@ -83,11 +113,22 @@ public final class LoggedGroup extends LoggedGroup_Base {
      * @return singleton {@link LoggedGroup} instance
      */
     public static LoggedGroup getInstance() {
-        return select(LoggedGroup.class, new Supplier<LoggedGroup>() {
-            @Override
-            public LoggedGroup get() {
-                return new LoggedGroup();
+        LoggedGroup instance = BennuGroupIndex.getLogged();
+        if (instance == null) {
+            // reuse of unlinked instances of bennu 2.1 or less
+            instance =
+                    (LoggedGroup) Iterables.tryFind(Bennu.getInstance().getGroupSet(), Predicates.instanceOf(LoggedGroup.class))
+                            .orNull();
+            if (instance != null) {
+                instance.setRootForGroupConstant(Bennu.getInstance());
             }
-        });
+        }
+        return instance != null ? instance : create();
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static LoggedGroup create() {
+        LoggedGroup instance = BennuGroupIndex.getLogged();
+        return instance != null ? instance : new LoggedGroup();
     }
 }

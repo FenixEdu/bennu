@@ -17,7 +17,6 @@
 package org.fenixedu.bennu.core.domain.groups;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.antlr.runtime.RecognitionException;
@@ -35,6 +34,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 /**
@@ -138,10 +138,16 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      * @return group resulting of the intersection between '{@code this}' and '{@code group}'
      */
     public Group and(Group group) {
-        Set<Group> children = new HashSet<>();
-        children.add(this);
-        children.add(group);
-        return IntersectionGroup.getInstance(children);
+        if (this.equals(group)) {
+            return this;
+        }
+        if (group instanceof NobodyGroup) {
+            return NobodyGroup.getInstance();
+        }
+        if (group instanceof AnyoneGroup) {
+            return this;
+        }
+        return IntersectionGroup.getInstance(ImmutableSet.<Group> builder().add(this).add(group).build());
     }
 
     /**
@@ -152,10 +158,16 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      * @return group resulting of the union between '{@code this}' and '{@code group}'
      */
     public Group or(Group group) {
-        Set<Group> children = new HashSet<>();
-        children.add(this);
-        children.add(group);
-        return UnionGroup.getInstance(children);
+        if (this.equals(group)) {
+            return this;
+        }
+        if (group instanceof NobodyGroup) {
+            return this;
+        }
+        if (group instanceof AnyoneGroup) {
+            return AnyoneGroup.getInstance();
+        }
+        return UnionGroup.getInstance(ImmutableSet.<Group> builder().add(this).add(group).build());
     }
 
     /**
@@ -166,10 +178,16 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      * @return group resulting of all members of '{@code this}' except members of '{@code group}'
      */
     public Group minus(Group group) {
-        Set<Group> children = new HashSet<>();
-        children.add(this);
-        children.add(group);
-        return DifferenceGroup.getInstance(children);
+        if (this.equals(group)) {
+            return NobodyGroup.getInstance();
+        }
+        if (group instanceof NobodyGroup) {
+            return this;
+        }
+        if (group instanceof AnyoneGroup) {
+            return NobodyGroup.getInstance();
+        }
+        return DifferenceGroup.getInstance(ImmutableSet.<Group> builder().add(this).add(group).build());
     }
 
     /**
@@ -255,6 +273,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      *            the wanted type
      * @return group instance.
      */
+    @Deprecated
     protected static <T extends Group> T select(final Class<? extends T> type, Supplier<T> maker) {
         T group = (T) Iterables.tryFind(Bennu.getInstance().getGroupSet(), Predicates.instanceOf(type)).orNull();
         return group == null ? (maker != null ? transactionalMake(Predicates.instanceOf(type), maker) : null) : group;
@@ -270,6 +289,7 @@ public abstract class Group extends Group_Base implements Comparable<Group> {
      *            the predicate to apply to group instances
      * @return group instance.
      */
+    @Deprecated
     protected static <T extends Group> T select(final Class<? extends T> type, final Predicate<? super T> predicate,
             Supplier<T> maker) {
         @SuppressWarnings("unchecked")

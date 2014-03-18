@@ -21,14 +21,18 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.joda.time.DateTime;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
@@ -88,20 +92,35 @@ public final class UserGroup extends UserGroup_Base {
     }
 
     @Override
-    public UserGroup grant(User user) {
-        Set<User> users = new HashSet<>(getMemberSet());
-        users.add(user);
-        return UserGroup.getInstance(users);
+    public Group and(Group group) {
+        if (group instanceof UserGroup) {
+            Set<User> intersection = Sets.intersection(getMemberSet(), ((UserGroup) group).getMemberSet());
+            if (intersection.isEmpty()) {
+                return NobodyGroup.getInstance();
+            }
+            return UserGroup.getInstance(intersection);
+        }
+        return super.and(group);
     }
 
     @Override
-    public Group revoke(User user) {
-        Set<User> users = new HashSet<>(getMemberSet());
-        users.remove(user);
-        if (users.isEmpty()) {
-            return NobodyGroup.getInstance();
+    public Group or(Group group) {
+        if (group instanceof UserGroup) {
+            return UserGroup.getInstance(Sets.union(getMemberSet(), ((UserGroup) group).getMemberSet()));
         }
-        return UserGroup.getInstance(users);
+        return super.or(group);
+    }
+
+    @Override
+    public Group minus(Group group) {
+        if (group instanceof UserGroup) {
+            Set<User> difference = Sets.difference(getMemberSet(), ((UserGroup) group).getMemberSet());
+            if (difference.isEmpty()) {
+                return NobodyGroup.getInstance();
+            }
+            return UserGroup.getInstance(difference);
+        }
+        return super.minus(group);
     }
 
     @Override
@@ -128,16 +147,39 @@ public final class UserGroup extends UserGroup_Base {
         if (users.isEmpty()) {
             throw BennuCoreDomainException.creatingUserGroupsWithoutUsers();
         }
-        return select(UserGroup.class, new Predicate<UserGroup>() {
+        UserGroup instance = select(users);
+        return instance != null ? instance : create(users);
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static UserGroup create(final Set<User> users) {
+        UserGroup instance = select(users);
+        return instance != null ? instance : new UserGroup(users);
+    }
+
+    private static UserGroup select(final Set<User> users) {
+        FluentIterable<UserGroup> intersection = null;
+        Predicate<UserGroup> sizePredicate = new Predicate<UserGroup>() {
             @Override
-            public boolean apply(UserGroup input) {
-                return Sets.symmetricDifference(input.getMemberSet(), users).isEmpty();
+            public boolean apply(UserGroup group) {
+                return group.getMemberSet().size() == users.size();
             }
-        }, new Supplier<UserGroup>() {
-            @Override
-            public UserGroup get() {
-                return new UserGroup(users);
+        };
+        for (final User user : users) {
+            if (intersection == null) {
+                intersection = FluentIterable.from(BennuGroupIndex.getUserGroups(user)).filter(sizePredicate);
+            } else {
+                intersection = intersection.filter(new Predicate<UserGroup>() {
+                    @Override
+                    public boolean apply(UserGroup group) {
+                        return group.getMemberSet().contains(user);
+                    }
+                });
             }
-        });
+            if (intersection.isEmpty()) {
+                return null;
+            }
+        }
+        return intersection.first().orNull();
     }
 }
