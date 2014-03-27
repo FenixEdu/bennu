@@ -18,7 +18,7 @@
 		<!-- * DEPENDENCIES VERSIONS * -->
 		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
 		<!-- ************************************************************************************************ -->
-		<version.org.antlr.antlr.runtime>3.5.1</version.org.antlr.antlr.runtime>
+		<version.org.antlr.antlr.runtime>3.5.2</version.org.antlr.antlr.runtime>
 		<version.javax.ws.rs.javax.ws.rs.api>2.0</version.javax.ws.rs.javax.ws.rs.api>
 		<version.joda.time.joda.time>2.3</version.joda.time.joda.time>
 		<version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
@@ -33,7 +33,7 @@
 		<!-- * PLUGIN VERSIONS * -->
 		<!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
 		<!-- ************************************************************************************************ -->
-		<version.org.antlr.antlr3.maven.plugin>3.5.1</version.org.antlr.antlr3.maven.plugin>
+		<version.org.antlr.antlr3.maven.plugin>3.5.2</version.org.antlr.antlr3.maven.plugin>
 	</properties>
 
 	<scm>
