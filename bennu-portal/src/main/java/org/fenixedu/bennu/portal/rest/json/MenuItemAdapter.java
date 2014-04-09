@@ -1,6 +1,6 @@
 package org.fenixedu.bennu.portal.rest.json;
 
-import org.fenixedu.bennu.core.domain.groups.Group;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.json.JsonCreator;
 import org.fenixedu.bennu.core.json.JsonUpdater;
@@ -47,7 +47,7 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
         json.addProperty("order", obj.getOrd());
         json.addProperty("path", obj.getPath());
         json.addProperty("fullPath", obj.getFullPath());
-        json.addProperty("accessExpression", obj.getAccessGroup().expression());
+        json.addProperty("accessExpression", obj.getAccessGroup().getExpression());
         json.addProperty("functionality", obj.isMenuFunctionality());
         json.addProperty("visible", obj.isVisible());
         json.addProperty("layout", obj.getLayout());

@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
-import org.fenixedu.bennu.core.domain.groups.LoggedGroup;
+import org.fenixedu.bennu.core.groups.LoggedGroup;
 import org.fenixedu.bennu.core.json.adapters.AuthenticatedUserViewer;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -64,7 +64,7 @@ public class ProfileResource extends BennuRestResource {
     @Path("logout")
     @Produces(MediaType.APPLICATION_JSON)
     public String logout(@Context HttpServletResponse response) {
-        accessControl(LoggedGroup.getInstance());
+        accessControl(LoggedGroup.get());
         Authenticate.logout(request.getSession(false));
         if (CoreConfiguration.casConfig().isCasEnabled()) {
             try {
@@ -104,7 +104,7 @@ public class ProfileResource extends BennuRestResource {
     @Path("preferred-locale/{tag}")
     @Produces(MediaType.APPLICATION_JSON)
     public String changePreferredLocale(@PathParam("tag") String localeTag) {
-        accessControl(LoggedGroup.getInstance());
+        accessControl(LoggedGroup.get());
         try {
             Locale locale = new Builder().setLanguageTag(localeTag).build();
             if (CoreConfiguration.supportedLocales().contains(locale)) {

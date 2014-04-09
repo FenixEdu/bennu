@@ -79,44 +79,42 @@ relation SystemUsers {
 
 /* Authorization Groups */
 
-public class groups.Group {
+public class groups.PersistentGroup {
 }
 
-relation Groups {
+relation PersistentGroups {
 	protected Bennu playsRole root {
 		multiplicity 0..1;
 	}
-	protected groups.Group playsRole group {
+	protected groups.PersistentGroup playsRole group {
 		multiplicity *;
 	}
 }
 
-public class groups.NobodyGroup extends groups.Group {
-}
+public class groups.GroupConstant extends groups.PersistentGroup;
 
-public class groups.AnyoneGroup extends groups.Group {
-}
+public class groups.PersistentNobodyGroup extends groups.GroupConstant;
 
-public class groups.AnonymousGroup extends groups.Group {
-}
+public class groups.PersistentAnyoneGroup extends groups.GroupConstant;
 
-public class groups.LoggedGroup extends groups.Group {
-}
+public class groups.PersistentAnonymousGroup extends groups.GroupConstant;
+
+public class groups.PersistentLoggedGroup extends groups.GroupConstant;
 
 relation GroupConstantRoot {
-    protected groups.Group playsRole groupConstant {
+    protected groups.GroupConstant playsRole groupConstant {
         multiplicity *;
     }
     protected Bennu playsRole rootForGroupConstant {
-        multiplicity 0..1;
+        multiplicity 1..1;
     }
 }
 
-public class groups.UserGroup extends groups.Group {
+public class groups.PersistentUserGroup extends groups.PersistentGroup {
 }
 
 relation UserGroupMembers {
-	protected groups.UserGroup playsRole userGroup {
+	protected groups.PersistentUserGroup playsRole userGroup {
 		multiplicity *;
 	}
 	protected User playsRole member {
@@ -124,67 +122,79 @@ relation UserGroupMembers {
 	}
 }
 
-public class groups.CompositionGroup extends groups.Group {
+public class groups.PersistentUnionGroup extends groups.PersistentGroup {
 }
 
-relation GroupComposition {
-	protected groups.Group playsRole children {
-		multiplicity 1..*;
-	}
-	protected groups.CompositionGroup playsRole composition {
-		multiplicity *;
-	}
+relation UnionGroupComposition {
+    protected groups.PersistentGroup playsRole children {
+        multiplicity 1..*;
+    }
+    protected groups.PersistentUnionGroup playsRole unions {
+        multiplicity *;
+    }
 }
 
-public class groups.UnionGroup extends groups.CompositionGroup {
+public class groups.PersistentIntersectionGroup extends groups.PersistentGroup {
 }
 
-public class groups.IntersectionGroup extends groups.CompositionGroup {
+relation IntersectionGroupComposition {
+    protected groups.PersistentGroup playsRole children {
+        multiplicity 1..*;
+    }
+    protected groups.PersistentIntersectionGroup playsRole intersections {
+        multiplicity *;
+    }
 }
 
-public class groups.DifferenceGroup extends groups.CompositionGroup {
+public class groups.PersistentDifferenceGroup extends groups.PersistentGroup {
 }
 
-public class groups.NegationGroup extends groups.Group {
-}
-
-relation NegationGroups {
-    protected Bennu playsRole negationRoot {
+relation DifferenceGroupFirst {
+    protected groups.PersistentGroup playsRole first {
         multiplicity 1..1;
     }
-    protected groups.NegationGroup playsRole negation {
-        multiplicity 0..*;
+    protected groups.PersistentDifferenceGroup playsRole differenceAtFirst {
+        multiplicity *;
     }
+}
+
+relation DifferenceGroupRest {
+    protected groups.PersistentGroup playsRole rest {
+        multiplicity 1..*;
+    }
+    protected groups.PersistentDifferenceGroup playsRole differenceAtRest {
+        multiplicity *;
+    }
+}
+
+public class groups.PersistentNegationGroup extends groups.PersistentGroup {
 }
 
 relation GroupNegationGroup {
-	protected groups.Group playsRole negated {
+	protected groups.PersistentGroup playsRole negated {
 		multiplicity 1..1;
 	}
-	protected groups.NegationGroup playsRole negation {
+	protected groups.PersistentNegationGroup playsRole negation {
 		multiplicity 0..1;
 	}
 }
 
-public class groups.CustomGroup extends groups.Group {
-}
-
-public class groups.DynamicGroup extends groups.Group {
+public class groups.PersistentDynamicGroup extends groups.PersistentGroup {
 	protected String name (REQUIRED);
 	protected DateTime created (REQUIRED);
 }
 
-relation DynamicGroups {
-    protected Bennu playsRole rootForDynamicGroup {
-        multiplicity 1..1;
-    }
-    protected groups.DynamicGroup playsRole dynamic {
+relation PersistentDynamicGroups {
+    protected groups.PersistentDynamicGroup playsRole dynamic {
         multiplicity 0..*;
+    }
+    protected Bennu playsRole rootForDynamicGroup {
+        multiplicity 0..1;
     }
 }
 
-relation DynamicGroupCreator {
-    protected groups.DynamicGroup playsRole createdDynamicGroup {
+relation PersistentDynamicGroupCreator {
+    protected groups.PersistentDynamicGroup playsRole createdDynamicGroup {
 		multiplicity *;
 	}
 	protected User playsRole creator {
@@ -192,20 +202,20 @@ relation DynamicGroupCreator {
 	}
 }
 
-relation DynamicGroupWrapper {
-	protected groups.DynamicGroup playsRole dynamicGroup {
+relation PersistentDynamicGroupWrapper {
+	protected groups.PersistentDynamicGroup playsRole dynamicGroup {
 		multiplicity *;
 	}
-	protected groups.Group playsRole group {
+	protected groups.PersistentGroup playsRole group {
 		multiplicity 1..1;
 	}
 }
 
 relation DynamicGroupHistoric {
-	protected groups.DynamicGroup playsRole previous {
+	protected groups.PersistentDynamicGroup playsRole previous {
 		multiplicity 0..1;
 	}
-	protected groups.DynamicGroup playsRole next {
+	protected groups.PersistentDynamicGroup playsRole next {
 		multiplicity 0..1;
 	}
 }

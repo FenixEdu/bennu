@@ -25,9 +25,8 @@ import javax.servlet.http.HttpSession;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
-import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
-import org.fenixedu.bennu.core.domain.groups.DynamicGroup;
-import org.fenixedu.bennu.core.domain.groups.UserGroup;
+import org.fenixedu.bennu.core.groups.DynamicGroup;
+import org.fenixedu.bennu.core.groups.UserGroup;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
@@ -110,12 +109,10 @@ public class Authenticate {
             }
             if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUserSet().isEmpty()) {
                 user = new User(username);
-                try {
-                    DynamicGroup.getInstance("managers");
-                    // Managers groups already initialized.
-                } catch (BennuCoreDomainException e) {
+                DynamicGroup managers = DynamicGroup.get("managers");
+                if (!managers.exists()) {
                     loggedUser.set(user);
-                    DynamicGroup.initialize("managers", UserGroup.getInstance(user));
+                    managers.changeGroup(UserGroup.of(user));
                     logger.info("Bootstrapped #managers group to user: " + user.getUsername());
                 }
                 return user;

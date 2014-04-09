@@ -11,8 +11,8 @@ import org.fenixedu.bennu.core.bootstrap.annotations.Field;
 import org.fenixedu.bennu.core.bootstrap.annotations.FieldType;
 import org.fenixedu.bennu.core.bootstrap.annotations.Section;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.DynamicGroup;
-import org.fenixedu.bennu.core.domain.groups.UserGroup;
+import org.fenixedu.bennu.core.groups.DynamicGroup;
+import org.fenixedu.bennu.core.groups.UserGroup;
 
 import com.google.common.base.Strings;
 
@@ -34,7 +34,7 @@ public class AdminUserBootstrapper {
         adminUser.changePassword(section.getAdminPassword());
         adminUser.setEmail(section.getAdminUserEmail());
 
-        DynamicGroup.initialize("managers", UserGroup.getInstance(adminUser));
+        DynamicGroup.get("managers").changeGroup(UserGroup.of(adminUser));
 
         return Collections.emptyList();
     }

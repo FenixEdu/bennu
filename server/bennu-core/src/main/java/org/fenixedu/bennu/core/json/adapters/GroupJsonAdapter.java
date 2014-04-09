@@ -1,7 +1,7 @@
 package org.fenixedu.bennu.core.json.adapters;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
-import org.fenixedu.bennu.core.domain.groups.Group;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.json.JsonAdapter;
 import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.security.Authenticate;
@@ -24,7 +24,7 @@ public class GroupJsonAdapter implements JsonAdapter<Group> {
     @Override
     public JsonElement view(Group group, JsonBuilder ctx) {
         JsonObject object = new JsonObject();
-        object.addProperty("expression", group.expression());
+        object.addProperty("expression", group.getExpression());
         object.addProperty("name", group.getPresentationName());
         object.addProperty("accessible", group.isMember(Authenticate.getUser()));
         return object;

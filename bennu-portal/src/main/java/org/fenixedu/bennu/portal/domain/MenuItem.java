@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.Group;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.commons.i18n.LocalizedString;
 
@@ -43,6 +43,14 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
             parent.addChild(this);
         }
         setFullPath(computeFullPath());
+    }
+
+    public Group getAccessGroup() {
+        return getGroup().toGroup();
+    }
+
+    public void setAccessGroup(Group group) {
+        setGroup(group.toPersistentGroup());
     }
 
     private String computeFullPath() {

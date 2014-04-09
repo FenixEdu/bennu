@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * field to be filled by the user.
  * 
  * Note that this annotation may only be applied to interfaces!
- *
+ * 
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

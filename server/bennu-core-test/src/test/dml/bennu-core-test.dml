@@ -1,0 +1,5 @@
+package org.fenixedu.bennu.core.example.domain;
+
+class groups.UsersCreatedAfterGroup extends .org.fenixedu.bennu.core.domain.groups.PersistentGroup {
+    DateTime date;
+}

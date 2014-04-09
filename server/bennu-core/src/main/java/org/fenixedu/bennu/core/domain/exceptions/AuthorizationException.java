@@ -40,10 +40,6 @@ public class AuthorizationException extends BennuCoreDomainException {
         return new AuthorizationException("error.bennu.core.unauthorized");
     }
 
-    public static AuthorizationException badAccessGroupConfiguration() {
-        return new AuthorizationException("error.bennu.core.badaccessgroupconfiguration");
-    }
-
     public static AuthorizationException applicationAlreadyBootstrapped() {
         return new AuthorizationException("error.bennu.core.application.already.bootstrapped");
     }

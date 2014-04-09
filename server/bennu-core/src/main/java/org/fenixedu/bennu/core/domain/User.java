@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Function;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 
@@ -76,6 +77,20 @@ public final class User extends User_Base implements Principal {
         }
 
     };
+
+    public static class UserToUsername implements Function<User, String> {
+        @Override
+        public String apply(User user) {
+            return user.getUsername();
+        }
+    }
+
+    public static class UsernameToUser implements Function<String, User> {
+        @Override
+        public User apply(String username) {
+            return User.findByUsername(username);
+        }
+    }
 
     private static UserPresentationStrategy strategy = defaultStrategy;
 
