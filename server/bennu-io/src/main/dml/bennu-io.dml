@@ -7,6 +7,8 @@ public class GenericFile {
 	public String displayName;
 	protected String contentType;
 	protected String contentKey;
+    protected String checksum;
+    protected String checksumAlgorithm;
 }
 
 public class FileRawData {

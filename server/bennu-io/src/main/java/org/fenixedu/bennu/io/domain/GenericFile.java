@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Strings;
+import com.google.common.hash.Hashing;
 
 /**
  * 
@@ -36,6 +37,8 @@ public abstract class GenericFile extends GenericFile_Base {
         setDisplayName(displayName);
         setFilename(filename);
         setContent(content);
+        setChecksum(Hashing.sha1().hashBytes(content).toString());
+        setChecksumAlgorithm("SHA");
     }
 
     @Override
@@ -54,6 +57,18 @@ public abstract class GenericFile extends GenericFile_Base {
     public String getContentType() {
         //FIXME: remove when the framework enables read-only slots
         return super.getContentType();
+    }
+
+    @Override
+    public String getChecksum() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getChecksum();
+    }
+
+    @Override
+    public String getChecksumAlgorithm() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getChecksumAlgorithm();
     }
 
     @Override
