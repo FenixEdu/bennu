@@ -33,7 +33,7 @@ public class FileStorage {
 	}	
 
 public class FileStorageConfiguration {
-	protected String fileType;
+	protected String fileType (REQUIRED);
 }
 
 public class FileSupport;
@@ -58,11 +58,11 @@ relation FileStorageFile {
 
 relation FileStorageConfigurationFileStorage {
 	public FileStorage playsRole storage {
-        multiplicity 0..1;
+        multiplicity 1..1;
 	}
-	protected FileStorageConfiguration playsRole configuration {
-		multiplicity *;
-	}
+    protected FileStorageConfiguration playsRole configuration {
+        multiplicity *;
+    }
 }
 
 relation GenericFiles {
@@ -90,6 +90,15 @@ relation FileStorages {
 	protected FileStorage playsRole fileStorage {
 		multiplicity *;
 	}
+}
+
+relation DefaultFileStorage {
+    protected FileSupport playsRole fileSupportAsDefault {
+        multiplicity 0..1;
+    }
+    public FileStorage playsRole defaultStorage {
+        multiplicity 1..1;
+    }
 }
 
 relation FileStorageConfigurations {

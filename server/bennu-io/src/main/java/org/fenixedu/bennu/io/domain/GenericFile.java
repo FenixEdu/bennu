@@ -126,7 +126,7 @@ public abstract class GenericFile extends GenericFile_Base {
     protected FileStorage getFileStorage() {
         final FileStorage fileStorage = FileStorageConfiguration.readFileStorageByFileType(getClass().getName());
         if (fileStorage == null) {
-            throw new RuntimeException("error.fileStorage.notDefinedForClassType");
+            return FileSupport.getInstance().getDefaultStorage();
         }
         return fileStorage;
     }
