@@ -3,38 +3,36 @@
 		<div class="col-lg-12">
 			<nav class="navbar navbar-default" style="margin-top: 10px; margin-bottom: 5px">
 				  <div class="collapse navbar-collapse">
-				  	{{^logged}}
+				  	{% if not logged %}
 					<form class="col-lg-6 navbar-form navbar-right">
 						<div class="form-group input-group-sm">
-							<input name="username" type="text" class="form-control" placeholder="{{#_i18n}}username{{/_i18n}}" />
+							<input name="username" type="text" class="form-control" placeholder="{{ 'username' | i18n }}" />
 						</div>
 						<div class="form-group input-group-sm">
-							<input name="password" type="password" class="form-control" placeholder="{{#_i18n}}password{{/_i18n}}" />
+							<input name="password" type="password" class="form-control" placeholder="{{ 'password' | i18n }}" />
 						</div>
 					</form>
-				 	{{/logged}}
-				 	{{#logged}}
+				 	{% else %}
 						<ul class="nav navbar-nav navbar-right">
 						  <li class="dropdown">
-						    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{#_i18n}}settings{{/_i18n}}<b class="caret"></b></a>
+						    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ 'settings' | i18n }}<b class="caret"></b></a>
 						    <ul class="dropdown-menu">
-						      {{#manager}}
-							  <li><a href="{{contextPath}}/bennu-admin">{{#_i18n}}admin{{/_i18n}}</a></li>
+						      {% if manager %}
+							  <li><a href="{{contextPath}}/bennu-admin">{{ 'admin' | i18n }}</a></li>
 						      <li class="divider"></li>
-   							  {{/manager}}
-							  {{#locales}}
-								{{#selected}}			
-									<li class="disabled" ><a href="#">{{#_i18n}}{{tag}}{{/_i18n}}</a></li>
-								{{/selected}}
-								{{^selected}}
-									<li><a class="lang" href="#" data-lang="{{tag}}">{{#_i18n}}{{tag}}{{/_i18n}}</a></li>
-								{{/selected}}
-							{{/locales}}
-						      <li><a href="#" id="logout">{{#_i18n}}logout{{/_i18n}}</a></li>
+   							  {% endif %}
+							  {% for locale in locales %}
+								{% if locale.selected %}			
+									<li class="disabled" ><a href="#">{{ locale.tag | i18n }}</a></li>
+								{% else %}
+									<li><a class="lang" href="#" data-lang="{{locale.tag}}">{{ locale.tag | i18n }}</a></li>
+								{% endif %}
+							  {% endfor %}
+						      <li><a href="#" id="logout">{{ 'logout' | i18n }}</a></li>
 						    </ul>
 						  </li>
 						</ul>
-					{{/logged}}
+					{% endif %}
 				</div>
 			</nav>
 		</div>
@@ -44,12 +42,12 @@
 		<div class="col-lg-12">
 			<div class="well well-sm">
 				<div class="media">
-				  <a class="pull-left" href="/{{contextPath}}">
-				    <img class="media-object" width="44px" height="44px" src="data:{{logoType}};base64,{{logo}}" alt="{{#_mls}}applicationTitle{{/_mls}}">
+				  <a class="pull-left" href="{{contextPath}}">
+				    <img class="media-object" width="44px" height="44px" src="data:{{logoType}};base64,{{logo}}" alt="{{ applicationTitle | mls }}">
 				  </a>
 				  <div class="media-body">
-				    <h4 class="media-heading">{{#_mls}}applicationTitle{{/_mls}}</h4>
-				    {{#_mls}}applicationSubTitle{{/_mls}}
+				    <h4 class="media-heading">{{ applicationTitle | mls }}</h4>
+				    {{ applicationSubTitle | mls }}
 				  </div>
 				</div>
 			</div>
@@ -57,35 +55,35 @@
 		</div>
 	</div>
 
-	{{#hasMenuItems}}
+	{% if hasMenuItems %}
 	<div class="row">
 		<div class="col-lg-12">
 			<div id="nav">
 				<ul class="nav nav-tabs">
-					{{#menu}}
-					<li class="menu {{#selected}}active{{/selected}}" menu="{{id}}">
-						<a href="{{contextPath}}/{{path}}" alt="{{#_mls}}description{{/_mls}}"><span>{{#_mls}}title{{/_mls}}</span></a>
+					{% for item in menu %}
+					<li class="menu {% if item.selected %}active{% endif %}" menu="{{item.id}}">
+						<a href="{{contextPath}}{{item.fullPath}}" alt="{{ item.description | mls }}"><span>{{ item.title | mls }}</span></a>
 					</li>
-					{{/menu}}
+					{% endfor %}
 				</ul>
 			</div>
 		</div>
 	</div>
-	{{/hasMenuItems}}
+	{% endif %}
 
 	
 	<div class="row">
 		<div class="col-lg-12">
 			<div id="subnav">
-			{{#menu}}
-				<ul class="nav nav-pills {{^selected}}hide{{/selected}}" menu="{{id}}">
-					{{#menu}}
-					<li class="submenu {{#selected}}active{{/selected}}">
-						<a href="{{contextPath}}/{{path}}" alt="{{#_mls}}description{{/_mls}}"><span>{{#_mls}}title{{/_mls}}</span></a>
+			{% for item in menu %}
+				<ul class="nav nav-pills {% if not item.selected %}hide{% endif %}" menu="{{item.id}}">
+					{% for child in item.menu %}
+					<li class="submenu {% if child.selected %}active{% endif %}">
+						<a href="{{contextPath}}{{child.fullPath}}" alt="{{ child.description | mls }}"><span>{{ child.title | mls }}</span></a>
 					</li>
-					{{/menu}}
+					{% endfor %}
 				</ul>
-			{{/menu}}
+			{% endfor %}
 			</div>
 		</div>
 	</div>
@@ -96,7 +94,7 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-12" id="footer">
-			<p>{{#_mls}}applicationCopyright{{/_mls}}</p>
+			<p>{{ applicationCopyright | mls }}</p>
 		</div>
 	</div>
 	

@@ -22,6 +22,9 @@
                 <directory>src/main/webapp</directory>
                 <targetPath>META-INF/resources</targetPath>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
         </resources>
         <plugins>
             <plugin>

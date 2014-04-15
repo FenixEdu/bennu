@@ -2,7 +2,7 @@
 "title" :  {"en-GB" : "IO Management", "pt-PT": "Gestão de Ficheiros"},
 "description" : {"en-GB" : "Manage file repositories and file type associations", "pt-PT": "Gestão de repositórios e associação de tipos de ficheiros"},
 "accessExpression" : "#managers",
-"path" : "bennu-io-ui/",
+"path" : "bennu-io-ui",
 "functionalities" : 
 		[
 			{ 

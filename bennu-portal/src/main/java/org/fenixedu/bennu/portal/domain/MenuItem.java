@@ -1,108 +1,170 @@
 package org.fenixedu.bennu.portal.domain;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.bennu.portal.AppServer;
 import org.fenixedu.commons.i18n.LocalizedString;
 
 import pt.ist.fenixframework.Atomic;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
+/**
+ * Base class for items that are presented in an application's menu.
+ * 
+ * {@code MenuItem}s are either a {@link MenuContainer}, aggregating other items or a {@link MenuFunctionality}, representing a
+ * concrete entry in the menu.
+ * 
+ * Note that a {@link MenuItem} is immutable, meaning that once it is installed in the menu, it is not possible to modify any of
+ * its properties. If you desire to do so, {@code delete} the item and create a new one with the new values.
+ * 
+ * {@code MenuItem}s are {@link Comparable} according to their order in the menu.
+ * 
+ * @see MenuContainer
+ * @see MenuFunctionality
+ * 
+ */
+public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
 
-public class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
-
-    public MenuItem() {
+    protected MenuItem() {
         super();
         setOrd(1);
-        setDescription(new LocalizedString());
     }
 
-    @Override
-    public void addChild(MenuItem child) {
-        addChild(child, getNextOrder());
+    protected final void init(MenuContainer parent, boolean visible, String accessGroup, LocalizedString title,
+            LocalizedString description, String path) {
+        setVisible(visible);
+        setAccessGroup(Group.parse(accessGroup));
+        setDescription(description);
+        setTitle(title);
+        setPath(path);
+        if (parent != null) {
+            parent.addChild(this);
+        }
+        setFullPath(computeFullPath());
     }
 
-    public void addChild(MenuItem child, Integer order) {
-        child.setOrd(order);
-        super.addChild(child);
+    private String computeFullPath() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("/");
+        builder.append(this.getPath());
+        MenuContainer current = getParent();
+        while (current != null && current.getConfiguration() == null) {
+            builder.insert(0, current.getPath());
+            builder.insert(0, "/");
+            current = current.getParent();
+        }
+        return builder.toString();
     }
 
-    private Integer getNextOrder() {
-        return getChildSet().size() + 1;
-    }
-
-    public Set<MenuItem> getOrderedChild() {
-        return Collections.unmodifiableSet(new TreeSet<>(getChildSet()));
-    }
-
-    public Set<MenuItem> getUserMenu() {
-        return FluentIterable.from(getOrderedChild()).filter(new Predicate<MenuItem>() {
-
-            @Override
-            public boolean apply(MenuItem menu) {
-                return menu.isAvailable(Authenticate.getUser());
-            }
-        }).toSet();
-    }
-
+    /**
+     * Compares this {@link MenuItem} with another, taking into account the order of both items.
+     * 
+     * Note that it only makes sense to invoke this method for items at the same level, as there are no ordering guarantees across
+     * multiple levels.
+     */
     @Override
     public int compareTo(MenuItem o) {
-        return getOrd().compareTo(o.getOrd());
+        int ord = getOrd().compareTo(o.getOrd());
+        return ord == 0 ? getTitle().compareTo(o.getTitle()) : ord;
     }
 
+    /**
+     * Deletes this item, removing it from the menu.
+     */
     @Atomic
     public void delete() {
         setParent(null);
-        setConfiguration(null);
-        for (MenuItem child : getChildSet()) {
-            child.delete();
-        }
+        setAccessGroup(null);
         deleteDomainObject();
     }
 
-    @Override
-    public LocalizedString getDescription() {
-        final LocalizedString description = super.getDescription();
-        if (description == null) {
-            return AppServer.getDescription(getPath());
-        }
-        return description;
+    /**
+     * Determines whether this {@link MenuItem} and all its parents are available for the given {@link User}.
+     * 
+     * @param user
+     *            The user to verify
+     * @return
+     *         Whether the given user can access this item
+     */
+    public boolean isAvailable(User user) {
+        return getAccessGroup().isMember(user) && getParent().isAvailable(user);
+    }
+
+    /**
+     * Determines whether this {@link MenuItem} and all its parents are available for the currently logged user.
+     * This method is a shorthand for <code>isAvailable(Authenticate.getUser())</code>.
+     * 
+     * @return
+     *         Whether the currently logged user can access this item
+     */
+    public boolean isAvailableForCurrentUser() {
+        return isAvailable(Authenticate.getUser());
+    }
+
+    /*
+     * Returns whether this item is available for the current user.
+     * Implementation Node: This method ONLY checks the current node, not the full chain!
+     */
+    protected boolean isItemAvailableForCurrentUser() {
+        return getAccessGroup().isMember(Authenticate.getUser());
+    }
+
+    /**
+     * Returns whether the Item should be visible when rendering a menu.
+     */
+    public boolean isVisible() {
+        return getVisible();
     }
 
     @Override
-    public LocalizedString getTitle() {
-        final LocalizedString title = super.getTitle();
-        if (title == null) {
-            return AppServer.getTitle(getPath());
-        }
-        return title;
+    public MenuContainer getParent() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getParent();
     }
 
     @Override
-    public void setTitle(LocalizedString title) {
-        if (!isFunctionalityLink()) {
-            super.setTitle(title);
-        }
+    public String getPath() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getPath();
     }
 
     @Override
-    public void setDescription(LocalizedString description) {
-        if (!isFunctionalityLink()) {
-            super.setDescription(description);
+    public String getFullPath() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getFullPath();
+    }
+
+    public boolean isMenuContainer() {
+        return this instanceof MenuContainer;
+    }
+
+    public boolean isMenuFunctionality() {
+        return this instanceof MenuFunctionality;
+    }
+
+    public MenuContainer getAsMenuContainer() {
+        if (isMenuContainer()) {
+            return (MenuContainer) this;
         }
+        throw new IllegalStateException("Not a MenuContainer");
     }
 
-    public Boolean isFunctionalityLink() {
-        return AppServer.hasFunctionality(getPath());
+    public MenuFunctionality getAsMenuFunctionality() {
+        if (isMenuFunctionality()) {
+            return (MenuFunctionality) this;
+        }
+        throw new IllegalStateException("Not a MenuFunctionality");
     }
 
-    public Boolean isAvailable(User user) {
-        return Group.parse(getAccessExpression()).isMember(user);
+    public List<MenuItem> getPathFromRoot() {
+        List<MenuItem> result = new ArrayList<MenuItem>();
+        MenuItem current = this;
+        while (current.getParent() != null) {
+            result.add(0, current);
+            current = current.getParent();
+        }
+        return result;
     }
 }

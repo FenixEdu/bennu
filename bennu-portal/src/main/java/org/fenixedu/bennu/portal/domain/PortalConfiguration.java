@@ -15,7 +15,15 @@ import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.common.io.ByteStreams;
 
+/**
+ * A {@link PortalConfiguration} contains the configuration for the installed application, as well as the entry point for the
+ * installed functionality tree.
+ * 
+ * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
+ * 
+ */
 public final class PortalConfiguration extends PortalConfiguration_Base {
+
     private static final Logger logger = LoggerFactory.getLogger(PortalConfiguration.class);
 
     private PortalConfiguration() {
@@ -37,14 +45,7 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
                 logger.error("Default logo could not be read from: img/bennu-logo.png");
             }
         }
-        setMenu(new MenuItem());
-    }
-
-    public static PortalConfiguration getInstance() {
-        if (Bennu.getInstance().getConfiguration() == null) {
-            return initialize();
-        }
-        return Bennu.getInstance().getConfiguration();
+        new MenuContainer(this);
     }
 
     @Atomic(mode = TxMode.WRITE)
@@ -55,16 +56,29 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
         return Bennu.getInstance().getConfiguration();
     }
 
+    /**
+     * Returns the singleton instance of {@link PortalConfiguration} for this application.
+     */
+    public static PortalConfiguration getInstance() {
+        if (Bennu.getInstance().getConfiguration() == null) {
+            return initialize();
+        }
+        return Bennu.getInstance().getConfiguration();
+    }
+
     @Override
     public String getSupportEmailAddress() {
         return super.getSupportEmailAddress() != null ? super.getSupportEmailAddress() : CoreConfiguration.getConfiguration()
                 .defaultSupportEmailAddress();
     }
 
-    @Atomic(mode = TxMode.WRITE)
-    public void delete() {
-        getMenu().delete();
-        setRoot(null);
-        deleteDomainObject();
+    /**
+     * Returns the root {@link MenuContainer} of this application.
+     */
+    @Override
+    public MenuContainer getMenu() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getMenu();
     }
+
 }
