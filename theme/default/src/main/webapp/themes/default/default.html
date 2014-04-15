@@ -31,6 +31,10 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<nav class="navbar navbar-default" style="margin-top: 10px; margin-bottom: 5px">
+					<img class="app-logo" width="58px" heigth="49px" src="data:{{config.logoType}};base64,{{config.logo | base64}}" alt="{{config.applicationTitle.content}}">
+					<div class="navbar-brand">
+						<h4 class="media-heading">{{config.applicationTitle.content}} <span class="small">{{config.applicationSubTitle.content}}</span></h4>
+					</div>
 					  <div class="collapse navbar-collapse">
 					  	{% if loggedUser is null %}
 						<form class="col-lg-6 navbar-form navbar-right">
@@ -64,26 +68,6 @@
 		</div>
 		{% endblock %}
 
-		{% block infobar %}
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="well well-sm">
-					<div class="media">
-					  <a class="pull-left" href="{{contextPath}}">
-					    <img class="media-object" width="44px" height="44px" 
-					    	 src="data:{{config.logoType}};base64,{{config.logo | base64}}" alt="{{config.applicationTitle.content}}">
-					  </a>
-					  <div class="media-body">
-					    <h4 class="media-heading">{{config.applicationTitle.content}}</h4>
-					    {{config.applicationSubTitle.content}}
-					  </div>
-					</div>
-				</div>
-
-			</div>
-		</div>
-		{% endblock %}
-
 		{% if not config.menu.userMenu is empty %}
 		<div class="row">
 			<div class="col-lg-12">
@@ -105,7 +89,7 @@
 				<div id="subnav">
 					<ul class="nav nav-pills" menu="{{id}}">
 						{% for child in selectedTopLevel.userMenu %}
-						<li class="submenu {% if child is in(pathFromRoot) %}active{% endif %}">
+						<li class="submenu">
 							<a href="{{contextPath}}{{child.fullPath}}" alt="{{ child.description.content }}"><span>{{ child.title.content }}</span></a>
 						</li>
 						{% endfor %}
@@ -116,9 +100,13 @@
 
 		<div class="row">
 			<div class="col-lg-12" id="content">
-				{{body}}
+				<div>
+					{{body}}
+				</div>
 			</div>
 		</div>
+
+		<hr />
 
 		{% block footer %}
 		<div class="row">
