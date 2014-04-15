@@ -11,6 +11,8 @@ public class GenericFile {
     protected String checksumAlgorithm;
 }
 
+public class GroupBasedFile extends GenericFile;
+
 public class FileRawData {
 	protected String contentKey;
 	protected bytearray content;
@@ -72,6 +74,15 @@ relation GenericFiles {
 	protected GenericFile playsRole file {
 		multiplicity *;
 	}
+}
+
+relation GroupBasedFilesGroup {
+    protected GroupBasedFile playsRole file {
+        multiplicity *;
+    }
+    protected .org.fenixedu.bennu.core.domain.groups.PersistentGroup playsRole group {
+        multiplicity 1..1;
+    }
 }
 
 relation FileRawDatas {

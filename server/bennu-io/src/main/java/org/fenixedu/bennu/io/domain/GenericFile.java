@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.commons.StringNormalizer;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -24,7 +26,7 @@ import com.google.common.hash.Hashing;
 public abstract class GenericFile extends GenericFile_Base {
     private static final Logger logger = LoggerFactory.getLogger(GenericFile.class);
 
-    public GenericFile() {
+    protected GenericFile() {
         super();
         setFileSupport(FileSupport.getInstance());
         setCreationDate(new DateTime());
@@ -40,6 +42,12 @@ public abstract class GenericFile extends GenericFile_Base {
         setChecksum(Hashing.sha1().hashBytes(content).toString());
         setChecksumAlgorithm("SHA");
     }
+
+    public static GenericFile create(String displayName, String filename, byte[] content, Group accessGroup) {
+        return new GroupBasedFile(displayName, filename, content, accessGroup);
+    }
+
+    public abstract boolean isAccessible(User user);
 
     @Override
     public DateTime getCreationDate() {
