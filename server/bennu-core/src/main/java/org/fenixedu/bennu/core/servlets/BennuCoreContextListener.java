@@ -20,6 +20,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import org.fenixedu.bennu.core.bootstrap.BootstrapperRegistry;
+
 import pt.ist.fenixframework.FenixFramework;
 
 /**
@@ -35,6 +37,7 @@ public class BennuCoreContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
+        BootstrapperRegistry.registerBootstrapFilter(event.getServletContext());
     }
 
     @Override
