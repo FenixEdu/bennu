@@ -136,19 +136,13 @@ bennuAdmin.controller('DomainBrowserController', [ '$scope', '$http', '$routePar
   }
   $scope.oid = $routeParams.oid;
   $scope.reload = function() {
-    $scope.data = null;
-    $http.get('../api/bennu-core/domain-browser/' + $scope.oid).success(function (data) {
-      $scope.data = data;
-    });
-  }
-  $scope.goTo = function(value) {
-    $(".modal-backdrop").remove(); $("body").removeClass('modal-open'); $location.url('domain-browser/' + value);
+    $location.url('domain-browser/'+$scope.oid);
   }
   $scope.exploreRelation = function(name) {
-    $scope.relation = name; $scope.relations = null; $scope.currentPage = 0;
-    $http.get('../api/bennu-core/domain-browser/' + $routeParams.oid + '/' + name).success(function (data) {
-      $scope.relations = chunk(data, 20); $scope.totalEntries = data.length;
-    });
+    $scope.relation = name; $scope.relations = $scope.relError = null; $scope.currentPage = 0;
+    $http.get('../api/bennu-core/domain-browser/' + $scope.oid + '/' + name).success(function (data) {
+      $scope.relations = chunk(data, 15); $scope.totalEntries = data.length;
+    }).error(function (data, code) { $scope.relError = code; });
   }
   $scope.nextPage = function() {
     if($scope.currentPage < $scope.relations.length - 1)
@@ -158,7 +152,11 @@ bennuAdmin.controller('DomainBrowserController', [ '$scope', '$http', '$routePar
     if($scope.currentPage > 0)
       $scope.currentPage--;
   }
-  $scope.reload();
+  $(".modal-backdrop").remove(); $("body").removeClass('modal-open'); $scope.error = null;
+  $http.get('../api/bennu-core/domain-browser/' + $scope.oid).success(function (data) {
+    document.title = data.oid + " · Domain Browser";
+    $scope.data = data;
+  }).error(function (data, code) { $scope.error = code; $scope.id = $scope.oid; });
 }]);
 
 bennuAdmin.filter('capitalize', function() {

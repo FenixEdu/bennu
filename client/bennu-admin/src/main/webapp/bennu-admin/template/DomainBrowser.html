@@ -7,21 +7,20 @@ kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial
 <h2>Domain Browser</h2>
 
 <div class="row">
-	<div class="col-lg-9">
+	<div class="col-sm-10">
 		<h3>{{data.type}} <span class="label label-primary">{{data.oid}}</span>
 		<span class="label" ng-class="{'label-success': mod == 'PUBLIC', 'label-warning': mod == 'PROTECTED'}" ng-repeat="mod in data.modifiers">
 			{{mod | capitalize}}
 		</span>
 		</h3>
 	</div>
-	<div class="col-lg-3" style="margin-top: 20px">
-		<button class="btn btn-success btn-sm pull-right" ng-click="reload()">Load</button>
-		<input type="text" class="pull-right" ng-model="oid">
+	<div class="col-sm-2" style="margin-top: 20px">
+		<input type="text" class="pull-right form-control text-center input-sm" ng-model="oid" ng-keyup="$event.keyCode == 13 ? reload() : null">
 	</div>
 
 </div>
 
-<table class="table">
+<table class="table" ng-if="data">
 	<thead>
 		<th>Name</th>
 		<th>Value</th>
@@ -46,7 +45,7 @@ kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial
 			<td>{{slot.name}}</td>
 			<td>
 				<kbd ng-if="!slot.value" style="color: #999">null</kbd>
-				<a href="#/domain-browser/{{slot.value}}" ng-if="slot.value" ng-click="goTo(slot.value)">
+				<a href="#/domain-browser/{{slot.value}}" ng-if="slot.value">
 					{{slot.value}}
 				</a>
 			</td>
@@ -59,6 +58,16 @@ kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial
 		</tr>
 	</tbody>
 </table>
+
+<div class="col-sm-offset-3 col-sm-6" ng-if="error">
+	<div class="alert alert-danger">
+		<h4>An error ocurred</h4>
+		<p>The server returned an error loading object <kbd>{{id}}</kbd>.</p>
+		<p class="text-right">
+			Status code: {{error}}
+		</p>
+	</div>
+</div>
 
 <div class="row" ng-if="data.relationSets">
 	<div class="col-lg-6">
@@ -91,8 +100,12 @@ kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial
 				<h2 class="modal-title">{{data.oid}}'s {{relation}}</h2>
 			</div>
 			<div class="modal-body">
-				<div ng-if="!relations">
-					Loading...
+				<div ng-if="!relations && !relError">
+					<h5>Please wait while the satellite moves into position...</h5>
+				</div>
+				<div ng-if="relError" class="alert alert-danger">
+					<h4 class="text-center">An error ocurred loading the relation</h4>
+					<p class="text-right">Status code: {{relError}}</p>
 				</div>
 				<table class="table" ng-if="relations != null">
 					<span ng-if="relations != null" class="pull-right">{{totalEntries}} entries</span>
@@ -101,7 +114,7 @@ kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial
 						<th>Type</th>
 					</thead>
 					<tr ng-repeat="obj in relations[currentPage]">
-						<td><a href="#/domain-browser/{{obj.oid}}" ng-click="goTo(obj.oid)" data-dismiss="modal">{{obj.oid}}</a></td>
+						<td><a href="#/domain-browser/{{obj.oid}}">{{obj.oid}}</a></td>
 						<td>{{obj.type}}</td>
 					</tr>
 				</table>
