@@ -51,6 +51,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
+import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.scheduler.log.CustomExecutionLog;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -196,9 +197,11 @@ public class ClassBean implements Serializable {
 
         private final DateTime uploadTime = new DateTime();
 
-        private Writer out = new StringWriter();
+        private final Writer out = new StringWriter();
 
         private CustomTask task;
+
+        private final String username = Authenticate.isLogged() ? Authenticate.getUser().getUsername() : null;
 
         public Executer() {
             runningExecuters.add(this);
@@ -268,6 +271,7 @@ public class ClassBean implements Serializable {
                         (Class<? extends CustomTask>) Class.forName(getClassName(), true, urlClassLoader);
                 task = clazz.newInstance();
                 task.<CustomExecutionLog> getExecutionLog().setJavaCode(contents);
+                task.<CustomExecutionLog> getExecutionLog().setUsername(username);
                 task.<CustomExecutionLog> getExecutionLog().start();
                 task.run();
             }

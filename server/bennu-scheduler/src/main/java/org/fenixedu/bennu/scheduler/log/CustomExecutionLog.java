@@ -6,6 +6,7 @@ public class CustomExecutionLog extends ExecutionLog {
 
     public final static String CUSTOMLOG_JSON_FILENAME = "customExecutionLog.json";
     private String javaCode;
+    private String username;
 
     public CustomExecutionLog(String taskName) {
         super(taskName);
@@ -17,6 +18,14 @@ public class CustomExecutionLog extends ExecutionLog {
 
     public String getJavaCode() {
         return javaCode;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -33,6 +42,7 @@ public class CustomExecutionLog extends ExecutionLog {
     public void end() {
         /* There is no need to persist javaCode again since it is already in the file when start runs */
         setJavaCode(null);
+        setUsername(null);
         super.end();
     }
 
