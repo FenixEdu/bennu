@@ -102,6 +102,12 @@ bennuAdmin.controller('SystemInfoController', [ '$scope', '$http', function ($sc
       $scope.threads = data;
     });
   }
+  $scope.healthcheck = function() {
+    $http.get('../api/bennu-core/system/healthcheck').success(function (data) {
+      $scope.healthchecks = data; $scope.currentCheck = null;
+    });
+  }
+  $scope.setCheck = function(check) { $scope.currentCheck = check; };
   $scope.getLabelClass = function(threadState) {
     if (threadState == 'RUNNABLE') {
         return "label-success";

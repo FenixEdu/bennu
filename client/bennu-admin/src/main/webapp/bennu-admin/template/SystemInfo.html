@@ -106,6 +106,7 @@
                 <br />
                 <button class="btn btn-success" ng-click="reload()">Reload</button>
                 <button class="btn btn-primary" ng-click="threadDump()">Thread Dump</button>
+                <button class="btn btn-info" ng-click="healthcheck()">Healthchecks</button>
             </div>
             <div class="row">
             <div class="col-lg-4">
@@ -174,6 +175,40 @@
                     </div>
                 </div>
             </div>
+
+            <div class="container" ng-if="healthchecks">
+                <h3>Healthchecks</h3>
+                <div class="col-lg-2">
+                    <span ng-repeat="check in healthchecks">
+                        <a href="" ng-click="setCheck(check)" class="label" ng-class="{'label-success': check.result.healthy, 'label-danger': !check.result.healthy}">{{check.name}}</a>
+                    </span>
+                </div>
+                <div class="col-lg-10" ng-if="currentCheck">
+                    <div class="panel" ng-class="{'panel-success': currentCheck.result.healthy, 'panel-danger': !currentCheck.result.healthy}">
+                        <div class="panel-heading">
+                            {{currentCheck.name}}
+                        </div>
+                        <div class="panel-body">
+                            <span ng-if="currentCheck.result.healthy">
+                                OK
+                            </span>
+                            <span ng-if="!currentCheck.result.healthy">
+                                <h5>Message: </h5>
+                                {{currentCheck.result.message}}
+                                <pre ng-if="currentCheck.result.error" style="overflow-x: scroll">{{currentCheck.result.error}}</pre>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+pre {
+  overflow: auto;
+  word-wrap: normal;
+  white-space: pre;
+}
+</style>

@@ -28,11 +28,14 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.jar.JarFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -182,6 +185,29 @@ public class SystemResource extends BennuRestResource {
         json.addProperty("totalThreads", total);
         json.add("threads", array);
         return Response.ok(toJson(json)).build();
+    }
+
+    @GET
+    @Path("healthcheck")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response healthChecks() {
+        accessControl("#managers");
+        JsonArray json = new JsonArray();
+
+        for (Healthcheck check : healthchecks) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("name", check.getName());
+            obj.add("result", check.execute().toJson());
+            json.add(obj);
+        }
+
+        return Response.ok(toJson(json)).build();
+    }
+
+    private static final Collection<Healthcheck> healthchecks = new ConcurrentLinkedQueue<>();
+
+    public static void registerHealthcheck(Healthcheck healthcheck) {
+        healthchecks.add(Objects.requireNonNull(healthcheck));
     }
 
 }
