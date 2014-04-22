@@ -30,6 +30,7 @@
 		dataType: "json",
 		success: function(hostJson, status, response) {
 			var theme_base = contextPath + "/themes/" + hostJson.theme;
+			hostJson.themePath = theme_base;
 			var theme_url = theme_base + "/layout.html";
 			var styles_url = theme_base + "/css/style.css";
 			var json_handler_url = theme_base + "/js/jsonHandler.js";
