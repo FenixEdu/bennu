@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import org.fenixedu.bennu.core.bootstrap.BootstrapError;
 import org.fenixedu.bennu.core.bootstrap.BootstrapperRegistry;
 import org.fenixedu.bennu.core.bootstrap.SectionsBootstrapper;
+import org.fenixedu.bennu.core.bootstrap.SectionsBootstrapper.BootstrapException;
 import org.fenixedu.bennu.core.bootstrap.annotations.Bootstrapper;
 import org.fenixedu.bennu.core.bootstrap.annotations.Field;
 import org.fenixedu.bennu.core.bootstrap.annotations.Section;
@@ -38,14 +39,13 @@ public class BootstrapResource extends BennuRestResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(final String json) throws Exception {
+    public Response create(final String json) throws Throwable {
         checkApplicationNotBootstrapped();
-        JsonObject jsonObject = parse(json).getAsJsonObject();
-        Collection<BootstrapError> errors = SectionsBootstrapper.bootstrapAll(jsonObject);
-        if (errors.isEmpty()) {
+        try {
+            SectionsBootstrapper.bootstrapAll(parse(json).getAsJsonObject());
             return Response.ok().build();
-        } else {
-            return Response.status(412).entity(toJson(createErrors(errors))).build();
+        } catch (BootstrapException e) {
+            return Response.status(412).entity(toJson(createErrors(e.getErrors()))).build();
         }
     }
 

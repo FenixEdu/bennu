@@ -23,11 +23,11 @@ public class AdminUserBootstrapper {
     public static List<BootstrapError> bootstrapAdminUser(AdminUserSection section) {
         if (Strings.isNullOrEmpty(section.getAdminPassword())) {
             return Collections.singletonList(new BootstrapError(AdminUserSection.class, "getAdminPassword",
-                    "bootstrapper.error.emptyPassword", "resources.ApplicationResources"));
+                    "bootstrapper.error.emptyPassword", "resources.BennuResources"));
         }
         if (!Objects.equals(section.getAdminPassword(), section.getAdminPasswordRetyped())) {
             return Collections.singletonList(new BootstrapError(AdminUserSection.class, "getAdminPasswordRetyped",
-                    "bootstrapper.error.password", "resources.ApplicationResources"));
+                    "bootstrapper.error.password", "resources.BennuResources"));
         }
 
         User adminUser = new User(section.getAdminUsername());

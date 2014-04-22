@@ -12,12 +12,18 @@ angular.module('bootstrapModule', [])
 		$scope.submitWizard = function() {
 			clearErrors();
 			if(validateCurrentStep()) {
+				$scope.submitting = true;
 				$http.post(ctxPath + '/api/bennu-core/bootstrap', allFields()).
 					success(function(data, status, headers, config) {
 						window.location = ctxPath;
 					}).
 					error(function(data, status, headers, config) {
-						showErrors(data);
+						if(status == 412) {
+							showErrors(data);
+							$scope.submitting = false;
+						} else {
+							$scope.exception = data;
+						}
 					});
 			}
 		};
@@ -82,6 +88,10 @@ angular.module('bootstrapModule', [])
 				}
 			}
 		};
+
+		$scope.advance = function() {
+			$scope.lastBootstrapper() ? $scope.submitWizard() : $scope.nextStep();
+		}
 
 		$scope.previousStep = function() {
 			if($scope.currentSectionNumber > 0) {

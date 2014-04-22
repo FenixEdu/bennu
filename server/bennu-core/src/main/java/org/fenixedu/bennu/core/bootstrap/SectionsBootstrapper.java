@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.core.bootstrap;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,19 +22,25 @@ public class SectionsBootstrapper {
      * @param json
      *            the json that for each declared {@link Field} maps its key on its value.
      * 
-     * @return all the errors that occurred on the bootstrap process
+     * @throws BootstrapException
+     *             If errors ocurred during the bootstrap
      */
     @Atomic(mode = TxMode.WRITE)
-    public static Collection<BootstrapError> bootstrapAll(JsonObject json) throws Exception {
-        List<BootstrapError> errors = new ArrayList<>();
+    public static void bootstrapAll(JsonObject json) throws Throwable {
         Class<?>[] sections = BootstrapperRegistry.getSections().toArray(new Class<?>[0]);
         Object superSection = SectionInvocationHandler.newInstance(json, sections);
         for (Method method : BootstrapperRegistry.getBootstrapMethods()) {
             Object[] args = new Object[method.getParameterTypes().length];
             Arrays.fill(args, superSection);
-            errors.addAll(invokeIt(method, args));
+            try {
+                List<BootstrapError> errors = invokeIt(method, args);
+                if (!errors.isEmpty()) {
+                    throw new BootstrapException(errors);
+                }
+            } catch (InvocationTargetException e) {
+                throw e.getCause();
+            }
         }
-        return errors;
     }
 
     private static List<BootstrapError> invokeIt(Method method, Object[] args) throws Exception {
@@ -52,6 +59,24 @@ public class SectionsBootstrapper {
         }
 
         return errors;
+    }
+
+    /*
+     * This exception is thrown to indicate the Fenix Framework that it should abort the transaction.
+     */
+    public static class BootstrapException extends Exception {
+
+        private static final long serialVersionUID = -5494716182369251565L;
+        private final List<BootstrapError> errors;
+
+        public BootstrapException(List<BootstrapError> errors) {
+            this.errors = errors;
+        }
+
+        public List<BootstrapError> getErrors() {
+            return errors;
+        }
+
     }
 
 }

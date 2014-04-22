@@ -47,7 +47,7 @@
 			</form>
 		</div>
 
-		<form ng-submit="submitWizard()" novalidate class="form-horizontal" role="form"  ng-show="locale" ng-repeat="bootstrapper in bootstrappers">	
+		<form ng-submit="submitWizard()" novalidate class="form-horizontal" role="form"  ng-show="locale && !submitting" ng-repeat="bootstrapper in bootstrappers">
 			<ng-form ng-repeat="section in bootstrapper.sections">
 				<section class="wizardSection" ng-show="getCurrentStep() == section">
 					<div class="row">
@@ -77,7 +77,8 @@
 								<div class="col-sm-9">
 									<input name="input" class="form-control" type="{{field.fieldType}}" 
 										placeholder="{{field.hint[locale.key]}}" ng-required="{{field.isMandatory}}" 
-										ng-show="{{field.validValues.length == 0}}" ng-model="field.value" />
+										ng-show="{{field.validValues.length == 0}}" ng-model="field.value"
+										ng-keyup="$event.keyCode == 13 ? advance() : null" />
 
 									<select name="input" class="form-control" ng-required="{{field.isMandatory}}" 
 										ng-show="{{field.validValues > 0}}" ng-model="field.value" 
@@ -94,10 +95,10 @@
 
 					<ul class="pager">
 						<li class="previous" ng-show="$first && firstBootstrapper()">
-							<a href="#" ng-click="showInitialConfig()">Previous</a>
+							<a href="#" ng-click="showInitialConfig()" tabindex="-99">Previous</a>
 						</li>
 						<li class="previous" ng-hide="$first && firstBootstrapper()">
-							<a href="#" ng-click="previousStep()">Previous</a>
+							<a href="#" ng-click="previousStep()" tabindex="-99">Previous</a>
 						</li>
 						<li class="next" ng-hide="$last && lastBootstrapper()">
 							<a href="#" ng-click="nextStep()">Next</a>
@@ -109,6 +110,31 @@
 				</section>
 			</ng-form>
 		</form>
+
+		<div ng-if="submitting">
+			<div class="row">
+				<div class="col-lg-10 col-sm-12">
+					<h1>Bootstrap</h1>
+				</div>
+				<div class="col-lg-2">
+					<h1><img src="${pageContext.request.contextPath}/img/logo_bennu.png" alt="FenixEdu Logo" width="80px" class="pull-right" /></h1>
+				</div>
+				<hr />
+			</div>
+			<fieldset>
+				<legend>Finish</legend>
+
+				<h4 ng-if="!exception" class="text-center">Configuring your installation, please wait...</h4>
+
+				<div ng-if="exception">
+					<h4 ng-click="showException = !showException" class="text-center">An error ocurred, could not configure your installation :(</h4>
+					<pre ng-if="showException">{{exception.stacktrace}}</pre>
+				</div>
+			</fieldset>
+
+			<ul class="pager">
+			</ul>
+		</div>
 	</div>
 </div>
 
