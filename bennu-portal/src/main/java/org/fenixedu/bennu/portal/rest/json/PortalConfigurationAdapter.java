@@ -37,6 +37,10 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
             object.addProperty("logo", BaseEncoding.base64().encode(configuration.getLogo()));
             object.addProperty("logoType", new String(configuration.getLogoType()));
         }
+        if (configuration.getFavicon() != null) {
+            object.addProperty("favicon", BaseEncoding.base64().encode(configuration.getFavicon()));
+            object.addProperty("faviconType", new String(configuration.getLogoType()));
+        }
         JsonArray themes = new JsonArray();
         for (String theme : PortalInitializer.getThemes()) {
             themes.add(new JsonPrimitive(theme));
@@ -75,6 +79,12 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         }
         if (object.has("logoType")) {
             configuration.setLogoType(object.get("logoType").getAsString());
+        }
+        if (object.has("favicon")) {
+            configuration.setFavicon(BaseEncoding.base64().decode(object.get("favicon").getAsString()));
+        }
+        if (object.has("faviconType")) {
+            configuration.setFaviconType(object.get("faviconType").getAsString());
         }
         return configuration;
     }

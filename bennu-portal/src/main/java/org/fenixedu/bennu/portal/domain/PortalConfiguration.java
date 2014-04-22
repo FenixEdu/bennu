@@ -45,6 +45,18 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
                 logger.error("Default logo could not be read from: img/bennu-logo.png");
             }
         }
+        
+        stream = this.getClass().getResourceAsStream("/img/bennu-favicon.png");
+        if (stream == null) {
+            logger.error("Default favicon not found in: img/bennu-favicon.png");
+        } else {
+            try {
+                setFavicon(ByteStreams.toByteArray(stream));
+                setFaviconType("image/png");
+            } catch (IOException e) {
+                logger.error("Default logo could not be read from: img/bennu-favicon.png");
+            }
+        }
         new MenuContainer(this);
     }
 

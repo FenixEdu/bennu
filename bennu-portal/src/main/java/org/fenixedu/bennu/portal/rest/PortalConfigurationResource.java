@@ -32,6 +32,16 @@ public class PortalConfigurationResource extends BennuRestResource {
         return Response.status(Status.NOT_FOUND).build();
     }
 
+    @GET
+    @Path("favicon")
+    public Response favicon() {
+        final PortalConfiguration instance = PortalConfiguration.getInstance();
+        if (instance != null && instance.getFavicon() != null) {
+            return Response.ok(instance.getFavicon(), instance.getFaviconType()).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+    }
+    
     @PUT
     @Path("{oid}")
     @Consumes(MediaType.APPLICATION_JSON)

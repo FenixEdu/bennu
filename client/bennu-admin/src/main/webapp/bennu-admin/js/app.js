@@ -62,7 +62,7 @@ bennuAdmin.controller('PortalConfigurationCtrl', ['$scope', '$http', function ($
       location.reload();
     });
   }
-  $scope.fileNameChanged = function(e) {
+  $scope.fileNameChanged = function(e, type) {
     var files = e.files; // FileList object
     $scope.error = '';
     for ( var i = 0; i < files.length; i++) {
@@ -80,10 +80,18 @@ bennuAdmin.controller('PortalConfigurationCtrl', ['$scope', '$http', function ($
           return function(e) {
               var content = e.target.result;
               var picBase64 = content.substr(content.indexOf(",") + 1, content.length);
-              $scope.$apply(function () {
-                $scope.menu.logo = picBase64;
-                $scope.menu.logoType = file.type;
-              });
+              if(type === "logo"){
+            	  $scope.$apply(function () {
+                      $scope.menu.logo = picBase64;
+                      $scope.menu.logoType = file.type;
+                    });
+              }
+              if(type === "favicon"){
+            	  $scope.$apply(function () {
+                      $scope.menu.favicon = picBase64;
+                      $scope.menu.faviconType = file.type;
+                    });
+              }
           };
       })(file);
       reader.readAsDataURL(file);
