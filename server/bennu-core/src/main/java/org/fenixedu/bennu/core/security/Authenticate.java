@@ -22,11 +22,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
-import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
-import org.fenixedu.bennu.core.groups.DynamicGroup;
-import org.fenixedu.bennu.core.groups.UserGroup;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
@@ -77,7 +74,7 @@ public class Authenticate {
             }
         }
         if (user == null) {
-            if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUserSet().isEmpty()) {
+            if (CoreConfiguration.casConfig().isCasEnabled()) {
                 user = attemptBootstrapUser(username);
             } else {
                 throw AuthorizationException.authenticationFailed();
@@ -102,25 +99,11 @@ public class Authenticate {
 
     @Atomic(mode = TxMode.WRITE)
     private static User attemptBootstrapUser(String username) {
-        try {
-            User user = User.findByUsername(username);
-            if (user != null) {
-                return user;
-            }
-            if (CoreConfiguration.casConfig().isCasEnabled() || Bennu.getInstance().getUserSet().isEmpty()) {
-                user = new User(username);
-                DynamicGroup managers = DynamicGroup.get("managers");
-                if (!managers.exists()) {
-                    loggedUser.set(user);
-                    managers.changeGroup(UserGroup.of(user));
-                    logger.info("Bootstrapped #managers group to user: " + user.getUsername());
-                }
-                return user;
-            }
-            throw AuthorizationException.authenticationFailed();
-        } finally {
-            loggedUser.set(null);
+        User user = User.findByUsername(username);
+        if (user != null) {
+            return user;
         }
+        return new User(username);
     }
 
     public static void logout(HttpSession session) {
