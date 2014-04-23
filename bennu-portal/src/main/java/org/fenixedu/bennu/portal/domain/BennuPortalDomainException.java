@@ -11,11 +11,11 @@ public class BennuPortalDomainException extends DomainException {
     }
 
     public static BennuPortalDomainException cannotDeleteRootContainer() {
-        return new BennuPortalDomainException("cannot.delete.root.container");
+        return new BennuPortalDomainException("error.cannot.delete.root.container");
     }
 
     public static BennuPortalDomainException childWithPathAlreadyExists(String path) {
-        return new BennuPortalDomainException("child.with.path.already.exists", path);
+        return new BennuPortalDomainException("error.child.with.path.already.exists", path);
     }
 
 }
