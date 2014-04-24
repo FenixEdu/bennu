@@ -21,6 +21,7 @@
 
     <modules>
         <module>bennu-core</module>
+        <module>bennu-core-test</module>
         <module>bennu-io</module>
         <module>bennu-scheduler</module>
         <module>bennu-search</module>
