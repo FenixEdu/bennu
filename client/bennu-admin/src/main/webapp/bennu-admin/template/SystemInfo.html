@@ -190,7 +190,7 @@
                         </div>
                         <div class="panel-body">
                             <span ng-if="currentCheck.result.healthy">
-                                OK
+                                {{currentCheck.result.message}}
                             </span>
                             <span ng-if="!currentCheck.result.healthy">
                                 <h5>Message: </h5>

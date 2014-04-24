@@ -25,7 +25,14 @@ public abstract class Healthcheck {
          * Returns a healthy {@link Result}.
          */
         public static Result healthy() {
-            return new Result(true, null, null);
+            return new Result(true, "OK", null);
+        }
+
+        /**
+         * Returns a healthy {@link Result} with the given message.
+         */
+        public static Result healthy(String message) {
+            return new Result(true, message, null);
         }
 
         /**
@@ -40,6 +47,13 @@ public abstract class Healthcheck {
          */
         public static Result unhealthy(Throwable error) {
             return new Result(false, error.getMessage(), error);
+        }
+
+        /**
+         * Returns an unhealthy {@link Result} with the given error and message.
+         */
+        public static Result unhealthy(String message, Throwable error) {
+            return new Result(false, message, error);
         }
 
         private final boolean healthy;
