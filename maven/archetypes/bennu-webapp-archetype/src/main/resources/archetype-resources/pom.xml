@@ -18,7 +18,7 @@
 
     <properties>
         <version.org.fenixedu.bennu>${bennuVersion}</version.org.fenixedu.bennu>
-        <version.org.glassfish.jersey.containers.jersey-container-servlet>2.4</version.org.glassfish.jersey.containers.jersey-container-servlet>
+        <version.org.glassfish.jersey.containers.jersey-container-servlet>2.7</version.org.glassfish.jersey.containers.jersey-container-servlet>
     </properties>
 
     <build>
