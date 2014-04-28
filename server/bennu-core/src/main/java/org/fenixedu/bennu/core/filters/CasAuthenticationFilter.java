@@ -50,6 +50,8 @@ public class CasAuthenticationFilter implements Filter {
     private final TicketValidator validator =
             new Cas20ServiceTicketValidator(CoreConfiguration.getConfiguration().casServerUrl());
 
+    public static final String AUTHENTICATION_EXCEPTION_KEY = "CAS_AUTHENTICATION_EXCEPTION";
+
     @Override
     public void init(final FilterConfig config) throws ServletException {
     }
@@ -76,6 +78,7 @@ public class CasAuthenticationFilter implements Filter {
             } catch (TicketValidationException | AuthorizationException e) {
                 // its ok, the user just won't have his session
                 logger.warn(e.getMessage(), e);
+                request.setAttribute(AUTHENTICATION_EXCEPTION_KEY, e);
             }
         }
         chain.doFilter(request, response);
