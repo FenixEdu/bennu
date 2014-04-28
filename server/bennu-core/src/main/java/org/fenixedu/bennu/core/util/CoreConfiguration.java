@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Locale.Builder;
 import java.util.Set;
 
+import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpServletRequest;
 
 import org.fenixedu.commons.configuration.ConfigurationInvocationHandler;
@@ -100,6 +101,30 @@ public class CoreConfiguration {
         @ConfigurationProperty(key = "application.url", description = "Full application url",
                 defaultValue = "http://localhost:8080")
         public String applicationUrl();
+
+        @ConfigurationProperty(key = "multipart.maxFileSize", description = "maximum size allowed for uploaded files",
+                defaultValue = "2147483648")
+        public Long multipartMaxFilesize();
+
+        @ConfigurationProperty(key = "multipart.maxRequestSize",
+                description = "maximum size allowed for multipart/form-data requests", defaultValue = "2252341248")
+        public Long multipartMaxRequestSize();
+
+        @ConfigurationProperty(key = "multipart.fileSizeThreshold",
+                description = "the size threshold after which files will be written to disk", defaultValue = "67108864")
+        public Integer multipartFileSizeThreshold();
+
+        /**
+         * Gets the maximum size allowed for multipart/form-data requests.
+         * 
+         * @return the maximum size allowed for multipart/form-data requests
+         */
+
+        /**
+         * Gets the size threshold after which files will be written to disk.
+         * 
+         * @return the size threshold after which files will be written to disk
+         */
     }
 
     private static CasConfig casConfig = new CasConfig(getConfiguration().casEnabled(), getConfiguration().casServerUrl(),
@@ -164,5 +189,13 @@ public class CoreConfiguration {
 
     public static ConfigurationProperties getConfiguration() {
         return ConfigurationInvocationHandler.getConfiguration(ConfigurationProperties.class);
+    }
+
+    public static MultipartConfigElement getMultipartConfigElement() {
+        final String location = System.getProperty("java.io.tmpdir");
+        final Long maxFileSize = getConfiguration().multipartMaxFilesize();
+        final Long maxRequestSize = getConfiguration().multipartMaxRequestSize();
+        final Integer fileSizeThreshold = getConfiguration().multipartFileSizeThreshold();
+        return new MultipartConfigElement(location, maxFileSize, maxRequestSize, fileSizeThreshold);
     }
 }

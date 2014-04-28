@@ -18,8 +18,7 @@ package org.fenixedu.bennu.core.domain;
 
 import java.util.Set;
 
-import org.fenixedu.bennu.core.domain.groups.Group;
-import org.fenixedu.bennu.core.domain.groups.NegationGroup;
+import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -56,14 +55,8 @@ public final class Bennu extends Bennu_Base {
     }
 
     @Override
-    public Set<Group> getGroupSet() {
+    public Set<PersistentGroup> getGroupSet() {
         //FIXME: remove when the framework enables read-only slots
         return super.getGroupSet();
-    }
-
-    @Override
-    public Set<NegationGroup> getNegationSet() {
-        //FIXME: remove when the framework enables read-only slots
-        return super.getNegationSet();
     }
 }

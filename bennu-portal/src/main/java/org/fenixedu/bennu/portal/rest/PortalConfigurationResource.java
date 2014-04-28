@@ -2,7 +2,6 @@ package org.fenixedu.bennu.portal.rest;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -19,6 +18,7 @@ public class PortalConfigurationResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String viewConfig() {
+        accessControl("#managers");
         return view(PortalConfiguration.getInstance());
     }
 
@@ -32,14 +32,16 @@ public class PortalConfigurationResource extends BennuRestResource {
         return Response.status(Status.NOT_FOUND).build();
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String createConfig(final String json) {
-        accessControl("#managers");
-        return view(create(json, PortalConfiguration.class));
+    @GET
+    @Path("favicon")
+    public Response favicon() {
+        final PortalConfiguration instance = PortalConfiguration.getInstance();
+        if (instance != null && instance.getFavicon() != null) {
+            return Response.ok(instance.getFavicon(), instance.getFaviconType()).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
     }
-
+    
     @PUT
     @Path("{oid}")
     @Consumes(MediaType.APPLICATION_JSON)

@@ -30,6 +30,7 @@
 		dataType: "json",
 		success: function(hostJson, status, response) {
 			var theme_base = contextPath + "/themes/" + hostJson.theme;
+			hostJson.themePath = theme_base;
 			var theme_url = theme_base + "/layout.html";
 			var styles_url = theme_base + "/css/style.css";
 			var json_handler_url = theme_base + "/js/jsonHandler.js";
@@ -51,13 +52,16 @@
                     var langs = this.locales;
                     model['_mls'] = function() {
                         return function(val) {
-                            if (this[val]) {
-                                if (this[val][completeLanguage]) {
-                                    return this[val][completeLanguage];
+                        	if(typeof val === "string") {
+                        		val = this[val];
+                        	}
+                            if (val) {
+                                if (val[completeLanguage]) {
+                                    return val[completeLanguage];
                                 }
                                 currentLanguage = BennuPortal.lang;
-                                if (this[val][currentLanguage]) {
-                                    return this[val][currentLanguage];
+                                if (val[currentLanguage]) {
+                                    return val[currentLanguage];
                                 }
                                 
                                 //search for other specific currentLanguage
@@ -69,8 +73,8 @@
                                         return false;
                                     }
                                 });
-                                if (fallbackLanguage != undefined && this[val][fallbackLanguage] != undefined) {
-                                    return this[val][fallbackLanguage];
+                                if (fallbackLanguage != undefined && val[fallbackLanguage] != undefined) {
+                                    return val[fallbackLanguage];
                                 }
                             }
                             return "_mls!!" + val + "!!";
@@ -110,71 +114,54 @@
 					});
 				}
 			};
-			//LOADING THEMES STATIC I18N MESSAGES
-			var theme_messages_url = theme_base + "/i18n/messages-" + BennuPortal.lang + ".json";
-			$.ajax({
-				type: "GET",
-				url: theme_messages_url,
-				dataType: "json",
-				success: function(messagesJson, status, response) {
-					hostJson["_i18n"] = function() {
-						return function(val) {
-	                        val = Mustache.to_html(val, this);
-							if (messagesJson[val]) {
-								return messagesJson[val];
-							} else {
-								return "_i18n!!" + BennuPortal.lang + "!!" + val + "!!";
-							}
-						}
-					}
-					$.ajaxSetup({ cache: true });
-					$.ajax({
-						type: "GET",
-						url: theme_url,
-						dataType: "text",
-						success: function(layoutTemplate, status, response) {
-							function applyLayout(hostJson) {
-								hostJson.contextPath = contextPath;
-								BennuPortal.addMls(hostJson);
+			$.ajaxSetup({ cache: true });
+			var messagesJson = {};
+			$.getJSON(theme_base + "/i18n/messages-" + BennuPortal.lang + ".json").done(function (data) {
+				messagesJson = data;
+			}).
+			always(function(data) {
+			$.when(
+				$.ajax(theme_url),
+				$.getScript(contextPath + "/bennu-portal/js/twig.min.js"),
+				$.getScript(json_handler_url)
+			).always(function (layoutTemplate) {
+				hostJson.contextPath = contextPath;
+				BennuPortal.addMls(hostJson);
 
-								if (jsonHandler) {
-									hostJson = jsonHandler(hostJson);
-								}
-								var new_body = Mustache.to_html(layoutTemplate,
-								hostJson);
-								$('body').append(new_body);
-								$("#portal-container").appendTo("#content");
-								$('body').show();
-								if(developmentMode) {
-									$.get(theme_base + '/less/style.less', function(data) {
-										$("head").prepend("<link rel='stylesheet/less' type='text/css' href='"+theme_base+"/less/style.less' />");
-										$("head").append("<script type='text/javascript' src='" + contextPath +"/bennu-portal/js/less.min.js" + "'></script>");
-									}).fail(function() {
-										if (window.console) {
-											console.log("In development mode mapping the theme less directory in jetty or tomcat would enable less compilation")
-										}
-										$("head").append('<link rel="stylesheet" href="' + styles_url + '" rel="stylesheet" />');
-									});
-								} else {
-									$("head").append('<link rel="stylesheet" href="' + styles_url + '" rel="stylesheet" />');
-								}
-								$("body").show();
-								$.ajaxSetup({ cache: false });
-							}
-
-							$.ajax({
-								type: "GET",
-								url: json_handler_url,
-								dataType: "script",
-								async: false
-							}).done(function(script, textStatus) {
-								applyLayout(hostJson);
-							}).fail(function(jqxhr, settings, exception) {
-								applyLayout(hostJson);
-							});
-						}
-					});
+				if (typeof jsonHandler === "function") {
+					hostJson = jsonHandler(hostJson);
 				}
+				var myTwig = Twig.exports || Twig;
+				myTwig.extendFilter('i18n', function(val) {
+					if(messagesJson[val]) {
+						return messagesJson[val];
+					} else {
+						return "_i18n!!" + BennuPortal.lang + "!!" + val + "!!";
+					}
+					return messagesJson[value];
+				});
+				myTwig.extendFilter('mls', function (val) {
+					return hostJson._mls()(val);
+				});
+				var template = myTwig.twig({ data: layoutTemplate[0] });
+				var new_body = template.render(hostJson);
+				$('body').append(new_body);
+				$("#portal-container").appendTo("#content");
+				if(developmentMode) {
+					$.get(theme_base + '/less/style.less', function(data) {
+						$("head").prepend("<link rel='stylesheet/less' type='text/css' href='"+theme_base+"/less/style.less' />");
+						$("head").append("<script type='text/javascript' src='" + contextPath +"/bennu-portal/js/less.min.js" + "'></script>");
+					}).fail(function() {
+						if (window.console) {
+							console.log("In development mode mapping the theme less directory in jetty or tomcat would enable less compilation")
+						}
+						$("head").append('<link rel="stylesheet" href="' + styles_url + '" rel="stylesheet" />');
+					});
+				} else {
+					$("head").append('<link rel="stylesheet" href="' + styles_url + '" rel="stylesheet" />');
+				}
+				$('body').show();
+			})
 			});
 		}
 	});

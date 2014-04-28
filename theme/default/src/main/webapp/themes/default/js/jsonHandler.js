@@ -43,8 +43,8 @@ function jsonHandler(hostJson) {
 	};
 	
 	var tryToSelectParentMenu = function() {
-		
-		if (this.path === path) {
+
+		if (this.path === path || this.path + '/' === path) {
 			this.selected = true;
 			selectedMenu = this;
 			return false;
@@ -59,7 +59,7 @@ function jsonHandler(hostJson) {
 		//if no parentMenu was selected and has child try to select one of the childs.
 		//If founds one child selects the parentMenu too.
 			$(child).each(function() {
-				this.selected = this.path === path;
+				this.selected = this.fullPath === '/' + path;
 				if (this.selected) {
 					selectedMenu = this;
 					this.selected = true;

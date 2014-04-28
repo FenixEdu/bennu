@@ -7,7 +7,11 @@ public class GenericFile {
 	public String displayName;
 	protected String contentType;
 	protected String contentKey;
+    protected String checksum;
+    protected String checksumAlgorithm;
 }
+
+public class GroupBasedFile extends GenericFile;
 
 public class FileRawData {
 	protected String contentKey;
@@ -31,7 +35,7 @@ public class FileStorage {
 	}	
 
 public class FileStorageConfiguration {
-	protected String fileType;
+	protected String fileType (REQUIRED);
 }
 
 public class FileSupport;
@@ -56,11 +60,11 @@ relation FileStorageFile {
 
 relation FileStorageConfigurationFileStorage {
 	public FileStorage playsRole storage {
-        multiplicity 0..1;
+        multiplicity 1..1;
 	}
-	protected FileStorageConfiguration playsRole configuration {
-		multiplicity *;
-	}
+    protected FileStorageConfiguration playsRole configuration {
+        multiplicity *;
+    }
 }
 
 relation GenericFiles {
@@ -70,6 +74,15 @@ relation GenericFiles {
 	protected GenericFile playsRole file {
 		multiplicity *;
 	}
+}
+
+relation GroupBasedFilesGroup {
+    protected GroupBasedFile playsRole file {
+        multiplicity *;
+    }
+    protected .org.fenixedu.bennu.core.domain.groups.PersistentGroup playsRole group {
+        multiplicity 1..1;
+    }
 }
 
 relation FileRawDatas {
@@ -88,6 +101,15 @@ relation FileStorages {
 	protected FileStorage playsRole fileStorage {
 		multiplicity *;
 	}
+}
+
+relation DefaultFileStorage {
+    protected FileSupport playsRole fileSupportAsDefault {
+        multiplicity 0..1;
+    }
+    public FileStorage playsRole defaultStorage {
+        multiplicity 1..1;
+    }
 }
 
 relation FileStorageConfigurations {

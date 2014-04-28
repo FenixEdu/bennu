@@ -14,7 +14,7 @@
     </properties>
 
     <artifactId>bennu-io-ui</artifactId>
-    <version>2.2.0</version>
+    <version>3.0.0</version>
     <name>Bennu IO UI</name>
 
     <build>
@@ -39,6 +39,6 @@
     </repositories>
 
   <scm>
-    <tag>v2.2.0</tag>
+    <tag>v3.0.0</tag>
   </scm>
 </project>

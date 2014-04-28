@@ -9,7 +9,6 @@ import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
-import org.fenixedu.bennu.search.domain.DomainIndexSystem;
 import org.fenixedu.commons.StringNormalizer;
 import org.joda.time.Partial;
 import org.joda.time.format.DateTimeFormatter;

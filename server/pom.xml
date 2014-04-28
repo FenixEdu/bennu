@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu</artifactId>
-        <version>2.2.0</version>
+        <version>3.0.0</version>
     </parent>
 
     <artifactId>bennu-server-aggregator</artifactId>
@@ -21,6 +21,7 @@
 
     <modules>
         <module>bennu-core</module>
+        <module>bennu-core-test</module>
         <module>bennu-io</module>
         <module>bennu-scheduler</module>
         <module>bennu-search</module>

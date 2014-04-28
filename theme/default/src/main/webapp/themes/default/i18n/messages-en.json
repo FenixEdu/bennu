@@ -1,11 +1,12 @@
 {
 	"username": "Username",
 	"password": "Password",
-	"settings": "Settings",
+	"settings": "Configuration",
 	"admin": "Admin",
 	"logout": "Logout",
 	"login": "Login",
 	"Language" : "Language",
 	"pt-PT" : "Portuguese",
-	"en-GB" : "English"
+	"en-GB" : "English (GB)",
+	"en-US" : "English (US)"
 }

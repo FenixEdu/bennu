@@ -11,6 +11,7 @@ public final class FileSupport extends FileSupport_Base {
     private FileSupport() {
         super();
         setBennu(Bennu.getInstance());
+        setDefaultStorage(DomainStorage.createNewDomainStorage("system-default"));
     }
 
     public static FileSupport getInstance() {
@@ -26,6 +27,12 @@ public final class FileSupport extends FileSupport_Base {
             return new FileSupport();
         }
         return Bennu.getInstance().getFileSupport();
+    }
+
+    @Override
+    public void setDefaultStorage(FileStorage defaultStorage) {
+        super.setDefaultStorage(defaultStorage);
+        addFileStorage(defaultStorage);
     }
 
     @Override

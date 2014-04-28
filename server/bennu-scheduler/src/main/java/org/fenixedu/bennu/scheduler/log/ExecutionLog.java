@@ -8,14 +8,15 @@ import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hashing;
 
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
 import org.joda.time.DateTime;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -58,9 +59,9 @@ public class ExecutionLog {
                 return new DateTime(json.getAsString());
             }
         });
-        
+
         if (CoreConfiguration.getConfiguration().developmentMode()) {
-        	gsonBuilder.setPrettyPrinting();
+            gsonBuilder.setPrettyPrinting();
         }
 //        gsonBuilder.addSerializationExclusionStrategy(new ExclusionStrategy() {
 //
@@ -83,13 +84,13 @@ public class ExecutionLog {
         return gson;
     }
 
-	private static final HashFunction hf = Hashing.md5();
+    private static final HashFunction hf = Hashing.md5();
 
     public ExecutionLog(String taskName) {
-		DateTime now = new DateTime();
+        DateTime now = new DateTime();
         setStart(now);
         setTaskName(taskName);
-        setId(hf.newHasher().putString(taskName).putLong(now.getMillis()).hash().toString());
+        setId(hf.newHasher().putString(taskName, Charsets.UTF_8).putLong(now.getMillis()).hash().toString());
         setSuccess(false);
     }
 

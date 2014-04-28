@@ -10,7 +10,7 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.exceptions.DomainException;
-import org.fenixedu.bennu.core.domain.groups.Group;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.core.util.CoreConfiguration.CasConfig;
@@ -81,8 +81,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
 
     protected User accessControl(String accessExpression) {
         try {
-            final Group group = Group.parse(accessExpression);
-            return accessControl(group);
+            return accessControl(Group.parse(accessExpression));
         } catch (DomainException e) {
             throw AuthorizationException.unauthorized();
         }

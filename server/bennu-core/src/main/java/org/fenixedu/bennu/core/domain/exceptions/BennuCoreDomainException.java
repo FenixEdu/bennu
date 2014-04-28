@@ -59,7 +59,11 @@ public class BennuCoreDomainException extends DomainException {
     }
 
     public static BennuCoreDomainException groupParsingError(Throwable cause) {
-        return new BennuCoreDomainException(cause, "error.bennu.core.groups.parse");
+        return new BennuCoreDomainException(cause, "error.bennu.core.groups.parse", cause.getMessage());
+    }
+
+    public static BennuCoreDomainException groupParsingNoGroupForOperator(String operator) {
+        return new BennuCoreDomainException("error.bennu.core.groups.parse.noGroupForOperator", operator);
     }
 
     public static BennuCoreDomainException errorOnDeleteDomainObject() {

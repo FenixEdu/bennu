@@ -4,4 +4,14 @@
     version="3.0">
     <name>${artifactId}</name>
     <description>${name}</description>
+
+    <ordering>
+        <after>
+            <name>bennu-core</name>
+        </after>
+        <before>
+            <others />
+        </before>
+    </ordering>
+
 </web-fragment>

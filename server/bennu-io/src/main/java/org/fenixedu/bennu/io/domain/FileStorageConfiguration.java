@@ -15,6 +15,7 @@ public final class FileStorageConfiguration extends FileStorageConfiguration_Bas
         super();
         setFileSupport(FileSupport.getInstance());
         setFileType(fileTypeClass.getName());
+        setStorage(FileSupport.getInstance().getDefaultStorage());
     }
 
     @Override

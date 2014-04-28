@@ -10,6 +10,8 @@ public class PortalConfiguration {
 	public String systemEmailAddress;
 	public bytearray logo;
 	public String logoType;
+	public bytearray favicon;
+	public String faviconType;
 }
 
 relation BennuPortalConfiguration {
@@ -22,27 +24,46 @@ relation BennuPortalConfiguration {
 }
 
 public class MenuItem {
-	public Integer ord;
-	public LocalizedString title;
-	public LocalizedString description;
-	public String path;
-	public String accessExpression;
+	public Integer ord (REQUIRED);
+	public LocalizedString title (REQUIRED);
+	public LocalizedString description (REQUIRED);
+	protected String path (REQUIRED);
+	protected String fullPath (REQUIRED);
+	public Boolean visible (REQUIRED);
+	public String layout;
+}
+
+public class MenuContainer extends MenuItem {
+}
+
+public class MenuFunctionality extends MenuItem {
+    protected String itemKey;
+    protected String provider;
 }
 
 relation ApplicationMenu {
-    public PortalConfiguration playsRole configuration {
+    protected PortalConfiguration playsRole configuration {
         multiplicity 0..1;
     }
-    public MenuItem playsRole menu {
+    protected MenuContainer playsRole menu {
         multiplicity 1..1;
     }
 }
 
 relation MenuItemComposition {
-	public MenuItem playsRole parent {
+	protected MenuContainer playsRole parent {
         multiplicity 0..1;
 	}
-	public MenuItem playsRole child {
+	protected MenuItem playsRole child {
 		multiplicity *;
 	}
+}
+
+relation MenuItemGroup {
+    protected MenuItem playsRole menuItem {
+        multiplicity *;
+    }
+    protected .org.fenixedu.bennu.core.domain.groups.PersistentGroup playsRole group {
+        multiplicity 1..1;
+    }
 }

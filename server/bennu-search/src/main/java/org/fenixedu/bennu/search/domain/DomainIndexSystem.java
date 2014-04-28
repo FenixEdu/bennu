@@ -39,7 +39,7 @@ import com.google.common.io.Files;
 public class DomainIndexSystem extends DomainIndexSystem_Base {
     private static Logger logger = LoggerFactory.getLogger(DomainIndexSystem.class);
 
-    public static final Version VERSION = Version.LUCENE_46;
+    public static final Version VERSION = Version.LUCENE_47;
 
     public static final String FORCE_REINDEX_LIST = "force-reindex";
 
@@ -135,7 +135,9 @@ public class DomainIndexSystem extends DomainIndexSystem_Base {
     public static List<String> tokenizeString(IndexableField field, String string) {
         List<String> result = new ArrayList<>();
         try (StandardAnalyzer analyzer = new StandardAnalyzer(VERSION)) {
-            try (TokenStream stream = analyzer.tokenStream(field.getFieldName(), new StringReader(StringNormalizer.normalizeAndRemoveAccents(string)))) {
+            try (TokenStream stream =
+                    analyzer.tokenStream(field.getFieldName(),
+                            new StringReader(StringNormalizer.normalizeAndRemoveAccents(string)))) {
                 stream.reset();
                 while (stream.incrementToken()) {
                     result.add(stream.getAttribute(CharTermAttribute.class).toString());

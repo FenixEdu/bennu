@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.commons.StringNormalizer;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Strings;
+import com.google.common.hash.Hashing;
 
 /**
  * 
@@ -23,7 +25,7 @@ import com.google.common.base.Strings;
 public abstract class GenericFile extends GenericFile_Base {
     private static final Logger logger = LoggerFactory.getLogger(GenericFile.class);
 
-    public GenericFile() {
+    protected GenericFile() {
         super();
         setFileSupport(FileSupport.getInstance());
         setCreationDate(new DateTime());
@@ -36,7 +38,11 @@ public abstract class GenericFile extends GenericFile_Base {
         setDisplayName(displayName);
         setFilename(filename);
         setContent(content);
+        setChecksum(Hashing.sha1().hashBytes(content).toString());
+        setChecksumAlgorithm("SHA");
     }
+
+    public abstract boolean isAccessible(User user);
 
     @Override
     public DateTime getCreationDate() {
@@ -54,6 +60,18 @@ public abstract class GenericFile extends GenericFile_Base {
     public String getContentType() {
         //FIXME: remove when the framework enables read-only slots
         return super.getContentType();
+    }
+
+    @Override
+    public String getChecksum() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getChecksum();
+    }
+
+    @Override
+    public String getChecksumAlgorithm() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getChecksumAlgorithm();
     }
 
     @Override
@@ -111,7 +129,7 @@ public abstract class GenericFile extends GenericFile_Base {
     protected FileStorage getFileStorage() {
         final FileStorage fileStorage = FileStorageConfiguration.readFileStorageByFileType(getClass().getName());
         if (fileStorage == null) {
-            throw new RuntimeException("error.fileStorage.notDefinedForClassType");
+            return FileSupport.getInstance().getDefaultStorage();
         }
         return fileStorage;
     }

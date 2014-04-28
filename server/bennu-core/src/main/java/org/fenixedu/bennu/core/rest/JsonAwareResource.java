@@ -33,9 +33,9 @@ public class JsonAwareResource {
         PARSER = new JsonParser();
         BUILDER = new JsonBuilder();
         if (CoreConfiguration.getConfiguration().developmentMode()) {
-        	GSON = new GsonBuilder().setPrettyPrinting().create();
+            GSON = new GsonBuilder().setPrettyPrinting().create();
         } else {
-        	GSON = new GsonBuilder().create();
+            GSON = new GsonBuilder().create();
         }
     }
 
@@ -133,7 +133,7 @@ public class JsonAwareResource {
         return BUILDER.update(parse, object, jsonUpdaterClass);
     }
 
-    private JsonElement parse(String jsonString) {
+    protected JsonElement parse(String jsonString) {
         try {
             if (Strings.isNullOrEmpty(jsonString)) {
                 return new JsonObject();

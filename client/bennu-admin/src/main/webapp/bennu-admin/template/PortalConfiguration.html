@@ -1,0 +1,75 @@
+<div class="row">
+<div class="col-lg-12">
+    <h2>Portal Configuration</h2>
+    <span class="error">{{error}}</span>
+    <form class="form-horizontal">
+      <fieldset>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="applicationTitle">Title</label>
+            <div class="col-sm-3" ng-repeat="locale in locales">
+                <input type="text" lang="{{locale.tag}}" id="applicationTitle" name="applicationTitle" ng-model="menu.applicationTitle[locale.tag]" placeholder="Title">
+                <span class="add-on">{{locale.tag}}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="applicationSubTitle">Subtitle</label>
+            <div class="col-sm-3" ng-repeat="locale in locales">
+                <input type="text" lang="{{locale.tag}}" id="applicationSubTitle" name="applicationSubTitle" ng-model="menu.applicationSubTitle[locale.tag]" placeholder="Subtitle">
+                <span class="add-on">{{locale.tag}}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="htmlTitle">HTML Title</label>
+            <div class="col-sm-3" ng-repeat="locale in locales">
+                <input type="text" lang="{{locale.tag}}" id="htmlTitle" name="htmlTitle" ng-model="menu.htmlTitle[locale.tag]" placeholder="HTML Title">
+                <span class="add-on">{{locale.tag}}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="applicationCopyright">Copyright</label>
+            <div class="col-sm-3" ng-repeat="locale in locales">
+                    <input type="text" lang="{{locale.tag}}" id="applicationCopyright" name="applicationCopyright" ng-model="menu.applicationCopyright[locale.tag]" placeholder="Copyright">
+                    <span class="add-on">{{locale.tag}}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="supportEmailAddress">Support Email</label>
+            <div class="col-sm-10">
+                <input type="email" id="supportEmailAddress" name="supportEmailAddress" ng-model="menu.supportEmailAddress" placeholder="Support Email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="systemEmailAddress">System Email</label>
+            <div class="col-sm-10">
+                <input type="email" id="systemEmailAddress" name="systemEmailAddress" ng-model="menu.systemEmailAddress" placeholder="System Email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="systemEmailAddress">Theme</label>
+            <div class="col-sm-10">
+                <select ng-model="menu.theme" ng-required="true" ng-options="theme for theme in menu.themes">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="logo">Logo</label>
+            <div class="col-sm-10">
+                <img ng-src="data:{{menu.logoType}};base64,{{menu.logo}}"></img>
+                <input type="file" name="logo" onchange="angular.element(this).scope().fileNameChanged(this,'logo')" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="favicon">Favicon</label>
+            <div class="col-sm-10">
+                <img ng-src="data:{{menu.faviconType}};base64,{{menu.favicon}}"></img>
+                <input type="file" name="favicon" onchange="angular.element(this).scope().fileNameChanged(this,'favicon')" />
+            </div>
+        </div>
+        <div class="col-sm-offset-2">
+        <button ng-click="save()" class="btn btn-primary">Save</button>
+        <a href="#menu/{{menu.menu.id}}" class="btn btn-default">Manage Menu</a>
+        </div>
+      </fieldset>
+    </form>
+</div>
+</div>

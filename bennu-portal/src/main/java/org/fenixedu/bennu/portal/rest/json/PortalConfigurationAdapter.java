@@ -5,18 +5,22 @@ import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.json.JsonUpdater;
 import org.fenixedu.bennu.core.json.JsonViewer;
 import org.fenixedu.bennu.core.json.adapters.DomainObjectViewer;
-import org.fenixedu.bennu.portal.domain.MenuItem;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
+import org.fenixedu.bennu.portal.servlet.PortalInitializer;
 import org.fenixedu.commons.i18n.LocalizedString;
 
-import pt.ist.fenixframework.FenixFramework;
-
 import com.google.common.io.BaseEncoding;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 @DefaultJsonAdapter(PortalConfiguration.class)
 public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguration>, JsonUpdater<PortalConfiguration> {
+
+    private static final boolean developmentMode = CoreConfiguration.getConfiguration().developmentMode();
+
     @Override
     public JsonElement view(PortalConfiguration configuration, JsonBuilder ctx) {
         JsonObject object = new JsonObject();
@@ -25,6 +29,7 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         object.add("htmlTitle", configuration.getHtmlTitle().json());
         object.add("applicationSubTitle", configuration.getApplicationSubTitle().json());
         object.add("applicationCopyright", configuration.getApplicationCopyright().json());
+        object.addProperty("developmentMode", developmentMode);
         object.addProperty("supportEmailAddress", configuration.getSupportEmailAddress());
         object.addProperty("systemEmailAddress", configuration.getSystemEmailAddress());
         object.addProperty("theme", configuration.getTheme());
@@ -32,6 +37,15 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
             object.addProperty("logo", BaseEncoding.base64().encode(configuration.getLogo()));
             object.addProperty("logoType", new String(configuration.getLogoType()));
         }
+        if (configuration.getFavicon() != null) {
+            object.addProperty("favicon", BaseEncoding.base64().encode(configuration.getFavicon()));
+            object.addProperty("faviconType", new String(configuration.getLogoType()));
+        }
+        JsonArray themes = new JsonArray();
+        for (String theme : PortalInitializer.getThemes()) {
+            themes.add(new JsonPrimitive(theme));
+        }
+        object.add("themes", themes);
         object.add("menu", ctx.view(configuration.getMenu(), DomainObjectViewer.class));
         return object;
     }
@@ -66,15 +80,11 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         if (object.has("logoType")) {
             configuration.setLogoType(object.get("logoType").getAsString());
         }
-        if (object.has("menu")) {
-            final JsonObject menuObj = object.get("menu").getAsJsonObject();
-            if (menuObj.has("id")) {
-                final String menuExternalId = menuObj.get("id").getAsString();
-                MenuItem menu = FenixFramework.getDomainObject(menuExternalId);
-                if (!menu.equals(configuration.getMenu())) {
-                    configuration.setMenu(menu);
-                }
-            }
+        if (object.has("favicon")) {
+            configuration.setFavicon(BaseEncoding.base64().decode(object.get("favicon").getAsString()));
+        }
+        if (object.has("faviconType")) {
+            configuration.setFaviconType(object.get("faviconType").getAsString());
         }
         return configuration;
     }

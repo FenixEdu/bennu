@@ -1,0 +1,25 @@
+<h4>Loggers @ {{server}}</h4>
+<p>
+Filter: <input type="text" ng-model="filter" class="form-control">
+</p>
+<table class="table table-condensed table-striped table-bordered table-responsive">
+    <thead>
+            <tr>
+                <td>Name</td>
+                <td>Level</td>
+            </tr>
+    </thead>
+
+    <tbody>
+            <tr ng-repeat="logger in loggers | filter:filter ">
+                <td><small>{{logger.name}}</small></td>
+                <td>
+                <button ng-click="changeLevel(logger, 'TRACE')" ng-class="(logger.level=='TRACE') ? 'btn-danger' : 'btn-default'" class="btn btn-default btn-xs">TRACE</button>
+                <button ng-click="changeLevel(logger, 'DEBUG')" ng-class="(logger.level=='DEBUG') ? 'btn-warning' : 'btn-default'" class="btn btn-default btn-xs">DEBUG</button>
+                <button ng-click="changeLevel(logger, 'INFO')" ng-class="(logger.level=='INFO') ? 'btn-info' : 'btn-default'" class="btn btn-default btn-xs">INFO</button>
+                <button ng-click="changeLevel(logger, 'WARN')" ng-class="(logger.level=='WARN') ? 'btn-success' : 'btn-default'" class="btn btn-default btn-xs">WARN</button>
+                <button ng-click="changeLevel(logger, 'ERROR')" ng-class="(logger.level=='ERROR') ? 'btn-primary' : 'btn-default'" class="btn btn-default btn-xs">ERROR</button>
+                </td>
+            </tr>
+    </tbody>
+</table>
