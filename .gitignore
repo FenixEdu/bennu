@@ -1,0 +1,20 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+.project
+.classpath
+.settings/
+.serviceAnnotationLog
+.project
+.classpath
+
+# Maven #
+target/
+bin/
+
+# AntLR #
+output/
