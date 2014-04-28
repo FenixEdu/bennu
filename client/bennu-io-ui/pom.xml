@@ -14,7 +14,7 @@
     </properties>
 
     <artifactId>bennu-io-ui</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0</version>
     <name>Bennu IO UI</name>
 
     <build>
@@ -37,4 +37,8 @@
             <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
         </repository>
     </repositories>
+
+  <scm>
+    <tag>v3.0.0</tag>
+  </scm>
 </project>
