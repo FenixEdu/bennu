@@ -124,13 +124,15 @@ public class CustomGroupRegistry {
                 List<String> arguments = new ArrayList<>();
                 for (String name : fields.keySet()) {
                     List<String> values = serializeField(fields.get(name), group);
-                    String serialized = Joiner.on(", ").join(values);
-                    if (Strings.isNullOrEmpty(name)) {
-                        arguments.add(serialized);
-                    } else if (values.size() == 1) {
-                        arguments.add(name + "=" + serialized);
-                    } else {
-                        arguments.add(name + "=[" + serialized + "]");
+                    if (!values.isEmpty()) {
+                        String serialized = Joiner.on(", ").join(values);
+                        if (Strings.isNullOrEmpty(name)) {
+                            arguments.add(serialized);
+                        } else if (values.size() == 1) {
+                            arguments.add(name + "=" + serialized);
+                        } else {
+                            arguments.add(name + "=[" + serialized + "]");
+                        }
                     }
                 }
                 return arguments.isEmpty() ? operator : operator + "(" + Joiner.on(", ").join(arguments) + ")";
