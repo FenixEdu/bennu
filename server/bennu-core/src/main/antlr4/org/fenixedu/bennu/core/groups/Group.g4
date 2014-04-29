@@ -40,7 +40,7 @@ function
     ;
 
 argument
-    : (IDENTIFIER '=')? (value | '[' value (',' value)* ']')
+    : (IDENTIFIER '=')? (value | '[' (value (',' value)*)? ']')
     ;
 
 value
