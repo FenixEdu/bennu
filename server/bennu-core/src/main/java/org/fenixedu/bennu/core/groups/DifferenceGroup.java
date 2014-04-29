@@ -22,6 +22,7 @@ import java.util.Set;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentDifferenceGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
+import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Joiner;
@@ -66,13 +67,13 @@ public final class DifferenceGroup extends Group {
 
     @Override
     public String getPresentationName() {
-        return "(" + first.getPresentationName() + " - " + Joiner.on(" - ").join(Iterables.transform(rest, groupToGroupName))
-                + ")";
+        String minus = " " + BundleUtil.getString("resources.BennuResources", "label.bennu.minus") + " ";
+        return first.getPresentationName() + minus + Joiner.on(minus).join(Iterables.transform(rest, groupToGroupName));
     }
 
     @Override
     public String getExpression() {
-        return "(" + first.getExpression() + " - " + Joiner.on(" - ").join(Iterables.transform(rest, groupToExpression)) + ")";
+        return first.getExpression() + " - " + Joiner.on(" - ").join(Iterables.transform(rest, groupToExpression));
     }
 
     public Group getFirst() {

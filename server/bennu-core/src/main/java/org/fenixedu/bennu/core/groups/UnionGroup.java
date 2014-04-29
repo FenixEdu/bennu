@@ -22,6 +22,7 @@ import java.util.Set;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentUnionGroup;
+import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Joiner;
@@ -63,12 +64,13 @@ public final class UnionGroup extends Group {
 
     @Override
     public String getPresentationName() {
-        return "(" + Joiner.on(" | ").join(Iterables.transform(children, groupToGroupName)) + ")";
+        String or = " " + BundleUtil.getString("resources.BennuResources", "label.bennu.or") + " ";
+        return Joiner.on(or).join(Iterables.transform(children, groupToGroupName));
     }
 
     @Override
     public String getExpression() {
-        return "(" + Joiner.on(" | ").join(Iterables.transform(children, groupToExpression)) + ")";
+        return Joiner.on(" | ").join(Iterables.transform(children, groupToExpression));
     }
 
     public Set<Group> getChildren() {
