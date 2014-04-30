@@ -41,6 +41,7 @@ public class PortalInitializer implements ServletContextListener {
 
     private void registerBuiltinPortalBackends() {
         PortalBackendRegistry.registerPortalBackend(new RedirectPortalBackend());
+        PortalBackendRegistry.registerPortalBackend(new ForwarderPortalBackend());
     }
 
     @Override
