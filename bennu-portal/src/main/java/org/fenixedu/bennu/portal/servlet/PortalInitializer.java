@@ -52,4 +52,8 @@ public class PortalInitializer implements ServletContextListener {
     public static Set<String> getThemes() {
         return Collections.unmodifiableSet(themes);
     }
+
+    public static boolean isThemeAvailable(String theme) {
+        return themes.contains(theme);
+    }
 }
