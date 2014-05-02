@@ -145,11 +145,6 @@
             <id>fenix-ashes-maven-repository</id>
             <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
         </repository>
-        <!-- TODO: this should be proxied in nexus -->
-        <repository>
-            <id>nuxeo</id>
-            <url>https://maven-us.nuxeo.org/nexus/content/groups/public/</url>
-        </repository>
     </repositories>
 
     <modules>
