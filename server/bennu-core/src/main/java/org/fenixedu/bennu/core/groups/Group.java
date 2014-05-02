@@ -35,9 +35,9 @@ import com.google.common.collect.ImmutableSet;
  * <p>
  * Groups can be translated to and from a DSL of groups, using methods {@link #getExpression()} and {@link #parse(String)},
  * respectively. The language supports compositions ({@code |}), intersections ({@code &}), negations ({@code !}) and differences
- * ({@code -}) over basic constructs, that can either be functions or the special link group: {@code #name} ({@link DynamicGroup}).
- * Functions have the general form: {@code id(argName=argValue, argName=argValue,...)} but for groups without arguments they loose
- * the parenthesis completely, also the argNames can be skipped if a default argument is set. Common basic constructs are:
+ * ({@code -}) over basic constructs, that can either be functions or the special link group: {@code #name} ({@link DynamicGroup}
+ * ). Functions have the general form: {@code id(argName=argValue, argName=argValue,...)} but for groups without arguments they
+ * loose the parenthesis completely, also the argNames can be skipped if a default argument is set. Common basic constructs are:
  * {@code anonymous} ( {@link AnonymousGroup}), {@code logged} ({@link LoggedGroup}), {@code anyone} ({@link AnyoneGroup}),
  * {@code nobody} ( {@link NobodyGroup}), {@code U(istxxx, istxxxx,...)} ({@link UserGroup}).
  * </p>
@@ -70,6 +70,9 @@ public abstract class Group implements Serializable, Comparable<Group> {
     public static final Function<Group, String> groupToExpression = new Function<Group, String>() {
         @Override
         public String apply(Group group) {
+            if (group instanceof IntersectionGroup || group instanceof DifferenceGroup || group instanceof UnionGroup) {
+                return "(" + group.getExpression() + ")";
+            }
             return group.getExpression();
         }
     };

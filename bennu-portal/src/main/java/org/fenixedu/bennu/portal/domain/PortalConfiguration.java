@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.bennu.portal.servlet.PortalInitializer;
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
                 logger.error("Default logo could not be read from: img/bennu-logo.png");
             }
         }
-        
+
         stream = this.getClass().getResourceAsStream("/img/bennu-favicon.png");
         if (stream == null) {
             logger.error("Default favicon not found in: img/bennu-favicon.png");
@@ -58,6 +59,12 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
             }
         }
         new MenuContainer(this);
+    }
+
+    @Override
+    public String getTheme() {
+        String theme = super.getTheme();
+        return PortalInitializer.isThemeAvailable(theme) ? theme : "default";
     }
 
     @Atomic(mode = TxMode.WRITE)

@@ -22,4 +22,10 @@ public final class GroupBasedFile extends GroupBasedFile_Base {
     public boolean isAccessible(User user) {
         return getAccessGroup().isMember(user);
     }
+
+    @Override
+    public void delete() {
+        setAccessGroup(null);
+        super.delete();
+    }
 }

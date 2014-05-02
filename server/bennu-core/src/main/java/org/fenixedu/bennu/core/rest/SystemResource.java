@@ -36,6 +36,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.jar.JarFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,11 +48,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.json.adapters.KeyValuePropertiesViewer;
+import org.fenixedu.bennu.core.rest.Healthcheck.Result;
 import org.fenixedu.commons.configuration.ConfigurationInvocationHandler;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.SharedIdentityMap;
 
+import com.google.common.base.Stopwatch;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -197,7 +200,11 @@ public class SystemResource extends BennuRestResource {
         for (Healthcheck check : healthchecks) {
             JsonObject obj = new JsonObject();
             obj.addProperty("name", check.getName());
-            obj.add("result", check.execute().toJson());
+            Stopwatch stop = Stopwatch.createStarted();
+            Result result = check.execute();
+            stop.stop();
+            obj.add("result", result.toJson());
+            obj.addProperty("time", stop.elapsed(TimeUnit.MILLISECONDS));
             json.add(obj);
         }
 

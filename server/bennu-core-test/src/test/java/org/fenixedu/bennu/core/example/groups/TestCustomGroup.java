@@ -21,6 +21,7 @@ public class TestCustomGroup {
         assertNotNull(Group.parse("after(things=['a b c', def])"));
         assertNotNull(Group.parse("after(x1=['a b c', def])"));
         assertNotNull(Group.parse("after(x1=['a b c', def])"));
+        assertNotNull(Group.parse("after(x1=[])"));
     }
 
 }

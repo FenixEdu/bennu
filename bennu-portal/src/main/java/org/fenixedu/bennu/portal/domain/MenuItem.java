@@ -84,7 +84,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
     @Atomic
     public void delete() {
         setParent(null);
-        setAccessGroup(null);
+        setGroup(null);
         deleteDomainObject();
     }
 

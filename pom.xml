@@ -10,7 +10,7 @@
 
     <artifactId>bennu</artifactId>
     <name>Bennu Framework</name>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -41,7 +41,7 @@
         <connection>scm:git:git@github.com:fenixedu/bennu.git</connection>
         <developerConnection>scm:git:git@github.com:fenixedu/bennu.git</developerConnection>
         <url>http://fenixedu.github.io/bennu</url>
-        <tag>v3.0.0</tag>
+        <tag>v3.0.1</tag>
     </scm>
 
     <build>
@@ -144,11 +144,6 @@
         <repository>
             <id>fenix-ashes-maven-repository</id>
             <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
-        </repository>
-        <!-- TODO: this should be proxied in nexus -->
-        <repository>
-            <id>nuxeo</id>
-            <url>https://maven-us.nuxeo.org/nexus/content/groups/public/</url>
         </repository>
     </repositories>
 

@@ -159,6 +159,7 @@ public class ExecutionLog {
     public FileOutputStream getLogFileOutputStream() throws IOException {
         File file = new File(getLogFilePath());
         if (!file.exists()) {
+            file.getParentFile().mkdirs();
             file.createNewFile();
         }
         return new FileOutputStream(file, true);

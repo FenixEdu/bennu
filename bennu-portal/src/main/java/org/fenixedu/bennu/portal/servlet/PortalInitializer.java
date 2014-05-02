@@ -41,6 +41,7 @@ public class PortalInitializer implements ServletContextListener {
 
     private void registerBuiltinPortalBackends() {
         PortalBackendRegistry.registerPortalBackend(new RedirectPortalBackend());
+        PortalBackendRegistry.registerPortalBackend(new ForwarderPortalBackend());
     }
 
     @Override
@@ -50,5 +51,9 @@ public class PortalInitializer implements ServletContextListener {
 
     public static Set<String> getThemes() {
         return Collections.unmodifiableSet(themes);
+    }
+
+    public static boolean isThemeAvailable(String theme) {
+        return themes.contains(theme);
     }
 }

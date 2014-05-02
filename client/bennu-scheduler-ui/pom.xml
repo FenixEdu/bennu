@@ -14,7 +14,7 @@
     </properties>
 
     <artifactId>bennu-scheduler-ui</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <name>Bennu Scheduler UI</name>
 
     <repositories>
@@ -25,6 +25,6 @@
     </repositories>
 
   <scm>
-    <tag>v3.0.0</tag>
+    <tag>v3.0.1</tag>
   </scm>
 </project>

@@ -14,7 +14,6 @@ import org.fenixedu.bennu.core.groups.Group;
 public class GroupResource extends BennuRestResource {
 
     @GET
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response grantUserMembershipGroup(@QueryParam("groupExpression") String groupExpression) {
         verifyAndGetRequestAuthor();
