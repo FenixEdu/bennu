@@ -3,8 +3,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unauthorized</title>
-	<script type="text/javascript" src="../bennu-portal/js/jquery.min.js"></script>
-	<script type="text/javascript" src="../bennu-portal/portal.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/portal.js"></script>
 </head>
 <body style="display: none">
 	<div id="portal-container">
