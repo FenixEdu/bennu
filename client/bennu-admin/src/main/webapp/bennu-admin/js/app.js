@@ -7,11 +7,15 @@ bennuAdmin.config(['$compileProvider', function($compileProvider) {
 }]);
 
 var i18n = function(input) {
+  if(!input || typeof input === 'string') return input;
   var tag = BennuPortal.locale.tag;
-  if(input && input[tag]) {
-    return input[tag];
+  if(input[tag]) { return input[tag]; }
+  tag = tag.split('-')[0];
+  if(input[tag]) { return input[tag]; }
+  for (var lang in input) {
+    if(lang.indexOf(tag) === 0) { return input[lang]; }
   }
-  return '!!' + JSON.stringify(input) + '!!';
+  return input[Object.keys(input)[0]];
 }
 
 function chunk(arr, n) {
