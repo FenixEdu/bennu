@@ -63,8 +63,13 @@
                                 if (val[currentLanguage]) {
                                     return val[currentLanguage];
                                 }
-                                
+
                                 //search for other specific currentLanguage
+                                for (var lang in val) {
+                                	if(lang.indexOf(currentLanguage) === 0) {
+                                		return val[lang];
+                                	}
+                                }
                                 var fallbackLanguage = undefined;
                                 $(langs).each(function() {
                                     var eachlang = this.tag;
@@ -76,6 +81,8 @@
                                 if (fallbackLanguage != undefined && val[fallbackLanguage] != undefined) {
                                     return val[fallbackLanguage];
                                 }
+                                // Fallback, return the first key in the object...
+                                return val[Object.keys(val)[0]];
                             }
                             return "_mls!!" + val + "!!";
                         };
