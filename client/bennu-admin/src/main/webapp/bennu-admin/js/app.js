@@ -28,8 +28,10 @@ bennuAdmin.filter('i18n', function () {
 });
 
 bennuAdmin.filter('uptime', function () {
-  return function(value) { return Math.round(value/(24*60*60)) + 'd ' + (Math.round(value/(60*60)) % 24) + 'h ' +
-                                  (Math.round(value/60) % 60) + 'm ' + (value % 60)+ 's'; };
+  var n = function(n){ return n > 9 ? "" + n: "0" + n; };
+  return function(value) { value = value || 0;
+    var days = Math.floor(value/(24*60*60)), hours = Math.floor(value/(60*60)) % 24, mins = Math.floor(value/60) % 60;
+    return (value >= 86400 ? n(days) + 'd ' : '') + (value >= 3600 ? n(hours) + 'h ' : '') + (value >= 60 ? n(mins) + 'm ' : '') + n(value % 60)+ 's'; };
 });
 
 bennuAdmin.config(['$routeProvider',
