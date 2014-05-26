@@ -1,3 +1,6 @@
+<%
+response.setStatus(403);
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
