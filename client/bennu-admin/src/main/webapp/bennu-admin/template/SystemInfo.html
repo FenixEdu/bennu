@@ -107,6 +107,8 @@
                 <button class="btn btn-primary" ng-click="reload()">Reload</button>
                 <button class="btn btn-primary" ng-click="threadDump()">Thread Dump</button>
                 <button class="btn btn-primary" ng-click="healthcheck()">Healthchecks</button>
+
+                <span class="label label-primary pull-right">{{data.metrics.hostname}}</span>
             </div>
             <div class="row">
             <div class="col-lg-4">
@@ -148,6 +150,8 @@
                 <p><strong>Total Loaded Classes:</strong> {{data.metrics['jvm.classloading.loaded.total']}}</p>
                 <p><strong>Loaded Classes:</strong> {{data.metrics['jvm.classloading.loaded']}}</p>
                 <p><strong>Unloaded Classes:</strong> {{data.metrics['jvm.classloading.unloaded']}}</p>
+                <p><strong>Start Time:</strong> {{data.metrics['jvm.runtime.start.time'] | date:'dd/MM/yyyy HH:mm:ss'}}</p>
+                <p><strong>Uptime:</strong> {{data.metrics['jvm.runtime.uptime'] | uptime}}</p>
 
             </div>
             <div class="col-lg-4">

@@ -23,6 +23,11 @@ bennuAdmin.filter('i18n', function () {
   return i18n;
 });
 
+bennuAdmin.filter('uptime', function () {
+  return function(value) { return Math.round(value/(24*60*60)) + 'd ' + (Math.round(value/(60*60)) % 24) + 'h ' +
+                                  (Math.round(value/60) % 60) + 'm ' + (value % 60)+ 's'; };
+});
+
 bennuAdmin.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
