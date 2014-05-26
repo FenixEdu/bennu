@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +40,7 @@ public class ExecutionLog {
     private String taskName;
     private String stackTrace;
     private Set<String> files;
+    private String hostname;
     private Boolean started = false;
 
     public static final String LOG_JSON_FILENAME = "executionLog.json";
@@ -84,6 +87,14 @@ public class ExecutionLog {
         return gson;
     }
 
+    private static String computeHostName() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            return null;
+        }
+    }
+
     private static final HashFunction hf = Hashing.md5();
 
     public ExecutionLog(String taskName) {
@@ -92,6 +103,7 @@ public class ExecutionLog {
         setTaskName(taskName);
         setId(hf.newHasher().putString(taskName, Charsets.UTF_8).putLong(now.getMillis()).hash().toString());
         setSuccess(false);
+        setHostname(computeHostName());
     }
 
     public ExecutionLog(JsonObject obj) {
@@ -140,6 +152,14 @@ public class ExecutionLog {
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
     }
 
     private void writeJson(String json) {
