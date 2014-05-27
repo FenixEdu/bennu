@@ -1,11 +1,14 @@
 bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
   $scope.id = $routeParams.id;
+  $scope.handleError = function(data) { $scope.error = data; };
   $scope.deleteSelected = function() {
-    $scope.selected.node.remove();
     if($scope.selected.id) {
-      $http.delete("../api/bennu-portal/menu/" + $scope.selected.id);
+      $http.delete("../api/bennu-portal/menu/" + $scope.selected.id).success(function (data) {
+        $scope.selected.node.remove(); $scope.selected = null;
+      }).error($scope.handleError);
+    } else {
+      $scope.selected.node.remove(); $scope.selected = null;
     }
-    $scope.selected = null;
   }
   $scope.saveSelected = function() {
     var data = { title: $scope.selected.title, description: $scope.selected.description, visible: $scope.selected.visible,
@@ -22,7 +25,7 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
       $scope.selected = data;
       data.node = node;
       node.setTitle(i18n(data.title));
-    });
+    }).error($scope.handleError);
   }
   $scope.loadApps = function() {
     $scope.filter = null;
@@ -35,7 +38,7 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
   $scope.installApplication = function() {
     $http.post("../api/bennu-portal/menu/applications/", { root: $scope.selected.id, key: $scope.newApp.key }).success(function (item) {
       add(item, $scope.selected.node);
-    });
+    }).error($scope.handleError);
   }
   $scope.createChild = function() {
     var mls = {}; 
@@ -46,7 +49,7 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
   $scope.saveOrder = function() {
     $http.post("../api/bennu-portal/menu/order", $scope.changes).success(function () {
       $scope.changes = null;
-    });
+    }).error($scope.handleError);
   }
 
   var add = function(item, parent) {
