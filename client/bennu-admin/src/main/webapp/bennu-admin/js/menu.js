@@ -25,6 +25,7 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
     });
   }
   $scope.loadApps = function() {
+    $scope.filter = null;
     if(!$scope.apps) {
       $http.get("../api/bennu-portal/menu/applications/").success(function (data) {
         $scope.apps = data;
