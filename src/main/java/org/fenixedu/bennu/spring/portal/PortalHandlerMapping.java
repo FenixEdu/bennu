@@ -1,3 +1,21 @@
+/**
+ * Copyright © 2014 Instituto Superior Técnico
+ *
+ * This file is part of Bennu Spring.
+ *
+ * Bennu Spring is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Bennu Spring is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Bennu Spring.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.fenixedu.bennu.spring.portal;
 
 import java.lang.reflect.Method;
@@ -65,8 +83,8 @@ public class PortalHandlerMapping extends RequestMappingHandlerMapping {
             SpringApplication app = AnnotationUtils.findAnnotation(type, SpringApplication.class);
             LocalizedString title = getLocalized(app.title());
             Application application =
-                    new Application(SpringPortalBackend.BACKEND_KEY, app.path(), app.group(), title, app.description().equals(
-                            DELEGATE) ? title : getLocalized(app.description()), app.hint());
+                    new Application(type.getName(), app.path(), app.group(), title,
+                            app.description().equals(DELEGATE) ? title : getLocalized(app.description()), app.hint());
             applicationClasses.put(type, application);
             ApplicationRegistry.registerApplication(application);
             logger.debug("Registered application for type {}", type);
@@ -87,7 +105,7 @@ public class PortalHandlerMapping extends RequestMappingHandlerMapping {
             Functionality functionality =
                     new Functionality(SpringPortalBackend.BACKEND_KEY, "/" + path, path.replace('/', '-'), model.accessGroup()
                             .equals(DELEGATE) ? app.getAccessGroup() : model.accessGroup(), title, model.description().equals(
-                                    DELEGATE) ? title : getLocalized(model.description()));
+                            DELEGATE) ? title : getLocalized(model.description()));
             app.addFunctionality(functionality);
             functionalities.put(type, functionality);
         }
