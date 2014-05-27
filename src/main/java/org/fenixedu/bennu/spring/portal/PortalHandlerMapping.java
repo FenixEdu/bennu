@@ -83,8 +83,8 @@ public class PortalHandlerMapping extends RequestMappingHandlerMapping {
             SpringApplication app = AnnotationUtils.findAnnotation(type, SpringApplication.class);
             LocalizedString title = getLocalized(app.title());
             Application application =
-                    new Application(SpringPortalBackend.BACKEND_KEY, app.path(), app.group(), title, app.description().equals(
-                            DELEGATE) ? title : getLocalized(app.description()), app.hint());
+                    new Application(type.getName(), app.path(), app.group(), title,
+                            app.description().equals(DELEGATE) ? title : getLocalized(app.description()), app.hint());
             applicationClasses.put(type, application);
             ApplicationRegistry.registerApplication(application);
             logger.debug("Registered application for type {}", type);
@@ -105,7 +105,7 @@ public class PortalHandlerMapping extends RequestMappingHandlerMapping {
             Functionality functionality =
                     new Functionality(SpringPortalBackend.BACKEND_KEY, "/" + path, path.replace('/', '-'), model.accessGroup()
                             .equals(DELEGATE) ? app.getAccessGroup() : model.accessGroup(), title, model.description().equals(
-                                    DELEGATE) ? title : getLocalized(model.description()));
+                            DELEGATE) ? title : getLocalized(model.description()));
             app.addFunctionality(functionality);
             functionalities.put(type, functionality);
         }
