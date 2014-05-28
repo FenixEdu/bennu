@@ -7,11 +7,15 @@ bennuAdmin.config(['$compileProvider', function($compileProvider) {
 }]);
 
 var i18n = function(input) {
+  if(!input || typeof input === 'string') return input;
   var tag = BennuPortal.locale.tag;
-  if(input && input[tag]) {
-    return input[tag];
+  if(input[tag]) { return input[tag]; }
+  tag = tag.split('-')[0];
+  if(input[tag]) { return input[tag]; }
+  for (var lang in input) {
+    if(lang.indexOf(tag) === 0) { return input[lang]; }
   }
-  return '!!' + JSON.stringify(input) + '!!';
+  return input[Object.keys(input)[0]];
 }
 
 function chunk(arr, n) {
@@ -21,6 +25,13 @@ function chunk(arr, n) {
 
 bennuAdmin.filter('i18n', function () {
   return i18n;
+});
+
+bennuAdmin.filter('uptime', function () {
+  var n = function(n){ return n > 9 ? "" + n: "0" + n; };
+  return function(value) { value = value || 0;
+    var days = Math.floor(value/(24*60*60)), hours = Math.floor(value/(60*60)) % 24, mins = Math.floor(value/60) % 60;
+    return (value >= 86400 ? n(days) + 'd ' : '') + (value >= 3600 ? n(hours) + 'h ' : '') + (value >= 60 ? n(mins) + 'm ' : '') + n(value % 60)+ 's'; };
 });
 
 bennuAdmin.config(['$routeProvider',

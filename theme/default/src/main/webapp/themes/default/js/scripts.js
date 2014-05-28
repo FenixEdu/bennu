@@ -1,4 +1,4 @@
-(function() {
+$(function() {
         $("input[name=password]").keypress(function(e) {
                 if (e.which == 13) {
                         e.preventDefault();
@@ -21,4 +21,4 @@
                         location.reload();
                 });
         });
-}());
+});

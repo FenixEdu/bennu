@@ -26,7 +26,10 @@ import java.lang.Thread.State;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -60,6 +63,14 @@ import com.google.gson.JsonObject;
 
 @Path("/bennu-core/system")
 public class SystemResource extends BennuRestResource {
+
+    private static String getHostName() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            return "<Host name unknown>";
+        }
+    }
 
     @GET
     @Path("info")
@@ -124,6 +135,7 @@ public class SystemResource extends BennuRestResource {
         metrics.addProperty("cacheSize", SharedIdentityMap.getCache().size());
         metrics.addProperty("project", FenixFramework.getProject().getName());
         metrics.addProperty("version", FenixFramework.getProject().getVersion());
+        metrics.addProperty("hostname", getHostName());
 
         MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
 
@@ -145,6 +157,11 @@ public class SystemResource extends BennuRestResource {
         metrics.addProperty("jvm.classloading.loaded.total", classLoading.getTotalLoadedClassCount());
         metrics.addProperty("jvm.classloading.loaded", classLoading.getLoadedClassCount());
         metrics.addProperty("jvm.classloading.unloaded", classLoading.getUnloadedClassCount());
+
+        RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
+
+        metrics.addProperty("jvm.runtime.uptime", runtime.getUptime() / 1000);
+        metrics.addProperty("jvm.runtime.start.time", runtime.getStartTime());
 
         json.add("metrics", metrics);
 
