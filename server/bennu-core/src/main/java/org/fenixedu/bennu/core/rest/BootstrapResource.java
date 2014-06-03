@@ -97,19 +97,19 @@ public class BootstrapResource extends BennuRestResource {
             JsonObject bootstrapperJson = new JsonObject();
             JsonArray sectionsJson = new JsonArray();
 
-            if (bootstrapperSections != null) {
+            if (bootstrapperSections != null && !bootstrapperSections.isEmpty()) {
                 for (Class<?> sectionClass : bootstrapperSections) {
                     if (!registeredSections.contains(sectionClass)) {
                         sectionsJson.add(createSection(sectionClass.getAnnotation(Section.class), sectionClass));
                         registeredSections.add(sectionClass);
                     }
                 }
+                bootstrapperJson.add("name", getLocalizedString(bootstrapper.bundle(), bootstrapper.name()).json());
+                bootstrapperJson.add("description", getLocalizedString(bootstrapper.bundle(), bootstrapper.description()).json());
+                bootstrapperJson.add("sections", sectionsJson);
+                bootstrappersJson.add(bootstrapperJson);
             }
 
-            bootstrapperJson.add("name", getLocalizedString(bootstrapper.bundle(), bootstrapper.name()).json());
-            bootstrapperJson.add("description", getLocalizedString(bootstrapper.bundle(), bootstrapper.description()).json());
-            bootstrapperJson.add("sections", sectionsJson);
-            bootstrappersJson.add(bootstrapperJson);
         }
         return bootstrappersJson;
     }
