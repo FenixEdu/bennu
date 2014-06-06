@@ -15,6 +15,8 @@ public class LocaleStringViewer implements JsonViewer<Locale> {
     public JsonElement view(Locale locale, JsonBuilder ctx) {
         JsonObject object = new JsonObject();
         object.addProperty("tag", locale.toLanguageTag());
+        object.addProperty("displayName", locale.getDisplayName(locale));
+        object.addProperty("lang", locale.getLanguage());
         return object;
     }
 }
