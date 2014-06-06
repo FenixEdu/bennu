@@ -20,8 +20,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.Comparator;
+import java.util.UUID;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -122,7 +122,7 @@ public final class User extends User_Base implements Principal {
     }
 
     public String generatePassword() {
-        final String password = RandomStringUtils.randomAlphanumeric(10);
+        final String password = UUID.randomUUID().toString().replace("-", "").substring(0, 15);
         changePassword(password);
         return password;
     }
