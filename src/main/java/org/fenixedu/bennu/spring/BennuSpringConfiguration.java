@@ -18,6 +18,7 @@
  */
 package org.fenixedu.bennu.spring;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -31,9 +32,11 @@ import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.core.util.CoreConfiguration.ConfigurationProperties;
 import org.fenixedu.bennu.spring.portal.PortalHandlerInterceptor;
 import org.fenixedu.bennu.spring.portal.PortalHandlerMapping;
+import org.fenixedu.bennu.spring.resolvers.AuthenticatedUserArgumentResolver;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +45,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
@@ -57,7 +61,7 @@ import com.google.common.collect.FluentIterable;
 
 @Configuration
 @ComponentScan("org.fenixedu.bennu")
-public class BennuSpringConfiguration extends WebMvcConfigurationSupport {
+public class BennuSpringConfiguration extends WebMvcConfigurationSupport implements InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(BennuSpringConfiguration.class);
 
@@ -164,4 +168,12 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport {
         return new StandardServletMultipartResolver();
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        // This is required to add the resolver as first on the list
+        List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
+        resolvers.add(new AuthenticatedUserArgumentResolver());
+        resolvers.addAll(requestMappingHandlerAdapter().getArgumentResolvers());
+        requestMappingHandlerAdapter().setArgumentResolvers(resolvers);
+    }
 }
