@@ -43,6 +43,18 @@
         <url>https://travis-ci.org/FenixEdu/bennu-spring</url>
     </ciManagement>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <sourcepath>src/main/java</sourcepath>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.fenixedu</groupId>
