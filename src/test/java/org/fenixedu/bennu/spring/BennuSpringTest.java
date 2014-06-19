@@ -19,8 +19,12 @@
 package org.fenixedu.bennu.spring;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.fenixedu.commons.i18n.I18N;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,4 +59,21 @@ public class BennuSpringTest {
         }
     }
 
+    @Test
+    public void testLocalizedConverter() throws Exception {
+        String localized = new LocalizedString(I18N.getLocale(), "Hello!").json().toString();
+        this.mockMvc.perform(post("/test/localized").param("localized", localized)).andExpect(status().isOk())
+                .andExpect(content().string(localized));
+    }
+
+    @Test
+    public void testLocalizedConverterWithBadString() throws Exception {
+        String localized = "xpto";
+        this.mockMvc.perform(post("/test/localized").param("localized", localized)).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testLocalizedConverterWithNoString() throws Exception {
+        this.mockMvc.perform(post("/test/localized")).andExpect(status().isBadRequest());
+    }
 }

@@ -18,8 +18,11 @@
  */
 package org.fenixedu.bennu.spring.mvc;
 
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/test/")
@@ -43,6 +46,12 @@ public class TestController {
     @RequestMapping("/500")
     public String throw500() {
         throw BennuSpringTestDomainException.status(500);
+    }
+
+    @ResponseBody
+    @RequestMapping("/localized")
+    public String localized(@RequestParam LocalizedString localized) {
+        return localized.json().toString();
     }
 
 }
