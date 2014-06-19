@@ -33,6 +33,7 @@ import org.fenixedu.bennu.core.util.CoreConfiguration.ConfigurationProperties;
 import org.fenixedu.bennu.spring.portal.PortalHandlerInterceptor;
 import org.fenixedu.bennu.spring.portal.PortalHandlerMapping;
 import org.fenixedu.bennu.spring.resolvers.AuthenticatedUserArgumentResolver;
+import org.fenixedu.bennu.spring.resolvers.BennuSpringExceptionResolver;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,7 @@ import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -176,4 +178,11 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport impleme
         resolvers.addAll(requestMappingHandlerAdapter().getArgumentResolvers());
         requestMappingHandlerAdapter().setArgumentResolvers(resolvers);
     }
+
+    @Override
+    protected void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
+        exceptionResolvers.add(new BennuSpringExceptionResolver());
+        addDefaultHandlerExceptionResolvers(exceptionResolvers);
+    }
+
 }
