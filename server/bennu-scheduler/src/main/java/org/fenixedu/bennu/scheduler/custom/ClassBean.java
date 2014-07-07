@@ -94,7 +94,12 @@ public class ClassBean implements Serializable {
         private final ClassLoader parent;
 
         public MyClassLoader(final URL[] urls, final ClassLoader parent) {
-            super(urls, parent);
+            super(urls);
+            /* The parent is not explicitly defined, instead we manually
+             * delegate whenever necessary.
+             * This ensures that the newly uploaded class is always chosen
+             * instead of an existing class with the same name.
+             */
             this.parent = parent;
         }
 
