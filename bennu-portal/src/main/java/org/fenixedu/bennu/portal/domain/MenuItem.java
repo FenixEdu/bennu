@@ -45,6 +45,19 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         setFullPath(computeFullPath());
     }
 
+    protected final void init(MenuContainer parent, MenuItem original) {
+        setVisible(original.getVisible());
+        setAccessGroup(original.getAccessGroup());
+        setDescription(original.getDescription());
+        setTitle(original.getTitle());
+        setPath(original.getPath());
+        setLayout(original.getLayout());
+        if (parent != null) {
+            parent.addChild(this);
+        }
+        setFullPath(computeFullPath());
+    }
+
     public Group getAccessGroup() {
         return getGroup().toGroup();
     }
@@ -175,4 +188,6 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         }
         return result;
     }
+
+    protected abstract MenuItem moveTo(MenuContainer container);
 }
