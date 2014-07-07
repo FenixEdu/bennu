@@ -38,23 +38,23 @@ bennuAdmin.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/configuration', {
-        templateUrl: 'template/PortalConfiguration.html',
+        templateUrl: contextPath + '/bennu-admin/template/PortalConfiguration.html',
         controller: 'PortalConfigurationCtrl'
       }).
       when('/menu/:id', {
-        templateUrl: 'template/Menu.html',
+        templateUrl: contextPath + '/bennu-admin/template/Menu.jsp',
         controller: 'MenuController'
       }).
       when('/system/info', {
-        templateUrl: 'template/SystemInfo.html',
+        templateUrl: contextPath + '/bennu-admin/template/SystemInfo.html',
         controller: 'SystemInfoController'
       }).
       when('/system/logger', {
-        templateUrl: 'template/Logger.html',
+        templateUrl: contextPath + '/bennu-admin/template/Logger.html',
         controller: 'LoggerController'
       }).
       when('/domain-browser/:oid?', {
-        templateUrl: 'template/DomainBrowser.html',
+        templateUrl: contextPath + '/bennu-admin/template/DomainBrowser.html',
         controller: 'DomainBrowserController'
       }).
       otherwise({
@@ -63,13 +63,13 @@ bennuAdmin.config(['$routeProvider',
   }]);
 
 bennuAdmin.controller('PortalConfigurationCtrl', ['$scope', '$http', function ($scope, $http) {
-  $http.get('../api/bennu-portal/configuration').success(function (data) {
+  $http.get(contextPath + '/api/bennu-portal/configuration').success(function (data) {
     $scope.locales = BennuPortal.locales;
     $scope.menu = data;
   });
   $scope.error = '';
   $scope.save = function() {
-    $http.put('../api/bennu-portal/configuration/' + $scope.menu.id, $scope.menu).success(function () {
+    $http.put(contextPath + '/api/bennu-portal/configuration/' + $scope.menu.id, $scope.menu).success(function () {
       location.reload();
     });
   }
@@ -112,17 +112,17 @@ bennuAdmin.controller('PortalConfigurationCtrl', ['$scope', '$http', function ($
 
 bennuAdmin.controller('SystemInfoController', [ '$scope', '$http', function ($scope, $http) {
   $scope.reload = function() {
-    $http.get('../api/bennu-core/system/info').success(function (data) {
+    $http.get(contextPath + '/api/bennu-core/system/info').success(function (data) {
       $scope.data = data;
     });
   }
   $scope.threadDump = function() {
-    $http.get('../api/bennu-core/system/thread-dump').success(function (data) {
+    $http.get(contextPath + '/api/bennu-core/system/thread-dump').success(function (data) {
       $scope.threads = data;
     });
   }
   $scope.healthcheck = function() {
-    $http.get('../api/bennu-core/system/healthcheck').success(function (data) {
+    $http.get(contextPath + '/api/bennu-core/system/healthcheck').success(function (data) {
       $scope.healthchecks = data; $scope.currentCheck = null;
     });
   }
@@ -143,11 +143,11 @@ bennuAdmin.controller('SystemInfoController', [ '$scope', '$http', function ($sc
 
 bennuAdmin.controller('LoggerController', [ '$scope', '$http', function ($scope, $http) {
   $scope.changeLevel = function(logger, level) {
-    $http.get('../api/bennu-core/system/logger/' + logger.name + '/' + level).success(function (data) {
+    $http.get(contextPath + '/api/bennu-core/system/logger/' + logger.name + '/' + level).success(function (data) {
       $scope.loggers = data.loggers;
     });
   }
-  $http.get('../api/bennu-core/system/logger').success(function (data) {
+  $http.get(contextPath + '/api/bennu-core/system/logger').success(function (data) {
     $scope.server = data.server;
     $scope.loggers = data.loggers;
   });
@@ -165,7 +165,7 @@ bennuAdmin.controller('DomainBrowserController', [ '$scope', '$http', '$routePar
   }
   $scope.exploreRelation = function(name) {
     $scope.relation = name; $scope.relations = $scope.relError = null; $scope.currentPage = 0;
-    $http.get('../api/bennu-core/domain-browser/' + $scope.oid + '/' + name).success(function (data) {
+    $http.get(contextPath + '/api/bennu-core/domain-browser/' + $scope.oid + '/' + name).success(function (data) {
       $scope.relations = chunk(data, 15); $scope.totalEntries = data.length;
     }).error(function (data, code) { $scope.relError = code; });
   }
@@ -178,7 +178,7 @@ bennuAdmin.controller('DomainBrowserController', [ '$scope', '$http', '$routePar
       $scope.currentPage--;
   }
   $(".modal-backdrop").remove(); $("body").removeClass('modal-open'); $scope.error = null;
-  $http.get('../api/bennu-core/domain-browser/' + $scope.oid).success(function (data) {
+  $http.get(contextPath + '/api/bennu-core/domain-browser/' + $scope.oid).success(function (data) {
     document.title = data.oid + " · Domain Browser";
     $scope.data = data;
   }).error(function (data, code) { $scope.error = code; $scope.id = $scope.oid; });
