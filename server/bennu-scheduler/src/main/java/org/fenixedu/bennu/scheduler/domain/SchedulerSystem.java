@@ -66,7 +66,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             if (leaseTimeProperty < 2) {
                 throw new Error("property scheduler.lease.time.minutes must be a positive integer greater than 1.");
             }
-            LOG.info("scheduler.lease.time.minutes: {}", leaseTimeProperty);
             leaseTime = leaseTimeProperty;
         }
         return leaseTime;
@@ -83,7 +82,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             if (queueThreadsNumberProperty < 1) {
                 throw new Error("property scheduler.queue.threads.number must be a positive integer greater than 0.");
             }
-            LOG.info("scheduler.queue.threads.number: {}", queueThreadsNumberProperty);
             queueThreadsNumber = queueThreadsNumberProperty;
         }
         return queueThreadsNumber;
@@ -277,7 +275,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     private static void spawnConsumers() {
         for (int i = 1; i <= getQueueThreadsNumber(); i++) {
-            LOG.info("Launching queue consumer {}", i);
+            LOG.debug("Launching queue consumer {}", i);
             Thread thread = new Thread(new ProcessQueue());
             thread.start();
             activeConsumers.add(thread);
@@ -387,7 +385,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     public static void destroy() {
 
         for (final Timer timer : timers) {
-            LOG.info("interrupted timer thread {}", timer.toString());
+            LOG.debug("interrupted timer thread {}", timer.toString());
             timer.cancel();
         }
 
@@ -395,7 +393,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             LOG.info("stopping scheduler");
             scheduler.stop();
             for (final Thread consumer : activeConsumers) {
-                LOG.info("interrupted consumer thread {}", consumer.getName());
+                LOG.debug("interrupted consumer thread {}", consumer.getName());
                 consumer.interrupt();
             }
             resetLease();
