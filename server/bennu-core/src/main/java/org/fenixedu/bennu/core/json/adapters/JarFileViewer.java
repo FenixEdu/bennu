@@ -24,7 +24,9 @@ public class JarFileViewer implements JsonViewer<JarFile> {
         properties.put("jar", file.getName());
 
         ZipEntry manifest = file.getEntry("META-INF/MANIFEST.MF");
-        properties.put("creation", new DateTime(manifest.getTime()).toString("yyyy-MM-dd HH:mm:ss"));
+        if (manifest != null) {
+            properties.put("creation", new DateTime(manifest.getTime()).toString("yyyy-MM-dd HH:mm:ss"));
+        }
 
         Enumeration<JarEntry> entries = file.entries();
         while (entries.hasMoreElements()) {
