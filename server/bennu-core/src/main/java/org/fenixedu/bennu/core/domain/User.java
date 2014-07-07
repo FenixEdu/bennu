@@ -20,7 +20,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.joda.time.DateTime;
@@ -49,6 +51,7 @@ public final class User extends User_Base implements Principal {
         }
     }
 
+    @Deprecated
     public interface UserPresentationStrategy {
         public String present(User user);
 
@@ -78,6 +81,7 @@ public final class User extends User_Base implements Principal {
 
     };
 
+    @Deprecated
     public static class UserToUsername implements Function<User, String> {
         @Override
         public String apply(User user) {
@@ -85,6 +89,7 @@ public final class User extends User_Base implements Principal {
         }
     }
 
+    @Deprecated
     public static class UsernameToUser implements Function<String, User> {
         @Override
         public User apply(String username) {
@@ -94,7 +99,23 @@ public final class User extends User_Base implements Principal {
 
     private static UserPresentationStrategy strategy = defaultStrategy;
 
+    public static interface UsernameGenerator {
+        public String doGenerate(UserProfile parameter);
+    }
+
+    /**
+     * @deprecated Use {@link User#User(String, UserProfile)} instead.
+     */
+    @Deprecated
     public User(final String username) {
+        this(username, new UserProfile());
+    }
+
+    public User(UserProfile profile) {
+        this(generateUsername(profile), profile);
+    }
+
+    public User(String username, UserProfile profile) {
         super();
         if (findByUsername(username) != null) {
             throw BennuCoreDomainException.duplicateUsername(username);
@@ -102,6 +123,13 @@ public final class User extends User_Base implements Principal {
         setBennu(Bennu.getInstance());
         setCreated(new DateTime());
         setUsername(username);
+        setProfile(profile);
+    }
+
+    @Override
+    public UserProfile getProfile() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getProfile();
     }
 
     @Override
@@ -117,8 +145,83 @@ public final class User extends User_Base implements Principal {
     }
 
     @Override
+    public LocalDate getExpiration() {
+        if (super.getExpiration() != null) {
+            return super.getExpiration();
+        }
+        LocalDate latest = null;
+        for (UserLoginPeriod period : getLoginPeriodSet()) {
+            // If there is an open period, set the user's expiration to null (i.e. open)
+            if (period.getEndDate() == null) {
+                return null;
+            }
+
+            // If no expiration is defined, or the current expiration is before the period's end date,
+            // set it as the expiration.
+            if (latest == null || latest.isBefore(period.getEndDate())) {
+                latest = period.getEndDate();
+            }
+        }
+        return null;
+    }
+
+    @Deprecated
+    @Override
+    public void setExpiration(LocalDate expiration) {
+        super.setExpiration(expiration);
+    }
+
+    /**
+     * @deprecated Use {@link UserProfile#getFullName()} instead
+     */
+    @Deprecated
+    @Override
     public String getName() {
-        return getUsername();
+        return getProfile() != null ? getProfile().getFullName() : getUsername();
+    }
+
+    /**
+     * @deprecated Use {@link UserProfile#getEmail()} instead
+     */
+    @Deprecated
+    @Override
+    public String getEmail() {
+        return getProfile() != null ? getProfile().getEmail() : super.getEmail();
+    }
+
+    /**
+     * @deprecated Use {@link UserProfile#setEmail(String) }
+     */
+    @Deprecated
+    @Override
+    public void setEmail(String email) {
+        if (getProfile() == null) {
+            bootstrapProfile();
+        }
+        getProfile().setEmail(email);
+        super.setEmail(email);
+    }
+
+    /**
+     * @deprecated Use {@link UserProfile#getPreferredLocale() }
+     */
+    @Deprecated
+    @Override
+    public Locale getPreferredLocale() {
+        return getProfile() != null ? getProfile().getPreferredLocale() : super.getPreferredLocale();
+    }
+
+    /**
+     * @deprecated Use {@link UserProfile#setPreferredLocale(Locale) }
+     */
+    @Deprecated
+    @Override
+    public void setPreferredLocale(Locale preferredLocale) {
+        if (getProfile() == null) {
+            bootstrapProfile();
+        }
+        getProfile().setPreferredLocale(preferredLocale);
+        super.setPreferredLocale(preferredLocale);
     }
 
     public String generatePassword() {
@@ -153,10 +256,18 @@ public final class User extends User_Base implements Principal {
         return hash.equals(getPassword());
     }
 
+    /**
+     * @deprecated Use {@link UserProfile#getFullName() } instead
+     */
+    @Deprecated
     public String getPresentationName() {
         return strategy.present(this);
     }
 
+    /**
+     * @deprecated Use {@link UserProfile#getNickname() } instead
+     */
+    @Deprecated
     public String getShortPresentationName() {
         return strategy.shortPresent(this);
     }
@@ -170,10 +281,43 @@ public final class User extends User_Base implements Principal {
         return null;
     }
 
+    public static void setUsernameGenerator(UsernameGenerator generator) {
+        usernameGenerator = generator;
+    }
+
+    /**
+     * @deprecated User now has native name field rendering the need for these strategies obsolete
+     */
+    @Deprecated
     public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
         if (strategy != defaultStrategy) {
             logger.warn("Overriding non-default strategy");
         }
         strategy = newStrategy;
+    }
+
+    private void bootstrapProfile() {
+        setProfile(new UserProfile());
+        getProfile().setEmail(super.getEmail());
+        getProfile().setPreferredLocale(super.getPreferredLocale());
+    }
+
+    private static UsernameGenerator usernameGenerator = new UsernameGenerator() {
+        private final AtomicInteger currentId = new AtomicInteger(0);
+
+        @Override
+        public String doGenerate(UserProfile profile) {
+            return "bennu" + currentId.getAndIncrement();
+        }
+    };
+
+    private static String generateUsername(UserProfile profile) {
+        while (true) {
+            String username = usernameGenerator.doGenerate(profile);
+            if (User.findByUsername(username) == null) {
+                logger.debug("Generated username {} for {}", username, profile);
+                return username;
+            }
+        }
     }
 }

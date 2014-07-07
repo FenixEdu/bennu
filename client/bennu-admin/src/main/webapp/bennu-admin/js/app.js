@@ -57,6 +57,10 @@ bennuAdmin.config(['$routeProvider',
         templateUrl: contextPath + '/bennu-admin/template/DomainBrowser.html',
         controller: 'DomainBrowserController'
       }).
+      when('/user-management', {
+        templateUrl: contextPath + '/bennu-admin/template/UserManagement.html',
+        controller: 'UserManagementController'
+      }).
       otherwise({
         redirectTo: '/configuration'
       });
@@ -182,6 +186,35 @@ bennuAdmin.controller('DomainBrowserController', [ '$scope', '$http', '$routePar
     document.title = data.oid + " · Domain Browser";
     $scope.data = data;
   }).error(function (data, code) { $scope.error = code; $scope.id = $scope.oid; });
+}]);
+
+bennuAdmin.controller('UserManagementController', [ '$scope', '$http', '$routeParams', '$location',
+                                                   function ($scope, $http, $routeParams, $location) {
+  $scope.updateDisplayName = function(user) {
+    var first = user.givenNames ? user.givenNames.split(' ')[0] : "";
+    var last = user.familyNames ? user.familyNames.split(' ')[user.familyNames.split(' ').length - 1] : "";
+    user.displayName = (first + " " + last).trim();
+  };
+
+  $scope.save = function(user) {
+    $scope.errors = null;
+    $http.post(contextPath + '/api/bennu-core/users', user).success(function () {
+      $scope.reset();
+    }).error(function(data, code) {
+      $scope.errors = data.message;
+    });
+  };
+
+  $scope.reset = function() {
+    $scope.user = { preferredLocale: $scope.locales[0] };
+  };
+
+  $scope.isUnchanged = function(user) {
+    return angular.equals(user, {});
+  };
+
+  $scope.locales = BennuPortal.locales;
+  $scope.reset();
 }]);
 
 bennuAdmin.filter('capitalize', function() {

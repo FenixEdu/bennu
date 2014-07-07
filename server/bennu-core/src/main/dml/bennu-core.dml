@@ -63,9 +63,22 @@ public class User {
 	protected String password;
 	protected String salt;
 	protected DateTime created;
-	public LocalDate expiration;
-	public String email;
-	public Locale preferredLocale;
+	public LocalDate expiration; // remove on the next major
+	public String email; // remove on the next major
+	public Locale preferredLocale; // remove on the next major
+}
+
+public class UserLoginPeriod {
+    protected LocalDate beginDate (REQUIRED);
+    protected LocalDate endDate;
+}
+
+public class UserProfile {
+    protected String displayName;
+    protected String givenNames;
+    protected String familyNames;
+    public String email;
+    public Locale preferredLocale;
 }
 
 relation SystemUsers {
@@ -75,6 +88,24 @@ relation SystemUsers {
 	protected User playsRole user {
 		multiplicity *;
 	}
+}
+
+relation UserLoginPeriods {
+    protected User playsRole user {
+        multiplicity 1..1;
+    }
+    protected UserLoginPeriod playsRole loginPeriod {
+        multiplicity *;
+    }
+}
+
+relation UserProfileUser {
+    protected User playsRole user {
+        multiplicity 1..1;
+    }
+    protected UserProfile playsRole profile {
+        multiplicity 0..1; // make required in the next major
+    }
 }
 
 /* Authorization Groups */

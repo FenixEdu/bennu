@@ -1,0 +1,48 @@
+<h2>User Management</h2>
+
+<form role="form" class="form-horizontal" ng-submit="save(user)">
+  <div class="form-group">
+    <label for="input-name" class="col-sm-2 control-label">Full Name</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" id="input-name" ng-model="user.givenNames" ng-change="updateDisplayName(user)" placeholder="Given Names" required/>
+      </div>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" id="input-family-name" ng-model="user.familyNames" ng-change="updateDisplayName(user)" placeholder="Family Names" required/>
+      </div>
+	</div>
+  </div>
+  <div class="form-group">
+    <label for="input-displayname" class="col-sm-2 control-label">Display Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="input-displayname" ng-model="user.displayName" placeholder="Display Name" required/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="input-email" class="col-sm-2 control-label">Email</label>
+    <div class="col-sm-10">
+      <input type="email" class="form-control" id="input-email" ng-model="user.email" ng-blur="updateGravatar()" placeholder="Enter email" required/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="input-language" class="col-sm-2 control-label">Preferred Language</label>
+    <div class="col-sm-10">
+      <select id="input-language" class="form-control" ng-model="user.preferredLocale" ng-options="locale.displayName for locale in locales">
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="input-password" class="col-sm-2 control-label">Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="input-password" ng-model="user.password" placeholder="Password" required/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="input-password2" class="col-sm-2 control-label">Password (Again)</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="input-password2" ng-model="user.passwordCheck" placeholder="Password (Again)" required/>
+    </div>
+  </div>
+  <div class="alert alert-danger" role="alert" ng-if="errors">{{errors}}</div>
+  <button ng-click="reset()" ng-disabled="isUnchanged(user)" class="btn" >Reset</button>
+  <button ng-disabled="isUnchanged(user)" class="btn btn-primary">Create User</button>
+</form>

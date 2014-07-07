@@ -11,6 +11,7 @@ import org.fenixedu.bennu.core.bootstrap.annotations.Field;
 import org.fenixedu.bennu.core.bootstrap.annotations.FieldType;
 import org.fenixedu.bennu.core.bootstrap.annotations.Section;
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.UserProfile;
 import org.fenixedu.bennu.core.groups.DynamicGroup;
 import org.fenixedu.bennu.core.groups.UserGroup;
 
@@ -30,9 +31,10 @@ public class AdminUserBootstrapper {
                     "bootstrapper.error.password", "resources.BennuResources"));
         }
 
-        User adminUser = new User(section.getAdminUsername());
+        User adminUser =
+                new User(section.getAdminUsername(), new UserProfile(section.getAdminGivenNames(), section.getAdminFamilyNames(),
+                        section.getAdminName(), section.getAdminUserEmail(), null));
         adminUser.changePassword(section.getAdminPassword());
-        adminUser.setEmail(section.getAdminUserEmail());
 
         DynamicGroup.get("managers").changeGroup(UserGroup.of(adminUser));
 
@@ -49,15 +51,21 @@ public class AdminUserBootstrapper {
         @Field(name = "bootstrapper.admin.adminName", hint = "bootstrapper.admin.adminName", order = 2)
         public String getAdminName();
 
-        @Field(name = "bootstrapper.admin.email", hint = "bootstrapper.admin.email.hint", fieldType = FieldType.EMAIL, order = 3)
+        @Field(name = "bootstrapper.admin.adminGivenNames", hint = "bootstrapper.admin.adminGivenNames", order = 3)
+        public String getAdminGivenNames();
+
+        @Field(name = "bootstrapper.admin.adminFamilyNames", hint = "bootstrapper.admin.adminFamilyNames", order = 4)
+        public String getAdminFamilyNames();
+
+        @Field(name = "bootstrapper.admin.email", hint = "bootstrapper.admin.email.hint", fieldType = FieldType.EMAIL, order = 5)
         public String getAdminUserEmail();
 
         @Field(name = "bootstrapper.admin.password", hint = "bootstrapper.admin.password", fieldType = FieldType.PASSWORD,
-                order = 4)
+                order = 6)
         public String getAdminPassword();
 
         @Field(name = "bootstrapper.admin.retypedPassword", hint = "bootstrapper.admin.password", fieldType = FieldType.PASSWORD,
-                order = 5)
+                order = 7)
         public String getAdminPasswordRetyped();
 
     }
