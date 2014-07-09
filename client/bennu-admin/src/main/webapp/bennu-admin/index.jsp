@@ -10,8 +10,8 @@
 	<div id="portal-container">
 		<div ng-view>
 		</div>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-admin/js/angular.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-admin/js/angular-route.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/angular.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/angular-route.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-admin/js/app.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-admin/js/menu.js"></script>
 	</div>
