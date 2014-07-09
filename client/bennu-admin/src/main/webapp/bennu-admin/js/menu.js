@@ -42,7 +42,7 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
   }
   $scope.createChild = function() {
     var mls = {}; 
-    mls[BennuPortal.locale.tag] = 'New Entry';
+    mls[BennuPortal.locale.tag] = 'New Entry';
     var newChild = { title: mls, description: {}, visible: true, accessExpression: 'anyone', functionality: false, parent: $scope.selected.id };
     add(newChild, $scope.selected.node).setActive(true);
   }
