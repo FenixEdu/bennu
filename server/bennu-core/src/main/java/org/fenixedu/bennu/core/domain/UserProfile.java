@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
 public class UserProfile extends UserProfile_Base {
@@ -52,6 +53,47 @@ public class UserProfile extends UserProfile_Base {
         setFamilyNames(cleanupName(family));
         setDisplayName(cleanupName(display));
         validateNames(getDisplayName(), getFullName());
+    }
+
+    /**
+     * Returns this user's avatar URL, never null. Avatar URLs are templates with the variable {size} in it, that must be replaced
+     * with the desired size by the invoking client.
+     */
+    @Override
+    public String getAvatarUrl() {
+        if (super.getAvatarUrl() != null) {
+            return super.getAvatarUrl();
+        }
+        return Avatar.mysteryManUrl(this.getUser());
+    }
+
+    /**
+     * Sets the user's avatar URL template.
+     * 
+     * @see UserProfile#getAvatarUrl()
+     */
+    @Override
+    public void setAvatarUrl(String avatarUrl) {
+        if (getLocalAvatar() != null) {
+            getLocalAvatar().delete();
+        }
+        super.setAvatarUrl(avatarUrl);
+    }
+
+    /**
+     * @param localAvatar
+     * @see org.fenixedu.bennu.core.domain.UserProfile_Base#setLocalAvatar(org.fenixedu.bennu.core.domain.Avatar)
+     */
+    @Override
+    public void setLocalAvatar(Avatar localAvatar) {
+        if (Objects.equal(getLocalAvatar(), localAvatar)) {
+            return;
+        }
+        if (getLocalAvatar() != null) {
+            getLocalAvatar().delete();
+        }
+        super.setLocalAvatar(localAvatar);
+        super.setAvatarUrl(localAvatar.urlTemplate());
     }
 
     private static void validateNames(String displayname, String fullname) {

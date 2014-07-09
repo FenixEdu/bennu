@@ -4,9 +4,18 @@ import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class JsonUtils {
     public static String getString(JsonObject json, String property) {
+        return getPrimitive(json, property).getAsString();
+    }
+
+    public static int getInt(JsonObject json, String property) {
+        return getPrimitive(json, property).getAsInt();
+    }
+
+    public static JsonPrimitive getPrimitive(JsonObject json, String property) {
         if (!json.has(property)) {
             return null;
         }
@@ -14,7 +23,7 @@ public class JsonUtils {
         if (!value.isJsonPrimitive()) {
             throw BennuCoreDomainException.wrongJsonFormat(value, "primitive");
         }
-        return value.getAsString();
+        return value.getAsJsonPrimitive();
     }
 
     public static <T extends Object> T get(JsonObject json, String property, JsonBuilder ctx, Class<T> type) {

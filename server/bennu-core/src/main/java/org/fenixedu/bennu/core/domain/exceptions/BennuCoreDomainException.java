@@ -103,4 +103,8 @@ public class BennuCoreDomainException extends DomainException {
     public static BennuCoreDomainException wrongJsonFormat(JsonElement json, String expected) {
         return new BennuCoreDomainException("error.bennu.core.wrongJsonFormat", json.toString(), expected);
     }
+
+    public static BennuCoreDomainException errorProcessingImage() {
+        return new BennuCoreDomainException("error.bennu.core.user.errorProcessingImage");
+    }
 }

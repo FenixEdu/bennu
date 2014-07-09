@@ -77,8 +77,14 @@ public class UserProfile {
     protected String displayName;
     protected String givenNames;
     protected String familyNames;
+    public String avatarUrl;
     public String email;
     public Locale preferredLocale;
+}
+
+class Avatar {
+    protected bytearray data;
+    protected String mimeType;
 }
 
 relation SystemUsers {
@@ -105,6 +111,15 @@ relation UserProfileUser {
     }
     protected UserProfile playsRole profile {
         multiplicity 0..1; // make required in the next major
+    }
+}
+
+relation UserProfileAvatar {
+    protected UserProfile playsRole profile {
+        multiplicity 1..1;
+    }
+    protected Avatar playsRole localAvatar {
+        multiplicity 0..1;
     }
 }
 

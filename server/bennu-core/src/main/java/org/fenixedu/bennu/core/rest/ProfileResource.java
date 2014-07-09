@@ -1,6 +1,7 @@
 package org.fenixedu.bennu.core.rest;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.IllformedLocaleException;
@@ -14,10 +15,13 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.fenixedu.bennu.core.domain.Avatar;
+import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.groups.LoggedGroup;
@@ -115,5 +119,25 @@ public class ProfileResource extends BennuRestResource {
         } catch (IllformedLocaleException e) {
         }
         throw BennuCoreDomainException.resourceNotFound(localeTag);
+    }
+
+    @GET
+    @Path("localavatar/{username}")
+    public Response localAvatar(@PathParam("username") String username, @QueryParam("s") int size) {
+        User user = User.findByUsername(username);
+        if (user != null) {
+            Avatar avatar = Avatar.getForUser(user);
+            if (avatar != null) {
+                return Response.ok(avatar.getData(size), avatar.getMimeType()).build();
+            } else {
+                try (InputStream mm =
+                        ProfileResource.class.getClassLoader().getResourceAsStream("META-INF/resources/img/mysteryman.png")) {
+                    return Response.ok(Avatar.process(mm, "image/png", size), "image/png").build();
+                } catch (IOException e) {
+                    throw BennuCoreDomainException.resourceNotFound(username);
+                }
+            }
+        }
+        throw BennuCoreDomainException.resourceNotFound(username);
     }
 }

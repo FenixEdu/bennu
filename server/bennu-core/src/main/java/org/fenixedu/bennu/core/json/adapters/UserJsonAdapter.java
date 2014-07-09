@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
+import org.fenixedu.bennu.core.domain.Avatar;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
@@ -13,6 +14,7 @@ import org.fenixedu.bennu.core.json.JsonUtils;
 
 import pt.ist.fenixframework.FenixFramework;
 
+import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -27,6 +29,7 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         JsonUtils.put(jsonObject, "givenNames", user.getProfile().getGivenNames());
         JsonUtils.put(jsonObject, "familyNames", user.getProfile().getFamilyNames());
         JsonUtils.put(jsonObject, "displayName", user.getProfile().getDisplayName());
+        JsonUtils.put(jsonObject, "avatar", user.getProfile().getAvatarUrl());
         JsonUtils.put(jsonObject, "email", user.getProfile().getEmail());
         JsonUtils.put(jsonObject, "preferredLocale", ctx.view(user.getProfile().getPreferredLocale()));
         return jsonObject;
@@ -37,6 +40,7 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         JsonObject object = json.getAsJsonObject();
         User user = new User(parseAndUpdateOrCreateProfile(object, ctx, null));
         changePassword(user, object);
+        changeAvatar(user.getProfile(), object);
         return user;
     }
 
@@ -53,6 +57,7 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         }
         parseAndUpdateOrCreateProfile(object, ctx, user.getProfile());
         changePassword(user, object);
+        changeAvatar(user.getProfile(), object);
         return user;
     }
 
@@ -66,6 +71,7 @@ public class UserJsonAdapter implements JsonAdapter<User> {
             current.changeName(given, family, display);
             current.setEmail(email);
             current.setPreferredLocale(preferredLocale);
+            changeAvatar(current, json);
             return current;
         }
         return new UserProfile(given, family, display, email, preferredLocale);
@@ -78,5 +84,28 @@ public class UserJsonAdapter implements JsonAdapter<User> {
             throw BennuCoreDomainException.passwordCheckDoesNotMatch();
         }
         user.changePassword(password);
+    }
+
+    private void changeAvatar(UserProfile profile, JsonObject json) {
+        if (json.has("avatar")) {
+            if (json.get("avatar").isJsonPrimitive()) {
+                profile.setAvatarUrl(json.get("avatar").getAsString());
+            } else {
+                JsonObject obj = json.get("avatar").getAsJsonObject();
+                byte[] img = BaseEncoding.base64().decode(JsonUtils.getString(obj, "img"));
+                String mimeType = JsonUtils.getString(obj, "mimeType");
+                if (obj.has("x1")) {
+                    int x1 = JsonUtils.getInt(obj, "x1");
+                    int y1 = JsonUtils.getInt(obj, "y1");
+                    int x2 = JsonUtils.getInt(obj, "x2");
+                    int y2 = JsonUtils.getInt(obj, "y2");
+                    profile.setLocalAvatar(Avatar.crop(img, mimeType, x1, y1, x2, y2));
+                } else {
+                    profile.setLocalAvatar(Avatar.create(img, mimeType));
+                }
+            }
+        } else {
+            profile.setAvatarUrl(null);
+        }
     }
 }
