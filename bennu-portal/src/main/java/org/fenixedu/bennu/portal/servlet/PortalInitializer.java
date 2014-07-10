@@ -13,6 +13,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import org.fenixedu.bennu.core.servlets.ExceptionHandlerFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,8 @@ public class PortalInitializer implements ServletContextListener {
         // Install Bennu Portal Dispatcher. It must be programmatically registered, so that is runs after EVERY other filter
         FilterRegistration registration = sce.getServletContext().addFilter("BennuPortalDispatcher", BennuPortalDispatcher.class);
         registration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
+
+        ExceptionHandlerFilter.setExceptionHandler(new PortalExceptionHandler(sce.getServletContext()));
     }
 
     private void registerBuiltinPortalBackends() {

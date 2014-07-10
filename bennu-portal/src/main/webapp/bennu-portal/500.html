@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<title>{{i18n('resources.BennuPortalResources', 'label.error.occurred')}} · {{config.applicationTitle.content}}</title>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<div class="container">
+			<img src="{{contextPath}}/api/bennu-portal/configuration/logo" />
+			<div class="content">
+				{{i18n('resources.BennuPortalResources', 'label.error.occurred')}}
+				<div class="support">
+					{{i18n('resources.BennuPortalResources', 'label.support.contact')}} <a href="mailto:{{config.supportEmailAddress}}">{{config.supportEmailAddress}}</a>
+				</div>
+			</div>
+		</div>
+
+		<!--
+			Logged User: {{loggedUser.username}}
+
+			Failed URL: {{url}}
+
+			Exception:  {{exception.message}}
+
+			{% for ste in stackTrace %}
+			{{ste}}
+
+			{% endfor %}
+	    -->
+	</body>
+
+	<style>
+		body {
+			font: 25px 'Roboto', sans-serif;
+			background-color: #F1F1F1;
+			text-align: center;
+			font-weight:100;
+			color: #617383;
+		}
+
+		.container {
+			margin: 150px auto 0 auto;
+			width: 350px;
+			background-color: white;
+			padding: 20px 0 20px 0;
+			-moz-border-radius: 2px;
+			-webkit-border-radius: 2px;
+			border-radius: 5px;
+		}
+
+		.content {
+			margin: 50px auto 20px auto;
+		}
+
+		.support {
+			margin-top: 20px;
+			font-size: 15px;
+		}
+	</style>
+</html>
