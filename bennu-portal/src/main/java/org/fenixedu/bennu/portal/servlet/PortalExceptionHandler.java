@@ -78,6 +78,7 @@ public class PortalExceptionHandler implements ExceptionHandler {
         ctx.put("stackTrace", Arrays.asList(exception.getStackTrace()));
 
         try {
+            response.setContentType("text/html;charset=UTF-8");
             PebbleTemplate template = engine.getTemplate(config.getTheme());
             template.evaluate(response.getWriter(), ctx, I18N.getLocale());
             return true;
