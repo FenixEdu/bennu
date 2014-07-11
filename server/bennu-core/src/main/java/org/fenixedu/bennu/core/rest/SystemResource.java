@@ -59,6 +59,7 @@ import pt.ist.fenixframework.core.SharedIdentityMap;
 
 import com.google.common.base.Stopwatch;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 @Path("/bennu-core/system")
@@ -83,24 +84,7 @@ public class SystemResource extends BennuRestResource {
         json.add("projects", getBuilder().view(FenixFramework.getProject().getProjects()));
 
         // libraries
-        try {
-            List<JarFile> libraries = new ArrayList<>();
-            String libPath = request.getServletContext().getRealPath("/WEB-INF/lib");
-            // in jetty this is not possible.
-            if (libPath != null) {
-                File[] files = new File(libPath).listFiles();
-                if (files != null) {
-                    for (File file : files) {
-                        if (file.getName().endsWith(".jar")) {
-                            libraries.add(new JarFile(file));
-                        }
-                    }
-                }
-            }
-            json.add("libraries", getBuilder().view(libraries));
-        } catch (IOException e) {
-            throw new Error(e);
-        }
+        json.add("libraries", getLibs(request));
 
         // system properties
         json.add("sys", getBuilder().view(System.getProperties(), Properties.class, KeyValuePropertiesViewer.class));
@@ -166,6 +150,38 @@ public class SystemResource extends BennuRestResource {
         json.add("metrics", metrics);
 
         return Response.ok(toJson(json)).build();
+    }
+
+    private static JsonElement libs;
+
+    /* 
+     * Going through all the libs can be slow, and they never change,
+     * so cache them.
+     */
+    private static JsonElement getLibs(HttpServletRequest req) {
+        JsonElement json = libs;
+        if (json == null) {
+            try {
+                List<JarFile> libraries = new ArrayList<>();
+                String libPath = req.getServletContext().getRealPath("/WEB-INF/lib");
+                // in jetty this is not possible.
+                if (libPath != null) {
+                    File[] files = new File(libPath).listFiles();
+                    if (files != null) {
+                        for (File file : files) {
+                            if (file.getName().endsWith(".jar")) {
+                                libraries.add(new JarFile(file));
+                            }
+                        }
+                    }
+                }
+                json = getBuilder().view(libraries);
+                libs = json;
+            } catch (IOException e) {
+                throw new Error(e);
+            }
+        }
+        return json;
     }
 
     @GET
