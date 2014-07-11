@@ -37,14 +37,9 @@
 					</div>
 					  <div class="collapse navbar-collapse">
 					  	{% if loggedUser is null %}
-						<form class="col-lg-6 navbar-form navbar-right">
-							<div class="form-group input-group-sm">
-								<input name="username" type="text" class="form-control" placeholder="{{ i18n('resources.DefaultThemeResources', 'label.username')  }}" />
-							</div>
-							<div class="form-group input-group-sm">
-								<input name="password" type="password" class="form-control" placeholder="{{ i18n('resources.DefaultThemeResources', 'label.password') }}" />
-							</div>
-						</form>
+						<ul class="nav navbar-nav navbar-right">
+							<li><a href="{{contextPath}}/login">{{ i18n('resources.DefaultThemeResources', 'label.login') }}</a></li>
+						</ul>
 					 	{% else %}
 							<ul class="nav navbar-nav navbar-right">
 							  <li class="dropdown">
@@ -57,7 +52,7 @@
 										<li><a class="lang" href="#" data-lang="{{locale}}">{{ i18n('resources.DefaultThemeResources', locale) }}</a></li>
 									{% endif %}
 								  {% endfor %}
-							      <li><a href="#" id="logout">{{ i18n('resources.DefaultThemeResources', 'label.logout') }}</a></li>
+							      <li><a href="{{contextPath}}/logout">{{ i18n('resources.DefaultThemeResources', 'label.logout') }}</a></li>
 							    </ul>
 							  </li>
 							</ul>
