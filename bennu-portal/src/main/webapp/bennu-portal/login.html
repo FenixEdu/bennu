@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html dir="ltr" lang="{{currentLocale}}">
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Language" content="{{currentLocale.language}}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <title>Login · {{config.applicationTitle.content}}</title>
+
+    <link href="{{contextPath}}/bennu-portal/css/login.css" rel="stylesheet">
+    <script src="{{contextPath}}/bennu-portal/js/jquery.min.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="{{contextPath}}/api/bennu-portal/configuration/favicon">
+
+  </head>
+
+  <body>
+  	<div class="container">
+  		<img src="{{contextPath}}/api/bennu-portal/configuration/logo" />
+  		<div class="login-content">
+  			<div class="app-name">
+  				{{config.applicationTitle.content}}
+  			</div>
+  			<div class="content">
+	  			<div class="alert">
+	  				{{i18n('resources.BennuPortalResources', 'label.invalid.authentication')}}
+	  			</div>
+	  			<div class="alert-login">
+	  				{{i18n('resources.BennuPortalResources', 'label.logging.in')}}
+	  			</div>
+	  			<form method="POST">
+	  				<input type="hidden" name="callback" value="{{callback}}" />
+
+			  		<input type="text" class="form-control" name="username" placeholder="Username" />
+			  		<input type="password" name="password" placeholder="Password" />
+
+		  			<div class="footer">
+		  				<input type="submit" value="&#10003;" />
+		  			</div>
+	  			</form>
+  			</div>
+  		</div>
+  	</div>
+  </body>
+
+  <script>
+  	$('form').on('submit', function (event) {
+  		event.preventDefault();
+  		var username = $(event.target).find('input[type=text]').val();
+  		var password = $(event.target).find('input[type=password]').val();
+  		$('.alert-login').show(); $('form').hide(); $('.alert').hide();
+  		$.post('{{contextPath}}/api/bennu-core/profile/login', {username: username, password: password}).done(function (data) {
+  			var url = $('input[type=hidden]').val() || '{{contextPath}}/';
+  			$('.alert-login').text("{{i18n('resources.BennuPortalResources', 'label.welcome')}} " + data.name + '!'); window.location = url;
+  		}).error(function (error) {
+  			$('.alert').show();
+  			$('form').show();
+  			$('.alert-login').hide();
+  		});
+  	});
+  </script>
+</html>
