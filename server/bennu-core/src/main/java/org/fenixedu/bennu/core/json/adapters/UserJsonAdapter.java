@@ -26,12 +26,16 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         jsonObject.addProperty("id", user.getExternalId());
         jsonObject.addProperty("username", user.getUsername());
         jsonObject.addProperty("name", user.getPresentationName());
-        JsonUtils.put(jsonObject, "givenNames", user.getProfile().getGivenNames());
-        JsonUtils.put(jsonObject, "familyNames", user.getProfile().getFamilyNames());
-        JsonUtils.put(jsonObject, "displayName", user.getProfile().getDisplayName());
-        JsonUtils.put(jsonObject, "avatar", user.getProfile().getAvatarUrl());
-        JsonUtils.put(jsonObject, "email", user.getProfile().getEmail());
-        JsonUtils.put(jsonObject, "preferredLocale", ctx.view(user.getProfile().getPreferredLocale()));
+        UserProfile profile = user.getProfile();
+        //FIXME: remove on the next major when profile is mandatory
+        if (profile != null) {
+            JsonUtils.put(jsonObject, "givenNames", profile.getGivenNames());
+            JsonUtils.put(jsonObject, "familyNames", profile.getFamilyNames());
+            JsonUtils.put(jsonObject, "displayName", profile.getDisplayName());
+            JsonUtils.put(jsonObject, "avatar", profile.getAvatarUrl());
+        }
+        JsonUtils.put(jsonObject, "email", user.getEmail());
+        JsonUtils.put(jsonObject, "preferredLocale", ctx.view(user.getPreferredLocale()));
         return jsonObject;
     }
 
@@ -55,7 +59,11 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         } else {
             return null;
         }
-        parseAndUpdateOrCreateProfile(object, ctx, user.getProfile());
+        UserProfile profile = parseAndUpdateOrCreateProfile(object, ctx, user.getProfile());
+        //FIXME: remove on the next major when profile is mandatory
+        if (user.getProfile() == null) {
+            user.setProfile(profile);
+        }
         changePassword(user, object);
         changeAvatar(user.getProfile(), object);
         return user;

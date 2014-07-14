@@ -109,7 +109,7 @@ relation UserProfileUser {
     protected User playsRole user {
         multiplicity 1..1;
     }
-    protected UserProfile playsRole profile {
+    public UserProfile playsRole profile {
         multiplicity 0..1; // make required in the next major
     }
 }

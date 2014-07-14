@@ -20,6 +20,12 @@ public class UserProfile extends UserProfile_Base {
     }
 
     @Override
+    public User getUser() {
+        // FIXME: remove when framework support read-only slots
+        return super.getUser();
+    }
+
+    @Override
     public String getDisplayName() {
         return super.getDisplayName() != null ? super.getDisplayName() : getFullName();
     }

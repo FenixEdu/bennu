@@ -127,12 +127,6 @@ public final class User extends User_Base implements Principal {
     }
 
     @Override
-    public UserProfile getProfile() {
-        //FIXME: remove when the framework enables read-only slots
-        return super.getProfile();
-    }
-
-    @Override
     public String getUsername() {
         //FIXME: remove when the framework enables read-only slots
         return super.getUsername();
