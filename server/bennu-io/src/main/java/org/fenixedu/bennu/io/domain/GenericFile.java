@@ -44,6 +44,10 @@ public abstract class GenericFile extends GenericFile_Base {
 
     public abstract boolean isAccessible(User user);
 
+    public boolean isPrivate() {
+        return !isAccessible(null);
+    }
+
     @Override
     public DateTime getCreationDate() {
         //FIXME: remove when the framework enables read-only slots
