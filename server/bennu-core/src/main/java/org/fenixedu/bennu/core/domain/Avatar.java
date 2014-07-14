@@ -56,9 +56,9 @@ public class Avatar extends Avatar_Base {
         return super.getMimeType();
     }
 
-    public String urlTemplate() {
+    public String url() {
         return CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-core/profile/localavatar/"
-                + getProfile().getUser().getUsername() + "?s={size}";
+                + getProfile().getUser().getUsername();
     }
 
     public void delete() {
@@ -72,7 +72,7 @@ public class Avatar extends Avatar_Base {
 
     public static String mysteryManUrl(User user) {
         return CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-core/profile/localavatar/"
-                + user.getUsername() + "?s={size}";
+                + user.getUsername();
     }
 
     public static byte[] process(InputStream stream, String mimeType, int size) {

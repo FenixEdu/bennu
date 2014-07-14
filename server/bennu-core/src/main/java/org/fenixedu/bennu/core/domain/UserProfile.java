@@ -62,19 +62,22 @@ public class UserProfile extends UserProfile_Base {
     }
 
     /**
-     * Returns this user's avatar URL, never null. Avatar URLs are templates with the variable {size} in it, that must be replaced
-     * with the desired size by the invoking client.
+     * Returns this user's avatar URL or a mystery man avatar URL if not present. Avatar URLs can be parameterized with
+     * {@code s=size}, by default size is 100.
      */
     @Override
     public String getAvatarUrl() {
         if (super.getAvatarUrl() != null) {
             return super.getAvatarUrl();
         }
+        if (getLocalAvatar() != null) {
+            return getLocalAvatar().url();
+        }
         return Avatar.mysteryManUrl(this.getUser());
     }
 
     /**
-     * Sets the user's avatar URL template.
+     * Sets the user's base avatar URL.
      * 
      * @see UserProfile#getAvatarUrl()
      */
@@ -99,7 +102,7 @@ public class UserProfile extends UserProfile_Base {
             getLocalAvatar().delete();
         }
         super.setLocalAvatar(localAvatar);
-        super.setAvatarUrl(localAvatar.urlTemplate());
+        super.setAvatarUrl(null);
     }
 
     private static void validateNames(String displayname, String fullname) {

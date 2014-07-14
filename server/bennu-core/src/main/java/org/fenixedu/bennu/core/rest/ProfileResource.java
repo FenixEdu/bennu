@@ -123,7 +123,10 @@ public class ProfileResource extends BennuRestResource {
 
     @GET
     @Path("localavatar/{username}")
-    public Response localAvatar(@PathParam("username") String username, @QueryParam("s") int size) {
+    public Response localAvatar(@PathParam("username") String username, @QueryParam("s") Integer size) {
+        if (size == null) {
+            size = 100;
+        }
         User user = User.findByUsername(username);
         if (user != null) {
             Avatar avatar = Avatar.getForUser(user);

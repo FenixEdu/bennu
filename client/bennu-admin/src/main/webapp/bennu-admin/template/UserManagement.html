@@ -16,15 +16,15 @@
         </label>
       </div>
       <div ng-if="avatarchoice == 'gravatar'">
-        <img id="img-gravatar" src="https://secure.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=300">
+        <img id="img-gravatar" src="https://secure.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=300" class="img-thumbnail" />
       </div>
       <div ng-if="avatarchoice == 'custom'">
-        <input type="url" class="form-control" id="input-avatar" ng-model="user.avatar" placeholder="Avatar URL template"/>
+        <input type="url" class="form-control" id="input-avatar" ng-model="user.avatar" placeholder="Avatar URL template" class="img-thumbnail"/>
       </div>
       <div ng-if="avatarchoice == 'upload'">
         <div class="row">
           <div id="cropzone" class="col-sm-5">
-            <img id="img-gravatar" src="https://secure.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=300">
+            <img id="img-gravatar" src="https://secure.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=300" class="img-thumbnail"/>
           </div>
         </div>
         <input type="file" onchange="angular.element(this).scope().fileNameChanged(this)" />
