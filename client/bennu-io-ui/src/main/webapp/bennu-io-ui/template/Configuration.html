@@ -1,0 +1,30 @@
+<h3>File Type Management</h3>
+
+<div class="alert alert-success alert-dismissible" ng-if="success">
+	Configurations saved successfully!
+	<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+</div>
+
+<div class="alert" ng-if="!configs">
+Loading...
+</div>
+
+<table class="table table-condensed" ng-if="configs">
+	<thead>
+		<tr>
+			<th>File Type</th>
+			<th>Repository</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="config in configs | orderBy:'type'">
+			<td>{{config.type}}</td>
+			<td>
+				<select ng-model="config.storage.id" ng-options="storage.id as storage.name group by storage.type for storage in storages | orderBy:'name'">
+					<option value="null">----</option>
+				</select>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<button class="btn btn-success text-right" ng-if="configs" ng-click="save()">Save</button>

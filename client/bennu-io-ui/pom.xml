@@ -4,32 +4,14 @@
 
     <parent>
         <groupId>org.fenixedu</groupId>
-        <artifactId>bankai-project</artifactId>
-        <version>1.0.0</version>
+        <artifactId>web-library-project</artifactId>
+        <version>1.3.0</version>
         <relativePath />
     </parent>
-
-    <properties>
-        <bankai.skip.js.optimization>false</bankai.skip.js.optimization>
-    </properties>
 
     <artifactId>bennu-io-ui</artifactId>
     <version>3.2.0-SNAPSHOT</version>
     <name>Bennu IO UI</name>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.mcheely</groupId>
-                <artifactId>requirejs-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
     <repositories>
         <repository>

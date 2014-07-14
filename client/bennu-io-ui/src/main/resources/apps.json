@@ -8,13 +8,13 @@
 			{ 
    			  "title" : {"en-GB" : "File Repositories Management", "pt-PT": "Gestão de Repositórios de Ficheiros"},
 			  "description" : {"en-GB" : "File Repositories Management", "pt-PT" : "Gestão de Repositórios de Ficheiros"},
-			  "path" : "#storage",
+			  "path" : "#/storage",
 			  "accessExpression" : "#managers"
 			},
 			{ 
    			  "title" : {"en-GB" : "File Type Management", "pt-PT" : "Gestão de Tipos de Ficheiros"},
 			  "description" : {"en-GB" : "File Type Management", "pt-PT" : "Gestão de Tipos de Ficheiros"},
-			  "path" : "#configuration",
+			  "path" : "#/configuration",
 			  "accessExpression" : "#managers"
 			}
 		]
