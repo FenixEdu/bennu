@@ -150,7 +150,7 @@ public final class User extends User_Base implements Principal {
             return super.getExpiration();
         }
         LocalDate latest = null;
-        for (UserLoginPeriod period : getLoginPeriodSet()) {
+        for (UserLoginPeriod period : getLoginValiditySet()) {
             // If there is an open period, set the user's expiration to null (i.e. open)
             if (period.getEndDate() == null) {
                 return null;

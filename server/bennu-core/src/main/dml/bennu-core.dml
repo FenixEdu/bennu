@@ -100,7 +100,7 @@ relation UserLoginPeriods {
     protected User playsRole user {
         multiplicity 1..1;
     }
-    protected UserLoginPeriod playsRole loginPeriod {
+    public UserLoginPeriod playsRole loginValidity {
         multiplicity *;
     }
 }

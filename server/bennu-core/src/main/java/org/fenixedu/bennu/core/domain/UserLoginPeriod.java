@@ -135,7 +135,7 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
      * Note that each user can only have at most one open period.
      */
     private static UserLoginPeriod getOpenPeriod(User user) {
-        for (UserLoginPeriod loginPeriod : user.getLoginPeriodSet()) {
+        for (UserLoginPeriod loginPeriod : user.getLoginValiditySet()) {
             if (loginPeriod.getEndDate() == null) {
                 return loginPeriod;
             }
