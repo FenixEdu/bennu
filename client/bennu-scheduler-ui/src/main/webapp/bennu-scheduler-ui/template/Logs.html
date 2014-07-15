@@ -1,0 +1,58 @@
+<style>
+	.table {
+		margin-bottom: 0px;
+	}
+</style>
+<h3>
+	Task Logs
+	<small>{{type}}</small>
+
+	<button class="pull-right btn btn-default" ng-click="reload()"><i class="glyphicon glyphicon-refresh"/></button> 
+	<a href="#/logs" class="pull-right btn btn-default" ng-if="type">« Back</a>
+</h3>
+
+<div class="text-center" ng-if="logs == null">
+	<h3>Loading...</h3>
+</div>
+
+<div ng-if="logs">
+	Search: <input type="text" ng-model="filter"/>
+</div>
+<table class="table table-condensed" ng-show="logs != null">
+	<thead>
+		<tr>
+			<th>Task Name</th>
+			<th>Start</th>
+			<th>End</th>
+			<th>Status</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody ng-init="totalDisplayed = 20">
+		<tr ng-repeat="log in logs | orderBy:'-end' | filter: filter | limitTo: totalDisplayed">
+			<td>{{log.taskName}}</td>
+			<td>{{log.start | moment}}</td>
+			<td>{{log.end | moment}}</td>
+			<td ng-if="log.end">
+				<i class="glyphicon glyphicon-ok" ng-if="log.success" />
+				<i class="glyphicon glyphicon-remove" ng-if="!log.success" />
+			</td>
+			<td ng-if="!log.end">
+				<i class="glyphicon glyphicon-play" />
+			</td>
+			<td>
+				<a href="#logs/{{log.taskName}}" class="btn btn-success" ng-if="!type">More</a>
+				<a href="#logs/{{log.taskName}}/{{log.id}}" class="btn btn-success">Details</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<div class="row" ng-show="logs != null">
+	<hr />
+	<div class="col-sm-2">
+		Showing {{totalDisplayed > logs.length ? logs.length : totalDisplayed}} of {{logs.length}}
+	</div>
+	<div class="col-sm-8 text-center">
+		<button class="btn btn-success" ng-show="totalDisplayed < logs.length" ng-click="totalDisplayed = totalDisplayed + 20">Load More</button>
+	</div>
+</div>

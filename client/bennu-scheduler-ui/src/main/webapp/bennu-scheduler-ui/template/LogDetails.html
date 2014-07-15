@@ -1,0 +1,80 @@
+<h3>
+	Task Log
+	<small>{{log.taskName}}</small>
+
+	<button class="pull-right btn btn-default" ng-click="refreshLog()"><i class="glyphicon glyphicon-refresh"/></button>
+	<a href="#/logs/{{log.taskName}}" class="pull-right btn btn-default" ng-if="!log.javaCode">« Back</a>
+	<a href="#/custom/{{log.taskName}}" class="pull-right btn btn-default" ng-if="log.javaCode">« Back</a>
+</h3>
+
+<table class="table">
+	<tbody>
+		<tr>
+			<td>TaskName</td>
+			<td>{{log.taskName}}</td>
+		</tr>
+		<tr>
+			<td>Start Time</td>
+			<td>{{log.start | moment}}</td>
+		</tr>
+		<tr>
+			<td>End Time</td>
+			<td>{{log.end | moment}}</td>
+		</tr>
+		<tr ng-if="log.username">
+			<td>User</td>
+			<td>{{log.username}}</td>
+		</tr>
+		<tr ng-if="log.hostname">
+			<td>Host</td>
+			<td>{{log.hostname}}</td>
+		</tr>
+		<tr>
+			<td>Status</td>
+			<td ng-if="log.end">
+				<i class="glyphicon glyphicon-ok" ng-if="log.success" />
+				<i class="glyphicon glyphicon-remove" ng-if="!log.success" />
+			</td>
+			<td ng-if="!log.end">
+				<i class="glyphicon glyphicon-play" />
+			</td>
+		</tr>
+		<tr ng-show="log.javaCode">
+			<td>Code</td>
+			<td>
+				<div class="control-group">
+					<div class="controls">
+						<ui-codemirror ui-codemirror-opts="editorOptions" ng-model="log.javaCode"></textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<button class="btn btn-success" ng-click="load()">Load</button>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr ng-if="log.files">
+			<td>Files</td>
+			<td>
+				<ul>
+					<li ng-repeat="file in log.files">
+						<a href="{{contextPath}}/api/bennu-scheduler/log/{{log.taskName}}/{{log.id}}/{{file}}">{{file}}</a>
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr ng-if="log.stackTrace">
+			<td>stacktrace</td>
+			<td>
+				<pre>{{log.stackTrace}}</pre>
+			</td>
+		</tr>
+			<tr ng-if="logs">
+				<td>log</td>
+				<td>
+					<pre>{{logs}}</pre>
+				</td>
+			</tr>
+	</tbody>
+</table>

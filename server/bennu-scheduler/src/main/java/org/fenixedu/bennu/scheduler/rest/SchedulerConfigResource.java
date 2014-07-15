@@ -20,6 +20,7 @@ public class SchedulerConfigResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getLoggingStorage() {
+        accessControl("#managers");
         return view(SchedulerSystem.getInstance());
     }
 
@@ -27,6 +28,7 @@ public class SchedulerConfigResource extends BennuRestResource {
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String changeLoggingStorage(@PathParam("oid") String loggingStorageExternalId) {
+        accessControl("#managers");
         innerSetLoggingStorage(loggingStorageExternalId);
         return getLoggingStorage();
     }

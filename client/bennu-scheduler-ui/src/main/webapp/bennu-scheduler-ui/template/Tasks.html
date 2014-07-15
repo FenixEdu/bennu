@@ -1,0 +1,20 @@
+<h3>Tasks</h3>
+
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Type</th>
+			<th>Title</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="task in tasks">
+			<td>{{task.type}}</td>
+			<td>{{task.name}}</td>
+			<td>
+				<a class="btn btn-sm btn-success" href="#schedule/{{task.type}}">Schedule</a>
+				<button class="btn btn-sm btn-success" ng-click="runNow(task)">Run Now</button>
+			</td>
+		</tr>
+	</tbody>
+</table>

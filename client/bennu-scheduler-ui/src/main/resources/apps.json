@@ -8,25 +8,25 @@
 			{ 
    			  "title" : {"en-GB" : "Tasks", "pt-PT": "Tarefas"},
 			  "description" : {"en-GB" : "Available tasks for scheduling", "pt-PT" : "Tarefas disponíveis para agendamento"},
-			  "path" : "#tasks",
+			  "path" : "#/tasks",
 			  "accessExpression" : "#managers"
 			},
 			{ 
    			  "title" : {"en-GB" : "Schedules", "pt-PT" : "Agendamentos"},
 			  "description" : {"en-GB" : "Task schedules", "pt-PT" : "Agendamento de tarefas"},
-			  "path" : "#schedules",
+			  "path" : "#/schedules",
 			  "accessExpression" : "#managers"
 			},
 			{ 
    			  "title" : {"en-GB" : "Task Logs", "pt-PT" : "Execuções de Agendamentos"},
 			  "description" : {"en-GB" : "Task logs", "pt-PT" : "Execuções Agendamento de tarefas"},
-			  "path" : "#logs",
+			  "path" : "#/logs",
 			  "accessExpression" : "#managers"
 			},
 			{ 
    			  "title" : {"en-GB" : "Custom Tasks", "pt-PT" : "Tarefas Manuais"},
 			  "description" : {"en-GB" : "Submit Custom Tasks", "pt-PT" : "Executar Tarefas Manuais"},
-			  "path" : "#custom",
+			  "path" : "#/custom",
 			  "accessExpression" : "#managers"
 			}
 		]

@@ -55,6 +55,7 @@ public class ScheduleResource extends BennuRestResource {
     }
 
     @POST
+    @Deprecated
     @Path("dump")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response loadDump(@FormParam("data") String json) {
@@ -62,6 +63,16 @@ public class ScheduleResource extends BennuRestResource {
         clearAllSchedules();
         createSchedulesFromDump(json);
         return Response.ok().build();
+    }
+
+    @POST
+    @Path("load-dump")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String loadDumpNew(String json) {
+        accessControl("#managers");
+        clearAllSchedules();
+        createSchedulesFromDump(json);
+        return getSchedule();
     }
 
     @Atomic(mode = TxMode.WRITE)
