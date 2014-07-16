@@ -14,18 +14,22 @@
 			</div>
 		</div>
 
-		<!--
-			Logged User: {{loggedUser.username}}
+<!--
+User         | {{loggedUser.username}}
 
-			Failed URL: {{url}}
+Request URI  | {{request.requestURI}}
 
-			Exception:  {{exception.message}}
+Request URL  | {{request.requestURL}}
 
-			{% for ste in stackTrace %}
-			{{ste}}
+Query String | {{request.queryString}}
 
-			{% endfor %}
-	    -->
+Method       | {{request.method}}
+
+Locale       | {{locale}}
+
+
+{{stackTrace}}
+-->
 	</body>
 
 	<style>

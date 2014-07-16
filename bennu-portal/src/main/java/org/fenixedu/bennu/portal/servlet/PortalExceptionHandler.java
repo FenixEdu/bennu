@@ -3,16 +3,20 @@ package org.fenixedu.bennu.portal.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Reader;
-import java.util.Arrays;
+import java.io.StringWriter;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.servlets.ExceptionHandlerFilter.ExceptionHandler;
@@ -21,6 +25,7 @@ import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Joiner;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
@@ -64,6 +69,8 @@ public class PortalExceptionHandler implements ExceptionHandler {
         if (response.isCommitted()) {
             return false;
         }
+        response.reset();
+        ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
         HttpServletRequest req = (HttpServletRequest) request;
         logger.error("Request at " + req.getRequestURI() + " threw an exception: ", exception);
@@ -73,9 +80,18 @@ public class PortalExceptionHandler implements ExceptionHandler {
         ctx.put("loggedUser", Authenticate.getUser());
         ctx.put("config", config);
         ctx.put("contextPath", req.getContextPath());
-        ctx.put("url", req.getRequestURI());
+        ctx.put("request", req);
         ctx.put("exception", exception);
-        ctx.put("stackTrace", Arrays.asList(exception.getStackTrace()));
+        ctx.put("locale", I18N.getLocale());
+        ctx.put("userAgent", req.getHeader("User-Agent"));
+        ctx.put("referer", req.getHeader("Referer"));
+        ctx.put("parameters", getParameters(req));
+        ctx.put("attributes", getAttributes(req));
+        ctx.put("functionality", BennuPortalDispatcher.getSelectedFunctionality(req));
+
+        StringWriter writer = new StringWriter(1024);
+        exception.printStackTrace(new PrintWriter(writer));
+        ctx.put("stackTrace", writer.toString());
 
         try {
             response.setContentType("text/html;charset=UTF-8");
@@ -85,5 +101,25 @@ public class PortalExceptionHandler implements ExceptionHandler {
         } catch (PebbleException e) {
             throw new IOException(e);
         }
+    }
+
+    private Object getParameters(HttpServletRequest req) {
+        Map<String, String> params = new TreeMap<>();
+        Enumeration<String> names = req.getParameterNames();
+        while (names.hasMoreElements()) {
+            String name = names.nextElement();
+            params.put(name, Joiner.on(" | ").join(req.getParameterValues(name)));
+        }
+        return params.entrySet();
+    }
+
+    private Object getAttributes(HttpServletRequest req) {
+        Map<String, Object> attrs = new TreeMap<>();
+        Enumeration<String> names = req.getAttributeNames();
+        while (names.hasMoreElements()) {
+            String name = names.nextElement();
+            attrs.put(name, req.getAttribute(name));
+        }
+        return attrs.entrySet();
     }
 }
