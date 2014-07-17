@@ -10,6 +10,8 @@ public class PortalConfiguration {
 	public String systemEmailAddress;
 	public bytearray logo;
 	public String logoType;
+	public String logoLinkUrl;
+	public String logoTooltip;
 	public bytearray favicon;
 	public String faviconType;
 }

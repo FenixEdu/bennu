@@ -10,6 +10,7 @@ import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.bennu.portal.servlet.PortalInitializer;
 import org.fenixedu.commons.i18n.LocalizedString;
 
+import com.google.common.base.Strings;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -36,6 +37,12 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         if (configuration.getLogo() != null) {
             object.addProperty("logo", BaseEncoding.base64().encode(configuration.getLogo()));
             object.addProperty("logoType", new String(configuration.getLogoType()));
+            if (!Strings.isNullOrEmpty(configuration.getLogoLinkUrl())) {
+                object.addProperty("logoLinkUrl", configuration.getLogoLinkUrl());
+            }
+            if (!Strings.isNullOrEmpty(configuration.getLogoTooltip())) {
+                object.addProperty("logoTooltip", configuration.getLogoTooltip());
+            }
         }
         if (configuration.getFavicon() != null) {
             object.addProperty("favicon", BaseEncoding.base64().encode(configuration.getFavicon()));
@@ -79,6 +86,12 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         }
         if (object.has("logoType")) {
             configuration.setLogoType(object.get("logoType").getAsString());
+        }
+        if (object.has("logoLinkUrl")) {
+            configuration.setLogoLinkUrl(object.get("logoLinkUrl").getAsString());
+        }
+        if (object.has("logoTooltip")) {
+            configuration.setLogoTooltip(object.get("logoTooltip").getAsString());
         }
         if (object.has("favicon")) {
             configuration.setFavicon(BaseEncoding.base64().decode(object.get("favicon").getAsString()));

@@ -2,7 +2,13 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<nav class="navbar navbar-default" style="margin-top: 10px; margin-bottom: 5px">
+				{% if logoLinkUrl %}
+				<a href="{{logoLinkUrl}}" title="{{logoTooltip}}">
+					<img class="app-logo" width="58px" heigth="49px" src="{{contextPath}}/api/bennu-portal/configuration/logo" alt="{{ applicationTitle | mls }}">
+				</a>
+				{% else %}
 				<img class="app-logo" width="58px" heigth="49px" src="{{contextPath}}/api/bennu-portal/configuration/logo" alt="{{ applicationTitle | mls }}">
+				{% endif %}
 				<div class="navbar-brand">
 					<h4 class="media-heading">{{ applicationTitle | mls }} <span class="small">{{ applicationSubTitle | mls }}</span></h4>
 				</div>
