@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import org.apache.tika.Tika;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.commons.StringNormalizer;
 import org.joda.time.DateTime;
@@ -20,10 +21,16 @@ import com.google.common.hash.Hashing;
 /**
  * 
  * @author Shezad Anavarali Date: Jul 15, 2009
+ * @author Sérgio Silva (sergio.silva@tecnico.ulisboa.pt)
  * 
  */
 public abstract class GenericFile extends GenericFile_Base {
     private static final Logger logger = LoggerFactory.getLogger(GenericFile.class);
+
+    /**
+     * Used to detect file content type. {@link Tika#detect(byte[], String)} is thread-safe.
+     */
+    private static final Tika tika = new Tika();
 
     protected GenericFile() {
         super();
@@ -40,6 +47,7 @@ public abstract class GenericFile extends GenericFile_Base {
         setContent(content);
         setChecksum(Hashing.sha1().hashBytes(content).toString());
         setChecksumAlgorithm("SHA");
+        setContentType(detectContentType());
     }
 
     public abstract boolean isAccessible(User user);
@@ -83,7 +91,7 @@ public abstract class GenericFile extends GenericFile_Base {
         final String nicerFilename = filename.substring(filename.lastIndexOf('/') + 1);
         final String normalizedFilename = StringNormalizer.normalizePreservingCapitalizedLetters(nicerFilename);
         super.setFilename(normalizedFilename);
-        super.setContentType(guessContentType(normalizedFilename));
+        updateContentType();
     }
 
     private void setContent(byte[] content) {
@@ -99,6 +107,7 @@ public abstract class GenericFile extends GenericFile_Base {
         }
 
         setContentKey(uniqueIdentification);
+        updateContentType();
     }
 
     public byte[] getContent() {
@@ -138,8 +147,39 @@ public abstract class GenericFile extends GenericFile_Base {
         return fileStorage;
     }
 
+    /***
+     * Guessing file content type with {@link javax.activation.MimetypesFileTypeMap} is not enough.
+     * 
+     * @param filename
+     * @return file content type
+     * @deprecated use {@link #detectContentType()} instead.
+     */
+    @Deprecated
     protected String guessContentType(final String filename) {
         return new MimetypesFileTypeMap().getContentType(filename);
+    }
+
+    /***
+     * Detect content type based on file content "magic" bytes.
+     * Fallback to filename extension if file content is inconclusive.
+     * 
+     * @return the detected mime-type. application/octet-stream returned when detection was not successful.
+     * 
+     * @see Tika
+     */
+    protected String detectContentType() {
+        return tika.detect(getContent(), getFilename());
+    }
+
+    /***
+     * Update content type information.
+     * When the {@link GenericFile} is created, the content type is set to {@link #detectContentType()} If the content changes or
+     * the filename changes it is necessary to update the content type value.
+     */
+    private void updateContentType() {
+        if (!Strings.isNullOrEmpty(getContentType())) {
+            setContentType(detectContentType());
+        }
     }
 
     public void delete() {
