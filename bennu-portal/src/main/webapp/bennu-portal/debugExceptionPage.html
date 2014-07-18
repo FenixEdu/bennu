@@ -1,0 +1,190 @@
+<html>
+	<head>
+		<title>{{i18n('resources.BennuPortalResources', 'label.error.occurred')}}</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet"  href="{{contextPath}}/bennu-core/css/bootstrap.min.css">
+	</head>
+
+	<body>
+		<div class="col-sm-12">
+			<header class="row">
+				<div class="col-sm-10">
+					<h2 class="exception-class-name">{{exception.class.name}}</h2>
+					{{exception.localizedMessage}}
+				</div>
+				<div class="col-sm-2 text-center">
+					<h3>Bennu Framework</h3>
+					Development Mode
+				</div>
+			</header>
+			<main class="row main-body">
+				<div class="col-sm-8">
+					<h3>Request Information</h3>
+					<div class="row">
+						<div class="col-sm-2 desc">Request URI</div>
+						<div class="col-sm-10">{{request.requestURI}}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-2 desc">Request URL</div>
+						<div class="col-sm-10">{{request.requestURL}}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-2 desc">Query String</div>
+						<div class="col-sm-10">{{request.queryString}}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-2 desc">Method</div>
+						<div class="col-sm-10">{{request.method}}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-2 desc">User Agent</div>
+						<div class="col-sm-10">{{userAgent}}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-2 desc">Referer</div>
+						<div class="col-sm-10">{{referer}}</div>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<h3>User Information</h3>
+					<div class="row">
+						<div class="col-sm-4 desc">Username</div>
+						<div class="col-sm-8">{{loggedUser.username}}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4 desc">Locale</div>
+						<div class="col-sm-8">{{locale}}</div>
+					</div>
+				</div>
+				<div class="col-sm-12 info-section">
+					<h3 class="text-center">Request Parameters</h3>
+					{% for attr in parameters %}
+						<div class="row">
+							<div class="col-sm-5 desc">{{attr.key}}</div>
+							<div class="col-sm-7">{{attr.value}}</div>
+						</div>
+					{% endfor %}
+				</div>
+				<div class="col-sm-12 info-section">
+					<h3 class="text-center">Session Parameters</h3>
+					{% for attr in session %}
+						<div class="row">
+							<div class="col-sm-5 desc">{{attr.key}}</div>
+							<div class="col-sm-7">{{attr.value}}</div>
+						</div>
+					{% endfor %}
+				</div>
+				<div class="col-sm-12 info-section">
+					<h3 class="text-center">Request Attributes</h3>
+					{% for attr in attributes %}
+						<div class="row">
+							<div class="col-sm-5 desc">{{attr.key}}</div>
+							<div class="col-sm-7">{{attr.value}}</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				<div class="col-sm-12 info-section">
+					<h3 class="text-center">Exception Information</h3>
+					<div id="stackTrace">
+						{% for stack in throwableInfos %}
+							<div class="trace-first-line level{{stack.level}}">
+								<strong>
+								{% if stack.cause %}
+									Caused by:
+								{% else %}
+									<div>Exception in thread {{threadName}}:</div>
+								{% endif %}
+								</strong>
+								<span class="class-package">{{stack.subject.class.package.name}}</span><!--
+							 -->.<strong class="file-name">{{stack.subject.class.simpleName}}</strong>: {{stack.localizedMessage | raw}}
+							</div>
+							{% for element in stack.subjectInfo %}
+								<div class="trace-line {% if element.externalClass %}external-exception{% endif %}">
+									<strong>at:</strong>
+									<span class="class-package">{{element.packageName}}</span>.<!--
+								 --><span class="class-name">{{element.simpleClassName}}</span>.<!--
+								 --><span class="method-name">{{element.element.methodName}}</span>
+
+									{% if element.element.fileName != null %}
+										(<span class="file-name">{{element.element.fileName}}</span><!--
+										{% if element.element.lineNumber > 0 %}
+											-->:<span class="line-number">{{element.element.lineNumber}}</span>)
+										{% else %}
+											-->)
+										{% endif %}
+									{% else %}
+										{% if element.element.nativeMethod %}
+											<span class="nativeMethodText">(Native Method)</span>
+										{% else %}
+											<span class="unknownSourceText">(Unknown Source)</span>
+										{% endif %}
+									{% endif %}
+								</div>
+							{% endfor %}
+						{% endfor %}
+					</div>
+				</div>
+			</main>
+		</div>
+	</body>
+	<style>
+		body {
+			margin: 0;
+			font-family: 'Roboto', sans-serif;
+			background-color: #F1F1F1;
+			color: #51606E;
+			font-weight: 100;
+		}
+
+		main { word-wrap: break-word; }
+
+		.info-section {
+			padding-bottom: 20px;
+			border-bottom: solid 1px #ddd;
+		}
+
+		.line-number { color: #268bd2; }
+
+		.method-name {
+			color: #5F8709;
+			font-weight: bold;
+		}
+
+		.class-name {
+			color:  #B58902;
+			font-weight: bold;
+		}
+
+		.class-package { color:	#b58900; }
+
+		.external-exception { opacity:0.3; }
+
+		.external-exception:hover { opacity:0.6; }
+
+		.file-name { color: #DC3209; }
+
+		header {
+			background-color: #FEFEFE;
+			padding: 1em;
+			font-size: 15px;
+		}
+
+		.trace-first-line {
+			padding-top: 10px;
+			line-height: 1.5em
+		}
+
+		.trace-line {
+			padding-left: 30px;
+			font-family: monospace;
+		}
+
+		.desc {
+			text-align: right;
+			font-weight: bold;
+		}
+
+		img { padding-top: 10px; }
+	</style>
+</html>

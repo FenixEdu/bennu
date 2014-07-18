@@ -3,7 +3,7 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
   $scope.handleError = function(data) { $scope.error = data; };
   $scope.deleteSelected = function() {
     if($scope.selected.id) {
-      $http.delete("../api/bennu-portal/menu/" + $scope.selected.id).success(function (data) {
+      $http.delete(contextPath + "/api/bennu-portal/menu/" + $scope.selected.id).success(function (data) {
         $scope.selected.node.remove(); $scope.selected = null;
       }).error($scope.handleError);
     } else {
@@ -15,10 +15,10 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
                  layout: $scope.selected.layout, accessExpression: $scope.selected.accessExpression };
     var promise;
     if($scope.selected.id) {
-      promise = $http.put("../api/bennu-portal/menu/" + $scope.selected.id, data);
+      promise = $http.put(contextPath + "/api/bennu-portal/menu/" + $scope.selected.id, data);
     } else {
       data.path = $scope.selected.path; data.parent = $scope.selected.parent;
-      promise = $http.post("../api/bennu-portal/menu", data);
+      promise = $http.post(contextPath + "/api/bennu-portal/menu", data);
     }
     promise.success(function (data) {
       var node = $scope.selected.node;
@@ -30,24 +30,24 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
   $scope.loadApps = function() {
     $scope.filter = null;
     if(!$scope.apps) {
-      $http.get("../api/bennu-portal/menu/applications/").success(function (data) {
+      $http.get(contextPath + "/api/bennu-portal/menu/applications/").success(function (data) {
         $scope.apps = data;
       });
     }
   }
   $scope.installApplication = function() {
-    $http.post("../api/bennu-portal/menu/applications/", { root: $scope.selected.id, key: $scope.newApp.key }).success(function (item) {
+    $http.post(contextPath + "/api/bennu-portal/menu/applications/", { root: $scope.selected.id, key: $scope.newApp.key }).success(function (item) {
       add(item, $scope.selected.node);
     }).error($scope.handleError);
   }
   $scope.createChild = function() {
     var mls = {}; 
-    mls[BennuPortal.locale.tag] = 'New Entry';
+    mls[BennuPortal.locale.tag] = 'New Entry';
     var newChild = { title: mls, description: {}, visible: true, accessExpression: 'anyone', functionality: false, parent: $scope.selected.id };
     add(newChild, $scope.selected.node).setActive(true);
   }
   $scope.saveOrder = function() {
-    $http.post("../api/bennu-portal/menu/order", $scope.changes).success(function () {
+    $http.post(contextPath + "/api/bennu-portal/menu/order", $scope.changes).success(function () {
       $scope.changes = null;
     }).error($scope.handleError);
   }
@@ -63,7 +63,7 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
     return node;
   }
 
-  $http.get('../api/bennu-portal/menu/' + $scope.id).success(function (data) {
+  $http.get(contextPath + '/api/bennu-portal/menu/' + $scope.id).success(function (data) {
     $scope.locales = BennuPortal.locales;
     $("#tree").fancytree({ source: [ ], extensions: ["dnd"],
       dnd: {

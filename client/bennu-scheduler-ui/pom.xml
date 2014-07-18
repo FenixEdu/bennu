@@ -4,17 +4,11 @@
 
     <parent>
         <groupId>org.fenixedu</groupId>
-        <artifactId>bankai-project</artifactId>
-        <version>1.0.0</version>
-        <relativePath />
+        <artifactId>bennu-client-aggregator</artifactId>
+        <version>3.2.0</version>
     </parent>
 
-    <properties>
-        <bankai.skip.js.optimization>false</bankai.skip.js.optimization>
-    </properties>
-
     <artifactId>bennu-scheduler-ui</artifactId>
-    <version>3.1.0</version>
     <name>Bennu Scheduler UI</name>
 
     <repositories>
@@ -23,8 +17,4 @@
             <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
         </repository>
     </repositories>
-
-  <scm>
-    <tag>v3.1.0</tag>
-  </scm>
 </project>

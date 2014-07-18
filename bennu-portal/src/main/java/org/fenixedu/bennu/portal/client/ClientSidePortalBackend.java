@@ -21,14 +21,17 @@ public class ClientSidePortalBackend implements PortalBackend {
             @Override
             public void handleRequest(MenuFunctionality functionality, HttpServletRequest request, HttpServletResponse response,
                     FilterChain chain) throws IOException, ServletException {
-                chain.doFilter(request, response);
+                String forwardUrl =
+                        "/" + functionality.getParent().getPath() + "/"
+                                + (functionality.getPath().startsWith("#") ? "" : functionality.getPath());
+                request.getRequestDispatcher(forwardUrl).forward(request, response);
             }
         };
     }
 
     @Override
     public boolean requiresServerSideLayout() {
-        return false;
+        return true;
     }
 
     @Override

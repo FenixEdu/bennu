@@ -1,4 +1,4 @@
-# Bennu - Modular Web App Development for Java
+# Bennu - Modular Web App Development for Java [![Build Status](https://travis-ci.org/FenixEdu/bennu.svg?branch=develop)](https://travis-ci.org/FenixEdu/bennu)
 
 Bennu is the foundation for building modular Java web applications based on the [fenix-framework](http://fenix-framework.github.io/).
 
@@ -18,55 +18,71 @@ Bennu covers the following core features:
 
 ### Basic setup
 
-* __step 1__ Create a mysql database for your project
+* __Step 1__ Create a mysql database for your project
 
-* __step 2__ Create a web-app project:
+* __Step 2__ Create a web-app project:
 ```
 mvn archetype:generate \
     -DarchetypeGroupId=org.fenixedu \
     -DarchetypeArtifactId=bennu-webapp-archetype \
-    -DarchetypeVersion=3.0.0 \
+    -DarchetypeVersion=3.2.0 \
     -DarchetypeRepository=https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository
 ```
-suplying the database information as requested
+Make sure to supply the information required by the archetype.
 
-* __step 3__ Run ```mvn package jetty:run``` on the newly created project and it's up and running
+> Due to a limitation with Maven, you cannot select an empty database password.
+> If your password is empty, choose any, and edit the 'src/main/resources/fenix-framework.properties' file.
 
-* __step 4__ Access [http://localhost:8080/web-app-artifactId](http://localhost:8080/)
+* __Step 3__ Run ```mvn tomcat7:run``` on the newly created project and it's up and running
 
-* __step 5__ Login a user without supplying any password, this will be your manager account for now.
+* __Step 4__ Open your application at [http://localhost:8080/](http://localhost:8080/)
 
-* __step 6__ Access Admin>Configuration link and set the name and other details of your App
+* __Step 5__ Follow the on-screen bootstrap guide, which will ask your for some initial system configurations.
+
+* __Step 6__ Once you hit finish, you should see the initial screen of your application. To login, simply
+             click the 'Login' button on the upper right corner, and enter the username you chose in the
+             previous step.
+
+* __Step 7__ Click on the 'System Management' and you are now able to select which functionalities your
+             application provides.
 
 ### Creating an hello world module
 
-* __step 7__ Create a library project using
+* __Step 1__ Create a library project using
 ```
 mvn archetype:generate \
     -DarchetypeGroupId=org.fenixedu \
     -DarchetypeArtifactId=bennu-project-archetype \
-    -DarchetypeVersion=3.0.0 \
+    -DarchetypeVersion=3.2.0 \
     -DarchetypeRepository=https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository
 ```
 
-* __step 8__ Open the file ```src/main/webapp/hello-world/index.html``` and set it's contents to:
+> The following steps assume you named your application 'hello-world'. If that is not the case,
+> replace 'hello-world' with the name you chose.
+
+* __Step 2__ Open the file ```src/main/webapp/hello-world/index.jsp``` and set it's contents to:
 ```
 <h1>Hello World</h1>
 ```
 
-* __step 9__ Open the file ```src/main/resources/hello-world/apps.json``` and set it's contents to:
+* __Step 3__ Open the file ```src/main/resources/apps.json``` and set it's contents to:
 ```
-{"apps" :
-    [{
+{"apps": [{
+    "title": { "en-GB" : "Hello World", "pt-PT": "Olá Mundo" },
+    "description": { "pt-PT": "O meu primeiro módulo Bennu", "en-GB": "My First Bennu Module" },
+    "accessExpression": "anyone",
+    "path": "hello-world",
+    "functionalities": [{
         "title" :  {"en-GB" : "Hello World", "pt-PT": "Olá Mundo"},
         "description" : {"en-GB" : "Greets people warmly", "pt-PT": "Saúda pessoas afectivamente"},
-        "accessExpression" : "#anyone",
-        "path" : "hello-world",
+        "accessExpression": "anyone",
+        "path": "#"
     }]
-}
+}]}
 ```
 
-* __step 10__ Access Admin>Menu Configuration and add the hello world functionality in any place of the menu, then access it and get greeted
+* __Step 4__ Add your newly created module to your application, and install it using the System Management tool.
+             Your app should now be available in the application's menu.
 
 ## What's next?
 

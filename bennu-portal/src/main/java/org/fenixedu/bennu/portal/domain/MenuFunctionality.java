@@ -46,6 +46,19 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
         setProvider(provider);
     }
 
+    /*
+     * Creates a new copy of this functionality under the specified parent.
+     */
+    private MenuFunctionality(MenuContainer newParent, MenuFunctionality original) {
+        super();
+        if (newParent == null) {
+            throw new IllegalArgumentException("MenuFunctionality cannot be created without a parent!");
+        }
+        init(newParent, original);
+        setItemKey(original.getItemKey());
+        setProvider(original.getProvider());
+    }
+
     /**
      * Looks up in the functionality tree, the functionality with the given provider and key.
      * 
@@ -77,6 +90,24 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
     public String getItemKey() {
         //FIXME: remove when the framework enables read-only slots
         return super.getItemKey();
+    }
+
+    /**
+     * "Moves" this functionality to the selected point in the menu.
+     * 
+     * As {@link MenuItem}s are immutable by default, this instance is deleted, and
+     * a new copy of it is created under the specified container.
+     * 
+     * @param newParent
+     *            The new parent in which to insert the copy of this functionality
+     * @return
+     *         The newly created functionality
+     */
+    @Override
+    public MenuFunctionality moveTo(MenuContainer newParent) {
+        MenuFunctionality copy = new MenuFunctionality(newParent, this);
+        delete();
+        return copy;
     }
 
     // Private methods

@@ -73,7 +73,7 @@
                                 var fallbackLanguage = undefined;
                                 $(langs).each(function() {
                                     var eachlang = this.tag;
-                                    if (eachlang != completeLanguage && eachlang.indexOf(currentLanguage) === 0) {
+                                    if (eachlang != completeLanguage && eachlang.indexOf(currentLanguage) < 0) {
                                         fallbackLanguage = eachlang;
                                         return false;
                                     }

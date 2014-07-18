@@ -3,8 +3,6 @@ package org.fenixedu.bennu.core.util;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
-
 public class CookieReaderUtils {
 
     /**
@@ -19,7 +17,7 @@ public class CookieReaderUtils {
             return null;
         }
         for (Cookie cookie : request.getCookies()) {
-            if (StringUtils.equalsIgnoreCase(cookie.getName(), name)) {
+            if (cookie.getName().equalsIgnoreCase(name)) {
                 return cookie;
             }
         }

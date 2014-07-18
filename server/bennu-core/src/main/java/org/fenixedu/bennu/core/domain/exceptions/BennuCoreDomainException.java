@@ -18,6 +18,8 @@ package org.fenixedu.bennu.core.domain.exceptions;
 
 import javax.ws.rs.core.Response.Status;
 
+import com.google.gson.JsonElement;
+
 /**
  * Factory class for bennu-core expected errors.
  */
@@ -76,5 +78,33 @@ public class BennuCoreDomainException extends DomainException {
 
     public static BennuCoreDomainException duplicateUsername(String username) {
         return new BennuCoreDomainException("error.bennu.core.user.duplicateUsername", username);
+    }
+
+    public static BennuCoreDomainException displayNameNotContainedInFullName(String nickname, String fullname) {
+        return new BennuCoreDomainException("error.bennu.core.user.displayNameNotContainedInFullName", nickname, fullname);
+    }
+
+    public static BennuCoreDomainException cannotEditClosedLogin() {
+        return new BennuCoreDomainException("cannot.edit.closed.login");
+    }
+
+    public static BennuCoreDomainException cannotEditOpenPeriodStartDate() {
+        return new BennuCoreDomainException("cannot.edit.open.period.start.date");
+    }
+
+    public static BennuCoreDomainException cannotDeleteStartedLoginPeriod() {
+        return new BennuCoreDomainException("cannot.delete.started.login.period");
+    }
+
+    public static BennuCoreDomainException passwordCheckDoesNotMatch() {
+        return new BennuCoreDomainException("error.bennu.core.user.passwordCheckDoesNotMatch");
+    }
+
+    public static BennuCoreDomainException wrongJsonFormat(JsonElement json, String expected) {
+        return new BennuCoreDomainException("error.bennu.core.wrongJsonFormat", json.toString(), expected);
+    }
+
+    public static BennuCoreDomainException errorProcessingImage() {
+        return new BennuCoreDomainException("error.bennu.core.user.errorProcessingImage");
     }
 }

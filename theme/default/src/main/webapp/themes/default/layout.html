@@ -2,38 +2,41 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<nav class="navbar navbar-default" style="margin-top: 10px; margin-bottom: 5px">
-				<img class="app-logo" width="58px" heigth="49px" src="data:{{logoType}};base64,{{logo}}" alt="{{ applicationTitle | mls }}">
+				{% if logoLinkUrl %}
+				<a href="{{logoLinkUrl}}" title="{{logoTooltip}}">
+					<img class="app-logo" width="58px" heigth="49px" src="{{contextPath}}/api/bennu-portal/configuration/logo" alt="{{ applicationTitle | mls }}">
+				</a>
+				{% else %}
+				<img class="app-logo" width="58px" heigth="49px" src="{{contextPath}}/api/bennu-portal/configuration/logo" alt="{{ applicationTitle | mls }}">
+				{% endif %}
 				<div class="navbar-brand">
 					<h4 class="media-heading">{{ applicationTitle | mls }} <span class="small">{{ applicationSubTitle | mls }}</span></h4>
 				</div>
-				  <div class="collapse navbar-collapse">
-				  	{% if not logged %}
-					<form class="col-lg-6 navbar-form navbar-right">
-						<div class="form-group input-group-sm">
-							<input name="username" type="text" class="form-control" placeholder="{{ 'username' | i18n }}" />
-						</div>
-						<div class="form-group input-group-sm">
-							<input name="password" type="password" class="form-control" placeholder="{{ 'password' | i18n }}" />
-						</div>
-					</form>
-				 	{% else %}
-						<ul class="nav navbar-nav navbar-right">
-						  <li class="dropdown">
-						    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ 'settings' | i18n }}<b class="caret"></b></a>
-						    <ul class="dropdown-menu">
-							  {% for locale in locales %}
-								{% if locale.selected %}			
-									<li class="disabled" ><a href="#">{{ locale.tag | i18n }}</a></li>
-								{% else %}
-									<li><a class="lang" href="#" data-lang="{{locale.tag}}">{{ locale.tag | i18n }}</a></li>
-								{% endif %}
-							  {% endfor %}
-						      <li><a href="#" id="logout">{{ 'logout' | i18n }}</a></li>
-						    </ul>
-						  </li>
-						</ul>
-					{% endif %}
+			  	{% if not logged %}
+			  	<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="{{contextPath}}/login">{{ 'login' | i18n }}</a></li>
+					</ul>
 				</div>
+			 	{% else %}
+			  	<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown"><img src="{{avatar}}?s=32" style="margin-right: 10px" class="img-circle"/>{{displayName}}<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+							  	{% for locale in locales %}
+								{% if locale.selected %}			
+								<li class="disabled" ><a href="#">{{ locale.tag | i18n }}</a></li>
+								{% else %}
+								<li><a onclick="setLang('{{locale.tag}}')">{{ locale.tag | i18n }}</a></li>
+								{% endif %}
+						 		{% endfor %}
+						 		<li><a href="{{contextPath}}/logout">{{ 'logout' | i18n }}</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				{% endif %}
 			</nav>
 		</div>
 	</div>
@@ -84,7 +87,10 @@
 	</div>
 	
 </div>
+
+<script> setLang = function(l) {
+  $.post('{{contextPath}}/api/bennu-core/profile/locale/' + l.replace('_', '-')).always(function() { location.reload(); });
+}
+</script>
 <script src="{{contextPath}}/themes/default/js/handleFrag.js"></script>
-<script src="{{contextPath}}/themes/default/js/login.js"></script>
-<script src="{{contextPath}}/themes/default/js/language.js"></script>
 <script src="{{contextPath}}/themes/default/js/bootstrap.min.js"></script>

@@ -71,6 +71,17 @@ public final class MenuContainer extends MenuContainer_Base {
         init(parent, visible, accessGroup, title, description, path);
     }
 
+    /*
+     * Creates a new copy of this container. It does NOT replicate the container's children.
+     */
+    private MenuContainer(MenuContainer parent, MenuContainer original) {
+        super();
+        if (parent == null) {
+            throw new IllegalArgumentException("MenuFunctionality cannot be created without a parent!");
+        }
+        init(parent, original);
+    }
+
     /**
      * Adds a given {@link MenuItem} as the last child of this container.
      * 
@@ -266,5 +277,27 @@ public final class MenuContainer extends MenuContainer_Base {
             }
         }
         return null;
+    }
+
+    /**
+     * "Moves" this container to the selected point in the menu.
+     * 
+     * As {@link MenuItem}s are immutable by default, this instance is deleted, and
+     * a new copy of it is created under the specified container. This process is
+     * recursive, meaning that all the current children will be replicated as well.
+     * 
+     * @param newParent
+     *            The new parent in which to insert the copy of this container
+     * @return
+     *         The newly created container
+     */
+    @Override
+    public MenuContainer moveTo(MenuContainer newParent) {
+        MenuContainer copy = new MenuContainer(newParent, this);
+        for (MenuItem item : getChildSet()) {
+            item.moveTo(copy);
+        }
+        super.delete();
+        return copy;
     }
 }

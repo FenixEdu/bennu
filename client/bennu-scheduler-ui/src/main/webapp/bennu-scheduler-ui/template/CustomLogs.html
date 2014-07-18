@@ -1,0 +1,45 @@
+<style>
+	.table {
+		margin-bottom: 0px;
+	}
+</style>
+<h3>
+	Custom Task Logs
+	<small>{{type}}</small>
+
+	<button class="pull-right btn btn-default" ng-click="reload()"><i class="glyphicon glyphicon-refresh"/></button>
+	<a href="#/custom" class="pull-right btn btn-default" ng-if="type">« Back</a>
+</h3>
+
+Search: <input type="text" ng-model="filter"/>
+
+<a href="#/custom/add" class="btn btn-success">Add Custom Task</a>
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Task Name</th>
+			<th>Start</th>
+			<th>End</th>
+			<th>Status</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="log in logs | orderBy:'-end' | filter: filter">
+			<td>{{log.taskName}}</td>
+			<td>{{log.start | moment}}</td>
+			<td>{{log.end | moment}}</td>
+			<td ng-if="log.end">
+				<i class="glyphicon glyphicon-ok" ng-if="log.success" />
+				<i class="glyphicon glyphicon-remove" ng-if="!log.success" />
+			</td>
+			<td ng-if="!log.end">
+				<i class="glyphicon glyphicon-play" />
+			</td>
+			<td>
+				<a href="#custom/{{log.taskName}}" class="btn btn-success" ng-if="!type">More</a>
+				<a href="#custom/{{log.taskName}}/{{log.id}}" class="btn btn-success">Details</a>
+			</td>
+		</tr>
+	</tbody>
+</table>

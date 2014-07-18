@@ -59,6 +59,18 @@
                     },
                     "accessExpression": "#managers",
                     "path": "#/domain-browser"
+                },
+                {
+                    "title": {
+                        "pt-PT": "Gestão de Utilizadores",
+                        "en-GB": "User Management"
+                    },
+                    "description": {
+                        "pt-PT": "Gestão de Utilizadores",
+                        "en-GB": "User Management"
+                    },
+                    "accessExpression": "#managers",
+                    "path": "#/user-management"
                 }
             ]
         }

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.Callable;
 
-import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.scheduler.annotation.Task;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
@@ -26,7 +25,7 @@ public abstract class CronTask implements Runnable {
     private Logger logger;
     protected transient ExecutionLog log;
     private PrintWriter taskLogWriter;
-    private Atomic atomic;
+    private final Atomic atomic;
 
     public CronTask() {
         atomic = new AtomicInstance(getTxMode(), true);
@@ -172,7 +171,7 @@ public abstract class CronTask implements Runnable {
     }
 
     protected final void taskLog() {
-        taskLog(StringUtils.EMPTY);
+        taskLog("");
     }
 
     @SuppressWarnings("unchecked")

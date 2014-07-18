@@ -1,0 +1,33 @@
+{"apps" : [{
+"title" :  {"en-GB" : "Scheduler Management", "pt-PT": "Tarefas"},
+"description" : {"en-GB" : "Manage scheduling of periodic tasks", "pt-PT": "Agendamento de tarefas"},
+"accessExpression" : "#managers",
+"path" : "bennu-scheduler-ui",
+"functionalities" : 
+		[
+			{ 
+   			  "title" : {"en-GB" : "Tasks", "pt-PT": "Tarefas"},
+			  "description" : {"en-GB" : "Available tasks for scheduling", "pt-PT" : "Tarefas disponíveis para agendamento"},
+			  "path" : "#/tasks",
+			  "accessExpression" : "#managers"
+			},
+			{ 
+   			  "title" : {"en-GB" : "Schedules", "pt-PT" : "Agendamentos"},
+			  "description" : {"en-GB" : "Task schedules", "pt-PT" : "Agendamento de tarefas"},
+			  "path" : "#/schedules",
+			  "accessExpression" : "#managers"
+			},
+			{ 
+   			  "title" : {"en-GB" : "Task Logs", "pt-PT" : "Execuções de Agendamentos"},
+			  "description" : {"en-GB" : "Task logs", "pt-PT" : "Execuções Agendamento de tarefas"},
+			  "path" : "#/logs",
+			  "accessExpression" : "#managers"
+			},
+			{ 
+   			  "title" : {"en-GB" : "Custom Tasks", "pt-PT" : "Tarefas Manuais"},
+			  "description" : {"en-GB" : "Submit Custom Tasks", "pt-PT" : "Executar Tarefas Manuais"},
+			  "path" : "#/custom",
+			  "accessExpression" : "#managers"
+			}
+		]
+}]}
