@@ -1,4 +1,4 @@
-# Bennu - Modular Web App Development for Java
+# Bennu - Modular Web App Development for Java [![Build Status](https://travis-ci.org/FenixEdu/bennu.svg?branch=develop)](https://travis-ci.org/FenixEdu/bennu)
 
 Bennu is the foundation for building modular Java web applications based on the [fenix-framework](http://fenix-framework.github.io/).
 
@@ -25,7 +25,7 @@ Bennu covers the following core features:
 mvn archetype:generate \
     -DarchetypeGroupId=org.fenixedu \
     -DarchetypeArtifactId=bennu-webapp-archetype \
-    -DarchetypeVersion=3.1.0 \
+    -DarchetypeVersion=3.2.0 \
     -DarchetypeRepository=https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository
 ```
 suplying the database information as requested
@@ -45,7 +45,7 @@ suplying the database information as requested
 mvn archetype:generate \
     -DarchetypeGroupId=org.fenixedu \
     -DarchetypeArtifactId=bennu-project-archetype \
-    -DarchetypeVersion=3.1.0 \
+    -DarchetypeVersion=3.2.0 \
     -DarchetypeRepository=https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository
 ```
 
