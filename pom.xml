@@ -29,6 +29,7 @@
         <version.com.google.code.gson.gson>2.2.4</version.com.google.code.gson.gson>
         <version.com.google.guava.guava>17.0</version.com.google.guava.guava>
         <version.com.mitchellbosecke.pebble>1.0.0</version.com.mitchellbosecke.pebble>
+        <version.org.apache.tika.tika-core>1.5</version.org.apache.tika.tika-core>
 
         <!-- ************************************************************************************************ -->
         <!-- * PLUGIN VERSIONS * -->
@@ -137,6 +138,11 @@
                 <artifactId>pebble</artifactId>
                 <version>${version.com.mitchellbosecke.pebble}</version>
             </dependency>
+	        <dependency>
+	            <groupId>org.apache.tika</groupId>
+	            <artifactId>tika-core</artifactId>
+	            <version>${version.org.apache.tika.tika-core}</version>
+	        </dependency>
         </dependencies>
     </dependencyManagement>
 
