@@ -30,6 +30,7 @@ import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
+import com.mitchellbosecke.pebble.loader.Loader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
 /**
@@ -47,7 +48,7 @@ public class PortalExceptionHandler implements ExceptionHandler {
     private final PebbleEngine engine;
 
     public PortalExceptionHandler(final ServletContext context) {
-        this.engine = new PebbleEngine(new ClasspathLoader() {
+        this(new ClasspathLoader() {
             @Override
             public Reader getReader(String themeName) throws LoaderException {
                 // Try to resolve the page from the theme...
@@ -60,6 +61,10 @@ public class PortalExceptionHandler implements ExceptionHandler {
                 }
             }
         });
+    }
+
+    protected PortalExceptionHandler(Loader loader) {
+        this.engine = new PebbleEngine(loader);
         engine.addExtension(new PortalExtension());
     }
 
@@ -88,6 +93,7 @@ public class PortalExceptionHandler implements ExceptionHandler {
         ctx.put("parameters", getParameters(req));
         ctx.put("attributes", getAttributes(req));
         ctx.put("functionality", BennuPortalDispatcher.getSelectedFunctionality(req));
+        setExtraParameters(ctx, req, exception);
 
         StringWriter writer = new StringWriter(1024);
         exception.printStackTrace(new PrintWriter(writer));
@@ -101,6 +107,10 @@ public class PortalExceptionHandler implements ExceptionHandler {
         } catch (PebbleException e) {
             throw new IOException(e);
         }
+    }
+
+    protected void setExtraParameters(Map<String, Object> ctx, HttpServletRequest req, Throwable exception) {
+        // Do nothing by default
     }
 
     private Object getParameters(HttpServletRequest req) {
