@@ -60,7 +60,7 @@ mvn archetype:generate \
 > The following steps assume you named your application 'hello-world'. If that is not the case,
 > replace 'hello-world' with the name you chose.
 
-* __Step 2__ Open the file ```src/main/webapp/hello-world/index.html``` and set it's contents to:
+* __Step 2__ Open the file ```src/main/webapp/hello-world/index.jsp``` and set it's contents to:
 ```
 <h1>Hello World</h1>
 ```
