@@ -31,7 +31,7 @@ public class ClientSidePortalBackend implements PortalBackend {
 
     @Override
     public boolean requiresServerSideLayout() {
-        return false;
+        return true;
     }
 
     @Override

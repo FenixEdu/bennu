@@ -45,6 +45,8 @@ public class PortalInitializer implements ServletContextListener {
         } else {
             ExceptionHandlerFilter.setExceptionHandler(new PortalExceptionHandler(sce.getServletContext()));
         }
+
+        sce.getServletContext().setAttribute("portal", new PortalBean(sce.getServletContext()));
     }
 
     private void registerBuiltinPortalBackends() {

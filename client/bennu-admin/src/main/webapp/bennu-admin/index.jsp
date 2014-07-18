@@ -1,21 +1,10 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="bennuAdmin">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Menu Manager</title>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/jquery.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/portal.js"></script>
-	<link  href="${pageContext.request.contextPath}/bennu-admin/cropper/cropper.min.css" rel="stylesheet">
-</head>
-<body style="display: none">
-	<div id="portal-container">
-		<div ng-view>
-		</div>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/angular.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/angular-route.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-admin/cropper/cropper.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-admin/js/app.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-admin/js/menu.js"></script>
+<div ng-app="bennuAdmin">
+	<div ng-view>
 	</div>
-</body>
-</html>
+	${portal.bennuPortal()}
+	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/angular.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/angular-route.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-admin/cropper/cropper.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-admin/js/app.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-admin/js/menu.js"></script>
+</div>
