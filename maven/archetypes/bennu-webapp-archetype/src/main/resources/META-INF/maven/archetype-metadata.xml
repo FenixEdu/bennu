@@ -3,7 +3,7 @@
     name="fenix-framework-project" xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <requiredProperties>
         <requiredProperty key="bennuVersion">
-            <defaultValue>3.0.0</defaultValue>
+            <defaultValue>3.2.0</defaultValue>
         </requiredProperty>
         <requiredProperty key="UpperCamelCaseProjectName" />
         <requiredProperty key="databaseHost" />
