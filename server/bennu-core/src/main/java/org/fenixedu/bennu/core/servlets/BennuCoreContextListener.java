@@ -18,12 +18,16 @@ package org.fenixedu.bennu.core.servlets;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRegistration;
 import javax.servlet.annotation.WebListener;
 
 import org.fenixedu.bennu.core.bootstrap.BootstrapperRegistry;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.rest.Healthcheck;
 import org.fenixedu.bennu.core.rest.SystemResource;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.FenixFramework;
 
@@ -32,14 +36,45 @@ import pt.ist.fenixframework.FenixFramework;
  * @author Pedro Santos
  * @author Luis Cruz
  * @author Paulo Abrantes
+ * @author Sérgio Silva (sergio.silva@tecnico.ulisboa.pt)
  * 
  */
 @WebListener
 public class BennuCoreContextListener implements ServletContextListener {
+    private static final Logger logger = LoggerFactory.getLogger(BennuCoreContextListener.class);
+
     private ClassLoader thisClassLoader;
+
+    /**
+     * This methods enables multipart feature in the JAX-RS api.
+     * 
+     * @see CoreConfiguration#getMultipartConfigElement
+     * 
+     * @param event The servlet context
+     */
+    private void registerMultipartConfig(ServletContextEvent event) {
+        final ServletRegistration restApplicationRegistration =
+                event.getServletContext().getServletRegistration(BennuJerseyRestApplication.class.getName());
+
+        if (restApplicationRegistration != null) {
+            if (restApplicationRegistration instanceof ServletRegistration.Dynamic) {
+                ((ServletRegistration.Dynamic) restApplicationRegistration).setMultipartConfig(CoreConfiguration
+                        .getMultipartConfigElement());
+                logger.info("Configure MultiPart for REST Application {}", restApplicationRegistration.getName());
+            } else {
+                logger.debug("ServletRegistration for {} doesn't implement ServletRegistration.Dynamic",
+                        BennuJerseyRestApplication.class.getName());
+            }
+        } else {
+            logger.debug("Couldn't find ServletRegistration for {}", BennuJerseyRestApplication.class.getName());
+        }
+    }
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
+
+        registerMultipartConfig(event);
+
         BootstrapperRegistry.registerBootstrapFilter(event.getServletContext());
 
         SystemResource.registerHealthcheck(new Healthcheck() {
