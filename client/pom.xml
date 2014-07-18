@@ -4,7 +4,7 @@
 
     <parent>
         <groupId>org.fenixedu</groupId>
-        <artifactId>fenixedu-project</artifactId>
+        <artifactId>web-library-project</artifactId>
         <version>1.3.2</version>
         <relativePath />
     </parent>
