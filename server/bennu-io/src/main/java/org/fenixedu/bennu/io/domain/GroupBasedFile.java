@@ -25,7 +25,7 @@ public final class GroupBasedFile extends GroupBasedFile_Base {
 
     @Override
     public void delete() {
-        setAccessGroup(null);
+        setGroup(null);
         super.delete();
     }
 }

@@ -109,7 +109,9 @@ public abstract class GenericFile extends GenericFile_Base {
         }
 
         setContentKey(uniqueIdentification);
-        setContentType(detectContentType(content, getFilename()));
+        if (content != null) {
+            setContentType(detectContentType(content, getFilename()));
+        }
     }
 
     public byte[] getContent() {
