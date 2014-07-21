@@ -11,7 +11,7 @@ public interface ArgumentParser<T> {
      * Parse the value from it's serialized form. The argument is never null or empty.
      * 
      * @param argument The serialized version of the type.
-     * @return
+     * @return the parsed argument
      */
     public T parse(String argument);
 

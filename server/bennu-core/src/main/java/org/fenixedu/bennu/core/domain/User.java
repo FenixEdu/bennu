@@ -104,6 +104,7 @@ public final class User extends User_Base implements Principal {
     }
 
     /**
+     * @param username the unique username
      * @deprecated Use {@link User#User(String, UserProfile)} instead.
      */
     @Deprecated
@@ -251,6 +252,7 @@ public final class User extends User_Base implements Principal {
     }
 
     /**
+     * @return the user's name
      * @deprecated Use {@link UserProfile#getFullName() } instead
      */
     @Deprecated
@@ -259,7 +261,8 @@ public final class User extends User_Base implements Principal {
     }
 
     /**
-     * @deprecated Use {@link UserProfile#getNickname() } instead
+     * @return the short version of the user's name
+     * @deprecated Use {@link UserProfile#getDisplayName() } instead
      */
     @Deprecated
     public String getShortPresentationName() {
@@ -280,6 +283,7 @@ public final class User extends User_Base implements Principal {
     }
 
     /**
+     * @param newStrategy {@link UserPresentationStrategy} instance
      * @deprecated User now has native name field rendering the need for these strategies obsolete
      */
     @Deprecated

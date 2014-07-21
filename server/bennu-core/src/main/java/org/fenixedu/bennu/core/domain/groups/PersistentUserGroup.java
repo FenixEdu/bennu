@@ -55,17 +55,20 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
     }
 
     /**
+     * Get or create instance of a {@link PersistentUserGroup} for the requested users
+     * 
+     * @param users the users to be part of the group
+     * @return {@link PersistentUserGroup} instance
      * @see #getInstance(Set)
      */
-    public static PersistentUserGroup getInstance(User... members) {
-        return getInstance(new HashSet<>(Arrays.asList(members)));
+    public static PersistentUserGroup getInstance(User... users) {
+        return getInstance(new HashSet<>(Arrays.asList(users)));
     }
 
     /**
      * Get or create instance of a {@link PersistentUserGroup} for the requested users
      * 
-     * @param users
-     *            the users to be part of the group
+     * @param users the users to be part of the group
      * @return {@link PersistentUserGroup} instance
      */
     public static PersistentUserGroup getInstance(final Set<User> users) {

@@ -55,10 +55,15 @@ public final class PersistentDifferenceGroup extends PersistentDifferenceGroup_B
     }
 
     /**
-     * @see #getInstance(Set)
+     * Get or create instance of a {@link PersistentDifferenceGroup} between the first group and the rest.
+     * 
+     * @param first the group from which to subtract
+     * @param rest the groups to subtract.
+     * @return singleton {@link PersistentDifferenceGroup} instance
+     * @see #getInstance(PersistentGroup, Set)
      */
-    public static PersistentDifferenceGroup getInstance(final PersistentGroup first, final PersistentGroup... children) {
-        return getInstance(first, new HashSet<>(Arrays.asList(children)));
+    public static PersistentDifferenceGroup getInstance(final PersistentGroup first, final PersistentGroup... rest) {
+        return getInstance(first, new HashSet<>(Arrays.asList(rest)));
     }
 
     /**

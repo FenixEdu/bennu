@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.fenixedu.bennu.core.bootstrap.annotations.Bootstrap;
+import org.fenixedu.bennu.core.bootstrap.annotations.Field;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -22,7 +23,7 @@ public class SectionsBootstrapper {
      * @param json
      *            the json that for each declared {@link Field} maps its key on its value.
      * 
-     * @throws BootstrapException
+     * @throws Throwable
      *             If errors ocurred during the bootstrap
      */
     @Atomic(mode = TxMode.WRITE)

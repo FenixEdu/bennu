@@ -3,6 +3,8 @@ package org.fenixedu.bennu.core.bootstrap;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import org.fenixedu.bennu.core.bootstrap.annotations.Field;
+
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.google.gson.JsonObject;
 

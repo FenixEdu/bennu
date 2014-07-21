@@ -17,12 +17,14 @@ import com.google.gson.JsonObject;
 public abstract class Healthcheck {
 
     /**
-     * The result of a {@link HealthCheck}. It can be healthy or unhealthy (with either an error message or a thrown exception).
+     * The result of a {@link Healthcheck}. It can be healthy or unhealthy (with either an error message or a thrown exception).
      */
     public static class Result {
 
         /**
          * Returns a healthy {@link Result}.
+         * 
+         * @return {@link Result} instance with "OK" message
          */
         public static Result healthy() {
             return new Result(true, "OK", null);
@@ -30,6 +32,9 @@ public abstract class Healthcheck {
 
         /**
          * Returns a healthy {@link Result} with the given message.
+         * 
+         * @param message the message to include in the result
+         * @return {@link Result} instance
          */
         public static Result healthy(String message) {
             return new Result(true, message, null);
@@ -37,6 +42,9 @@ public abstract class Healthcheck {
 
         /**
          * Returns an unhealthy {@link Result} with the given message.
+         * 
+         * @param message the message to include in the result
+         * @return {@link Result} instance
          */
         public static Result unhealthy(String message) {
             return new Result(false, message, null);
@@ -44,6 +52,9 @@ public abstract class Healthcheck {
 
         /**
          * Returns an unhealthy {@link Result} with the given error.
+         * 
+         * @param error an exception to include in the result
+         * @return {@link Result} instance
          */
         public static Result unhealthy(Throwable error) {
             return new Result(false, error.getMessage(), error);
@@ -51,6 +62,11 @@ public abstract class Healthcheck {
 
         /**
          * Returns an unhealthy {@link Result} with the given error and message.
+         * 
+         * @param message the message to include in the result
+         * @param error an exception to include in the result
+         * 
+         * @return {@link Result} instance
          */
         public static Result unhealthy(String message, Throwable error) {
             return new Result(false, message, error);
@@ -84,6 +100,8 @@ public abstract class Healthcheck {
 
     /**
      * Returns the presentation name of this healthcheck.
+     * 
+     * @return the name {@link String}
      */
     public abstract String getName();
 
@@ -98,6 +116,8 @@ public abstract class Healthcheck {
 
     /**
      * Executes the health check. Any exceptions will result in an Unhealthy Result.
+     * 
+     * @return {@link Result} instance
      */
     public final Result execute() {
         try {

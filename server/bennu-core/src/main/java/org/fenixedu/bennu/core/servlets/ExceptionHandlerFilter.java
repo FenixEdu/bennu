@@ -47,6 +47,7 @@ public class ExceptionHandlerFilter implements Filter {
     /**
      * Registers the given {@link ExceptionHandler} as this application's exception handler
      * 
+     * @param handler the {@link ExceptionHandler} instance to register
      * @throws NullPointerException if the provided handler is null
      */
     public static void setExceptionHandler(ExceptionHandler handler) {

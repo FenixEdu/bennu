@@ -151,8 +151,8 @@ public class JsonAwareResource {
     /**
      * merges the source within target
      * 
-     * @param target
-     * @param source
+     * @param target json where to merge the source
+     * @param source the json source to merge
      */
     public void merge(JsonObject target, JsonObject source) {
         for (final Entry<String, JsonElement> entry : source.entrySet()) {

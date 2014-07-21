@@ -245,7 +245,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      * @param expression
      *            the group in textual form
      * @return group representing the semantics of the expression.
-     * @throws GroupException
+     * @throws BennuCoreDomainException
      *             if a parsing error occurs
      */
     public static Group parse(String expression) {

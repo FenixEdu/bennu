@@ -53,6 +53,10 @@ public final class PersistentIntersectionGroup extends PersistentIntersectionGro
     }
 
     /**
+     * Get or create instance of a {@link PersistentIntersectionGroup} between the requested children.
+     * 
+     * @param children the groups to make a {@link PersistentIntersectionGroup} on.
+     * @return singleton {@link PersistentIntersectionGroup} instance
      * @see #getInstance(Set)
      */
     public static PersistentIntersectionGroup getInstance(final PersistentGroup... children) {
@@ -62,8 +66,7 @@ public final class PersistentIntersectionGroup extends PersistentIntersectionGro
     /**
      * Get or create instance of a {@link PersistentIntersectionGroup} between the requested children.
      * 
-     * @param children
-     *            the groups to make a {@link PersistentIntersectionGroup} on.
+     * @param children the groups to make a {@link PersistentIntersectionGroup} on.
      * @return singleton {@link PersistentIntersectionGroup} instance
      */
     public static PersistentIntersectionGroup getInstance(final Set<PersistentGroup> children) {

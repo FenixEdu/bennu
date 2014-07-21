@@ -7,6 +7,11 @@ import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
+/**
+ * User account profile information. This information includes names, email, avatar and preferred locale.
+ * 
+ * @author Pedro Santos (pedro.miguel.santos@tecnico.ulisboa.pt)
+ */
 public class UserProfile extends UserProfile_Base {
     protected UserProfile() {
         super();
@@ -25,23 +30,50 @@ public class UserProfile extends UserProfile_Base {
         return super.getUser();
     }
 
+    /**
+     * A possibly shorter version of the full name. Used on most places to identify the person.
+     * 
+     * @return a String with the display name or null.
+     * @see #getFullName()
+     */
     @Override
     public String getDisplayName() {
         return super.getDisplayName() != null ? super.getDisplayName() : getFullName();
     }
 
+    /**
+     * The given names of the person. First part of the full name.
+     * 
+     * @return a String with the given names or null.
+     * @see #getFamilyNames()
+     * @see #getFullName()
+     */
     @Override
     public String getGivenNames() {
         // FIXME: remove when framework support read-only slots
         return super.getGivenNames();
     }
 
+    /**
+     * The family names (surnames) of the person. Last part of the full name.
+     * 
+     * @return a String with the family names or null.
+     * @see #getFamilyNames()
+     * @see #getFullName()
+     */
     @Override
     public String getFamilyNames() {
         // FIXME: remove when framework support read-only slots
         return super.getFamilyNames();
     }
 
+    /**
+     * The full name of the person, composed of given and family names separated by a space.
+     * 
+     * @return a String with the full name or null.
+     * @see #getGivenNames()
+     * @see #getFamilyNames()
+     */
     public String getFullName() {
         StringBuilder builder = new StringBuilder();
         if (getGivenNames() != null) {
@@ -54,11 +86,61 @@ public class UserProfile extends UserProfile_Base {
         return builder.toString().trim();
     }
 
+    /**
+     * Change the name by changing it's parts validating consistency between them. Namely ensures the display name is a subset of
+     * the given and family names together.
+     * 
+     * @param given person's given names
+     * @param family person's family names
+     * @param display person's display name
+     */
     public void changeName(String given, String family, String display) {
         setGivenNames(cleanupName(given));
         setFamilyNames(cleanupName(family));
         setDisplayName(cleanupName(display));
         validateNames(getDisplayName(), getFullName());
+    }
+
+    /**
+     * User's primary email.
+     * 
+     * @return a String with the user's email or null
+     */
+    @Override
+    public String getEmail() {
+        return super.getEmail();
+    }
+
+    /**
+     * Change user's primary email.
+     * 
+     * @param email a String with the user's primary email
+     */
+    @Override
+    public void setEmail(String email) {
+        super.setEmail(email);
+    }
+
+    /**
+     * The users's preferred locale for internationalized content. If this value is null the system localizes content based on
+     * global defaults.
+     * 
+     * @return a Locale instance or null
+     */
+    @Override
+    public Locale getPreferredLocale() {
+        return super.getPreferredLocale();
+    }
+
+    /**
+     * Change the user's preferred locale.
+     * 
+     * @param preferredLocale a Locale instance
+     * @see #getPreferredLocale()
+     */
+    @Override
+    public void setPreferredLocale(Locale preferredLocale) {
+        super.setPreferredLocale(preferredLocale);
     }
 
     /**
@@ -79,7 +161,7 @@ public class UserProfile extends UserProfile_Base {
     /**
      * Sets the user's base avatar URL.
      * 
-     * @see UserProfile#getAvatarUrl()
+     * @see #getAvatarUrl()
      */
     @Override
     public void setAvatarUrl(String avatarUrl) {
@@ -90,8 +172,10 @@ public class UserProfile extends UserProfile_Base {
     }
 
     /**
-     * @param localAvatar
-     * @see org.fenixedu.bennu.core.domain.UserProfile_Base#setLocalAvatar(org.fenixedu.bennu.core.domain.Avatar)
+     * Sets this user's avatar to a locally stored avatar and updates the avatar url accordingly.
+     * 
+     * @param localAvatar a Avatar instance with the image
+     * @see #getAvatarUrl()
      */
     @Override
     public void setLocalAvatar(Avatar localAvatar) {

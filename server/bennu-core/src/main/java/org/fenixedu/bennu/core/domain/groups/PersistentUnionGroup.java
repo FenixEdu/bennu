@@ -53,6 +53,10 @@ public final class PersistentUnionGroup extends PersistentUnionGroup_Base {
     }
 
     /**
+     * Get or create instance of a {@link PersistentUnionGroup} between the requested children.
+     * 
+     * @param children the groups to make a {@link PersistentUnionGroup} on.
+     * @return {@link PersistentUnionGroup} instance
      * @see #getInstance(Set)
      */
     public static PersistentUnionGroup getInstance(final PersistentGroup... children) {
@@ -62,8 +66,7 @@ public final class PersistentUnionGroup extends PersistentUnionGroup_Base {
     /**
      * Get or create instance of a {@link PersistentUnionGroup} between the requested children.
      * 
-     * @param children
-     *            the groups to make a {@link PersistentUnionGroup} on.
+     * @param children the groups to make a {@link PersistentUnionGroup} on.
      * @return {@link PersistentUnionGroup} instance
      */
     public static PersistentUnionGroup getInstance(final Set<PersistentGroup> children) {

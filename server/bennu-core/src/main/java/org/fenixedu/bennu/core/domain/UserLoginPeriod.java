@@ -21,7 +21,9 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
     /**
      * Creates a {@link UserLoginPeriod} for the given {@link User} with the exact dates.
      * 
-     * All arguments are required.
+     * @param user {@link User} instance
+     * @param beginDate {@link LocalDate} when the period started
+     * @param endDate {@link LocalDate} when the period ended
      */
     public UserLoginPeriod(User user, LocalDate beginDate, LocalDate endDate) {
         setUser(Objects.requireNonNull(user));
@@ -50,6 +52,9 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
     /**
      * Edits this period. Changing the begin date is only allowed if the period is not already started, and changing the end date
      * is only allowed if such date is in the future.
+     * 
+     * @param beginDate {@link LocalDate} when the period started
+     * @param endDate {@link LocalDate} when the period ended
      */
     public void edit(LocalDate beginDate, LocalDate endDate) {
         if (isClosed()) {
@@ -64,6 +69,8 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
 
     /**
      * Returns whether this period is already closed, i.e. its end date is in the past.
+     * 
+     * @return true if period is closed (ended), false otherwise
      */
     public boolean isClosed() {
         return getEndDate() != null && getEndDate().isBefore(new LocalDate());
@@ -71,6 +78,8 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
 
     /**
      * Returns whether this period has already started, i.e. its begin date is not in the future.
+     * 
+     * @return true if period has started, false otherwise
      */
     public boolean isStarted() {
         return !getBeginDate().isAfter(new LocalDate());
@@ -78,6 +87,10 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
 
     /**
      * Returns whether this period matches exactly the given dates.
+     * 
+     * @param beginDate start {@link LocalDate} to test against
+     * @param endDate end {@link LocalDate} to test against
+     * @return true if matches, false otherwise
      */
     public boolean matches(LocalDate beginDate, LocalDate endDate) {
         return getBeginDate().equals(beginDate) && Objects.equals(getEndDate(), endDate);
@@ -100,6 +113,9 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
     /**
      * Returns an open (i.e. without end date) period for the given {@link User}, or creates one with today's start date if
      * necessary.
+     * 
+     * @param user the {@link User} to add the period to
+     * @return a {@link UserLoginPeriod} instance
      */
     public static UserLoginPeriod createOpenPeriod(User user) {
         UserLoginPeriod period = getOpenPeriod(user);
@@ -108,6 +124,8 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
 
     /**
      * Closes the open (i.e. without end date) period for the given {@link User} if it exists.
+     * 
+     * @param user the {@link User} to close the period
      */
     public static void closeOpenPeriod(User user) {
         UserLoginPeriod period = getOpenPeriod(user);
