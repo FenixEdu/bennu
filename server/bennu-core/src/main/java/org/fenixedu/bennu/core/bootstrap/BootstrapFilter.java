@@ -5,10 +5,12 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 
@@ -30,7 +32,12 @@ public class BootstrapFilter implements Filter {
                 || path.startsWith(req.getContextPath() + "/api/")) {
             chain.doFilter(request, response);
         } else {
-            request.getRequestDispatcher("/bennu-core/bootstrap.jsp").forward(request, response);
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/bennu-core/bootstrap.jsp");
+            if (requestDispatcher != null) {
+                requestDispatcher.forward(request, response);
+            } else {
+                ((HttpServletResponse) response).sendError(HttpServletResponse.SC_NOT_FOUND, "No forward url could be processed");
+            }
         }
     }
 

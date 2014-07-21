@@ -39,7 +39,7 @@ public class JsonBuilder {
             return null;
         }
 
-        if (Collection.class.isAssignableFrom(objectClass)) {
+        if (Collection.class.isAssignableFrom(objectClass) && obj != null) {
             return views((Collection) obj, jsonViewerClass);
         }
 

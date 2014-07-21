@@ -30,13 +30,16 @@ public class Avatar extends Avatar_Base {
     public static Avatar crop(byte[] src, String mimeType, int x1, int y1, int x2, int y2) {
         try {
             BufferedImage img = ImageIO.read(new ByteArrayInputStream(src));
-            BufferedImage crop = img.getSubimage(x1, y1, x2 - x1, y2 - y1);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
-            ImageOutputStream outstream = ImageIO.createImageOutputStream(out);
-            writer.setOutput(outstream);
-            writer.write(crop);
-            return new Avatar(out.toByteArray(), mimeType);
+            if (img != null) {
+                BufferedImage crop = img.getSubimage(x1, y1, x2 - x1, y2 - y1);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
+                ImageOutputStream outstream = ImageIO.createImageOutputStream(out);
+                writer.setOutput(outstream);
+                writer.write(crop);
+                return new Avatar(out.toByteArray(), mimeType);
+            }
+            throw BennuCoreDomainException.errorProcessingImage();
         } catch (IOException e) {
             throw BennuCoreDomainException.errorProcessingImage();
         }

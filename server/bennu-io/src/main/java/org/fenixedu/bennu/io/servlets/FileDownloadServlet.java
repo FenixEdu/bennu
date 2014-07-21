@@ -38,11 +38,15 @@ public class FileDownloadServlet extends HttpServlet {
             }
             if (file.isAccessible(Authenticate.getUser())) {
                 byte[] content = file.getContent();
-                response.setContentType(file.getContentType());
-                response.setContentLength(file.getSize().intValue());
-                try (OutputStream stream = response.getOutputStream()) {
-                    stream.write(content);
-                    stream.flush();
+                if (content != null) {
+                    response.setContentType(file.getContentType());
+                    response.setContentLength(file.getSize().intValue());
+                    try (OutputStream stream = response.getOutputStream()) {
+                        stream.write(content);
+                        stream.flush();
+                    }
+                } else {
+                    response.sendError(HttpServletResponse.SC_NO_CONTENT, "File empty");
                 }
             } else if (file.isPrivate() && !Authenticate.isLogged()
                     && request.getAttribute(CasAuthenticationFilter.AUTHENTICATION_EXCEPTION_KEY) == null) {

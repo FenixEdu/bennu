@@ -18,6 +18,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -86,7 +87,7 @@ public class JsonAwareResource {
     public final String viewPaginated(List<?> object, String collectionKey, Class<? extends JsonViewer<?>> viewerClass, int skip,
             int pageSize) {
         if (object == null) {
-            return viewPaginated(object, (Class<?>) null, collectionKey, viewerClass, skip, pageSize);
+            return viewPaginated(null, (Class<?>) null, collectionKey, viewerClass, skip, pageSize);
         }
         return viewPaginated(object, object.getClass(), collectionKey, viewerClass, skip, pageSize);
     }
@@ -94,10 +95,15 @@ public class JsonAwareResource {
     public final String viewPaginated(List<?> object, Class<?> objectClass, String collectionKey,
             Class<? extends JsonViewer<?>> viewerClass, int skip, int pageSize) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add(collectionKey,
-                BUILDER.view(object.subList(Math.min(object.size(), skip), Math.min(object.size(), skip + pageSize)),
-                        objectClass, viewerClass));
-        jsonObject.addProperty("total", object.size());
+        if (object == null) {
+            jsonObject.add(collectionKey, new JsonArray());
+            jsonObject.addProperty("total", 0);
+        } else {
+            jsonObject.add(collectionKey, BUILDER.view(
+                    object.subList(Math.min(object.size(), skip), Math.min(object.size(), skip + pageSize)), objectClass,
+                    viewerClass));
+            jsonObject.addProperty("total", object.size());
+        }
         return GSON.toJson(jsonObject);
     }
 

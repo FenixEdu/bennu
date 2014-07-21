@@ -3,6 +3,7 @@ package org.fenixedu.bennu.portal.servlet;
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +23,12 @@ public class ForwarderPortalBackend implements PortalBackend {
         @Override
         public void handleRequest(MenuFunctionality functionality, HttpServletRequest request, HttpServletResponse response,
                 FilterChain chain) throws IOException, ServletException {
-            request.getRequestDispatcher(functionality.getItemKey()).forward(request, response);
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher(functionality.getItemKey());
+            if (requestDispatcher != null) {
+                requestDispatcher.forward(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "No forward url could be processed");
+            }
         }
     };
 

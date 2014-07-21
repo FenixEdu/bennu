@@ -71,7 +71,7 @@ public class UsersCreatedAfterGroup extends UsersCreatedAfterGroup_Base {
 
         @Override
         public boolean isMember(User user) {
-            return user.getCreated().isAfter(date);
+            return user != null && user.getCreated().isAfter(date);
         }
 
         @Override

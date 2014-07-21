@@ -119,7 +119,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      * Tests if the given user is a member of the group.
      * 
      * @param user
-     *            the user to test
+     *            the user to test, can be null
      * @return <code>true</code> if member, <code>false</code> otherwise
      * 
      * @see #verify()
@@ -130,7 +130,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      * Same as {@link #isMember(User)} but at a given moment in time. This is like a time-machine for the groups domain.
      * 
      * @param user
-     *            the user to test
+     *            the user to test, can be null
      * @param when
      *            moment when to test the user.
      * @return <code>true</code> if member, <code>false</code> otherwise
