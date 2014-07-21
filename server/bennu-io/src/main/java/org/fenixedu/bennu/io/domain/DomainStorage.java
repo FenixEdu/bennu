@@ -38,6 +38,7 @@ public final class DomainStorage extends DomainStorage_Base {
 
     @Override
     public InputStream readAsInputStream(String uniqueIdentification) {
-        return new ByteArrayInputStream(read(uniqueIdentification));
+        byte[] read = read(uniqueIdentification);
+        return read != null ? new ByteArrayInputStream(read) : null;
     }
 }

@@ -103,6 +103,6 @@ public final class PersistentUnionGroup extends PersistentUnionGroup_Base {
                 return null;
             }
         }
-        return intersection.first().orNull();
+        return intersection != null ? intersection.first().orNull() : null;
     }
 }

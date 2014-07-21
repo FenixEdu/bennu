@@ -154,7 +154,7 @@ public final class DifferenceGroup extends Group {
     public boolean equals(Object object) {
         if (object instanceof DifferenceGroup) {
             DifferenceGroup diff = (DifferenceGroup) object;
-            return first.equals(diff.rest) && rest.equals(diff.rest);
+            return first.equals(diff.first) && rest.equals(diff.rest);
         }
         return false;
     }

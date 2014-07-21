@@ -198,7 +198,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     /**
      * Initializes the scheduler.
      */
-    private static void bootstrap() {
+    private synchronized static void bootstrap() {
         LOG.info("Running Scheduler bootstrap");
         if (scheduler == null) {
             scheduler = new Scheduler();
@@ -417,7 +417,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * 
      * @return the physical absolute path of the logging storage.
      */
-
     @Atomic(mode = TxMode.READ)
     public static String getLogsPath() {
         if (getInstance().getLoggingStorage() == null) {

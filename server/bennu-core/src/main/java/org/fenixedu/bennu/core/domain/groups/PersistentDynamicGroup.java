@@ -76,7 +76,7 @@ public final class PersistentDynamicGroup extends PersistentDynamicGroup_Base {
         if (getPrevious() != null) {
             return getPrevious().getGroup(when);
         }
-        return null;
+        return PersistentNobodyGroup.getInstance();
     }
 
     private void pushHistory() {

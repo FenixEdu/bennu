@@ -103,6 +103,6 @@ public final class PersistentIntersectionGroup extends PersistentIntersectionGro
                 return null;
             }
         }
-        return intersection.first().orNull();
+        return intersection != null ? intersection.first().orNull() : null;
     }
 }

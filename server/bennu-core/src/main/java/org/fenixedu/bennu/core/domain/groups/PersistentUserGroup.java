@@ -108,6 +108,6 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
                 return null;
             }
         }
-        return intersection.first().orNull();
+        return intersection != null ? intersection.first().orNull() : null;
     }
 }

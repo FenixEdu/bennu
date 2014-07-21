@@ -40,8 +40,10 @@ public class JarFileViewer implements JsonViewer<JarFile> {
             }
         }
         try {
-            for (Entry<Object, Object> entry : file.getManifest().getMainAttributes().entrySet()) {
-                properties.put(entry.getKey().toString(), entry.getValue());
+            if (file.getManifest() != null) {
+                for (Entry<Object, Object> entry : file.getManifest().getMainAttributes().entrySet()) {
+                    properties.put(entry.getKey().toString(), entry.getValue());
+                }
             }
         } catch (IOException e) {
             throw new Error(e);
