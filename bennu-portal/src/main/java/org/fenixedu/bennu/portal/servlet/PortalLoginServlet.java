@@ -102,7 +102,7 @@ public class PortalLoginServlet extends HttpServlet {
      * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
      *
      */
-    private static class LocalLoginStrategy implements PortalLoginStrategy {
+    public static class LocalLoginStrategy implements PortalLoginStrategy {
 
         private volatile PebbleEngine engine;
 
