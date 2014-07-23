@@ -23,6 +23,8 @@ public class ForwarderPortalBackend implements PortalBackend {
         @Override
         public void handleRequest(MenuFunctionality functionality, HttpServletRequest request, HttpServletResponse response,
                 FilterChain chain) throws IOException, ServletException {
+            // Remove the functionality, allowing the target to choose the proper one
+            BennuPortalDispatcher.selectFunctionality(request, null);
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(functionality.getItemKey());
             if (requestDispatcher != null) {
                 requestDispatcher.forward(request, response);
