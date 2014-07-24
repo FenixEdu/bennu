@@ -18,6 +18,7 @@
  */
 package org.fenixedu.bennu.spring;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.springframework.core.convert.TypeDescriptor;
@@ -25,8 +26,6 @@ import org.springframework.core.convert.converter.ConditionalGenericConverter;
 
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
-
-import com.google.common.collect.ImmutableSet;
 
 /***
  * Converts a string to a DomainObject
@@ -42,7 +41,7 @@ public class DomainObjectConverter implements ConditionalGenericConverter {
 
     @Override
     public Set<ConvertiblePair> getConvertibleTypes() {
-        return ImmutableSet.of(new ConvertiblePair(String.class, DomainObject.class));
+        return Collections.singleton(new ConvertiblePair(String.class, DomainObject.class));
     }
 
     @Override

@@ -18,13 +18,13 @@
  */
 package org.fenixedu.bennu.spring.converters;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonParser;
 
 public class LocalizedStringConverter implements ConditionalGenericConverter {
@@ -33,7 +33,7 @@ public class LocalizedStringConverter implements ConditionalGenericConverter {
 
     @Override
     public Set<ConvertiblePair> getConvertibleTypes() {
-        return ImmutableSet.of(new ConvertiblePair(String.class, LocalizedString.class));
+        return Collections.singleton(new ConvertiblePair(String.class, LocalizedString.class));
     }
 
     @Override

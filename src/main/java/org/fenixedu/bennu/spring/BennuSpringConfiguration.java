@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,9 +59,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
 
 @Configuration
 @ComponentScan("org.fenixedu.bennu")
@@ -113,14 +111,8 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport impleme
         for (String beanName : beanNames) {
             BennuSpringModule bennuSpringModuleAnnotation = context.findAnnotationOnBean(beanName, BennuSpringModule.class);
             if (bennuSpringModuleAnnotation != null) {
-                final List<String> bundles = Arrays.asList(bennuSpringModuleAnnotation.bundles());
-                baseNames.addAll(FluentIterable.from(bundles).transform(new Function<String, String>() {
-
-                    @Override
-                    public String apply(String bundle) {
-                        return getBundleBasename(bundle);
-                    }
-                }).toSet());
+                baseNames.addAll(Arrays.stream(bennuSpringModuleAnnotation.bundles()).map(this::getBundleBasename)
+                        .collect(Collectors.toSet()));
             }
         }
         return baseNames;
