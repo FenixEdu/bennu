@@ -1,9 +1,16 @@
 package org.fenixedu.bennu.core.domain;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
+import org.fenixedu.commons.StringNormalizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
@@ -13,10 +20,22 @@ import com.google.common.base.Strings;
  * @author Pedro Santos (pedro.miguel.santos@tecnico.ulisboa.pt)
  */
 public class UserProfile extends UserProfile_Base {
+    private static final Logger logger = LoggerFactory.getLogger(UserProfile.class);
+
     protected UserProfile() {
         super();
+        setBennu(Bennu.getInstance());
     }
 
+    /**
+     * New unlinked profile.
+     * 
+     * @param givenNames person's given names
+     * @param familyNames person's family names
+     * @param displayName person's display name
+     * @param email person's email address for communication
+     * @param preferredLocale locale used to localize all content when the user is logged.
+     */
     public UserProfile(String givenNames, String familyNames, String displayName, String email, Locale preferredLocale) {
         this();
         changeName(givenNames, familyNames, displayName);
@@ -99,6 +118,7 @@ public class UserProfile extends UserProfile_Base {
         setFamilyNames(cleanupName(family));
         setDisplayName(cleanupName(display));
         validateNames(getDisplayName(), getFullName());
+        NameIndex.updateNameIndex(this);
     }
 
     /**
@@ -189,6 +209,23 @@ public class UserProfile extends UserProfile_Base {
         super.setAvatarUrl(null);
     }
 
+    /**
+     * Search all profiles matching the given.
+     * 
+     * @param name the query string
+     * @param maxHits limit on the result size
+     * @return all {@link UserProfile}s where the name contains all the terms of the query string
+     */
+    public static Stream<UserProfile> searchByName(String name, int maxHits) {
+        if (logger.isTraceEnabled()) {
+            long time = System.currentTimeMillis();
+            Stream<UserProfile> matches = NameIndex.search(name, maxHits);
+            logger.trace("Profile search for '{}' took {}ms", name, System.currentTimeMillis() - time);
+            return matches;
+        }
+        return NameIndex.search(name, maxHits);
+    }
+
     private static void validateNames(String displayname, String fullname) {
         if (displayname == null) {
             return;
@@ -196,18 +233,12 @@ public class UserProfile extends UserProfile_Base {
         if (fullname == null) {
             throw BennuCoreDomainException.displayNameNotContainedInFullName(displayname, fullname);
         }
-        String[] fullnameparts = fullname.split(" ");
-        String[] displayparts = displayname.split(" ");
-        for (int n = 0, f = 0; n < displayparts.length; n++, f++) {
-            if (fullnameparts.length == f) {
-                throw BennuCoreDomainException.displayNameNotContainedInFullName(displayname, fullname);
-            }
-            while (!displayparts[n].equalsIgnoreCase(fullnameparts[f])) {
-                f++;
-                if (fullnameparts.length == f) {
-                    throw BennuCoreDomainException.displayNameNotContainedInFullName(displayname, fullname);
-                }
-            }
+        List<String> fullnameParts =
+                Arrays.asList(StringNormalizer.normalizeAndRemoveAccents(fullname).toLowerCase().trim().split("\\s+|-"));
+        List<String> displaynameParts =
+                Arrays.asList(StringNormalizer.normalizeAndRemoveAccents(displayname).toLowerCase().trim().split("\\s+|-"));
+        if (!fullnameParts.containsAll(displaynameParts)) {
+            throw BennuCoreDomainException.displayNameNotContainedInFullName(displayname, fullname);
         }
     }
 
@@ -215,6 +246,6 @@ public class UserProfile extends UserProfile_Base {
         if (name == null) {
             return null;
         }
-        return Strings.emptyToNull(name.trim().replaceAll("\\s+", " "));
+        return Strings.emptyToNull(CharMatcher.WHITESPACE.trimAndCollapseFrom(name, ' '));
     }
 }
