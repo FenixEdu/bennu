@@ -68,7 +68,7 @@ public class FileDownloadServlet extends HttpServlet {
                 + URLEncoder.encode(getDownloadUrl(file), Charsets.UTF_8.name());
     }
 
-    private static GenericFile getFileFromURL(String url) {
+    public static GenericFile getFileFromURL(String url) {
         try {
             // Remove trailing path, and split the tokens
             String[] parts = url.substring(url.indexOf(SERVLET_PATH)).replace(SERVLET_PATH, "").split("\\/");
