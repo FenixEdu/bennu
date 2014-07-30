@@ -40,6 +40,11 @@ bennuIO.controller('StorageCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.convert = function(storage) {
     $http.put(contextPath + '/api/bennu-io/storage/convert/' + storage.id);
   }
+  $scope.setDefault = function(storage) {
+    $http.post(contextPath + '/api/bennu-io/storage/default/' + storage.id).success(function (data) {
+      $scope.storages = data.storages;
+    }).error(function (data) { $scope.error = data; });
+  }
 }]);
 
 bennuIO.controller('ConfigurationCtrl', ['$scope', '$http', function ($scope, $http) {

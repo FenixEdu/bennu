@@ -24,6 +24,19 @@ import pt.ist.fenixframework.Atomic;
 public class FileStorageResource extends BennuRestResource {
 
     @POST
+    @Path("/default/{storage}")
+    public String setDefault(@PathParam("storage") String storageId) {
+        accessControl("#managers");
+        innerSetDefault(this.<FileStorage> readDomainObject(storageId));
+        return all();
+    }
+
+    @Atomic
+    private void innerSetDefault(FileStorage storage) {
+        FileSupport.getInstance().setDefaultStorage(storage);
+    }
+
+    @POST
     @Path("/domain/{name}")
     @Produces(MediaType.APPLICATION_JSON)
     public String createDomainStorage(@PathParam("name") String name) {

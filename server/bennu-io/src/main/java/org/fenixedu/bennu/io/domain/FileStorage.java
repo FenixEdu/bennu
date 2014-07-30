@@ -54,4 +54,8 @@ public abstract class FileStorage extends FileStorage_Base {
     public boolean isCanBeDeleted() {
         return getFileSet().isEmpty();
     }
+
+    public boolean isDefault() {
+        return getFileSupportAsDefault() != null;
+    }
 }

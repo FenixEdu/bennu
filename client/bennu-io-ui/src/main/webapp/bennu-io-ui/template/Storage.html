@@ -28,6 +28,8 @@ Loading...
 			<td>
 				<button class="btn btn-sm btn-warning" ng-click="convert(storage)">Convert</button>
 				<button class="btn btn-sm btn-danger" ng-class="{disabled: storage.filesCount > 0}" ng-click="delete(storage)">Delete</button>
+				<button class="btn btn-sm btn-primary" ng-if="!storage.default" ng-click="setDefault(storage)">Set Default</button>
+				<button class="btn btn-sm btn-primary" ng-if="storage.default" disabled>Default</button>
 			</td>
 		</tr>
 	</tbody>
