@@ -1,11 +1,6 @@
 package org.fenixedu.bennu.portal.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.portal.domain.MenuFunctionality;
@@ -19,10 +14,9 @@ import org.fenixedu.bennu.portal.domain.MenuFunctionality;
  */
 public class ForwarderPortalBackend implements PortalBackend {
 
-    private static final SemanticURLHandler HANDLER = new SemanticURLHandler() {
-        @Override
-        public void handleRequest(MenuFunctionality functionality, HttpServletRequest request, HttpServletResponse response,
-                FilterChain chain) throws IOException, ServletException {
+    @Override
+    public SemanticURLHandler getSemanticURLHandler() {
+        return (functionality, request, response, chain) -> {
             // Remove the functionality, allowing the target to choose the proper one
             BennuPortalDispatcher.selectFunctionality(request, null);
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(functionality.getItemKey());
@@ -31,12 +25,7 @@ public class ForwarderPortalBackend implements PortalBackend {
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "No forward url could be processed");
             }
-        }
-    };
-
-    @Override
-    public SemanticURLHandler getSemanticURLHandler() {
-        return HANDLER;
+        };
     }
 
     @Override

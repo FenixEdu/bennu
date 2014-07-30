@@ -27,7 +27,7 @@ public class UserMenuViewer implements JsonViewer<MenuItem> {
             if (container.isRoot()) {
                 json.add("title", ctx.view(PortalConfiguration.getInstance().getApplicationTitle()));
             }
-            json.add("menu", ctx.view(container.getUserMenu()));
+            json.add("menu", ctx.view(container.getUserMenuStream()));
         }
         return json;
     }

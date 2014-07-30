@@ -1,12 +1,5 @@
 package org.fenixedu.bennu.portal.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.fenixedu.bennu.portal.domain.MenuFunctionality;
 
 /**
@@ -18,17 +11,9 @@ import org.fenixedu.bennu.portal.domain.MenuFunctionality;
  */
 public class RedirectPortalBackend implements PortalBackend {
 
-    private static final SemanticURLHandler HANDLER = new SemanticURLHandler() {
-        @Override
-        public void handleRequest(MenuFunctionality functionality, HttpServletRequest request, HttpServletResponse response,
-                FilterChain chain) throws IOException, ServletException {
-            response.sendRedirect(functionality.getItemKey());
-        }
-    };
-
     @Override
     public SemanticURLHandler getSemanticURLHandler() {
-        return HANDLER;
+        return (functionality, request, response, chain) -> response.sendRedirect(functionality.getItemKey());
     }
 
     @Override

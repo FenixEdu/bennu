@@ -11,7 +11,7 @@ public class PortalMenuViewer extends PortalConfigurationAdapter {
     public JsonElement view(PortalConfiguration configuration, JsonBuilder ctx) {
         final JsonObject view = super.view(configuration, ctx).getAsJsonObject();
         if (configuration.getMenu() != null) {
-            view.add("menu", ctx.view(configuration.getMenu().getUserMenu()));
+            view.add("menu", ctx.view(configuration.getMenu().getUserMenuStream()));
         }
         return view;
     }
