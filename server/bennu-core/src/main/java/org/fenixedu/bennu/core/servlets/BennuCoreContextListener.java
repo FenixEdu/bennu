@@ -43,8 +43,6 @@ import pt.ist.fenixframework.FenixFramework;
 public class BennuCoreContextListener implements ServletContextListener {
     private static final Logger logger = LoggerFactory.getLogger(BennuCoreContextListener.class);
 
-    private ClassLoader thisClassLoader;
-
     /**
      * This methods enables multipart feature in the JAX-RS api.
      * 
@@ -94,13 +92,13 @@ public class BennuCoreContextListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent event) {
         FenixFramework.shutdown();
-        this.thisClassLoader = this.getClass().getClassLoader();
         interruptThreads();
     }
 
     private void interruptThreads() {
         for (Thread thread : Thread.getAllStackTraces().keySet()) {
-            if (thread == null || thread.getContextClassLoader() != thisClassLoader || thread == Thread.currentThread()) {
+            if (thread == null || thread.getContextClassLoader() != getClass().getClassLoader()
+                    || thread == Thread.currentThread()) {
                 continue;
             }
 

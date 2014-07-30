@@ -75,13 +75,6 @@ public class ExceptionHandlerFilter implements Filter {
     public void destroy() {
     }
 
-    private static ExceptionHandler exceptionHandler = new ExceptionHandler() {
-        @Override
-        public boolean handle(ServletRequest request, ServletResponse response, Throwable throwable) throws ServletException,
-                IOException {
-            // Don't handle any exceptions, throw them to the container
-            return false;
-        }
-    };
+    private static ExceptionHandler exceptionHandler = (req, resp, t) -> false;
 
 }

@@ -6,6 +6,7 @@ import java.util.IllformedLocaleException;
 import java.util.Locale;
 import java.util.Locale.Builder;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpServletRequest;
@@ -16,10 +17,7 @@ import org.fenixedu.commons.configuration.ConfigurationProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
 
 public class CoreConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(CoreConfiguration.class);
@@ -171,12 +169,7 @@ public class CoreConfiguration {
     }
 
     private static String formatSupportedLocales() {
-        return Joiner.on(',').join(Iterables.transform(supportedLocales(), new Function<Locale, String>() {
-            @Override
-            public String apply(Locale locale) {
-                return locale.toLanguageTag();
-            }
-        }));
+        return supportedLocales().stream().map(Locale::toLanguageTag).collect(Collectors.joining(","));
     }
 
     public static CasConfig casConfig() {
