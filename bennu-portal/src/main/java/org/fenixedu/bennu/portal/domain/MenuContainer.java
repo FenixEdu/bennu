@@ -3,6 +3,8 @@ package org.fenixedu.bennu.portal.domain;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.portal.model.Application;
@@ -131,6 +133,14 @@ public final class MenuContainer extends MenuContainer_Base {
         return Collections.unmodifiableSet(new TreeSet<>(getChildSet()));
     }
 
+    /**
+     * Returns a {@link Set} containing all the children of this container, that are available to the
+     * current user.
+     * 
+     * @deprecated
+     *             Use {@link MenuContainer#getUserMenuStream()} and apply a {@link Collector}.
+     */
+    @Deprecated
     public Set<MenuItem> getUserMenu() {
         return FluentIterable.from(getChildSet()).filter(new Predicate<MenuItem>() {
             @Override
@@ -143,7 +153,11 @@ public final class MenuContainer extends MenuContainer_Base {
     /**
      * Returns an {@link Iterable} containing all the child {@link MenuContainer}s of this container, that are available to the
      * current user.
+     * 
+     * @deprecated
+     *             Use {@link MenuContainer#getUserMenuStream()} and apply another filter
      */
+    @Deprecated
     public Iterable<MenuContainer> getAvailableChildContainers() {
         return FluentIterable.from(getChildSet()).filter(MenuContainer.class).filter(new Predicate<MenuContainer>() {
             @Override
@@ -151,6 +165,17 @@ public final class MenuContainer extends MenuContainer_Base {
                 return container.isItemAvailableForCurrentUser() && container.isVisible();
             }
         }).toSortedList(Ordering.natural());
+    }
+
+    /**
+     * Returns the User Menu as a lazy {@link Stream}. This method is preferred
+     * to the alternatives (returning {@link Set}), as it allows further optimizations.
+     * 
+     * @return
+     *         The User's Menu as a Stream
+     */
+    public Stream<MenuItem> getUserMenuStream() {
+        return getChildSet().stream().filter((item) -> item.isVisible() && item.isItemAvailableForCurrentUser()).sorted();
     }
 
     /**

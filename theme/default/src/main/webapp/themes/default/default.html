@@ -78,11 +78,11 @@
 			<div class="col-lg-12">
 				<div id="nav">
 					<ul class="nav nav-tabs">
-						{% for item in config.menu.userMenu %}
+						{% lazyFor item in config.menu.userMenuStream %}
 						<li class="menu {% if item == selectedTopLevel %}active{% endif %}" menu="{{item.id}}">
 							<a href="{{contextPath}}/{{item.path}}" alt="{{item.description.content}}">{{item.title.content}}</a>
 						</li>
-						{% endfor %}
+						{% endLazyFor %}
 					</ul>
 				</div>
 			</div>
@@ -93,11 +93,11 @@
 			<div class="col-lg-12">
 				<div id="subnav">
 					<ul class="nav nav-pills" menu="{{id}}">
-						{% for child in selectedTopLevel.userMenu %}
+						{% lazyFor child in selectedTopLevel.userMenuStream %}
 						<li class="submenu">
 							<a href="{{contextPath}}{{child.fullPath}}" alt="{{ child.description.content }}"><span>{{ child.title.content }}</span></a>
 						</li>
-						{% endfor %}
+						{% endLazyFor %}
 					</ul>
 				</div>
 			</div>
