@@ -45,13 +45,14 @@ public class TestAnonymous {
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
-        assertEquals(AnonymousGroup.get().toPersistentGroup(), BennuGroupIndex.getGroupConstant(PersistentAnonymousGroup.class));
+        assertEquals(AnonymousGroup.get().toPersistentGroup(), BennuGroupIndex.groupConstant(PersistentAnonymousGroup.class)
+                .findAny().orElse(null));
     }
 
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void gcDoesNotDelete() {
         PersistentGroup.garbageCollect();
-        assertTrue(BennuGroupIndex.getGroupConstant(PersistentAnonymousGroup.class) != null);
+        assertTrue(BennuGroupIndex.groupConstant(PersistentAnonymousGroup.class).findAny().isPresent());
     }
 }

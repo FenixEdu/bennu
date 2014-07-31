@@ -46,13 +46,15 @@ public class TestNobody {
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
-        assertEquals(NobodyGroup.get().toPersistentGroup(), BennuGroupIndex.getGroupConstant(PersistentNobodyGroup.class));
+        assertEquals(NobodyGroup.get().toPersistentGroup(), BennuGroupIndex.groupConstant(PersistentNobodyGroup.class).findAny()
+                .orElse(null));
     }
 
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void gcDoesNotDelete() {
         PersistentGroup.garbageCollect();
-        assertTrue(BennuGroupIndex.getGroupConstant(PersistentNobodyGroup.class) != null);
+        assertTrue(BennuGroupIndex.groupConstant(PersistentNobodyGroup.class).findAny().isPresent());
     }
+
 }

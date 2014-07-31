@@ -18,16 +18,12 @@ package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.UnionGroup;
-
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 
 /**
  * Union composition group.
@@ -42,8 +38,7 @@ public final class PersistentUnionGroup extends PersistentUnionGroup_Base {
 
     @Override
     public Group toGroup() {
-        Group[] children = FluentIterable.from(getChildrenSet()).transform(persistentGroupToGroup).toArray(Group.class);
-        return UnionGroup.of(children);
+        return UnionGroup.of(getChildrenSet().stream().map(g -> g.toGroup()));
     }
 
     @Override
@@ -70,39 +65,18 @@ public final class PersistentUnionGroup extends PersistentUnionGroup_Base {
      * @return {@link PersistentUnionGroup} instance
      */
     public static PersistentUnionGroup getInstance(final Set<PersistentGroup> children) {
-        PersistentUnionGroup instance = select(children);
-        return instance != null ? instance : create(children);
+        return singleton(() -> select(children), () -> new PersistentUnionGroup(children));
     }
 
-    @Atomic(mode = TxMode.WRITE)
-    private static PersistentUnionGroup create(final Set<PersistentGroup> children) {
-        PersistentUnionGroup instance = select(children);
-        return instance != null ? instance : new PersistentUnionGroup(children);
-    }
-
-    private static PersistentUnionGroup select(final Set<PersistentGroup> children) {
-        FluentIterable<PersistentUnionGroup> intersection = null;
-        Predicate<PersistentUnionGroup> sizePredicate = new Predicate<PersistentUnionGroup>() {
-            @Override
-            public boolean apply(PersistentUnionGroup group) {
-                return group.getChildrenSet().size() == children.size();
-            }
-        };
+    private static Optional<PersistentUnionGroup> select(final Set<PersistentGroup> children) {
+        Stream<PersistentUnionGroup> intersection = null;
         for (final PersistentGroup child : children) {
             if (intersection == null) {
-                intersection = FluentIterable.from(child.getUnionsSet()).filter(sizePredicate);
+                intersection = child.getUnionsSet().stream().filter(g -> g.getChildrenSet().size() == children.size());
             } else {
-                intersection = intersection.filter(new Predicate<PersistentUnionGroup>() {
-                    @Override
-                    public boolean apply(PersistentUnionGroup group) {
-                        return group.getChildrenSet().contains(child);
-                    }
-                });
-            }
-            if (intersection.isEmpty()) {
-                return null;
+                intersection = intersection.filter(g -> g.getChildrenSet().contains(child));
             }
         }
-        return intersection != null ? intersection.first().orNull() : null;
+        return intersection != null ? intersection.findAny() : Optional.empty();
     }
 }
