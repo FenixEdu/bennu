@@ -46,6 +46,13 @@ valueType java.util.Locale as Locale {
 	internalizeWith forLanguageTag();
 }
 
+valueType org.fenixedu.bennu.core.groups.GroupStrategy as GroupStrategyValueType {
+    externalizeWith {
+        String externalize();
+    }
+    internalizeWith strategyForType();
+}
+
 public class Bennu {
 }
 
@@ -169,6 +176,10 @@ relation PersistentGroups {
 }
 
 public class groups.GroupConstant extends groups.PersistentGroup;
+
+public class groups.PersistentGroupStrategy extends groups.GroupConstant {
+    protected GroupStrategyValueType strategy;
+}
 
 public class groups.PersistentNobodyGroup extends groups.GroupConstant;
 
