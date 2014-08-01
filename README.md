@@ -25,7 +25,7 @@ Bennu covers the following core features:
 mvn archetype:generate \
     -DarchetypeGroupId=org.fenixedu \
     -DarchetypeArtifactId=bennu-webapp-archetype \
-    -DarchetypeVersion=3.2.0 \
+    -DarchetypeVersion=3.3.0 \
     -DarchetypeRepository=https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository
 ```
 Make sure to supply the information required by the archetype.
@@ -53,7 +53,7 @@ Make sure to supply the information required by the archetype.
 mvn archetype:generate \
     -DarchetypeGroupId=org.fenixedu \
     -DarchetypeArtifactId=bennu-project-archetype \
-    -DarchetypeVersion=3.2.0 \
+    -DarchetypeVersion=3.3.0 \
     -DarchetypeRepository=https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository
 ```
 

@@ -5,7 +5,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <requiredProperties>
         <requiredProperty key="bennuVersion">
-            <defaultValue>3.2.0</defaultValue>
+            <defaultValue>3.3.0</defaultValue>
         </requiredProperty>
         <requiredProperty key="UpperCamelCaseProjectName" />
         <requiredProperty key="package">
