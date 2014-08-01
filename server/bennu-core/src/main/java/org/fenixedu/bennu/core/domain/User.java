@@ -21,7 +21,9 @@ import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
@@ -42,6 +44,8 @@ public final class User extends User_Base implements Principal {
     private static final Logger logger = LoggerFactory.getLogger(User.class);
 
     private static SecureRandom prng = null;
+
+    private static Map<String, User> map = new ConcurrentHashMap<>();
 
     static {
         try {
@@ -263,12 +267,12 @@ public final class User extends User_Base implements Principal {
     }
 
     public static User findByUsername(final String username) {
-        for (final User user : Bennu.getInstance().getUserSet()) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-        return null;
+        return map.computeIfAbsent(username, name -> manualFind(name));
+    }
+
+    private static User manualFind(String username) {
+        return Bennu.getInstance().getUserSet().stream().filter(user -> user.getUsername().equals(username)).findAny()
+                .orElse(null);
     }
 
     public static void setUsernameGenerator(UsernameGenerator generator) {

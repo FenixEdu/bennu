@@ -18,18 +18,16 @@ package org.fenixedu.bennu.core.groups;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentDifferenceGroup;
-import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 
 /**
  * Difference composition group. Can be read as members of first group except members of the remaining ones.
@@ -51,29 +49,27 @@ public final class DifferenceGroup extends Group {
     }
 
     public static Group between(Group first, Set<Group> rest) {
-        return between(first, rest.toArray(new Group[0]));
+        return between(first, rest.stream());
     }
 
     public static Group between(Group first, Group... rest) {
-        if (rest.length == 0) {
-            return first;
-        }
-        Group group = first;
-        for (Group subtract : rest) {
-            group = group.minus(subtract);
-        }
-        return group;
+        return between(first, Stream.of(rest));
+    }
+
+    public static Group between(Group first, Stream<Group> rest) {
+        return rest.reduce(first, (result, group) -> result.minus(group));
     }
 
     @Override
     public String getPresentationName() {
         String minus = " " + BundleUtil.getString("resources.BennuResources", "label.bennu.minus") + " ";
-        return first.getPresentationName() + minus + Joiner.on(minus).join(Iterables.transform(rest, groupToGroupName));
+        return first.getPresentationName() + minus
+                + rest.stream().map(g -> g.getPresentationName()).collect(Collectors.joining(minus));
     }
 
     @Override
     public String getExpression() {
-        return first.getExpression() + " - " + Joiner.on(" - ").join(Iterables.transform(rest, groupToExpression));
+        return first.getExpression() + " - " + rest.stream().map(g -> g.getExpression()).collect(Collectors.joining(" - "));
     }
 
     public Group getFirst() {
@@ -86,8 +82,8 @@ public final class DifferenceGroup extends Group {
 
     @Override
     public PersistentDifferenceGroup toPersistentGroup() {
-        ImmutableSet<PersistentGroup> groups = FluentIterable.from(rest).transform(groupToPersistentGroup).toSet();
-        return PersistentDifferenceGroup.getInstance(first.toPersistentGroup(), groups);
+        return PersistentDifferenceGroup.getInstance(first.toPersistentGroup(), rest.stream().map(g -> g.toPersistentGroup())
+                .collect(Collectors.toSet()));
     }
 
     @Override

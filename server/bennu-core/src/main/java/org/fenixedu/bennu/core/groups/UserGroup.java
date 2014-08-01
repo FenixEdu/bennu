@@ -17,6 +17,7 @@
 package org.fenixedu.bennu.core.groups;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.fenixedu.bennu.core.annotation.GroupArgument;
 import org.fenixedu.bennu.core.annotation.GroupArgumentParser;
@@ -25,10 +26,7 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentUserGroup;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 /**
@@ -94,14 +92,7 @@ public final class UserGroup extends CustomGroup {
 
     @Override
     public String getPresentationName() {
-        Iterable<String> usernames = Iterables.transform(members, new Function<User, String>() {
-            @Override
-            public String apply(User user) {
-                return user.getUsername();
-            }
-        });
-
-        return Joiner.on(", ").join(usernames);
+        return members.stream().map(u -> u.getUsername()).collect(Collectors.joining(", "));
     }
 
     @Override

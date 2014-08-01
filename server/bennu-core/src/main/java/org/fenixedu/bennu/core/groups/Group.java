@@ -60,6 +60,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
         }
     };
 
+    @Deprecated
     public static final Function<Group, String> groupToGroupName = new Function<Group, String>() {
         @Override
         public String apply(Group group) {
@@ -67,6 +68,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
         }
     };
 
+    @Deprecated
     public static final Function<Group, String> groupToExpression = new Function<Group, String>() {
         @Override
         public String apply(Group group) {

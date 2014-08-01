@@ -18,17 +18,15 @@ package org.fenixedu.bennu.core.groups;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentUnionGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 
 /**
  * Union composition group.
@@ -47,30 +45,26 @@ public final class UnionGroup extends Group {
     }
 
     public static Group of(Set<Group> groups) {
-        Group group = NobodyGroup.get();
-        for (Group child : groups) {
-            group = group.or(child);
-        }
-        return group;
+        return of(groups.stream());
     }
 
     public static Group of(Group... groups) {
-        Group group = NobodyGroup.get();
-        for (int i = 0; i < groups.length; i++) {
-            group = group.or(groups[i]);
-        }
-        return group;
+        return of(Stream.of(groups));
+    }
+
+    public static Group of(Stream<Group> groups) {
+        return groups.reduce(NobodyGroup.get(), (result, group) -> result.or(group));
     }
 
     @Override
     public String getPresentationName() {
         String or = " " + BundleUtil.getString("resources.BennuResources", "label.bennu.or") + " ";
-        return Joiner.on(or).join(Iterables.transform(children, groupToGroupName));
+        return children.stream().map(g -> g.getPresentationName()).collect(Collectors.joining(or));
     }
 
     @Override
     public String getExpression() {
-        return Joiner.on(" | ").join(Iterables.transform(children, groupToExpression));
+        return children.stream().map(g -> g.getExpression()).collect(Collectors.joining(" | "));
     }
 
     public Set<Group> getChildren() {
@@ -79,8 +73,7 @@ public final class UnionGroup extends Group {
 
     @Override
     public PersistentUnionGroup toPersistentGroup() {
-        ImmutableSet<PersistentGroup> groups = FluentIterable.from(children).transform(groupToPersistentGroup).toSet();
-        return PersistentUnionGroup.getInstance(groups);
+        return PersistentUnionGroup.getInstance(children.stream().map(g -> g.toPersistentGroup()).collect(Collectors.toSet()));
     }
 
     @Override

@@ -46,6 +46,20 @@ valueType java.util.Locale as Locale {
 	internalizeWith forLanguageTag();
 }
 
+valueType org.fenixedu.bennu.core.groups.GroupStrategy as GroupStrategyValueType {
+    externalizeWith {
+        String externalize();
+    }
+    internalizeWith strategyForType();
+}
+
+valueType org.fenixedu.bennu.core.domain.NashornStrategy as NashornStrategy {
+    externalizeWith {
+        Class getType();
+        String getCode();
+    }
+}
+
 public class Bennu {
 }
 
@@ -87,6 +101,10 @@ class Avatar {
     protected String mimeType;
 }
 
+class NameIndex {
+    protected String keyword;
+}
+
 relation SystemUsers {
 	protected Bennu playsRole bennu {
 		multiplicity 1..1;
@@ -105,9 +123,18 @@ relation UserLoginPeriods {
     }
 }
 
+relation SystemProfiles {
+    protected Bennu playsRole bennu {
+        multiplicity 1..1;
+    }
+    protected UserProfile playsRole profile {
+        multiplicity *;
+    }
+}
+
 relation UserProfileUser {
     protected User playsRole user {
-        multiplicity 1..1;
+        multiplicity 0..1;
     }
     public UserProfile playsRole profile {
         multiplicity 0..1; // make required in the next major
@@ -116,10 +143,28 @@ relation UserProfileUser {
 
 relation UserProfileAvatar {
     protected UserProfile playsRole profile {
-        multiplicity 1..1;
+        multiplicity 0..1;
     }
     protected Avatar playsRole localAvatar {
         multiplicity 0..1;
+    }
+}
+
+relation BennuNameIndexes {
+    protected Bennu playsRole bennu {
+        multiplicity 1..1;
+    }
+    protected NameIndex playsRole nameIndex {
+        multiplicity *;
+    }
+}
+
+relation UserProfileNameIndexes {
+    public UserProfile playsRole profile {
+        multiplicity *;
+    }
+    protected NameIndex playsRole nameIndex {
+        multiplicity *;
     }
 }
 
@@ -138,6 +183,10 @@ relation PersistentGroups {
 }
 
 public class groups.GroupConstant extends groups.PersistentGroup;
+
+public class groups.PersistentGroupStrategy extends groups.GroupConstant {
+    protected GroupStrategyValueType strategy;
+}
 
 public class groups.PersistentNobodyGroup extends groups.GroupConstant;
 

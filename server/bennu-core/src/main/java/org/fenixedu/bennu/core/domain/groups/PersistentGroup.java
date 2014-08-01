@@ -16,7 +16,9 @@
  */
 package org.fenixedu.bennu.core.domain.groups;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.Bennu;
@@ -25,6 +27,9 @@ import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.joda.time.DateTime;
+
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.common.base.Function;
 
@@ -49,6 +54,7 @@ import com.google.common.base.Function;
  * @see GroupOperator
  */
 public abstract class PersistentGroup extends PersistentGroup_Base {
+    @Deprecated
     public static final Function<PersistentGroup, Group> persistentGroupToGroup = new Function<PersistentGroup, Group>() {
         @Override
         public Group apply(PersistentGroup group) {
@@ -166,5 +172,14 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
                 group.gc();
             }
         }
+    }
+
+    protected static <T extends PersistentGroup> T singleton(Supplier<Optional<T>> selector, Supplier<T> creator) {
+        return selector.get().orElseGet(() -> create(selector, creator));
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static <T extends PersistentGroup> T create(Supplier<Optional<T>> selector, Supplier<T> creator) {
+        return selector.get().orElseGet(creator);
     }
 }

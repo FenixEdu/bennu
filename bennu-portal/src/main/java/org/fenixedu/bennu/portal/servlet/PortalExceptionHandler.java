@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.servlets.ExceptionHandlerFilter.ExceptionHandler;
+import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
@@ -65,6 +66,9 @@ public class PortalExceptionHandler implements ExceptionHandler {
     protected PortalExceptionHandler(Loader loader) {
         this.engine = new PebbleEngine(loader);
         engine.addExtension(new PortalExtension());
+        if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
+            engine.setTemplateCache(null);
+        }
     }
 
     @Override
