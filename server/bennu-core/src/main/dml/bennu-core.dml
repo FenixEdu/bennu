@@ -53,6 +53,13 @@ valueType org.fenixedu.bennu.core.groups.GroupStrategy as GroupStrategyValueType
     internalizeWith strategyForType();
 }
 
+valueType org.fenixedu.bennu.core.domain.NashornStrategy as NashornStrategy {
+    externalizeWith {
+        Class getType();
+        String getCode();
+    }
+}
+
 public class Bennu {
 }
 
