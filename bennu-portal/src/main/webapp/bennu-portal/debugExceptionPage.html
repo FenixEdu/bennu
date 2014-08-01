@@ -1,190 +1,298 @@
 <html>
-	<head>
-		<title>{{i18n('resources.BennuPortalResources', 'label.error.occurred')}}</title>
-		<meta charset="UTF-8">
-		<link rel="stylesheet"  href="{{contextPath}}/bennu-core/css/bootstrap.min.css">
-	</head>
+<head>
+    <title>{{i18n('resources.BennuPortalResources', 'label.error.occurred')}}</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{contextPath}}/bennu-core/css/bootstrap.min.css">
+    <script src="{{contextPath}}/bennu-core/js/jquery.min.js"></script>
+</head>
 
-	<body>
-		<div class="col-sm-12">
-			<header class="row">
-				<div class="col-sm-10">
-					<h2 class="exception-class-name">{{exception.class.name}}</h2>
-					{{exception.localizedMessage}}
-				</div>
-				<div class="col-sm-2 text-center">
-					<h3>Bennu Framework</h3>
-					Development Mode
-				</div>
-			</header>
-			<main class="row main-body">
-				<div class="col-sm-8">
-					<h3>Request Information</h3>
-					<div class="row">
-						<div class="col-sm-2 desc">Request URI</div>
-						<div class="col-sm-10">{{request.requestURI}}</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-2 desc">Request URL</div>
-						<div class="col-sm-10">{{request.requestURL}}</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-2 desc">Query String</div>
-						<div class="col-sm-10">{{request.queryString}}</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-2 desc">Method</div>
-						<div class="col-sm-10">{{request.method}}</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-2 desc">User Agent</div>
-						<div class="col-sm-10">{{userAgent}}</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-2 desc">Referer</div>
-						<div class="col-sm-10">{{referer}}</div>
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<h3>User Information</h3>
-					<div class="row">
-						<div class="col-sm-4 desc">Username</div>
-						<div class="col-sm-8">{{loggedUser.username}}</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-4 desc">Locale</div>
-						<div class="col-sm-8">{{locale}}</div>
-					</div>
-				</div>
-				<div class="col-sm-12 info-section">
-					<h3 class="text-center">Request Parameters</h3>
-					{% for attr in parameters %}
-						<div class="row">
-							<div class="col-sm-5 desc">{{attr.key}}</div>
-							<div class="col-sm-7">{{attr.value}}</div>
-						</div>
-					{% endfor %}
-				</div>
-				<div class="col-sm-12 info-section">
-					<h3 class="text-center">Session Parameters</h3>
-					{% for attr in session %}
-						<div class="row">
-							<div class="col-sm-5 desc">{{attr.key}}</div>
-							<div class="col-sm-7">{{attr.value}}</div>
-						</div>
-					{% endfor %}
-				</div>
-				<div class="col-sm-12 info-section">
-					<h3 class="text-center">Request Attributes</h3>
-					{% for attr in attributes %}
-						<div class="row">
-							<div class="col-sm-5 desc">{{attr.key}}</div>
-							<div class="col-sm-7">{{attr.value}}</div>
-						</div>
-					{% endfor %}
-				</div>
+<body>
+<div class="content">
+    <div class="row">
+        <div class="col-sm-12">
+            <header class="row">
+                <div class="col-sm-10">
+                    <h2 class="exception-class-name">{{exception.class.name}}</h2>
+                    {{exception.localizedMessage}}
+                </div>
+            </header>
+            <main class="row main-body">
+                <div class="col-sm-8">
+                    <h3>Request Information</h3>
 
-				<div class="col-sm-12 info-section">
-					<h3 class="text-center">Exception Information</h3>
-					<div id="stackTrace">
-						{% for stack in throwableInfos %}
-							<div class="trace-first-line level{{stack.level}}">
-								<strong>
-								{% if stack.cause %}
-									Caused by:
-								{% else %}
-									<div>Exception in thread {{threadName}}:</div>
-								{% endif %}
-								</strong>
-								<span class="class-package">{{stack.subject.class.package.name}}</span><!--
-							 -->.<strong class="file-name">{{stack.subject.class.simpleName}}</strong>: {{stack.localizedMessage | raw}}
-							</div>
-							{% for element in stack.subjectInfo %}
-								<div class="trace-line {% if element.externalClass %}external-exception{% endif %}">
-									<strong>at:</strong>
-									<span class="class-package">{{element.packageName}}</span>.<!--
-								 --><span class="class-name">{{element.simpleClassName}}</span>.<!--
-								 --><span class="method-name">{{element.element.methodName}}</span>
+                    <div class="row line">
+                        <div class="col-sm-2 desc">Request URI</div>
+                        <div class="col-sm-10">{{request.requestURI}}</div>
+                    </div>
+                    <div class="row line">
+                        <div class="col-sm-2 desc">Request URL</div>
+                        <div class="col-sm-10">{{request.requestURL}}</div>
+                    </div>
+                    <div class="row line">
+                        <div class="col-sm-2 desc">Query String</div>
+                        <div class="col-sm-10">{{request.queryString}}</div>
+                    </div>
+                    <div class="row line">
+                        <div class="col-sm-2 desc">Method</div>
+                        <div class="col-sm-10">{{request.method}}</div>
+                    </div>
+                    <div class="row line">
+                        <div class="col-sm-2 desc">User Agent</div>
+                        <div class="col-sm-10">{{userAgent}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 desc">Referer</div>
+                        <div class="col-sm-10">{{referer}}</div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <h3>User Information</h3>
 
-									{% if element.element.fileName != null %}
-										(<span class="file-name">{{element.element.fileName}}</span><!--
-										{% if element.element.lineNumber > 0 %}
-											-->:<span class="line-number">{{element.element.lineNumber}}</span>)
-										{% else %}
-											-->)
-										{% endif %}
-									{% else %}
-										{% if element.element.nativeMethod %}
-											<span class="nativeMethodText">(Native Method)</span>
-										{% else %}
-											<span class="unknownSourceText">(Unknown Source)</span>
-										{% endif %}
-									{% endif %}
-								</div>
-							{% endfor %}
-						{% endfor %}
-					</div>
-				</div>
-			</main>
-		</div>
-	</body>
-	<style>
-		body {
-			margin: 0;
-			font-family: 'Roboto', sans-serif;
-			background-color: #F1F1F1;
-			color: #51606E;
-			font-weight: 100;
-		}
+                    <div class="row">
+                        <div class="col-sm-4 desc">Username</div>
+                        <div class="col-sm-8">{{loggedUser.username}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 desc">Locale</div>
+                        <div class="col-sm-8">{{locale}}</div>
+                    </div>
+                </div>
+                <div class="col-sm-12 info-section">
+                    <h3 class="">Request Parameters</h3>
+                    {% for attr in parameters %}
+                    <div class="row">
+                        <div class="col-sm-5 desc">{{attr.key}}</div>
+                        <div class="col-sm-7">{{attr.value}}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="col-sm-12 info-section">
+                    <h3 class="">Session Parameters</h3>
+                    {% for attr in session %}
+                    <div class="row">
+                        <div class="col-sm-5 desc">{{attr.key}}</div>
+                        <div class="col-sm-7">{{attr.value}}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="col-sm-12 info-section">
+                    <h3 class="">Request Attributes</h3>
+                    {% for attr in attributes %}
+                    <div class="row table">
+                        <div class="col-sm-5 desc">{{attr.key}}</div>
+                        <div class="col-sm-7 values">{{attr.value}}</div>
+                    </div>
+                    {% endfor %}
+                </div>
 
-		main { word-wrap: break-word; }
+                <div class="col-sm-12">
+                    <h3 class="">Exception Information</h3>
 
-		.info-section {
-			padding-bottom: 20px;
-			border-bottom: solid 1px #ddd;
-		}
+                    <div id="stackTrace">
+                        {% for stack in throwableInfos %}
+                        <div class="trace-first-line level{{stack.level}}">
+                            <strong>
+                                {% if stack.cause %}
+                                Caused by:
+                                {% else %}
+                                <div>Exception in thread {{threadName}}:</div>
+                                {% endif %}
+                            </strong>
+                            <span class="class-package reference">{{stack.subject.class.package.name}}</span><!--
+                                 -->.<strong class="class-name reference">{{stack.subject.class.simpleName}}</strong>:
+                            {{stack.localizedMessage | raw}}
+                        </div>
+                        {% for element in stack.subjectInfo %}
+                        <div class="trace-line {% if element.externalClass %}external-exception{% endif %}">
+                            <strong class="at">at:</strong>
+                            <span class="class-package">{{element.packageName}}</span>.<!--
+                                     --><span class="class-name">{{element.simpleClassName}}</span>.<!--
+                                     --><span class="method-name">{{element.element.methodName}}</span>
 
-		.line-number { color: #268bd2; }
+                            {% if  element.element.fileName != null %}
 
-		.method-name {
-			color: #5F8709;
-			font-weight: bold;
-		}
+                            (<span class="file-name">{{element.element.fileName}}</span><!--
+                                            {% if element.element.lineNumber > 0 %}
+                                                -->:<span class="line-number">{{element.element.lineNumber}}</span>)
+                            {% else %}
+                            -->)
+                            {% endif %}
+                            {% else %}
+                            {% if element.element.nativeMethod %}
+                            <span class="nativeMethodText">(Native Method)</span>
+                            {% else %}
+                            <span class="unknownSourceText">(Unknown Source)</span>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+</body>
+<style>
+    body {
+        margin: 0;
+        background-color: #F1F1F1;
+        color: #51606E;
+        font-weight: 200;
+    }
 
-		.class-name {
-			color:  #B58902;
-			font-weight: bold;
-		}
+    main {
+        word-wrap: break-word;
+    }
 
-		.class-package { color:	#b58900; }
+    .info-section {
+        padding-bottom: 20px;
+        border-bottom: solid 1px #ddd;
+    }
 
-		.external-exception { opacity:0.3; }
+    .line-number {
+        color: #685C79;
+    }
 
-		.external-exception:hover { opacity:0.6; }
+    .method-name {
+        color: #218777;
+        font-weight: bold;
+    }
 
-		.file-name { color: #DC3209; }
+    .class-name {
+        color: #685C79;
+        font-weight: bold;
+    }
 
-		header {
-			background-color: #FEFEFE;
-			padding: 1em;
-			font-size: 15px;
-		}
+    .class-package {
+        color: #70757E;
+    }
 
-		.trace-first-line {
-			padding-top: 10px;
-			line-height: 1.5em
-		}
+    .external-exception {
+        opacity: 0.3;
+    }
 
-		.trace-line {
-			padding-left: 30px;
-			font-family: monospace;
-		}
+    .external-exception:hover {
+        opacity: 0.6;
+    }
 
-		.desc {
-			text-align: right;
-			font-weight: bold;
-		}
+    .file-name {
+        color: #F53357;
+    }
 
-		img { padding-top: 10px; }
-	</style>
+    header {
+        background-color: #FEFEFE;
+        font-size: 15px;
+        padding-bottom: 10px;
+    }
+
+    .trace-first-line {
+        padding-top: 10px;
+        line-height: 1.5em
+    }
+
+    .reference{
+        font-family: "Menlo", "Monaco", "Inconsolata", "Mono", monospace;
+    }
+
+    .values{
+        font-family: "Menlo", "Monaco", "Inconsolata", "Mono", monospace;
+    }
+
+    .trace-line {
+        padding-left: 30px;
+        font-family: "Menlo", "Monaco", "Inconsolata", "Mono", monospace;
+    }
+
+    .desc {
+        text-align: right;
+        font-weight: bold;
+    }
+
+    img {
+        padding-top: 10px;
+    }
+
+    .content {
+        padding:20px;
+        padding-top: 0px;
+    }
+
+    header.row{
+        margin-left:-20px;
+        margin-right:-20px;
+        border-bottom: 1px solid rgb(112, 172, 226);
+    }
+    .class-package.small{
+        display:none;
+    }
+
+
+    .line{
+        margin-bottom: 10px;
+    }
+
+    .first-char{
+        display: none;
+    }
+
+    @media (max-width: 767px) {
+        .exception-class-name {
+            font-size: 20px;
+            word-wrap: break-word;
+        }
+
+        h3{
+            font-size:18px;
+        }
+
+
+        .desc{
+            text-align: left;
+        }
+
+        .trace-line{
+            padding-left: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+
+            font-size:12px;
+        }
+        .at{
+            display: none;
+        }
+        .class-package{
+            display: none;
+        }
+
+        .class-package.first-char{
+            display: inline;
+        }
+    }
+</style>
+<script>
+    $(".values").map(function(i,e){
+        if ($(e).html().length > 200){
+            var dom = $("<button data-toggle='tooltip' data-placement='right' title='Value is very big. Click to see.' class='btn btn-sm btn-default'>Show Value</button>")
+            dom.data("value",$(e).html());
+            $(e).on("click",function(e){
+                dom.parent().html(dom.data("value"));
+            });
+            $(e).html(dom);
+        }
+
+    });
+
+    $(".class-package").map(function(i,e){
+        e = $(e)
+        var val = $(e).html();
+        var spack = val.split(".").map(function(e){
+            return e[0];
+        }).reduce(function(x,y){
+            return x + "." + y
+        });
+        e.after("<span class='class-package first-char'>" + spack +"</span>")
+    });
+</script>
 </html>
