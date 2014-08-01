@@ -18,19 +18,14 @@ package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.UserGroup;
-
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 
 /**
  * Groups of specific users.
@@ -55,56 +50,35 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
     }
 
     /**
+     * Get or create instance of a {@link PersistentUserGroup} for the requested users
+     * 
+     * @param users the users to be part of the group
+     * @return {@link PersistentUserGroup} instance
      * @see #getInstance(Set)
      */
-    public static PersistentUserGroup getInstance(User... members) {
-        return getInstance(new HashSet<>(Arrays.asList(members)));
+    public static PersistentUserGroup getInstance(User... users) {
+        return getInstance(new HashSet<>(Arrays.asList(users)));
     }
 
     /**
      * Get or create instance of a {@link PersistentUserGroup} for the requested users
      * 
-     * @param users
-     *            the users to be part of the group
+     * @param users the users to be part of the group
      * @return {@link PersistentUserGroup} instance
      */
     public static PersistentUserGroup getInstance(final Set<User> users) {
-        if (users.isEmpty()) {
-            throw BennuCoreDomainException.creatingUserGroupsWithoutUsers();
-        }
-        PersistentUserGroup instance = select(users);
-        return instance != null ? instance : create(users);
+        return singleton(() -> select(users), () -> new PersistentUserGroup(users));
     }
 
-    @Atomic(mode = TxMode.WRITE)
-    private static PersistentUserGroup create(final Set<User> users) {
-        PersistentUserGroup instance = select(users);
-        return instance != null ? instance : new PersistentUserGroup(users);
-    }
-
-    private static PersistentUserGroup select(final Set<User> users) {
-        FluentIterable<PersistentUserGroup> intersection = null;
-        Predicate<PersistentUserGroup> sizePredicate = new Predicate<PersistentUserGroup>() {
-            @Override
-            public boolean apply(PersistentUserGroup group) {
-                return group.getMemberSet().size() == users.size();
-            }
-        };
-        for (final User user : users) {
+    private static Optional<PersistentUserGroup> select(final Set<User> users) {
+        Stream<PersistentUserGroup> intersection = null;
+        for (User user : users) {
             if (intersection == null) {
-                intersection = FluentIterable.from(BennuGroupIndex.getUserGroups(user)).filter(sizePredicate);
+                intersection = BennuGroupIndex.getUserGroups(user).stream().filter(g -> g.getMemberSet().size() == users.size());
             } else {
-                intersection = intersection.filter(new Predicate<PersistentUserGroup>() {
-                    @Override
-                    public boolean apply(PersistentUserGroup group) {
-                        return group.getMemberSet().contains(user);
-                    }
-                });
-            }
-            if (intersection.isEmpty()) {
-                return null;
+                intersection = intersection.filter(g -> g.getMemberSet().contains(user));
             }
         }
-        return intersection.first().orNull();
+        return intersection != null ? intersection.findAny() : Optional.empty();
     }
 }

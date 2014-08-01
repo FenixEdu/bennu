@@ -3,6 +3,7 @@ package org.fenixedu.bennu.core.json;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -39,11 +40,21 @@ public class JsonBuilder {
             return null;
         }
 
-        if (Collection.class.isAssignableFrom(objectClass)) {
+        if (Collection.class.isAssignableFrom(objectClass) && obj != null) {
             return views((Collection) obj, jsonViewerClass);
         }
 
+        if (Stream.class.isAssignableFrom(objectClass) && obj != null) {
+            return viewStream((Stream) obj, jsonViewerClass);
+        }
+
         return viewers.get(objectClass, jsonViewerClass).view(obj, this);
+    }
+
+    private JsonArray viewStream(Stream<?> stream, Class<? extends JsonViewer> jsonViewerClass) {
+        JsonArray array = new JsonArray();
+        stream.map(obj -> view(obj, jsonViewerClass)).forEach(array::add);
+        return array;
     }
 
     private JsonArray views(Collection coll, Class<? extends JsonViewer> jsonViewerClass) {

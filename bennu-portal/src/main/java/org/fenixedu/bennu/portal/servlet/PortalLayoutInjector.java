@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.MenuFunctionality;
 import org.fenixedu.bennu.portal.domain.MenuItem;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
@@ -71,6 +72,11 @@ public class PortalLayoutInjector implements Filter {
         // Disable auto-escaping
         engine.getExtension(EscaperExtension.class).setAutoEscaping(false);
         engine.addExtension(new PortalExtension());
+
+        if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
+            logger.info("Theme Development Mode Enabled!");
+            engine.setTemplateCache(null);
+        }
     }
 
     @Override

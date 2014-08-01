@@ -16,11 +16,10 @@
  */
 package org.fenixedu.bennu.core.domain.groups;
 
+import java.util.Optional;
+
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.NegationGroup;
-
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
 
 /**
  * Inverse group of another group.
@@ -51,13 +50,6 @@ public final class PersistentNegationGroup extends PersistentNegationGroup_Base 
      * @return singleton {@link PersistentNegationGroup} instance
      */
     public static PersistentNegationGroup getInstance(final PersistentGroup group) {
-        PersistentNegationGroup instance = group.getNegation();
-        return instance != null ? instance : create(group);
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    private static PersistentNegationGroup create(PersistentGroup group) {
-        PersistentNegationGroup instance = group.getNegation();
-        return instance != null ? instance : new PersistentNegationGroup(group);
+        return singleton(() -> Optional.ofNullable(group.getNegation()), () -> new PersistentNegationGroup(group));
     }
 }

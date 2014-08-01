@@ -19,17 +19,15 @@ package org.fenixedu.bennu.core.groups;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentIntersectionGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 
 /**
  * Intersection composition group.
@@ -48,29 +46,26 @@ public final class IntersectionGroup extends Group {
     }
 
     public static Group of(Set<Group> groups) {
-        return of(groups.toArray(new Group[0]));
+        return of(groups.stream());
     }
 
     public static Group of(Group... groups) {
-        if (groups.length == 0) {
-            return NobodyGroup.get();
-        }
-        Group group = groups[0];
-        for (int i = 1; i < groups.length; i++) {
-            group = group.and(groups[i]);
-        }
-        return group;
+        return of(Stream.of(groups));
+    }
+
+    public static Group of(Stream<Group> groups) {
+        return groups.reduce(NobodyGroup.get(), (result, group) -> result.and(group));
     }
 
     @Override
     public String getPresentationName() {
         String and = " " + BundleUtil.getString("resources.BennuResources", "label.bennu.and") + " ";
-        return Joiner.on(and).join(Iterables.transform(children, groupToGroupName));
+        return children.stream().map(g -> g.getPresentationName()).collect(Collectors.joining(and));
     }
 
     @Override
     public String getExpression() {
-        return Joiner.on(" & ").join(Iterables.transform(children, groupToExpression));
+        return children.stream().map(g -> g.getExpression()).collect(Collectors.joining(" & "));
     }
 
     public Set<Group> getChildren() {
@@ -79,8 +74,8 @@ public final class IntersectionGroup extends Group {
 
     @Override
     public PersistentIntersectionGroup toPersistentGroup() {
-        ImmutableSet<PersistentGroup> groups = FluentIterable.from(children).transform(groupToPersistentGroup).toSet();
-        return PersistentIntersectionGroup.getInstance(groups);
+        return PersistentIntersectionGroup.getInstance(children.stream().map(g -> g.toPersistentGroup())
+                .collect(Collectors.toSet()));
     }
 
     @Override

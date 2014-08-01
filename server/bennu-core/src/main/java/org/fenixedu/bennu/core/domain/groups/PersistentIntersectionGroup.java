@@ -18,16 +18,12 @@ package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.IntersectionGroup;
-
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 
 /**
  * Intersection composition group.
@@ -42,8 +38,7 @@ public final class PersistentIntersectionGroup extends PersistentIntersectionGro
 
     @Override
     public Group toGroup() {
-        Group[] children = FluentIterable.from(getChildrenSet()).transform(persistentGroupToGroup).toArray(Group.class);
-        return IntersectionGroup.of(children);
+        return IntersectionGroup.of(getChildrenSet().stream().map(g -> g.toGroup()));
     }
 
     @Override
@@ -53,6 +48,10 @@ public final class PersistentIntersectionGroup extends PersistentIntersectionGro
     }
 
     /**
+     * Get or create instance of a {@link PersistentIntersectionGroup} between the requested children.
+     * 
+     * @param children the groups to make a {@link PersistentIntersectionGroup} on.
+     * @return singleton {@link PersistentIntersectionGroup} instance
      * @see #getInstance(Set)
      */
     public static PersistentIntersectionGroup getInstance(final PersistentGroup... children) {
@@ -62,44 +61,22 @@ public final class PersistentIntersectionGroup extends PersistentIntersectionGro
     /**
      * Get or create instance of a {@link PersistentIntersectionGroup} between the requested children.
      * 
-     * @param children
-     *            the groups to make a {@link PersistentIntersectionGroup} on.
+     * @param children the groups to make a {@link PersistentIntersectionGroup} on.
      * @return singleton {@link PersistentIntersectionGroup} instance
      */
     public static PersistentIntersectionGroup getInstance(final Set<PersistentGroup> children) {
-        PersistentIntersectionGroup instance = select(children);
-        return instance != null ? instance : create(children);
+        return singleton(() -> select(children), () -> new PersistentIntersectionGroup(children));
     }
 
-    @Atomic(mode = TxMode.WRITE)
-    private static PersistentIntersectionGroup create(final Set<PersistentGroup> children) {
-        PersistentIntersectionGroup instance = select(children);
-        return instance != null ? instance : new PersistentIntersectionGroup(children);
-    }
-
-    private static PersistentIntersectionGroup select(final Set<PersistentGroup> children) {
-        FluentIterable<PersistentIntersectionGroup> intersection = null;
-        Predicate<PersistentIntersectionGroup> sizePredicate = new Predicate<PersistentIntersectionGroup>() {
-            @Override
-            public boolean apply(PersistentIntersectionGroup group) {
-                return group.getChildrenSet().size() == children.size();
-            }
-        };
+    private static Optional<PersistentIntersectionGroup> select(final Set<PersistentGroup> children) {
+        Stream<PersistentIntersectionGroup> intersection = null;
         for (final PersistentGroup child : children) {
             if (intersection == null) {
-                intersection = FluentIterable.from(child.getIntersectionsSet()).filter(sizePredicate);
+                intersection = child.getIntersectionsSet().stream().filter(g -> g.getChildrenSet().size() == children.size());
             } else {
-                intersection = intersection.filter(new Predicate<PersistentIntersectionGroup>() {
-                    @Override
-                    public boolean apply(PersistentIntersectionGroup group) {
-                        return group.getChildrenSet().contains(child);
-                    }
-                });
-            }
-            if (intersection.isEmpty()) {
-                return null;
+                intersection = intersection.filter(g -> g.getChildrenSet().contains(child));
             }
         }
-        return intersection.first().orNull();
+        return intersection != null ? intersection.findAny() : Optional.empty();
     }
 }

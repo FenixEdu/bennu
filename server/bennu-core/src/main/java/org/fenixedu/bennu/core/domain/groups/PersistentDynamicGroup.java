@@ -29,7 +29,7 @@ import com.google.common.base.Optional;
 
 /**
  * <p>
- * Mutable named group. In the group language is referred by {@literal#}name. Keeps history of every change made.
+ * Mutable named group. In the group language is referred by {@literal #}name. Keeps history of every change made.
  * </p>
  * 
  * <p>
@@ -76,7 +76,7 @@ public final class PersistentDynamicGroup extends PersistentDynamicGroup_Base {
         if (getPrevious() != null) {
             return getPrevious().getGroup(when);
         }
-        return null;
+        return PersistentNobodyGroup.getInstance();
     }
 
     private void pushHistory() {

@@ -15,7 +15,7 @@ public class InvalidJsonException extends WebApplicationException {
     public InvalidJsonException(JsonElement jsonElement, String... missingAttributes) {
         super(Response
                 .status(Status.BAD_REQUEST)
-                .entity(String.format("Invalid Json Input:%s\nMissing Attributes:%s", jsonElement.toString(),
+                .entity(String.format("Invalid Json Input:%s%nMissing Attributes:%s", jsonElement.toString(),
                         Arrays.toString(missingAttributes))).build());
     }
 }

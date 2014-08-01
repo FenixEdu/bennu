@@ -82,10 +82,6 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
             }
 
             Map<String, FileWriteIntention> map = getPerTxBox().get();
-            if (map == null) {
-                map = new HashMap<>();
-                fileIntentions.put(map);
-            }
             if (map.containsKey(uniqueIdentification)) {
                 map.remove(uniqueIdentification);
             }
@@ -147,7 +143,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     public byte[] read(String uniqueIdentification) {
         try {
             Map<String, FileWriteIntention> map = getPerTxBox().get();
-            if (map != null && map.containsKey(uniqueIdentification)) {
+            if (map.containsKey(uniqueIdentification)) {
                 return map.get(uniqueIdentification).contents;
             }
 
@@ -161,7 +157,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     public InputStream readAsInputStream(String uniqueIdentification) {
         try {
             Map<String, FileWriteIntention> map = getPerTxBox().get();
-            if (map != null && map.containsKey(uniqueIdentification)) {
+            if (map.containsKey(uniqueIdentification)) {
                 return new ByteArrayInputStream(map.get(uniqueIdentification).contents);
             }
 
@@ -174,12 +170,12 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 
     private synchronized PerTxBox<Map<String, FileWriteIntention>> getPerTxBox() {
         if (fileIntentions == null) {
-            fileIntentions = new PerTxBox<Map<String, FileWriteIntention>>(null) {
+            fileIntentions = new PerTxBox<Map<String, FileWriteIntention>>(new HashMap<String, FileWriteIntention>()) {
                 @Override
                 public void commit(Map<String, FileWriteIntention> map) {
-                    for (String key : map.keySet()) {
+                    for (FileWriteIntention i : map.values()) {
                         try {
-                            map.get(key).write();
+                            i.write();
                         } catch (IOException e) {
                             throw new RuntimeException("error.store.file", e);
                         }

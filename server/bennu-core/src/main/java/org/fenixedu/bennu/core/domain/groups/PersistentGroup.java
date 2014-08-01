@@ -16,34 +16,32 @@
  */
 package org.fenixedu.bennu.core.domain.groups;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
-import org.fenixedu.bennu.core.groups.AnonymousGroup;
-import org.fenixedu.bennu.core.groups.AnyoneGroup;
 import org.fenixedu.bennu.core.groups.Group;
-import org.fenixedu.bennu.core.groups.LoggedGroup;
-import org.fenixedu.bennu.core.groups.NobodyGroup;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.joda.time.DateTime;
+
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.common.base.Function;
 
 /**
  * <p>
- * {@code Group}s represent access groups. These groups are domain entities but immutable and unique in semantics (with the sole
- * exception of {@link PersistentDynamicGroup}). That means that there is only one instance of a groups representing authenticated users, or
- * ('john' & 'mary').
+ * {@code PersistentGroup}s represent access groups. These groups are domain entities but immutable and unique in semantics (with
+ * the sole exception of {@link PersistentDynamicGroup}). That means that there is only one instance of a group representing
+ * authenticated users, or only one instance of a group for a specific set of users
  * </p>
  * 
  * <p>
- * Groups can be translated to and from a DSL of groups, using methods {@link #expression()} and {@link #parse(String)},
- * respectively. The language supports compositions (|), intersections (&), negations (!) and differences (-) over basic
- * constructs like: anonymous ({@link AnonymousGroup}), logged ({@link LoggedGroup}), anyone ({@link AnyoneGroup}), nobody (
- * {@link NobodyGroup}), P(istxxx, istxxxx,...) ({@link PersistentUserGroup}) or #name ({@link PersistentDynamicGroup}).
+ * This is the persistent counter part of {@link Group}.
  * </p>
  * 
  * <p>
@@ -56,6 +54,7 @@ import com.google.common.base.Function;
  * @see GroupOperator
  */
 public abstract class PersistentGroup extends PersistentGroup_Base {
+    @Deprecated
     public static final Function<PersistentGroup, Group> persistentGroupToGroup = new Function<PersistentGroup, Group>() {
         @Override
         public Group apply(PersistentGroup group) {
@@ -173,5 +172,14 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
                 group.gc();
             }
         }
+    }
+
+    protected static <T extends PersistentGroup> T singleton(Supplier<Optional<T>> selector, Supplier<T> creator) {
+        return selector.get().orElseGet(() -> create(selector, creator));
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static <T extends PersistentGroup> T create(Supplier<Optional<T>> selector, Supplier<T> creator) {
+        return selector.get().orElseGet(creator);
     }
 }

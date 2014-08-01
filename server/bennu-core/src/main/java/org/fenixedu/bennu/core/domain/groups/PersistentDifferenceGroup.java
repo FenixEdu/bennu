@@ -18,16 +18,12 @@ package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.groups.DifferenceGroup;
 import org.fenixedu.bennu.core.groups.Group;
-
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 
 /**
  * Difference composition group. Can be read as members of first group except members of the remaining ones.
@@ -43,8 +39,7 @@ public final class PersistentDifferenceGroup extends PersistentDifferenceGroup_B
 
     @Override
     public Group toGroup() {
-        Group[] children = FluentIterable.from(getRestSet()).transform(persistentGroupToGroup).toArray(Group.class);
-        return DifferenceGroup.between(getFirst().toGroup(), children);
+        return DifferenceGroup.between(getFirst().toGroup(), getRestSet().stream().map(g -> g.toGroup()));
     }
 
     @Override
@@ -55,10 +50,15 @@ public final class PersistentDifferenceGroup extends PersistentDifferenceGroup_B
     }
 
     /**
-     * @see #getInstance(Set)
+     * Get or create instance of a {@link PersistentDifferenceGroup} between the first group and the rest.
+     * 
+     * @param first the group from which to subtract
+     * @param rest the groups to subtract.
+     * @return singleton {@link PersistentDifferenceGroup} instance
+     * @see #getInstance(PersistentGroup, Set)
      */
-    public static PersistentDifferenceGroup getInstance(final PersistentGroup first, final PersistentGroup... children) {
-        return getInstance(first, new HashSet<>(Arrays.asList(children)));
+    public static PersistentDifferenceGroup getInstance(final PersistentGroup first, final PersistentGroup... rest) {
+        return getInstance(first, new HashSet<>(Arrays.asList(rest)));
     }
 
     /**
@@ -69,39 +69,18 @@ public final class PersistentDifferenceGroup extends PersistentDifferenceGroup_B
      * @return singleton {@link PersistentDifferenceGroup} instance
      */
     public static PersistentDifferenceGroup getInstance(final PersistentGroup first, final Set<PersistentGroup> rest) {
-        PersistentDifferenceGroup instance = select(first, rest);
-        return instance != null ? instance : create(first, rest);
+        return singleton(() -> select(first, rest), () -> new PersistentDifferenceGroup(first, rest));
     }
 
-    @Atomic(mode = TxMode.WRITE)
-    private static PersistentDifferenceGroup create(PersistentGroup first, Set<PersistentGroup> rest) {
-        PersistentDifferenceGroup instance = select(first, rest);
-        return instance != null ? instance : new PersistentDifferenceGroup(first, rest);
-    }
-
-    public static PersistentDifferenceGroup select(final PersistentGroup first, final Set<PersistentGroup> rest) {
+    private static Optional<PersistentDifferenceGroup> select(final PersistentGroup first, final Set<PersistentGroup> rest) {
         if (first.getDifferenceAtFirstSet().isEmpty()) {
-            return null;
+            return Optional.empty();
         }
-        Predicate<PersistentDifferenceGroup> sizePredicate = new Predicate<PersistentDifferenceGroup>() {
-            @Override
-            public boolean apply(PersistentDifferenceGroup group) {
-                return group.getRestSet().size() == rest.size();
-            }
-        };
-        FluentIterable<PersistentDifferenceGroup> intersection =
-                FluentIterable.from(first.getDifferenceAtFirstSet()).filter(sizePredicate);
+        Stream<PersistentDifferenceGroup> intersection =
+                first.getDifferenceAtFirstSet().stream().filter(g -> g.getRestSet().size() == rest.size());
         for (final PersistentGroup child : rest) {
-            intersection = intersection.filter(new Predicate<PersistentDifferenceGroup>() {
-                @Override
-                public boolean apply(PersistentDifferenceGroup group) {
-                    return group.getDifferenceAtRestSet().contains(child);
-                }
-            });
-            if (intersection.isEmpty()) {
-                return null;
-            }
+            intersection = intersection.filter(g -> g.getDifferenceAtRestSet().contains(child));
         }
-        return intersection.first().orNull();
+        return intersection.findAny();
     }
 }

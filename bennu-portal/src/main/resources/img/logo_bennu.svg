@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="163px" height="37.65px" viewBox="0 0 163 37.65" enable-background="new 0 0 163 37.65" xml:space="preserve">
+<g>
+	<g>
+		<defs>
+			<rect id="SVGID_1_" x="0" y="-0.04" width="49.783" height="16.596"/>
+		</defs>
+		<clipPath id="SVGID_2_">
+			<use xlink:href="#SVGID_1_"  overflow="visible"/>
+		</clipPath>
+		<g clip-path="url(#SVGID_2_)">
+			<defs>
+				<rect id="SVGID_3_" x="0" y="-0.038" width="49.783" height="16.594"/>
+			</defs>
+			<clipPath id="SVGID_4_">
+				<use xlink:href="#SVGID_3_"  overflow="visible"/>
+			</clipPath>
+			<g clip-path="url(#SVGID_4_)">
+				<g>
+					<defs>
+						<rect id="SVGID_5_" x="-30.158" y="-1.814" width="93.506" height="41.431"/>
+					</defs>
+					<clipPath id="SVGID_6_">
+						<use xlink:href="#SVGID_5_"  overflow="visible"/>
+					</clipPath>
+					<rect x="16.596" y="-0.038" clip-path="url(#SVGID_6_)" fill="#66C4ED" width="16.594" height="16.594"/>
+					<rect x="0" y="-0.038" clip-path="url(#SVGID_6_)" fill="#99D8F3" width="16.595" height="16.594"/>
+				</g>
+			</g>
+		</g>
+		<rect x="33.188" y="-0.042" clip-path="url(#SVGID_2_)" fill="#009DE0" width="16.595" height="16.598"/>
+	</g>
+	<rect x="61.154" y="-0.041" fill="none" width="105.014" height="16.596"/>
+	<text transform="matrix(1 0 0 1 61.1548 14.9241)" fill="#58585A" font-family="'KlavikaMedium-Plain'" font-size="21.2882">Bennu</text>
+	<rect x="61.154" y="19.479" fill="none" width="105.014" height="16.595"/>
+	<text transform="matrix(1 0 0 1 61.1548 34.2527)" fill="#58585A" font-family="'KlavikaLight-Plain'" font-size="21.2882">Framework</text>
+</g>
+</svg>

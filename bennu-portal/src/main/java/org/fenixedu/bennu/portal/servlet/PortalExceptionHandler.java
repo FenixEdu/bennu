@@ -20,12 +20,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.servlets.ExceptionHandlerFilter.ExceptionHandler;
+import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Joiner;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
@@ -66,6 +66,9 @@ public class PortalExceptionHandler implements ExceptionHandler {
     protected PortalExceptionHandler(Loader loader) {
         this.engine = new PebbleEngine(loader);
         engine.addExtension(new PortalExtension());
+        if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
+            engine.setTemplateCache(null);
+        }
     }
 
     @Override
@@ -118,7 +121,7 @@ public class PortalExceptionHandler implements ExceptionHandler {
         Enumeration<String> names = req.getParameterNames();
         while (names.hasMoreElements()) {
             String name = names.nextElement();
-            params.put(name, Joiner.on(" | ").join(req.getParameterValues(name)));
+            params.put(name, String.join(" | ", req.getParameterValues(name)));
         }
         return params.entrySet();
     }

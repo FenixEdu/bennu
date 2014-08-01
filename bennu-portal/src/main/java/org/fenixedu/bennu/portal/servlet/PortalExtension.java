@@ -14,6 +14,7 @@ import com.mitchellbosecke.pebble.extension.AbstractExtension;
 import com.mitchellbosecke.pebble.extension.Filter;
 import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.extension.Test;
+import com.mitchellbosecke.pebble.tokenParser.TokenParser;
 
 class PortalExtension extends AbstractExtension {
 
@@ -85,6 +86,11 @@ class PortalExtension extends AbstractExtension {
             Collection<?> collection = (Collection<?>) args.get("collection");
             return collection.contains(input);
         }
+    }
+
+    @Override
+    public List<TokenParser> getTokenParsers() {
+        return Collections.singletonList(new LazyForTokenParser());
     }
 
 }

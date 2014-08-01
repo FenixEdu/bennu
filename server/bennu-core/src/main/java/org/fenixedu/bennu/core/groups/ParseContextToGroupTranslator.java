@@ -91,7 +91,7 @@ class ParseContextToGroupTranslator {
         if (expr != null) {
             return expression(expr);
         }
-        return null;
+        throw new Error("Unrecognized expression: " + ctx.getText());
     }
 
     private Group link(LinkContext ctx) {

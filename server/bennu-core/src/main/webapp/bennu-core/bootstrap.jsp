@@ -20,7 +20,7 @@
 						<h1>Bootstrap</h1>
 					</div>
 					<div class="col-lg-2">
-						<h1><img src="${pageContext.request.contextPath}/img/logo_bennu.png" alt="FenixEdu Logo" width="80px" class="pull-right" /></h1>
+						<h1><img src="${pageContext.request.contextPath}/img/logo_bennu.svg" alt="Bennu Logo" width="200px" class="pull-right" /></h1>
 					</div>
 				</div>
 				<fieldset>
@@ -55,7 +55,7 @@
 							<h1>{{bootstrapper.name[locale.key]}}</h1>
 						</div>
 						<div class="col-lg-2">
-							<h1><img src="${pageContext.request.contextPath}/img/logo_bennu.png" width="80px" class="pull-right" /></h1>
+							<h1><img src="${pageContext.request.contextPath}/img/logo_bennu.svg" width="200px" class="pull-right" /></h1>
 						</div>
 					</div>
 				
@@ -117,7 +117,7 @@
 					<h1>Bootstrap</h1>
 				</div>
 				<div class="col-lg-2">
-					<h1><img src="${pageContext.request.contextPath}/img/logo_bennu.png" alt="FenixEdu Logo" width="80px" class="pull-right" /></h1>
+					<h1><img src="${pageContext.request.contextPath}/img/logo_bennu.svg" alt="Bennu Logo" width="200px" class="pull-right" /></h1>
 				</div>
 				<hr />
 			</div>

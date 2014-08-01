@@ -10,7 +10,7 @@ public class CookieReaderUtils {
      * 
      * @param name the name of the cookie.
      * @param request the HttpServletRequest to find the cookie on.
-     * @return
+     * @return the cookie
      */
     public static Cookie getCookieForName(String name, HttpServletRequest request) {
         if (request.getCookies() == null) {

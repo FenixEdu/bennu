@@ -60,6 +60,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
         }
     };
 
+    @Deprecated
     public static final Function<Group, String> groupToGroupName = new Function<Group, String>() {
         @Override
         public String apply(Group group) {
@@ -67,6 +68,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
         }
     };
 
+    @Deprecated
     public static final Function<Group, String> groupToExpression = new Function<Group, String>() {
         @Override
         public String apply(Group group) {
@@ -119,7 +121,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      * Tests if the given user is a member of the group.
      * 
      * @param user
-     *            the user to test
+     *            the user to test, can be null
      * @return <code>true</code> if member, <code>false</code> otherwise
      * 
      * @see #verify()
@@ -130,7 +132,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      * Same as {@link #isMember(User)} but at a given moment in time. This is like a time-machine for the groups domain.
      * 
      * @param user
-     *            the user to test
+     *            the user to test, can be null
      * @param when
      *            moment when to test the user.
      * @return <code>true</code> if member, <code>false</code> otherwise
@@ -245,7 +247,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      * @param expression
      *            the group in textual form
      * @return group representing the semantics of the expression.
-     * @throws GroupException
+     * @throws BennuCoreDomainException
      *             if a parsing error occurs
      */
     public static Group parse(String expression) {

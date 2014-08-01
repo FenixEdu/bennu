@@ -8,11 +8,13 @@ import com.google.gson.JsonPrimitive;
 
 public class JsonUtils {
     public static String getString(JsonObject json, String property) {
-        return getPrimitive(json, property).getAsString();
+        JsonPrimitive primitive = getPrimitive(json, property);
+        return primitive != null ? primitive.getAsString() : null;
     }
 
     public static int getInt(JsonObject json, String property) {
-        return getPrimitive(json, property).getAsInt();
+        JsonPrimitive primitive = getPrimitive(json, property);
+        return primitive != null ? primitive.getAsInt() : null;
     }
 
     public static JsonPrimitive getPrimitive(JsonObject json, String property) {

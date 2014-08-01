@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
 
@@ -102,7 +103,7 @@ public class PortalLoginServlet extends HttpServlet {
      * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
      *
      */
-    private static class LocalLoginStrategy implements PortalLoginStrategy {
+    public static class LocalLoginStrategy implements PortalLoginStrategy {
 
         private volatile PebbleEngine engine;
 
@@ -147,6 +148,9 @@ public class PortalLoginServlet extends HttpServlet {
                 }
             });
             pebble.addExtension(new PortalExtension());
+            if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
+                pebble.setTemplateCache(null);
+            }
             this.engine = pebble;
             return pebble;
         }

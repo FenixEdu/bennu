@@ -38,11 +38,15 @@ public class FileDownloadServlet extends HttpServlet {
             }
             if (file.isAccessible(Authenticate.getUser())) {
                 byte[] content = file.getContent();
-                response.setContentType(file.getContentType());
-                response.setContentLength(file.getSize().intValue());
-                try (OutputStream stream = response.getOutputStream()) {
-                    stream.write(content);
-                    stream.flush();
+                if (content != null) {
+                    response.setContentType(file.getContentType());
+                    response.setContentLength(file.getSize().intValue());
+                    try (OutputStream stream = response.getOutputStream()) {
+                        stream.write(content);
+                        stream.flush();
+                    }
+                } else {
+                    response.sendError(HttpServletResponse.SC_NO_CONTENT, "File empty");
                 }
             } else if (file.isPrivate() && !Authenticate.isLogged()
                     && request.getAttribute(CasAuthenticationFilter.AUTHENTICATION_EXCEPTION_KEY) == null) {
@@ -64,7 +68,7 @@ public class FileDownloadServlet extends HttpServlet {
                 + URLEncoder.encode(getDownloadUrl(file), Charsets.UTF_8.name());
     }
 
-    private static GenericFile getFileFromURL(String url) {
+    public static GenericFile getFileFromURL(String url) {
         try {
             // Remove trailing path, and split the tokens
             String[] parts = url.substring(url.indexOf(SERVLET_PATH)).replace(SERVLET_PATH, "").split("\\/");

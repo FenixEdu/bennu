@@ -21,7 +21,9 @@ import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
@@ -42,6 +44,8 @@ public final class User extends User_Base implements Principal {
     private static final Logger logger = LoggerFactory.getLogger(User.class);
 
     private static SecureRandom prng = null;
+
+    private static Map<String, User> map = new ConcurrentHashMap<>();
 
     static {
         try {
@@ -72,14 +76,7 @@ public final class User extends User_Base implements Principal {
 
     };
 
-    public static final Comparator<User> COMPARATOR_BY_NAME = new Comparator<User>() {
-
-        @Override
-        public int compare(final User user1, final User user2) {
-            return user1.getUsername().compareTo(user2.getUsername());
-        }
-
-    };
+    public static final Comparator<User> COMPARATOR_BY_NAME = Comparator.comparing(User::getUsername);
 
     @Deprecated
     public static class UserToUsername implements Function<User, String> {
@@ -104,6 +101,7 @@ public final class User extends User_Base implements Principal {
     }
 
     /**
+     * @param username the unique username
      * @deprecated Use {@link User#User(String, UserProfile)} instead.
      */
     @Deprecated
@@ -251,6 +249,7 @@ public final class User extends User_Base implements Principal {
     }
 
     /**
+     * @return the user's name
      * @deprecated Use {@link UserProfile#getFullName() } instead
      */
     @Deprecated
@@ -259,7 +258,8 @@ public final class User extends User_Base implements Principal {
     }
 
     /**
-     * @deprecated Use {@link UserProfile#getNickname() } instead
+     * @return the short version of the user's name
+     * @deprecated Use {@link UserProfile#getDisplayName() } instead
      */
     @Deprecated
     public String getShortPresentationName() {
@@ -267,12 +267,12 @@ public final class User extends User_Base implements Principal {
     }
 
     public static User findByUsername(final String username) {
-        for (final User user : Bennu.getInstance().getUserSet()) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-        return null;
+        return map.computeIfAbsent(username, name -> manualFind(name));
+    }
+
+    private static User manualFind(String username) {
+        return Bennu.getInstance().getUserSet().stream().filter(user -> user.getUsername().equals(username)).findAny()
+                .orElse(null);
     }
 
     public static void setUsernameGenerator(UsernameGenerator generator) {
@@ -280,6 +280,7 @@ public final class User extends User_Base implements Principal {
     }
 
     /**
+     * @param newStrategy {@link UserPresentationStrategy} instance
      * @deprecated User now has native name field rendering the need for these strategies obsolete
      */
     @Deprecated

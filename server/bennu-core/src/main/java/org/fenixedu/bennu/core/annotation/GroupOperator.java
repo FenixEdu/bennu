@@ -20,7 +20,7 @@ public @interface GroupOperator {
      * Unique name (system wide) for the group. Must be a proper identifier: only alphanumeric characters, no spaces. The
      * {@code _} character is also allowed.
      * 
-     * @return
+     * @return the {@link String} value
      */
     String value();
 }
