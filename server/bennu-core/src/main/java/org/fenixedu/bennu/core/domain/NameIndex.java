@@ -39,7 +39,7 @@ class NameIndex extends NameIndex_Base {
     }
 
     private static NameIndex create(String keyword) {
-        return map.computeIfAbsent(keyword, query -> manualFind(keyword).orElseGet(NameIndex::new));
+        return map.computeIfAbsent(keyword, query -> manualFind(keyword).orElseGet(() -> new NameIndex(keyword)));
     }
 
     private static Set<UserProfile> find(String keyword) {
