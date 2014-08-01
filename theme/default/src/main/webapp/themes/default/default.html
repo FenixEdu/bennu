@@ -35,10 +35,10 @@
 				<nav class="navbar navbar-default" style="margin-top: 10px; margin-bottom: 5px">
 					{% if not config.logoLinkUrl is empty %}
 					<a href="{{config.logoLinkUrl}}" title="{{config.logoTooltip}}">
-						<img class="app-logo" width="58px" heigth="49px" src="{{contextPath}}/api/bennu-portal/configuration/logo" alt="{{config.applicationTitle.content}}">
+						<img class="app-logo" width="200px"  src="{{contextPath}}/api/bennu-portal/configuration/logo" alt="{{config.applicationTitle.content}}">
 					</a>
 					{% else %}
-					<img class="app-logo" width="58px" heigth="49px" src="{{contextPath}}/api/bennu-portal/configuration/logo" alt="{{config.applicationTitle.content}}">
+					<img class="app-logo" width="200px" src="{{contextPath}}/api/bennu-portal/configuration/logo" alt="{{config.applicationTitle.content}}">
 					{% endif %}
 					<div class="navbar-brand">
 						<h4 class="media-heading">{{config.applicationTitle.content}} <span class="small">{{config.applicationSubTitle.content}}</span></h4>

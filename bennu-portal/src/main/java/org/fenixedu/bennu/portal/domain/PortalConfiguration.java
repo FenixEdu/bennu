@@ -35,25 +35,25 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
         setApplicationCopyright(new LocalizedString(I18N.getLocale(), "Organization Copyright"));
         setHtmlTitle(getApplicationTitle());
         setTheme("default");
-        try (InputStream stream = this.getClass().getResourceAsStream("/img/bennu-logo.png")) {
+        try (InputStream stream = this.getClass().getResourceAsStream("/img/logo_bennu.svg")) {
             if (stream == null) {
-                logger.error("Default logo not found in: img/bennu-logo.png");
+                logger.error("Default logo not found in: img/logo_bennu.svg");
             } else {
                 setLogo(ByteStreams.toByteArray(stream));
-                setLogoType("image/png");
+                setLogoType("image/svg+xml");
             }
         } catch (IOException e) {
-            logger.error("Default logo could not be read from: img/bennu-logo.png");
+            logger.error("Default logo could not be read from: img/logo_bennu.svg");
         }
-        try (InputStream stream = this.getClass().getResourceAsStream("/img/bennu-favicon.png")) {
+        try (InputStream stream = this.getClass().getResourceAsStream("/img/favicon_bennu.png")) {
             if (stream == null) {
-                logger.error("Default favicon not found in: img/bennu-favicon.png");
+                logger.error("Default favicon not found in: img/favicon_bennu.png");
             } else {
                 setFavicon(ByteStreams.toByteArray(stream));
                 setFaviconType("image/png");
             }
         } catch (IOException e) {
-            logger.error("Default logo could not be read from: img/bennu-favicon.png");
+            logger.error("Default logo could not be read from: img/favicon_bennu.png");
         }
         new MenuContainer(this);
     }
