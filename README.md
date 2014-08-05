@@ -1,4 +1,6 @@
-# Bennu - Modular Web App Development for Java [![Build Status](https://travis-ci.org/FenixEdu/bennu.svg?branch=develop)](https://travis-ci.org/FenixEdu/bennu)
+![](http://i.imgur.com/I5EvniD.png)
+
+# Modular Web App Development for Java [![Build Status](https://travis-ci.org/FenixEdu/bennu.svg?branch=develop)](https://travis-ci.org/FenixEdu/bennu)
 
 Bennu is the foundation for building modular Java web applications based on the [fenix-framework](http://fenix-framework.github.io/).
 
