@@ -2,11 +2,13 @@ package org.fenixedu.bennu.portal.rest;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -29,13 +31,21 @@ public class PortalConfigurationResource extends BennuRestResource {
 
     @GET
     @Path("logo")
-    public Response logo() {
+    public Response logo(@HeaderParam("If-None-Match") String ifNoneMatch) {
         final PortalConfiguration instance = PortalConfiguration.getInstance();
         if (instance != null && instance.getLogo() != null) {
+            EntityTag etag = buildETag(instance);
+            if (etag.toString().equals(ifNoneMatch)) {
+                return Response.notModified(etag).build();
+            }
             return Response.ok(instance.getLogo(), instance.getLogoType()).cacheControl(CACHE_CONTROL)
-                    .expires(DateTime.now().plusHours(12).toDate()).build();
+                    .expires(DateTime.now().plusHours(12).toDate()).tag(etag).build();
         }
         return Response.status(Status.NOT_FOUND).build();
+    }
+
+    private EntityTag buildETag(PortalConfiguration instance) {
+        return EntityTag.valueOf("W/\"" + instance.getLogo().length + "-" + instance.getExternalId() + "\"");
     }
 
     @GET
