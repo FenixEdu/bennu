@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -81,11 +82,9 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
                 }
             }
 
-            Map<String, FileWriteIntention> map = getPerTxBox().get();
-            if (map.containsKey(uniqueIdentification)) {
-                map.remove(uniqueIdentification);
-            }
+            Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
             map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, content));
+            getPerTxBox().put(map);
         }
         return uniqueIdentification;
 
@@ -170,7 +169,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 
     private synchronized PerTxBox<Map<String, FileWriteIntention>> getPerTxBox() {
         if (fileIntentions == null) {
-            fileIntentions = new PerTxBox<Map<String, FileWriteIntention>>(new HashMap<String, FileWriteIntention>()) {
+            fileIntentions = new PerTxBox<Map<String, FileWriteIntention>>(Collections.emptyMap()) {
                 @Override
                 public void commit(Map<String, FileWriteIntention> map) {
                     for (FileWriteIntention i : map.values()) {
