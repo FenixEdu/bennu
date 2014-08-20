@@ -158,9 +158,17 @@ bennuScheduler.controller('CustomTaskCtrl', ['$scope', '$http', '$location', fun
   $scope.javaCode = window.code || ""; window.code = null;
   $scope.compiled = false;   $scope.editorOptions = { lineNumbers: true, mode: 'text/x-java', theme: 'eclipse'};
   $scope.compile = function() {
-    var packageName = new RegExp("package (.*);").exec($scope.javaCode)[1];
-    var className = new RegExp("public class (.*) extends").exec($scope.javaCode)[1];
-    var fqn = packageName + "." + className;
+    var packageRegex = new RegExp("package (.*);").exec($scope.javaCode);
+    var classNameRegex = new RegExp("public class (.*) extends").exec($scope.javaCode);
+    if (packageRegex == null) {
+      $scope.result = 'Error: Custom Tasks cannot be defined in the default package!';
+      return;
+    }
+    if (classNameRegex == null) {
+      $scope.result = 'Error: Cannot determine class name. Are you sure your class is public and extends CustomTask?';
+      return;
+    }
+    var fqn = packageRegex[1] + "." + classNameRegex[1];
     $http({ method: 'POST', url: contextPath + '/api/bennu-scheduler/custom/compile', data: $.param({'name': fqn, 'code': $scope.javaCode}),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).success(function (result) {
       if(result.compileOK) {
@@ -177,6 +185,9 @@ bennuScheduler.controller('CustomTaskCtrl', ['$scope', '$http', '$location', fun
     $http({ method: 'POST', url: contextPath + '/api/bennu-scheduler/custom', data: $.param({'name': fqn, 'code': $scope.javaCode}),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).success(function (result) { $location.url('custom') });
   }
+  $scope.$watch('javaCode', function (oldValue, newValue) {
+    $scope.compiled = false; $scope.result = '';
+  });
 }]);
 
 bennuScheduler.controller('CustomTaskLogsCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
