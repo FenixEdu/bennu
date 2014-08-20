@@ -98,4 +98,5 @@ input[type=submit]:hover{
 
 img {
 	padding: 30px;
+	max-width: 290px;
 }
