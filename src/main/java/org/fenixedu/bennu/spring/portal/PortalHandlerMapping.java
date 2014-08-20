@@ -39,9 +39,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-
 public class PortalHandlerMapping extends RequestMappingHandlerMapping {
 
     private static final Logger logger = LoggerFactory.getLogger(PortalHandlerMapping.class);
@@ -56,7 +53,6 @@ public class PortalHandlerMapping extends RequestMappingHandlerMapping {
     private final Map<Class<?>, Application> applicationClasses = new HashMap<>();
 
     @Override
-    @Atomic(mode = TxMode.READ)
     protected void initHandlerMethods() {
         registerApplications(getApplicationContext().getBeansWithAnnotation(SpringApplication.class).values());
         registerFunctionalities(getApplicationContext().getBeansWithAnnotation(SpringFunctionality.class).values());

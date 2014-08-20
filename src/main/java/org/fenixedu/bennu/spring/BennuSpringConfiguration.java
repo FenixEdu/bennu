@@ -18,22 +18,28 @@
  */
 package org.fenixedu.bennu.spring;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.core.util.CoreConfiguration.ConfigurationProperties;
+import org.fenixedu.bennu.spring.converters.LocalizedStringConverter;
 import org.fenixedu.bennu.spring.portal.PortalHandlerInterceptor;
 import org.fenixedu.bennu.spring.portal.PortalHandlerMapping;
+import org.fenixedu.bennu.spring.resolvers.AuthenticatedUserArgumentResolver;
+import org.fenixedu.bennu.spring.resolvers.BennuSpringExceptionResolver;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -42,8 +48,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -52,12 +60,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
-
 @Configuration
 @ComponentScan("org.fenixedu.bennu")
-public class BennuSpringConfiguration extends WebMvcConfigurationSupport {
+public class BennuSpringConfiguration extends WebMvcConfigurationSupport implements InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(BennuSpringConfiguration.class);
 
@@ -106,14 +111,8 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport {
         for (String beanName : beanNames) {
             BennuSpringModule bennuSpringModuleAnnotation = context.findAnnotationOnBean(beanName, BennuSpringModule.class);
             if (bennuSpringModuleAnnotation != null) {
-                final List<String> bundles = Arrays.asList(bennuSpringModuleAnnotation.bundles());
-                baseNames.addAll(FluentIterable.from(bundles).transform(new Function<String, String>() {
-
-                    @Override
-                    public String apply(String bundle) {
-                        return getBundleBasename(bundle);
-                    }
-                }).toSet());
+                baseNames.addAll(Arrays.stream(bennuSpringModuleAnnotation.bundles()).map(this::getBundleBasename)
+                        .collect(Collectors.toSet()));
             }
         }
         return baseNames;
@@ -156,12 +155,28 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport {
     @Bean
     public ConversionService conversionService(GenericConversionService service) {
         service.addConverter(new DomainObjectConverter());
+        service.addConverter(new LocalizedStringConverter());
         return service;
     }
 
     @Bean
     public MultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        // This is required to add the resolver as first on the list
+        List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
+        resolvers.add(new AuthenticatedUserArgumentResolver());
+        resolvers.addAll(requestMappingHandlerAdapter().getArgumentResolvers());
+        requestMappingHandlerAdapter().setArgumentResolvers(resolvers);
+    }
+
+    @Override
+    protected void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
+        exceptionResolvers.add(new BennuSpringExceptionResolver());
+        addDefaultHandlerExceptionResolvers(exceptionResolvers);
     }
 
 }

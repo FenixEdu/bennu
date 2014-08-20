@@ -16,35 +16,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Bennu Spring.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fenixedu.bennu.spring.portal;
+package org.fenixedu.bennu.spring.mvc;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.ws.rs.core.Response.Status;
 
-import org.fenixedu.bennu.portal.model.Application;
-import org.springframework.stereotype.Component;
+import org.fenixedu.bennu.core.domain.exceptions.DomainException;
 
-/**
- * Marks the annotated class as a Spring-based {@link Application}
- * 
- * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
- *
- */
-@Component
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface SpringApplication {
+public class BennuSpringTestDomainException extends DomainException {
 
-    String path();
+    private static final long serialVersionUID = 3826434718569097708L;
 
-    String group();
+    private BennuSpringTestDomainException(Status status) {
+        super(status, "resources.BennuResources", "error.bennu.core.resourcenotfound");
+    }
 
-    String title();
-
-    String description() default PortalHandlerMapping.DELEGATE;
-
-    String hint() default "bennu-spring";
+    public static DomainException status(int statusCode) {
+        return new BennuSpringTestDomainException(Status.fromStatusCode(statusCode));
+    }
 
 }
