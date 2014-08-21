@@ -9,14 +9,18 @@ import java.util.Locale;
 import java.util.Locale.Builder;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,6 +33,7 @@ import org.fenixedu.bennu.core.json.adapters.AuthenticatedUserViewer;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.I18N;
+import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -121,26 +126,36 @@ public class ProfileResource extends BennuRestResource {
         throw BennuCoreDomainException.resourceNotFound(localeTag);
     }
 
+    private static final CacheControl CACHE_CONTROL = CacheControl.valueOf("max-age=43200");
+
     @GET
     @Path("localavatar/{username}")
-    public Response localAvatar(@PathParam("username") String username, @QueryParam("s") Integer size) {
-        if (size == null) {
-            size = 100;
-        }
+    public Response localAvatar(@PathParam("username") String username, @QueryParam("s") @DefaultValue("100") Integer size,
+            @HeaderParam("If-None-Match") String ifNoneMatch) {
         User user = User.findByUsername(username);
         if (user != null) {
             Avatar avatar = Avatar.getForUser(user);
+            EntityTag etag = getEtag(avatar, size);
+            if (etag.toString().equals(ifNoneMatch)) {
+                return Response.notModified(etag).build();
+            }
             if (avatar != null) {
-                return Response.ok(avatar.getData(size), avatar.getMimeType()).build();
+                return Response.ok(avatar.getData(size), avatar.getMimeType()).cacheControl(CACHE_CONTROL)
+                        .expires(DateTime.now().plusHours(12).toDate()).tag(etag).build();
             } else {
                 try (InputStream mm =
                         ProfileResource.class.getClassLoader().getResourceAsStream("META-INF/resources/img/mysteryman.png")) {
-                    return Response.ok(Avatar.process(mm, "image/png", size), "image/png").build();
+                    return Response.ok(Avatar.process(mm, "image/png", size), "image/png").cacheControl(CACHE_CONTROL)
+                            .expires(DateTime.now().plusHours(12).toDate()).tag(etag).build();
                 } catch (IOException e) {
                     throw BennuCoreDomainException.resourceNotFound(username);
                 }
             }
         }
         throw BennuCoreDomainException.resourceNotFound(username);
+    }
+
+    private EntityTag getEtag(Avatar avatar, int size) {
+        return EntityTag.valueOf("W/\"" + (avatar == null ? "mm-av" : avatar.getExternalId()) + "-" + size + "\"");
     }
 }

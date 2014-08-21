@@ -6,8 +6,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,8 +33,8 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 
     private static class FileWriteIntention {
 
-        private String path;
-        private byte[] contents;
+        private final String path;
+        private final byte[] contents;
 
         FileWriteIntention(String path, byte[] contents) {
             this.path = path;
@@ -81,11 +83,9 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
                 }
             }
 
-            Map<String, FileWriteIntention> map = getPerTxBox().get();
-            if (map.containsKey(uniqueIdentification)) {
-                map.remove(uniqueIdentification);
-            }
+            Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
             map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, content));
+            getPerTxBox().put(map);
         }
         return uniqueIdentification;
 
@@ -168,9 +168,25 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         }
     }
 
+    /*
+     * Returns the absolute path for the given content key.
+     * 
+     * It must first check if the file indeed exists, in order
+     * for the application to throw the proper exception.
+     */
+    @Override
+    Optional<String> getSendfilePath(String uniqueIdentification) {
+        String path = getFullPath(uniqueIdentification) + uniqueIdentification;
+        if (new File(path).exists()) {
+            return Optional.of(path);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     private synchronized PerTxBox<Map<String, FileWriteIntention>> getPerTxBox() {
         if (fileIntentions == null) {
-            fileIntentions = new PerTxBox<Map<String, FileWriteIntention>>(new HashMap<String, FileWriteIntention>()) {
+            fileIntentions = new PerTxBox<Map<String, FileWriteIntention>>(Collections.emptyMap()) {
                 @Override
                 public void commit(Map<String, FileWriteIntention> map) {
                     for (FileWriteIntention i : map.values()) {

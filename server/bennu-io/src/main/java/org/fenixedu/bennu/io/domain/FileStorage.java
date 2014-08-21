@@ -2,6 +2,7 @@ package org.fenixedu.bennu.io.domain;
 
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -57,5 +58,33 @@ public abstract class FileStorage extends FileStorage_Base {
 
     public boolean isDefault() {
         return getFileSupportAsDefault() != null;
+    }
+
+    /**
+     * Returns the 'sendfile' path for the given file. <br />
+     * 
+     * PRIVATE API:
+     * Note that this is Bennu IO private API, and should not be used outside this module.
+     * If you do use it, do it at your own risk, as this API is subject to change without
+     * any warning.
+     * 
+     * @param file
+     *            The file to check
+     * @return
+     *         An optional sendfile path
+     */
+    public static Optional<String> sendfilePath(GenericFile file) {
+        return file.getStorage().getSendfilePath(file.getContentKey());
+    }
+
+    /*
+     * Retrieves the file path for the given content key,
+     * if this storage supports it, and the file is indeed stored
+     * in the file system.
+     * 
+     * By default returns an empty optional.
+     */
+    Optional<String> getSendfilePath(String contentKey) {
+        return Optional.empty();
     }
 }

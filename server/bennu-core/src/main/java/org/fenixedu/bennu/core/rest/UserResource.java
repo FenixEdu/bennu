@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -14,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
@@ -37,7 +39,10 @@ public class UserResource extends BennuRestResource {
     @POST
     @Path("find")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findUser(@QueryParam("query") String query, @QueryParam("maxHits") Integer maxHits) {
+    public Response findUser(@QueryParam("query") String query, @QueryParam("maxHits") @DefaultValue("20") Integer maxHits) {
+        if (query == null) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
         Set<User> matches = new HashSet<>();
         User user = User.findByUsername(query);
         if (user != null) {

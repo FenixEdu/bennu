@@ -104,62 +104,51 @@
         <div class="tab-pane active" id="metrics">
             <div class="col-lg-12">
                 <br />
-                <button class="btn btn-primary" ng-click="reload()">Reload</button>
+                <button class="btn btn-success" ng-click="reload(false)"><span class="glyphicon glyphicon-refresh"></span> Reload</button>
                 <button class="btn btn-primary" ng-click="threadDump()">Thread Dump</button>
                 <button class="btn btn-primary" ng-click="healthcheck()">Healthchecks</button>
 
-                <span class="label label-primary pull-right">{{data.metrics.hostname}}</span>
+                <span class="badge pull-right">{{data.metrics.project}}-{{data.metrics.version}} @ {{data.metrics.hostname}}</span>
             </div>
             <div class="row">
             <div class="col-lg-4">
                 <h4>Memory</h4>
-                <p>Total Memory ({{data.metrics['jvm.memory.total.used'] / 1000000 | number:0}}M / {{data.metrics['jvm.memory.total.max'] / 1000000 | number:0}}M)</p>
-                <div class="progress progress-striped">
-                    <div class="progress-bar progress-bar-success" role="progressbar"
-                         aria-valuenow="{{data.metrics['jvm.memory.total.used'] / 1000000 | number:0}}"
-                         aria-valuemin="0"
-                         aria-valuemax="{{data.metrics['jvm.memory.total.max'] / 1000000 | number:0}}"
-                         style="width: {{data.metrics['jvm.memory.total.used'] * 100 / data.metrics['jvm.memory.total.max']  | number:0}}%">
-                        {{data.metrics['jvm.memory.total.used'] * 100 / data.metrics['jvm.memory.total.max']  | number:0}}%
-                    </div>
-                </div>
-                <p>Heap Memory ({{data.metrics['jvm.memory.heap.used'] / 1000000 | number:0}}M / {{data.metrics['jvm.memory.heap.max'] / 1000000 | number:0}}M)</p>
-                <div class="progress progress-striped">
-                    <div class="progress-bar progress-bar-success" role="progressbar"
-                         aria-valuenow="{{data.metrics['jvm.memory.heap.used'] / 1000000 | number:0}}"
-                         aria-valuemin="0"
-                         aria-valuemax="{{data.metrics['jvm.memory.heap.max'] / 1000000 | number:0}}"
-                         style="width: {{data.metrics['jvm.memory.heap.used'] * 100 / data.metrics['jvm.memory.heap.max']  | number:0}}%">
-                        {{data.metrics['jvm.memory.heap.used'] * 100 / data.metrics['jvm.memory.heap.max']  | number:0}}%
-                    </div>
-                </div>
-                <p>Non-heap Memory ({{data.metrics['jvm.memory.non-heap.used'] / 1000000 | number:0}}M / {{data.metrics['jvm.memory.non-heap.max'] / 1000000 | number:0}}M)</p>
-                <div class="progress progress-striped">
-                    <div class="progress-bar progress-bar-success" role="progressbar"
-                         aria-valuenow="{{data.metrics['jvm.memory.non-heap.used'] / 1000000 | number:0}}"
-                         aria-valuemin="0"
-                         aria-valuemax="{{data.metrics['jvm.memory.non-heap.max'] / 1000000 | number:0}}"
-                         style="width: {{data.metrics['jvm.memory.non-heap.used'] * 100 / data.metrics['jvm.memory.non-heap.max']  | number:0}}%">
-                        {{data.metrics['jvm.memory.non-heap.used'] * 100 / data.metrics['jvm.memory.non-heap.max']  | number:0}}%
-                    </div>
-                </div>
+                <progress-bar header="Total Memory" current="data.metrics['jvm.memory.total.used']" total="data.metrics['jvm.memory.total.max']" divider="1e6" unit="M"></progress-bar>
+                <progress-bar header="Heap Memory" current="data.metrics['jvm.memory.heap.used']" total="data.metrics['jvm.memory.heap.max']" divider="1e6" unit="M"></progress-bar>
+                <progress-bar header="Non-heap Memory" current="data.metrics['jvm.memory.non-heap.used']" total="data.metrics['jvm.memory.non-heap.max']" divider="1e6" unit="M"></progress-bar>
+                <progress-bar header="Physical Memory" current="data.metrics['os.total.physical.memory'] - data.metrics['os.free.physical.memory']" total="data.metrics['os.total.physical.memory']" divider="1e6" unit="M"></progress-bar>
+                <p><strong>Committed VM Size:</strong> {{data.metrics['os.committed.vm.size'] / 10e5 | number:0}} MB</p>
             </div>
             <div class="col-lg-4">
                 <h4>JVM</h4>
                 <p><strong>Thread Count:</strong> {{data.metrics['jvm.threads.count']}}</p>
-                <p><strong>Total Loaded Classes:</strong> {{data.metrics['jvm.classloading.loaded.total']}}</p>
-                <p><strong>Loaded Classes:</strong> {{data.metrics['jvm.classloading.loaded']}}</p>
-                <p><strong>Unloaded Classes:</strong> {{data.metrics['jvm.classloading.unloaded']}}</p>
+                <p><strong>Total Loaded Classes:</strong> {{data.metrics['jvm.classloading.loaded.total'] | number}}</p>
+                <p><strong>Loaded Classes:</strong> {{data.metrics['jvm.classloading.loaded'] | number}}</p>
+                <p><strong>Unloaded Classes:</strong> {{data.metrics['jvm.classloading.unloaded'] | number}}</p>
                 <p><strong>Start Time:</strong> {{data.metrics['jvm.runtime.start.time'] | date:'dd/MM/yyyy HH:mm:ss'}}</p>
+                <p><strong>Server Time:</strong> {{data.metrics.now | date:'dd/MM/yyyy HH:mm:ss'}}</p>
                 <p><strong>Uptime:</strong> {{data.metrics['jvm.runtime.uptime'] | uptime}}</p>
-
+                <p><strong>Compiler Name:</strong> {{data.metrics['jit.name']}}</p>
+                <p><strong>Compilation Time:</strong> {{data.metrics['jit.total.time'] | number}} ms</p>
+                <p><strong>Fenix Framework Cache size:</strong> {{data.metrics.cacheSize | number}}</p>
             </div>
             <div class="col-lg-4">
-                <h4>Fenix Framework</h4>
-                <p><strong>Objects in cache:</strong> {{data.metrics.cacheSize}}</p>
-                <p><strong>Project Name:</strong> {{data.metrics.project}}</p>
-                <p><strong>Project Version:</strong> {{data.metrics.version}}</p>
+                <h4>OS</h4>
+                <progress-bar header="Load Average" current="data.metrics['os.load.average']" total="data.metrics['os.available.cpus']" precision="2"></progress-bar>
+                <progress-bar header="File Descriptors" current="data.metrics['os.process.open.fd.count']" total="data.metrics['os.process.max.fd.count']" ></progress-bar>
+                <progress-bar header="System CPU Usage" current="data.metrics['os.system.cpu.usage'] * data.metrics['os.available.cpus'] * 100" total="data.metrics['os.available.cpus'] * 100" unit="%"></progress-bar>
+                <progress-bar header="Process CPU Usage" current="data.metrics['os.process.cpu.usage'] * data.metrics['os.available.cpus'] * 100" total="data.metrics['os.available.cpus'] * 100" unit="%"></progress-bar>
+                <p><strong>Process CPU Time:</strong> {{data.metrics['os.process.cpu.time'] / 10e9 | number:0}} s</p>
             </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-lg-4" ng-repeat="gc in data.metrics.gc">
+                    <h4>GC: {{gc.name}}</h4>
+                    <p><strong>Pools: </strong> {{gc.pools}}</p>
+                    <p><strong>Count: </strong> {{gc.collectionCount | number}}</p>
+                    <p><strong>Time: </strong> {{gc.collectionTime | number}} ms</p>
+                </div>
             </div>
 
             <div class="container" ng-if="threads">
@@ -216,5 +205,11 @@
   word-wrap: normal;
   white-space: pre;
   font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+}
+.progress-bar[aria-valuenow="0"] {
+    color:#777;
+    background-color:transparent;
+    background-image:none;
+    box-shadow:none
 }
 </style>
