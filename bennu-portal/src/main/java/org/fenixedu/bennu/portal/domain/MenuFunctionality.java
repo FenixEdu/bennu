@@ -1,7 +1,12 @@
 package org.fenixedu.bennu.portal.domain;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
+
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * {@link MenuFunctionality}s are the leafs of the functionality tree. They represent a concrete functionality installed in the
@@ -70,8 +75,25 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
      *         The {@link MenuFunctionality} with the given provider and key. {@code null} if no such functionality is installed.
      */
     public static MenuFunctionality findFunctionality(String provider, String key) {
-        return findFunctionality(PortalConfiguration.getInstance().getMenu(), provider, key);
+        String functionality = "$$bennuPortal$$provider:" + provider + "$$bennu;Portal$$key:" + key;
+        MenuFunctionality target =
+                cache.computeIfAbsent(functionality,
+                        (funct) -> findFunctionality(PortalConfiguration.getInstance().getMenu(), provider, key));
+        if (target == null) {
+            // null is only returned if it wasn't present in the map, and functionality isn't really installed.
+            return null;
+        }
+        // Check if the functionality is still valid. As the key and provider are immutable, we must only
+        // ensure that the Domain Object still exists.
+        if (!FenixFramework.isDomainObjectValid(target)) {
+            cache.remove(functionality, target);
+            return cache.computeIfAbsent(functionality,
+                    (funct) -> findFunctionality(PortalConfiguration.getInstance().getMenu(), provider, key));
+        }
+        return target;
     }
+
+    private static final ConcurrentMap<String, MenuFunctionality> cache = new ConcurrentHashMap<>();
 
     public String resolveLayout() {
         if (getLayout() != null) {
