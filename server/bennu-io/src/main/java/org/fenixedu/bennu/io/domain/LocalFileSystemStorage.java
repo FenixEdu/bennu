@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,8 +33,8 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 
     private static class FileWriteIntention {
 
-        private String path;
-        private byte[] contents;
+        private final String path;
+        private final byte[] contents;
 
         FileWriteIntention(String path, byte[] contents) {
             this.path = path;
@@ -164,6 +165,22 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException("file.not.found", e);
+        }
+    }
+
+    /*
+     * Returns the absolute path for the given content key.
+     * 
+     * It must first check if the file indeed exists, in order
+     * for the application to throw the proper exception.
+     */
+    @Override
+    Optional<String> getSendfilePath(String uniqueIdentification) {
+        String path = getFullPath(uniqueIdentification) + uniqueIdentification;
+        if (new File(path).exists()) {
+            return Optional.of(path);
+        } else {
+            return Optional.empty();
         }
     }
 
