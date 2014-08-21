@@ -24,13 +24,17 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.Thread.State;
 import java.lang.management.ClassLoadingMXBean;
+import java.lang.management.CompilationMXBean;
+import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -41,11 +45,14 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -75,44 +82,47 @@ public class SystemResource extends BennuRestResource {
 
     @GET
     @Path("info")
+    @SuppressWarnings("restriction")
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response info(@Context HttpServletRequest request) {
+    public Response info(@Context HttpServletRequest request, @QueryParam("full") @DefaultValue("true") Boolean full) {
         accessControl("#managers");
         JsonObject json = new JsonObject();
 
-        // fenix-framework projects
-        json.add("projects", getBuilder().view(FenixFramework.getProject().getProjects()));
+        if (full) {
+            // fenix-framework projects
+            json.add("projects", getBuilder().view(FenixFramework.getProject().getProjects()));
 
-        // libraries
-        json.add("libraries", getLibs(request));
+            // libraries
+            json.add("libraries", getLibs(request));
 
-        // system properties
-        json.add("sys", getBuilder().view(System.getProperties(), Properties.class, KeyValuePropertiesViewer.class));
+            // system properties
+            json.add("sys", getBuilder().view(System.getProperties(), Properties.class, KeyValuePropertiesViewer.class));
 
-        // environment properties
-        JsonArray env = new JsonArray();
-        for (Entry<String, String> entry : System.getenv().entrySet()) {
-            JsonObject object = new JsonObject();
-            object.addProperty("key", entry.getKey());
-            object.addProperty("value", entry.getValue());
-            env.add(object);
+            // environment properties
+            JsonArray env = new JsonArray();
+            for (Entry<String, String> entry : System.getenv().entrySet()) {
+                JsonObject object = new JsonObject();
+                object.addProperty("key", entry.getKey());
+                object.addProperty("value", entry.getValue());
+                env.add(object);
+            }
+            json.add("env", env);
+
+            JsonArray headers = new JsonArray();
+            for (final Enumeration<String> e = request.getHeaderNames(); e.hasMoreElements();) {
+                String header = e.nextElement();
+                JsonObject object = new JsonObject();
+                object.addProperty("key", header);
+                object.addProperty("value", request.getHeader(header));
+                headers.add(object);
+            }
+            json.add("http", headers);
+
+            json.add(
+                    "conf",
+                    getBuilder().view(ConfigurationInvocationHandler.rawProperties(), Properties.class,
+                            KeyValuePropertiesViewer.class));
         }
-        json.add("env", env);
-
-        JsonArray headers = new JsonArray();
-        for (final Enumeration<String> e = request.getHeaderNames(); e.hasMoreElements();) {
-            String header = e.nextElement();
-            JsonObject object = new JsonObject();
-            object.addProperty("key", header);
-            object.addProperty("value", request.getHeader(header));
-            headers.add(object);
-        }
-        json.add("http", headers);
-
-        json.add(
-                "conf",
-                getBuilder().view(ConfigurationInvocationHandler.rawProperties(), Properties.class,
-                        KeyValuePropertiesViewer.class));
 
         JsonObject metrics = new JsonObject();
 
@@ -146,6 +156,49 @@ public class SystemResource extends BennuRestResource {
 
         metrics.addProperty("jvm.runtime.uptime", runtime.getUptime() / 1000);
         metrics.addProperty("jvm.runtime.start.time", runtime.getStartTime());
+        metrics.addProperty("now", System.currentTimeMillis());
+
+        CompilationMXBean compilation = ManagementFactory.getCompilationMXBean();
+
+        metrics.addProperty("jit.name", compilation.getName());
+        if (compilation.isCompilationTimeMonitoringSupported()) {
+            metrics.addProperty("jit.total.time", compilation.getTotalCompilationTime());
+        }
+
+        OperatingSystemMXBean os = ManagementFactory.getOperatingSystemMXBean();
+
+        metrics.addProperty("os.available.cpus", os.getAvailableProcessors());
+        metrics.addProperty("os.load.average", os.getSystemLoadAverage());
+
+        if (os instanceof com.sun.management.OperatingSystemMXBean) {
+            com.sun.management.OperatingSystemMXBean osBean = (com.sun.management.OperatingSystemMXBean) os;
+            metrics.addProperty("os.system.cpu.usage", osBean.getSystemCpuLoad());
+            metrics.addProperty("os.process.cpu.usage", osBean.getProcessCpuLoad());
+            metrics.addProperty("os.process.cpu.time", osBean.getProcessCpuTime());
+            metrics.addProperty("os.free.physical.memory", osBean.getFreePhysicalMemorySize());
+            metrics.addProperty("os.total.physical.memory", osBean.getTotalPhysicalMemorySize());
+            metrics.addProperty("os.committed.vm.size", osBean.getCommittedVirtualMemorySize());
+        }
+
+        if (os instanceof com.sun.management.UnixOperatingSystemMXBean) {
+            com.sun.management.UnixOperatingSystemMXBean osBean = (com.sun.management.UnixOperatingSystemMXBean) os;
+            metrics.addProperty("os.process.max.fd.count", osBean.getMaxFileDescriptorCount());
+            metrics.addProperty("os.process.open.fd.count", osBean.getOpenFileDescriptorCount());
+        }
+
+        JsonArray gc = new JsonArray();
+
+        for (GarbageCollectorMXBean bean : ManagementFactory.getGarbageCollectorMXBeans()) {
+            JsonObject beanJson = new JsonObject();
+            beanJson.addProperty("name", bean.getName());
+            beanJson.addProperty("valid", bean.isValid());
+            beanJson.addProperty("pools", Arrays.stream(bean.getMemoryPoolNames()).collect(Collectors.joining(", ")));
+            beanJson.addProperty("collectionCount", bean.getCollectionCount());
+            beanJson.addProperty("collectionTime", bean.getCollectionTime());
+            gc.add(beanJson);
+        }
+
+        metrics.add("gc", gc);
 
         json.add("metrics", metrics);
 

@@ -117,9 +117,9 @@ bennuAdmin.controller('PortalConfigurationCtrl', ['$scope', '$http', function ($
 }]);
 
 bennuAdmin.controller('SystemInfoController', [ '$scope', '$http', function ($scope, $http) {
-  $scope.reload = function() {
-    $http.get(contextPath + '/api/bennu-core/system/info').success(function (data) {
-      $scope.data = data;
+  $scope.reload = function(full) {
+    $http.get(contextPath + '/api/bennu-core/system/info?full=' + full).success(function (data) {
+      if(full) { $scope.data = data; } else { $scope.data.metrics = data.metrics; }
     });
   }
   $scope.threadDump = function() {
@@ -144,8 +144,30 @@ bennuAdmin.controller('SystemInfoController', [ '$scope', '$http', function ($sc
         return "label-danger";
     }
   };
-  $scope.reload();
+  $scope.reload(true);
 }]);
+
+bennuAdmin.directive('progressBar', function() {
+  return {
+    restrict: 'E',
+    scope: { 'current': '=', 'total': '=' },
+    template: '<p><strong>{{header}}</strong> {{current / divider | number:precision}}{{unit}} / {{total / divider | number:precision}}{{unit}}</p>\
+              <div class="progress progress-striped" title="{{ratio() | number}}%">\
+                <div class="progress-bar progress-bar-{{barStyle()}}" role="progressbar" style="width: {{ratio() | number:0}}%;"\
+                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ratio() | number:0}}">\
+                  {{ratio() | number:0}}%\
+                </div>\
+              </div>',
+    link: function(scope, el, attr) {
+      scope.ratio = function() { return (scope.current / scope.total) * 100 };
+      scope.barStyle = function() {
+        var r = Math.round(scope.ratio()); if(r < 75) {return 'success';} if(r < 90) {return 'warning';} return 'danger';
+      }
+      scope.divider = attr.divider || 1; scope.unit = attr.unit || '';
+      scope.precision = attr.precision || 0; scope.header = attr.header || '';
+    }
+  }
+});
 
 bennuAdmin.controller('LoggerController', [ '$scope', '$http', function ($scope, $http) {
   $scope.changeLevel = function(logger, level) {
