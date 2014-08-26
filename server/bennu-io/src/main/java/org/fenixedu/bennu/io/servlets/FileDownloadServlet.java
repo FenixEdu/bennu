@@ -39,6 +39,13 @@ public class FileDownloadServlet extends HttpServlet {
                 return;
             }
             if (file.isAccessible(Authenticate.getUser())) {
+                String etag = "W/\"" + file.getExternalId() + "\"";
+                response.setHeader("ETag", etag);
+                response.setHeader("Cache-Control", "max-age=43200");
+                if (etag.equals(request.getHeader("If-None-Match"))) {
+                    response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    return;
+                }
                 if (sendFile(file, request, response)) {
                     return;
                 }
@@ -94,6 +101,7 @@ public class FileDownloadServlet extends HttpServlet {
      * See: http://tomcat.apache.org/tomcat-7.0-doc/aio.html#Asynchronous_writes
      */
     private void handleSendfile(GenericFile file, String filename, HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("X-Bennu-Sendfile", "true");
         response.setContentType(file.getContentType());
         response.setContentLength(file.getSize().intValue());
         request.setAttribute("org.apache.tomcat.sendfile.filename", filename);
