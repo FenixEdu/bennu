@@ -7,8 +7,10 @@
 	Custom Task Logs
 	<small>{{type}}</small>
 
-	<button class="pull-right btn btn-default" ng-click="reload()"><i class="glyphicon glyphicon-refresh"/></button>
-	<a href="#/custom" class="pull-right btn btn-default" ng-if="type">« Back</a>
+	<div class="pull-right btn-group">
+		<a href="#/custom" class="btn btn-default" ng-if="type">« Back</a>
+		<button class="btn btn-default" ng-click="reload()"><i class="glyphicon glyphicon-refresh"/></button>
+	</div>
 </h3>
 
 Search: <input type="text" ng-model="filter"/>
@@ -37,8 +39,8 @@ Search: <input type="text" ng-model="filter"/>
 				<i class="glyphicon glyphicon-play" />
 			</td>
 			<td>
-				<a href="#custom/{{log.taskName}}" class="btn btn-success" ng-if="!type">More</a>
 				<a href="#custom/{{log.taskName}}/{{log.id}}" class="btn btn-success">Details</a>
+				<a href="#custom/{{log.taskName}}" class="btn btn-success" ng-if="!type">More</a>
 			</td>
 		</tr>
 	</tbody>

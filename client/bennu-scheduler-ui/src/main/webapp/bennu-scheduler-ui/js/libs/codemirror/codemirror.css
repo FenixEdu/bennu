@@ -3,7 +3,7 @@
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
   font-family: monospace;
-  height: 300px;
+  min-height: 300px;
 }
 .CodeMirror-scroll {
   /* Set scrolling behaviour here */
@@ -155,6 +155,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
   position: relative;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
+  min-height: 300px;
 }
 .CodeMirror-sizer {
   position: relative;

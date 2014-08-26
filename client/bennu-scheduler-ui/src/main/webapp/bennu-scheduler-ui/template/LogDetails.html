@@ -2,9 +2,12 @@
 	Task Log
 	<small>{{log.taskName}}</small>
 
-	<button class="pull-right btn btn-default" ng-click="refreshLog()"><i class="glyphicon glyphicon-refresh"/></button>
-	<a href="#/logs/{{log.taskName}}" class="pull-right btn btn-default" ng-if="!log.javaCode">« Back</a>
-	<a href="#/custom/{{log.taskName}}" class="pull-right btn btn-default" ng-if="log.javaCode">« Back</a>
+	<div class="pull-right btn-group">
+		<a href="#/logs/{{log.taskName}}" class="btn btn-default" ng-if="!log.javaCode">« Back</a>
+		<a href="#/custom/{{log.taskName}}" class="btn btn-default" ng-if="log.javaCode">« Back</a>
+		<button class="btn btn-default" ng-click="refreshLog()"><i class="glyphicon glyphicon-refresh"/></button>
+	</div>
+
 </h3>
 
 <table class="table">
@@ -44,7 +47,7 @@
 			<td>
 				<div class="control-group">
 					<div class="controls">
-						<ui-codemirror ui-codemirror-opts="editorOptions" ng-model="log.javaCode"></textarea>
+						<div ui-codemirror="{onLoad: codemirrorLoaded}" ui-codemirror-opts="editorOptions" ng-model="log.javaCode"></div>
 					</div>
 				</div>
 				<div class="control-group">
