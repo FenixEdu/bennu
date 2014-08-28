@@ -1,6 +1,6 @@
 bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
   $scope.id = $routeParams.id;
-  $scope.handleError = function(data) { $scope.error = data; };
+  $scope.handleError = function(data) { $scope.error = data; $scope.saving = false; };
   $scope.deleteSelected = function() {
     if($scope.selected.id) {
       $http.delete(contextPath + "/api/bennu-portal/menu/" + $scope.selected.id).success(function (data) {
@@ -20,9 +20,10 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
       data.path = $scope.selected.path; data.parent = $scope.selected.parent;
       promise = $http.post(contextPath + "/api/bennu-portal/menu", data);
     }
+    $scope.error = null; $scope.saving = true;
     promise.success(function (data) {
       var node = $scope.selected.node;
-      $scope.selected = data;
+      $scope.selected = data; $scope.saving = false;
       data.node = node;
       node.setTitle(i18n(data.title));
     }).error($scope.handleError);
@@ -85,7 +86,7 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
      });
     var tree = $("#tree").fancytree("getTree");
     $("#tree").bind("fancytreeactivate", function(event, data) {
-      $scope.selected = data.node.data.item;
+      $scope.selected = data.node.data.item; $scope.error = null;
       if(!$scope.$$phase) {
         $scope.$apply();
       }

@@ -7,15 +7,17 @@
 	Task Logs
 	<small>{{type}}</small>
 
-	<button class="pull-right btn btn-default" ng-click="reload()"><i class="glyphicon glyphicon-refresh"/></button> 
-	<a href="#/logs" class="pull-right btn btn-default" ng-if="type">« Back</a>
+	<div class="pull-right btn-group">
+		<a href="#/logs" class="btn btn-default" ng-if="type">« Back</a>
+		<button class="btn btn-default" ng-click="reload()"><i class="glyphicon glyphicon-refresh"/></button>
+	</div>
 </h3>
 
 <div class="text-center" ng-if="logs == null">
 	<h3>Loading...</h3>
 </div>
 
-<div ng-if="logs">
+<div ng-show="logs">
 	Search: <input type="text" ng-model="filter"/>
 </div>
 <table class="table table-condensed" ng-show="logs != null">
@@ -41,8 +43,8 @@
 				<i class="glyphicon glyphicon-play" />
 			</td>
 			<td>
-				<a href="#logs/{{log.taskName}}" class="btn btn-success" ng-if="!type">More</a>
 				<a href="#logs/{{log.taskName}}/{{log.id}}" class="btn btn-success">Details</a>
+				<a href="#logs/{{log.taskName}}" class="btn btn-success" ng-if="!type">More</a>
 			</td>
 		</tr>
 	</tbody>

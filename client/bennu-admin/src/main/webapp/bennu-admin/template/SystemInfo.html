@@ -152,7 +152,7 @@
             </div>
 
             <div class="container" ng-if="threads">
-                <h3>Threads</h3>
+                <h3>Threads <button class="btn btn-default btn-xs" ng-click="threadDump()"><span class="glyphicon glyphicon-refresh"></span></button></h3>
                 <div class="col-lg-2">
                     <a href="" class="label label-primary" ng-click="threadDumpFilter = {}">All&nbsp;<span class="badge">{{threads.totalThreads}}</span></a><br />
                     <a href="" class="label label-success" ng-click="threadDumpFilter = {state: 'RUNNABLE'}">Runnable&nbsp;<span class="badge">{{threads.RUNNABLE}}</span></a><br />
@@ -162,7 +162,8 @@
                 </div>
 
                 <div class="col-lg-10">
-                    <div class="row" ng-repeat="thread in threads.threads | filter:threadDumpFilter:true ">
+                    <input type="text" ng-model="threadFilter" class="pull-right" placeholder="Filter"/>
+                    <div class="row" ng-repeat="thread in threads.threads | filter:threadDumpFilter:true | filter:threadFilter">
                         <h5><span class="label" ng-class="getLabelClass(thread.state)">&nbsp;</span>&nbsp;<a href="" ng-click="thread.shown = !thread.shown">{{thread.name}} ({{thread.id}})</a></h5>
                         <pre ng-show="thread.shown" style="overflow-y: scroll">{{thread.stacktrace}}</pre>
                     </div>

@@ -109,6 +109,7 @@ bennuScheduler.controller('LogsCtrl', ['$scope', '$http', '$routeParams', functi
   $scope.reload = function () {
     $http.get(url).success(function (data) {
       $scope.logs = data.logs;
+      angular.forEach($scope.logs, function(value) { value.date = moment(value.begin).format("DD MMMM YYYY HH:mm:ss");  });
     });
   }
   $scope.reload();
@@ -151,6 +152,7 @@ bennuScheduler.controller('CustomLogDetailsCtrl', ['$scope', '$http', '$routePar
       $scope.refreshLog();
     }
   }, 3000);
+  $scope.codemirrorLoaded = function(_editor) { setTimeout(function() { _editor.refresh();}, 200); }
   $scope.refreshLog();
 }]);
 
@@ -196,6 +198,7 @@ bennuScheduler.controller('CustomTaskLogsCtrl', ['$scope', '$http', '$routeParam
   $scope.reload = function () {
     $http.get(url).success(function (data) {
       $scope.logs = data.logs;
+      angular.forEach($scope.logs, function(value) { value.date = moment(value.begin).format("DD MMMM YYYY HH:mm:ss");  });
     });
   }
   $scope.reload();
