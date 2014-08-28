@@ -6,6 +6,7 @@ import org.fenixedu.bennu.core.json.JsonCreator;
 import org.fenixedu.bennu.core.json.JsonUpdater;
 import org.fenixedu.bennu.core.json.JsonViewer;
 import org.fenixedu.bennu.portal.domain.MenuContainer;
+import org.fenixedu.bennu.portal.domain.MenuFunctionality;
 import org.fenixedu.bennu.portal.domain.MenuItem;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.LocalizedString;
@@ -60,6 +61,10 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
                 json.add("title", ctx.view(PortalConfiguration.getInstance().getApplicationTitle()));
             }
             json.add("menu", ctx.view(container.getOrderedChild(), MenuItemAdapter.class));
+        } else {
+            MenuFunctionality functionality = obj.getAsMenuFunctionality();
+            json.addProperty("key", functionality.getItemKey());
+            json.addProperty("provider", functionality.getProvider());
         }
         return json;
     }
