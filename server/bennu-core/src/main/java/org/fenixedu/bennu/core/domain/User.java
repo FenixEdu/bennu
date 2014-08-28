@@ -267,7 +267,7 @@ public final class User extends User_Base implements Principal {
     }
 
     public static User findByUsername(final String username) {
-        return map.computeIfAbsent(username, name -> manualFind(name));
+        return username == null ? null : map.computeIfAbsent(username, User::manualFind);
     }
 
     private static User manualFind(String username) {
