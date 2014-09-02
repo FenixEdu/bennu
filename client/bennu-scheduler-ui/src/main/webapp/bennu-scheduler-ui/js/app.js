@@ -69,6 +69,7 @@ bennuScheduler.controller('SchedulesCtrl', ['$scope', '$http', '$routeParams', f
   $http.get(contextPath + '/api/bennu-scheduler/config').success(function (data) {
     $scope.config = data;
   });
+  $scope.contextPath = window.contextPath;
   $scope.saveStore = function() {
     $scope.saving = true;
     $http.put(contextPath + '/api/bennu-scheduler/config/' + $scope.config.loggingStorage.id).success(function (data) {
