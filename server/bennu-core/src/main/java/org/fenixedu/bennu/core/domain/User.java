@@ -32,6 +32,8 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.fenixframework.FenixFramework;
+
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.hash.Hashing;
@@ -267,7 +269,19 @@ public final class User extends User_Base implements Principal {
     }
 
     public static User findByUsername(final String username) {
-        return username == null ? null : map.computeIfAbsent(username, User::manualFind);
+        if (username == null) {
+            return null;
+        }
+        User match = map.computeIfAbsent(username, User::manualFind);
+        if (match == null) {
+            return null;
+        }
+        // FIXME: the second condition is there because of bug #197 in the fenix-framework
+        if (!FenixFramework.isDomainObjectValid(match) || !match.getUsername().equals(username)) {
+            map.remove(username, match);
+            return findByUsername(username);
+        }
+        return match;
     }
 
     private static User manualFind(String username) {
