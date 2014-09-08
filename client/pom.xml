@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>bennu-client-aggregator</artifactId>
-    <version>3.3.3</version>
+    <version>3.4.0-SNAPSHOT</version>
     <name>Bennu Framework Client Components Aggregating Pom</name>
     <packaging>pom</packaging>
 
