@@ -87,8 +87,7 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
         // ensure that the Domain Object still exists.
         if (!FenixFramework.isDomainObjectValid(target)) {
             cache.remove(functionality, target);
-            return cache.computeIfAbsent(functionality,
-                    (funct) -> findFunctionality(PortalConfiguration.getInstance().getMenu(), provider, key));
+            return findFunctionality(provider, key);
         }
         return target;
     }

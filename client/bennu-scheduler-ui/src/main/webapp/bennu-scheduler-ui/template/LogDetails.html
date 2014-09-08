@@ -62,19 +62,20 @@
 			<td>
 				<ul>
 					<li ng-repeat="file in log.files">
-						<a href="{{contextPath}}/api/bennu-scheduler/log/{{log.taskName}}/{{log.id}}/{{file}}">{{file}}</a>
+						<a href="{{contextPath}}/api/bennu-scheduler/log/{{log.taskName}}/{{log.id}}/{{file}}" ng-if="!log.javaCode">{{file}}</a>
+						<a href="{{contextPath}}/api/bennu-scheduler/custom/{{log.taskName}}/{{log.id}}/{{file}}" ng-if="log.javaCode">{{file}}</a>
 					</li>
 				</ul>
 			</td>
 		</tr>
 		<tr ng-if="log.stackTrace">
-			<td>stacktrace</td>
+			<td>Stacktrace</td>
 			<td>
 				<pre>{{log.stackTrace}}</pre>
 			</td>
 		</tr>
 			<tr ng-if="logs">
-				<td>log</td>
+				<td>Log</td>
 				<td>
 					<pre>{{logs}}</pre>
 				</td>

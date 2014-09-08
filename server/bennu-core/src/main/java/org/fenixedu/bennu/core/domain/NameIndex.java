@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 
 import org.fenixedu.commons.StringNormalizer;
 
+import pt.ist.fenixframework.FenixFramework;
+
 import com.google.common.collect.Sets;
 
 class NameIndex extends NameIndex_Base {
@@ -39,11 +41,25 @@ class NameIndex extends NameIndex_Base {
     }
 
     private static NameIndex create(String keyword) {
-        return map.computeIfAbsent(keyword, query -> manualFind(keyword).orElseGet(() -> new NameIndex(keyword)));
+        NameIndex match = map.computeIfAbsent(keyword, query -> manualFind(keyword).orElseGet(() -> new NameIndex(keyword)));
+        // FIXME: the second condition is there because of bug #197 in the fenix-framework
+        if (!FenixFramework.isDomainObjectValid(match) || !match.getKeyword().equals(keyword)) {
+            map.remove(keyword, match);
+            return create(keyword);
+        }
+        return match;
     }
 
     private static Set<UserProfile> find(String keyword) {
         NameIndex match = map.computeIfAbsent(keyword, query -> manualFind(keyword).orElse(null));
+        if (match == null) {
+            return Collections.emptySet();
+        }
+        // FIXME: the second condition is there because of bug #197 in the fenix-framework
+        if (!FenixFramework.isDomainObjectValid(match) || !match.getKeyword().equals(keyword)) {
+            map.remove(keyword, match);
+            return find(keyword);
+        }
         return match != null ? match.getProfileSet() : Collections.emptySet();
     }
 
