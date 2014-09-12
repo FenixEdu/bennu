@@ -1,39 +1,69 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.fenixedu</groupId>
-		<artifactId>fenix-framework-project</artifactId>
-		<version>1.3.0</version>
-	</parent>
+    <parent>
+        <groupId>org.fenixedu</groupId>
+        <artifactId>web-library-project</artifactId>
+        <version>2.1.0</version>
+    </parent>
 
-	<artifactId>bennu-signals</artifactId>
-	<name>Bennu Signals</name>
-	<version>0.0.1-SNAPSHOT</version>
+    <artifactId>bennu-signals</artifactId>
+    <name>Bennu Signals</name>
+    <version>0.0.1-SNAPSHOT</version>
 
-	<properties>
-		<version.org.fenixedu.bennu>2.2.0-SNAPSHOT</version.org.fenixedu.bennu>
-	</properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>pt.ist</groupId>
+                <artifactId>ff-maven-plugin</artifactId>
+                <version>2.5.1</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>ff-test-generate-domain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <codeGeneratorClassName>pt.ist.fenixframework.backend.mem.MemCodeGenerator</codeGeneratorClassName>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>pt.ist</groupId>
+                        <artifactId>fenix-framework-backend-mem-code-generator</artifactId>
+                        <version>2.5.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.fenixedu</groupId>
-			<artifactId>bennu-core</artifactId>
-			<version>${version.org.fenixedu.bennu}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>16.0.1</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>fenix-framework-core-api</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>17.0</version>
+        </dependency>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>fenix-framework-backend-mem-runtime</artifactId>
+            <version>2.5.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-	<repositories>
-		<repository>
-			<id>fenix-ashes-maven-repository</id>
-			<url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>fenix-ashes-maven-repository</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+        </repository>
+    </repositories>
 
 </project>

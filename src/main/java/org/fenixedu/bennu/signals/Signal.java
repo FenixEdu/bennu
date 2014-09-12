@@ -3,6 +3,8 @@ package org.fenixedu.bennu.signals;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +23,11 @@ import com.google.common.eventbus.EventBus;
  */
 public class Signal {
 
-    private static Logger logger = LoggerFactory.getLogger(Signal.class);
+    private static final Logger logger = LoggerFactory.getLogger(Signal.class);
 
-    private static HashMap<String, EventBus> withTransaction = new HashMap<String, EventBus>();
-    private static HashMap<String, EventBus> withoutTransaction = new HashMap<String, EventBus>();
-    private static HashMap<String, HashSet<Object>> handlers = new HashMap<>();
+    private static final Map<String, EventBus> withTransaction = new ConcurrentHashMap<>();
+    private static final Map<String, EventBus> withoutTransaction = new ConcurrentHashMap<>();
+    private static final Map<String, HashSet<Object>> handlers = new ConcurrentHashMap<>();
 
     /**
      * Registers a handler for events of that key. This handler will run outside the transaction and only after the commit is
@@ -49,7 +51,7 @@ public class Signal {
         return registerInBus(key, handler, withTransaction);
     }
 
-    private static HandlerRegistration registerInBus(String key, Object handler, HashMap<String, EventBus> eventBuses) {
+    private static HandlerRegistration registerInBus(String key, Object handler, Map<String, EventBus> eventBuses) {
         HashSet<Object> handlerSet = handlers.get(key);
 
         if (handlerSet == null) {

@@ -14,10 +14,11 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.Transaction;
 
 @WebListener
-public class FenixFrameworkListnerAttacher implements ServletContextListener {
-    CommitListener listner = new CommitListener() {
+public class FenixFrameworkListenerAttacher implements ServletContextListener {
 
-        Logger logger = LoggerFactory.getLogger(FenixFrameworkListnerAttacher.class);
+    private static final Logger logger = LoggerFactory.getLogger(FenixFrameworkListenerAttacher.class);
+
+    private final CommitListener listener = new CommitListener() {
 
         @Override
         public void afterCommit(Transaction transaction) {
@@ -38,11 +39,11 @@ public class FenixFrameworkListnerAttacher implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        FenixFramework.getTransactionManager().addCommitListener(listner);
+        FenixFramework.getTransactionManager().addCommitListener(listener);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        FenixFramework.getTransactionManager().removeCommitListener(listner);
+        FenixFramework.getTransactionManager().removeCommitListener(listener);
     }
 }

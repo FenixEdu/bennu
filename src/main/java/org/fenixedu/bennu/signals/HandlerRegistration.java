@@ -8,8 +8,8 @@ package org.fenixedu.bennu.signals;
  * 
  */
 class HandlerRegistration {
-    private Object handler;
-    private String key;
+    private final Object handler;
+    private final String key;
 
     protected HandlerRegistration(String key, Object handler) {
         this.handler = handler;
