@@ -6,9 +6,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.transaction.Status;
+import javax.transaction.SystemException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.fenixframework.CommitListener;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.Transaction;
 
@@ -28,6 +32,41 @@ public class Signal {
     private static final Map<String, EventBus> withTransaction = new ConcurrentHashMap<>();
     private static final Map<String, EventBus> withoutTransaction = new ConcurrentHashMap<>();
     private static final Map<String, HashSet<Object>> handlers = new ConcurrentHashMap<>();
+
+    private static final CommitListener listener = new CommitListener() {
+
+        @Override
+        public void afterCommit(Transaction transaction) {
+            try {
+                if (transaction.getStatus() == Status.STATUS_COMMITTED) {
+                    Signal.fireAllInCacheOutsideTransaction(transaction);
+                }
+            } catch (SystemException e) {
+                logger.error("Can't fire signals", e);
+            }
+        }
+
+        @Override
+        public void beforeCommit(Transaction transaction) {
+            Signal.fireAllInCacheWithinTransaction(transaction);
+        }
+    };
+
+    /**
+     * Initializes the signaling system. This registers the required FenixFramework commit listeners.
+     */
+    public static void init() {
+        FenixFramework.getTransactionManager().addCommitListener(listener);
+    }
+
+    /**
+     * Shuts down the signaling system. This removes all registered event handlers,
+     * and removes the FenixFramework transactional listener.
+     */
+    public static void shutdown() {
+        clear();
+        FenixFramework.getTransactionManager().removeCommitListener(listener);
+    }
 
     /**
      * Registers a handler for events of that key. This handler will run outside the transaction and only after the commit is
@@ -187,7 +226,7 @@ public class Signal {
         }
     }
 
-    protected static void fireAllInCacheOutsideTransaction(Transaction transaction) {
+    private static void fireAllInCacheOutsideTransaction(Transaction transaction) {
         HashMap<String, ArrayList<Object>> cache = transaction.getFromContext("signals");
         if (cache != null) {
             for (String key : cache.keySet()) {
@@ -199,7 +238,7 @@ public class Signal {
         }
     }
 
-    protected static void fireAllInCacheWithinTransaction(Transaction transaction) {
+    private static void fireAllInCacheWithinTransaction(Transaction transaction) {
         HashMap<String, ArrayList<Object>> cache = transaction.getFromContext("signalsWithTransaction");
         if (cache != null) {
             for (String key : cache.keySet()) {

@@ -18,9 +18,9 @@ import com.google.common.eventbus.Subscribe;
 public class SignalsTest {
 
     @BeforeClass
-    public static void initFF() {
+    public static void init() {
         System.setProperty("fenixframework.appName", "fenix-framework-core-api");
-        new FenixFrameworkListenerAttacher().contextInitialized(null);
+        Signal.init();
     }
 
     @Test
