@@ -68,25 +68,25 @@ public class Signal {
     }
 
     /**
-     * Registers a handler for events of that key. This handler will run outside the transaction and only after the commit is
-     * successful. If you want the chance to abort the transaction, use {@link #registerWithTransaction(String, Object)} .
-     * 
-     * @param key
-     * @param handler
-     */
-    public static HandlerRegistration register(String key, Object handler) {
-        return registerInBus(key, handler, withoutTransaction);
-    }
-
-    /**
      * Registers a handler for events of that key that runs within the same transaction as the emited events. This means that this
      * handler can still abort the transaction.
      * 
      * @param key
      * @param handler
      */
-    public static HandlerRegistration registerWithTransaction(String key, Object handler) {
+    public static HandlerRegistration register(String key, Object handler) {
         return registerInBus(key, handler, withTransaction);
+    }
+
+    /**
+     * Registers a handler for events of that key. This handler will run outside the transaction and only after the commit is
+     * successful. If you want the chance to abort the transaction, use {@link #register(String, Object)} .
+     * 
+     * @param key
+     * @param handler
+     */
+    public static HandlerRegistration registerWithoutTransaction(String key, Object handler) {
+        return registerInBus(key, handler, withoutTransaction);
     }
 
     private static HandlerRegistration registerInBus(String key, Object handler, Map<String, EventBus> eventBuses) {

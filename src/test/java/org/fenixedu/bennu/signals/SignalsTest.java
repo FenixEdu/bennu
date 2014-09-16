@@ -32,7 +32,7 @@ public class SignalsTest {
     @Test
     public void testInTransactionNotification() throws Exception {
         AtomicBoolean bool = new AtomicBoolean(false);
-        Signal.registerWithTransaction("x", new Listener(bool));
+        Signal.register("x", new Listener(bool));
         TransactionManager manager = FenixFramework.getTransactionManager();
         manager.begin();
         Signal.emit("x", new DomainObjectEvent<>(FenixFramework.getDomainRoot()));
@@ -44,7 +44,7 @@ public class SignalsTest {
     @Test
     public void testOutsideTransactionNotification() throws Exception {
         AtomicBoolean bool = new AtomicBoolean(false);
-        Signal.register("x", new Listener(bool));
+        Signal.registerWithoutTransaction("x", new Listener(bool));
         TransactionManager manager = FenixFramework.getTransactionManager();
         manager.begin();
         Signal.emit("x", new DomainObjectEvent<>(FenixFramework.getDomainRoot()));
