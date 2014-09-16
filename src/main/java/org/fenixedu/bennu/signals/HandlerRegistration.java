@@ -7,11 +7,11 @@ package org.fenixedu.bennu.signals;
  * @author Artur Ventura
  * 
  */
-class HandlerRegistration {
+public final class HandlerRegistration {
     private final Object handler;
     private final String key;
 
-    protected HandlerRegistration(String key, Object handler) {
+    HandlerRegistration(String key, Object handler) {
         this.handler = handler;
         this.key = key;
     }

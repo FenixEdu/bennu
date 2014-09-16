@@ -2,7 +2,7 @@ package org.fenixedu.bennu.signals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,7 +31,6 @@ public class Signal {
 
     private static final Map<String, EventBus> withTransaction = new ConcurrentHashMap<>();
     private static final Map<String, EventBus> withoutTransaction = new ConcurrentHashMap<>();
-    private static final Map<String, HashSet<Object>> handlers = new ConcurrentHashMap<>();
 
     private static final CommitListener listener = new CommitListener() {
 
@@ -91,24 +90,7 @@ public class Signal {
     }
 
     private static HandlerRegistration registerInBus(String key, Object handler, Map<String, EventBus> eventBuses) {
-        HashSet<Object> handlerSet = handlers.get(key);
-
-        if (handlerSet == null) {
-            handlerSet = new HashSet<Object>();
-            handlers.put(key, handlerSet);
-        } else if (handlerSet.contains(handler)) {
-            return new HandlerRegistration(key, handler);
-        }
-
-        handlerSet.add(handler);
-        EventBus bus;
-        if (!eventBuses.containsKey(key)) {
-            bus = new EventBus(key);
-            withTransaction.put(key, bus);
-        } else {
-            bus = eventBuses.get(key);
-        }
-        bus.register(handler);
+        eventBuses.computeIfAbsent(key, EventBus::new).register(handler);
         return new HandlerRegistration(key, handler);
     }
 
@@ -118,22 +100,8 @@ public class Signal {
      * @param the key to be cleared
      */
     public static void clear(String key) {
-        if (handlers.containsKey(key)) {
-            HashSet<Object> hlr = handlers.get(key);
-            EventBus with = withTransaction.get(key);
-            EventBus without = withoutTransaction.get(key);
-            for (Object handler : hlr) {
-                if (with != null) {
-                    with.unregister(handler);
-                }
-                if (without != null) {
-                    without.unregister(handler);
-                }
-            }
-            withTransaction.remove(key);
-            withoutTransaction.remove(key);
-            handlers.remove(key);
-        }
+        withTransaction.remove(key);
+        withoutTransaction.remove(key);
     }
 
     /**
@@ -143,9 +111,8 @@ public class Signal {
      */
     public static void clear() {
         logger.warn("Detaching all handlers. Be sure what you are doing.");
-        for (String key : handlers.keySet()) {
-            clear(key);
-        }
+        withTransaction.clear();
+        withoutTransaction.clear();
     }
 
     /**
@@ -155,17 +122,13 @@ public class Signal {
      * @param the handler to be removed
      */
     public static void unregister(String key, Object handler) {
-        if (handlers.containsKey(key)) {
-            HashSet<Object> hlr = handlers.get(key);
-            EventBus with = withTransaction.get(key);
-            EventBus without = withoutTransaction.get(key);
-            if (with != null) {
-                with.unregister(handler);
-            }
-            if (without != null) {
-                without.unregister(handler);
-            }
-            hlr.remove(handler);
+        EventBus with = withTransaction.get(key);
+        EventBus without = withoutTransaction.get(key);
+        if (with != null) {
+            with.unregister(handler);
+        }
+        if (without != null) {
+            without.unregister(handler);
         }
     }
 
@@ -175,9 +138,8 @@ public class Signal {
      * @param handler to be removed
      */
     public static void unregister(Object handler) {
-        for (String key : handlers.keySet()) {
-            unregister(key, handler);
-        }
+        withTransaction.forEach((key, bus) -> bus.unregister(handler));
+        withoutTransaction.forEach((key, bus) -> bus.unregister(handler));
     }
 
     /**
@@ -188,46 +150,26 @@ public class Signal {
      */
     public static void emit(String key, Object event) {
         if (withoutTransaction.containsKey(key)) {
-            HashMap<String, ArrayList<Object>> cache = FenixFramework.getTransaction().getFromContext("signals");
-
+            Map<String, List<Object>> cache = FenixFramework.getTransaction().getFromContext("signals");
             if (cache == null) {
                 cache = new HashMap<>();
+                FenixFramework.getTransaction().putInContext("signals", cache);
             }
-
-            ArrayList<Object> list = cache.get(key);
-
-            if (list == null) {
-                list = new ArrayList<>();
-            }
-
-            list.add(event);
-            cache.put(key, list);
-
-            FenixFramework.getTransaction().putInContext("signals", cache);
+            cache.computeIfAbsent(key, (k) -> new ArrayList<Object>()).add(event);
         }
 
         if (withTransaction.containsKey(key)) {
-            HashMap<String, ArrayList<Object>> cache = FenixFramework.getTransaction().getFromContext("signalsWithTransaction");
-
+            Map<String, List<Object>> cache = FenixFramework.getTransaction().getFromContext("signalsWithTransaction");
             if (cache == null) {
                 cache = new HashMap<>();
+                FenixFramework.getTransaction().putInContext("signalsWithTransaction", cache);
             }
-
-            ArrayList<Object> list = cache.get(key);
-
-            if (list == null) {
-                list = new ArrayList<>();
-            }
-
-            list.add(event);
-            cache.put(key, list);
-
-            FenixFramework.getTransaction().putInContext("signalsWithTransaction", cache);
+            cache.computeIfAbsent(key, (k) -> new ArrayList<Object>()).add(event);
         }
     }
 
     private static void fireAllInCacheOutsideTransaction(Transaction transaction) {
-        HashMap<String, ArrayList<Object>> cache = transaction.getFromContext("signals");
+        Map<String, ArrayList<Object>> cache = transaction.getFromContext("signals");
         if (cache != null) {
             for (String key : cache.keySet()) {
                 for (Object event : cache.get(key)) {
@@ -239,7 +181,7 @@ public class Signal {
     }
 
     private static void fireAllInCacheWithinTransaction(Transaction transaction) {
-        HashMap<String, ArrayList<Object>> cache = transaction.getFromContext("signalsWithTransaction");
+        Map<String, ArrayList<Object>> cache = transaction.getFromContext("signalsWithTransaction");
         if (cache != null) {
             for (String key : cache.keySet()) {
                 for (Object event : cache.get(key)) {

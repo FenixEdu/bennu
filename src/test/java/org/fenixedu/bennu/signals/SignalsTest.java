@@ -3,6 +3,7 @@ package org.fenixedu.bennu.signals;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,11 @@ public class SignalsTest {
     public static void init() {
         System.setProperty("fenixframework.appName", "fenix-framework-core-api");
         Signal.init();
+    }
+
+    @Before
+    public void cleanup() {
+        Signal.clear("x");
     }
 
     @Test
