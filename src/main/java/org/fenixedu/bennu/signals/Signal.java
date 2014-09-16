@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 import javax.transaction.Status;
 import javax.transaction.SystemException;
@@ -17,6 +19,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.Transaction;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 /**
  * This is the main class for the signaling system. This implements a system wide event bus that allows writing code in one module
@@ -79,6 +82,25 @@ public class Signal {
     }
 
     /**
+     * Registers the given {@link Consumer} as a handler for events, with the same semantics as {@link #register(String, Object)}.
+     * 
+     * The advantage of this method is that it is lambda-ready, removing the necessity of creating an {@link EventBus} compatible
+     * class.
+     * 
+     * @param key
+     *            The key in which to register this handler.
+     * @param handler
+     *            The handler to register.
+     * @return
+     *         The {@link HandlerRegistration} associated with this handler.
+     * @throws NullPointerException
+     *             If either key or handler are null.
+     */
+    public static <T> HandlerRegistration register(String key, Consumer<T> handler) {
+        return register(key, new LambdaHandler<T>(handler));
+    }
+
+    /**
      * Registers a handler for events of that key. This handler will run outside the transaction and only after the commit is
      * successful. If you want the chance to abort the transaction, use {@link #register(String, Object)} .
      * 
@@ -89,7 +111,29 @@ public class Signal {
         return registerInBus(key, handler, withoutTransaction);
     }
 
+    /**
+     * Registers the given {@link Consumer} as a handler for events, with the same semantics as
+     * {@link #registerWithoutTransaction(String, Object)}.
+     * 
+     * The advantage of this method is that it is lambda-ready, removing the necessity of creating an {@link EventBus} compatible
+     * class.
+     * 
+     * @param key
+     *            The key in which to register this handler.
+     * @param handler
+     *            The handler to register.
+     * @return
+     *         The {@link HandlerRegistration} associated with this handler.
+     * @throws NullPointerException
+     *             If either key or handler are null.
+     */
+    public static <T> HandlerRegistration registerWithoutTransaction(String key, Consumer<T> handler) {
+        return registerWithoutTransaction(key, new LambdaHandler<T>(handler));
+    }
+
     private static HandlerRegistration registerInBus(String key, Object handler, Map<String, EventBus> eventBuses) {
+        Objects.requireNonNull(key, "key");
+        Objects.requireNonNull(handler, "handler");
         eventBuses.computeIfAbsent(key, EventBus::new).register(handler);
         return new HandlerRegistration(key, handler);
     }
@@ -190,5 +234,20 @@ public class Signal {
             }
             transaction.putInContext("signalsWithTransaction", null);
         }
+    }
+
+    private static final class LambdaHandler<T> {
+
+        private final Consumer<T> consumer;
+
+        public LambdaHandler(Consumer<T> consumer) {
+            this.consumer = Objects.requireNonNull(consumer);
+        }
+
+        @Subscribe
+        public void handleEvent(T event) {
+            this.consumer.accept(event);
+        }
+
     }
 }

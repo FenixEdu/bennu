@@ -70,4 +70,21 @@ public class SignalsTest {
 
     }
 
+    @Test
+    public void testLambdaSignals() throws Exception {
+        AtomicBoolean bool = new AtomicBoolean(false);
+        Signal.register("x", (DomainObjectEvent<DomainRoot> event) -> {
+            Assert.assertTrue("Event is not for domain root!", event.getInstance() instanceof DomainRoot);
+            Assert.assertTrue("Instances do not match!", event.getInstance() == FenixFramework.getDomainRoot());
+            bool.set(true);
+        });
+        TransactionManager manager = FenixFramework.getTransactionManager();
+        manager.begin();
+        Assert.assertEquals(false, bool.get());
+        Signal.emit("x", new DomainObjectEvent<>(FenixFramework.getDomainRoot()));
+        Assert.assertEquals(false, bool.get());
+        manager.commit();
+        Assert.assertEquals(true, bool.get());
+    }
+
 }
