@@ -10,7 +10,7 @@
 
     <artifactId>bennu-signals</artifactId>
     <name>Bennu Signals</name>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0.RC1</version>
     <url>http://fenixedu.org</url>
     <inceptionYear>2014</inceptionYear>
 
