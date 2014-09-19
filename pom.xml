@@ -11,13 +11,45 @@
     <artifactId>bennu-signals</artifactId>
     <name>Bennu Signals</name>
     <version>0.0.1-SNAPSHOT</version>
+    <url>http://fenixedu.org</url>
+    <inceptionYear>2014</inceptionYear>
+
+    <properties>
+        <version.fenix.framework>2.5.1</version.fenix.framework>
+    </properties>
+
+    <issueManagement>
+        <system>JIRA</system>
+        <url>https://jira.fenixedu.org/browse/SIGNALS</url>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License v3.0</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <ciManagement>
+        <system>Bamboo</system>
+        <url>https://ci.fenixedu.org/browse/SIGNALS</url>
+    </ciManagement>
+
+    <scm>
+        <connection>scm:git:https://github.com/FenixEdu/bennu-signals.git</connection>
+        <developerConnection>scm:git:git@github.com:FenixEdu/bennu-signals.git</developerConnection>
+        <url>http://fenixedu.org</url>
+        <tag>HEAD</tag>
+    </scm>
+
 
     <build>
         <plugins>
             <plugin>
                 <groupId>pt.ist</groupId>
                 <artifactId>ff-maven-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>${version.fenix.framework}</version>
                 <executions>
                     <execution>
                         <id>default</id>
@@ -33,7 +65,7 @@
                     <dependency>
                         <groupId>pt.ist</groupId>
                         <artifactId>fenix-framework-backend-mem-code-generator</artifactId>
-                        <version>2.5.1</version>
+                        <version>${version.fenix.framework}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -44,7 +76,7 @@
         <dependency>
             <groupId>pt.ist</groupId>
             <artifactId>fenix-framework-core-api</artifactId>
-            <version>2.5.1</version>
+            <version>${version.fenix.framework}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -54,7 +86,7 @@
         <dependency>
             <groupId>pt.ist</groupId>
             <artifactId>fenix-framework-backend-mem-runtime</artifactId>
-            <version>2.5.1</version>
+            <version>${version.fenix.framework}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
