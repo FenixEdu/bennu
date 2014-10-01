@@ -60,8 +60,13 @@ public class BennuCoreDomainException extends DomainException {
         return new BennuCoreDomainException(Status.BAD_REQUEST, "error.bennu.core.parseerror");
     }
 
+    @Deprecated
     public static BennuCoreDomainException groupParsingError(Throwable cause) {
         return new BennuCoreDomainException(cause, "error.bennu.core.groups.parse", cause.getMessage());
+    }
+
+    public static BennuCoreDomainException groupParsingError(String message) {
+        return new BennuCoreDomainException("error.bennu.core.groups.parse", message);
     }
 
     public static BennuCoreDomainException groupParsingNoGroupForOperator(String operator) {
