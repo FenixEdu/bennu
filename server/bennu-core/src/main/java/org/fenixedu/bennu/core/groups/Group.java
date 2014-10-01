@@ -280,7 +280,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
         if (input.getExpectedTokens() != null) {
             message.append("\nExpected: ");
             message.append(input.getExpectedTokens().toString(GroupParser.tokenNames)).append(" got ")
-                    .append(GroupParser.tokenNames[offendingToken.getType()]);
+                    .append(offendingToken.getType() == Token.EOF ? "<EOF>" : GroupParser.tokenNames[offendingToken.getType()]);
         }
         return message.toString();
     }
