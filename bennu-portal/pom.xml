@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -28,8 +29,41 @@
                                 <jsSourceFile>portal.js</jsSourceFile>
                             </jsSourceFiles>
                             <webappTargetDir>${project.build.outputDirectory}/META-INF/resources</webappTargetDir>
-                            <jsTargetDir />
+                            <jsTargetDir/>
                             <jsFinalFile>portal.js</jsFinalFile>
+                            <nosuffix>true</nosuffix>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>toolkit</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <charset>utf-8</charset>
+                            <jsSourceDir>bennu-toolkit/js</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>moment.js</jsSourceFile>
+                                <jsSourceFile>datepicker.js</jsSourceFile>
+                                <jsSourceFile>jquery.fullscreen.js</jsSourceFile>
+                                <jsSourceFile>jquery.hotkeys.js</jsSourceFile>
+                                <jsSourceFile>sanitize.js</jsSourceFile>
+                                <jsSourceFile>bootstrap-wysiwyg.js</jsSourceFile>
+                                <jsSourceFile>typeahead.bundle.js</jsSourceFile>
+                                <jsSourceFile>bennu.js</jsSourceFile>
+                                <jsSourceFile>validation.js</jsSourceFile>
+                                <jsSourceFile>localizedString.js</jsSourceFile>
+                                <jsSourceFile>htmlEditor.js</jsSourceFile>
+                                <jsSourceFile>group.js</jsSourceFile>
+                                <jsSourceFile>datetime.js</jsSourceFile>
+                                <jsSourceFile>MutationObserverPolyfill.js</jsSourceFile>
+                                <jsSourceFile>mutations.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <webappTargetDir>${project.build.outputDirectory}/META-INF/resources/</webappTargetDir>
+                            <jsTargetDir>bennu-toolkit/js</jsTargetDir>
+                            <jsFinalFile>toolkit.js</jsFinalFile>
+                            <jsEngine>CLOSURE</jsEngine>
                             <nosuffix>true</nosuffix>
                         </configuration>
                         <goals>
