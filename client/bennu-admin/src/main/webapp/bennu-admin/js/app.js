@@ -63,6 +63,10 @@ bennuAdmin.config(['$routeProvider',
         templateUrl: contextPath + '/bennu-admin/template/UserManagement.html',
         controller: 'UserManagementController'
       }).
+      when('/jmx-browser', {
+        templateUrl: contextPath + '/bennu-admin/template/JmxBrowser.html',
+        controller: 'JmxController'
+      }).
       otherwise({
         redirectTo: '/configuration'
       });
@@ -292,6 +296,14 @@ bennuAdmin.controller('UserManagementController', [ '$scope', '$http', '$routePa
 
   $scope.locales = BennuPortal.locales;
   $scope.reset();
+}]);
+
+bennuAdmin.controller('JmxController', ['$scope', '$http', function($scope, $http) {
+  $scope.setDomain = function(name) { $scope.currentDomain = name; }
+  $scope.show = function(item) { $scope.selected = item; $('#attributes').modal('show'); }
+  $scope.isObject = function(something) { return typeof something === 'object'; }
+  $scope.isArray = function(something) { return Array.isArray(something); }
+  $http.get(contextPath + '/api/bennu-core/system/jmx').success(function (data) { $scope.data = data; });
 }]);
 
 bennuAdmin.filter('capitalize', function() {

@@ -71,6 +71,18 @@
                     },
                     "accessExpression": "#managers",
                     "path": "#/user-management"
+                },
+                {
+                    "title": {
+                        "pt-PT": "JMX Browser",
+                        "en-GB": "JMX Browser"
+                    },
+                    "description": {
+                        "pt-PT": "JMX Browser",
+                        "en-GB": "JMX Browser"
+                    },
+                    "accessExpression": "#managers",
+                    "path": "#/jmx-browser"
                 }
             ]
         }
