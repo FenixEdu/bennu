@@ -27,7 +27,7 @@ Search: <input type="text" ng-model="filter"/>
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="log in logs | orderBy:'-end' | filter: filter">
+		<tr ng-repeat="log in logs | orderBy:'-start' | filter: filter">
 			<td>{{log.taskName}}</td>
 			<td>{{log.start | moment}}</td>
 			<td>{{log.end | moment}}</td>
