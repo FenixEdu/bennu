@@ -45,9 +45,12 @@
 
             return val;
         } else if (inputObject.attr("required-any") != null || inputObject.attr("required-any") != undefined) {
-            var value = inputObject.val();
-            var val = (value && value !== "{}");
-
+	    var val = Bennu.locales.map(function (x) {
+                var val = inputObject.val();
+                return val && JSON.parse(val)[x.tag] || false; 
+            }).reduce(function (x, y) {
+                return x || y;
+            }, false);
             if (!val) {
                 inputObject.data("input").addClass("has-error");
                 $(".help-block", inputObject.data("input")).html('You need to to insert text in at least one language');

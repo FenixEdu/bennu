@@ -152,20 +152,24 @@
     Bennu.monitor.checkFor = function (tag, actions) {
         var observer = new MutationObserver(function (mutations) {
 
-        if ($.grep(mutations, function (e) {
-                return $.grep(e.addedNodes, function (e) {
-                    var contains = $("[" + tag + "]", $(e)).length !== 0;
-                    var is = $(e).attr(tag) === "";
-                    return is || contains;
-                }).length !== 0;
-            }).length !== 0) {
-                actions.add && actions.add(e);
-            }
+        $.map(mutations, function (e) {
+        	$.map(e.addedNodes, function (e) {
+                var contains = $("[" + tag + "]", $(e)).length !== 0;
+                var is = $(e).attr(tag) === "";
+                if (is){
+                	actions.add && actions.add(e);
+                }else if(contains){
+                	$("[" + tag + "]", $(e)).map(function(i,x){
+                		actions.add && actions.add(x)	
+                	})
 
-            $.map(mutations, function (e) {
-                return $.map(e.removedNodes, function (e) {
-                    actions.remove && actions.remove(e);
-                });
+                }
+            });
+
+            $.map(e.removedNodes, function (e) {
+                actions.remove && actions.remove(e);
+            });
+            
             });
         });
 
