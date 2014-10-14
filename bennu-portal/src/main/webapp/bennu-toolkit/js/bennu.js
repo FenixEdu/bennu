@@ -147,9 +147,10 @@
 
     Bennu.monitor = Bennu.monitor || {};
 
-    var target = document.querySelector('body');
-
     Bennu.monitor.checkFor = function (tag, actions) {
+
+        var target = document.querySelector('body');
+
         var observer = new MutationObserver(function (mutations) {
 
         $.map(mutations, function (e) {
@@ -169,8 +170,6 @@
             $.map(e.removedNodes, function (e) {
                 actions.remove && actions.remove(e);
             });
-            
-            });
         });
 
         var config = {
@@ -189,12 +188,6 @@
         async: false,
         dataType: "json",
         success: function (hostJson, status, response) {
-            var theme_base = Bennu.contextPath + "/themes/" + hostJson.theme;
-            hostJson.themePath = theme_base;
-            var theme_url = theme_base + "/layout.html";
-            var styles_url = theme_base + "/css/style.css";
-            var json_handler_url = theme_base + "/js/jsonHandler.js";
-
             Bennu.username = hostJson.username;
             Bennu.locales = hostJson.locales;
             Bennu.locale = hostJson.locale;
@@ -205,6 +198,16 @@
                 }
                 return locale;
             })(hostJson.locale.tag);
+        },
+        error: function (xhr, status, errorThrown) {
+            Bennu.username = null;
+            Bennu.locales = [
+                {displayName: "English (United Kingdom)", lang: "en", tag: "en-GB"}
+            ];
+            Bennu.locale = {displayName: "English (United Kingdom)", lang: "en", tag: "en-GB"};
+            Bennu.groups = null;
+            Bennu.lang = "en";
+
         }
     });
 }).call(this);

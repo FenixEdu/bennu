@@ -555,3 +555,7 @@ fieldset[disabled] .twitter-typeahead .tt-input {
     padding-top:15px;
     padding-bottom:15px;
 }
+
+.timepicker-picker .separator{
+  padding:2px;
+}

@@ -43,7 +43,16 @@
         if (!$(input).data("input")) {
 
             if (input.prop("tagName") == "INPUT") {
-                var widget = $('<div class="bennu-localized-string-input-group" ><div class="input-group"><input type="text" class="form-control bennu-localized-string-input"><div class="input-group-btn bennu-localized-string-group"><button type="button" class="btn btn-default dropdown-toggle bennu-localized-string-button" data-toggle="dropdown"><span class="bennu-localized-string-language"></span> <span class="caret"></span></button><ul class="dropdown-menu bennu-localized-string-menu pull-right" role="menu"></ul></div></div><p class="help-block"></p></div>');
+                var widget = $('<div class="bennu-localized-string-input-group" >'+
+                    '<div class="input-group"><input type="text" class="form-control bennu-localized-string-input">'+
+                    '<div class="input-group-btn bennu-localized-string-group">'+
+                    '<button type="button" class="hidden-sm hidden-xs btn btn-default dropdown-toggle bennu-localized-string-button" data-toggle="dropdown">'+
+                    '<span class="bennu-localized-string-language"></span> <span class="caret"></span></button>'+
+                    '<button type="button" class="visible-sm visible-xs btn btn-default dropdown-toggle bennu-localized-string-button" data-toggle="dropdown">'+
+                    '<span class="glyphicon glyphicon-globe"></span> <span class="caret"></span></button>'+
+                    '</button>'+
+                    '<ul class="dropdown-menu bennu-localized-string-menu pull-right" role="menu"></ul></div></div>'+
+                    '<p class="help-block"></p></div>');
             } else if (input.prop("tagName") == "TEXTAREA") {
                 var widget = $('<div class="bennu-localized-string-textArea"><p><div class="btn-group bennu-localized-string-group"><button type="button" class="btn btn-default dropdown-toggle bennu-localized-string-button" data-toggle="dropdown"><span class="bennu-localized-string-language"></span><span class="caret"></span></button><ul class="dropdown-menu bennu-localized-string-menu" role="menu"></ul></div></p><p><textarea class="form-control bennu-localized-string-textarea"></textarea><p class="help-block"></p></div>');
             }
