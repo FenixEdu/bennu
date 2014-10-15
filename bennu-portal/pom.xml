@@ -57,6 +57,7 @@
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
                                 <jsSourceFile>group.js</jsSourceFile>
                                 <jsSourceFile>datetime.js</jsSourceFile>
+                                <jsSourceFile>typeahead.bundle.js</jsSourceFile>
                             </jsSourceFiles>
                             <webappTargetDir>${project.build.outputDirectory}/META-INF/resources/</webappTargetDir>
                             <jsTargetDir>bennu-toolkit/js</jsTargetDir>
