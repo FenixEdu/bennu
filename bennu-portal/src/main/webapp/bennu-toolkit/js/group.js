@@ -291,7 +291,7 @@
         setSelected(dom);
     }
 
-    $(function () {
+    Bennu.on("load", function () {
         var inputs = $("[" + Bennu.group.attr + "]");
 
         if (inputs.size() > 0) {

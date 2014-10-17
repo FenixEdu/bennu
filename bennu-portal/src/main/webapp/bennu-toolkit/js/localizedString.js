@@ -25,7 +25,7 @@
     Bennu.localizedString.makeLocaleList = function(menu, widget, callback){
         for (var i = 0; i < Bennu.locales.length; i++) {
             var locale = Bennu.locales[i];
-            var menuOption = $("<li><a href='#'>" + (locale.displayName || locale.tag) + "</a>");
+            var menuOption = $("<li><a href='#' onclick='return false;' >" + (locale.displayName || locale.tag) + "</a>");
             menuOption.data("locale", locale);
             menuOption.on("click", callback);
             menu.append(menuOption);
@@ -79,7 +79,7 @@
         }
     };
 
-    $(function () {
+    Bennu.on("load", function () {
         $("[bennu-localized-string]").map(function(i,e){
             Bennu.localizedString.createWidget(e);
         });

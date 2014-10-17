@@ -53,19 +53,19 @@
 
     Bennu.on = function () {
         prefixForEvent(arguments);
-        var q = $("body");
+        var q = $("html");
         q.on.apply(q, arguments);
     };
 
     Bennu.off = function () {
         prefixForEvent(arguments);
-        var q = $("body");
+        var q = $("html");
         q.off.apply(q, arguments);
     };
 
     Bennu.trigger = function () {
         prefixForEvent(arguments);
-        var q = $("body");
+        var q = $("html");
         q.trigger.apply(q, arguments);
     };
 
@@ -153,61 +153,67 @@
 
         var observer = new MutationObserver(function (mutations) {
 
-        $.map(mutations, function (e) {
-        	$.map(e.addedNodes, function (e) {
-                var contains = $("[" + tag + "]", $(e)).length !== 0;
-                var is = $(e).attr(tag) === "";
-                if (is){
-                	actions.add && actions.add(e);
-                }else if(contains){
-                	$("[" + tag + "]", $(e)).map(function(i,x){
-                		actions.add && actions.add(x)	
-                	})
+            $.map(mutations, function (e) {
+                $.map(e.addedNodes, function (e) {
+                    var contains = $("[" + tag + "]", $(e)).length !== 0;
+                    var is = $(e).attr(tag) === "";
+                    if (is) {
+                        actions.add && actions.add(e);
+                    } else if (contains) {
+                        $("[" + tag + "]", $(e)).map(function (i, x) {
+                            actions.add && actions.add(x);
+                        })
 
-                }
+                    }
+                });
+
+                $.map(e.removedNodes, function (e) {
+                    actions.remove && actions.remove(e);
+                });
             });
 
-            $.map(e.removedNodes, function (e) {
-                actions.remove && actions.remove(e);
-            });
+            var config = {
+                attributes: true,
+                subtree: true,
+                childList: true,
+                characterData: true
+            };
+            observer.observe(target, config);
         });
-
-        var config = {
-            attributes: true,
-            subtree: true,
-            childList: true,
-            characterData: true
-        };
-        observer.observe(target, config);
-    };
+    }
 
     //TODO: this needs to go, prefering head meta keys;
-    $.ajax({
-        type: "GET",
-        url: Bennu.contextPath + "/api/bennu-portal/data",
-        async: false,
-        dataType: "json",
-        success: function (hostJson, status, response) {
-            Bennu.username = hostJson.username;
-            Bennu.locales = hostJson.locales;
-            Bennu.locale = hostJson.locale;
-            Bennu.groups = hostJson.groups;
-            Bennu.lang = (function (locale) {
-                if (locale.indexOf("-") != -1) {
-                    return locale.split("-")[0];
-                }
-                return locale;
-            })(hostJson.locale.tag);
-        },
-        error: function (xhr, status, errorThrown) {
-            Bennu.username = null;
-            Bennu.locales = [
-                {displayName: "English (United Kingdom)", lang: "en", tag: "en-GB"}
-            ];
-            Bennu.locale = {displayName: "English (United Kingdom)", lang: "en", tag: "en-GB"};
-            Bennu.groups = null;
-            Bennu.lang = "en";
+    setTimeout(function () {
+        $.ajax({
+            type: "GET",
+            url: Bennu.contextPath + "/api/bennu-portal/data",
+            async: false,
+            dataType: "json",
+            success: function (hostJson, status, response) {
+                Bennu.username = hostJson.username;
+                Bennu.locales = hostJson.locales;
+                Bennu.locale = hostJson.locale;
+                Bennu.groups = hostJson.groups;
+                Bennu.lang = (function (locale) {
+                    if (locale.indexOf("-") != -1) {
+                        return locale.split("-")[0];
+                    }
+                    return locale;
+                })(hostJson.locale.tag);
+                Bennu.trigger("load");
+            },
+            error: function (xhr, status, errorThrown) {
+                Bennu.username = null;
+                Bennu.locales = [
+                    {displayName: "English (United Kingdom)", lang: "en", tag: "en-GB"}
+                ];
+                Bennu.locale = {displayName: "English (United Kingdom)", lang: "en", tag: "en-GB"};
+                Bennu.groups = null;
+                Bennu.lang = "en";
+                Bennu.trigger("load");
 
-        }
-    });
+            }
+        })
+    }, 100);
+    ;
 }).call(this);

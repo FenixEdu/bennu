@@ -51,6 +51,7 @@
                                 <jsSourceFile>MutationObserverPolyfill.js</jsSourceFile>
                                 <jsSourceFile>sanitize.js</jsSourceFile>
                                 <jsSourceFile>bootstrap-wysiwyg.js</jsSourceFile>
+                                <jsSourceFile>typeahead.bundle.js</jsSourceFile>
                                 <jsSourceFile>bennu.js</jsSourceFile>
                                 <jsSourceFile>validation.js</jsSourceFile>
                                 <jsSourceFile>localizedString.js</jsSourceFile>

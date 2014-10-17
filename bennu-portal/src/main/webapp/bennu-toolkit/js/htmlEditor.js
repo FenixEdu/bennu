@@ -1,9 +1,10 @@
 (function () {
-    var ALLOW_VOICE = false;
-    var ALLOW_FULLSCREEN = true;
+    /** @const */ var ALLOW_VOICE = false;
+    /** @const */ var ALLOW_FULLSCREEN = true;
 
 
     Bennu.htmlEditor = Bennu.htmlEditor || {};
+
     Bennu.htmlEditor.fullscreen = function (e) {
         var target = $(e.target);
         a = target.closest(".bennu-html-editor-input");
@@ -60,7 +61,7 @@
     }
 
 
-    $(function () {
+    Bennu.on("load", function () {
         $("[bennu-html-editor]").map(function (i, e) {
             e = $(e)
             var dom = $('<div class="bennu-html-editor-input">' +

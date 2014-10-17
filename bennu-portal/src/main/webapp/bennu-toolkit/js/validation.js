@@ -6,7 +6,7 @@
         var form = widget.closest("form");
         if (!form.data("bennu-validator")) {
             form.on("submit", function (submitEvent) {
-                try{
+                try {
                     var val = $("[bennu-localized-string],[bennu-html-editor]", form).map(function (i, xx) {
                         xx = $(xx);
                         xx.data("input").removeClass("has-error");
@@ -19,7 +19,7 @@
                         submitEvent.preventDefault();
                         return false;
                     }
-                }catch(e){
+                } catch (e) {
                     console.error(e.stack);
                     return POST_ON_ERROR;
                 }
@@ -45,9 +45,9 @@
 
             return val;
         } else if (inputObject.attr("required-any") != null || inputObject.attr("required-any") != undefined) {
-	    var val = Bennu.locales.map(function (x) {
+            var val = Bennu.locales.map(function (x) {
                 var val = inputObject.val();
-                return val && JSON.parse(val)[x.tag] || false; 
+                return val && JSON.parse(val)[x.tag] || false;
             }).reduce(function (x, y) {
                 return x || y;
             }, false);

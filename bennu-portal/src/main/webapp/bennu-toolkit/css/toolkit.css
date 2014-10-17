@@ -355,7 +355,7 @@ button.voiceBtn {
 }
 
 /* end */
-[bennu-datetime],[bennu-group]{
+[bennu-datetime],[bennu-time],[bennu-date],[bennu-group]{
     display: none;
 }
 
