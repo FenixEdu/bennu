@@ -1,3 +1,5 @@
+if(!window.functionality) { window.location = contextPath + (BennuPortal.username ? '' : '/login?callback=' + location.href); }
+
 var bennuAdmin = angular.module('bennuAdmin', [
   'ngRoute'
 ]);
