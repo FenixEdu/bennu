@@ -1,77 +1,125 @@
-<h2>User Management</h2>
+<h3 class="page-header">User Management</h3>
 
-<form role="form" class="form-horizontal" ng-submit="save(user)">
-  <div class="form-group">
-    <label for="input-avatar" class="col-sm-2 control-label">Avatar</label>
-    <div class="col-sm-10">
-      <div class="col-sm-10">
-        <label class="radio-inline">
-          <input type="radio" value="gravatar" ng-model="avatarchoice" ng-change="updateGravatar()"> Gravatar
-        </label>
-        <label class="radio-inline">
-          <input type="radio" value="custom" ng-model="avatarchoice"> Specify Url
-        </label>
-        <label class="radio-inline">
-          <input type="radio" value="upload" ng-model="avatarchoice"> Upload File
-        </label>
-      </div>
-      <div ng-if="avatarchoice == 'gravatar'">
-        <img id="img-gravatar" src="https://secure.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=300" class="img-thumbnail" />
-      </div>
-      <div ng-if="avatarchoice == 'custom'">
-        <input type="url" class="form-control" id="input-avatar" ng-model="user.avatar" placeholder="Avatar URL template" class="img-thumbnail"/>
-      </div>
-      <div ng-if="avatarchoice == 'upload'">
-        <div class="row">
-          <div id="cropzone" class="col-sm-5">
-            <img id="img-gravatar" src="https://secure.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=300" class="img-thumbnail"/>
-          </div>
-        </div>
-        <input type="file" onchange="angular.element(this).scope().fileNameChanged(this)" />
-      </div>
-    </div>
+<div>
+	<div class="row">
+		<div class="col-sm-4">
+			<form class="form-horizontal" ng-submit="doSearch()">
+				<div class="form-group">
+					<label for="searchText" class="col-sm-2 control-label">Find</label>
+					<div class="col-sm-10">
+						<input type="text" ng-model="query" class="form-control" />
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-4">
+			<button class="btn btn-default" ng-click="doSearch()"><span class="glyphicon glyphicon-search"></span> Find</button>
+			<a href="#/user-management/create" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Create User</a>
+			<a class="btn btn-default" data-toggle="modal" data-target="#managersModal" ng-click="managersExpr = userData.managers.expression; updateGroupInfo()"><span class="glyphicon glyphicon-user"></span> Managers</a>
+		</div>
+		<div class="col-sm-2">
+			<div class="pretty-number label-primary" data-toggle="tooltip" title="User Count" data-placement="bottom">
+				{{userData.userCount}}
+			</div>
+		</div>
+		<div class="col-sm-2" ng-show="userData.activeSessions">
+			<div class="pretty-number label-warning" data-toggle="tooltip" title="Active Sessions" data-placement="bottom">
+				{{userData.activeSessions}}
+			</div>
+		</div>
 	</div>
-  <div class="form-group">
-    <label for="input-name" class="col-sm-2 control-label">Full Name</label>
-      <div class="col-sm-5">
-        <input type="text" class="form-control" id="input-name" ng-model="user.givenNames" ng-change="updateDisplayName(user)" placeholder="Given Names" required/>
-      </div>
-      <div class="col-sm-5">
-        <input type="text" class="form-control" id="input-family-name" ng-model="user.familyNames" ng-change="updateDisplayName(user)" placeholder="Family Names" required/>
-      </div>
-  </div>
-  <div class="form-group">
-    <label for="input-displayname" class="col-sm-2 control-label">Display Name</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="input-displayname" ng-model="user.displayName" placeholder="Display Name" required/>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="input-email" class="col-sm-2 control-label">Email</label>
-    <div class="col-sm-10">
-      <input type="email" class="form-control" id="input-email" ng-model="user.email" ng-blur="updateGravatar()" placeholder="Enter email" required/>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="input-language" class="col-sm-2 control-label">Preferred Language</label>
-    <div class="col-sm-10">
-      <select id="input-language" class="form-control" ng-model="user.preferredLocale" ng-options="locale.displayName for locale in locales">
-      </select>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="input-password" class="col-sm-2 control-label">Password</label>
-    <div class="col-sm-10">
-      <input type="password" class="form-control" id="input-password" ng-model="user.password" placeholder="Password" required/>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="input-password2" class="col-sm-2 control-label">Password (Again)</label>
-    <div class="col-sm-10">
-      <input type="password" class="form-control" id="input-password2" ng-model="user.passwordCheck" placeholder="Password (Again)" required/>
-    </div>
-  </div>
-  <div class="alert alert-danger" role="alert" ng-if="errors">{{errors}}</div>
-  <button ng-click="reset()" ng-disabled="isUnchanged(user)" class="btn" >Reset</button>
-  <button ng-disabled="isUnchanged(user)" class="btn btn-primary">Create User</button>
-</form>
+</div>
+
+<div ng-show="currentSearch">
+<h4>Search for '{{currentSearch}}' <span class="badge">{{users.length}}<span ng-if="users.length == 20">+</span> hit<span ng-if="users.length != 1">s</span></span></h4>
+
+<div class="table-responsive">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th width="40px"></th>
+				<th><a href="" ng-click="predicate = 'username'; reverse=!reverse">Username</a></th>
+				<th><a href="" ng-click="predicate = 'displayName'; reverse=!reverse">Display Name</a></th>
+				<th><a href="" ng-click="predicate = 'email'; reverse=!reverse">Email</a></th>
+				<th>Locale</th>
+				<th>Active</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="user in users | orderBy:predicate:reverse">
+				<td><img ng-src="{{user.avatar}}?s=40" class="img-circle" width="40" /></td>
+				<td><code>{{user.username}}</code></td>
+				<td>{{user.displayName}}</td>
+				<td>{{user.email}}</td>
+				<td>{{user.preferredLocale.displayName}}</td>
+				<td><span class="glyphicon glyphicon-ok" ng-if="user.active"></span></td>
+				<td><a ng-href="#/user-management/{{user.username}}" class="btn btn-xs btn-primary">Manage</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+</div>
+
+<div class="modal fade" id="managersModal">
+	<form class="modal-dialog form-horizontal" ng-submit="changeManagers()">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Managers</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<ul class="list-group list-unstyled">
+							<li ng-repeat="user in userData.managers.users">{{user}}</li>
+						</ul>
+					</div>
+				</div>
+				<hr />
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Expression</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" ng-model="managersExpr" ng-change="updateGroupInfo()"/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<div class="text-danger group-error" ng-if="groupError">{{groupError}}</div>
+						<div ng-if="groupData && !groupError">
+							<p><strong>Name:</strong> {{groupData.name}}</p>
+							<p><strong>Accessible:</strong> {{groupData.accessible}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-success">Change</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<style>
+.pretty-number {
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+	line-height: 50px;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	font-weight: bold;
+	color: white;
+	font-size: 13px;
+}
+.page-header {
+	margin-top: 0;
+}
+.group-error {
+	font-family: monospace;
+	white-space: pre-wrap;
+}
+</style>
+<script>$("[data-toggle=tooltip]").tooltip()</script>

@@ -65,6 +65,10 @@ bennuAdmin.config(['$routeProvider',
         templateUrl: contextPath + '/bennu-admin/template/UserManagement.html',
         controller: 'UserManagementController'
       }).
+      when('/user-management/:id', {
+        templateUrl: contextPath + '/bennu-admin/template/CreateUser.html',
+        controller: 'UserManagementController'
+      }).
       when('/jmx-browser', {
         templateUrl: contextPath + '/bennu-admin/template/JmxBrowser.html',
         controller: 'JmxController'
@@ -218,8 +222,8 @@ bennuAdmin.controller('DomainBrowserController', [ '$scope', '$http', '$routePar
   }).error(function (data, code) { $scope.error = code; $scope.id = $scope.oid; });
 }]);
 
-bennuAdmin.controller('UserManagementController', [ '$scope', '$http', '$routeParams', '$location',
-                                                   function ($scope, $http, $routeParams, $location) {
+bennuAdmin.controller('UserManagementController', [ '$scope', '$http', '$routeParams', '$location', '$routeParams',
+                                                   function ($scope, $http, $routeParams, $location, $routeParams) {
   $scope.updateDisplayName = function(user) {
     var first = user.givenNames ? user.givenNames.split(' ')[0] : "";
     var last = user.familyNames ? user.familyNames.split(' ')[user.familyNames.split(' ').length - 1] : "";
@@ -279,12 +283,20 @@ bennuAdmin.controller('UserManagementController', [ '$scope', '$http', '$routePa
   };
 
   $scope.save = function(user) {
-    $scope.errors = null;
-    $http.post(contextPath + '/api/bennu-core/users', user).success(function () {
-      $scope.reset();
-    }).error(function(data, code) {
-      $scope.errors = data.message;
-    });
+    $scope.errors = null; $scope.success = false;
+    if($scope.newUser) {
+      $http.post(contextPath + '/api/bennu-core/users', user).success(function (data) {
+        $location.url('user-management/' + data.username);
+      }).error(function(data, code) {
+        $scope.errors = data.message;
+      });
+    } else {
+      $http.put(contextPath + '/api/bennu-core/users/' + user.username, user).success(function (data) {
+        $scope.user = data; $scope.success = true;
+      }).error(function(data, code) {
+        $scope.errors = data.message;
+      });
+    }
   };
 
   $scope.reset = function() {
@@ -292,12 +304,52 @@ bennuAdmin.controller('UserManagementController', [ '$scope', '$http', '$routePa
     $scope.user = { preferredLocale: $scope.locales[0] };
   };
 
-  $scope.isUnchanged = function(user) {
-    return angular.equals(user, {});
+  $scope.locales = BennuPortal.locales;
+
+  if ($routeParams.id) {
+    if($routeParams.id !== 'create') {
+      $scope.newUser = false; $scope.avatarchoice = 'custom';
+      $http.get(contextPath + '/api/bennu-core/users/username/' + $routeParams.id).success(function (data) {
+        $scope.user = data;
+      });
+    } else {
+      $scope.newUser = true;
+      $scope.reset();
+    }
+  }
+
+  $scope.updateGroupInfo = function() {
+    $http.get(contextPath + '/api/bennu-core/groups?groupExpression=' + escape($scope.managersExpr)).success(function (data) {
+      $scope.groupError = null; $scope.groupData = data;
+    }).error(function (data) {
+      $scope.groupError = data.message || 'An unknown error has occurred. Please check your group expression!'; $scope.groupData = null;
+    });
   };
 
-  $scope.locales = BennuPortal.locales;
-  $scope.reset();
+  $scope.changeManagers = function() {
+    if($scope.groupError) { return; }
+    if($scope.groupData && $scope.groupData.accessible) {
+      $http.post(contextPath + '/api/bennu-core/users/managers', $scope.managersExpr).success(function () { location.reload(); });
+    } else {
+      $scope.groupError = 'The group you are trying to set is not accessible to you!';
+    }
+  };
+
+  $scope.users = [];
+
+  $scope.doSearch = function() {
+    $scope.currentSearch = $scope.query;
+    if($scope.query) {
+      $http.post(contextPath + '/api/bennu-core/users/find?query=' + $scope.query).success(function (data) {
+        $scope.users = data.users;
+      });   
+    } else {
+      $scope.users = [];
+    }
+  };
+  $http.get(contextPath + '/api/bennu-core/users/data').success(function (data) {
+    $scope.userData = data;
+  });
 }]);
 
 bennuAdmin.controller('JmxController', ['$scope', '$http', function($scope, $http) {
