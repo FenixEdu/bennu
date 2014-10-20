@@ -59,7 +59,7 @@ public class UserResource extends BennuRestResource {
         Stream<User> results =
                 Stream.concat(Stream.of(User.findByUsername(query)),
                         UserProfile.searchByName(query, Integer.MAX_VALUE).map(UserProfile::getUser)).filter(Objects::nonNull)
-                        .limit(maxHits);
+                        .distinct().limit(maxHits);
         return Response.ok(view(results, "users")).build();
     }
 
