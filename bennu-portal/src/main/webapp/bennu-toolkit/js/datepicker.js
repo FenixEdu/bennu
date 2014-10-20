@@ -925,7 +925,7 @@
                 getTemplate = function () {
                     if (picker.options.pickDate && picker.options.pickTime) {
                         var ret = '';
-                        ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + ' dropdown-menu" style="z-index:9999 !important;">';
+                        ret = '<div class="bootstrap-datetimepicker-widget' + (picker.options.sideBySide ? ' timepicker-sbs' : '') + ' dropdown-menu">';
                         if (picker.options.sideBySide) {
                             ret += '<div class="row">' +
                                 '<div class="col-sm-6 datepicker">' + dpGlobal.template + '</div>' +
