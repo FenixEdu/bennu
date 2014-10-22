@@ -41,6 +41,13 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
       add(item, $scope.selected.node);
     }).error($scope.handleError);
   }
+  $scope.installFunctionality = function() {
+    $http.post(contextPath + '/api/bennu-portal/menu/functionalities/', 
+              { root: $scope.selected.id, appKey: $scope.newApp.key, provider: $scope.newFunctionality.provider, key: $scope.newFunctionality.key}).
+              success(function (item) {
+      add(item, $scope.selected.node);
+    }).error($scope.handleError);
+  }
   $scope.createChild = function() {
     var mls = {}; 
     mls[BennuPortal.locale.tag] = 'New Entry';

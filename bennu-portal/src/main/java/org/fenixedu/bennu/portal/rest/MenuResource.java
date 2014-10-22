@@ -1,6 +1,7 @@
 package org.fenixedu.bennu.portal.rest;
 
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -16,9 +17,11 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.portal.domain.MenuContainer;
+import org.fenixedu.bennu.portal.domain.MenuFunctionality;
 import org.fenixedu.bennu.portal.domain.MenuItem;
 import org.fenixedu.bennu.portal.model.Application;
 import org.fenixedu.bennu.portal.model.ApplicationRegistry;
+import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.bennu.portal.rest.json.MenuItemAdapter;
 
 import pt.ist.fenixframework.Atomic;
@@ -110,6 +113,34 @@ public class MenuResource extends BennuRestResource {
             return Response.status(Status.NOT_FOUND).build();
         }
         return Response.ok(viewMenu(doInstall(app, container))).build();
+    }
+
+    @POST
+    @Path("/functionalities")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response installFunctionality(String json) {
+        accessControl("#managers");
+        JsonObject obj = parse(json).getAsJsonObject();
+        MenuContainer container = readDomainObject(obj.get("root").getAsString());
+        Application app = ApplicationRegistry.getAppByKey(obj.get("appKey").getAsString());
+        if (app == null) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+        Optional<MenuFunctionality> functionality =
+                app.getFunctionalities()
+                        .stream()
+                        .filter(f -> f.getProvider().equals(obj.get("provider").getAsString())
+                                && f.getKey().equals(obj.get("key").getAsString())).findAny().map(f -> doInstall(container, f));
+        if (functionality.isPresent()) {
+            return Response.ok(viewMenu(functionality.get())).build();
+        } else {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private MenuFunctionality doInstall(MenuContainer container, Functionality functionality) {
+        return new MenuFunctionality(container, functionality);
     }
 
     @Atomic(mode = TxMode.WRITE)

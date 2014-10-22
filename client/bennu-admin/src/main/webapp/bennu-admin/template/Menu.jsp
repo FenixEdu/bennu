@@ -88,7 +88,7 @@
 	<button class="btn btn-success btn-sm" disabled ng-if="saving">Saving...</button>
 	<button data-target="#modal-delete-menu" role="button" class="btn btn-danger btn-sm" data-toggle="modal">Delete</button>
 	<span ng-if="!selected.functionality && selected.id">
-		<button ng-click="loadApps()" data-target="#modal-install-application" data-toggle="modal" class="btn btn-primary btn-sm">Install Application</button>
+		<button ng-click="loadApps()" data-target="#modal-install-application" data-toggle="modal" class="btn btn-primary btn-sm">Install</button>
 		<button ng-click="createChild()" class="btn btn-primary btn-sm">Create Child</button>
 	</span>
 	<span ng-if="selected.functionality" class="pull-right">
@@ -120,16 +120,42 @@
 		<div class="modal-content">
 			<div class="modal-header">
 		      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		      <h3>Install Application</h3>
+		      <h4 class="modal-title">Install</h4>
 			</div>
 			<div class="modal-body">
-				<select ng-model="newApp" ng-required="true" ng-options="app.title group by app.group for app in apps | orderBy:'title' | filter: filter">
-					<option value="">Select an application...</option>
-				</select>
-				<input class="pull-right" placeholder="Filter" ng-model="filter">
-			</div>
-			<div class="modal-footer">
-				<button ng-click="installApplication()" data-dismiss="modal" class="btn btn-success" ng-disabled="!newApp">Install</button>
+				<div class="form-group">
+					<label>Application</label>
+					<div class="row">
+						<div class="col-sm-8">
+							<select ng-model="newApp" ng-required="true" ng-options="app.title group by app.group for app in apps | orderBy:'title' | filter: filter" class="form-control">
+								<option value="">Select an application...</option>
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<input class="form-control" placeholder="Filter" ng-model="filter">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4 col-sm-offset-8">
+						<button ng-click="installApplication()" data-dismiss="modal" class="btn btn-success" ng-disabled="!newApp">Install Application</button>
+					</div>
+				</div>
+				<div class="form-group" ng-show="newApp">
+					<label>Functionality</label>
+					<div class="row">
+						<div class="col-sm-8">
+							<select ng-model="newFunctionality" ng-required="true"
+											ng-options="functionality.title for functionality in newApp.functionalities | orderBy: 'title'"
+											class="form-control">
+								<option value="">Select a functionality...</option>
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<button ng-click="installFunctionality()" data-dismiss="modal" class="btn btn-success" ng-disabled="!newFunctionality">Install Functionality</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
