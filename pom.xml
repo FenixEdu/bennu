@@ -10,7 +10,7 @@
 
     <artifactId>bennu</artifactId>
     <name>Bennu Framework</name>
-    <version>3.3.3</version>
+    <version>3.3.4</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -42,7 +42,7 @@
         <connection>scm:git:git@github.com:fenixedu/bennu.git</connection>
         <developerConnection>scm:git:git@github.com:fenixedu/bennu.git</developerConnection>
         <url>http://fenixedu.github.io/bennu</url>
-        <tag>v3.3.3</tag>
+        <tag>v3.3.4</tag>
     </scm>
 
     <build>
