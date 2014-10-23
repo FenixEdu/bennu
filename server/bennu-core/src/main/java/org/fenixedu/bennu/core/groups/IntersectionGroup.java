@@ -54,8 +54,7 @@ public final class IntersectionGroup extends Group {
     }
 
     public static Group of(Stream<Group> groups) {
-        return groups.findAny().isPresent() ? groups.reduce(AnyoneGroup.get(), (result, group) -> result.and(group)) : NobodyGroup
-                .get();
+        return groups.reduce((result, group) -> result.and(group)).orElseGet(NobodyGroup::get);
     }
 
     @Override
