@@ -24,10 +24,6 @@ import javax.ws.rs.core.Response.Status;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
-import org.fenixedu.bennu.core.groups.DynamicGroup;
-import org.fenixedu.bennu.core.groups.Group;
-import org.fenixedu.bennu.core.json.adapters.GroupJsonAdapter.FullGroupJsonAdapter;
-import org.fenixedu.bennu.core.security.Authenticate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,18 +119,8 @@ public class UserResource extends BennuRestResource {
         } catch (Exception e) {
             // Ignore, not on Tomcat
         }
-        json.add("managers", getBuilder().view(DynamicGroup.get("managers").underlyingGroup(), FullGroupJsonAdapter.class));
 
         return Response.ok(json.toString()).build();
     }
 
-    @POST
-    @Path("/managers")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response changeManagers(String expression) {
-        accessControl("#managers");
-        logger.warn("User '{}' changed the managers group to {}", Authenticate.getUser().getUsername(), expression);
-        Group group = Group.parse(expression);
-        return Response.ok(getBuilder().view(DynamicGroup.get("managers").changeGroup(group).underlyingGroup())).build();
-    }
 }

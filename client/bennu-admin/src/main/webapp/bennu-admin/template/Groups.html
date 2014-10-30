@@ -1,0 +1,77 @@
+<div class="page-header">
+	<h3>Dynamic Group Management</h3>
+</div>
+<div class="row">
+	<div class="col-sm-3">
+		<ul class="list-group">
+			<a href="" ng-repeat="group in groups | orderBy:'displayName'" class="list-group-item" ng-class="{'active': $parent.selectedGroup == group}" ng-click="$parent.selectedGroup = group; $parent.filter = ''">
+				<span class="badge">{{group.members.length}}</span> {{group.displayName}}
+			</a>
+		</ul>
+	</div>
+	<div class="col-sm-9">
+		<div ng-show="selectedGroup">
+			<h4>
+				{{selectedGroup.displayName}} <span class="badge">{{selectedGroup.members.length}}</span>
+				<input type="text" ng-model="filter" placeholder="Filter..." class="pull-right"/>
+			</h4>
+
+
+			<table class="table" ng-show="selectedGroup.members.length > 0">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Username</th>
+						<th>Name</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="user in selectedGroup.members | filter:filter | orderBy:'name' | limitTo: 1000">
+						<td><img ng-src="{{user.avatar}}?s=40" class="img-circle" width="40" height="40" /></td>
+						<td><code>{{user.username}}</code></td>
+						<td>{{user.name}}</td>
+						<td>
+							<a href="" ng-show="!showRevoke" ng-click="showRevoke = true">Remove</a>
+							<span ng-show="showRevoke">
+								Are you sure?
+								<div>
+									<a class="btn btn-danger btn-xs" href="" ng-click="revoke(user.username)">Yes</a>
+									<a class="btn btn-default btn-xs" href="" ng-click="showRevoke = false">No</a>
+								</div>
+							</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="clearfix">
+				<em class="pull-right">
+					Showing {{min(selectedGroup.members.length, 1000)}} of {{selectedGroup.members.length}}
+				</em>
+			</div>
+			<hr />
+			<form ng-submit="grant(newUser)" class="form-horizontal">
+				<div class="alert alert-danger" ng-show="error">
+					User '{{newUser}}' not found!
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="newUser">Add User:</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" ng-model="newUser" ng-change="error = false" required />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-10 col-sm-offset-2">
+						<button type="submit" ng-disabled="!newUser" class="btn btn-success">Add User</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<blockquote ng-show="!selectedGroup">
+			Select a group from the list on the left to start...
+		</blockquote>
+	</div>
+</div>
+<style>
+.page-header,.page-header>h2 { margin-top: 0;}
+</style>

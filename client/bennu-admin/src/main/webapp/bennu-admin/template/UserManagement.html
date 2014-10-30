@@ -15,7 +15,7 @@
 		<div class="col-sm-4">
 			<button class="btn btn-default" ng-click="doSearch()"><span class="glyphicon glyphicon-search"></span> Find</button>
 			<a href="#/user-management/create" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Create User</a>
-			<a class="btn btn-default" data-toggle="modal" data-target="#managersModal" ng-click="managersExpr = userData.managers.expression; updateGroupInfo()"><span class="glyphicon glyphicon-user"></span> Managers</a>
+			<a class="btn btn-default" href="#/groups"><span class="glyphicon glyphicon-user"></span> Groups</a>
 		</div>
 		<div class="col-sm-2">
 			<div class="pretty-number label-primary" data-toggle="tooltip" title="User Count" data-placement="bottom">
@@ -61,46 +61,6 @@
 </div>
 </div>
 
-<div class="modal fade" id="managersModal">
-	<form class="modal-dialog form-horizontal" ng-submit="changeManagers()">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title">Managers</h4>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-sm-12">
-						<ul class="list-group list-unstyled">
-							<li ng-repeat="user in userData.managers.users">{{user}}</li>
-						</ul>
-					</div>
-				</div>
-				<hr />
-				<div class="form-group">
-					<label class="col-sm-2 control-label">Expression</label>
-					<div class="col-sm-10">
-						<input type="text" class="form-control" ng-model="managersExpr" ng-change="updateGroupInfo()"/>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-offset-2 col-sm-10">
-						<div class="text-danger group-error" ng-if="groupError">{{groupError}}</div>
-						<div ng-if="groupData && !groupError">
-							<p><strong>Name:</strong> {{groupData.name}}</p>
-							<p><strong>Accessible:</strong> {{groupData.accessible}}</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-success">Change</button>
-			</div>
-		</div>
-	</form>
-</div>
-
 <style>
 .pretty-number {
 	border-radius: 50%;
@@ -116,10 +76,6 @@
 }
 .page-header {
 	margin-top: 0;
-}
-.group-error {
-	font-family: monospace;
-	white-space: pre-wrap;
 }
 </style>
 <script>$("[data-toggle=tooltip]").tooltip()</script>

@@ -101,6 +101,10 @@ public final class DynamicGroup extends Group {
         return NobodyGroup.get();
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object instanceof DynamicGroup) {

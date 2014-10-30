@@ -73,6 +73,10 @@ bennuAdmin.config(['$routeProvider',
         templateUrl: contextPath + '/bennu-admin/template/JmxBrowser.html',
         controller: 'JmxController'
       }).
+      when('/groups', {
+        templateUrl: contextPath + '/bennu-admin/template/Groups.html',
+        controller: 'GroupsController'
+      }).
       otherwise({
         redirectTo: '/configuration'
       });
@@ -318,23 +322,6 @@ bennuAdmin.controller('UserManagementController', [ '$scope', '$http', '$routePa
     }
   }
 
-  $scope.updateGroupInfo = function() {
-    $http.get(contextPath + '/api/bennu-core/groups?groupExpression=' + escape($scope.managersExpr)).success(function (data) {
-      $scope.groupError = null; $scope.groupData = data;
-    }).error(function (data) {
-      $scope.groupError = data.message || 'An unknown error has occurred. Please check your group expression!'; $scope.groupData = null;
-    });
-  };
-
-  $scope.changeManagers = function() {
-    if($scope.groupError) { return; }
-    if($scope.groupData && $scope.groupData.accessible) {
-      $http.post(contextPath + '/api/bennu-core/users/managers', $scope.managersExpr).success(function () { location.reload(); });
-    } else {
-      $scope.groupError = 'The group you are trying to set is not accessible to you!';
-    }
-  };
-
   $scope.users = [];
 
   $scope.doSearch = function() {
@@ -358,6 +345,20 @@ bennuAdmin.controller('JmxController', ['$scope', '$http', function($scope, $htt
   $scope.isObject = function(something) { return typeof something === 'object'; }
   $scope.isArray = function(something) { return Array.isArray(something); }
   $http.get(contextPath + '/api/bennu-core/system/jmx').success(function (data) { $scope.data = data; });
+}]);
+
+bennuAdmin.controller('GroupsController', ['$scope', '$http', function($scope, $http) {
+  $http.get(contextPath + '/api/bennu-core/groups/dynamic').success(function (data) {
+    $scope.groups = data;
+  });
+  function doIt(op, user) {
+    return $http.post(contextPath + '/api/bennu-core/groups/dynamic/' + op, {'group': $scope.selectedGroup.name, 'user': user}).success(function (data) {
+      $scope.groups[$scope.groups.indexOf($scope.selectedGroup)] = data; $scope.selectedGroup = data; $scope.newUser = '';
+    });
+  }
+  $scope.grant = function(user) { doIt('grant', user).error(function() { $scope.error = true; }); };
+  $scope.revoke = function(user) { doIt('revoke', user); };
+  $scope.min = Math.min;
 }]);
 
 bennuAdmin.filter('capitalize', function() {
