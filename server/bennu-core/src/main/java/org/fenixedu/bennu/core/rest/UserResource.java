@@ -116,7 +116,7 @@ public class UserResource extends BennuRestResource {
         try {
             Object sessions =
                     getPlatformMBeanServer().getAttribute(
-                            new ObjectName("Tomcat:type=Manager,context="
+                            new ObjectName("Catalina:type=Manager,context="
                                     + (request.getContextPath().isEmpty() ? "/" : request.getContextPath()) + ",host=localhost"),
                             "activeSessions");
             json.addProperty("activeSessions", sessions.toString());
