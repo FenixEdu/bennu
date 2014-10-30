@@ -16,7 +16,7 @@
         </label>
       </div>
       <div class="col-sm-9" ng-if="avatarchoice == 'gravatar'">
-        <img id="img-gravatar" src="https://secure.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=150" class="img-thumbnail" />
+        <img id="img-gravatar" ng-src="https://secure.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=150" class="img-thumbnail" />
       </div>
       <div class="col-sm-9" ng-if="avatarchoice == 'custom'">
         <img class="img-thumbnail" ng-src="{{user.avatar}}?s=150" />
@@ -25,7 +25,7 @@
       <div class="col-sm-9" ng-if="avatarchoice == 'upload'">
         <div class="row">
           <div id="cropzone" class="col-sm-5">
-            <img id="img-gravatar" src="https://secure.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=150" class="img-thumbnail"/>
+            <img id="img-gravatar" ng-src="https://secure.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=150" class="img-thumbnail"/>
           </div>
         </div>
         <input type="file" onchange="angular.element(this).scope().fileNameChanged(this)" />
