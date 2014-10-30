@@ -99,6 +99,44 @@
                 widget.removeClass("has-error");
             });
 
+            function nextLocale() {
+                var idx = localeIndex($(widget).data('locale')) + 1;
+                if(idx == Bennu.locales.length) { idx = 0; }
+                return Bennu.locales[idx];
+            };
+
+            function previousLocale() {
+                var idx = localeIndex($(widget).data('locale')) - 1;
+                if(idx < 0) { idx = Bennu.locales.length - 1; }
+                return Bennu.locales[idx];
+            };
+
+            function localeIndex(locale) {
+                var idx = -1;
+                $.map(Bennu.locales, function(val, i) {
+                    if(val.tag == locale.tag) { idx = i; }
+                });
+                return idx;
+            };
+
+            var modOn = false;
+            widget.keydown(function(evt) {
+                if(evt.keyCode == 18) {
+                    modOn = true;
+                } else if(modOn) {
+                    var newLocale;
+                    if(evt.keyCode == 40) { newLocale = nextLocale(); }
+                    else if(evt.keyCode == 38) { newLocale = previousLocale(); }
+                    if(newLocale) {
+                        Bennu.localizedString.changeData(newLocale, $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget);
+                    }
+                }
+            });
+
+            widget.keyup(function (evt) {
+                if(evt.keyCode == 18) { modOn = false; }
+            });
+
             input.data("input", widget);
             input.on("change.bennu", function (e) {
                 Bennu.localizedString.changeData(widget.data("locale"), $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget);
