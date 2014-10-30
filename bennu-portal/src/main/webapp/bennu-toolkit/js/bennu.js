@@ -1,26 +1,10 @@
 (function () {
 
-    var cookies = null;
+    window.Bennu = window.Bennu || {};
 
-    function readCookie(name, c, C, i) {
-        if (cookies) {
-            return cookies[name];
-        }
-
-        c = document.cookie.split('; ');
-        cookies = {};
-
-        for (i = c.length - 1; i >= 0; i--) {
-            C = c[i].split('=');
-            cookies[C[0]] = C[1];
-        }
-
-        return cookies[name];
+    if(window.BennuPortal) {
+        $.extend(window.Bennu, window.BennuPortal);
     }
-
-    window.Bennu = function () {
-        return $.apply($, arguments);
-    };
 
     Bennu.version = "1.0.0";
 
@@ -39,9 +23,17 @@
         return text;
     };
 
-    Bennu.contextPath = readCookie("contextPath") || "";
+    Bennu.contextPath = window.contextPath;
+    if(!Bennu.contextPath) {
+        $("script").map(function (idx, el) {
+            var src = el.getAttribute('src');
+            if(src && src.indexOf('/bennu-toolkit/js/toolkit.js') != -1) {
+                Bennu.contextPath = src.substring(0, src.indexOf('/bennu-toolkit/js/toolkit.js'));
+            }
+        });
+    }
 
-    Bennu.developmentMode = (readCookie("developmentMode") && true) || false;
+    Bennu.contextPath = Bennu.contextPath || "";
 
     function prefixForEvent(a) {
         a[0] = a[0].split(" ").map(function (e) {
@@ -67,82 +59,6 @@
         prefixForEvent(arguments);
         var q = $("html");
         q.trigger.apply(q, arguments);
-    };
-
-    Bennu.addMls = function (model) {
-        var completeLanguage = this.locale.tag;
-        var currentLanguage = completeLanguage;
-        var langs = this.locales;
-        model['_mls'] = function () {
-            return function (val) {
-                if (typeof val === "string") {
-                    val = this[val];
-                }
-                if (val) {
-                    if (val[completeLanguage]) {
-                        return val[completeLanguage];
-                    }
-                    currentLanguage = BennuPortal.lang;
-                    if (val[currentLanguage]) {
-                        return val[currentLanguage];
-                    }
-
-                    //search for other specific currentLanguage
-                    for (var lang in val) {
-                        if (lang.indexOf(currentLanguage) === 0) {
-                            return val[lang];
-                        }
-                    }
-                    var fallbackLanguage = undefined;
-                    $(langs).each(function () {
-                        var eachlang = this.tag;
-                        if (eachlang != completeLanguage && eachlang.indexOf(currentLanguage) === 0) {
-                            fallbackLanguage = eachlang;
-                            return false;
-                        }
-                    });
-                    if (fallbackLanguage != undefined && val[fallbackLanguage] != undefined) {
-                        return val[fallbackLanguage];
-                    }
-                    // Fallback, return the first key in the object...
-                    return val[Object.keys(val)[0]];
-                }
-                return "_mls!!" + val + "!!";
-            };
-        };
-        model["_lang"] = currentLanguage;
-    };
-
-    Bennu.login = function (user, pass, callback) {
-        $.post(Bennu.contextPath + "/api/bennu-core/profile/login", {
-            username: user,
-            password: pass
-        }, function (data, textStatus, jqxhr) {
-            callback(data, textStatus, jqxhr);
-        });
-    };
-
-    Bennu.logout = function (callback) {
-        var logoutUrl = Bennu.contextPath + "/api/bennu-core/profile/logout";
-        if (hostJson.casEnabled) {
-            logoutUrl = hostJson.logoutUrl;
-        }
-        $.get(logoutUrl, null, function (data, textStatus, jqxhr) {
-            callback(data, textStatus, jqxhr);
-        });
-    };
-
-    Bennu.changeLanguage = function (tag, callback) {
-        $.post(Bennu.contextPath + "/api/bennu-core/profile/locale/" + tag, null, function (data, textStatus, jqxhr) {
-            callback(data, textStatus, jqxhr);
-        });
-    };
-
-    Bennu.load = function (scripts) {
-        $(scripts).each(function (i, e) {
-            $.getScript(Bennu.contextPath + e, function () {
-            });
-        });
     };
 
     Bennu.widgetHandler = Bennu.widgetHandler || {}
@@ -187,8 +103,9 @@
         return result;
     };
 
-    //TODO: this needs to go, prefering head meta keys;
-    setTimeout(function () {
+    if(Bennu.locales) {
+        Bennu.trigger("load");
+    } else {
         $.ajax({
             type: "GET",
             url: Bennu.contextPath + "/api/bennu-portal/data",
@@ -219,6 +136,5 @@
 
             }
         })
-    }, 100);
-    ;
+    };
 }).call(this);

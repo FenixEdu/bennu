@@ -48,13 +48,22 @@ public class PortalBean {
         StringBuilder builder = new StringBuilder();
         builder.append("<script>");
         {
-            builder.append("window.BennuPortal = ");
-            builder.append(BennuRestResource.getBuilder().view(null, Void.class, AuthenticatedUserViewer.class)).append(";");
+            builder.append("window.Bennu = ");
+            builder.append(BennuRestResource.getBuilder().view(null, Void.class, AuthenticatedUserViewer.class)).append(
+                    ";window.BennuPortal=window.Bennu;");
         }
         {
             builder.append("window.contextPath = '").append(ctxPath).append("';");
         }
         builder.append("</script>");
+        return builder.toString();
+    }
+
+    public String toolkit() {
+        StringBuilder builder = new StringBuilder(bennuPortal());
+        builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
+                .append("/bennu-toolkit/js/toolkit.js\"></script>");
+        builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
         return builder.toString();
     }
 
