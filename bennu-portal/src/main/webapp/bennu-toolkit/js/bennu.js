@@ -104,7 +104,9 @@
     };
 
     if(Bennu.locales) {
-        Bennu.trigger("load");
+        $(function (){
+    		Bennu.trigger("load");
+    	});
     } else {
         $.ajax({
             type: "GET",
