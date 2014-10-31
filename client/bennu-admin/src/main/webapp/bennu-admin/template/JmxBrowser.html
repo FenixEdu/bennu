@@ -4,7 +4,7 @@
 kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial; padding: 0; }
 </style>
 
-<div ng-if="data">
+<div class="clearfix" ng-if="data">
 	<ul class="nav nav-pills">
 		<li ng-repeat="(name, domain) in data">
 			<a href="#/jmx-browser" data-target="#{{name}}" data-toggle="tab" ng-click="setDomain(domain)">{{name}}</a>

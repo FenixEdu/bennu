@@ -40,20 +40,13 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label" for="title">Title</label>
 		<div class="col-sm-10">
-			<div class="input-group" ng-repeat="locale in locales">
-				<input type="text" lang="{{locale.tag}}" id="title" name="title" ng-model="selected.title[locale.tag]" placeholder="Title" class="form-control" required> 
-				<span class="input-group-addon"><code>{{locale.tag}}</code></span>
-			</div>
+			<input type="text" ng-localized-string="selected.title" class="form-control"/>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label" for="description">Description</label>
 		<div class="col-sm-10">
-			<div ng-repeat="locale in locales" class="input-group">
-				<input type="text" lang="{{locale.tag}}" id="description" name="description"
-					ng-model="selected.description[locale.tag]" placeholder="Description" class="form-control" required>
-				<span class="input-group-addon"><code>{{locale.tag}}</code></span>
-			</div>
+			<input type="text" ng-localized-string="selected.description" class="form-control"/>
 		</div>
 	</div>
 	<div class="form-group">
