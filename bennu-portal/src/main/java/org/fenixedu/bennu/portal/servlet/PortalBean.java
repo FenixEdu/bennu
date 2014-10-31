@@ -67,6 +67,16 @@ public class PortalBean {
         return builder.toString();
     }
 
+    public String angularToolkit() {
+        StringBuilder builder = new StringBuilder(bennuPortal());
+        builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
+                .append("/bennu-portal/js/angular.min.js\"></script>");
+        builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
+                .append("/bennu-toolkit/js/toolkit-angular.js\"></script>");
+        builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
+        return builder.toString();
+    }
+
     /**
      * Returns the current instance of {@link PortalConfiguration}, providing access to application configuration.
      * 

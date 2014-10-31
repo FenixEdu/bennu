@@ -70,6 +70,38 @@
                             <goal>minify</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>toolkit-angular</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <charset>utf-8</charset>
+                            <jsSourceDir>bennu-toolkit/js</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>moment.js</jsSourceFile>
+                                <jsSourceFile>datepicker.js</jsSourceFile>
+                                <jsSourceFile>jquery.fullscreen.js</jsSourceFile>
+                                <jsSourceFile>jquery.hotkeys.js</jsSourceFile>
+                                <jsSourceFile>sanitize.js</jsSourceFile>
+                                <jsSourceFile>bootstrap-wysiwyg.js</jsSourceFile>
+                                <jsSourceFile>typeahead.bundle.js</jsSourceFile>
+                                <jsSourceFile>bennu.js</jsSourceFile>
+                                <jsSourceFile>validation.js</jsSourceFile>
+                                <jsSourceFile>localizedString.js</jsSourceFile>
+                                <jsSourceFile>htmlEditor.js</jsSourceFile>
+                                <jsSourceFile>group.js</jsSourceFile>
+                                <jsSourceFile>datetime.js</jsSourceFile>
+                                <jsSourceFile>bennu-angular.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <webappTargetDir>${project.build.outputDirectory}/META-INF/resources/</webappTargetDir>
+                            <jsTargetDir>bennu-toolkit/js</jsTargetDir>
+                            <jsFinalFile>toolkit-angular.js</jsFinalFile>
+                            <jsEngine>CLOSURE</jsEngine>
+                            <nosuffix>true</nosuffix>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
