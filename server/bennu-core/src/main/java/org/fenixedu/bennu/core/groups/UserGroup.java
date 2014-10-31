@@ -36,7 +36,7 @@ import com.google.common.collect.Sets;
  * @see Group
  */
 @GroupOperator("U")
-public final class UserGroup extends CustomGroup {
+public/* final */class UserGroup extends CustomGroup {
     private static final long serialVersionUID = -6178473769354461857L;
 
     @GroupArgumentParser
@@ -60,7 +60,7 @@ public final class UserGroup extends CustomGroup {
     @GroupArgument("")
     private Set<User> members;
 
-    private UserGroup() {
+    protected UserGroup() {
         super();
     }
 
@@ -92,22 +92,22 @@ public final class UserGroup extends CustomGroup {
 
     @Override
     public String getPresentationName() {
-        return members.stream().map(u -> u.getUsername()).collect(Collectors.joining(", "));
+        return members().stream().map(User::getUsername).collect(Collectors.joining(", "));
     }
 
     @Override
     public PersistentUserGroup toPersistentGroup() {
-        return PersistentUserGroup.getInstance(members);
+        return PersistentUserGroup.getInstance(members());
     }
 
     @Override
     public Set<User> getMembers() {
-        return members;
+        return members();
     }
 
     @Override
     public boolean isMember(User user) {
-        return user != null && members.contains(user);
+        return user != null && members().contains(user);
     }
 
     @Override
@@ -123,7 +123,7 @@ public final class UserGroup extends CustomGroup {
     @Override
     public Group and(Group group) {
         if (group instanceof UserGroup) {
-            return UserGroup.of(Sets.intersection(members, ((UserGroup) group).members));
+            return UserGroup.of(Sets.intersection(members(), ((UserGroup) group).members()));
         }
         return super.and(group);
     }
@@ -131,7 +131,7 @@ public final class UserGroup extends CustomGroup {
     @Override
     public Group or(Group group) {
         if (group instanceof UserGroup) {
-            return UserGroup.of(Sets.union(members, ((UserGroup) group).members));
+            return UserGroup.of(Sets.union(members(), ((UserGroup) group).members()));
         }
         return super.or(group);
     }
@@ -139,7 +139,7 @@ public final class UserGroup extends CustomGroup {
     @Override
     public Group minus(Group group) {
         if (group instanceof UserGroup) {
-            return UserGroup.of(Sets.difference(members, ((UserGroup) group).members));
+            return UserGroup.of(Sets.difference(members(), ((UserGroup) group).members()));
         }
         return super.minus(group);
     }
@@ -147,13 +147,17 @@ public final class UserGroup extends CustomGroup {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserGroup) {
-            return members.equals(((UserGroup) object).members);
+            return members().equals(((UserGroup) object).members());
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return members.hashCode();
+        return members().hashCode();
+    }
+
+    protected Set<User> members() {
+        return members;
     }
 }

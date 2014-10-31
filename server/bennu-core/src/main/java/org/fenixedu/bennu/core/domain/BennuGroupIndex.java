@@ -42,4 +42,8 @@ public class BennuGroupIndex {
     public static Stream<Group> allDynamicGroups() {
         return Bennu.getInstance().getDynamicSet().stream().map(PersistentGroup::toGroup);
     }
+
+    public static boolean isUserGroupMember(User user, PersistentUserGroup group) {
+        return user.getUserGroupSet().contains(group);
+    }
 }
