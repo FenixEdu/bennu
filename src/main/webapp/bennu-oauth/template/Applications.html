@@ -1,0 +1,258 @@
+<h3>My Applications:</h3>
+<button role="button" data-toggle="modal"
+	class="btn btn-primary btn-sm pull-right"
+	ng-click="showCreateApplication()">Create</button>
+</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Logo</th>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Site</th>
+			<th>Scopes</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="application in applications">
+			<td class="col-sm-1" style="vertical-align: middle">
+				<div>
+					<img ng-src="data:image/JPEG;base64,{{application.logo}}"
+						height="50px;">
+				</div>
+
+
+			</td>
+			<td class="col-sm-1" style="vertical-align: middle">{{application.name}}</td>
+			<td class="col-sm-2" style="vertical-align: middle">{{application.description}}</td>
+			<td class="col-sm-2" style="vertical-align: middle">{{application.siteUrl}}</td>
+			<td class="col-sm-2" style="vertical-align: middle">{{application.scopes}}</td>
+			<td class="col-sm-2" style="vertical-align: middle">
+				<button role="button" data-toggle="modal" data-target="#editScope"
+					class="btn btn-primary btn-sm"
+					ng-click="showDetailsApplication(application)">Details</button>
+
+
+				<button role="button" data-toggle="modal"
+					class="btn btn-primary btn-sm"
+					ng-click="showEditApplication(application)">Edit</button>
+
+
+				<button data-target="#modal-delete-menu" role="button"
+					class="btn btn-danger btn-sm"
+					ng-click="showDeleteModal(application)">Delete</button>
+			</td>
+
+
+		</tr>
+	</tbody>
+</table>
+<hr />
+
+
+<div id="modal-delete-menu" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3>Delete Item</h3>
+			</div>
+			<div class="modal-body">
+				<p>Do you wish to delete the selected item?</p>
+
+			</div>
+			<div class="modal-footer">
+				<button data-dismiss="modal" class="btn secondary btn-sm">No</button>
+
+				<button ng-click="deleteApp()" data-dismiss="modal"
+					class="btn btn-danger btn-sm">Yes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="createApplication" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">{{typeStr}}</h4>
+			</div>
+			<form ng-submit="create()" class="form-horizontal">
+				<div class="modal-body">
+
+					<div class="form-group">
+
+						<label for="logo" class="col-sm-2 control-label">Logo</label>
+						<div class="col-sm-8">
+							<input type="file" ng-model="currentapp.logo" name="logo"
+								id="logo"
+								onchange="angular.element(this).scope().fileNameChanged(this,'logo')" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="name" class="col-sm-2 control-label">Name</label>
+						<div class="col-sm-8">
+							<input type="text" ng-model="currentapp.name"
+								class="form-control" placeholder="Name">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="description" class="col-sm-2 control-label">Description</label>
+						<div class="col-sm-8">
+							<textarea class="form-control" ng-model="currentapp.description"
+								id="description" placeholder="Description" rows="2"></textarea>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="siteUrl" class="col-sm-2 control-label">Site</label>
+						<div class="col-sm-8">
+							<input type="text" ng-model="currentapp.siteUrl"
+								class="form-control" id="siteUrl" placeholder="Site">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="redirectUrl" class="col-sm-2 control-label">Redirect
+							Url</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control"
+								ng-model="currentapp.redirectUrl" id="redirectUrl"
+								placeholder="Redirect Url">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="redirectUrl" class="col-sm-2 control-label">Scopes</label>
+						<div class="col-sm-10">
+
+							<div ng-repeat="scope in scopes">
+								<input type="checkbox" name="{{scope.name}}" id="{{scope.name}}"
+									ng-model="scope.checked" ng-click="selectedScopes()" /> <label
+									for="{{scope.name}}">{{scope.name}}</label>
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button onclick="$('#createApplication').modal('hide');"
+						type="submit" class="btn btn-primary">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="detailsApplication" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Application Details</h4>
+			</div>
+			<form class="form-horizontal">
+				<div class="modal-body">
+
+					<div class="form-group">
+
+						<label for="logo" class="col-sm-2 control-label">Logo</label>
+						<div class="col-sm-8">
+						
+							<img ng-src="data:image/JPEG;base64,{{currentapp.logo}}"
+							height="50px;">
+						
+						
+						</div>
+					</div>
+
+
+
+					<div class="form-group">
+						<label for="name" class="col-sm-2 control-label">Name</label>
+						<div class="col-sm-8">
+							<input disabled type="text" ng-model="currentapp.name"
+								class="form-control" placeholder="Name">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="description" class="col-sm-2 control-label">Description</label>
+						<div class="col-sm-8">
+							<textarea disabled class="form-control"
+								ng-model="currentapp.description" id="description" rows="2"></textarea>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="siteUrl" class="col-sm-2 control-label">Site</label>
+						<div class="col-sm-8">
+							<input disabled type="text" ng-model="currentapp.siteUrl"
+								class="form-control" id="siteUrl">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="redirectUrl" class="col-sm-2 control-label">Redirect
+							Url</label>
+						<div class="col-sm-8">
+							<input disabled type="text" class="form-control"
+								ng-model="currentapp.redirectUrl" id="redirectUrl">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="scopes" class="col-sm-2 control-label">Scopes</label>
+						<div class="col-sm-8">
+							<input disabled type="text" class="form-control"
+								ng-model="currentapp.scopes" id="scopes">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="clientId" class="col-sm-2 control-label">Client
+							Id</label>
+						<div class="col-sm-8">
+							<input disabled type="text" class="form-control"
+								ng-model="currentapp.id" id="clientId">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="secret" class="col-sm-2 control-label">Client
+							Secret</label>
+						<div class="col-sm-8">
+
+							<textarea disabled type="text" class="form-control"
+								ng-model="currentapp.secret" id="secret" rows="3" />
+
+						</div>
+					</div>
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+

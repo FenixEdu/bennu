@@ -1,0 +1,66 @@
+<table class="table">
+	<thead>
+		<tr>
+			<th>Logo</th>
+			<th>Name</th>
+			<th>Author</th>
+			<th>Description</th>
+			<th>Scopes</th>
+			<th>Site</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="authorization in authorizations">
+			<td class="col-sm-1" style="vertical-align: middle">
+
+				<div>
+					<img
+						ng-src="data:image/JPEG;base64,{{authorization.applicationLogo}}"
+						height="50px;">
+				</div>
+			</td>
+			<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationName}}</td>
+			<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationAuthor}}</td>
+			<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationDescription}}</td>
+			<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationScopes}}</td>
+			<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationSiteUrl}}</td>
+
+
+
+			<td class="col-sm-1" style="vertical-align: middle">
+
+				<button role="button" class="btn btn-primary btn-sm">Details</button>
+			
+				<button data-target="#modal-revoke-menu" role="button"
+					class="btn btn-danger btn-sm"
+					ng-click="showRevokeModal(authorization)">Revoke</button>
+				
+			</td>
+
+		</tr>
+	</tbody>
+</table>
+<hr />
+
+<div id="modal-revoke-menu" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3>Revoke Application</h3>
+			</div>
+			<div class="modal-body">
+				<p>Do you wish to revoke the selected application?</p>
+
+			</div>
+			<div class="modal-footer">
+				<button data-dismiss="modal" class="btn secondary btn-sm">No</button>
+
+				<button ng-click="revokeApp()" data-dismiss="modal"
+					class="btn btn-danger btn-sm">Yes</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html dir="ltr" lang="{{currentLocale}}">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Language" content="{{currentLocale.language}}" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<title>Login · {{config.applicationTitle.content}}</title>
+
+<link href="{{contextPath}}/themes/{{config.theme}}/css/style.css"
+	rel="stylesheet">
+<link rel="shortcut icon" type="image/x-icon"
+	href="{{contextPath}}/api/bennu-portal/configuration/favicon">
+
+</head>
+
+<body>
+	<div class="container">
+		<img src="{{contextPath}}/api/bennu-portal/configuration/logo" />
+		<div class="login-content">
+			<div class="app-name">{{config.applicationTitle.content}}</div>
+			<div class="content">{{app.name}}</div>
+			
+			<form action="{{contextPath}}/oauth/userconfirmation">
+    			<input type="hidden" name="client_id" value="{{app.externalId}}"/>
+				<input type="hidden" name="redirect_uri" value="{{app.redirectUrl}}"/>
+    			
+    			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-primary">Authorize</button>	
+			</form>
+
+			
+		</div>
+	</div>
+</body>
+
+
+</html>

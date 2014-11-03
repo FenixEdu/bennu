@@ -1,0 +1,26 @@
+{"apps": [{
+    "title": { "en-GB" : "External Applications", "pt-PT": "Aplicações Externas" },
+    "description": { "pt-PT": "Aplicações Externas", "en-GB": "External Applications" },
+    "accessExpression": "logged",
+    "path": "external-applications",
+    "functionalities": [
+	    {
+	        "title" :  {"en-GB" : "Manage Applications", "pt-PT": "Gerir Aplicações"},
+	        "description" : {"en-GB" : "Manage Applications", "pt-PT": "Gerir Aplicações"},
+	        "accessExpression": "logged",
+	        "path": "#/applications"
+	    },
+	    {
+	        "title" :  {"en-GB" : "Manage Authorizations", "pt-PT": "Gerir Autorizações"},
+	        "description" : {"en-GB" : "Manage Authorizations", "pt-PT": "Gerir Autorizações"},
+	        "accessExpression": "logged",
+	        "path": "#/authorizations"
+	    },
+	    {
+	        "title" :  {"en-GB" : "Application Management", "pt-PT": "Gestão de Aplicações"},
+	        "description" : {"en-GB" : "Application Management", "pt-PT": "Gestão de Aplicações"},
+	        "accessExpression": "#managers",
+	        "path": "#/manage"
+	    }
+    ]
+}]}
