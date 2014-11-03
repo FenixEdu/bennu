@@ -281,6 +281,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         ctx.put("currentLocale", I18N.getLocale());
         ctx.put("contextPath", request.getContextPath());
         ctx.put("locales", CoreConfiguration.supportedLocales());
+        ctx.put("loggedUser", Authenticate.getUser());
 
         try {
             response.setContentType("text/html;charset=UTF-8");
@@ -395,7 +396,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private String generateToken(ApplicationUserSession appUserSession) {
         String random = generateCode();
         String token = Joiner.on(":").join(appUserSession.getExternalId(), random);
-        return Base64.getEncoder().encodeToString(token.getBytes());
+        return Base64.getEncoder().encodeToString(token.getBytes()).replace("=", "").replace("+", "-").replace("/", "-");
 
     }
 

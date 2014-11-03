@@ -20,24 +20,65 @@
 </head>
 
 <body>
+	<div class="navbar navbar-default hidden-xs fenixedu-bar">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="{{contextPath}}/" target="_blank">{{config.applicationTitle.content}}</a></li>
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav navbar-right">
+				<li><a><img src="{{loggedUser.profile.avatarUrl}}?s=20" width="20" heigth="20" style="margin-right: 10px" class="img-circle"/>{{loggedUser.profile.displayName}}</a></li>
+				<li class="active"><a href="{{contextPath}}/logout">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
 	<div class="container">
-		<img src="{{contextPath}}/api/bennu-portal/configuration/logo" />
-		<div class="login-content">
-			<div class="app-name">{{config.applicationTitle.content}}</div>
-			<div class="content">{{app.name}}</div>
+		<div class="col-sm-6">
 			
-			<form action="{{contextPath}}/oauth/userconfirmation">
-    			<input type="hidden" name="client_id" value="{{app.externalId}}"/>
-				<input type="hidden" name="redirect_uri" value="{{app.redirectUrl}}"/>
-    			
-    			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				<button type="submit" class="btn btn-primary">Authorize</button>	
-			</form>
+			<div class="login-content">
+				<h4>Autoriza a aplicação '{{app.name}}' a utilizar a sua conta FenixEdu?</h4>
 
-			
+				<p>
+					Esta aplicação terá acesso a:
+				</p>
+
+				<ul>
+					{% for scope in app.scopesSet %}
+					<li>{{scope.name}}</li>
+					{% endfor %}
+				</ul>
+				<form action="{{contextPath}}/oauth/userconfirmation">
+					<input type="hidden" name="client_id" value="{{app.externalId}}"/>
+					<input type="hidden" name="redirect_uri" value="{{app.redirectUrl}}"/>
+					<a href="{{contextPath}}/logout" class="btn btn-default">Cancelar</a>
+					<button type="submit" class="btn btn-primary">Autorizar</button>
+				</form>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<hr class="visible-xs"/>
+			<img src="{{contextPath}}/api/bennu-oauth/applications/{{app.externalId}}/logo" width="75" height="75" class="img-thumbnail" />
+
+			<h3><a href="{{app.siteUrl}}" target="_blank">{{app.name}}</a></h3>
+
+			<p class="small">{{app.author.name}}</p>
+
+			{{app.description}}
 		</div>
 	</div>
 </body>
 
+<style>
+.container {
+	margin: 80px auto 0 auto;
+	background-color: white;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	border-radius: 5px;
+	max-width: 750px;
+	border: solid 1px #eee;
+}
+</style>
 
 </html>
