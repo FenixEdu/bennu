@@ -32,7 +32,14 @@ kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial
 			<td>{{slot.name}}</td>
 			<td>
 				<kbd ng-if="!slot.value" style="color: #999">null</kbd>
-				{{slot.value}}
+				<span ng-if="slot.value.length > 50">
+					{{slot.value | limitTo: 50}}…
+					<button class="btn btn-default btn-xs" ng-click="slot.open = !slot.open"><small>…</small></button>
+					<div ng-show="slot.open" style="font-family: monospace">{{slot.value}}</div>
+				</span>
+				<span ng-if="slot.value.length <= 50">
+					{{slot.value}}
+				</span>
 			</td>
 			<td><kbd>{{slot.type}}</kbd></td>
 			<td>

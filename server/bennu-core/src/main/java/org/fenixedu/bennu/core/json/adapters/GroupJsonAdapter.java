@@ -29,4 +29,5 @@ public class GroupJsonAdapter implements JsonAdapter<Group> {
         object.addProperty("accessible", group.isMember(Authenticate.getUser()));
         return object;
     }
+
 }

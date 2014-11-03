@@ -105,7 +105,10 @@ public class BootstrapResource extends BennuRestResource {
                     }
                 }
                 bootstrapperJson.add("name", getLocalizedString(bootstrapper.bundle(), bootstrapper.name()).json());
-                bootstrapperJson.add("description", getLocalizedString(bootstrapper.bundle(), bootstrapper.description()).json());
+                bootstrapperJson.add(
+                        "description",
+                        getLocalizedString(bootstrapper.bundle(),
+                                bootstrapper.description().isEmpty() ? bootstrapper.name() : bootstrapper.description()).json());
                 bootstrapperJson.add("sections", sectionsJson);
                 bootstrappersJson.add(bootstrapperJson);
             }

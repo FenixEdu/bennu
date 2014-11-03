@@ -156,7 +156,7 @@ public final class User extends User_Base implements Principal {
                 latest = period.getEndDate();
             }
         }
-        return null;
+        return latest;
     }
 
     @Deprecated

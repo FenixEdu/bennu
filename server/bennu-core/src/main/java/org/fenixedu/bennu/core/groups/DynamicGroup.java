@@ -85,7 +85,7 @@ public final class DynamicGroup extends Group {
         return underlyingGroup(when).isMember(user, when);
     }
 
-    private Group underlyingGroup() {
+    public Group underlyingGroup() {
         Optional<PersistentDynamicGroup> persistent = PersistentDynamicGroup.getInstance(name);
         if (persistent.isPresent()) {
             return persistent.get().getGroup().toGroup();
@@ -93,12 +93,16 @@ public final class DynamicGroup extends Group {
         return NobodyGroup.get();
     }
 
-    private Group underlyingGroup(DateTime when) {
+    public Group underlyingGroup(DateTime when) {
         Optional<PersistentDynamicGroup> persistent = PersistentDynamicGroup.getInstance(name);
         if (persistent.isPresent()) {
             return persistent.get().getGroup(when).toGroup();
         }
         return NobodyGroup.get();
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

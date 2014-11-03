@@ -31,7 +31,7 @@
 		</tr>
 	</thead>
 	<tbody ng-init="totalDisplayed = 20">
-		<tr ng-repeat="log in logs | orderBy:'-end' | filter: filter | limitTo: totalDisplayed">
+		<tr ng-repeat="log in logs | orderBy:'-start' | filter: filter | limitTo: totalDisplayed">
 			<td>{{log.taskName}}</td>
 			<td>{{log.start | moment}}</td>
 			<td>{{log.end | moment}}</td>

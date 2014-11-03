@@ -1,13 +1,14 @@
 package org.fenixedu.bennu.core.groups;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.User;
@@ -254,17 +255,34 @@ public abstract class Group implements Serializable, Comparable<Group> {
         if (Strings.isNullOrEmpty(expression)) {
             return NobodyGroup.get();
         }
-        try (ByteArrayInputStream stream = new ByteArrayInputStream(expression.getBytes())) {
-            GroupLexer lexer = new GroupLexer(new ANTLRInputStream(stream));
+        try {
+            GroupLexer lexer = new GroupLexer(new ANTLRInputStream(expression));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             GroupParser parser = new GroupParser(tokens);
             parser.setErrorHandler(new BailErrorStrategy());
             return new ParseContextToGroupTranslator().parse(parser.parse());
         } catch (ParseCancellationException e) {
-            throw BennuCoreDomainException.groupParsingError(e.getCause());
-        } catch (IOException e) {
-            throw BennuCoreDomainException.groupParsingError(e);
+            RecognitionException input = (RecognitionException) e.getCause();
+            String message = getPrettyMessage(expression, input);
+            throw BennuCoreDomainException.groupParsingError(message);
         }
+    }
+
+    private static String getPrettyMessage(String expression, RecognitionException input) {
+        StringBuilder message = new StringBuilder();
+        message.append("\n");
+        Token offendingToken = input.getOffendingToken();
+        String[] lines = expression.split("\n");
+        message.append(lines[offendingToken.getLine() - 1]).append('\n');
+        IntStream.range(0, input.getOffendingToken().getCharPositionInLine()).forEach(i -> message.append(' '));
+        IntStream.range(input.getOffendingToken().getStartIndex(), input.getOffendingToken().getStopIndex() + 1).forEach(
+                i -> message.append('^'));
+        if (input.getExpectedTokens() != null) {
+            message.append("\nExpected: ");
+            message.append(input.getExpectedTokens().toString(GroupParser.tokenNames)).append(" got ")
+                    .append(offendingToken.getType() == Token.EOF ? "<EOF>" : GroupParser.tokenNames[offendingToken.getType()]);
+        }
+        return message.toString();
     }
 
     @Override

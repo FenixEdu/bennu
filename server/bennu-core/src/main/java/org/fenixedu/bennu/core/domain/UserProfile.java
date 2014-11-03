@@ -117,7 +117,7 @@ public class UserProfile extends UserProfile_Base {
         setGivenNames(cleanupName(given));
         setFamilyNames(cleanupName(family));
         setDisplayName(cleanupName(display));
-        validateNames(getDisplayName(), getFullName());
+        validateNames(super.getDisplayName(), getFullName());
         NameIndex.updateNameIndex(this);
     }
 

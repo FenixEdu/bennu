@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
-import org.fenixedu.bennu.core.groups.UserGroup;
 
 /**
  * Groups of specific users.
@@ -40,7 +39,7 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
 
     @Override
     public Group toGroup() {
-        return UserGroup.of(getMemberSet());
+        return new DomainBackedUserGroup(this);
     }
 
     @Override

@@ -42,11 +42,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectInstance;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -301,6 +304,24 @@ public class SystemResource extends BennuRestResource {
 
     public static void registerHealthcheck(Healthcheck healthcheck) {
         healthchecks.add(Objects.requireNonNull(healthcheck));
+    }
+
+    @GET
+    @Path("/jmx")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getJmxInfo() {
+        accessControl("#managers");
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        Set<ObjectInstance> objects = mbs.queryMBeans(null, null);
+        JsonObject json = new JsonObject();
+        for (ObjectInstance instance : objects) {
+            String domain = instance.getObjectName().getDomain();
+            if (!json.has(domain)) {
+                json.add(domain, new JsonArray());
+            }
+            json.get(domain).getAsJsonArray().add(getBuilder().view(instance.getObjectName()));
+        }
+        return toJson(json);
     }
 
 }

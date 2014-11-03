@@ -6,14 +6,18 @@ import java.util.Objects;
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
 import org.fenixedu.bennu.core.domain.Avatar;
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.UserLoginPeriod;
 import org.fenixedu.bennu.core.domain.UserProfile;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.json.JsonAdapter;
 import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.json.JsonUtils;
+import org.joda.time.LocalDate;
+import org.joda.time.format.ISODateTimeFormat;
 
 import pt.ist.fenixframework.FenixFramework;
 
+import com.google.common.base.Strings;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -26,6 +30,12 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         jsonObject.addProperty("id", user.getExternalId());
         jsonObject.addProperty("username", user.getUsername());
         jsonObject.addProperty("name", user.getPresentationName());
+        jsonObject.addProperty("active", !user.isLoginExpired());
+        LocalDate expiration = user.getExpiration();
+        if (expiration != null) {
+            jsonObject.addProperty("expiration", ISODateTimeFormat.date().print(expiration));
+        }
+
         UserProfile profile = user.getProfile();
         //FIXME: remove on the next major when profile is mandatory
         if (profile != null) {
@@ -45,6 +55,7 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         User user = new User(parseAndUpdateOrCreateProfile(object, ctx, null));
         changePassword(user, object);
         changeAvatar(user.getProfile(), object);
+        changeExpiration(user, object);
         return user;
     }
 
@@ -66,7 +77,40 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         }
         changePassword(user, object);
         changeAvatar(user.getProfile(), object);
+        changeExpiration(user, object);
         return user;
+    }
+
+    private void changeExpiration(User user, JsonObject json) {
+        String expiration = JsonUtils.getString(json, "expiration");
+
+        // Clear expiration slot
+        user.setExpiration(null);
+
+        if (Strings.isNullOrEmpty(expiration)) {
+            UserLoginPeriod.createOpenPeriod(user);
+        } else {
+            LocalDate endDate = ISODateTimeFormat.date().parseLocalDate(expiration);
+            UserLoginPeriod current = getCurrentUserLoginPeriod(user);
+            if (current == null || current.isClosed()) {
+                new UserLoginPeriod(user, LocalDate.now(), endDate);
+            } else {
+                current.edit(current.getBeginDate(), endDate);
+            }
+        }
+    }
+
+    private UserLoginPeriod getCurrentUserLoginPeriod(User user) {
+        UserLoginPeriod latest = null;
+        for (UserLoginPeriod current : user.getLoginValiditySet()) {
+            if (current.getEndDate() == null) {
+                return current;
+            }
+            if (latest == null || latest.getEndDate().isBefore(current.getEndDate())) {
+                latest = current;
+            }
+        }
+        return latest;
     }
 
     private UserProfile parseAndUpdateOrCreateProfile(JsonObject json, JsonBuilder ctx, UserProfile current) {
@@ -87,6 +131,10 @@ public class UserJsonAdapter implements JsonAdapter<User> {
 
     private void changePassword(User user, JsonObject json) {
         String password = JsonUtils.getString(json, "password");
+        if (Strings.isNullOrEmpty(password)) {
+            // Dont' change the password
+            return;
+        }
         String passwordCheck = JsonUtils.getString(json, "passwordCheck");
         if (!Objects.equals(password, passwordCheck)) {
             throw BennuCoreDomainException.passwordCheckDoesNotMatch();

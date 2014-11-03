@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
 
 public class Authenticate {
     private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
@@ -136,7 +137,7 @@ public class Authenticate {
 
     static void updateFromSession(HttpSession session) {
         User user = (User) (session == null ? null : session.getAttribute(LOGGED_USER_ATTRIBUTE));
-        if (user != null) {
+        if (user != null && FenixFramework.isDomainObjectValid(user)) {
             loggedUser.set(user);
         } else {
             loggedUser.set(null);

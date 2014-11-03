@@ -42,7 +42,7 @@ public class BundleUtil {
             }
             return message;
         } catch (MissingResourceException e) {
-            logger.warn(e.getMessage());
+            logger.warn("Can't find resource for bundle '{}', key '{}' ({})", bundle, key, locale);
             return '!' + key + '!';
         }
     }

@@ -2,6 +2,7 @@ package org.fenixedu.bennu.core.rest;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -109,7 +110,11 @@ public class DomainBrowserResource extends BennuRestResource {
                 JsonObject slotJson = new JsonObject();
                 slotJson.addProperty("name", slot.getName());
                 slotJson.addProperty("type", slot.getSlotType().getFullname());
-                slotJson.addProperty("value", Objects.toString(getSlotValue(obj, slot), null));
+                Object value = getSlotValue(obj, slot);
+                if (value instanceof byte[]) {
+                    value = Base64.getEncoder().encodeToString((byte[]) value);
+                }
+                slotJson.addProperty("value", Objects.toString(value, null));
                 slotJson.add("modifiers", modifiers(slot));
                 slots.add(slotJson);
             }
