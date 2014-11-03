@@ -24,15 +24,15 @@
                     actions.remove && actions.remove(e);
                 });
             });
-
-            var config = {
-                attributes: true,
-                subtree: true,
-                childList: true,
-                characterData: true
-            };
-            observer.observe(target, config);
         });
+
+	var config = {
+            attributes: true,
+            subtree: true,
+            childList: true,
+            characterData: true
+        };
+        observer.observe(target, config);
     };
 
     Bennu.on("load", function () {
@@ -43,12 +43,34 @@
             Bennu.datetime.createWidget(e);
         });
 
-        Bennu.monitor.checkFor(Bennu.datetime.attr, {
+        Bennu.monitor.checkFor("bennu-date", {
             add: function (e) {
                 Bennu.datetime.createWidget(e);
             },
             remove: function (e) {
-                if ($(e).attr(Bennu.datetime.attr) === "") {
+                if ($(e).attr("bennu-date") === "") {
+                    $(e).data("handler").remove();
+                }
+            }
+        });
+
+	Bennu.monitor.checkFor("bennu-time", {
+            add: function (e) {
+                Bennu.datetime.createWidget(e);
+            },
+            remove: function (e) {
+                if ($(e).attr("bennu-time") === "") {
+                    $(e).data("handler").remove();
+                }
+            }
+        });
+
+	Bennu.monitor.checkFor("bennu-datetime", {
+            add: function (e) {
+                Bennu.datetime.createWidget(e);
+            },
+            remove: function (e) {
+                if ($(e).attr("bennu-datetime") === "") {
                     $(e).data("handler").remove();
                 }
             }

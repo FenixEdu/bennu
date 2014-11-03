@@ -1,7 +1,11 @@
 (function () {
 
     window.Bennu = window.Bennu || {};
-
+    
+    $(function(){
+	Bennu.loaded = true;
+    })
+    
     if(window.BennuPortal) {
         $.extend(window.Bennu, window.BennuPortal);
     }
@@ -102,11 +106,17 @@
         $(e).data("handler", result);
         return result;
     };
-
-    if(Bennu.locales) {
-        $(function (){
+    var _start = function(){
+	if (Bennu.loaded){
+	   Bennu.trigger("load");
+	}else{
+	   $(function (){
     		Bennu.trigger("load");
-    	});
+           });
+	}            	   
+    }
+    if(Bennu.locales) {
+	  _start();
     } else {
         $.ajax({
             type: "GET",
@@ -124,7 +134,8 @@
                     }
                     return locale;
                 })(hostJson.locale.tag);
-                Bennu.trigger("load");
+		
+                _start();
             },
             error: function (xhr, status, errorThrown) {
                 Bennu.username = null;
@@ -134,7 +145,7 @@
                 Bennu.locale = {displayName: "English (United Kingdom)", lang: "en", tag: "en-GB"};
                 Bennu.groups = null;
                 Bennu.lang = "en";
-                Bennu.trigger("load");
+                _start();
 
             }
         })
