@@ -456,11 +456,23 @@
         e.after(dom);
 
         e.on("change.bennu", function (ev) {
-            var t = $(e).val()
-            var r = $(".bennu-html-editor-editor", dom).html();
-            if (r !== t){
-                $(".bennu-html-editor-editor", dom)[0].innerHTML = t;
-                e.data("handler").trigger();
+            var attr = e.attr("bennu-localized-string");
+            if (attr !== null && attr !== undefined) {
+                var data = JSON.parse($(e).val());
+                var t = data[$(".bennu-localized-string-language", dom).data("locale").tag]
+                var r = $(".bennu-html-editor-editor", dom).html();
+
+                if (r !== t){
+                    $(".bennu-html-editor-editor", dom)[0].innerHTML = t;
+                    e.data("handler").trigger();
+                }
+            } else {
+                var t = $(e).val()
+                var r = $(".bennu-html-editor-editor", dom).html();
+                if (r !== t){
+                    $(".bennu-html-editor-editor", dom)[0].innerHTML = t;
+                    e.data("handler").trigger();
+                }
             }
         });
 
