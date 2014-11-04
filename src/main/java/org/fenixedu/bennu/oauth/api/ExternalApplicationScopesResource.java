@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.annotation.OAuthEndpoint;
+import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 
 @Path("/bennu-oauth/scopes")
@@ -39,7 +40,11 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
     @Path("/{scope}")
     public Response delete(@PathParam("scope") ExternalApplicationScope scope) {
         accessControl("#managers");
+
         atomic(() -> {
+            for (ExternalApplication externalApplication : Bennu.getInstance().getApplicationsSet()) {
+                externalApplication.removeScope(scope);
+            }
             Bennu.getInstance().removeScopes(scope);
         });
         return Response.ok().build();

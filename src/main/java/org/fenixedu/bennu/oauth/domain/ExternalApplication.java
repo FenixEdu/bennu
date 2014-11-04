@@ -51,6 +51,14 @@ public class ExternalApplication extends ExternalApplication_Base {
         oldScopes.addAll(newScopes);
     }
 
+    public void removeScope(ExternalApplicationScope scope) {
+        List<ExternalApplicationScope> oldScopes = getScopeList();
+        if (oldScopes.contains(scope)) {
+            oldScopes.remove(scope);
+            setScopeList(oldScopes);
+        }
+    }
+
     public List<ExternalApplicationScope> getScopeList() {
         return new ArrayList<ExternalApplicationScope>(getScopesSet());
     }
