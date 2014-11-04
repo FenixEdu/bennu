@@ -53,6 +53,9 @@ public class ExternalApplicationAuthorizationAdapter implements JsonAdapter<Appl
         json.addProperty("applicationScopes",
                 application.getScopesSet().stream().map(ExternalApplicationScope::getName).collect(Collectors.joining(", ")));
 
+        json.addProperty("applicationScopesId", application.getScopesSet().stream().map(ExternalApplicationScope::getExternalId)
+                .collect(Collectors.joining(", ")));
+
         if (application.getLogo() != null && !Strings.isNullOrEmpty(application.getLogo().toString())) {
             try {
                 json.addProperty("applicationLogo", new String(application.getLogo(), "UTF-8"));

@@ -24,7 +24,7 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
     @OAuthEndpoint("info")
     @Produces(MediaType.APPLICATION_JSON)
     public String getScopes() {
-        return view(Bennu.getInstance().getScopesSet());
+        return view(Bennu.getInstance().getScopesSet().stream().sorted((a1, a2) -> a1.getName().compareTo(a2.getName())));
     }
 
     @POST

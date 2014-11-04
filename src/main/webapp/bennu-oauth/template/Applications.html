@@ -135,7 +135,7 @@
 						<div class="col-sm-10">
 
 							<div ng-repeat="scope in scopes">
-								<input type="checkbox" name="{{scope.name}}" id="{{scope.name}}"
+								<input type="checkbox" name="{{scope.name}}" id="{{scope.id}}"
 									ng-model="scope.checked" ng-click="selectedScopes()" /> <label
 									for="{{scope.name}}">{{scope.name}}</label>
 							</div>
@@ -171,16 +171,11 @@
 					<div class="form-group">
 
 						<label for="logo" class="col-sm-2 control-label">Logo</label>
-						<div class="col-sm-8">
-						
+						<div class="col-sm-8">						
 							<img ng-src="data:image/JPEG;base64,{{currentapp.logo}}"
-							height="50px;">
-						
-						
+							height="50px;">	
 						</div>
 					</div>
-
-
 
 					<div class="form-group">
 						<label for="name" class="col-sm-2 control-label">Name</label>
@@ -218,8 +213,8 @@
 					<div class="form-group">
 						<label for="scopes" class="col-sm-2 control-label">Scopes</label>
 						<div class="col-sm-8">
-							<input disabled type="text" class="form-control"
-								ng-model="currentapp.scopes" id="scopes">
+							<textarea disabled type="text" class="form-control"
+								ng-model="currentapp.scopes" id="scopes"/>
 						</div>
 					</div>
 
@@ -236,15 +231,11 @@
 						<label for="secret" class="col-sm-2 control-label">Client
 							Secret</label>
 						<div class="col-sm-8">
-
 							<textarea disabled type="text" class="form-control"
 								ng-model="currentapp.secret" id="secret" rows="3" />
-
 						</div>
 					</div>
-
 				</div>
-
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>

@@ -182,7 +182,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         if (!externalApplication.matches(redirectUrl, clientSecret)) {
             //return sendOAuthResponse(response,
             //        getOAuthProblemResponse(SC_BAD_REQUEST, INVALID_GRANT, "Credentials or redirect_uri don't match"));
-            System.out.println("" + externalApplication + " " + redirectUrl + "  " + clientSecret);
             errorPage(request, response);
 
         }

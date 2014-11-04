@@ -44,7 +44,6 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
                 app.addScopes(FenixFramework.getDomainObject(oid));
             }
         }
-
         return app;
     }
 
@@ -88,8 +87,13 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         json.addProperty("redirectUrl", obj.getRedirectUrl());
         json.addProperty("author", obj.getAuthor().getUsername());
 
-        json.addProperty("scopes",
-                obj.getScopesSet().stream().map(ExternalApplicationScope::getName).collect(Collectors.joining(", ")));
+        json.addProperty(
+                "scopes",
+                obj.getScopesSet().stream().sorted((a1, a2) -> a1.getName().compareTo(a2.getName()))
+                        .map(ExternalApplicationScope::getName).collect(Collectors.joining(", ")));
+
+        json.addProperty("scopesId",
+                obj.getScopesSet().stream().map(ExternalApplicationScope::getExternalId).collect(Collectors.joining(", ")));
 
         if (obj.getLogo() != null && !Strings.isNullOrEmpty(obj.getLogo().toString())) {
             try {

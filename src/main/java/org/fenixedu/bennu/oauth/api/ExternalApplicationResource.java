@@ -33,7 +33,8 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/applications")
     public String myApplications() {
-        return view(verifyAndGetRequestAuthor().getOwnedApplicationSet().stream().filter(p -> p.isActive()));
+        return view(verifyAndGetRequestAuthor().getOwnedApplicationSet().stream().filter(p -> p.isActive())
+                .sorted((a1, a2) -> a1.getName().compareTo(a2.getName())));
     }
 
     @GET

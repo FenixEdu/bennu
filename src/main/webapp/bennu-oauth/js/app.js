@@ -55,17 +55,17 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 	$scope.create = function(type) {
 		if($scope.type === "create") {
 			$http.post(contextPath + '/api/bennu-oauth/applications', {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'siteUrl': $scope.currentapp.siteUrl, 'redirectUrl': $scope.currentapp.redirectUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.currentapp.selectedScopesCheckbox}).success(function (data) {
-				$scope.applications.push(data);
+				$http.get(contextPath + '/api/bennu-oauth/applications').success(function (data) {
+					$scope.applications = data;
+				});
 				$('#logo').val('');					
 			});
 
 		} else if ($scope.type === "edit") {
 			$http.put(contextPath + '/api/bennu-oauth/applications/' +  $scope.id, {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'siteUrl': $scope.currentapp.siteUrl, 'redirectUrl': $scope.currentapp.redirectUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.currentapp.selectedScopesCheckbox }).success(function (data) {
-				var index = $scope.applications.indexOf($scope.selectedApp);
-				if (index > -1) {
-					$scope.applications.splice(index, 1);
-				}				
-				$scope.applications.push(data);
+				$http.get(contextPath + '/api/bennu-oauth/applications').success(function (data) {
+					$scope.applications = data;
+				});
 				$('#logo').val('');			
 			});
 
@@ -75,9 +75,9 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 	$scope.deleteApp = function() {
 		var index = $scope.applications.indexOf($scope.selectedApp);
 		$http.delete(contextPath + '/api/bennu-oauth/applications/' + $scope.selectedApp.id).success(function () {
-			if (index > -1) {
-				$scope.applications.splice(index, 1);
-			}
+			$http.get(contextPath + '/api/bennu-oauth/applications').success(function (data) {
+				$scope.applications = data;
+			});
 		});
 	}
 
@@ -108,7 +108,7 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 				$scope.error = "<p>Apenas são aceites imagens</p>";
 				continue;
 			}
-			if (file.size > 200 * 1024) { // 200kb
+			if (file.size > 2000 * 1024) { // 2000kb
 				$scope.error = "<p>Imagem muito grande. Tamanho máximo : 200kb</p>";
 				continue;
 			}
@@ -158,18 +158,19 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 		$scope.type = 'edit';
 		$scope.typeStr = 'Edit Application';	
 
-		var scopesSelectedArray = application.scopes.split(", ");
+		var scopesSelectedArray = application.scopesId.split(", ");
 		var scopesArray = [];
 		var arrayLength = $scope.scopes.length;			
 		for (var i = 0; i < arrayLength; i++) {			   
-			scopesArray.push($scope.scopes[i].name);
+			scopesArray.push($scope.scopes[i].id);
 		}
 
 		var selectedScopeArray = intersect(scopesArray, scopesSelectedArray);
 
 		var arrayLengthSelected = selectedScopeArray.length;
 
-		for (var i = 0; i < arrayLengthSelected; i++) {			    
+		for (var i = 0; i < arrayLengthSelected; i++) {	
+			
 			$('#'+selectedScopeArray[i]).prop('checked', true);
 		}
 		getSelectedScopes();
@@ -183,7 +184,7 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 	function getSelectedScopes() {
 		var selScopes = []
 		$scope.scopes.forEach(function(entry) {
-			if ($('#'+entry.name).prop('checked')) {	
+			if ($('#'+entry.id).prop('checked')) {	
 				selScopes.push(entry.id);	
 			}
 		});
@@ -193,7 +194,7 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 	function clearScopes() {
 		var arrayLength = $scope.scopes.length;	
 		for (var i = 0; i < arrayLength; i++) {			    
-			$('#'+$scope.scopes[i].name).prop('checked', false);
+			$('#'+$scope.scopes[i].id).prop('checked', false);
 		}
 	}
 
