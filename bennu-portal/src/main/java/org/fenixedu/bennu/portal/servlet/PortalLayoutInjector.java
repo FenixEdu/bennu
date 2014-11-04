@@ -102,6 +102,7 @@ public class PortalLayoutInjector implements Filter {
                     ctx.put("body", body);
                     ctx.put("functionality", functionality);
                     ctx.put("config", config);
+                    ctx.put("topLevelMenu", config.getMenu().getUserMenuStream());
                     ctx.put("contextPath", request.getContextPath());
                     ctx.put("themePath", request.getContextPath() + "/themes/" + config.getTheme());
                     ctx.put("devMode", CoreConfiguration.getConfiguration().developmentMode());
