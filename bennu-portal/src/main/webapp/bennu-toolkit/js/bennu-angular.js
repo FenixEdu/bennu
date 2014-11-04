@@ -31,6 +31,33 @@
 	  }
 	}]);
 
+    bennuToolkit.directive('ngHtmlEditor', ['$timeout', function($timeout) {
+        return {
+            restrict: 'A',
+            scope: {
+                model: '=ngHtmlEditor'
+            },
+            link: function(scope, el, attr) {
+                el.hide();
+                var isLocalized = el[0].hasAttribute('bennu-localized-string');
+                var handler = Bennu.htmlEditor.createWidget(el);
+                scope.$watch('model', function(value) {
+                    if(isLocalized) {
+                        value = JSON.stringify(value);
+                    }
+                    if(value !== handler.get()) {
+                        handler.set(value);
+                    }
+                });
+                handler.onchange(function () {
+                    $timeout(function () {
+                        scope.model = isLocalized ? JSON.parse(handler.get()) : handler.get();
+                    });
+                });
+            }
+        }
+    }]);
+
 	bennuToolkit.directive('progressBar', function() {
 	  return {
 	    restrict: 'E',
