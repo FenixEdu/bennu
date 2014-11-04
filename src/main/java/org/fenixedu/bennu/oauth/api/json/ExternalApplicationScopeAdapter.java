@@ -24,7 +24,6 @@ public class ExternalApplicationScopeAdapter implements JsonAdapter<ExternalAppl
     @Override
     public ExternalApplicationScope update(JsonElement json, ExternalApplicationScope obj, JsonBuilder ctx) {
         JsonObject asJsonObject = json.getAsJsonObject();
-        obj.setScopeKey(asJsonObject.get("scopeKey").getAsString());
         obj.setName(asJsonObject.get("name").getAsString());
         obj.setDescription(asJsonObject.get("description").getAsString());
         return obj;
@@ -39,5 +38,4 @@ public class ExternalApplicationScopeAdapter implements JsonAdapter<ExternalAppl
         json.addProperty("description", obj.getDescription());
         return json;
     }
-
 }

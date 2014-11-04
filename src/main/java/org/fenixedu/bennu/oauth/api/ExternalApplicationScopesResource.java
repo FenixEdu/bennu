@@ -6,6 +6,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -14,7 +15,6 @@ import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
-import org.fenixedu.bennu.oauth.annotation.OAuthEndpoint;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 
@@ -22,9 +22,9 @@ import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 public class ExternalApplicationScopesResource extends BennuRestResource {
 
     @GET
-    @OAuthEndpoint("info")
     @Produces(MediaType.APPLICATION_JSON)
     public String getScopes() {
+        verifyAndGetRequestAuthor();
         return view(Bennu.getInstance().getScopesSet().stream().sorted((a1, a2) -> a1.getName().compareTo(a2.getName())));
     }
 
@@ -32,15 +32,23 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String createScope(String json) {
-        verifyAndGetRequestAuthor();
+        accessControl("#managers");
         return view(create(json, ExternalApplicationScope.class));
+    }
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{scope}")
+    public String updateScope(@PathParam("scope") ExternalApplicationScope scope, String json) {
+        accessControl("#managers");
+        return view(update(json, scope));
     }
 
     @DELETE
     @Path("/{scope}")
     public Response delete(@PathParam("scope") ExternalApplicationScope scope) {
         accessControl("#managers");
-
         atomic(() -> {
             for (ExternalApplication externalApplication : Bennu.getInstance().getApplicationsSet()) {
                 externalApplication.removeScope(scope);

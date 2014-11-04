@@ -33,12 +33,12 @@ bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', function ($scop
 	$http.get(contextPath + '/api/bennu-oauth/authorizations').success(function (data) {
 		$scope.authorizations = data;
 	});
-	
+
 	$scope.showRevokeModal = function(authorization) {
 		$scope.selectedAuthorization = authorization;
 		$('#modal-revoke-menu').modal('show');
 	}
-	
+
 	$scope.revokeApp = function() {
 		var index = $scope.authorizations.indexOf($scope.selectedAuthorization);
 		$http.delete(contextPath + '/api/bennu-oauth/authorizations/' + $scope.selectedAuthorization.id).success(function () {
@@ -127,7 +127,7 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 			reader.readAsDataURL(file);
 		}
 	}
-	
+
 	$scope.showCreateApplication = function() {
 		$scope.type = 'create';
 		$scope.typeStr = 'Create Application';
@@ -144,8 +144,8 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 		$('#detailsApplication').modal('show');
 
 	}
-	
-	
+
+
 	$scope.showEditApplication = function(application) {
 
 		$scope.currentapp = Object.create(application);
@@ -170,7 +170,7 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 		var arrayLengthSelected = selectedScopeArray.length;
 
 		for (var i = 0; i < arrayLengthSelected; i++) {	
-			
+
 			$('#'+selectedScopeArray[i]).prop('checked', true);
 		}
 		getSelectedScopes();
@@ -178,9 +178,9 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 	}	
 
 	function getUpdateScopes() {
-		
+
 	}
-	
+
 	function getSelectedScopes() {
 		var selScopes = []
 		$scope.scopes.forEach(function(entry) {
@@ -210,40 +210,53 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope,
 
 bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', function ($scope, $http) {
 	$scope.ctx = contextPath;
-	$scope.create = function() {		
-		$http.post(contextPath + '/api/bennu-oauth/scopes', {'scopeKey': $scope.scopeKey, 'name': $scope.name, 'description': $scope.description}).success(function (data) {
-			$scope.scopes.push(data); 
-			$scope.scopeKey = "";
-			$scope.name = "";
-			$scope.description = "";
-		});
-	};
-	$scope.deleteScope = function() {		
-		var index = $scope.scopes.indexOf($scope.selectedScope);
-		var arr = 
-			$http.delete(contextPath + '/api/bennu-oauth/scopes/' + $scope.selectedScope.id).success(function () {			
-				if (index > -1) {
-					$scope.scopes.splice(index, 1);
-				}
+	
+	$scope.create = function() {
+		$http.post(contextPath + '/api/bennu-oauth/scopes', {'scopeKey': $scope.currentscope.scopeKey, 'name': $scope.currentscope.name, 'description': $scope.currentscope.description}).success(function (data) {
+			$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
+				$scope.scopes = data;
 			});
+		});
 	}
+	
+	$scope.update = function() {
+		$http.put(contextPath + '/api/bennu-oauth/scopes/' + $scope.currentscope.id, {'name': $scope.currentscope.name, 'description': $scope.currentscope.description}).success(function () {			
+			$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
+				$scope.scopes = data;
+			});
+		});
+	}	
+	
+	$scope.deleteScope = function() {		
+		$http.delete(contextPath + '/api/bennu-oauth/scopes/' + $scope.currentscope.id).success(function () {			
+			$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
+				$scope.scopes = data;
+			});
+		});
+	}
+	
 	$scope.showDeleteModal = function(scope) {
-		$scope.selectedScope = scope;
+		$scope.currentscope = Object.create(scope);
 		$('#modal-delete-menu').modal('show');
 	}
+	
 	$scope.showEditModal = function(scope) {
-		$('#editScopeKey').val(scope.scopeKey);
-		$('#editName').val(scope.name);
-		$('#editDescription').val(scope.description);
-		$scope.selectedScope = scope;
+		$scope.currentscope = Object.create(scope);
+		$('#editScope').modal('show');
 	}
 
 	$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
 		$scope.scopes = data;
-	});
-
+	})
+	
 	$http.get(contextPath + '/api/bennu-oauth/all-applications').success(function (data) {
 		$scope.applications = data;
-	});	
+	})
 
+	$scope.showCreateScope = function() {
+		$scope.currentscope = {};
+		$('#addScope').modal('show');
+	}
+
+	
 }]);

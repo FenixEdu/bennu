@@ -16,9 +16,9 @@
 		<div class="col-sm-8">
 			<h4>
 				Scopes
-				<button role="button" data-toggle="modal" data-target="#addScope"
+				<button role="button" data-toggle="modal"
 					class="btn btn-primary btn-sm pull-right"
-					ng-click="showEditModal(scope)">Create</button>
+					ng-click="showCreateScope()">Create</button>
 			</h4>
 
 
@@ -40,8 +40,7 @@
 
 
 							<button role="button" data-toggle="modal"
-								data-target="#editScope" class="btn btn-primary btn-sm"
-								ng-click="showEditModal(scope)">Edit</button>
+								class="btn btn-sm" ng-click="showEditModal(scope)">Edit</button>
 
 							<button data-target="#modal-delete-menu" role="button"
 								class="btn btn-danger btn-sm" ng-click="showDeleteModal(scope)">Delete</button>
@@ -92,7 +91,7 @@
 					<div class="form-group">
 						<label for="scopeKey" class="col-sm-2 control-label">Key</label>
 						<div class="col-sm-10">
-							<input ng-model="scopeKey" type="text" class="form-control"
+							<input ng-model="currentscope.scopeKey" type="text" class="form-control"
 								id="scopeKey" placeholder="Key" required />
 						</div>
 					</div>
@@ -101,7 +100,7 @@
 
 						<label for="name" class="col-sm-2 control-label">Name</label>
 						<div class="col-sm-10">
-							<input ng-model="name" type="text" class="form-control" id="name"
+							<input ng-model="currentscope.name" type="text" class="form-control" id="name"
 								placeholder="Name" required />
 						</div>
 					</div>
@@ -109,7 +108,7 @@
 					<div class="form-group">
 						<label for="description" class="col-sm-2 control-label">Description</label>
 						<div class="col-sm-10">
-							<textarea ng-model="description" class="form-control"
+							<textarea ng-model="currentscope.description" class="form-control"
 								id="description" placeholder="Description" rows="2" required />
 						</div>
 					</div>
@@ -118,13 +117,15 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					<button onclick="$('#addScope').modal('hide');" type="submit"
-						class="btn btn-primary">Create</button>
+						class="btn btn-primary">Create</button>									
+												
 				</div>
 
 			</form>
 		</div>
 	</div>
 </div>
+
 
 <div class="modal fade" id="editScope" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
@@ -143,7 +144,7 @@
 					<div class="form-group">
 						<label for="scopeKey" class="col-sm-2 control-label">Key</label>
 						<div class="col-sm-10">
-							<input ng-model="scopeKey" type="text" class="form-control"
+							<input ng-model="currentscope.scopeKey" type="text" class="form-control"
 								id="editScopeKey" placeholder="Key" disabled/>
 						</div>
 					</div>
@@ -151,7 +152,7 @@
 					<div class="form-group">
 						<label for="name" class="col-sm-2 control-label">Name</label>
 						<div class="col-sm-10">
-							<input ng-model="name" type="text" class="form-control"
+							<input ng-model="currentscope.name" type="text" class="form-control"
 								id="editName" placeholder="Name" required />
 						</div>
 					</div>
@@ -159,7 +160,7 @@
 					<div class="form-group">
 						<label for="description" class="col-sm-2 control-label">Description</label>
 						<div class="col-sm-10">
-							<textarea ng-model="description" class="form-control"
+							<textarea ng-model="currentscope.description" class="form-control"
 								id="editDescription" placeholder="Description" rows="2" required />
 						</div>
 					</div>
