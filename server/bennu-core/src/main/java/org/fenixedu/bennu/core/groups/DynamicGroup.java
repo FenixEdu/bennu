@@ -33,17 +33,20 @@ public final class DynamicGroup extends Group {
         return PersistentDynamicGroup.getInstance(name).isPresent();
     }
 
+    /*
+     * Deprecated: use mutator().rename(String)
+     */
+    @Deprecated
     public DynamicGroup rename(String name) {
-        Optional<PersistentDynamicGroup> persistent = PersistentDynamicGroup.getInstance(name);
-        if (persistent.isPresent()) {
-            persistent.get().rename(name);
-        }
-        return new DynamicGroup(name);
+        return mutator().rename(name);
     }
 
+    /*
+     * Deprecated: use mutator().changeGroup(Group)
+     */
+    @Deprecated
     public DynamicGroup changeGroup(Group group) {
-        PersistentDynamicGroup.set(name, group.toPersistentGroup());
-        return this;
+        return mutator().changeGroup(group);
     }
 
     @Override
@@ -116,5 +119,79 @@ public final class DynamicGroup extends Group {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    /**
+     * Returns a {@link Mutator} that allows access to operations that will change the state
+     * of this dynamic group.
+     * 
+     * @return
+     *         A {@link Mutator} for this Dynamic Group.
+     */
+    public DynamicGroup.Mutator mutator() {
+        return new Mutator();
+    }
+
+    /**
+     * A {@link Mutator} allows access to operations that change the state of the Dynamic Group.
+     * 
+     * All the methods in this class behave like the ones in {@link Group}, only instead of returning
+     * a new group, change the underlying one with the same semantics.
+     * 
+     */
+    public class Mutator {
+
+        /**
+         * Changes the underlying group for this Dynamic Group.
+         * 
+         * @param group
+         *            The new underlying group
+         * @return
+         *         This Dynamic Group, with the new underlying group.
+         */
+        public DynamicGroup changeGroup(Group group) {
+            PersistentDynamicGroup.set(name, group.toPersistentGroup());
+            return DynamicGroup.this;
+        }
+
+        /**
+         * Changes the name for this Dynamic Group.
+         * 
+         * @param name
+         *            The new name.
+         * @return
+         *         A new Dynamic Group, with a new name.
+         */
+        public DynamicGroup rename(String name) {
+            Optional<PersistentDynamicGroup> persistent = PersistentDynamicGroup.getInstance(name);
+            if (persistent.isPresent()) {
+                persistent.get().rename(name);
+            }
+            return new DynamicGroup(name);
+        }
+
+        public DynamicGroup and(Group group) {
+            return changeGroup(underlyingGroup().and(group));
+        }
+
+        public DynamicGroup or(Group group) {
+            return changeGroup(underlyingGroup().or(group));
+        }
+
+        public DynamicGroup minus(Group group) {
+            return changeGroup(underlyingGroup().minus(group));
+        }
+
+        public DynamicGroup not() {
+            return changeGroup(underlyingGroup().not());
+        }
+
+        public DynamicGroup grant(User user) {
+            return changeGroup(underlyingGroup().grant(user));
+        }
+
+        public DynamicGroup revoke(User user) {
+            return changeGroup(underlyingGroup().revoke(user));
+        }
     }
 }
