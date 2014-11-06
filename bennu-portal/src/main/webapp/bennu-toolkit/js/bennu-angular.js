@@ -7,6 +7,29 @@
 		};
 	});
 
+    bennuToolkit.directive('ngGroups', ['$timeout', function($timeout) {
+        return {
+            restrict: 'A',
+            scope: {
+                model: '=ngGroups'
+            },
+            link: function(scope, el, attr) {
+                el.hide();
+                var handler = Bennu.group.createWidget(el);
+                scope.$watch('model', function(value) {
+                    if(value !== handler.get()) {
+                        handler.set(value);
+                    }
+                });
+                handler.onchange(function () {
+                    $timeout(function () {
+                        scope.model = handler.get();
+                    });
+                });
+            }
+        }
+    }]);
+
 	bennuToolkit.directive('ngLocalizedString', ['$timeout', function($timeout) {
 	  return {
 	    restrict: 'A',
