@@ -31,9 +31,10 @@ public class ExternalApplicationAuthorizationResources extends BennuRestResource
     }
 
     @DELETE
-    @Path("/{app}")
-    public Response delete(@PathParam("app") ApplicationUserAuthorization app) {
-        app.delete();
+    @Path("/{authorization}")
+    public Response delete(@PathParam("authorization") ApplicationUserAuthorization authorization) {
+        verifyAndGetRequestAuthor();
+        authorization.delete();
         return Response.ok().build();
     }
 

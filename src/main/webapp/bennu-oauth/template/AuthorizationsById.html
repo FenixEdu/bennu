@@ -1,0 +1,60 @@
+
+<table class="table">
+	<thead>
+		<tr>
+			<th class="col-sm-1 text-center">Date</th>
+			<th class="col-sm-2 text-center">Device</th>
+			<th class="col-sm-4 text-center">Refresh Token</th>
+			<th class="col-sm-4 text-center">Access Token</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="session in sessions">
+
+			<td class="col-sm-2 text-center" style="vertical-align: middle">{{session.date}}</td>
+			<td class="col-sm-2 text-center" style="vertical-align: middle">{{session.device}}</td>
+			<td class="col-sm-4 text-center" style="vertical-align: middle">{{session.refresh_token}}</td>
+			<td class="col-sm-4 text-center" style="vertical-align: middle">{{session.access_token}}</td>
+
+
+
+			<td class="col-sm-1 text-center" style="vertical-align: middle">
+				<button data-target="#modal-revoke-menu" role="button"
+					class="btn btn-danger btn-sm"
+					ng-click="showRevokeSessionModal(session)">Revoke</button>
+
+			</td>
+
+		</tr>
+	</tbody>
+</table>
+
+<div id="modal-revoke-session-menu" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3>Revoke Session</h3>
+			</div>
+			<div class="modal-body">
+				<p>Do you wish to revoke the selected session?</p>
+
+			</div>
+			<div class="modal-footer">
+				<button data-dismiss="modal" class="btn secondary btn-sm">No</button>
+
+				<button ng-click="revokeSession()" data-dismiss="modal"
+					class="btn btn-danger btn-sm">Yes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+.table {
+	table-layout: fixed;
+	word-wrap: break-word;
+}
+</style>

@@ -8,7 +8,11 @@ bennuOAuth.config(['$routeProvider',
 	when('/authorizations', {
 		templateUrl: contextPath + '/bennu-oauth/template/Authorizations.html',
 		controller: 'AuthorizationsCtrl'
-	}).      
+	}).
+	when('/authorizations/:id', {
+		templateUrl: contextPath + '/bennu-oauth/template/AuthorizationsById.html',
+		controller: 'AuthorizationsByIdCtrl'
+	}).   
 	when('/applications', {
 		templateUrl: contextPath + '/bennu-oauth/template/Applications.html',
 		controller: 'ApplicationsCtrl'
@@ -22,7 +26,7 @@ bennuOAuth.config(['$routeProvider',
 	});
 }]);
 
-bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', function ($scope, $http) {
+bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', '$location', function ($scope, $http, $location) {
 	$scope.ctx = contextPath;
 	$scope.create = function() {
 		$http.post(contextPath + '/api/bennu-oauth/authorizations', {'name': $scope.name}).success(function (data) {
@@ -39,6 +43,11 @@ bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', function ($scop
 		$('#modal-revoke-menu').modal('show');
 	}
 
+	$scope.showDetails = function(authorization) {
+		$scope.selectedAuthorization = authorization;
+	    $location.url('/authorizations/'+authorization.id);
+	}
+	
 	$scope.revokeApp = function() {
 		var index = $scope.authorizations.indexOf($scope.selectedAuthorization);
 		$http.delete(contextPath + '/api/bennu-oauth/authorizations/' + $scope.selectedAuthorization.id).success(function () {
@@ -47,6 +56,29 @@ bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', function ($scop
 			}
 		});
 	}	
+}]);
+
+
+bennuOAuth.controller('AuthorizationsByIdCtrl', [ '$scope', '$http', '$routeParams', '$location', function ($scope, $http, $routeParams, $location) {
+	$scope.ctx = contextPath;
+	
+	
+	$http.get(contextPath + '/api/bennu-oauth/sessions/' + $routeParams.id ).success(function (data) {
+		$scope.sessions = data;		
+	});	
+	
+	$scope.showRevokeSessionModal = function(session) {
+		$scope.selectedSession = session;
+		$('#modal-revoke-session-menu').modal('show');
+	}
+	
+	$scope.revokeSession = function() {	
+		$http.delete(contextPath + '/api/bennu-oauth/sessions/' + $scope.selectedSession.id).success(function () {
+			$http.get(contextPath + '/api/bennu-oauth/sessions/' + $routeParams.id ).success(function (data) {
+				$scope.sessions = data;		
+			});	
+		});
+	}
 }]);
 
 bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope, $http) {
@@ -251,12 +283,23 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', function ($scope, $http
 	
 	$http.get(contextPath + '/api/bennu-oauth/all-applications').success(function (data) {
 		$scope.applications = data;
+		$scope.originalApplications = data;
 	})
 
 	$scope.showCreateScope = function() {
 		$scope.currentscope = {};
 		$('#addScope').modal('show');
 	}
-
+	
+	$scope.filterApplications = function(value, index) {
+		var found = false;
+		angular.forEach(['name', 'description','author'], function(key) {
+			if (!$scope.query || value[key].indexOf($scope.query) >= 0) {
+				found = true;
+				return;
+			}
+		});
+		return found;
+	}
 	
 }]);

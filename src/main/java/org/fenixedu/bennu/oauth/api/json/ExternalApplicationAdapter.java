@@ -86,11 +86,9 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         json.addProperty("secret", obj.getSecret());
         json.addProperty("redirectUrl", obj.getRedirectUrl());
         json.addProperty("author", obj.getAuthor().getUsername());
-
-        json.addProperty(
-                "scopes",
-                obj.getScopesSet().stream().sorted((a1, a2) -> a1.getName().compareTo(a2.getName()))
-                        .map(ExternalApplicationScope::getName).collect(Collectors.joining(", ")));
+        json.addProperty("authorizations", obj.getApplicationUserAuthorizationSet().size());
+        json.addProperty("scopes",
+                obj.getScopesSet().stream().map(ExternalApplicationScope::getName).collect(Collectors.joining(", ")));
 
         json.addProperty("scopesId",
                 obj.getScopesSet().stream().map(ExternalApplicationScope::getExternalId).collect(Collectors.joining(", ")));

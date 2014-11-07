@@ -19,23 +19,11 @@ public class ExternalApplicationAuthorizationAdapter implements JsonAdapter<Appl
 
     @Override
     public ApplicationUserAuthorization create(JsonElement json, JsonBuilder ctx) {
-        /*
-        ExternalApplicationScope scope = new ExternalApplicationScope();
-        JsonObject asJsonObject = json.getAsJsonObject();
-        scope.setScopeKey(asJsonObject.get("scopeKey").getAsString());
-        scope.setName(asJsonObject.get("name").getAsString());
-        scope.setDescription(asJsonObject.get("description").getAsString());
-        */
         return null;
     }
 
     @Override
     public ApplicationUserAuthorization update(JsonElement json, ApplicationUserAuthorization obj, JsonBuilder ctx) {
-        /*JsonObject asJsonObject = json.getAsJsonObject();
-        obj.setScopeKey(asJsonObject.get("scopeKey").getAsString());
-        obj.setName(asJsonObject.get("name").getAsString());
-        obj.setDescription(asJsonObject.get("description").getAsString());
-        */
         return null;
     }
 
