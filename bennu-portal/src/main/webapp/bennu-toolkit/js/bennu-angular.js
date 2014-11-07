@@ -15,6 +15,7 @@
             },
             link: function(scope, el, attr) {
                 el.hide();
+                Bennu.group.setupModal();
                 var handler = Bennu.group.createWidget(el);
                 scope.$watch('model', function(value) {
                     if(value !== handler.get()) {
@@ -66,7 +67,11 @@
                 var handler = Bennu.htmlEditor.createWidget(el);
                 scope.$watch('model', function(value) {
                     if(isLocalized) {
-                        value = JSON.stringify(value);
+                        if(value === undefined && handler.get() === "{}"){
+                            value = "{}"
+                        }else {
+                            value = JSON.stringify(value);
+                        }
                     }
                     if(value !== handler.get()) {
                         handler.set(value);
