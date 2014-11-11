@@ -1,8 +1,9 @@
 package org.fenixedu.bennu.scheduler.rest;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.scheduler.custom.ClassBean;
@@ -10,24 +11,32 @@ import org.fenixedu.bennu.scheduler.log.CustomExecutionLogContext;
 import org.fenixedu.bennu.scheduler.log.ExecutionLog;
 import org.fenixedu.bennu.scheduler.log.ExecutionLogContext;
 
+import com.google.gson.JsonObject;
+
 @Path("/bennu-scheduler/custom")
 public class CustomTaskResource extends ExecutionLogResource {
 
     private static final CustomExecutionLogContext context = new CustomExecutionLogContext();
 
-    @POST
-    public Response addCustomTask(@FormParam("name") String name, @FormParam("code") String code) {
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addCustomTask(String jsonCode) {
         accessControl("#managers");
-        final ClassBean classBean = new ClassBean(name, code);
-        classBean.run();
+        getClassBean(jsonCode).run();
         return Response.ok().build();
     }
 
-    @POST
+    private ClassBean getClassBean(String jsonCode) {
+        JsonObject parse = parse(jsonCode).getAsJsonObject();
+        return new ClassBean(parse.get("name").getAsString(), parse.get("code").getAsString());
+    }
+
+    @PUT
     @Path("compile")
-    public Response compileCustomTask(@FormParam("name") String name, @FormParam("code") String code) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response compileCustomTask(String jsonCode) {
         accessControl("#managers");
-        return Response.ok(ExecutionLog.getGson().toJson(new ClassBean(name, code).compile())).build();
+        return Response.ok(ExecutionLog.getGson().toJson(getClassBean(jsonCode).compile())).build();
     }
 
     @Override

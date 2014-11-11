@@ -738,8 +738,7 @@ app.controller('CustomTaskController', ['$scope', '$http', '$state', function ($
       return;
     }
     var fqn = packageRegex[1] + "." + classNameRegex[1];
-    $http({ method: 'POST', url: contextPath + '/api/bennu-scheduler/custom/compile', data: $.param({'name': fqn, 'code': $scope.javaCode}),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).success(function (result) {
+    $http.put(contextPath + '/api/bennu-scheduler/custom/compile', {'name': fqn, 'code': $scope.javaCode}).success(function (result) {
       if(result.compileOK) {
         $scope.result = 'The compilation was successful!'; $scope.compiled = true;
       } else {
@@ -751,8 +750,7 @@ app.controller('CustomTaskController', ['$scope', '$http', '$state', function ($
     var packageName = new RegExp("package (.*);").exec($scope.javaCode)[1];
     var className = new RegExp("public class (.*) extends").exec($scope.javaCode)[1];
     var fqn = packageName + "." + className;
-    $http({ method: 'POST', url: contextPath + '/api/bennu-scheduler/custom', data: $.param({'name': fqn, 'code': $scope.javaCode}),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).success(function (result) { $state.go('scheduler.custom') });
+    $http.put(contextPath + '/api/bennu-scheduler/custom', {'name': fqn, 'code': $scope.javaCode}).success(function (result) { $state.go('scheduler.custom') });
   }
   $scope.$watch('javaCode', function (oldValue, newValue) {
     $scope.compiled = false; $scope.result = '';
