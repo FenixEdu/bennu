@@ -2,8 +2,60 @@ var bennuOAuth = angular.module('bennuOAuth', [
                                                'ngRoute'
                                                ]);
 
-bennuOAuth.config(['$routeProvider',
-                   function($routeProvider) {
+bennuOAuth.filter('scopeNames', function() {	
+	return function(scopes) {
+		var names = [];		
+		angular.forEach(scopes, function(scope) {
+			if (scope.selected) {
+				names.push(scope.name);
+			}
+		});		
+		return names.join(", ");
+	}
+});
+
+bennuOAuth.factory('httpUnauthorizedFilter', ['$window', function httpUnauthorizedFilter($window) {
+	
+	return {
+		responseError : function(response) {
+			if (response.status === 401) { // unauthorized
+				$window.location.href = window.contextPath + "/login";
+			}
+		}
+	};
+}]);
+
+function fileNameChangedAux(e, type, $scope){
+	var files = e.files; // FileList object
+	$scope.error = '';
+	for ( var i = 0; i < files.length; i++) {
+		var file = files[i];
+		if (!file.type.match("image.*")) {
+			$scope.error = "<p>Apenas são aceites imagens</p>";
+			continue;
+		}
+		if (file.size > 2000 * 1024) { // 2000kb
+			$scope.error = "<p>Imagem muito grande. Tamanho máximo : 200kb</p>";
+			continue;
+		}
+		var reader = new FileReader();
+		reader.onload = (function(f) {
+			return function(e) {
+				var content = e.target.result;
+				var picBase64 = content.substr(content.indexOf(",") + 1, content.length);
+				if(type === "logo"){
+					$scope.$apply(function () {
+						$scope.currentapp.logo = picBase64;
+					});
+				}
+			};
+		})(file);
+		reader.readAsDataURL(file);
+	}
+}
+
+bennuOAuth.config(['$routeProvider','$httpProvider',
+                   function($routeProvider, $httpProvider) {
 	$routeProvider.
 	when('/authorizations', {
 		templateUrl: contextPath + '/bennu-oauth/template/Authorizations.html',
@@ -24,6 +76,8 @@ bennuOAuth.config(['$routeProvider',
 	otherwise({
 		redirectTo: '/authorizations'
 	});
+	
+	$httpProvider.interceptors.push('httpUnauthorizedFilter');
 }]);
 
 bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', '$location', function ($scope, $http, $location) {
@@ -41,13 +95,13 @@ bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', '$location', fu
 	$scope.showRevokeModal = function(authorization) {
 		$scope.selectedAuthorization = authorization;
 		$('#modal-revoke-menu').modal('show');
-	}
+	};
 
 	$scope.showDetails = function(authorization) {
 		$scope.selectedAuthorization = authorization;
-	    $location.url('/authorizations/'+authorization.id);
-	}
-	
+		$location.url('/authorizations/'+authorization.id);
+	};
+
 	$scope.revokeApp = function() {
 		var index = $scope.authorizations.indexOf($scope.selectedAuthorization);
 		$http.delete(contextPath + '/api/bennu-oauth/authorizations/' + $scope.selectedAuthorization.id).success(function () {
@@ -58,20 +112,19 @@ bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', '$location', fu
 	}	
 }]);
 
-
 bennuOAuth.controller('AuthorizationsByIdCtrl', [ '$scope', '$http', '$routeParams', '$location', function ($scope, $http, $routeParams, $location) {
 	$scope.ctx = contextPath;
-	
-	
+
+
 	$http.get(contextPath + '/api/bennu-oauth/sessions/' + $routeParams.id ).success(function (data) {
 		$scope.sessions = data;		
 	});	
-	
+
 	$scope.showRevokeSessionModal = function(session) {
 		$scope.selectedSession = session;
 		$('#modal-revoke-session-menu').modal('show');
-	}
-	
+	};
+
 	$scope.revokeSession = function() {	
 		$http.delete(contextPath + '/api/bennu-oauth/sessions/' + $scope.selectedSession.id).success(function () {
 			$http.get(contextPath + '/api/bennu-oauth/sessions/' + $routeParams.id ).success(function (data) {
@@ -81,225 +134,223 @@ bennuOAuth.controller('AuthorizationsByIdCtrl', [ '$scope', '$http', '$routePara
 	}
 }]);
 
-bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', function ($scope, $http) {
+bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', '$cacheFactory', '$timeout', function ($scope, $http, $cacheFactory, $timeout) {
+
 	$scope.ctx = contextPath;
-
-	$scope.create = function(type) {
-		if($scope.type === "create") {
-			$http.post(contextPath + '/api/bennu-oauth/applications', {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'siteUrl': $scope.currentapp.siteUrl, 'redirectUrl': $scope.currentapp.redirectUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.currentapp.selectedScopesCheckbox}).success(function (data) {
-				$http.get(contextPath + '/api/bennu-oauth/applications').success(function (data) {
-					$scope.applications = data;
-				});
-				$('#logo').val('');					
-			});
-
-		} else if ($scope.type === "edit") {
-			$http.put(contextPath + '/api/bennu-oauth/applications/' +  $scope.id, {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'siteUrl': $scope.currentapp.siteUrl, 'redirectUrl': $scope.currentapp.redirectUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.currentapp.selectedScopesCheckbox }).success(function (data) {
-				$http.get(contextPath + '/api/bennu-oauth/applications').success(function (data) {
-					$scope.applications = data;
-				});
-				$('#logo').val('');			
-			});
-
-		}
-	};
-
-	$scope.deleteApp = function() {
-		var index = $scope.applications.indexOf($scope.selectedApp);
-		$http.delete(contextPath + '/api/bennu-oauth/applications/' + $scope.selectedApp.id).success(function () {
-			$http.get(contextPath + '/api/bennu-oauth/applications').success(function (data) {
-				$scope.applications = data;
-			});
-		});
-	}
 
 	$http.get(contextPath + '/api/bennu-oauth/applications').success(function (data) {
 		$scope.applications = data;
+		TestCtrl();
 	});
 
 	$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
 		$scope.scopes = data;
-	});	
+	});
 
+	$scope.create = function() {
+		$http.post(contextPath + '/api/bennu-oauth/applications', {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'siteUrl': $scope.currentapp.siteUrl, 'redirectUrl': $scope.currentapp.redirectUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.currentapp.scopes}).success(function (data) {
+			$http.get(contextPath + '/api/bennu-oauth/applications').success(function (data) {
+				$scope.applications = data;
+			});
+			$('#logo').val('');					
+		});
+	};
 
-	$scope.selectedScopes = function () {
-		getSelectedScopes();
-	}
-
-	$scope.showDeleteModal = function(app) {
-		$scope.selectedApp = app;
-		$('#modal-delete-menu').modal('show');
-	}
-
-	$scope.fileNameChanged = function(e, type) {
-		var files = e.files; // FileList object
-		$scope.error = '';
-		for ( var i = 0; i < files.length; i++) {
-			var file = files[i];
-			if (!file.type.match("image.*")) {
-				$scope.error = "<p>Apenas são aceites imagens</p>";
-				continue;
+	$scope.update = function() {
+		$http.put(contextPath + '/api/bennu-oauth/applications/' +  $scope.currentapp.id, {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'siteUrl': $scope.currentapp.siteUrl, 'redirectUrl': $scope.currentapp.redirectUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.currentapp.scopes }).success(function (data) {
+			if ($scope.currentappindex > -1) {
+				var logoUrl = data.logoUrl;
+				$scope.applications[$scope.currentappindex] = data;
+				$scope.applications[$scope.currentappindex].logoUrl += "?cb=" + (new Date()).getTime();
 			}
-			if (file.size > 2000 * 1024) { // 2000kb
-				$scope.error = "<p>Imagem muito grande. Tamanho máximo : 200kb</p>";
-				continue;
-			}
-			var reader = new FileReader();
-			reader.onload = (function(f) {
-				return function(e) {
-					var content = e.target.result;
-					var picBase64 = content.substr(content.indexOf(",") + 1, content.length);
-					if(type === "logo"){
-						$scope.$apply(function () {
-							$scope.currentapp.logo = picBase64;
-						});
-					}	             
-				};
-			})(file);
-			reader.readAsDataURL(file);
-		}
-	}
+			$('#logo').val('');
+		});
+	};
+
+	$scope.deleteApp = function() {
+		var index = $scope.applications.indexOf($scope.currentapp);
+		$http.delete(contextPath + '/api/bennu-oauth/applications/' + $scope.currentapp.id).success(function () {
+			if (index > -1) {
+				$scope.applications.splice(index, 1);				
+			}			
+		});
+	};
 
 	$scope.showCreateApplication = function() {
-		$scope.type = 'create';
-		$scope.typeStr = 'Create Application';
-		clearScopes();
 		$scope.currentapp = {};
-
+		$('#logo').val('');
+		$scope.currentapp.scopes = angular.copy($scope.scopes);		
 		$('#createApplication').modal('show');
-	}
+	};
 
 	$scope.showDetailsApplication = function(application) {
-		$scope.currentapp = Object.create(application);
-		clearScopes();
-		getSelectedScopes();
+		$scope.currentappindex = $scope.applications.indexOf(application);
+		$scope.currentapp = angular.copy(application);
 		$('#detailsApplication').modal('show');
-
-	}
-
+	};
 
 	$scope.showEditApplication = function(application) {
+		$scope.currentappindex = $scope.applications.indexOf(application);
+		$scope.currentapp = angular.copy(application);
+		$scope.currentapp.scopes = application.scopes;
+		$('#editApplication').modal('show');	
+	};
 
-		$scope.currentapp = Object.create(application);
-		clearScopes();
-		getSelectedScopes();
-		$('#createApplication').modal('show');
+	$scope.showDeleteModal = function(application) {
+		$scope.currentappindex = $scope.applications.indexOf(application);
+		$scope.currentapp = application;
+		$('#modal-delete-menu').modal('show');
+	};
 
-		$scope.selectedApp = application;
-		$scope.id = application.id;
-		$scope.type = 'edit';
-		$scope.typeStr = 'Edit Application';	
-
-		var scopesSelectedArray = application.scopesId.split(", ");
-		var scopesArray = [];
-		var arrayLength = $scope.scopes.length;			
-		for (var i = 0; i < arrayLength; i++) {			   
-			scopesArray.push($scope.scopes[i].id);
-		}
-
-		var selectedScopeArray = intersect(scopesArray, scopesSelectedArray);
-
-		var arrayLengthSelected = selectedScopeArray.length;
-
-		for (var i = 0; i < arrayLengthSelected; i++) {	
-
-			$('#'+selectedScopeArray[i]).prop('checked', true);
-		}
-		getSelectedScopes();
-
-	}	
-
-	function getUpdateScopes() {
-
-	}
-
-	function getSelectedScopes() {
-		var selScopes = []
-		$scope.scopes.forEach(function(entry) {
-			if ($('#'+entry.id).prop('checked')) {	
-				selScopes.push(entry.id);	
-			}
-		});
-		$scope.currentapp.selectedScopesCheckbox = selScopes;
-	}
-
-	function clearScopes() {
-		var arrayLength = $scope.scopes.length;	
-		for (var i = 0; i < arrayLength; i++) {			    
-			$('#'+$scope.scopes[i].id).prop('checked', false);
-		}
-	}
-
-	function intersect(a, b) {
-		var t;
-		if (b.length > a.length) t = b, b = a, a = t; 
-		return a.filter(function (e) {
-			if (b.indexOf(e) !== -1) return true;
-		});	    
-	}
+	$scope.fileNameChanged = function(e, type) {
+		fileNameChangedAux(e, type, $scope);
+	};
 
 }]);
 
 bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', function ($scope, $http) {
 	$scope.ctx = contextPath;
-	
+
+	$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
+		$scope.scopes = data;
+	});
+
+	$http.get(contextPath + '/api/bennu-oauth/applications/all').success(function (data) {
+		$scope.applications = data;
+		$scope.originalApplications = data;
+	});
+
 	$scope.create = function() {
 		$http.post(contextPath + '/api/bennu-oauth/scopes', {'scopeKey': $scope.currentscope.scopeKey, 'name': $scope.currentscope.name, 'description': $scope.currentscope.description}).success(function (data) {
 			$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
 				$scope.scopes = data;
 			});
 		});
-	}
-	
+	};
+
 	$scope.update = function() {
 		$http.put(contextPath + '/api/bennu-oauth/scopes/' + $scope.currentscope.id, {'name': $scope.currentscope.name, 'description': $scope.currentscope.description}).success(function () {			
 			$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
 				$scope.scopes = data;
 			});
 		});
-	}	
-	
+	};
+
 	$scope.deleteScope = function() {		
 		$http.delete(contextPath + '/api/bennu-oauth/scopes/' + $scope.currentscope.id).success(function () {			
 			$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
 				$scope.scopes = data;
 			});
 		});
-	}
+	};
+
+	$scope.updateApplication = function() {
+		$http.put(contextPath + '/api/bennu-oauth/applications/' +  $scope.currentapp.id, {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'author': $scope.currentapp.author, 'siteUrl': $scope.currentapp.siteUrl, 'redirectUrl': $scope.currentapp.redirectUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.currentapp.scopes }).success(function (data) {
+			if ($scope.currentappindex > -1) {
+				var logoUrl = data.logoUrl;
+				$scope.applications[$scope.currentappindex] = data;
+				$scope.applications[$scope.currentappindex].logoUrl += "?cb=" + (new Date()).getTime();
+			}
+			$('#logo').val('');
+		});
+	};
+
+	$scope.fileNameChanged = function(e, type) {
+		fileNameChangedAux(e, type, $scope);
+	};
 	
 	$scope.showDeleteModal = function(scope) {
 		$scope.currentscope = Object.create(scope);
 		$('#modal-delete-menu').modal('show');
-	}
-	
+	};
+
 	$scope.showEditModal = function(scope) {
 		$scope.currentscope = Object.create(scope);
 		$('#editScope').modal('show');
-	}
+	};
 
-	$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
-		$scope.scopes = data;
-	})
-	
-	$http.get(contextPath + '/api/bennu-oauth/all-applications').success(function (data) {
-		$scope.applications = data;
-		$scope.originalApplications = data;
-	})
 
 	$scope.showCreateScope = function() {
 		$scope.currentscope = {};
 		$('#addScope').modal('show');
-	}
-	
+	};
+
+	$scope.showBanModal = function(application) {
+		$scope.currentapp = application;
+		$('#modal-ban-menu').modal('show');
+	};
+
+	$scope.showUnbanModal = function(application) {
+		$scope.currentapp = application;
+		$('#modal-unban-menu').modal('show');
+	};
+
+	$scope.showDeleteApplicationModal = function(application) {
+		$scope.currentapp = application;
+		$('#modal-delete-application-menu').modal('show');
+	};
+
+	$scope.banApplication = function() {
+		var index = $scope.applications.indexOf($scope.currentapp);
+		$http.put(contextPath + '/api/bennu-oauth/applications/' + $scope.currentapp.id + '/ban').success(function () {
+			$scope.applications[index].state = "Banned";
+		});
+	};
+
+	$scope.activeApplication = function() {
+		var index = $scope.applications.indexOf($scope.currentapp);
+		$http.put(contextPath + '/api/bennu-oauth/applications/' + $scope.currentapp.id + '/active').success(function () {
+			$scope.applications[index].state = "Active";
+		});
+	};
+
+	$scope.deleteApplication = function() {
+		var index = $scope.applications.indexOf($scope.currentapp);
+		$http.delete(contextPath + '/api/bennu-oauth/applications/' + $scope.currentapp.id).success(function () {
+			$scope.applications[index].state = "Deleted";
+		});
+	};
+
 	$scope.filterApplications = function(value, index) {
 		var found = false;
-		angular.forEach(['name', 'description','author'], function(key) {
-			if (!$scope.query || value[key].indexOf($scope.query) >= 0) {
+		angular.forEach(['name', 'description', 'author', 'state', 'redirectUrl'], function(key) {
+			if (!$scope.query || value[key].toLowerCase().indexOf($scope.query.toLowerCase()) >= 0) {
 				found = true;
 				return;
 			}
 		});
 		return found;
+	};
+
+	$scope.showDetailsApplication = function(application) {
+		$scope.currentapp = application;
+		$('#detailsApplication').modal('show');
 	}
-	
+
+	$scope.showEditApplicationModal = function(application) {
+		$scope.currentappindex = $scope.applications.indexOf(application);
+		$scope.currentapp = angular.copy(application);
+		$('#editApplicationManager').modal('show');
+	}
+
+	$scope.btnFilter = function(state, type) {
+		if (type == 'Edit') {
+			if(state != 'Deleted') {
+				return true;
+			}
+		} else if (type == 'Ban') {
+			if(state != 'Deleted' && state != 'Banned') {
+				return true;
+			}
+		} else if (type == 'Unban') {			
+			if(state != 'Deleted' && state == 'Banned') {
+				return true;
+			}			
+		} else if (type == 'Delete') {
+			if(state != 'Deleted') {
+				return true;
+			}
+		}
+		return false;
+	}
 }]);

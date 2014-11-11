@@ -2,9 +2,19 @@ package org.fenixedu.bennu.oauth.domain;
 
 public enum ExternalApplicationState {
 
-    ACTIVE,
+    ACTIVE("Active"),
 
-    DELETED,
+    DELETED("Deleted"),
 
-    BANNED;
+    BANNED("Banned");
+
+    private String name;
+
+    private ExternalApplicationState(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

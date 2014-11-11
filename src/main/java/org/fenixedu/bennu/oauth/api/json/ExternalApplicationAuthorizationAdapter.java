@@ -1,16 +1,18 @@
 package org.fenixedu.bennu.oauth.api.json;
 
-import java.io.UnsupportedEncodingException;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
+import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.json.JsonAdapter;
 import org.fenixedu.bennu.core.json.JsonBuilder;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 
 import com.google.common.base.Strings;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -38,20 +40,30 @@ public class ExternalApplicationAuthorizationAdapter implements JsonAdapter<Appl
         json.addProperty("applicationSiteUrl", application.getSiteUrl());
         json.addProperty("applicationAuthor", application.getAuthor().getUsername());
 
-        json.addProperty("applicationScopes",
-                application.getScopesSet().stream().map(ExternalApplicationScope::getName).collect(Collectors.joining(", ")));
+        JsonArray scopeArray = new JsonArray();
+        List<ExternalApplicationScope> appScopes = application.getScopeList();
 
-        json.addProperty("applicationScopesId", application.getScopesSet().stream().map(ExternalApplicationScope::getExternalId)
-                .collect(Collectors.joining(", ")));
+        for (ExternalApplicationScope externalApplicationScope : Bennu.getInstance().getScopesSet()) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("id", externalApplicationScope.getExternalId());
+            jsonObject.addProperty("name", externalApplicationScope.getName());
 
-        if (application.getLogo() != null && !Strings.isNullOrEmpty(application.getLogo().toString())) {
-            try {
-                json.addProperty("applicationLogo", new String(application.getLogo(), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+            if (appScopes.contains(externalApplicationScope)) {
+                jsonObject.addProperty("selected", true);
+            } else {
+                jsonObject.addProperty("selected", false);
             }
+            scopeArray.add(jsonObject);
         }
 
+        json.add("applicationScopes", scopeArray);
+
+        if (application.getLogo() != null && !Strings.isNullOrEmpty(application.getLogo().toString())) {
+            String logoUrl =
+                    CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-oauth/applications/"
+                            + application.getExternalId() + "/logo";
+            json.addProperty("applicationLogoUrl", logoUrl);
+        }
         return json;
     }
 }

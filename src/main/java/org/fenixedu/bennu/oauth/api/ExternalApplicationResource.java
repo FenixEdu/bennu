@@ -13,20 +13,40 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.annotation.OAuthEndpoint;
+import org.fenixedu.bennu.oauth.api.json.ExternalApplicationForManagersAdapter;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
-import org.joda.time.DateTime;
 
 @Path("/bennu-oauth")
 public class ExternalApplicationResource extends BennuRestResource {
+
+    private boolean isManager(User user) {
+        return Group.parse("#managers").isMember(user);
+    }
+
+    protected User verifyAndGetRequestAuthor(ExternalApplication application) {
+        User currentUser = super.verifyAndGetRequestAuthor();
+
+        if (isManager(currentUser)) {
+            return currentUser;
+        }
+
+        if (application.getAuthor().equals(currentUser)) {
+            return currentUser;
+        }
+
+        throw AuthorizationException.unauthorized();
+    }
 
     @GET
     @OAuthEndpoint({ "info", "payments" })
@@ -38,7 +58,7 @@ public class ExternalApplicationResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/all-applications")
+    @Path("/applications/all")
     public String allApplications() {
         accessControl("#managers");
         return view(Bennu.getInstance().getApplicationsSet());
@@ -58,14 +78,42 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/applications/{app}")
     public String updateApplication(@PathParam("app") ExternalApplication application, String json) {
-        verifyAndGetRequestAuthor();
+        User currentUser = verifyAndGetRequestAuthor(application);
+        if (isManager(currentUser)) {
+            return view(update(json, application, ExternalApplicationForManagersAdapter.class));
+        }
         return view(update(json, application));
+    }
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/applications/{app}/ban")
+    public Response banApplication(@PathParam("app") ExternalApplication application, String json) {
+        accessControl("#managers");
+        atomic(() -> {
+            application.setBanned();
+        });
+        return Response.ok().build();
+    }
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/applications/{app}/active")
+    public Response unbanApplication(@PathParam("app") ExternalApplication application, String json) {
+        accessControl("#managers");
+        atomic(() -> {
+
+            application.setActive();
+        });
+        return Response.ok().build();
     }
 
     @DELETE
     @Path("/applications/{app}")
     public Response delete(@PathParam("app") ExternalApplication app) {
-        verifyAndGetRequestAuthor();
+        verifyAndGetRequestAuthor(app);
         atomic(() -> {
             app.setDeleted();
         });
@@ -80,13 +128,10 @@ public class ExternalApplicationResource extends BennuRestResource {
             if (etag.toString().equals(ifNoneMatch)) {
                 return Response.notModified(etag).build();
             }
-            return Response.ok(Base64.getDecoder().decode(app.getLogo()), "image/jpeg").cacheControl(CACHE_CONTROL)
-                    .expires(DateTime.now().plusHours(12).toDate()).tag(etag).build();
+            return Response.ok(Base64.getDecoder().decode(app.getLogo()), "image/jpeg").tag(etag).build();
         }
         return Response.status(Status.NOT_FOUND).build();
     }
-
-    private static final CacheControl CACHE_CONTROL = CacheControl.valueOf("max-age=43200");
 
     private EntityTag buildETag(ExternalApplication instance) {
         return EntityTag.valueOf("W/\"" + instance.getLogo().length + "-" + instance.getExternalId() + "\"");

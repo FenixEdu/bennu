@@ -1,14 +1,14 @@
 package org.fenixedu.bennu.oauth.api.json;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
+import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.json.JsonAdapter;
 import org.fenixedu.bennu.core.json.JsonBuilder;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 
@@ -39,9 +39,13 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         if (jObj.has("scopes") && !jObj.get("scopes").isJsonNull()) {
 
             JsonArray jArr = jObj.get("scopes").getAsJsonArray();
+
             for (int i = 0; i < jArr.size(); i++) {
-                String oid = jArr.get(i).getAsString();
-                app.addScopes(FenixFramework.getDomainObject(oid));
+                JsonObject scopeJsonObject = jArr.get(i).getAsJsonObject();
+                if (scopeJsonObject.has("selected") && scopeJsonObject.get("selected").getAsBoolean()) {
+                    String oid = scopeJsonObject.get("id").getAsString();
+                    app.addScopes(FenixFramework.getDomainObject(oid));
+                }
             }
         }
         return app;
@@ -62,10 +66,15 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
 
         if (jObj.has("scopes") && !jObj.get("scopes").isJsonNull()) {
             List<ExternalApplicationScope> newScopes = new ArrayList<ExternalApplicationScope>();
+
             JsonArray jArr = jObj.get("scopes").getAsJsonArray();
             for (int i = 0; i < jArr.size(); i++) {
-                String oid = jArr.get(i).getAsString();
-                newScopes.add(FenixFramework.getDomainObject(oid));
+
+                JsonObject scopeJsonObject = jArr.get(i).getAsJsonObject();
+                if (scopeJsonObject.get("selected").getAsBoolean()) {
+                    String oid = scopeJsonObject.get("id").getAsString();
+                    newScopes.add(FenixFramework.getDomainObject(oid));
+                }
             }
             obj.setScopeList(newScopes);
         } else {
@@ -83,23 +92,38 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         json.addProperty("description", obj.getDescription());
         json.addProperty("siteUrl", obj.getSiteUrl());
         json.addProperty("active", obj.isActive());
+        json.addProperty("state", obj.getState().getName());
         json.addProperty("secret", obj.getSecret());
         json.addProperty("redirectUrl", obj.getRedirectUrl());
-        json.addProperty("author", obj.getAuthor().getUsername());
+        json.addProperty("author", obj.getAuthorNameForUserDialog());
         json.addProperty("authorizations", obj.getApplicationUserAuthorizationSet().size());
-        json.addProperty("scopes",
-                obj.getScopesSet().stream().map(ExternalApplicationScope::getName).collect(Collectors.joining(", ")));
 
-        json.addProperty("scopesId",
-                obj.getScopesSet().stream().map(ExternalApplicationScope::getExternalId).collect(Collectors.joining(", ")));
+        JsonArray scopeArray = new JsonArray();
+        List<ExternalApplicationScope> appScopes = obj.getScopeList();
+
+        for (ExternalApplicationScope externalApplicationScope : Bennu.getInstance().getScopesSet()) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("id", externalApplicationScope.getExternalId());
+            jsonObject.addProperty("name", externalApplicationScope.getName());
+
+            if (appScopes.contains(externalApplicationScope)) {
+                jsonObject.addProperty("selected", true);
+            } else {
+                jsonObject.addProperty("selected", false);
+            }
+            scopeArray.add(jsonObject);
+        }
+
+        json.add("scopes", scopeArray);
 
         if (obj.getLogo() != null && !Strings.isNullOrEmpty(obj.getLogo().toString())) {
-            try {
-                json.addProperty("logo", new String(obj.getLogo(), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            String logoUrl =
+                    CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-oauth/applications/"
+                            + obj.getExternalId() + "/logo";
+
+            json.addProperty("logoUrl", logoUrl);
         }
+
         return json;
     }
 }
