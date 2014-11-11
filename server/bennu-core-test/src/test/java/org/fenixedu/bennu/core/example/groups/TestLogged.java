@@ -11,6 +11,8 @@ import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentLoggedGroup;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.LoggedGroup;
+import org.fenixedu.bennu.core.groups.UnionGroup;
+import org.fenixedu.bennu.core.groups.UserGroup;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -42,6 +44,18 @@ public class TestLogged {
         assertEquals(LoggedGroup.get().getMembers(), Bennu.getInstance().getUserSet());
         assertTrue(LoggedGroup.get().isMember(user1));
         assertFalse(LoggedGroup.get().isMember(null));
+    }
+
+    @Test
+    @Atomic(mode = TxMode.READ)
+    public void loggedCompression() {
+        assertEquals(LoggedGroup.get(), LoggedGroup.get().grant(user1));
+        assertEquals(LoggedGroup.get(), UserGroup.of(user1).or(LoggedGroup.get()));
+
+        assertEquals(UserGroup.of(user1), LoggedGroup.get().and(UserGroup.of(user1)));
+        assertEquals(UserGroup.of(user1), UserGroup.of(user1).and(LoggedGroup.get()));
+
+        assertEquals(LoggedGroup.get(), UnionGroup.of(UserGroup.of(user1), LoggedGroup.get()));
     }
 
     @Test

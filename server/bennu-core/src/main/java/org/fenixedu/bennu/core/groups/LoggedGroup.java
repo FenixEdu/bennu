@@ -83,6 +83,9 @@ public final class LoggedGroup extends CustomGroup {
         if (group instanceof AnonymousGroup) {
             return NobodyGroup.get();
         }
+        if (!group.isMember(null)) {
+            return group;
+        }
         return super.and(group);
     }
 
@@ -90,6 +93,9 @@ public final class LoggedGroup extends CustomGroup {
     public Group or(Group group) {
         if (group instanceof AnonymousGroup) {
             return AnyoneGroup.get();
+        }
+        if (!group.isMember(null)) {
+            return this;
         }
         return super.or(group);
     }

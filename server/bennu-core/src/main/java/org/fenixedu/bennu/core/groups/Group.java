@@ -168,6 +168,9 @@ public abstract class Group implements Serializable, Comparable<Group> {
         if (group instanceof AnyoneGroup) {
             return this;
         }
+        if (group instanceof LoggedGroup && !this.isMember(null)) {
+            return this;
+        }
         return new IntersectionGroup(ImmutableSet.<Group> builder().add(this).add(group).build());
     }
 
@@ -187,6 +190,9 @@ public abstract class Group implements Serializable, Comparable<Group> {
         }
         if (group instanceof AnyoneGroup) {
             return AnyoneGroup.get();
+        }
+        if (group instanceof LoggedGroup && !this.isMember(null)) {
+            return group;
         }
         return new UnionGroup(ImmutableSet.<Group> builder().add(this).add(group).build());
     }
