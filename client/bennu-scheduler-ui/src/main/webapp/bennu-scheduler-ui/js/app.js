@@ -1,5 +1,5 @@
 var bennuScheduler = angular.module('bennuScheduler', [
-  'ngRoute', 'ui.codemirror'
+  'ngRoute', 'ui.codemirror', 'bennuToolkit'
 ]);
 
 bennuScheduler.config(['$routeProvider',
@@ -160,6 +160,7 @@ bennuScheduler.controller('CustomLogDetailsCtrl', ['$scope', '$http', '$routePar
 bennuScheduler.controller('CustomTaskCtrl', ['$scope', '$http', '$location', function ($scope, $http, $location) {
   $scope.javaCode = window.code || ""; window.code = null;
   $scope.compiled = false;   $scope.editorOptions = { lineNumbers: true, mode: 'text/x-java', theme: 'eclipse'};
+
   $scope.compile = function() {
     var packageRegex = new RegExp("package (.*);").exec($scope.javaCode);
     var classNameRegex = new RegExp("public class (.*) extends").exec($scope.javaCode);

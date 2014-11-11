@@ -1,8 +1,7 @@
 <div ng-app="bennuScheduler">
 	<div ng-view>
 	</div>
-	${portal.bennuPortal()}
-	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/angular.min.js"></script>
+	${portal.angularToolkit()}
 	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-portal/js/angular-route.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-scheduler-ui/js/libs/moment/moment.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-scheduler-ui/js/libs/codemirror/codemirror.js"></script>

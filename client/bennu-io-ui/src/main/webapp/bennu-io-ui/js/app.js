@@ -1,4 +1,4 @@
-var bennuIO = angular.module('bennuIO', [ 'ngRoute' ]);
+var bennuIO = angular.module('bennuIO', [ 'ngRoute', 'bennuToolkit' ]);
 
 bennuIO.config(['$routeProvider',
   function($routeProvider) {
