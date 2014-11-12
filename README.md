@@ -1,4 +1,4 @@
-![](http://i.imgur.com/I5EvniD.png)
+![](https://cloud.githubusercontent.com/assets/132118/5009829/70603546-6a63-11e4-96fc-9d88559fa600.png)
 
 # Modular Web App Development for Java [![Build Status](https://travis-ci.org/FenixEdu/bennu.svg?branch=develop)](https://travis-ci.org/FenixEdu/bennu)
 
