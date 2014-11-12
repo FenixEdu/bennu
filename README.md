@@ -1,6 +1,7 @@
 ![](https://cloud.githubusercontent.com/assets/132118/5009829/70603546-6a63-11e4-96fc-9d88559fa600.png)
 
-# Modular Web App Development for Java [![Build Status](https://travis-ci.org/FenixEdu/bennu.svg?branch=develop)](https://travis-ci.org/FenixEdu/bennu)
+[![Build Status](https://travis-ci.org/FenixEdu/bennu.svg?branch=develop)](https://travis-ci.org/FenixEdu/bennu)
+==========
 
 Bennu is the foundation for building modular Java web applications based on the [fenix-framework](http://fenix-framework.github.io/). It provides a bunch of features out of the box so you can start developing your own applications and modules without worring about problems, like user authentication and management or task scheduling.
 
@@ -11,6 +12,10 @@ To start developing using the Bennu Framework you should take a look to our docu
 [https://confluence.fenixedu.org/display/BENNU/Welcome](https://confluence.fenixedu.org/display/BENNU/Welcome)
 
 It includes tutorials and examples so you can learn how to use the Bennu Framework
+
+##Issue Tracking
+
+Issue Tracking for the Bennu Framework should be done using [GitHub Issues](https://github.com/FenixEdu/bennu/issues)
 
 ## Contribute
 
