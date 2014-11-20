@@ -78,7 +78,7 @@ public final class User extends User_Base implements Principal {
 
     };
 
-    public static final Comparator<User> COMPARATOR_BY_NAME = Comparator.comparing(User::getUsername);
+    public static final Comparator<User> COMPARATOR_BY_NAME = Comparator.comparing(u -> u.getProfile().getDisplayName());
 
     @Deprecated
     public static class UserToUsername implements Function<User, String> {
