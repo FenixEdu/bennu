@@ -344,14 +344,14 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', function ($scope, $http
 	$scope.showDetailsApplication = function(application) {
 		$scope.currentapp = application;
 		$('#detailsApplication').modal('show');
-	}
+	};
 
 	$scope.showEditApplicationModal = function(application) {
 		angular.element('#logo').val(null);
 		$scope.currentappindex = $scope.applications.indexOf(application);
 		$scope.currentapp = angular.copy(application);
 		$('#editApplicationManager').modal('show');
-	}
+	};
 
 	$scope.btnFilter = function(state, type) {
 		if (type == 'Edit') {
@@ -373,4 +373,16 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', function ($scope, $http
 		}
 		return false;
 	}
+	
+	$scope.keyChange = function() {
+		var found = false;
+
+		angular.forEach($scope.scopes, function(scope) {
+			if(scope.scopeKey === $scope.currentscope.scopeKey) {
+				found = true;
+			} 
+		});
+		$scope.error = found;
+
+	};
 }]);

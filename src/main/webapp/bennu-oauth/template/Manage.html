@@ -77,9 +77,8 @@
 						</div>
 					</td>
 					<td><b>Name:</b> {{app.name}} <br> <b>Description:</b>
-						{{app.description}} <br>
-					<b>Author:</b> {{app.author}} <br>
-					<b>Scopes:</b> {{app.scopes | scopeNames}}</td>
+						{{app.description}} <br> <b>Author:</b> {{app.author}} <br>
+						<b>Scopes:</b> {{app.scopes | scopeNames}}</td>
 					<td style="vertical-align: middle" class="col-sm-2 text-center">{{app.authorizations}}</td>
 					<td style="vertical-align: middle">{{app.redirectUrl}}</td>
 					<td style="vertical-align: middle">{{app.state}}</td>
@@ -217,7 +216,11 @@
 						<label for="scopeKey" class="col-sm-2 control-label">Key</label>
 						<div class="col-sm-10">
 							<input ng-model="currentscope.scopeKey" type="text"
-								class="form-control" id="scopeKey" placeholder="Key" required />
+								ng-change="keyChange()" class="form-control" id="scopeKey"
+								placeholder="Key" required />
+								 								
+								<span ng-show="error">Key
+								already exists.</span>
 						</div>
 					</div>
 
@@ -242,7 +245,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Create</button>
+					<button ng-disabled="error" type="submit" class="btn btn-primary">Create</button>
 				</div>
 
 			</form>
@@ -271,6 +274,7 @@
 							<input ng-model="currentscope.scopeKey" type="text"
 								class="form-control" id="editScopeKey" placeholder="Key"
 								disabled />
+
 						</div>
 					</div>
 
@@ -319,8 +323,7 @@
 
 						<label for="logo" class="col-sm-2 control-label">Logo</label>
 						<div class="col-sm-8">
-							<img ng-src="{{currentapp.getLogoUrl}}"
-								height="50px;">
+							<img ng-src="{{currentapp.getLogoUrl}}" height="50px;">
 						</div>
 					</div>
 
@@ -345,11 +348,10 @@
 						<label for="description" class="col-sm-2 control-label">Description</label>
 						<div class="col-sm-8">
 							<textarea disabled class="form-control"
-								ng-model="currentapp.description" id="description"
-								rows="2"></textarea>
+								ng-model="currentapp.description" id="description" rows="2"></textarea>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="siteUrl" class="col-sm-2 control-label">Site</label>
 						<div class="col-sm-8">
@@ -435,8 +437,8 @@
 					<div class="form-group">
 						<label for="author" class="col-sm-2 control-label">Author</label>
 						<div class="col-sm-8">
-							<input type="text" ng-model="currentapp.author" ng-required="true"
-								class="form-control" id="author" >
+							<input type="text" ng-model="currentapp.author"
+								ng-required="true" class="form-control" id="author">
 						</div>
 					</div>
 
@@ -451,9 +453,9 @@
 					<div class="form-group">
 						<label for="description" class="col-sm-2 control-label">Description</label>
 						<div class="col-sm-8">
-							<textarea class="form-control"
-								ng-model="currentapp.description" id="description" ng-required="true"
-								placeholder="Description" rows="2"></textarea>
+							<textarea class="form-control" ng-model="currentapp.description"
+								id="description" ng-required="true" placeholder="Description"
+								rows="2"></textarea>
 						</div>
 					</div>
 
@@ -470,8 +472,8 @@
 							Url</label>
 						<div class="col-sm-8">
 							<input type="text" class="form-control"
-								ng-model="currentapp.redirectUrl" id="redirectUrl" ng-required="true"
-								placeholder="Redirect Url">
+								ng-model="currentapp.redirectUrl" id="redirectUrl"
+								ng-required="true" placeholder="Redirect Url">
 						</div>
 					</div>
 
@@ -480,9 +482,8 @@
 						<div class="col-sm-10">
 
 							<div for="" ng-repeat="scope in currentapp.scopes">
-								<input type="checkbox"
-									value="scope.name" ng-model="scope.selected">
-								{{scope.name}}
+								<input type="checkbox" value="scope.name"
+									ng-model="scope.selected"> {{scope.name}}
 							</div>
 
 

@@ -27,7 +27,7 @@ class ApplicationUserAuthorization {
 class ExternalApplicationScope {
     String scopeKey (REQUIRED);
     String name (REQUIRED);
-    String description;
+    String description (REQUIRED);
 }
 
 relation BennuExternalApplications {
