@@ -4,25 +4,39 @@
 	<div class="row">
 
 
+		<h3>Scopes</h3>
+		<button role="button" data-toggle="modal"
+			class="btn btn-primary  pull-right" ng-click="showCreateScope()">Create</button>
+
+
 		<h4>
-			Scopes
-			<button role="button" data-toggle="modal"
-				class="btn btn-primary btn-sm pull-right"
-				ng-click="showCreateScope()">Create</button>
+			<div ng-show="scopes" class="col-sm-4 pull-right">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Find</label>
+						<div class="col-sm-10">
+							<input type="text" ng-model="queryScopes" class="form-control" />
+						</div>
+					</div>
+				</form>
+			</div>
 		</h4>
+
 
 
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th>Key</th>
-					<th>Name</th>
+					<th><a href=""
+						ng-click="predicate = 'scopeKey'; reverse=!reverse">Key</a></th>
+					<th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
 					<th>Description</th>
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="scope in scopes">
+				<tr
+					ng-repeat="scope in scopes | filter: filterScopes | orderBy:predicate:reverse">
 					<td>{{scope.scopeKey}}</td>
 					<td>{{scope.name}}</td>
 					<td>{{scope.description}}</td>
@@ -43,10 +57,11 @@
 
 		<br /> <br />
 
-		<h4>
-			Applications
+		<h3>Applications</h3>
 
-			<div class="col-sm-4 pull-right">
+		<h4>
+
+			<div ng-show="applications" class="col-sm-4 pull-right">
 				<form class="form-horizontal">
 					<div class="form-group">
 						<label class="col-sm-2 control-label">Find</label>
@@ -62,15 +77,18 @@
 			<thead>
 				<tr>
 					<th class="col-sm-1">Logo</th>
-					<th class="col-sm-3">Information</th>
-					<th class="col-sm-2 text-center">Authorizations</th>
+					<th class="col-sm-3"><a href=""
+						ng-click="predicateApplications = 'name'; reverseApplication=!reverseApplication">Information</a></th>
+					<th class="col-sm-2 text-center"><a href=""
+						ng-click="predicateApplications = 'authorizations'; reverseApplication=!reverseApplication">Authorizations</a></th>
 					<th class="col-sm-2">Redirect</th>
 					<th class="col-sm-1">State</th>
 					<th class="col-sm-3"></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="app in applications | filter: filterApplications">
+				<tr
+					ng-repeat="app in applications | filter: filterApplications | orderBy:predicateApplications:reverseApplication">
 					<td style="vertical-align: middle" class="col-sm-1">
 						<div>
 							<img ng-src="{{app.getLogoUrl}}" height="55px;">
@@ -217,9 +235,7 @@
 						<div class="col-sm-10">
 							<input ng-model="currentscope.scopeKey" type="text"
 								ng-change="keyChange()" class="form-control" id="scopeKey"
-								placeholder="Key" required />
-								 								
-								<span ng-show="error">Key
+								placeholder="Key" required /> <span ng-show="error">Key
 								already exists.</span>
 						</div>
 					</div>

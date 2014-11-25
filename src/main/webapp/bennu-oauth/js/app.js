@@ -101,7 +101,11 @@ bennuOAuth.config(['$routeProvider','$httpProvider',
 }]);
 
 bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', '$location', function ($scope, $http, $location) {
+	
 	$scope.ctx = contextPath;
+	
+    $scope.predicate = 'applicationName';
+
 	$scope.create = function() {
 		$http.post(contextPath + '/api/bennu-oauth/authorizations', {'name': $scope.name}).success(function (data) {
 			$scope.authorizations.push(createReloadableUrlObject(data, 'applicationLogoUrl')); 
@@ -130,12 +134,25 @@ bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', '$location', fu
 				$scope.authorizations.splice(index, 1);
 			}
 		});
-	}	
+	};
+	
+	$scope.filterApplications = function(value, index) {
+		var found = false;
+		angular.forEach(['applicationName', 'applicationAuthor', 'applicationDescription', 'applicationSiteUrl'], function(key) {
+			if (!$scope.query || value[key].toLowerCase().indexOf($scope.query.toLowerCase()) >= 0) {
+				found = true;
+				return;
+			}
+		});
+		return found;
+	};
 }]);
 
 bennuOAuth.controller('AuthorizationsByIdCtrl', [ '$scope', '$http', '$routeParams', '$location', function ($scope, $http, $routeParams, $location) {
+
 	$scope.ctx = contextPath;
 
+    $scope.predicate = '-date';
 
 	$http.get(contextPath + '/api/bennu-oauth/sessions/' + $routeParams.id ).success(function (data) {
 		$scope.sessions = data;		
@@ -152,12 +169,15 @@ bennuOAuth.controller('AuthorizationsByIdCtrl', [ '$scope', '$http', '$routePara
 				$scope.sessions = data;		
 			});	
 		});
-	}
+	};
+	
 }]);
 
 bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', '$cacheFactory', '$timeout', function ($scope, $http, $cacheFactory, $timeout) {
 
 	$scope.ctx = contextPath;
+
+    $scope.predicate = 'name';
 
 	$http.get(contextPath + '/api/bennu-oauth/applications').success(function (data) {		
 		$scope.applications = getReloadableUrlObjects(data);
@@ -224,12 +244,28 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', '$cacheFactory', 
 	$scope.fileNameChanged = function(e, type) {
 		fileNameChangedAux(e, type, $scope);
 	};
+	
+	$scope.filterApplications = function(value, index) {
+		var found = false;
+		angular.forEach(['name', 'description', 'siteUrl'], function(key) {
+			if (!$scope.query || value[key].toLowerCase().indexOf($scope.query.toLowerCase()) >= 0) {
+				found = true;
+				return;
+			}
+		});
+		return found;
+	};
 
 }]);
 
 bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', function ($scope, $http) {
+	
 	$scope.ctx = contextPath;
 
+    $scope.predicate = 'scopeKey';
+    $scope.predicateApplications = 'name';
+
+    
 	$http.get(contextPath + '/api/bennu-oauth/scopes').success(function (data) {
 		$scope.scopes = data;
 	});
@@ -334,6 +370,17 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', function ($scope, $http
 		var found = false;
 		angular.forEach(['name', 'description', 'author', 'state', 'redirectUrl'], function(key) {
 			if (!$scope.query || value[key].toLowerCase().indexOf($scope.query.toLowerCase()) >= 0) {
+				found = true;
+				return;
+			}
+		});
+		return found;
+	};
+	
+	$scope.filterScopes = function(value, index) {
+		var found = false;
+		angular.forEach(['scopeKey', 'name'], function(key) {
+			if (!$scope.queryScopes || value[key].toLowerCase().indexOf($scope.queryScopes.toLowerCase()) >= 0) {
 				found = true;
 				return;
 			}

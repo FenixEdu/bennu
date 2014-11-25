@@ -114,6 +114,10 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (Strings.isNullOrEmpty(request.getPathInfo())) {
+            response.sendError(404);
+            return;
+        }
         String path = trim(request.getPathInfo());
         switch (path) {
         case "userdialog":

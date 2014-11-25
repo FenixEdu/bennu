@@ -1,65 +1,88 @@
-<table class="table">
-	<thead>
-		<tr>
-			<th>Logo</th>
-			<th>Name</th>
-			<th>Author</th>
-			<th>Description</th>
-			<th>Scopes</th>
-			<th>Site</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr ng-repeat="authorization in authorizations">
-			<td class="col-sm-1" style="vertical-align: middle">
-				<div>
-					<img													
-						ng-src="{{authorization.getLogoUrl}}"
-						height="50px;">
+<div>
+	<div class="row">
+
+		<h3>Authorizations:</h3>
+		<h4>
+			<div ng-show="authorizations" class="col-sm-4 pull-right">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Find</label>
+						<div class="col-sm-10">
+							<input type="text" ng-model="query" class="form-control" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</h4>
+
+		<table class="table">
+
+			<thead>
+				<tr>
+					<th>Logo</th>
+					<th><a href="" ng-click="predicate = 'applicationName'; reverse=!reverse">Name</a></th>
+					<th><a href=""
+						ng-click="predicate = 'applicationAuthor'; reverse=!reverse">Author</a></th>
+					<th>Description</th>
+					<th>Scopes</th>
+					<th>Site</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					ng-repeat="authorization in authorizations | filter: filterApplications | orderBy:predicate:reverse">
+					<td class="col-sm-1" style="vertical-align: middle">
+						<div>
+							<img ng-src="{{authorization.getLogoUrl}}" height="50px;">
+						</div>
+					</td>
+					<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationName}}</td>
+					<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationAuthor}}</td>
+					<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationDescription}}</td>
+					<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationScopes
+						| scopeNames}}</td>
+					<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationSiteUrl}}</td>
+
+
+
+					<td class="col-sm-1" style="vertical-align: middle">
+
+						<button ng-click="showDetails(authorization)" role="button"
+							class="btn btn-sm">Details</button>
+
+						<button data-target="#modal-revoke-menu" role="button"
+							class="btn btn-danger btn-sm"
+							ng-click="showRevokeModal(authorization)">Revoke</button>
+
+					</td>
+
+				</tr>
+			</tbody>
+		</table>
+		<hr />
+
+		<div id="modal-revoke-menu" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h3>Revoke Application</h3>
+					</div>
+					<div class="modal-body">
+						<p>Do you wish to revoke the selected application?</p>
+
+					</div>
+					<div class="modal-footer">
+						<button data-dismiss="modal" class="btn secondary btn-sm">No</button>
+
+						<button ng-click="revokeApp()" data-dismiss="modal"
+							class="btn btn-danger btn-sm">Yes</button>
+					</div>
 				</div>
-			</td>
-			<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationName}}</td>
-			<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationAuthor}}</td>
-			<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationDescription}}</td>
-			<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationScopes | scopeNames}}</td>
-			<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationSiteUrl}}</td>
-
-
-
-			<td class="col-sm-1" style="vertical-align: middle">
-
-				<button ng-click="showDetails(authorization)" role="button" class="btn btn-sm">Details</button>
-			
-				<button data-target="#modal-revoke-menu" role="button"
-					class="btn btn-danger btn-sm"
-					ng-click="showRevokeModal(authorization)">Revoke</button>
-				
-			</td>
-
-		</tr>
-	</tbody>
-</table>
-<hr />
-
-<div id="modal-revoke-menu" class="modal fade">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
-				<h3>Revoke Application</h3>
-			</div>
-			<div class="modal-body">
-				<p>Do you wish to revoke the selected application?</p>
-
-			</div>
-			<div class="modal-footer">
-				<button data-dismiss="modal" class="btn secondary btn-sm">No</button>
-
-				<button ng-click="revokeApp()" data-dismiss="modal"
-					class="btn btn-danger btn-sm">Yes</button>
 			</div>
 		</div>
 	</div>
 </div>
+
