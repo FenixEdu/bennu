@@ -318,11 +318,11 @@ bennuAdmin.controller('GroupsController', ['$scope', '$http', function($scope, $
     $scope.groups = data;
   });
   function doIt(op, user) {
-    return $http.post(contextPath + '/api/bennu-core/groups/dynamic/' + op, {'group': $scope.selectedGroup.name, 'user': user}).success(function (data) {
-      $scope.groups[$scope.groups.indexOf($scope.selectedGroup)] = data; $scope.selectedGroup = data; $scope.newUser = '';
+    return $http.post(contextPath + '/api/bennu-core/groups/dynamic/' + op, {'group': $scope.selectedGroup.name, 'user': user.username}).success(function (data) {
+      $scope.groups[$scope.groups.indexOf($scope.selectedGroup)] = data; $scope.selectedGroup = data; $scope.newUser = {};
     });
   }
-  $scope.grant = function(user) { doIt('grant', user).error(function() { $scope.error = true; }); };
+  $scope.grant = function(user) { doIt('grant', user).success(function() { $scope.error = false; }).error(function() { $scope.error = true; }); };
   $scope.revoke = function(user) { doIt('revoke', user); };
   $scope.min = Math.min;
 }]);

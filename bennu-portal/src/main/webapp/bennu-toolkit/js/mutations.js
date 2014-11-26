@@ -133,5 +133,30 @@
                 }
             }
         });
+        
+        
+        // User Autocomplete
+        // -----------------
+        var autocompletes = $("[" + Bennu.userAutocomplete.attr + "]");
+        
+        if (autocompletes.size() > 0) {
+        	Bennu.userAutocomplete.setup();
+        }
+        
+        autocompletes.map(function (i, e) {
+            Bennu.userAutocomplete.createWidget(e);
+        });
+        
+        Bennu.monitor.checkFor(Bennu.userAutocomplete.attr, {
+            add: function (e) {
+                Bennu.userAutocomplete.createWidget(e);
+            },
+            remove: function (e) {
+                if ($(e).attr(Bennu.userAutocomplete.attr) === "") {
+                    $(e).data("handler").remove();
+                }
+            }
+        });
+        
     });
 })();

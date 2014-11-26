@@ -36,7 +36,7 @@
 							<span ng-show="showRevoke">
 								Are you sure?
 								<div>
-									<a class="btn btn-danger btn-xs" href="" ng-click="revoke(user.username)">Yes</a>
+									<a class="btn btn-danger btn-xs" href="" ng-click="revoke(user)">Yes</a>
 									<a class="btn btn-default btn-xs" href="" ng-click="showRevoke = false">No</a>
 								</div>
 							</span>
@@ -52,12 +52,12 @@
 			<hr />
 			<form ng-submit="grant(newUser)" class="form-horizontal">
 				<div class="alert alert-danger" ng-show="error">
-					User '{{newUser}}' not found!
+					User '{{newUser.username}}' not found!
 				</div>
 				<div class="form-group">
 					<label class="control-label col-sm-2" for="newUser">Add User:</label>
 					<div class="col-sm-10">
-						<input class="form-control" type="text" ng-model="newUser" ng-change="error = false" required />
+						<input class="form-control" type="text" ng-user-autocomplete="newUser" required />
 					</div>
 				</div>
 				<div class="form-group">

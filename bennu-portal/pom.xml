@@ -55,6 +55,7 @@
                                 <jsSourceFile>localizedString.js</jsSourceFile>
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
                                 <jsSourceFile>group.js</jsSourceFile>
+                                <jsSourceFile>userAutocomplete.js</jsSourceFile>
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>MutationObserverPolyfill.js</jsSourceFile>
                                 <jsSourceFile>mutations.js</jsSourceFile>
