@@ -1,14 +1,14 @@
-<h2 class="page-header">Authorizations</h2>
+<h2 class="page-header" translate>Authorizations</h2>
 
 <div>
 	<div class="row">
 
 		
 		<h4>
-			<div ng-show="authorizations" class="col-sm-4 pull-right">
+			<div ng-show="authorizations" class="col-sm-5 pull-right">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Find</label>
+						<label class="col-sm-2 control-label" translate >Find</label>
 						<div class="col-sm-10">
 							<input type="text" ng-model="query" class="form-control" />
 						</div>
@@ -21,13 +21,13 @@
 
 			<thead>
 				<tr>
-					<th>Logo</th>
+					<th></th>
 					<th><a href=""
-						ng-click="predicate = 'applicationName'; reverse=!reverse">Name</a></th>
+						ng-click="predicate = 'applicationName'; reverse=!reverse" translate>Name</a></th>
 					<th><a href=""
-						ng-click="predicate = 'applicationAuthor'; reverse=!reverse">Author</a></th>
-					<th>Description</th>
-					<th>Scopes</th>
+						ng-click="predicate = 'applicationAuthor'; reverse=!reverse" translate>Author</a></th>
+					<th translate>Description</th>
+					<th translate>Scopes</th>
 					<th>Site</th>
 					<th></th>
 				</tr>
@@ -55,11 +55,11 @@
 						<div class="btn-group">
 
 							<button ng-click="showDetails(authorization)" role="button"
-								class="btn btn-sm">Details</button>
+								class="btn btn-sm" translate>Details</button>
 
 							<button data-target="#modal-revoke-menu" role="button"
 								class="btn btn-danger btn-sm"
-								ng-click="showRevokeModal(authorization)">Revoke</button>
+								ng-click="showRevokeModal(authorization)" translate >Revoke</button>
 						</div>
 					</td>
 
@@ -77,14 +77,14 @@
 						<h3>Revoke Application</h3>
 					</div>
 					<div class="modal-body">
-						<p>Do you wish to revoke the selected application?</p>
+						<p translate>Do you wish to revoke the selected application?</p>
 
 					</div>
 					<div class="modal-footer">
-						<button data-dismiss="modal" class="btn secondary btn-sm">No</button>
+						<button data-dismiss="modal" class="btn secondary btn-sm" translate>No</button>
 
 						<button ng-click="revokeApp()" data-dismiss="modal"
-							class="btn btn-danger btn-sm">Yes</button>
+							class="btn btn-danger btn-sm" translate>Yes</button>
 					</div>
 				</div>
 			</div>

@@ -1,12 +1,12 @@
-<h2 class="page-header">Authorizations by Application</h2>
+<h2 class="page-header" translate>Authorizations by Application</h2>
 
 <table class="table">
 	<thead>
 		<tr>
 			<th class="col-sm-1 text-center"><a href=""
-				ng-click="predicate = 'date'; reverse=!reverse">Date</a></th>
+				ng-click="predicate = 'date'; reverse=!reverse" translate>Date</a></th>
 			<th class="col-sm-2 text-center"><a href=""
-				ng-click="predicate = 'device'; reverse=!reverse">Device</a></th>
+				ng-click="predicate = 'device'; reverse=!reverse" translate>Device</a></th>
 			<th class="col-sm-4 text-center">Refresh Token</th>
 			<th class="col-sm-4 text-center">Access Token</th>
 			<th></th>
@@ -26,7 +26,7 @@
 			<td class="col-sm-1 text-center" style="vertical-align: middle">
 				<button data-target="#modal-revoke-menu" role="button"
 					class="btn btn-danger btn-sm"
-					ng-click="showRevokeSessionModal(session)">Revoke</button>
+					ng-click="showRevokeSessionModal(session)" translate>Revoke</button>
 			</td>
 
 		</tr>
@@ -39,17 +39,17 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h3>Revoke Session</h3>
+				<h3 translate>Revoke Session</h3>
 			</div>
 			<div class="modal-body">
-				<p>Do you wish to revoke the selected session?</p>
+				<p translate>Do you wish to revoke the selected session?</p>
 
 			</div>
 			<div class="modal-footer">
-				<button data-dismiss="modal" class="btn secondary btn-sm">No</button>
+				<button data-dismiss="modal" class="btn secondary btn-sm" translate>No</button>
 
 				<button ng-click="revokeSession()" data-dismiss="modal"
-					class="btn btn-danger btn-sm">Yes</button>
+					class="btn btn-danger btn-sm" translate>Yes</button>
 			</div>
 		</div>
 	</div>

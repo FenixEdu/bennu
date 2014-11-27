@@ -1,5 +1,5 @@
 var bennuOAuth = angular.module('bennuOAuth', [
-                                               'ngRoute'
+                                               'ngRoute', 'pascalprecht.translate'
                                                ]);
 
 bennuOAuth.filter('scopeNames', function() {	
@@ -51,13 +51,13 @@ function fileNameChangedAux(e, type, $scope){
 		var file = files[i];
 		if (!file.type.match("image.*")) {
 			$scope.$apply(function () {
-				$scope.error = "Apenas são aceites imagens";
+				$scope.error = "Only images";
 			});
 			continue;
 		}
 		if (file.size > 2000 * 1024) { // 2000kb
 			$scope.$apply(function () {
-				$scope.error = "Imagem muito grande. Tamanho máximo : 2MB";
+				$scope.error = "Image too large. Maximum size : 2MB";
 			});
 			continue;
 		}
@@ -77,8 +77,8 @@ function fileNameChangedAux(e, type, $scope){
 	}
 }
 
-bennuOAuth.config(['$routeProvider','$httpProvider',
-                   function($routeProvider, $httpProvider) {
+bennuOAuth.config(['$routeProvider','$httpProvider','$translateProvider',
+                   function($routeProvider, $httpProvider, $translateProvider) {
 	$routeProvider.
 	when('/authorizations', {
 		templateUrl: contextPath + '/bennu-oauth/template/Authorizations.html',
@@ -101,6 +101,14 @@ bennuOAuth.config(['$routeProvider','$httpProvider',
 	});
 
 	$httpProvider.interceptors.push('httpUnauthorizedFilter');
+	
+	$translateProvider.useStaticFilesLoader({
+        prefix: window.contextPath + "/bennu-oauth/i18n/",
+        suffix: '.json'
+    });
+	
+	$translateProvider.preferredLanguage(Bennu.locale.lang);
+        	
 }]);
 
 bennuOAuth.controller('AuthorizationsCtrl', [ '$scope', '$http', '$location', function ($scope, $http, $location) {
