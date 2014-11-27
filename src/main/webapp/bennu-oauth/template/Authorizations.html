@@ -1,7 +1,9 @@
+<h2 class="page-header">Authorizations</h2>
+
 <div>
 	<div class="row">
 
-		<h3>Authorizations:</h3>
+		
 		<h4>
 			<div ng-show="authorizations" class="col-sm-4 pull-right">
 				<form class="form-horizontal">
@@ -20,7 +22,8 @@
 			<thead>
 				<tr>
 					<th>Logo</th>
-					<th><a href="" ng-click="predicate = 'applicationName'; reverse=!reverse">Name</a></th>
+					<th><a href=""
+						ng-click="predicate = 'applicationName'; reverse=!reverse">Name</a></th>
 					<th><a href=""
 						ng-click="predicate = 'applicationAuthor'; reverse=!reverse">Author</a></th>
 					<th>Description</th>
@@ -42,20 +45,22 @@
 					<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationDescription}}</td>
 					<td class="col-sm-1" style="vertical-align: middle">{{authorization.applicationScopes
 						| scopeNames}}</td>
-					
-					<td class="col-sm-1" style="vertical-align: middle"><a href="{{authorization.applicationSiteUrl}}">{{authorization.applicationSiteUrl}}</a></td>
+
+					<td class="col-sm-1" style="vertical-align: middle"><a
+						href="{{authorization.applicationSiteUrl}}">{{authorization.applicationSiteUrl}}</a></td>
 
 
 
 					<td class="col-sm-1" style="vertical-align: middle">
+						<div class="btn-group">
 
-						<button ng-click="showDetails(authorization)" role="button"
-							class="btn btn-sm">Details</button>
+							<button ng-click="showDetails(authorization)" role="button"
+								class="btn btn-sm">Details</button>
 
-						<button data-target="#modal-revoke-menu" role="button"
-							class="btn btn-danger btn-sm"
-							ng-click="showRevokeModal(authorization)">Revoke</button>
-
+							<button data-target="#modal-revoke-menu" role="button"
+								class="btn btn-danger btn-sm"
+								ng-click="showRevokeModal(authorization)">Revoke</button>
+						</div>
 					</td>
 
 				</tr>
@@ -87,3 +92,8 @@
 	</div>
 </div>
 
+<style>
+a {
+	color: #4b565c;
+}
+</style>

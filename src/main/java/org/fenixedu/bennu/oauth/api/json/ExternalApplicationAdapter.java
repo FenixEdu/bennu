@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.json.JsonAdapter;
 import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -27,15 +28,16 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
 
         JsonObject jObj = json.getAsJsonObject();
         ExternalApplication app = new ExternalApplication();
-        app.setName(jObj.get("name").getAsString());
-        app.setDescription(jObj.get("description").getAsString());
-        app.setSiteUrl(jObj.get("siteUrl").getAsString());
-        app.setRedirectUrl(jObj.get("redirectUrl").getAsString());
+
+        app.setName(getRequiredValue(jObj, "name"));
+        app.setDescription(getRequiredValue(jObj, "description"));
+        app.setRedirectUrl(getRequiredValue(jObj, "redirectUrl"));
+
+        app.setSiteUrl(getDefaultValue(jObj, "siteUrl", ""));
 
         if (jObj.has("logo") && !jObj.get("logo").isJsonNull()) {
             app.setLogo(jObj.get("logo").getAsString().getBytes(Charset.forName("UTF-8")));
         }
-
         if (jObj.has("scopes") && !jObj.get("scopes").isJsonNull()) {
 
             JsonArray jArr = jObj.get("scopes").getAsJsonArray();
@@ -52,16 +54,17 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
     }
 
     @Override
-    public ExternalApplication update(JsonElement json, ExternalApplication obj, JsonBuilder ctx) {
+    public ExternalApplication update(JsonElement json, ExternalApplication app, JsonBuilder ctx) {
 
         JsonObject jObj = json.getAsJsonObject();
-        obj.setName(jObj.get("name") == null ? "" : jObj.get("name").getAsString());
-        obj.setDescription(jObj.get("description") == null ? "" : jObj.get("description").getAsString());
-        obj.setSiteUrl(jObj.get("siteUrl") == null ? "" : jObj.get("siteUrl").getAsString());
-        obj.setRedirectUrl(jObj.get("redirectUrl") == null ? "" : jObj.get("redirectUrl").getAsString());
+        app.setName(getRequiredValue(jObj, "name"));
+        app.setDescription(getRequiredValue(jObj, "description"));
+        app.setRedirectUrl(getRequiredValue(jObj, "redirectUrl"));
+
+        app.setSiteUrl(getDefaultValue(jObj, "siteUrl", ""));
 
         if (jObj.has("logo") && !jObj.get("logo").isJsonNull()) {
-            obj.setLogo(jObj.get("logo").getAsString().getBytes(Charset.forName("UTF-8")));
+            app.setLogo(jObj.get("logo").getAsString().getBytes(Charset.forName("UTF-8")));
         }
 
         if (jObj.has("scopes") && !jObj.get("scopes").isJsonNull()) {
@@ -76,12 +79,11 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
                     newScopes.add(FenixFramework.getDomainObject(oid));
                 }
             }
-            obj.setScopeList(newScopes);
+            app.setScopeList(newScopes);
         } else {
-            obj.setScopeList(new ArrayList<ExternalApplicationScope>());
+            app.setScopeList(new ArrayList<ExternalApplicationScope>());
         }
-
-        return obj;
+        return app;
     }
 
     @Override
@@ -125,5 +127,19 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         }
 
         return json;
+    }
+
+    private String getRequiredValue(JsonObject obj, String property) {
+        if (obj.has(property)) {
+            return obj.get(property).getAsString();
+        }
+        throw BennuCoreDomainException.cannotCreateEntity();
+    }
+
+    private String getDefaultValue(JsonObject obj, String property, String defaultValue) {
+        if (obj.has(property)) {
+            return obj.get(property).getAsString();
+        }
+        return defaultValue;
     }
 }

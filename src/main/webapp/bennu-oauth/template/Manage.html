@@ -42,13 +42,14 @@
 					<td>{{scope.description}}</td>
 					<td class="text-right">
 
+						<div class="btn-group">
 
-						<button role="button" data-toggle="modal" class="btn btn-sm"
-							ng-click="showEditModal(scope)">Edit</button>
+							<button role="button" data-toggle="modal" class="btn btn-sm"
+								ng-click="showEditModal(scope)">Edit</button>
 
-						<button data-target="#modal-delete-menu" role="button"
-							class="btn btn-danger btn-sm" ng-click="showDeleteModal(scope)">Delete</button>
-
+							<button data-target="#modal-delete-menu" role="button"
+								class="btn btn-danger btn-sm" ng-click="showDeleteModal(scope)">Delete</button>
+						</div>
 
 					</td>
 				</tr>
@@ -102,25 +103,30 @@
 					<td style="vertical-align: middle">{{app.state}}</td>
 					<td style="vertical-align: middle" class="text-right">
 
-						<button role="button" data-toggle="modal" class="btn btn-sm"
-							ng-click="showDetailsApplication(app)">Details</button>
+						<div class="btn-group">
 
-						<button data-target="#modal-delete-menu" role="button"
-							class="btn btn-sm" ng-show="btnFilter(app.state, 'Edit')"
-							ng-click="showEditApplicationModal(app)">Edit</button>
 
-						<button role="button" class="btn btn-sm"
-							ng-show="btnFilter(app.state, 'Ban')"
-							ng-click="showBanModal(app)">Ban</button>
+							<button role="button" data-toggle="modal" class="btn btn-sm"
+								ng-click="showDetailsApplication(app)">Details</button>
 
-						<button role="button" class="btn btn-sm"
-							ng-show="btnFilter(app.state, 'Unban')"
-							ng-click="showUnbanModal(app)">Unban</button>
+							<button data-target="#modal-delete-menu" role="button"
+								class="btn btn-sm" ng-show="btnFilter(app.state, 'Edit')"
+								ng-click="showEditApplicationModal(app)">Edit</button>
 
-						<button data-target="#modal-delete-menu" role="button"
-							class="btn btn-danger btn-sm"
-							ng-show="btnFilter(app.state, 'Delete')"
-							ng-click="showDeleteApplicationModal(app)">Delete</button>
+							<button role="button" class="btn btn-sm"
+								ng-show="btnFilter(app.state, 'Ban')"
+								ng-click="showBanModal(app)">Ban</button>
+
+							<button role="button" class="btn btn-sm"
+								ng-show="btnFilter(app.state, 'Unban')"
+								ng-click="showUnbanModal(app)">Unban</button>
+
+							<button data-target="#modal-delete-menu" role="button"
+								class="btn btn-danger btn-sm"
+								ng-show="btnFilter(app.state, 'Delete')"
+								ng-click="showDeleteApplicationModal(app)">Delete</button>
+
+						</div>
 					</td>
 
 				</tr>
@@ -522,5 +528,9 @@
 .table {
 	table-layout: fixed;
 	word-wrap: break-word;
+}
+
+a {
+	color: #4b565c;
 }
 </style>

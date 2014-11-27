@@ -1,9 +1,12 @@
+<h2 class="page-header">Authorizations by Application</h2>
 
 <table class="table">
 	<thead>
 		<tr>
-			<th class="col-sm-1 text-center"><a href="" ng-click="predicate = 'date'; reverse=!reverse">Date</a></th>
-			<th class="col-sm-2 text-center"><a href="" ng-click="predicate = 'device'; reverse=!reverse">Device</a></th>
+			<th class="col-sm-1 text-center"><a href=""
+				ng-click="predicate = 'date'; reverse=!reverse">Date</a></th>
+			<th class="col-sm-2 text-center"><a href=""
+				ng-click="predicate = 'device'; reverse=!reverse">Device</a></th>
 			<th class="col-sm-4 text-center">Refresh Token</th>
 			<th class="col-sm-4 text-center">Access Token</th>
 			<th></th>
@@ -12,7 +15,8 @@
 	<tbody>
 		<tr ng-repeat="session in sessions | orderBy:predicate:reverse">
 
-			<td class="col-sm-2 text-center" style="vertical-align: middle">{{session.date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+			<td class="col-sm-2 text-center" style="vertical-align: middle">{{session.date
+				| date:'yyyy-MM-dd HH:mm:ss'}}</td>
 			<td class="col-sm-2 text-center" style="vertical-align: middle">{{session.device}}</td>
 			<td class="col-sm-4 text-center" style="vertical-align: middle">{{session.refresh_token}}</td>
 			<td class="col-sm-4 text-center" style="vertical-align: middle">{{session.access_token}}</td>
@@ -55,5 +59,9 @@
 .table {
 	table-layout: fixed;
 	word-wrap: break-word;
+}
+
+a {
+	color: #4b565c;
 }
 </style>
