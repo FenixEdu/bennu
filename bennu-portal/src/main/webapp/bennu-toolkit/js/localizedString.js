@@ -11,10 +11,12 @@
             val = "{}";
         }
         var val = JSON.parse(val)[locale.tag]
-        inputField.val(val || "");
-        localeButton.html(locale.displayName || locale.tag);
-        localeButton.data("locale", locale);
-        widget.data("locale", locale);
+        if (val !== inputField.val()){
+            inputField.val(val || "");
+            localeButton.html(locale.displayName || locale.tag);
+            localeButton.data("locale", locale);
+            widget.data("locale", locale);
+        }
     };
 
     Bennu.localizedString.updateValueForLanguage = function (input, localeContainer, widget) {
@@ -92,7 +94,6 @@
 
             Bennu.localizedString.changeData(Bennu.locale, $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget);
             $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget).on("input propertychange", function () {
-
                 Bennu.localizedString.updateValueForLanguage($(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), $(".bennu-localized-string-language", widget), widget);
 
                 $(".help-block", widget).empty();
@@ -139,6 +140,7 @@
 
             input.data("input", widget);
             input.on("change.bennu", function (e) {
+
                 Bennu.localizedString.changeData(widget.data("locale"), $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget);
                 input.data("handler").trigger();
             });

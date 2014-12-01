@@ -630,3 +630,121 @@ fieldset[disabled] .twitter-typeahead .tt-input {
 .timepicker-picker .separator {
     padding: 2px;
 }
+
+.bennu-html-editor-toolbar .btn.btn-sm{
+    padding: 4px 10px;
+}
+
+sub{
+    vertical-align: sub;
+}
+
+sup{
+    vertical-align: super;
+}
+
+.menu-paragraph{
+    min-width: 223px;
+}
+
+ul.menu-paragraph li{
+    padding-left: 5px;
+}
+
+.add-url{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.add-url input{
+    width: 200px !important;
+}
+
+.btn-group .note-table {
+  min-width: 0;
+  padding: 5px;
+}
+.btn-group .note-table .note-dimension-picker {
+  font-size: 18px;
+}
+.btn-group .note-table .note-dimension-picker .note-dimension-picker-mousecatcher {
+  position: absolute !important;
+  z-index: 3;
+  width: 10em;
+  height: 10em;
+  cursor: pointer;
+}
+.btn-group .note-table .note-dimension-picker .note-dimension-picker-unhighlighted {
+  position: relative !important;
+  z-index: 1;
+  width: 5em;
+  height: 5em;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAgMAAAAroGbEAAAACVBMVEUAAIj4+Pjp6ekKlAqjAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfYAR0BKhmnaJzPAAAAG0lEQVQI12NgAAOtVatWMTCohoaGUY+EmIkEAEruEzK2J7tvAAAAAElFTkSuQmCC') repeat;
+}
+.btn-group .note-table .note-dimension-picker .note-dimension-picker-highlighted {
+  position: absolute !important;
+  z-index: 2;
+  width: 1em;
+  height: 1em;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAgMAAAAroGbEAAAACVBMVEUAAIjd6vvD2f9LKLW+AAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfYAR0BKwNDEVT0AAAAG0lEQVQI12NgAAOtVatWMTCohoaGUY+EmIkEAEruEzK2J7tvAAAAAElFTkSuQmCC') repeat;
+}
+
+.note-dimension-display{
+    text-align: center;
+    color:#888;
+}
+
+.bennu-html-code-editor-container{
+    margin-top: 15px;
+}
+
+.bennu-html-code-editor{
+    height:500px;
+    
+}
+/* ----- */
+.note-color .dropdown-menu {
+  min-width: 340px;
+}
+.note-color .dropdown-menu .btn-group {
+  margin: 0;
+}
+.note-color .dropdown-menu .btn-group:first-child {
+  margin: 0 5px;
+}
+.note-color .dropdown-menu .btn-group .note-palette-title {
+  font-size: 12px;
+  margin: 2px 7px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+.note-color .dropdown-menu .btn-group .note-color-reset {
+  font-size: 11px;
+  margin: 3px;
+  padding: 0 3px;
+  cursor: pointer;
+}
+.note-color .dropdown-menu .btn-group .note-color-row {
+  height: 20px;
+}
+.note-color .dropdown-menu .btn-group .note-color-reset:hover {
+  background: #eee;
+}
+
+/* color palette for toolbar and popover */
+.note-color-palette {
+  line-height: 1;
+}
+.note-color-palette div .note-color-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #fff;
+}
+.note-color-palette div .note-color-btn:hover {
+  border: 1px solid #000;
+}
+
+/* --- */
+

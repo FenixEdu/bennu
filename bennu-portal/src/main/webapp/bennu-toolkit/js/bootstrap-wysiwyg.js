@@ -25,7 +25,7 @@
             toolbarBtnSelector,
             updateToolbar = function () {
                 if (options.activeToolbarClass) {
-                    $(options.toolbarSelector).find(toolbarBtnSelector).each(function () {
+                    $(options.toolbarSelector, editor.parent()).find(toolbarBtnSelector).each(function () {
                         var command = $(this).data(options.commandRole);
                         if (document.queryCommandState(command)) {
                             $(this).addClass(options.activeToolbarClass);
@@ -161,7 +161,7 @@
         if (options.dragAndDropImages) {
             initFileDrops();
         }
-        bindToolbar($(options.toolbarSelector), options);
+        bindToolbar($(options.toolbarSelector,editor.parent()), options);
         editor.attr('contenteditable', true)
             .on('mouseup keyup mouseout', function () {
                 saveSelection();

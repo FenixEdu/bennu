@@ -1,10 +1,17 @@
 package org.fenixedu.bennu.portal.servlet;
 
+import java.io.InputStream;
 import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
@@ -16,6 +23,11 @@ import org.fenixedu.bennu.core.util.CoreConfiguration.ConfigurationProperties;
 import org.fenixedu.bennu.portal.domain.MenuFunctionality;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * The goal of this bean is to allow easy injection of Bennu Portal variables in JSP pages.
@@ -28,6 +40,8 @@ import org.fenixedu.commons.i18n.I18N;
 public class PortalBean {
 
     private final String ctxPath;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(PortalBean.class);
 
     public PortalBean(ServletContext servletContext) {
         this.ctxPath = servletContext.getContextPath();
@@ -48,9 +62,8 @@ public class PortalBean {
         StringBuilder builder = new StringBuilder();
         builder.append("<script>");
         {
-            builder.append("window.Bennu = ");
-            builder.append(BennuRestResource.getBuilder().view(null, Void.class, AuthenticatedUserViewer.class)).append(
-                    ";window.BennuPortal=window.Bennu;");
+            builder.append("window.BennuPortal = ");
+            builder.append(BennuRestResource.getBuilder().view(null, Void.class, AuthenticatedUserViewer.class)).append(";");
         }
         {
             builder.append("window.contextPath = '").append(ctxPath).append("';");
@@ -59,22 +72,110 @@ public class PortalBean {
         return builder.toString();
     }
 
-    public String toolkit() {
+    private static String DEBUG_TOOLKIT_TAG = null;
+    private static String DEBUG_TOOLKIT_ANGULAR_TAG = null;
+
+    
+    private NodeList getFilesForId(String id) throws Exception{
+        InputStream is = this.getClass().getResource("/META-INF/maven/org.fenixedu/bennu-portal/pom.xml").openStream();
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder b = factory.newDocumentBuilder();
+        Document doc = b.parse(is);
+
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
+
+        XPathExpression expr =
+                xpath.compile("//project/build/plugins/plugin/executions/execution[id = '" + id + "']/configuration/jsSourceFiles/jsSourceFile");
+        Object result = expr.evaluate(doc, XPathConstants.NODESET);
+        return (NodeList) result;
+        
+    }
+    
+    private String getDebugToolkit() {
+        if (DEBUG_TOOLKIT_TAG == null) {
+            try {
+                NodeList nodes = getFilesForId("toolkit");
+                StringBuilder builder = new StringBuilder(bennuPortal());
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node currentItem = nodes.item(i);
+                    
+                    builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
+                    .append("/bennu-toolkit/js/").append(currentItem.getTextContent()).append("\"></script>");
+                }
+                builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
+                
+                DEBUG_TOOLKIT_TAG = builder.toString();
+            } catch (Exception e) {
+                LOGGER.warn("Error resolving the portal POM, falling back into compiled toolkit");
+                
+                return getToolkit();
+            }
+        }
+        
+        return DEBUG_TOOLKIT_TAG;
+    }
+    
+    private String getDebugToolkitAngular() {
+        if (DEBUG_TOOLKIT_ANGULAR_TAG == null) {
+            try {
+                NodeList nodes = getFilesForId("toolkit-angular");
+                StringBuilder builder = new StringBuilder(bennuPortal());
+                builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
+                        .append("/bennu-portal/js/angular.min.js\"></script>");
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node currentItem = nodes.item(i);
+                    
+                    builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
+                    .append("/bennu-toolkit/js/").append(currentItem.getTextContent()).append("\"></script>");
+                }
+                builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
+                
+                DEBUG_TOOLKIT_ANGULAR_TAG = builder.toString();
+            } catch (Exception e) {
+                LOGGER.warn("Error resolving the portal POM, falling back into compiled toolkit");
+                
+                return getAngularToolkit();
+            }
+        }
+        
+        return DEBUG_TOOLKIT_ANGULAR_TAG;
+    }
+    
+    private String getToolkit(){
         StringBuilder builder = new StringBuilder(bennuPortal());
         builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
                 .append("/bennu-toolkit/js/toolkit.js\"></script>");
         builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
         return builder.toString();
     }
-
-    public String angularToolkit() {
+    
+    
+    private String getAngularToolkit(){
         StringBuilder builder = new StringBuilder(bennuPortal());
         builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
                 .append("/bennu-portal/js/angular.min.js\"></script>");
         builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
                 .append("/bennu-toolkit/js/toolkit-angular.js\"></script>");
         builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
-        return builder.toString();
+        return builder.toString(); 
+    }
+
+    public String toolkit() {
+        if (CoreConfiguration.getConfiguration().developmentMode()){
+            return getDebugToolkit();
+        }else{
+            return getToolkit();
+        }
+    }
+
+    public String angularToolkit() {
+        if (CoreConfiguration.getConfiguration().developmentMode()){
+            return getDebugToolkitAngular();
+        }else{
+            return getAngularToolkit();
+        }
     }
 
     /**

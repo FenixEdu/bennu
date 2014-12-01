@@ -267,8 +267,12 @@
         allow = allow.split(",");
         for (var i = 0; i < allow.length; i++) {
             var perm = Bennu.group.allow[allow[i]];
-            var temp = '<button type="button" data-role="' + perm.group + '" class="btn btn-sm btn-default"><span class="' + perm.icon + '"></span> ' + perm.name + '</button>';
-            dom.append(temp);
+            if (perm){
+                var temp = '<button type="button" data-role="' + perm.group + '" class="btn btn-sm btn-default"><span class="' + perm.icon + '"></span> ' + perm.name + '</button>';
+                dom.append(temp);
+            }else{
+                console.warn("Unknown permission type " + allow[i]);
+            }
         }
 
         dom.data("related", input);
