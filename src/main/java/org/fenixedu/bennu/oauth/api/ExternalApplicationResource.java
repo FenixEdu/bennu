@@ -34,6 +34,10 @@ public class ExternalApplicationResource extends BennuRestResource {
         return Group.parse("#managers").isMember(user);
     }
 
+    private boolean isDeveloper(User user) {
+        return Group.parse("#developers").isMember(user);
+    }
+
     protected User verifyAndGetRequestAuthor(ExternalApplication application) {
         User currentUser = super.verifyAndGetRequestAuthor();
 
@@ -41,11 +45,21 @@ public class ExternalApplicationResource extends BennuRestResource {
             return currentUser;
         }
 
-        if (application.getAuthor().equals(currentUser)) {
+        if (isDeveloper(currentUser) && application.getAuthor().equals(currentUser)) {
             return currentUser;
         }
 
         throw AuthorizationException.unauthorized();
+    }
+
+    protected User verifyDeveloperAndGetRequestAuthor() {
+        User currentUser = super.verifyAndGetRequestAuthor();
+
+        if (isDeveloper(currentUser)) {
+            return currentUser;
+        }
+        throw AuthorizationException.unauthorized();
+
     }
 
     @GET
@@ -53,7 +67,7 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/applications")
     public String myApplications() {
-        return view(verifyAndGetRequestAuthor().getOwnedApplicationSet().stream().filter(p -> p.isActive()));
+        return view(verifyDeveloperAndGetRequestAuthor().getOwnedApplicationSet().stream().filter(p -> p.isActive()));
     }
 
     @GET
@@ -69,7 +83,7 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/applications")
     public String createApplication(String json) {
-        verifyAndGetRequestAuthor();
+        verifyDeveloperAndGetRequestAuthor();
         return view(create(json, ExternalApplication.class));
     }
 
@@ -104,7 +118,6 @@ public class ExternalApplicationResource extends BennuRestResource {
     public Response unbanApplication(@PathParam("app") ExternalApplication application, String json) {
         accessControl("#managers");
         atomic(() -> {
-
             application.setActive();
         });
         return Response.ok().build();

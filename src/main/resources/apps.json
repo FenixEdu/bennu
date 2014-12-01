@@ -7,7 +7,7 @@
 	    {
 	        "title" :  {"en-GB" : "Manage Applications", "pt-PT": "Gerir Aplicações"},
 	        "description" : {"en-GB" : "Manage Applications", "pt-PT": "Gerir Aplicações"},
-	        "accessExpression": "logged",
+	        "accessExpression": "#developers",
 	        "path": "#/applications"
 	    },
 	    {
