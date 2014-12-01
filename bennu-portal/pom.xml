@@ -89,6 +89,7 @@
                                 <jsSourceFile>localizedString.js</jsSourceFile>
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
                                 <jsSourceFile>group.js</jsSourceFile>
+                                <jsSourceFile>userAutocomplete.js</jsSourceFile>
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>bennu-angular.js</jsSourceFile>
                             </jsSourceFiles>
