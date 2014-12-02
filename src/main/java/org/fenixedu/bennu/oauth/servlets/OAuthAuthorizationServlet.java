@@ -366,6 +366,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         User user = Authenticate.getUser();
         if (user == null) {
             errorPage(request, response);
+            return;
         }
 
         String clientId = request.getParameter(CLIENT_ID);
