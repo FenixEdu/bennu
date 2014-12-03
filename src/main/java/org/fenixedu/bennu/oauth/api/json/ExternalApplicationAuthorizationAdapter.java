@@ -38,7 +38,7 @@ public class ExternalApplicationAuthorizationAdapter implements JsonAdapter<Appl
         json.addProperty("applicationName", application.getName());
         json.addProperty("applicationDescription", application.getDescription());
         json.addProperty("applicationSiteUrl", application.getSiteUrl());
-        json.addProperty("applicationAuthor", application.getAuthorNameForUserDialog());
+        json.addProperty("applicationAuthor", application.getAuthorApplicationName());
 
         JsonArray scopeArray = new JsonArray();
         List<ExternalApplicationScope> appScopes = application.getScopeList();

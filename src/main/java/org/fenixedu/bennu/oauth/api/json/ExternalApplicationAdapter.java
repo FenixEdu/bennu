@@ -104,7 +104,7 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         json.addProperty("state", obj.getState().getName());
         json.addProperty("secret", obj.getSecret());
         json.addProperty("redirectUrl", obj.getRedirectUrl());
-        json.addProperty("author", obj.getAuthorNameForUserDialog());
+        json.addProperty("author", obj.getAuthorApplicationName());
         json.addProperty("authorizations", obj.getApplicationUserAuthorizationSet().size());
 
         JsonArray scopeArray = new JsonArray();

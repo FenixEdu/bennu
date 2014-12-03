@@ -263,7 +263,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
 
         if (!externalApplication.matches(redirectUrl, clientSecret)) {
-            //TODO ver o outro
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CREDENTIALS_OR_REDIRECT_URI_DON_T_MATCH);
             return;
         }
@@ -400,7 +399,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             return;
         }
 
-        //TODO if oficial application
         if (!externalApplication.hasApplicationUserAuthorization(user)) {
             request.setAttribute("application", externalApplication);
             authorizationPage(request, response, externalApplication);

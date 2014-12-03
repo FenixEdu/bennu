@@ -109,15 +109,6 @@ public class ExternalApplication extends ExternalApplication_Base {
         return null;
     }
 
-    public String getAuthorNameForUserDialog() {
-        String name = getAuthorName();
-        if (!Strings.isNullOrEmpty(name)) {
-            return name;
-        } else {
-            return getAuthor().getProfile().getDisplayName();
-        }
-    }
-
     public String getAuthorApplicationName() {
         String name = getAuthorName();
         if (!Strings.isNullOrEmpty(name)) {
