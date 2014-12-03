@@ -17,6 +17,7 @@ import org.fenixedu.bennu.oauth.annotation.OAuthEndpoint;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
+import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,8 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
 
     private final static String ACCESS_TOKEN = "access_token";
 
+    private final static String USER_HEADER = "__username__";
+
     private static final Logger logger = LoggerFactory.getLogger(BennuOAuthAuthorizationFilter.class);
 
     private final OAuthEndpoint endpoint;
@@ -41,14 +44,53 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+
+        String accessToken = getAccessToken(requestContext);
+
+        Optional<ServiceApplication> serviceApplication = extractServiceApplication(accessToken);
+
+        if (endpoint.serviceOnly() && !serviceApplication.isPresent()) {
+            requestContext.abortWith(Response.status(Status.NOT_FOUND).build());
+            return;
+        }
+
+        if (serviceApplication.isPresent()) {
+
+            if (serviceApplication.get().isDeleted()) {
+                sendError(requestContext, "accessTokenInvalidFormat", "Access Token not recognized.");
+                return;
+            }
+
+            if (serviceApplication.get().isBanned()) {
+                sendError(requestContext, "appBanned", "The application has been banned.");
+                return;
+            }
+
+            if (!serviceApplication.get().hasServiceAuthorization(accessToken)) {
+                requestContext.abortWith(Response.status(Status.NOT_FOUND).build());
+                return;
+            }
+
+            String username = getUserParam(requestContext);
+
+            if (!Strings.isNullOrEmpty(username)) {
+                User user = User.findByUsername(username);
+                if (user != null) {
+                    Authenticate.mock(user);
+                }
+            }
+
+            return;
+        }
+
         if (Authenticate.isLogged()) {
             logger.trace("Already logged in, proceeding...");
             return;
         }
-        Optional<ExternalApplicationScope> scope = ExternalApplicationScope.forKey(endpoint.value());
-        if (scope.isPresent()) {
-            String accessToken = getAccessToken(requestContext);
 
+        Optional<ExternalApplicationScope> scope = ExternalApplicationScope.forKey(endpoint.value());
+
+        if (scope.isPresent()) {
             Optional<ApplicationUserSession> session = extractUserSession(accessToken);
             if (session.isPresent()) {
                 ApplicationUserSession appUserSession = session.get();
@@ -100,6 +142,20 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
                 .build());
     }
 
+    private Optional<ServiceApplication> extractServiceApplication(String accessToken) {
+
+        if (Strings.isNullOrEmpty(accessToken)) {
+            return Optional.empty();
+        }
+        String fullToken = new String(Base64.getDecoder().decode(accessToken));
+        String[] accessTokenBuilder = fullToken.split(":");
+        if (accessTokenBuilder.length != 2) {
+            return Optional.empty();
+        }
+
+        return getDomainObject(accessTokenBuilder[0], ServiceApplication.class);
+    }
+
     private Optional<ApplicationUserSession> extractUserSession(String accessToken) {
         if (Strings.isNullOrEmpty(accessToken)) {
             return Optional.empty();
@@ -109,15 +165,24 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
         if (accessTokenBuilder.length != 2) {
             return Optional.empty();
         }
+
         return getDomainObject(accessTokenBuilder[0], ApplicationUserSession.class);
     }
 
     private String getAccessToken(ContainerRequestContext requestContext) {
-        String accessToken = requestContext.getHeaderString(ACCESS_TOKEN);
-        if (Strings.isNullOrEmpty(accessToken)) {
-            accessToken = requestContext.getUriInfo().getQueryParameters().getFirst(ACCESS_TOKEN);
+        return getHeaderOrQueryParam(requestContext, ACCESS_TOKEN);
+    }
+
+    private String getUserParam(ContainerRequestContext requestContext) {
+        return getHeaderOrQueryParam(requestContext, USER_HEADER);
+    }
+
+    private String getHeaderOrQueryParam(ContainerRequestContext requestContext, String paramName) {
+        String paramValue = requestContext.getHeaderString(paramName);
+        if (Strings.isNullOrEmpty(paramValue)) {
+            paramValue = requestContext.getUriInfo().getQueryParameters().getFirst(paramName);
         }
-        return accessToken;
+        return paramValue;
     }
 
     public static final <T extends DomainObject> Optional<T> getDomainObject(final String externalId, final Class<T> clazz) {

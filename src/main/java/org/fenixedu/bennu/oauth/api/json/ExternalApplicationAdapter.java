@@ -23,16 +23,19 @@ import com.google.gson.JsonObject;
 @DefaultJsonAdapter(ExternalApplication.class)
 public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplication> {
 
+    protected ExternalApplication create() {
+        return new ExternalApplication();
+    }
+
     @Override
     public ExternalApplication create(JsonElement json, JsonBuilder ctx) {
 
         JsonObject jObj = json.getAsJsonObject();
-        ExternalApplication app = new ExternalApplication();
+        ExternalApplication app = create();
 
         app.setName(getRequiredValue(jObj, "name"));
         app.setDescription(getRequiredValue(jObj, "description"));
-        app.setRedirectUrl(getRequiredValue(jObj, "redirectUrl"));
-
+        app.setRedirectUrl(getRedirectUrl(jObj));
         app.setSiteUrl(getDefaultValue(jObj, "siteUrl", ""));
 
         if (jObj.has("logo") && !jObj.get("logo").isJsonNull()) {
@@ -53,13 +56,17 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         return app;
     }
 
+    protected String getRedirectUrl(JsonObject jObj) {
+        return getRequiredValue(jObj, "redirectUrl");
+    }
+
     @Override
     public ExternalApplication update(JsonElement json, ExternalApplication app, JsonBuilder ctx) {
 
         JsonObject jObj = json.getAsJsonObject();
         app.setName(getRequiredValue(jObj, "name"));
         app.setDescription(getRequiredValue(jObj, "description"));
-        app.setRedirectUrl(getRequiredValue(jObj, "redirectUrl"));
+        app.setRedirectUrl(getRedirectUrl(jObj));
 
         app.setSiteUrl(getDefaultValue(jObj, "siteUrl", ""));
 
@@ -129,14 +136,14 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         return json;
     }
 
-    private String getRequiredValue(JsonObject obj, String property) {
+    protected String getRequiredValue(JsonObject obj, String property) {
         if (obj.has(property)) {
             return obj.get(property).getAsString();
         }
         throw BennuCoreDomainException.cannotCreateEntity();
     }
 
-    private String getDefaultValue(JsonObject obj, String property, String defaultValue) {
+    protected String getDefaultValue(JsonObject obj, String property, String defaultValue) {
         if (obj.has(property)) {
             return obj.get(property).getAsString();
         }

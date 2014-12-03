@@ -13,6 +13,15 @@ public class ExternalApplication  {
     public String authorName;
 }
 
+public class ServiceApplication extends ExternalApplication {
+    
+}
+
+class ServiceApplicationAuthorization {
+    DateTime creationDate (REQUIRED);
+    String accessToken (REQUIRED);
+}
+
 class ApplicationUserSession {
     DateTime creationDate;
     String code;
@@ -28,6 +37,23 @@ class ExternalApplicationScope {
     String scopeKey (REQUIRED);
     String name (REQUIRED);
     String description (REQUIRED);
+}
+
+relation BennuServiceApplications {
+    .org.fenixedu.bennu.core.domain.Bennu playsRole bennuServiceApplication;  
+    ServiceApplication playsRole serviceApplication {
+        multiplicity *;
+    }
+}
+
+relation ServiceApplicationAuthorizations {
+    ServiceApplicationAuthorization playsRole serviceAuthorization {
+        multiplicity *;
+    }
+    
+    ServiceApplication playsRole serviceApplication {
+        multiplicity 1..1;
+    }
 }
 
 relation BennuExternalApplications {

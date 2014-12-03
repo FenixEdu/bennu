@@ -28,6 +28,7 @@ import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
+import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
@@ -54,6 +55,12 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
  */
 @WebServlet("/oauth/*")
 public class OAuthAuthorizationServlet extends HttpServlet {
+
+    private static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
+
+    private static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
+
+    private static final String GRANT_TYPE_ACCESS_TOKEN = "access_token";
 
     private static final String CODE_EXPIRED = "code expired";
 
@@ -124,12 +131,24 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             handleUserDialog(request, response);
             break;
         case "userconfirmation":
+            if (!"POST".equals(request.getMethod())) {
+                response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                return;
+            }
             userConfirmation(request, response);
             break;
         case "access_token":
+            if (!"POST".equals(request.getMethod())) {
+                response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                return;
+            }
             handleAccessToken(request, response);
             break;
         case "refresh_token":
+            if (!"POST".equals(request.getMethod())) {
+                response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                return;
+            }
             handleRefreshToken(request, response);
             break;
 
@@ -203,9 +222,38 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         String authCode = request.getParameter(CODE);
         String grantType = request.getParameter(GRANT_TYPE);
 
+        if (Strings.isNullOrEmpty(clientId) || Strings.isNullOrEmpty(clientSecret) || Strings.isNullOrEmpty(grantType)) {
+            sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT,
+                    Joiner.on(",").join(CLIENT_ID, CLIENT_SECRET, GRANT_TYPE) + " are mandatory");
+            return;
+        }
+
+        if (!GRANT_TYPE_AUTHORIZATION_CODE.equals(grantType) && !GRANT_TYPE_CLIENT_CREDENTIALS.equals(grantType)) {
+            sendOAuthErrorResponse(
+                    response,
+                    Status.BAD_REQUEST,
+                    INVALID_GRANT,
+                    GRANT_TYPE + " must be on of the following values: "
+                            + Joiner.on(",").join(GRANT_TYPE_CLIENT_CREDENTIALS, GRANT_TYPE_AUTHORIZATION_CODE));
+            return;
+        }
+
+        if (GRANT_TYPE_AUTHORIZATION_CODE.equals(grantType)) {
+            if (Strings.isNullOrEmpty(redirectUrl) || Strings.isNullOrEmpty(authCode)) {
+                sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, Joiner.on(",").join(REDIRECT_URI, CODE)
+                        + " are mandatory");
+                return;
+            }
+        }
+
         ExternalApplication externalApplication = getExternalApplication(clientId);
 
         if (externalApplication == null) {
+            sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
+            return;
+        }
+
+        if (externalApplication instanceof ServiceApplication && !GRANT_TYPE_CLIENT_CREDENTIALS.equals(grantType)) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
             return;
         }
@@ -217,6 +265,15 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         if (!externalApplication.matches(redirectUrl, clientSecret)) {
             //TODO ver o outro
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CREDENTIALS_OR_REDIRECT_URI_DON_T_MATCH);
+            return;
+        }
+
+        if (externalApplication instanceof ServiceApplication) {
+            final String accessToken = generateToken(externalApplication);
+            ((ServiceApplication) externalApplication).createServiceAuthorization(accessToken);
+            JsonObject jsonResponse = new JsonObject();
+            jsonResponse.addProperty(ACCESS_TOKEN, accessToken);
+            sendOAuthResponse(response, Status.OK, jsonResponse);
             return;
         }
 
@@ -329,7 +386,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
         ExternalApplication externalApplication = getExternalApplication(clientId);
 
-        if (externalApplication == null) {
+        if (externalApplication == null || externalApplication instanceof ServiceApplication) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
             return;
         }
@@ -374,7 +431,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
         ExternalApplication externalApplication = FenixFramework.getDomainObject(clientId);
 
-        if (externalApplication == null) {
+        if (externalApplication == null || externalApplication instanceof ServiceApplication) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
             return;
         }
@@ -462,11 +519,10 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         return deviceId;
     }
 
-    private String generateToken(ApplicationUserSession appUserSession) {
+    private String generateToken(DomainObject domainObject) {
         String random = generateCode();
-        String token = Joiner.on(":").join(appUserSession.getExternalId(), random);
+        String token = Joiner.on(":").join(domainObject.getExternalId(), random);
         return Base64.getEncoder().encodeToString(token.getBytes()).replace("=", "").replace("+", "-").replace("/", "-");
-
     }
 
     private String trim(String value) {

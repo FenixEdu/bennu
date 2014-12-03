@@ -1,0 +1,374 @@
+<h2 class="page-header" translate>Application Management</h2>
+
+<div>
+	<div class="row">
+		<h3 translate>Service Applications</h3>
+		<button role="button" data-toggle="modal"
+			class="btn btn-primary pull-right" ng-click="showCreateApplication()" translate >Create</button>
+	
+		<h4>
+			<div ng-show="applications" class="col-sm-5 pull-right">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label" translate>Find</label>
+						<div class="col-sm-10">
+							<input type="text" ng-model="query" class="form-control" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</h4>
+
+		<table class="table table-hover table-condensed">
+			<thead>
+				<tr>
+					<th class="col-sm-1"></th>
+					<th translate class="col-sm-3"><a href=""
+						ng-click="predicateApplications = 'name'; reverseApplication=!reverseApplication">Information</a></th>
+					<th translate class="col-sm-2 text-center"><a href=""
+						ng-click="predicateApplications = 'authorizations'; reverseApplication=!reverseApplication">Authorizations</a></th>
+					<th translate class="col-sm-1">State</th>
+					<th class="col-sm-4"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					ng-repeat="app in applications | filter: filterApplications | orderBy:predicateApplications:reverseApplication">
+					<td style="vertical-align: middle" class="col-sm-1">
+						<div>
+							<img ng-src="{{app.getLogoUrl}}" height="55px" width="55px">
+						</div>
+					</td>
+					<td>
+					
+					<b translate>Name</b><b>:</b> {{app.name}} <br>
+					<b translate>Description</b><b>:</b> {{app.description}} <br>
+					<b translate>Author</b><b>:</b> {{app.author}} <br>
+					<b translate>Scopes</b><b>:</b> {{app.scopes | scopeNames}}</td>
+					
+					<td style="vertical-align: middle" class="col-sm-2 text-center">{{app.authorizations}}</td>
+					<td style="vertical-align: middle">{{app.state | translate}}</td>
+					<td style="vertical-align: middle" class="text-right">
+
+						<div class="btn-group">
+						
+							<button role="button" data-toggle="modal" class="btn btn-sm"
+								ng-click="showDetailsApplication(app)" translate>Details</button>
+
+							<button data-target="#modal-delete-menu" role="button"
+								class="btn btn-sm" ng-show="btnFilter(app.state, 'Edit')"
+								ng-click="showEditApplicationModal(app)" translate>Edit</button>
+
+							<button role="button" class="btn btn-sm"
+								ng-show="btnFilter(app.state, 'Ban')"
+								ng-click="showBanModal(app)" translate>Ban</button>
+
+							<button role="button" class="btn btn-sm"
+								ng-show="btnFilter(app.state, 'Unban')"
+								ng-click="showUnbanModal(app)" translate>Unban</button>
+
+							<button data-target="#modal-delete-menu" role="button"
+								class="btn btn-danger btn-sm"
+								ng-show="btnFilter(app.state, 'Delete')"
+								ng-click="showDeleteApplicationModal(app)" translate>Delete</button>
+
+						</div>
+					</td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div id="modal-ban-menu" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3 translate>Ban Application</h3>
+			</div>
+			<div class="modal-body">
+				<p translate>Do you wish to ban the selected application?</p>
+
+			</div>
+			<div class="modal-footer">
+				<button data-dismiss="modal" class="btn secondary btn-sm" translate>No</button>
+
+				<button ng-click="banApplication()" data-dismiss="modal"
+					class="btn btn-danger btn-sm" translate>Yes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modal-unban-menu" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3 translate>Unban Application</h3>
+			</div>
+			<div class="modal-body">
+				<p translate>Do you wish to unban the selected application?</p>
+
+			</div>
+			<div class="modal-footer">
+				<button data-dismiss="modal" class="btn secondary btn-sm" translate>No</button>
+
+				<button ng-click="activeApplication()" data-dismiss="modal"
+					class="btn btn-sm" translate>Yes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modal-delete-application-menu" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3 translate>Delete Application</h3>
+			</div>
+			<div class="modal-body">
+				<p translate>Do you wish to delete the selected application?</p>
+
+			</div>
+			<div class="modal-footer">
+				<button data-dismiss="modal" class="btn secondary btn-sm" translate>No</button>
+
+				<button ng-click="deleteApplication()" data-dismiss="modal"
+					class="btn btn-danger btn-sm" translate>Yes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="detailsApplication" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel" translate>Application Details</h4>
+			</div>
+			<form class="form-horizontal">
+				<div class="modal-body">
+
+					<div class="form-group">
+
+						<label for="logo" class="col-sm-2 control-label"></label>
+						<div class="col-sm-8">
+							<img ng-src="{{currentapp.getLogoUrl}}" height="50px;">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="author" class="col-sm-2 control-label" translate>Author</label>
+						<div class="col-sm-8">
+							<input disabled type="text" ng-model="currentapp.author"
+								class="form-control" id="author">
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<label for="name" class="col-sm-2 control-label" translate >Name</label>
+						<div class="col-sm-8">
+							<input disabled type="text" ng-model="currentapp.name"
+								class="form-control">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="description" class="col-sm-2 control-label" translate>Description</label>
+						<div class="col-sm-8">
+							<textarea disabled class="form-control"
+								ng-model="currentapp.description" id="description" rows="2"></textarea>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="siteUrl" class="col-sm-2 control-label" translate>Site</label>
+						<div class="col-sm-8">
+							<input disabled type="text" ng-model="currentapp.siteUrl"
+								class="form-control" id="siteUrl">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="clientId" class="col-sm-2 control-label" >Client Id</label>
+						<div class="col-sm-8">
+							<input disabled type="text" class="form-control"
+								ng-model="currentapp.id" id="clientId">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="secret" class="col-sm-2 control-label">Client Secret</label>
+						<div class="col-sm-8">
+							<textarea disabled type="text" class="form-control"
+								ng-model="currentapp.secret" id="secret" rows="3" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="state" class="col-sm-2 control-label" translate>State</label>
+						<div class="col-sm-8">
+							<input disabled type="text" class="form-control"
+								ng-model="currentapp.state" id="state" />
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="editApplicationManager" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel" translate>Edit Application</h4>
+			</div>
+			<form ng-submit="updateApplication()" class="form-horizontal">
+				<div class="modal-body">
+
+					<div class="form-group">
+
+						<label for="logo" class="col-sm-2 control-label">Logo</label>
+						<div class="col-sm-8">
+							<input type="file" ng-model="currentapp.logo" name="logo"
+								id="logo"
+								onchange="angular.element(this).scope().fileNameChanged(this,'logo')" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="author" class="col-sm-2 control-label" translate>Author</label>
+						<div class="col-sm-8">
+							<input type="text" ng-model="currentapp.author"
+								ng-required="true" class="form-control" id="author">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="name" class="col-sm-2 control-label" translate>Name</label>
+						<div class="col-sm-8">
+							<input type="text" ng-model="currentapp.name" ng-required="true"
+								class="form-control">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="description" class="col-sm-2 control-label" translate>Description</label>
+						<div class="col-sm-8">
+							<textarea class="form-control" ng-model="currentapp.description"
+								id="description" ng-required="true" placeholder="Description"
+								rows="2"></textarea>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="siteUrl" class="col-sm-2 control-label">Site</label>
+						<div class="col-sm-8">
+							<input type="url" ng-model="currentapp.siteUrl"
+								class="form-control" id="siteUrl" placeholder="Site">
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
+					<button type="submit" class="btn btn-primary" translate>Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="createApplication" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only" translate>Close</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel" translate>Create Application</h4>
+			</div>
+			<form ng-submit="createApplication()" class="form-horizontal">
+				<div class="modal-body">
+
+					<div class="form-group">
+
+						<label for="logo" class="col-sm-2 control-label">Logo</label>
+						<div class="col-sm-8">
+							<input type="file" ng-model="currentapp.logo" name="logo"
+								id="logo"
+								onchange="angular.element(this).scope().fileNameChanged(this,'logo')" />
+							{{error | translate}}
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="name" class="col-sm-2 control-label" translate>Name</label>
+						<div class="col-sm-8">
+							<input type="text" ng-model="currentapp.name" ng-required="true"
+								class="form-control" placeholder="{{'Name' | translate}}">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="description" class="col-sm-2 control-label" translate>Description</label>
+						<div class="col-sm-8">
+							<textarea class="form-control" ng-model="currentapp.description"
+								ng-required="true" id="description" placeholder="{{'Description' | translate}}"
+								rows="2"></textarea>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="siteUrl" class="col-sm-2 control-label">Site</label>
+						<div class="col-sm-8">
+							<input type="url" ng-model="currentapp.siteUrl"
+								class="form-control" id="siteUrl" placeholder="Site">
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
+					<button ng-disabled="error" type="submit" class="btn btn-primary" translate>Create</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<br />
+
+<style>
+.table {
+	table-layout: fixed;
+	word-wrap: break-word;
+}
+
+a {
+	color: #4b565c;
+}
+</style>

@@ -21,6 +21,12 @@
 	        "description" : {"en-GB" : "Application Management", "pt-PT": "Gestão de Aplicações"},
 	        "accessExpression": "#managers",
 	        "path": "#/manage"
+	    },
+	    {
+	        "title" :  {"en-GB" : "Service Application Management", "pt-PT": "Gestão de Aplicações Serviço"},
+	        "description" : {"en-GB" : "Service Application Management", "pt-PT": "Gestão de Aplicações Serviço"},
+	        "accessExpression": "#managers",
+	        "path": "#/service-applications"
 	    }
     ]
 }]}
