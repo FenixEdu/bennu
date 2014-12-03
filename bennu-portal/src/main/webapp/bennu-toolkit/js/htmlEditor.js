@@ -326,17 +326,23 @@
             var attr = e.attr("bennu-localized-string");
             if (attr !== null && attr !== undefined) {
                 var data = JSON.parse($(dom.data("related")).val());
-                data[$(".bennu-localized-string-language", dom).data("locale").tag] = widgetInput.val();
-                $(dom.data("related")).val(JSON.stringify(data));
-                $(".help-block", dom).empty();
-                dom.removeClass("has-error");
-                dom.data("related").trigger("change");
+                var r = data[$(".bennu-localized-string-language", dom).data("locale").tag]
+                var t = widgetInput.val();
+                if(r !== t){
+                    data[$(".bennu-localized-string-language", dom).data("locale").tag] = t
+                    $(dom.data("related")).val(JSON.stringify(data));
+                    $(".help-block", dom).empty();
+                    dom.removeClass("has-error");
+                    dom.data("related").trigger("change");
+                    e.data("handler").trigger();
+                }
             } else {
                 var r = dom.data("related").val();
                 var t = $(".bennu-html-editor-editor", dom).html();
                 if (r !== t) {
                     dom.data("related").val($(".bennu-html-editor-editor", dom).html());
                     dom.data("related").trigger("change");
+                    e.data("handler").trigger();
                 };
             }
         });
@@ -368,10 +374,11 @@
                     z && z(dataTransfer.files);
                 }
             });
-        $('.bennu-html-editor-editor', dom).wysiwyg({ dragAndDropImages: false, fileUploadError: showErrorAlert});
 
         Bennu.validation.attachToForm(dom);
         e.after(dom);
+        $('.bennu-html-editor-editor', dom).wysiwyg({ dragAndDropImages: false, fileUploadError: showErrorAlert});
+
 
         if ($(".bennu-html-code-editor", dom).length != 0){
             Bennu.codeEditor.require();
@@ -470,6 +477,7 @@
 
                 if (r !== t){
                     $(".bennu-html-editor-editor", dom)[0].innerHTML = t;
+                    $(".bennu-html-editor-editor", dom).trigger("change");
                     e.data("handler").trigger();
                 }
             } else {

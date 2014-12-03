@@ -7,6 +7,30 @@
 		};
 	});
 
+    bennuToolkit.directive('ngGroups', ['$timeout', function($timeout) {
+        return {
+            restrict: 'A',
+            scope: {
+                model: '=ngGroups'
+            },
+            link: function(scope, el, attr) {
+                el.hide();
+                Bennu.group.setupModal();
+                var handler = Bennu.group.createWidget(el);
+                scope.$watch('model', function(value) {
+                    if(value !== handler.get()) {
+                        handler.set(value);
+                    }
+                });
+                handler.onchange(function () {
+                    $timeout(function () {
+                        scope.model = handler.get();
+                    });
+                });
+            }
+        }
+    }]);
+
 	bennuToolkit.directive('ngLocalizedString', ['$timeout', function($timeout) {
 	  return {
 	    restrict: 'A',
@@ -43,7 +67,11 @@
                 var handler = Bennu.htmlEditor.createWidget(el);
                 scope.$watch('model', function(value) {
                     if(isLocalized) {
-                        value = JSON.stringify(value);
+                        if(value === undefined && handler.get() === "{}"){
+                            value = "{}"
+                        }else {
+                            value = JSON.stringify(value);
+                        }
                     }
                     if(value !== handler.get()) {
                         handler.set(value);

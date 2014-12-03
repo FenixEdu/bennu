@@ -109,6 +109,7 @@
     }
 
     Bennu.group.setupModal = function () {
+        if ($(".bennu-group-custom-modal").length === 0){
         $(document.body).append(Bennu.group.modalTemplate);
         // Bennu.group.customModal = $(".bennu-group-custom-modal");
         // Bennu.group.customModal.modal('show');
@@ -183,7 +184,7 @@
 // -------------------------------------
 // -------------------------------------
 // -------------------------------------
-
+        }
     }
 
     function group(dom) {
