@@ -3,6 +3,7 @@ package org.fenixedu.bennu.core.groups;
 import java.util.Collections;
 import java.util.Set;
 
+import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroupStrategy;
@@ -41,6 +42,7 @@ public abstract class GroupStrategy extends CustomGroup {
         }
     }
 
+    @GroupOperator("nobody-strategy")
     private static final class NobodyGroupStrategy extends GroupStrategy {
         private static final long serialVersionUID = 584606595093061522L;
 
