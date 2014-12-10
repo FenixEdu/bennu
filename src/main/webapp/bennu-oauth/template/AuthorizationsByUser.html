@@ -1,0 +1,69 @@
+<h2 class="page-header" translate>Authorizations by User</h2>
+
+<form class="form-horizontal">
+	<div class="form-group">
+		<label class="col-sm-9 control-label" translate>Find</label>
+		<div class="col-sm-3">
+			<input type="text" ng-model="query" class="form-control" />
+		</div>
+	</div>
+</form>
+
+<table class="table table-hover table-condensed">
+	<thead>
+		<tr>
+			<th class="col-sm-6"><a href=""
+				ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
+			<th class="col-sm-4"><a href=""
+				ng-click="predicate = 'authorizations'; reverse=!reverse">Authorizations</a></th>
+			<th class="col-sm-2 text-right"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr
+			ng-repeat="authorization in authorizations | filter: filterAuthorizations | orderBy:predicate:reverse">
+			<td class="col-sm-6" style="vertical-align: middle">{{authorization.name}}</td>
+			<td class="col-sm-4" style="vertical-align: middle">{{authorization.authorizations}}</td>
+			<td class="col-sm-2 text-center" style="vertical-align: middle">
+				<button role="button" data-toggle="modal" class="btn btn-sm"
+					ng-click="showSessionsApplication(authorization)" translate>Details</button>
+
+				<button data-target="#modal-revoke-menu" role="button"
+					class="btn btn-danger btn-sm"
+					ng-click="showRevokeModal(authorization)" translate>Revoke</button>
+
+			</td>
+		</tr>
+	</tbody>
+</table>
+<div id="modal-revoke-menu" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3>Revoke Application</h3>
+			</div>
+			<div class="modal-body">
+				<p translate>Do you wish to revoke the selected application?</p>
+
+			</div>
+			<div class="modal-footer">
+				<button data-dismiss="modal" class="btn secondary btn-sm" translate>No</button>
+
+				<button ng-click="revokeApp()" data-dismiss="modal"
+					class="btn btn-danger btn-sm" translate>Yes</button>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+.table {
+	table-layout: fixed;
+	word-wrap: break-word;
+}
+
+a {
+	color: #4b565c;
+}
+</style>

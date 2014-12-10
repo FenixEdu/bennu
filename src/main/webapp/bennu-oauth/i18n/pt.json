@@ -47,6 +47,7 @@
 	"Date": "Data",
 	"Device": "Dispositivo",
 	"Revoke Session": "Revogar Sessão",
-	"Do you wish to revoke the selected session?": "Deseja revogar a sessão seleccionada?"
+	"Do you wish to revoke the selected session?": "Deseja revogar a sessão seleccionada?",
+	"Authorizations by User": "Autorizações por Utilizador"
 	
 }

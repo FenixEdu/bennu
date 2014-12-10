@@ -25,7 +25,7 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getScopes() {
         verifyAndGetRequestAuthor();
-        return view(Bennu.getInstance().getScopesSet().stream());
+        return view(Bennu.getInstance().getScopesSet());
     }
 
     @POST

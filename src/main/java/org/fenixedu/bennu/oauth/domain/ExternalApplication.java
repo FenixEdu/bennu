@@ -13,7 +13,6 @@ import java.util.UUID;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.security.Authenticate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +39,6 @@ public class ExternalApplication extends ExternalApplication_Base {
         setSecret(Base64.getEncoder().encodeToString(
                 Hashing.sha512().hashBytes(UUID.randomUUID().toString().getBytes(StandardCharsets.UTF_8)).asBytes()));
         setState(ExternalApplicationState.ACTIVE);
-        setAuthor(Authenticate.getUser());
     }
 
     public void setScopeList(List<ExternalApplicationScope> newScopes) {

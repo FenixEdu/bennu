@@ -56,10 +56,6 @@ public class ApplicationUserSession extends ApplicationUserSession_Base {
         return getRefreshToken().equals(refreshToken);
     }
 
-    public String getUsername() {
-        return getApplicationUserAuthorization().getUser().getUsername();
-    }
-
     @Atomic
     public void setTokens(String accessToken, String refreshToken) {
         setAccessToken(accessToken);

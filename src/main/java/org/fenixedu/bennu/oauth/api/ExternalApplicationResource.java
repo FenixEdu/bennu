@@ -25,6 +25,7 @@ import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.api.json.ExternalApplicationForManagersAdapter;
+import org.fenixedu.bennu.oauth.api.json.ExternalApplicationUsersAdapter;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 
 @Path("/bennu-oauth/applications")
@@ -71,7 +72,15 @@ public class ExternalApplicationResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/all")
+    @Path("/applications/{app}/authorizations")
+    public String applicationsAuthorizations(@PathParam("app") ExternalApplication application) {
+        accessControl("#managers");
+        return view(application, ExternalApplicationUsersAdapter.class);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/applications/all")
     public String allApplications() {
         accessControl("#managers");
         return view(getAllApplications());

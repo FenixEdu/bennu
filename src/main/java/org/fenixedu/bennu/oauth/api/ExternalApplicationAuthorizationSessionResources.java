@@ -10,6 +10,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
@@ -21,18 +23,27 @@ public class ExternalApplicationAuthorizationSessionResources extends BennuRestR
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{session}")
     public String authorizations(@PathParam("session") ApplicationUserAuthorization authorization) {
-        verifyAndGetRequestAuthor();
-        return view(authorization.getSessionSet());
+        User user = verifyAndGetRequestAuthor();
+        if (authorization.getUser() == user || isManager(user)) {
+            return view(authorization.getSessionSet());
+        }
+        return null;
     }
 
     @DELETE
     @Path("/{session}")
     public Response delete(@PathParam("session") ApplicationUserSession session) {
-        verifyAndGetRequestAuthor();
-        atomic(() -> {
-            session.delete();
-        });
-        return Response.ok().build();
+        User user = verifyAndGetRequestAuthor();
+        if (session.getApplicationUserAuthorization().getUser() == user || isManager(user)) {
+            atomic(() -> {
+                session.delete();
+            });
+            return Response.ok().build();
+        }
+        return null;
     }
 
+    private boolean isManager(User user) {
+        return Group.parse("#managers").isMember(user);
+    }
 }

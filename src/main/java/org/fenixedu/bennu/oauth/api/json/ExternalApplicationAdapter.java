@@ -9,6 +9,7 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.json.JsonAdapter;
 import org.fenixedu.bennu.core.json.JsonBuilder;
+import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
@@ -33,6 +34,7 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         JsonObject jObj = json.getAsJsonObject();
         ExternalApplication app = create();
 
+        app.setAuthor(Authenticate.getUser());
         app.setName(getRequiredValue(jObj, "name"));
         app.setDescription(getRequiredValue(jObj, "description"));
         app.setRedirectUrl(getRedirectUrl(jObj));
