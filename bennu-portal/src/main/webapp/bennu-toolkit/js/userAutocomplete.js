@@ -3,11 +3,10 @@
     
     Bennu.userAutocomplete.attr = "bennu-user-autocomplete";
     
-    var bloodhound = null;
-    
     Bennu.userAutocomplete.setup = function () {
     	
-    	if (!bloodhound) {
+    	var bloodhound = null;
+    	
     		bloodhound = new Bloodhound({
         	    datumTokenizer: function (d) {
         	        return Bloodhound.tokenizers.whitespace(d.value);
@@ -35,9 +34,12 @@
         	    }
         	});
         	bloodhound.initialize();
-    	}
     	
+        	return bloodhound;
     };
+    
+    Bennu.userAutocomplete.bloodhound = Bennu.userAutocomplete.bloodhound || Bennu.userAutocomplete.setup();
+
     
     Bennu.userAutocomplete.createWidget = function (input) {
     	
@@ -119,7 +121,7 @@
     	    displayKey: function(user) {
     	    	return user.displayName;
     	    },
-    	    source: bloodhound.ttAdapter(),
+    	    source: Bennu.userAutocomplete.bloodhound.ttAdapter(),
     	    templates: {
     	        empty: [
     	            '<div class="empty-message">',
