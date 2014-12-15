@@ -85,19 +85,21 @@
 
         var currentDate = e.val();
 
-        if (currentDate.trim() === "") {
-            currentDate = new Date();
-        } else {
+        if (currentDate && currentDate.trim() !== "") {
             currentDate = new Date(currentDate);
+            e.val(moment(currentDate).format("YYYY-MM-DD"));
         }
 
         var options = {
-            defaultDate: currentDate,
             language: Bennu.lang,
             showToday: true,
             pickDate: true,
             pickTime: false,
         };
+
+        if(currentDate){
+            options['defaultDate'] = currentDate;
+        }
 
         dateOptions(e, options);
 
@@ -158,19 +160,20 @@
 
         var currentDate = e.val();
 
-        if (currentDate.trim() == "") {
-            currentDate = new Date();
-        } else {
+        if (currentDate && currentDate.trim() != "") {
             currentDate = parseTime(currentDate);
+            e.val(moment(currentDate).format("HH:mm:ss.SSS"));
         }
-        e.val(moment(currentDate).format("HH:mm:ss.SSS"));
 
         var options = {
-            defaultDate: currentDate,
             language: Bennu.lang,
             pickDate: false,
             pickTime: true,
             useSeconds: true
+        }
+
+        if(currentDate){
+            options['defaultDate'] = currentDate;
         }
 
         timeOptions(e, options);
@@ -222,23 +225,23 @@
 
         var currentDate = e.val();
 
-        if (currentDate.trim() == "") {
-            currentDate = new Date();
-        } else {
+        if (currentDate && currentDate.trim() != "") {
             currentDate = new Date(currentDate);
+            e.val(moment(currentDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
         }
-
-        e.val(moment(currentDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
 
         var options = {
             sideBySide: true,
-            defaultDate: currentDate,
             language: Bennu.lang,
             pickDate: true,
             pickTime: true,
             useSeconds: true,
             showToday: true,
         };
+
+        if(currentDate){
+            options['defaultDate'] = currentDate;
+        }
 
         dateOptions(e,options);
         timeOptions(e,options);
