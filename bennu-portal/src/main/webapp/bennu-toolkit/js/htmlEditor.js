@@ -470,16 +470,15 @@
 
                 if (r !== t){
                     $(".bennu-html-editor-editor", dom)[0].innerHTML = t;
-                    e.data("handler").trigger();
                 }
             } else {
                 var t = $(e).val()
                 var r = $(".bennu-html-editor-editor", dom).html();
                 if (r !== t){
                     $(".bennu-html-editor-editor", dom)[0].innerHTML = t;
-                    e.data("handler").trigger();
                 }
             }
+	    e.data("handler").trigger();
         });
 
         var handler = Bennu.widgetHandler.makeFor(e);
