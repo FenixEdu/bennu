@@ -88,7 +88,6 @@
 				model : '=ngUserAutocomplete'
 			},
 			link : function(scope, el, attr) {
-				Bennu.userAutocomplete.setup();
 				var result = Bennu.userAutocomplete.createWidget(el);
 				
 				scope.$watch('model', function(value) {

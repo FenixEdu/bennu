@@ -33,6 +33,7 @@
         	        }
         	    }
         	});
+        	
         	bloodhound.initialize();
     	
         	return bloodhound;
@@ -52,11 +53,12 @@
         $.each(attrs, function() {
         	if (this.name === Bennu.userAutocomplete.attr ||
         		this.name === "name" ||
-        		this.name === "id") {
+        		this.name === "id" || this.name === "value") {
         		return true;
         	}
         	userAutocomplete.attr(this.name, this.value);
         });
+        
         
         input.attr('type','hidden');
         
@@ -103,12 +105,12 @@
         
         result.onchange(function() {
         	var value = this.get();
-        	if (value && value.hasOwnProperty('id') && value.hasOwnProperty('name')) {
-        		input.val(value.id);
-        		userAutocomplete.val(value.name);
+        	if (value && value.hasOwnProperty('username') && value.hasOwnProperty('name')) {
+        		$(input).val(value.username);
+        		userAutocomplete.typeahead('val', value.name);
         	} else {
-        		input.val("");
-        		userAutocomplete.val("");
+        		$(input).val("");
+        		userAutocomplete.typeahead('val', '');
         	}
         });
         
@@ -142,6 +144,14 @@
     	});
         
         result.handler = Bennu.widgetHandler.makeFor(input);
+        
+        var val = $(input).val();
+        
+        if (val) {
+        	Bennu.userAutocomplete.bloodhound.get(val, function(results) {
+        		result.set(results[0]);
+        	});
+        }
         
         return result;
     };

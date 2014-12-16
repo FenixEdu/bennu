@@ -139,10 +139,6 @@
         // -----------------
         var autocompletes = $("[" + Bennu.userAutocomplete.attr + "]");
         
-        if (autocompletes.size() > 0) {
-        	Bennu.userAutocomplete.setup();
-        }
-        
         autocompletes.map(function (i, e) {
             Bennu.userAutocomplete.createWidget(e);
         });
