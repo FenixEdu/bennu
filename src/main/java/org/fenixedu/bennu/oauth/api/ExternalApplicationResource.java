@@ -72,7 +72,7 @@ public class ExternalApplicationResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/applications/{app}/authorizations")
+    @Path("/{app}/authorizations")
     public String applicationsAuthorizations(@PathParam("app") ExternalApplication application) {
         accessControl("#managers");
         return view(application, ExternalApplicationUsersAdapter.class);
@@ -80,7 +80,7 @@ public class ExternalApplicationResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/applications/all")
+    @Path("/all")
     public String allApplications() {
         accessControl("#managers");
         return view(getAllApplications());

@@ -31,11 +31,11 @@ public class ExternalApplication extends ExternalApplication_Base {
 
     public ExternalApplication() {
         super();
-        setBennu(Bennu.getInstance());
         init();
     }
 
     protected void init() {
+        setBennu(Bennu.getInstance());
         setSecret(Base64.getEncoder().encodeToString(
                 Hashing.sha512().hashBytes(UUID.randomUUID().toString().getBytes(StandardCharsets.UTF_8)).asBytes()));
         setState(ExternalApplicationState.ACTIVE);

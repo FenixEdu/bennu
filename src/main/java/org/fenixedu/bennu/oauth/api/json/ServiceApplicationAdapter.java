@@ -1,6 +1,7 @@
 package org.fenixedu.bennu.oauth.api.json;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
+import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 
@@ -11,7 +12,9 @@ public class ServiceApplicationAdapter extends ExternalApplicationAdapter {
 
     @Override
     protected ExternalApplication create() {
-        return new ServiceApplication();
+        ServiceApplication serviceApplication = new ServiceApplication();
+        serviceApplication.setAuthorName(Authenticate.getUser().getProfile().getDisplayName());
+        return serviceApplication;
     }
 
     @Override

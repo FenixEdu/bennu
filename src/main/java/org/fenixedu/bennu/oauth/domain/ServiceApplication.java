@@ -11,6 +11,7 @@ public class ServiceApplication extends ServiceApplication_Base {
         init();
         setRedirectUrl("");
         setBennuServiceApplication(Bennu.getInstance());
+        setBennu(null);
     }
 
     @Atomic
