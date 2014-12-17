@@ -6,7 +6,8 @@
 
 		<h3 translate>Scopes</h3>
 		<button role="button" data-toggle="modal"
-			class="btn btn-primary  pull-right" ng-click="showCreateScope()" translate>Create</button>
+			class="btn btn-primary  pull-right" ng-click="showCreateScope()"
+			translate>Create</button>
 
 
 		<h4>
@@ -29,8 +30,10 @@
 				<tr>
 					<th><a href=""
 						ng-click="predicate = 'scopeKey'; reverse=!reverse" translate>Key</a></th>
-					<th><a href="" ng-click="predicate = 'name'; reverse=!reverse" translate>Name</a></th>
+					<th><a href="" ng-click="predicate = 'name'; reverse=!reverse"
+						translate>Name</a></th>
 					<th translate>Description</th>
+					<th translate>Service</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -40,6 +43,7 @@
 					<td>{{scope.scopeKey}}</td>
 					<td>{{scope.name}}</td>
 					<td>{{scope.description}}</td>
+					<td>{{scope.service}}</td>
 					<td class="text-right">
 
 						<div class="btn-group">
@@ -48,7 +52,8 @@
 								ng-click="showEditModal(scope)" translate>Edit</button>
 
 							<button data-target="#modal-delete-menu" role="button"
-								class="btn btn-danger btn-sm" ng-click="showDeleteModal(scope)" translate>Delete</button>
+								class="btn btn-danger btn-sm" ng-click="showDeleteModal(scope)"
+								translate>Delete</button>
 						</div>
 
 					</td>
@@ -95,13 +100,11 @@
 							<img ng-src="{{app.getLogoUrl}}" height="55px" width="55px">
 						</div>
 					</td>
-					<td>
-					
-					<b translate>Name</b><b>:</b> {{app.name}} <br>
-					<b translate>Description</b><b>:</b> {{app.description}} <br>
-					<b translate>Author</b><b>:</b> {{app.author}} <br>
-					<b translate>Scopes</b><b>:</b> {{app.scopes | scopeNames}}</td>
-					
+					<td><b translate>Name</b><b>:</b> {{app.name}} <br> <b
+						translate>Description</b><b>:</b> {{app.description}} <br> <b
+						translate>Author</b><b>:</b> {{app.author}} <br> <b translate>Scopes</b><b>:</b>
+						{{app.scopes | scopeNames}}</td>
+
 					<td style="vertical-align: middle" class="col-sm-2 text-center">{{app.authorizations}}</td>
 					<td style="vertical-align: middle">{{app.redirectUrl}}</td>
 					<td style="vertical-align: middle">{{app.state | translate}}</td>
@@ -247,7 +250,8 @@
 						<div class="col-sm-10">
 							<input ng-model="currentscope.scopeKey" type="text"
 								ng-change="keyChange()" class="form-control" id="scopeKey"
-								placeholder="{{'Key' | translate}}" required /> <span ng-show="error" translate>Key already exists</span>
+								placeholder="{{'Key' | translate}}" required /> <span
+								ng-show="error" translate>Key already exists</span>
 						</div>
 					</div>
 
@@ -256,7 +260,8 @@
 						<label for="name" class="col-sm-2 control-label">Name</label>
 						<div class="col-sm-10">
 							<input ng-model="currentscope.name" type="text"
-								class="form-control" id="name" placeholder="{{'Name' | translate}}" required />
+								class="form-control" id="name"
+								placeholder="{{'Name' | translate}}" required />
 						</div>
 					</div>
 
@@ -264,15 +269,24 @@
 						<label for="description" class="col-sm-2 control-label" translate>Description</label>
 						<div class="col-sm-10">
 							<textarea ng-model="currentscope.description"
-								class="form-control" id="description" placeholder="{{'Description' | translate}}"
-								rows="2" required />
+								class="form-control" id="description"
+								placeholder="{{'Description' | translate}}" rows="2" required />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" translate>Service</label>
+						<div class="col-sm-10">
+							<input type="checkbox" ng-model="currentscope.service">
 						</div>
 					</div>
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
-					<button ng-disabled="error" type="submit" class="btn btn-primary" translate>Create</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						translate>Close</button>
+					<button ng-disabled="error" type="submit" class="btn btn-primary"
+						translate>Create</button>
 				</div>
 
 			</form>
@@ -299,8 +313,8 @@
 						<label for="scopeKey" class="col-sm-2 control-label" translate>Key</label>
 						<div class="col-sm-10">
 							<input ng-model="currentscope.scopeKey" type="text"
-								class="form-control" id="editScopeKey" placeholder="{{'Key' | translate}}"
-								disabled />
+								class="form-control" id="editScopeKey"
+								placeholder="{{'Key' | translate}}" disabled />
 
 						</div>
 					</div>
@@ -309,7 +323,8 @@
 						<label for="name" class="col-sm-2 control-label" translate>Name</label>
 						<div class="col-sm-10">
 							<input ng-model="currentscope.name" type="text"
-								class="form-control" id="editName" placeholder="{{'Name' | translate}}" required />
+								class="form-control" id="editName"
+								placeholder="{{'Name' | translate}}" required />
 						</div>
 					</div>
 
@@ -322,9 +337,17 @@
 						</div>
 					</div>
 
+					<div class="form-group">
+						<label class="col-sm-2 control-label" translate>Service</label>
+						<div class="col-sm-10">
+							<input type="checkbox" ng-model="currentscope.service">
+						</div>
+					</div>
+
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						translate>Close</button>
 					<button type="submit" class="btn btn-primary" translate>Save</button>
 				</div>
 
@@ -341,7 +364,8 @@
 				<button type="button" class="close" data-dismiss="modal"">
 					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel" translate>Application Details</h4>
+				<h4 class="modal-title" id="myModalLabel" translate>Application
+					Details</h4>
 			</div>
 			<form class="form-horizontal">
 				<div class="modal-body">
@@ -364,7 +388,7 @@
 
 
 					<div class="form-group">
-						<label for="name" class="col-sm-2 control-label" translate >Name</label>
+						<label for="name" class="col-sm-2 control-label" translate>Name</label>
 						<div class="col-sm-8">
 							<input disabled type="text" ng-model="currentapp.name"
 								class="form-control">
@@ -404,7 +428,8 @@
 					</div>
 
 					<div class="form-group">
-						<label for="clientId" class="col-sm-2 control-label" >Client Id</label>
+						<label for="clientId" class="col-sm-2 control-label">Client
+							Id</label>
 						<div class="col-sm-8">
 							<input disabled type="text" class="form-control"
 								ng-model="currentapp.id" id="clientId">
@@ -412,7 +437,8 @@
 					</div>
 
 					<div class="form-group">
-						<label for="secret" class="col-sm-2 control-label">Client Secret</label>
+						<label for="secret" class="col-sm-2 control-label">Client
+							Secret</label>
 						<div class="col-sm-8">
 							<textarea disabled type="text" class="form-control"
 								ng-model="currentapp.secret" id="secret" rows="3" />
@@ -429,7 +455,8 @@
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						translate>Close</button>
 				</div>
 			</form>
 		</div>
@@ -444,7 +471,8 @@
 				<button type="button" class="close" data-dismiss="modal"">
 					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel" translate>Edit Application</h4>
+				<h4 class="modal-title" id="myModalLabel" translate>Edit
+					Application</h4>
 			</div>
 			<form ng-submit="updateApplication()" class="form-horizontal">
 				<div class="modal-body">
@@ -517,7 +545,8 @@
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						translate>Close</button>
 					<button type="submit" class="btn btn-primary" translate>Save</button>
 				</div>
 			</form>

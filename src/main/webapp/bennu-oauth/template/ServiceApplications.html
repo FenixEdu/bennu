@@ -4,8 +4,9 @@
 	<div class="row">
 		<h3 translate>Service Applications</h3>
 		<button role="button" data-toggle="modal"
-			class="btn btn-primary pull-right" ng-click="showCreateApplication()" translate >Create</button>
-	
+			class="btn btn-primary pull-right" ng-click="showCreateApplication()"
+			translate>Create</button>
+
 		<h4>
 			<div ng-show="applications" class="col-sm-5 pull-right">
 				<form class="form-horizontal">
@@ -39,19 +40,17 @@
 							<img ng-src="{{app.getLogoUrl}}" height="55px" width="55px">
 						</div>
 					</td>
-					<td>
-					
-					<b translate>Name</b><b>:</b> {{app.name}} <br>
-					<b translate>Description</b><b>:</b> {{app.description}} <br>
-					<b translate>Author</b><b>:</b> {{app.author}} <br>
-					<b translate>Scopes</b><b>:</b> {{app.scopes | scopeNames}}</td>
-					
+					<td><b translate>Name</b><b>:</b> {{app.name}} <br> <b
+						translate>Description</b><b>:</b> {{app.description}} <br> <b
+						translate>Author</b><b>:</b> {{app.author}} <br> <b translate>Scopes</b><b>:</b>
+						{{app.scopes | scopeNames}}</td>
+
 					<td style="vertical-align: middle" class="col-sm-2 text-center">{{app.authorizations}}</td>
 					<td style="vertical-align: middle">{{app.state | translate}}</td>
 					<td style="vertical-align: middle" class="text-right">
 
 						<div class="btn-group">
-						
+
 							<button role="button" data-toggle="modal" class="btn btn-sm"
 								ng-click="showDetailsApplication(app)" translate>Details</button>
 
@@ -156,7 +155,8 @@
 				<button type="button" class="close" data-dismiss="modal"">
 					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel" translate>Application Details</h4>
+				<h4 class="modal-title" id="myModalLabel" translate>Application
+					Details</h4>
 			</div>
 			<form class="form-horizontal">
 				<div class="modal-body">
@@ -179,7 +179,7 @@
 
 
 					<div class="form-group">
-						<label for="name" class="col-sm-2 control-label" translate >Name</label>
+						<label for="name" class="col-sm-2 control-label" translate>Name</label>
 						<div class="col-sm-8">
 							<input disabled type="text" ng-model="currentapp.name"
 								class="form-control">
@@ -203,7 +203,8 @@
 					</div>
 
 					<div class="form-group">
-						<label for="clientId" class="col-sm-2 control-label" >Client Id</label>
+						<label for="clientId" class="col-sm-2 control-label">Client
+							Id</label>
 						<div class="col-sm-8">
 							<input disabled type="text" class="form-control"
 								ng-model="currentapp.id" id="clientId">
@@ -211,7 +212,8 @@
 					</div>
 
 					<div class="form-group">
-						<label for="secret" class="col-sm-2 control-label">Client Secret</label>
+						<label for="secret" class="col-sm-2 control-label">Client
+							Secret</label>
 						<div class="col-sm-8">
 							<textarea disabled type="text" class="form-control"
 								ng-model="currentapp.secret" id="secret" rows="3" />
@@ -228,7 +230,8 @@
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						translate>Close</button>
 				</div>
 			</form>
 		</div>
@@ -243,7 +246,8 @@
 				<button type="button" class="close" data-dismiss="modal"">
 					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel" translate>Edit Application</h4>
+				<h4 class="modal-title" id="myModalLabel" translate>Edit
+					Application</h4>
 			</div>
 			<form ng-submit="updateApplication()" class="form-horizontal">
 				<div class="modal-body">
@@ -290,10 +294,22 @@
 								class="form-control" id="siteUrl" placeholder="Site">
 						</div>
 					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" translate>Scopes</label>
+						<div class="col-sm-10">
+
+							<div for="" ng-repeat="scope in currentapp.scopes">
+								<input type="checkbox" value="scope.name"
+									ng-model="scope.selected"> {{scope.name}}
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						translate>Close</button>
 					<button type="submit" class="btn btn-primary" translate>Save</button>
 				</div>
 			</form>
@@ -307,9 +323,11 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">
-					<span aria-hidden="true">&times;</span><span class="sr-only" translate>Close</span>
+					<span aria-hidden="true">&times;</span><span class="sr-only"
+						translate>Close</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel" translate>Create Application</h4>
+				<h4 class="modal-title" id="myModalLabel" translate>Create
+					Application</h4>
 			</div>
 			<form ng-submit="createApplication()" class="form-horizontal">
 				<div class="modal-body">
@@ -337,8 +355,8 @@
 						<label for="description" class="col-sm-2 control-label" translate>Description</label>
 						<div class="col-sm-8">
 							<textarea class="form-control" ng-model="currentapp.description"
-								ng-required="true" id="description" placeholder="{{'Description' | translate}}"
-								rows="2"></textarea>
+								ng-required="true" id="description"
+								placeholder="{{'Description' | translate}}" rows="2"></textarea>
 						</div>
 					</div>
 
@@ -349,11 +367,25 @@
 								class="form-control" id="siteUrl" placeholder="Site">
 						</div>
 					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" translate>Scopes</label>
+						<div class="col-sm-10">
+
+							<div for="" ng-repeat="scope in currentapp.scopes">
+								<input type="checkbox" value="scope.name"
+									ng-model="scope.selected"> {{scope.name}}
+							</div>
+						</div>
+					</div>
+
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
-					<button ng-disabled="error" type="submit" class="btn btn-primary" translate>Create</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						translate>Close</button>
+					<button ng-disabled="error" type="submit" class="btn btn-primary"
+						translate>Create</button>
 				</div>
 			</form>
 		</div>

@@ -18,6 +18,11 @@ public class ExternalApplicationScopeAdapter implements JsonAdapter<ExternalAppl
         scope.setScopeKey(asJsonObject.get("scopeKey").getAsString());
         scope.setName(asJsonObject.get("name").getAsString());
         scope.setDescription(asJsonObject.get("description").getAsString());
+        if (asJsonObject.has("service")) {
+            scope.setService(asJsonObject.get("service").getAsBoolean());
+        } else {
+            scope.setService(false);
+        }
         return scope;
     }
 
@@ -26,6 +31,11 @@ public class ExternalApplicationScopeAdapter implements JsonAdapter<ExternalAppl
         JsonObject asJsonObject = json.getAsJsonObject();
         obj.setName(asJsonObject.get("name").getAsString());
         obj.setDescription(asJsonObject.get("description").getAsString());
+        if (asJsonObject.has("service")) {
+            obj.setService(asJsonObject.get("service").getAsBoolean());
+        } else {
+            obj.setService(false);
+        }
         return obj;
     }
 
@@ -36,6 +46,7 @@ public class ExternalApplicationScopeAdapter implements JsonAdapter<ExternalAppl
         json.addProperty("scopeKey", obj.getScopeKey());
         json.addProperty("name", obj.getName());
         json.addProperty("description", obj.getDescription());
+        json.addProperty("service", obj.getService());
         return json;
     }
 }
