@@ -5,8 +5,10 @@ import java.lang.reflect.Method;
 import java.util.Base64;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -29,6 +31,9 @@ import com.google.gson.JsonObject;
 
 class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
 
+    @Context
+    private HttpServletRequest httpRequest;
+
     private final static String ACCESS_TOKEN = "access_token";
 
     private final static String USER_HEADER = "__username__";
@@ -44,6 +49,8 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+
+        String ipAddress = getIpAddress();
 
         String accessToken = getAccessToken(requestContext);
 
@@ -68,6 +75,11 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
 
             if (!serviceApplication.get().hasServiceAuthorization(accessToken)) {
                 requestContext.abortWith(Response.status(Status.NOT_FOUND).build());
+                return;
+            }
+
+            if (!Strings.isNullOrEmpty(ipAddress) && !serviceApplication.get().matchesIpAddress(ipAddress)) {
+                requestContext.abortWith(Response.status(Status.FORBIDDEN).build());
                 return;
             }
 
@@ -132,6 +144,17 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
             logger.debug("Scope '{}' is not defined!", endpoint.value());
             requestContext.abortWith(Response.status(Status.NOT_FOUND).build());
         }
+    }
+
+    private String getIpAddress() {
+
+        String xFor = httpRequest.getHeader("x-forwarded-for");
+
+        if (!Strings.isNullOrEmpty(xFor)) {
+            return xFor;
+        }
+
+        return httpRequest.getRemoteAddr();
     }
 
     private void sendError(ContainerRequestContext requestContext, String error, String errorDescription) {

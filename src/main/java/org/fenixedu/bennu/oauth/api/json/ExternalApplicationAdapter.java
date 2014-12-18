@@ -24,7 +24,7 @@ import com.google.gson.JsonObject;
 @DefaultJsonAdapter(ExternalApplication.class)
 public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplication> {
 
-    protected ExternalApplication create() {
+    protected ExternalApplication create(JsonElement json) {
         ExternalApplication app = new ExternalApplication();
         app.setAuthor(Authenticate.getUser());
         return app;
@@ -34,7 +34,7 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
     public ExternalApplication create(JsonElement json, JsonBuilder ctx) {
 
         JsonObject jObj = json.getAsJsonObject();
-        ExternalApplication app = create();
+        ExternalApplication app = create(json);
 
         app.setName(getRequiredValue(jObj, "name"));
         app.setDescription(getRequiredValue(jObj, "description"));

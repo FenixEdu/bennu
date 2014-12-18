@@ -499,20 +499,35 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', function (
 bennuOAuth.controller('ServiceApplicationsCtrl', ['$scope', '$http', '$controller', function ($scope, $http, $controller) {
 	
 	$scope.applicationsBaseApiUrl = '/api/bennu-oauth/service-applications/';
+	
+	$scope.newIp = '';
+	
+	$scope.addNewIp = function() {
+		var whitelist = $scope.currentapp.ipAddresses;
+		if ($scope.newIp && whitelist.indexOf($scope.newIp) === -1) {
+			$scope.currentapp.ipAddresses.push($scope.newIp);
+			$scope.newIp = '';
+		}
+	};
+	
+	$scope.removeIp = function(ip) {
+		var whitelist = $scope.currentapp.ipAddresses;
+		whitelist.splice(whitelist.indexOf(ip), 1);
+	};
 		
 	$controller('ManageCtrl', {$scope : $scope});
 	
 	$scope.showCreateApplication = function() {
 		angular.element('#logo').val(null);
 		$scope.error = "";
-		$scope.currentapp = {logo : null, name : "", scopes : [], description : "" , siteUrl : "", redirectUrl : ""};
-		$scope.currentapp.scopes = angular.copy($scope.scopes);		
+		$scope.currentapp = {logo : null, name : "", scopes : [], description : "" , siteUrl : "", redirectUrl : "", whitelist : []};
+		$scope.currentapp.scopes = angular.copy($scope.scopes);	
 		$('#createApplication').modal('show');
 	};
 	
 	$scope.createApplication = function() {
 		$('#createApplication').modal('hide');
-		$http.post(contextPath + $scope.applicationsBaseApiUrl, {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'siteUrl': $scope.currentapp.siteUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.currentapp.scopes}).success(function (data) {
+		$http.post(contextPath + $scope.applicationsBaseApiUrl, $scope.currentapp).success(function (data) {
 			$http.get(contextPath + $scope.applicationsBaseApiUrl + 'all').success(function (data) {
 				$scope.applications = getReloadableUrlObjects(data);
 			});

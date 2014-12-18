@@ -14,7 +14,7 @@ public class ExternalApplication  {
 }
 
 public class ServiceApplication extends ExternalApplication {
-    
+    JsonElement ipAddresses;
 }
 
 class ServiceApplicationAuthorization {
