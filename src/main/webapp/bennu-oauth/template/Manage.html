@@ -536,7 +536,7 @@
 
 							<div for="" ng-repeat="scope in userscopes">
 								<input type="checkbox" value="{{scope}}"
-									ng-checked="ifChecked(scope)" ng-click="toggleSelection(scope)">
+									ng-checked="ifChecked(currentapp, scope)" ng-click="toggleSelection(currentapp, scope)">
 								{{scope.name}}
 							</div>
 

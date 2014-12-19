@@ -173,7 +173,7 @@
 
 							<div for="" ng-repeat="scope in scopes">
 								<input type="checkbox" value="{{scope}}"
-									ng-checked="ifChecked(scope)" ng-click="toggleSelection(scope)">
+									ng-checked="ifChecked(currentapp, scope)" ng-click="toggleSelection(currentapp, scope)">
 								{{scope.name}}
 							</div>
 
@@ -261,7 +261,7 @@
 
 							<div for="" ng-repeat="scope in scopes">
 								<input type="checkbox" value="{{scope}}"
-									ng-checked="ifChecked(scope)" ng-click="toggleSelection(scope)">
+									ng-checked="ifChecked(currentapp, scope)" ng-click="toggleSelection(currentapp, scope)">
 								{{scope.name}}
 							</div>
 
@@ -342,7 +342,7 @@
 					<div class="form-group">
 						<label for="scopes" class="col-sm-2 control-label" translate>Scopes</label>
 						<div class="col-sm-8">
-							<textarea disabled type="text" class="form-control" id="scopes">{{scopeselection | scopeNames}}</textarea>
+							<textarea disabled type="text" class="form-control" id="scopes">{{currentapp.scopes | scopeNames}}</textarea>
 						</div>
 					</div>
 

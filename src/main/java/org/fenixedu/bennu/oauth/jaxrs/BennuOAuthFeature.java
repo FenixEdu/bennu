@@ -14,7 +14,9 @@ public class BennuOAuthFeature implements DynamicFeature {
     public void configure(ResourceInfo resourceInfo, FeatureContext context) {
         OAuthEndpoint endpoint = resourceInfo.getResourceMethod().getAnnotation(OAuthEndpoint.class);
         if (endpoint != null) {
-            context.register(new BennuOAuthAuthorizationFilter(resourceInfo.getResourceMethod(), endpoint));
+//            BennuOAuthAuthorizationFilter filter = new BennuOAuthAuthorizationFilter();
+//            filter.setEndpoint(endpoint);
+            context.register(BennuOAuthAuthorizationFilter.class);
         }
     }
 

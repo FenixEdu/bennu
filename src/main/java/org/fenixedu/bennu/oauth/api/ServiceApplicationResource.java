@@ -39,4 +39,9 @@ public class ServiceApplicationResource extends ExternalApplicationResource {
         return create(json, ServiceApplication.class);
     }
 
+    @Override
+    protected String update(ExternalApplication application, String json, User currentUser) {
+        return view(update(json, application));
+    }
+
 }

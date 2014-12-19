@@ -108,6 +108,10 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Path("/{app}")
     public String updateApplication(@PathParam("app") ExternalApplication application, String json) {
         User currentUser = verifyAndGetRequestAuthor(application);
+        return update(application, json, currentUser);
+    }
+
+    protected String update(ExternalApplication application, String json, User currentUser) {
         if (isManager(currentUser)) {
             return view(update(json, application, ExternalApplicationForManagersAdapter.class));
         }

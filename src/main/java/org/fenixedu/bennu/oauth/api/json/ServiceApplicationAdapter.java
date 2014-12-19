@@ -6,6 +6,7 @@ import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -32,7 +33,11 @@ public class ServiceApplicationAdapter extends ExternalApplicationAdapter {
     public JsonElement view(ExternalApplication obj, JsonBuilder ctx) {
         JsonElement view = super.view(obj, ctx);
         JsonObject jsonObject = view.getAsJsonObject();
-        jsonObject.add("ipAddresses", ((ServiceApplication) obj).getIpAddresses());
+        JsonElement ipAddresses = ((ServiceApplication) obj).getIpAddresses();
+        if (ipAddresses == null || ipAddresses.isJsonNull()) {
+            ipAddresses = new JsonArray();
+        }
+        jsonObject.add("ipAddresses", ipAddresses);
         return jsonObject;
     }
 

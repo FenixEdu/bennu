@@ -241,7 +241,7 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', '$cacheFactory', 
 
 	$scope.create = function() {
 		$('#createApplication').modal('hide');
-		$http.post(contextPath + '/api/bennu-oauth/applications', {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'siteUrl': $scope.currentapp.siteUrl, 'redirectUrl': $scope.currentapp.redirectUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.scopeselection}).success(function (data) {
+		$http.post(contextPath + '/api/bennu-oauth/applications', $scope.currentapp).success(function (data) {
 			$http.get(contextPath + '/api/bennu-oauth/applications').success(function (data) {
 				$scope.applications = getReloadableUrlObjects(data);
 			});
@@ -250,7 +250,7 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', '$cacheFactory', 
 
 	$scope.update = function() {
 		$('#editApplication').modal('hide');
-		$http.put(contextPath + '/api/bennu-oauth/applications/' +  $scope.currentapp.id, {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'siteUrl': $scope.currentapp.siteUrl, 'redirectUrl': $scope.currentapp.redirectUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.scopeselection}).success(function (data) {
+		$http.put(contextPath + '/api/bennu-oauth/applications/' +  $scope.currentapp.id, $scope.currentapp).success(function (data) {
 			if ($scope.currentappindex > -1) {
 				$scope.applications[$scope.currentappindex] = createReloadableUrlObject(data);
 			}
@@ -269,15 +269,13 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', '$cacheFactory', 
 	$scope.showCreateApplication = function() {
 		angular.element('#logo').val(null);
 		$scope.error = "";
-		$scope.currentapp = {logo : null, name : "", description : "" , siteUrl : "", redirectUrl : ""};
-		$scope.scopeselection = [];
+		$scope.currentapp = {logo : null, name : "", description : "" , siteUrl : "", redirectUrl : "", scopes : []};
 		$('#createApplication').modal('show');
 	};
 
 	$scope.showDetailsApplication = function(application) {
 		$scope.currentappindex = $scope.applications.indexOf(application);
 		$scope.currentapp = angular.copy(application);
-		$scope.scopeselection = application.scopes;	
 		$('#detailsApplication').modal('show');
 	};
 
@@ -286,36 +284,40 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', '$cacheFactory', 
 		$scope.error = "";
 		$scope.currentappindex = $scope.applications.indexOf(application);
 		$scope.currentapp = angular.copy(application);
-		$scope.scopeselection = application.scopes;	
 		$('#editApplication').modal('show');	
 	};	
 
-	$scope.ifChecked = function(scope) {
-		var found = false;
-		angular.forEach($scope.scopeselection, function(key) {
-			if(key.name === scope.name) {
-				found = true;
-				return;
-			} 
-		});		
-		return found;
+	$scope.ifChecked = function(app, scope) {
+		if (app) {
+			var found = false;
+			angular.forEach(app.scopes, function(key) {
+				if(key.name === scope.name) {
+					found = true;
+					return;
+				}
+			});		
+			return found;
+		}
+		return false;
 	}
 
-	$scope.toggleSelection = function toggleSelection(scope) {
-		var idx = -1;
-		var i = 0;
-		angular.forEach($scope.scopeselection, function(key) {
-			if(key.name === scope.name) {
-				idx = i;
-				return;
-			} 
-			i++;
-		});			
-		if (idx > -1) {
-			$scope.scopeselection.splice(idx, 1);
-		} else {
-			$scope.scopeselection.push(scope);
-		}	    
+	$scope.toggleSelection = function toggleSelection(app, scope) {
+		if (app) {
+			var idx = -1;
+			var i = 0;
+			angular.forEach(app.scopes, function(key) {
+				if(key.name === scope.name) {
+					idx = i;
+					return;
+				} 
+				i++;
+			});			
+			if (idx > -1) {
+				app.scopes.splice(idx, 1);
+			} else {
+				app.scopes.push(scope);
+			}
+		}
 	};
 
 	$scope.showDeleteModal = function(application) {
@@ -364,38 +366,43 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', function (
 		//$scope.originalApplications = getReloadableUrlObjects(data);
 	});
 	
-	$scope.ifChecked = function(scope) {
-		var found = false;
-		angular.forEach($scope.scopeselection, function(key) {
-			if(key.name === scope.name) {
-				found = true;
-				return;
-			} 
-		});		
-		return found;
+	$scope.ifChecked = function(app, scope) {
+		if (app) {
+			var found = false;
+			angular.forEach(app.scopes, function(key) {
+				if(key.name === scope.name) {
+					found = true;
+					return;
+				}
+			});		
+			return found;
+		}
+		return false;
 	}
 
-	$scope.toggleSelection = function toggleSelection(scope) {
-		var idx = -1;
-		var i = 0;
-		angular.forEach($scope.scopeselection, function(key) {
-			if(key.name === scope.name) {
-				idx = i;
-				return;
-			} 
-			i++;
-		});			
-		if (idx > -1) {
-			$scope.scopeselection.splice(idx, 1);
-		} else {
-			$scope.scopeselection.push(scope);
-		}	    
+	$scope.toggleSelection = function toggleSelection(app, scope) {
+		if (app) {
+			var idx  = -1;
+			var i = 0;
+			angular.forEach(app.scopes, function(key) {
+				if(key.name === scope.name) {
+					idx = i;
+					return;
+				} 
+				i++;
+			});			
+			if (idx > -1) {
+				app.scopes.splice(idx, 1);
+			} else {
+				app.scopes.push(scope);
+			}
+		}
 	};
 
 
 	$scope.create = function() {
 		$('#addScope').modal('hide');
-		$http.post(contextPath + '/api/bennu-oauth/scopes', {'scopeKey': $scope.currentscope.scopeKey, 'name': $scope.currentscope.name, 'description': $scope.currentscope.description, 'service': $scope.currentscope.service}).success(function (data) {
+		$http.post(contextPath + '/api/bennu-oauth/scopes', $scope.currentscope).success(function (data) {
 			$http.get(contextPath + '/api/bennu-oauth/scopes/all').success(function (data) {
 				$scope.scopes = data;
 			});
@@ -404,7 +411,7 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', function (
 
 	$scope.update = function() {
 		$('#editScope').modal('hide');
-		$http.put(contextPath + '/api/bennu-oauth/scopes/' + $scope.currentscope.id, {'name': $scope.currentscope.name, 'description': $scope.currentscope.description, 'service': $scope.currentscope.service}).success(function () {			
+		$http.put(contextPath + '/api/bennu-oauth/scopes/' + $scope.currentscope.id, $scope.currentscope).success(function () {			
 			$http.get(contextPath + '/api/bennu-oauth/scopes/all').success(function (data) {
 				$scope.scopes = data;
 			});
@@ -421,7 +428,7 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', function (
 
 	$scope.updateApplication = function() {
 		$('#editApplicationManager').modal('hide');
-		$http.put(contextPath + $scope.applicationsBaseApiUrl +  $scope.currentapp.id, {'name': $scope.currentapp.name, 'description': $scope.currentapp.description, 'author': $scope.currentapp.author, 'siteUrl': $scope.currentapp.siteUrl, 'redirectUrl': $scope.currentapp.redirectUrl, 'logo': $scope.currentapp.logo, 'scopes': $scope.scopeselection }).success(function (data) {
+		$http.put(contextPath + $scope.applicationsBaseApiUrl +  $scope.currentapp.id, $scope.currentapp).success(function (data) {
 			if ($scope.currentappindex > -1) {
 				$scope.applications[$scope.currentappindex] = createReloadableUrlObject(data);
 			}
@@ -519,7 +526,6 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', function (
 		angular.element('#logo').val(null);
 		$scope.currentappindex = $scope.applications.indexOf(application);
 		$scope.currentapp = angular.copy(application);
-		$scope.scopeselection = angular.copy(application.scopes);	
 		$('#editApplicationManager').modal('show');
 	};
 
@@ -584,13 +590,11 @@ bennuOAuth.controller('ServiceApplicationsCtrl', ['$scope', '$http', '$controlle
 		$scope.error = "";
 		$scope.currentapp = {logo : null, name : "", scopes : [], description : "" , siteUrl : "", redirectUrl : "", ipAddresses : []};
 		$scope.scopes = angular.copy($scope.scopes);		
-		$scope.scopeselection = [];
 		$('#createApplication').modal('show');
 	};
 
 	$scope.createApplication = function() {
 		$('#createApplication').modal('hide');
-		$scope.currentapp.scopes = $scope.scopeselection;
 		$http.post(contextPath + $scope.applicationsBaseApiUrl, $scope.currentapp).success(function (data) {
 			$http.get(contextPath + $scope.applicationsBaseApiUrl + 'all').success(function (data) {
 				$scope.applications = getReloadableUrlObjects(data);

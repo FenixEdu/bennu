@@ -127,11 +127,7 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         json.addProperty("author", obj.getAuthorApplicationName());
         json.addProperty("authorizations", obj.getApplicationUserAuthorizationSet().size());
 
-        JsonArray scopeArray = new JsonArray();
-        for (ExternalApplicationScope externalApplicationScope : obj.getScopesSet()) {
-            scopeArray.add(ctx.view(externalApplicationScope));
-        }
-        json.add("scopes", scopeArray);
+        json.add("scopes", ctx.view(obj.getScopesSet()));
 
         if (obj.getLogo() != null && !Strings.isNullOrEmpty(obj.getLogo().toString())) {
             String logoUrl =

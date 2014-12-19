@@ -1,13 +1,13 @@
 package org.fenixedu.bennu.oauth.jaxrs;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Base64;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -31,21 +31,17 @@ import com.google.gson.JsonObject;
 
 class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
 
-    @Context
-    private HttpServletRequest httpRequest;
-
     private final static String ACCESS_TOKEN = "access_token";
 
     private final static String USER_HEADER = "__username__";
 
     private static final Logger logger = LoggerFactory.getLogger(BennuOAuthAuthorizationFilter.class);
 
-    private final OAuthEndpoint endpoint;
+    @Context
+    ResourceInfo requestInfo;
 
-    public BennuOAuthAuthorizationFilter(Method method, OAuthEndpoint endpoint) {
-        this.endpoint = endpoint;
-        logger.debug("Securing REST endpoint {} with scope '{}'", method, endpoint.value());
-    }
+    @Context
+    private HttpServletRequest httpRequest;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -53,6 +49,8 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
         String ipAddress = getIpAddress();
 
         String accessToken = getAccessToken(requestContext);
+
+        final OAuthEndpoint endpoint = requestInfo.getResourceMethod().getAnnotation(OAuthEndpoint.class);
 
         Optional<ServiceApplication> serviceApplication = extractServiceApplication(accessToken);
 
@@ -80,6 +78,13 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
 
             if (!Strings.isNullOrEmpty(ipAddress) && !serviceApplication.get().matchesIpAddress(ipAddress)) {
                 requestContext.abortWith(Response.status(Status.FORBIDDEN).build());
+                return;
+            }
+
+            Optional<ExternalApplicationScope> scope = ExternalApplicationScope.forKey(endpoint.value());
+
+            if (scope.isPresent() && !serviceApplication.get().getScopesSet().contains(scope.get())) {
+                sendError(requestContext, "invalidScope", "Application doesn't have permissions to this getEndpoint().");
                 return;
             }
 
@@ -118,7 +123,7 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
                 }
 
                 if (!app.getScopesSet().contains(scope.get())) {
-                    sendError(requestContext, "invalidScope", "Application doesn't have permissions to this endpoint.");
+                    sendError(requestContext, "invalidScope", "Application doesn't have permissions to this getEndpoint().");
                     return;
                 }
 
@@ -148,13 +153,18 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
 
     private String getIpAddress() {
 
-        String xFor = httpRequest.getHeader("x-forwarded-for");
+        if (httpRequest != null) {
+            String xFor = null;
+            xFor = httpRequest.getHeader("x-forwarded-for");
 
-        if (!Strings.isNullOrEmpty(xFor)) {
-            return xFor;
+            if (!Strings.isNullOrEmpty(xFor)) {
+                return xFor;
+            }
+
+            return httpRequest.getRemoteAddr();
         }
 
-        return httpRequest.getRemoteAddr();
+        return null;
     }
 
     private void sendError(ContainerRequestContext requestContext, String error, String errorDescription) {
