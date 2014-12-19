@@ -5,37 +5,24 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>fenix-framework-project</artifactId>
-        <version>2.1.0</version>
-        <relativePath />
+        <version>2.2.0</version>
     </parent>
 
-    <artifactId>bennu-oauth</artifactId>
+    <artifactId>bennu-oauth-parent</artifactId>
+    <name>Bennu OAuth Parent</name>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
-    <name>OAuth</name>
-
-    <properties>
-        <version.org.fenixedu.bennu>3.3.0</version.org.fenixedu.bennu>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.fenixedu</groupId>
-            <artifactId>bennu-core</artifactId>
-            <version>${version.org.fenixedu.bennu}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.fenixedu</groupId>
-            <artifactId>bennu-portal</artifactId>
-            <version>${version.org.fenixedu.bennu}</version>
-        </dependency>
-    </dependencies>
+    <packaging>pom</packaging>
 
     <repositories>
         <repository>
-            <id>fenix-ashes-maven-repository</id>
-            <url>https://fenix-ashes.ist.utl.pt/nexus/content/groups/fenix-ashes-maven-repository</url>
+            <id>fenixedu-maven-repository</id>
+            <url>https://repo.fenixedu.org/fenixedu-maven-repository</url>
         </repository>
     </repositories>
+
+    <modules>
+        <module>bennu-oauth</module>
+        <module>bennu-oauth-test</module>
+    </modules>
+    
 </project>
