@@ -4,7 +4,8 @@
 <h3 translate>My Applications</h3>
 
 <button role="button" data-toggle="modal"
-	class="btn btn-primary pull-right" ng-click="showCreateApplication()" translate >Create</button>
+	class="btn btn-primary pull-right" ng-click="showCreateApplication()"
+	translate>Create</button>
 
 
 <h4>
@@ -24,7 +25,8 @@
 	<thead>
 		<tr>
 			<th></th>
-			<th><a href="" ng-click="predicate = 'name'; reverse=!reverse" translate>Name</a></th>
+			<th><a href="" ng-click="predicate = 'name'; reverse=!reverse"
+				translate>Name</a></th>
 			<th style="text-align: right"><a href=""
 				ng-click="predicate = 'authorizations'; reverse=!reverse" translate>Authorizations</a></th>
 			<th></th>
@@ -45,14 +47,16 @@
 				<div class="btn-group">
 
 					<button role="button" data-toggle="modal" data-target="#editScope"
-						class="btn" ng-click="showDetailsApplication(application)" translate>Details</button>
+						class="btn" ng-click="showDetailsApplication(application)"
+						translate>Details</button>
 
 
 					<button role="button" data-toggle="modal" class="btn"
 						ng-click="showEditApplication(application)" translate>Edit</button>
 
 					<button data-target="#modal-delete-menu" role="button"
-						class="btn btn-danger" ng-click="showDeleteModal(application)" translate>Delete</button>
+						class="btn btn-danger" ng-click="showDeleteModal(application)"
+						translate>Delete</button>
 				</div>
 			</td>
 		</tr>
@@ -62,23 +66,22 @@
 
 <h3 translate>Available Scopes</h3>
 <table class="table table-hover">
-			<thead>
-				<tr>
-	
-					<th translate>Name</th>
-					<th translate>Description</th>
-	
-				</tr>
-			</thead>
-			<tbody>
-				<tr
-					ng-repeat="scope in scopes | orderBy:predicateScope:reverseScope"">
-					<td class="col-sm-2">{{scope.name}}</td>
-					<td class="col-sm-6">{{scope.description}}</td>
-					
-				</tr>
-			</tbody>
-		</table>
+	<thead>
+		<tr>
+
+			<th translate>Name</th>
+			<th translate>Description</th>
+
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="scope in scopes | orderBy:predicateScope:reverseScope"">
+			<td class="col-sm-2">{{scope.name}}</td>
+			<td class="col-sm-6">{{scope.description}}</td>
+
+		</tr>
+	</tbody>
+</table>
 
 
 <div id="modal-delete-menu" class="modal fade">
@@ -98,7 +101,7 @@
 
 				<button ng-click="deleteApp()" data-dismiss="modal"
 					class="btn btn-danger btn-sm" translate>Yes</button>
-			</div> 
+			</div>
 		</div>
 	</div>
 </div>
@@ -109,9 +112,11 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">
-					<span aria-hidden="true">&times;</span><span class="sr-only" translate>Close</span>
+					<span aria-hidden="true">&times;</span><span class="sr-only"
+						translate>Close</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel" translate>Create Application</h4>
+				<h4 class="modal-title" id="myModalLabel" translate>Create
+					Application</h4>
 			</div>
 			<form ng-submit="create()" class="form-horizontal">
 				<div class="modal-body">
@@ -139,8 +144,8 @@
 						<label for="description" class="col-sm-2 control-label" translate>Description</label>
 						<div class="col-sm-8">
 							<textarea class="form-control" ng-model="currentapp.description"
-								ng-required="true" id="description" placeholder="{{'Description' | translate}}"
-								rows="2"></textarea>
+								ng-required="true" id="description"
+								placeholder="{{'Description' | translate}}" rows="2"></textarea>
 						</div>
 					</div>
 
@@ -166,17 +171,21 @@
 						<label class="col-sm-2 control-label" translate>Scopes</label>
 						<div class="col-sm-10">
 
-							<div for="" ng-repeat="scope in currentapp.scopes">
-								<input type="checkbox" value="scope.name"
-									ng-model="scope.selected"> {{scope.name}}
+							<div for="" ng-repeat="scope in scopes">
+								<input type="checkbox" value="{{scope}}"
+									ng-checked="ifChecked(scope)" ng-click="toggleSelection(scope)">
+								{{scope.name}}
 							</div>
+
 						</div>
 					</div>
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
-					<button ng-disabled="error" type="submit" class="btn btn-primary" translate>Create</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						translate>Close</button>
+					<button ng-disabled="error" type="submit" class="btn btn-primary"
+						translate>Create</button>
 				</div>
 			</form>
 		</div>
@@ -190,9 +199,11 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">
-					<span aria-hidden="true">&times;</span><span class="sr-only" translate>Close</span>
+					<span aria-hidden="true">&times;</span><span class="sr-only"
+						translate>Close</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel" translate>Edit Application</h4>
+				<h4 class="modal-title" id="myModalLabel" translate>Edit
+					Application</h4>
 			</div>
 			<form ng-submit="update()" class="form-horizontal">
 				<div class="modal-body">
@@ -221,8 +232,8 @@
 						<label for="description" class="col-sm-2 control-label" translate>Description</label>
 						<div class="col-sm-8">
 							<textarea class="form-control" ng-model="currentapp.description"
-								ng-required="true" id="description" placeholder="{{'Description' | translate}}"
-								rows="2"></textarea>
+								ng-required="true" id="description"
+								placeholder="{{'Description' | translate}}" rows="2"></textarea>
 						</div>
 					</div>
 
@@ -248,17 +259,23 @@
 						<label class="col-sm-2 control-label" translate>Scopes</label>
 						<div class="col-sm-10">
 
-							<div for="" ng-repeat="scope in currentapp.scopes">
-								<input type="checkbox" value="scope.name"
-									ng-model="scope.selected"> {{scope.name}}
+							<div for="" ng-repeat="scope in scopes">
+								<input type="checkbox" value="{{scope}}"
+									ng-checked="ifChecked(scope)" ng-click="toggleSelection(scope)">
+								{{scope.name}}
 							</div>
+
+
 						</div>
 					</div>
+
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
-					<button ng-disabled="error" type="submit" class="btn btn-primary" translate>Save</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						translate>Close</button>
+					<button ng-disabled="error" type="submit" class="btn btn-primary"
+						translate>Save</button>
 				</div>
 			</form>
 		</div>
@@ -271,9 +288,11 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">
-					<span aria-hidden="true">&times;</span><span class="sr-only" translate>Close</span>
+					<span aria-hidden="true">&times;</span><span class="sr-only"
+						translate>Close</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel" translate>Application Details</h4>
+				<h4 class="modal-title" id="myModalLabel" translate>Application
+					Details</h4>
 			</div>
 			<form class="form-horizontal">
 				<div class="modal-body">
@@ -282,7 +301,8 @@
 
 						<label for="logo" class="col-sm-2 control-label"></label>
 						<div class="col-sm-8">
-							<img ng-src="{{currentapp.getLogoUrl}}" height="50px" width="50px">
+							<img ng-src="{{currentapp.getLogoUrl}}" height="50px"
+								width="50px">
 						</div>
 					</div>
 
@@ -295,7 +315,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="description" class="col-sm-2 control-label" translate >Description</label>
+						<label for="description" class="col-sm-2 control-label" translate>Description</label>
 						<div class="col-sm-8">
 							<textarea disabled class="form-control"
 								ng-model="currentapp.description" id="description" rows="2"></textarea>
@@ -303,7 +323,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="siteUrl" class="col-sm-2 control-label" >Site</label>
+						<label for="siteUrl" class="col-sm-2 control-label">Site</label>
 						<div class="col-sm-8">
 							<input disabled type="text" ng-model="currentapp.siteUrl"
 								class="form-control" id="siteUrl">
@@ -322,7 +342,7 @@
 					<div class="form-group">
 						<label for="scopes" class="col-sm-2 control-label" translate>Scopes</label>
 						<div class="col-sm-8">
-							<textarea disabled type="text" class="form-control" id="scopes">{{currentapp.scopes | scopeNames}}</textarea>
+							<textarea disabled type="text" class="form-control" id="scopes">{{scopeselection | scopeNames}}</textarea>
 						</div>
 					</div>
 
@@ -345,7 +365,8 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" translate>Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						translate>Close</button>
 				</div>
 			</form>
 		</div>

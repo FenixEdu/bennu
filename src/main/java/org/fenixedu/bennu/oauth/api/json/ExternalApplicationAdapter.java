@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
-import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.json.JsonAdapter;
 import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.security.Authenticate;
@@ -23,6 +24,10 @@ import com.google.gson.JsonObject;
 
 @DefaultJsonAdapter(ExternalApplication.class)
 public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplication> {
+
+    protected boolean isManager(User user) {
+        return Group.parse("#managers").isMember(user);
+    }
 
     protected ExternalApplication create(JsonElement json) {
         ExternalApplication app = new ExternalApplication();
@@ -50,9 +55,15 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
 
             for (int i = 0; i < jArr.size(); i++) {
                 JsonObject scopeJsonObject = jArr.get(i).getAsJsonObject();
-                if (scopeJsonObject.has("selected") && scopeJsonObject.get("selected").getAsBoolean()) {
-                    String oid = scopeJsonObject.get("id").getAsString();
-                    app.addScopes(FenixFramework.getDomainObject(oid));
+                String oid = scopeJsonObject.get("id").getAsString();
+                ExternalApplicationScope scope = FenixFramework.getDomainObject(oid);
+
+                if (scope.getService()) {
+                    if (isManager(Authenticate.getUser())) {
+                        app.addScopes(scope);
+                    }
+                } else {
+                    app.addScopes(scope);
                 }
             }
         }
@@ -84,9 +95,15 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
             for (int i = 0; i < jArr.size(); i++) {
 
                 JsonObject scopeJsonObject = jArr.get(i).getAsJsonObject();
-                if (scopeJsonObject.get("selected").getAsBoolean()) {
-                    String oid = scopeJsonObject.get("id").getAsString();
-                    newScopes.add(FenixFramework.getDomainObject(oid));
+                String oid = scopeJsonObject.get("id").getAsString();
+                ExternalApplicationScope scope = FenixFramework.getDomainObject(oid);
+
+                if (scope.getService()) {
+                    if (isManager(Authenticate.getUser())) {
+                        newScopes.add(scope);
+                    }
+                } else {
+                    newScopes.add(scope);
                 }
             }
             app.setScopeList(newScopes);
@@ -111,21 +128,9 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         json.addProperty("authorizations", obj.getApplicationUserAuthorizationSet().size());
 
         JsonArray scopeArray = new JsonArray();
-        List<ExternalApplicationScope> appScopes = obj.getScopeList();
-
-        for (ExternalApplicationScope externalApplicationScope : Bennu.getInstance().getScopesSet()) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("id", externalApplicationScope.getExternalId());
-            jsonObject.addProperty("name", externalApplicationScope.getName());
-
-            if (appScopes.contains(externalApplicationScope)) {
-                jsonObject.addProperty("selected", true);
-            } else {
-                jsonObject.addProperty("selected", false);
-            }
-            scopeArray.add(jsonObject);
+        for (ExternalApplicationScope externalApplicationScope : obj.getScopesSet()) {
+            scopeArray.add(ctx.view(externalApplicationScope));
         }
-
         json.add("scopes", scopeArray);
 
         if (obj.getLogo() != null && !Strings.isNullOrEmpty(obj.getLogo().toString())) {

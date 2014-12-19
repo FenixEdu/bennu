@@ -1,9 +1,6 @@
 package org.fenixedu.bennu.oauth.api.json;
 
-import java.util.List;
-
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
-import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.json.JsonAdapter;
 import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -41,21 +38,9 @@ public class ExternalApplicationAuthorizationAdapter implements JsonAdapter<Appl
         json.addProperty("applicationAuthor", application.getAuthorApplicationName());
 
         JsonArray scopeArray = new JsonArray();
-        List<ExternalApplicationScope> appScopes = application.getScopeList();
-
-        for (ExternalApplicationScope externalApplicationScope : Bennu.getInstance().getScopesSet()) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("id", externalApplicationScope.getExternalId());
-            jsonObject.addProperty("name", externalApplicationScope.getName());
-
-            if (appScopes.contains(externalApplicationScope)) {
-                jsonObject.addProperty("selected", true);
-            } else {
-                jsonObject.addProperty("selected", false);
-            }
-            scopeArray.add(jsonObject);
+        for (ExternalApplicationScope externalApplicationScope : application.getScopesSet()) {
+            scopeArray.add(ctx.view(externalApplicationScope));
         }
-
         json.add("applicationScopes", scopeArray);
 
         if (application.getLogo() != null && !Strings.isNullOrEmpty(application.getLogo().toString())) {

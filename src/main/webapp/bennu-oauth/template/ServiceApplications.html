@@ -310,9 +310,11 @@
 						<label class="col-sm-2 control-label" translate>Scopes</label>
 						<div class="col-sm-10">
 
-							<div for="" ng-repeat="scope in currentapp.scopes">
-								<input type="checkbox" value="scope.name"
-									ng-model="scope.selected"> {{scope.name}}
+							<div for="" ng-repeat="scope in scopes">
+								<input type="checkbox" value="{{scope}}"
+									ng-checked="ifChecked(scope)" ng-click="toggleSelection(scope)">
+								{{scope.name}}
+
 							</div>
 						</div>
 					</div>
@@ -398,12 +400,15 @@
 						<label class="col-sm-2 control-label" translate>Scopes</label>
 						<div class="col-sm-10">
 
-							<div for="" ng-repeat="scope in currentapp.scopes">
-								<input type="checkbox" value="scope.name"
-									ng-model="scope.selected"> {{scope.name}}
+							<div for="" ng-repeat="scope in scopes">
+								<input type="checkbox" value="{{scope}}"
+									ng-checked="ifChecked(scope)" ng-click="toggleSelection(scope)">
+								{{scope.name}}
+
 							</div>
 						</div>
 					</div>
+
 
 					<div class="form-group">
 						<label for="siteUrl" class="col-sm-2 control-label">IP whitelist</label>
@@ -418,7 +423,7 @@
 							<button type="button" class="btn btn-default" ng-click="addNewIp()">Add</button>
 						</div>
 					</div>
-					
+
 				</div>
 
 				<div class="modal-footer">
