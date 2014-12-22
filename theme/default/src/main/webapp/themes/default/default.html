@@ -10,7 +10,7 @@
 
     <title>{% block title %}{{ functionality.title.content }}{% endblock %}</title>
 
-    <link href="{{contextPath}}/themes/default/css/style.css" rel="stylesheet">
+    <link href="{{contextPath}}/webjars/fenixedu-canvas/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
     <![endif]-->
 
 	<script src="{{contextPath}}/bennu-portal/js/jquery.min.js"></script>
-	<script src="{{contextPath}}/themes/default/js/bootstrap.min.js"></script>
+	<script src="{{contextPath}}/webjars/fenixedu-canvas/js/bootstrap.min.js"></script>
 	<script> setLang = function(l) {
 	  $.post('{{contextPath}}/api/bennu-core/profile/locale/' + l.replace('_', '-')).always(function() { location.reload(); });
 	}
