@@ -105,4 +105,100 @@ public class SignalsTest {
         Assert.assertEquals(true, bool.get());
     }
 
+    @Test
+    public void testExceptionHandling() {
+        AtomicBoolean bool = new AtomicBoolean(false);
+        Signal.register("x", (event) -> {
+            throw new NullPointerException();
+        });
+
+        boolean caught = false;
+        try {
+            TransactionManager manager = FenixFramework.getTransactionManager();
+            manager.begin();
+            Assert.assertEquals(false, bool.get());
+            Signal.emit("x", new DomainObjectEvent<>(FenixFramework.getDomainRoot()));
+            Assert.assertEquals(false, bool.get());
+            manager.commit();
+        } catch (Throwable e) {
+            caught = true;
+            Assert.assertTrue("Wrong Exception", e.getCause() instanceof RuntimeException);
+            Assert.assertTrue("Wrong Exception", e.getMessage().equals("Exceptions while emiting signals"));
+            Assert.assertTrue("Incorrect Exception emited", e.getCause().getCause() instanceof NullPointerException);
+        }
+        Assert.assertTrue("Exception not thrown", caught);
+    }
+
+    @Test
+    public void testMultipleExceptionHandling() {
+        AtomicBoolean bool = new AtomicBoolean(false);
+        Signal.register("x", (event) -> {
+            throw new NullPointerException();
+        });
+        Signal.register("x", (event) -> {
+            throw new UnsupportedOperationException();
+        });
+
+        boolean caught = false;
+        try {
+            TransactionManager manager = FenixFramework.getTransactionManager();
+            manager.begin();
+            Assert.assertEquals(false, bool.get());
+            Signal.emit("x", new DomainObjectEvent<>(FenixFramework.getDomainRoot()));
+            Assert.assertEquals(false, bool.get());
+            manager.commit();
+        } catch (Throwable e) {
+            caught = true;
+            Assert.assertTrue("Wrong Exception", e.getCause() instanceof RuntimeException);
+            Assert.assertTrue("Wrong Exception", e.getMessage().equals("Exceptions while emiting signals"));
+            Assert.assertTrue("Incorrect Exception emited", e.getCause().getCause() instanceof NullPointerException
+                    || e.getCause().getCause() instanceof UnsupportedOperationException);
+        }
+        Assert.assertTrue("Exception not thrown", caught);
+    }
+    
+    @Test
+    public void testSilentExceptionHandling() {
+        AtomicBoolean bool = new AtomicBoolean(false);
+        Signal.registerWithoutTransaction("x", (event) -> {
+            throw new NullPointerException();
+        });
+
+        try {
+            TransactionManager manager = FenixFramework.getTransactionManager();
+            manager.begin();
+            Assert.assertEquals(false, bool.get());
+            Signal.emit("x", new DomainObjectEvent<>(FenixFramework.getDomainRoot()));
+            Assert.assertEquals(false, bool.get());
+            manager.commit();
+        } catch (Throwable e) {
+            Assert.fail("Thrown exception");
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testMultipleSilentExceptionHandling() {
+        AtomicBoolean bool = new AtomicBoolean(false);
+        Signal.registerWithoutTransaction("x", (event) -> {
+            throw new NullPointerException();
+        });
+        Signal.registerWithoutTransaction("x", (event) -> {
+            throw new UnsupportedOperationException();
+        });
+
+        try {
+            TransactionManager manager = FenixFramework.getTransactionManager();
+            manager.begin();
+            Assert.assertEquals(false, bool.get());
+            Signal.emit("x", new DomainObjectEvent<>(FenixFramework.getDomainRoot()));
+            Assert.assertEquals(false, bool.get());
+            manager.commit();
+        } catch (Throwable e) {
+            Assert.fail("Thrown exception");
+            e.printStackTrace();
+        }
+        
+    }
+
 }

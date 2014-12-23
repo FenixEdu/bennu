@@ -50,8 +50,8 @@ public class Signal {
 
     private static final Logger logger = LoggerFactory.getLogger(Signal.class);
 
-    private static final Map<String, EventBus> withTransaction = new ConcurrentHashMap<>();
-    private static final Map<String, EventBus> withoutTransaction = new ConcurrentHashMap<>();
+    private static final Map<String, SignalEventBus> withTransaction = new ConcurrentHashMap<>();
+    private static final Map<String, SignalEventBus> withoutTransaction = new ConcurrentHashMap<>();
 
     private static final CommitListener listener = new CommitListener() {
 
@@ -96,7 +96,7 @@ public class Signal {
      * @param handler
      */
     public static HandlerRegistration register(String key, Object handler) {
-        return registerInBus(key, handler, withTransaction);
+        return registerInBus(key, handler, withTransaction, true);
     }
 
     /**
@@ -126,7 +126,7 @@ public class Signal {
      * @param handler
      */
     public static HandlerRegistration registerWithoutTransaction(String key, Object handler) {
-        return registerInBus(key, handler, withoutTransaction);
+        return registerInBus(key, handler, withoutTransaction, false);
     }
 
     /**
@@ -149,10 +149,10 @@ public class Signal {
         return registerWithoutTransaction(key, new LambdaHandler<T>(handler));
     }
 
-    private static HandlerRegistration registerInBus(String key, Object handler, Map<String, EventBus> eventBuses) {
+    private static HandlerRegistration registerInBus(String key, Object handler, Map<String, SignalEventBus> eventBuses, boolean throwsException) {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(handler, "handler");
-        eventBuses.computeIfAbsent(key, EventBus::new).register(handler);
+        eventBuses.computeIfAbsent(key, (k) -> new SignalEventBus(k, throwsException)).register(handler);
         return new HandlerRegistration(key, handler);
     }
 
@@ -184,8 +184,8 @@ public class Signal {
      * @param the handler to be removed
      */
     public static void unregister(String key, Object handler) {
-        EventBus with = withTransaction.get(key);
-        EventBus without = withoutTransaction.get(key);
+        SignalEventBus with = withTransaction.get(key);
+        SignalEventBus without = withoutTransaction.get(key);
         if (with != null) {
             with.unregister(handler);
         }
@@ -208,7 +208,7 @@ public class Signal {
      * Emits a event.
      * 
      * @param key the key for that signal
-     * @param event the event
+     * @param event the event object
      */
     public static void emit(String key, Object event) {
         if (withoutTransaction.containsKey(key)) {
@@ -235,7 +235,7 @@ public class Signal {
         if (cache != null) {
             for (String key : cache.keySet()) {
                 for (Object event : cache.get(key)) {
-                    withoutTransaction.get(key).post(event);
+                    withoutTransaction.get(key).emit(event);
                 }
             }
             transaction.putInContext("signals", null);
@@ -247,7 +247,7 @@ public class Signal {
         if (cache != null) {
             for (String key : cache.keySet()) {
                 for (Object event : cache.get(key)) {
-                    withTransaction.get(key).post(event);
+                    withTransaction.get(key).emit(event);
                 }
             }
             transaction.putInContext("signalsWithTransaction", null);
