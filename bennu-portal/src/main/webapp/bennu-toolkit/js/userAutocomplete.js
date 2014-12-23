@@ -148,8 +148,13 @@
         var val = $(input).val();
         
         if (val) {
-        	Bennu.userAutocomplete.bloodhound.get(val, function(results) {
-        		result.set(results[0]);
+        	$.ajax({
+        		url: Bennu.contextPath + "/api/bennu-core/users/find?query=" + val + "&maxHits=1",
+        		dataType:"json",
+        		method:"POST",
+        		success: function(data) {
+        			result.set(data.users[0]);
+        		}
         	});
         }
         
