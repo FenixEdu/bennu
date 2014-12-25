@@ -4,12 +4,18 @@ import java.io.IOException;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
+import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
+import org.fenixedu.bennu.oauth.jaxrs.BennuOAuthFeature;
 import org.fenixedu.bennu.oauth.servlets.OAuthAuthorizationServlet;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,12 +32,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @RunWith(FenixFrameworkRunner.class)
-public class OAuthServletTest {
+public class OAuthServletTest extends JerseyTest {
 
     private static ExternalApplication externalApplication;
     private static ServiceApplication serviceApplication;
     private static OAuthAuthorizationServlet oauthServlet;
     private static User user1;
+    private static ServiceApplication serviceApplicationWithScope;
+
+    @Override
+    protected Application configure() {
+        return new ResourceConfig(TestResource.class, BennuOAuthFeature.class);
+    }
 
     private static User createUser(String username, String firstName, String lastName, String fullName, String email) {
         return new User(username, new UserProfile(firstName, lastName, fullName, email, Locale.getDefault()));
@@ -54,13 +66,27 @@ public class OAuthServletTest {
             serviceApplication.setDescription("This is a test service application");
         }
 
+        if (serviceApplicationWithScope == null) {
+            serviceApplicationWithScope = new ServiceApplication();
+            serviceApplicationWithScope.setAuthorName("John Doe");
+            serviceApplicationWithScope.setName("Service App with scope");
+            serviceApplicationWithScope.setDescription("Service App with scope SERVICE");
+            ExternalApplicationScope scope = new ExternalApplicationScope();
+            scope.setScopeKey("SERVICE");
+            scope.setName("Service Scope");
+            scope.setDescription("Service scope is for service only");
+            scope.setService(Boolean.TRUE);
+            serviceApplicationWithScope.addScopes(scope);
+        }
+
         if (externalApplication == null) {
             externalApplication = new ExternalApplication();
             externalApplication.setAuthor(user1);
-            serviceApplication.setName("Test External Application");
-            serviceApplication.setDescription("This is a test external application");
-            serviceApplication.setRedirectUrl("http://test.url/callback");
+            externalApplication.setName("Test External Application");
+            externalApplication.setDescription("This is a test external application");
+            externalApplication.setRedirectUrl("http://test.url/callback");
         }
+
     }
 
     @BeforeClass
@@ -90,6 +116,115 @@ public class OAuthServletTest {
 
             Assert.assertTrue("response must be a valid json and have access_token field", token.has("access_token")
                     && token.get("access_token").getAsString().length() > 0);
+
+        } catch (ServletException | IOException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testNormalEndpoint() {
+        String res = target("bennu-oauth").path("test").path("normal").request().get(String.class);
+        Assert.assertEquals("message must be the same", "this is a normal endpoint", res);
+    }
+
+    @Test
+    public void testServiceOnlyEndpoint() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        req.addParameter("client_id", serviceApplication.getExternalId());
+        req.addParameter("client_secret", serviceApplication.getSecret());
+        req.addParameter("grant_type", "client_credentials");
+        req.setMethod("POST");
+        req.setPathInfo("/access_token");
+
+        try {
+            oauthServlet.service(req, res);
+
+            Assert.assertEquals("must return status OK", 200, res.getStatus());
+
+            String tokenJson = res.getContentAsString();
+
+            final JsonObject token = new JsonParser().parse(tokenJson).getAsJsonObject();
+            final String accessToken = token.get("access_token").getAsString();
+
+            Assert.assertTrue("response must be a valid json and have access_token field", token.has("access_token")
+                    && accessToken.length() > 0);
+
+            String result =
+                    target("bennu-oauth").path("test").path("service-only-without-scope").queryParam("access_token", accessToken)
+                            .request().get(String.class);
+            Assert.assertEquals("this is an endpoint with serviceOnly", result);
+
+        } catch (ServletException | IOException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testServiceOnlyEndpointWithScopeMustFail() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        req.addParameter("client_id", serviceApplication.getExternalId());
+        req.addParameter("client_secret", serviceApplication.getSecret());
+        req.addParameter("grant_type", "client_credentials");
+        req.setMethod("POST");
+        req.setPathInfo("/access_token");
+
+        try {
+            oauthServlet.service(req, res);
+
+            Assert.assertEquals("must return status OK", 200, res.getStatus());
+
+            String tokenJson = res.getContentAsString();
+
+            final JsonObject token = new JsonParser().parse(tokenJson).getAsJsonObject();
+            final String accessToken = token.get("access_token").getAsString();
+
+            Assert.assertTrue("response must be a valid json and have access_token field", token.has("access_token")
+                    && accessToken.length() > 0);
+
+            Response result =
+                    target("bennu-oauth").path("test").path("service-only-with-scope").queryParam("access_token", accessToken)
+                            .request().get(Response.class);
+
+            Assert.assertNotEquals("request must fail", 200, result.getStatus());
+
+        } catch (ServletException | IOException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testServiceOnlyWithScopeEndpoint() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        req.addParameter("client_id", serviceApplicationWithScope.getExternalId());
+        req.addParameter("client_secret", serviceApplicationWithScope.getSecret());
+        req.addParameter("grant_type", "client_credentials");
+        req.setMethod("POST");
+        req.setPathInfo("/access_token");
+
+        try {
+            oauthServlet.service(req, res);
+
+            Assert.assertEquals("must return status OK", 200, res.getStatus());
+
+            String tokenJson = res.getContentAsString();
+
+            final JsonObject token = new JsonParser().parse(tokenJson).getAsJsonObject();
+            final String accessToken = token.get("access_token").getAsString();
+
+            Assert.assertTrue("response must be a valid json and have access_token field", token.has("access_token")
+                    && accessToken.length() > 0);
+
+            String result =
+                    target("bennu-oauth").path("test").path("service-only-with-scope").queryParam("access_token", accessToken)
+                            .request().get(String.class);
+            Assert.assertEquals("this is an endpoint with SERVICE scope, serviceOnly", result);
 
         } catch (ServletException | IOException e) {
             Assert.fail(e.getMessage());
