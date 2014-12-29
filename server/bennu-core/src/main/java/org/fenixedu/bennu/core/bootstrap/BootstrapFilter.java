@@ -28,8 +28,9 @@ public class BootstrapFilter implements Filter {
             ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         String path = req.getRequestURI();
-        if (!shouldFilter() || path.endsWith(".js") || path.endsWith(".css") || path.startsWith(req.getContextPath() + "/img")
-                || path.startsWith(req.getContextPath() + "/api/")) {
+        if (!shouldFilter() || path.endsWith(".js") || path.endsWith(".css") || path.endsWith(".eot") || path.endsWith(".otf")
+                || path.endsWith(".svg") || path.endsWith(".ttf") || path.endsWith(".woff")
+                || path.startsWith(req.getContextPath() + "/img") || path.startsWith(req.getContextPath() + "/api/")) {
             chain.doFilter(request, response);
         } else {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("/bennu-core/bootstrap.jsp");
