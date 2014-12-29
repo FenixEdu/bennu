@@ -20,6 +20,9 @@
         </plugins>
     </build>
 
+    <properties>
+        <version.org.fenixedu.fenixedu-canvas>1.0.0</version.org.fenixedu.fenixedu-canvas>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -65,6 +68,11 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>fenixedu-canvas</artifactId>
+            <version>${version.org.fenixedu.fenixedu-canvas}</version>
         </dependency>
     </dependencies>
 

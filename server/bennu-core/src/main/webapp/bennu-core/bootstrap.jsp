@@ -5,8 +5,8 @@
 	<script> window.ctxPath = '${pageContext.request.contextPath}'; </script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-core/js/angular.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-core/js/jquery.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-core/js/bootstrap.js"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/bennu-core/css/bootstrap.min.css"></link>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/fenixedu-canvas/css/bootstrap.js"></script>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/fenixedu-canvas/css/bootstrap.min.css"></link>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/bennu-core/css/bootstrapWizard.css"></link>
 	<title>FenixEdu - Bootstrap</title>
 </head>
