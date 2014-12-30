@@ -2,7 +2,11 @@
     Bennu.localizedString = Bennu.localizedString || {};
     Bennu.localizedString.attr = "bennu-localized-string";
 
-    Bennu.localizedString.changeData = function (locale, localeButton, inputField, widget) {
+    function getSingleTag(locale){
+        return locale.tag.split("-")[0].toUpperCase();
+    }
+
+    Bennu.localizedString.changeData = function (locale, localeButton, inputField, widget, tagButton) {
         widget = $(widget);
         var val = $(widget.data("related")).val();
 
@@ -13,8 +17,12 @@
         var val = JSON.parse(val)[locale.tag]
         if (val !== inputField.val()){
             inputField.val(val || "");
-            localeButton.html(locale.displayName || locale.tag);
+            
+            localeButton.html(locale.displayName || getSingleTag(locale));
+            if(tagButton && tagButton.length) { tagButton.html(getSingleTag(locale)) };
+
             localeButton.data("locale", locale);
+            
             widget.data("locale", locale);
         }
     };
@@ -76,10 +84,10 @@
                 var widget = $('<div class="bennu-localized-string-input-group" >' +
                     '<div class="input-group"><input type="text" class="form-control bennu-localized-string-input">' +
                     '<div class="input-group-btn bennu-localized-string-group">' +
-                    '<button type="button" class="hidden-sm hidden-xs btn btn-default dropdown-toggle bennu-localized-string-button" data-toggle="dropdown">' +
+                    '<button type="button" class=" btn btn-default dropdown-toggle bennu-localized-string-button-full bennu-localized-string-button" data-toggle="dropdown">' +
                     '<span class="bennu-localized-string-language"></span> <span class="caret"></span></button>' +
-                    '<button type="button" class="visible-sm visible-xs btn btn-default dropdown-toggle bennu-localized-string-button" data-toggle="dropdown">' +
-                    '<span class="glyphicon glyphicon-globe"></span> <span class="caret"></span></button>' +
+                    '<button type="button" class=" btn btn-default dropdown-toggle bennu-localized-string-button-short bennu-localized-string-button" data-toggle="dropdown">' +
+                    '<span class="bennu-localized-string-tag"></span> <span class="caret"></span></button>' +
                     '</button>' +
                     '<ul class="dropdown-menu bennu-localized-string-menu pull-right" role="menu"></ul></div></div>' +
                     '<p class="help-block"></p></div>');
@@ -89,10 +97,10 @@
 
             widget.data("related", input);
             Bennu.localizedString.makeLocaleList($(".bennu-localized-string-menu", widget), widget, function (e) {
-                Bennu.localizedString.changeData($(e.target).parent().data("locale"), $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget);
+                Bennu.localizedString.changeData($(e.target).parent().data("locale"), $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget, $(".bennu-localized-string-tag", widget));
             });
 
-            Bennu.localizedString.changeData(Bennu.locale, $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget);
+            Bennu.localizedString.changeData(Bennu.locale, $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget, $(".bennu-localized-string-tag", widget));
             $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget).on("input propertychange", function () {
                 Bennu.localizedString.updateValueForLanguage($(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), $(".bennu-localized-string-language", widget), widget);
 
@@ -129,7 +137,7 @@
                     if(evt.keyCode == 40) { newLocale = nextLocale(); }
                     else if(evt.keyCode == 38) { newLocale = previousLocale(); }
                     if(newLocale) {
-                        Bennu.localizedString.changeData(newLocale, $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget);
+                        Bennu.localizedString.changeData(newLocale, $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget, $(".bennu-localized-string-tag", widget));
                     }
                 }
             });
@@ -141,16 +149,39 @@
             input.data("input", widget);
             input.on("change.bennu", function (e) {
 
-                Bennu.localizedString.changeData(widget.data("locale"), $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget);
+                Bennu.localizedString.changeData(widget.data("locale"), $(".bennu-localized-string-language", widget), $(".bennu-localized-string-input,.bennu-localized-string-textarea", widget), widget, $(".bennu-localized-string-tag", widget));
                 input.data("handler").trigger();
             });
 
             input.after(widget);
             Bennu.validation.attachToForm(widget);
-
+            recalculateButtons(widget);
             return Bennu.widgetHandler.makeFor(input);
         }
     };
 
+    function recalculateButtons(el) {
+        el = el || $(".bennu-localized-string-input-group");
+        el.map(function(i, e) { 
+            e = $(e); 
+            var z = $(".bennu-localized-string-button-full", e)
+            var x = $(".bennu-localized-string-button-short", e)
+            if ((z.width() / e.width()) > 1/3){
+                if (z[0].style.display !== "none"){
+                    x[0].style.display = "inline";
+                    z[0].style.display = "none";
+                }
+            }else{
+                if (x[0].style.display !== "none"){
+                    z[0].style.display = "inline";
+                    x[0].style.display = "none";
+                }
+            }
+        });
+    }
 
+    $( window ).resize(function(){
+
+        recalculateButtons();
+    });
 })();
