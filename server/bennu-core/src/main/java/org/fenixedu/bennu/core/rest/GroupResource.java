@@ -16,6 +16,7 @@ import org.fenixedu.bennu.core.groups.DynamicGroup;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.json.JsonViewer;
+import org.fenixedu.commons.i18n.LocalizedString;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -60,6 +61,18 @@ public class GroupResource extends BennuRestResource {
     }
 
     @POST
+    @Path("/dynamic")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String changeDynamicGroupName(String json) {
+        accessControl("#managers");
+        JsonObject obj = parse(json).getAsJsonObject();
+        DynamicGroup group = DynamicGroup.get(obj.get("group").getAsString());
+        LocalizedString name = obj.has("name") ? LocalizedString.fromJson(obj.get("name")) : null;
+        group.mutator().setPresentationName(name);
+        return view(group, DynamicGroupJsonAdapter.class);
+    }
+
+    @POST
     @Path("/dynamic/grant")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -95,7 +108,11 @@ public class GroupResource extends BennuRestResource {
         public JsonElement view(DynamicGroup obj, JsonBuilder ctx) {
             JsonObject json = new JsonObject();
             json.addProperty("name", obj.getName());
-            json.addProperty("displayName", obj.getName());
+            LocalizedString customPresentationName = obj.toPersistentGroup().getCustomPresentationName();
+            json.addProperty("displayName", customPresentationName == null ? obj.getName() : customPresentationName.getContent());
+            if (customPresentationName != null) {
+                json.add("customPresentationName", customPresentationName.json());
+            }
             JsonArray users = new JsonArray();
 
             for (User user : obj.getMembers()) {

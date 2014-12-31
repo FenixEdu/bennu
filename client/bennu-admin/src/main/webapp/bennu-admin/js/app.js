@@ -324,6 +324,10 @@ bennuAdmin.controller('GroupsController', ['$scope', '$http', function($scope, $
   }
   $scope.grant = function(user) { doIt('grant', user).success(function() { $scope.error = false; }).error(function() { $scope.error = true; }); };
   $scope.revoke = function(user) { doIt('revoke', user); };
+  $scope.saveName = function() { $http.post(contextPath + '/api/bennu-core/groups/dynamic',
+      {'group': $scope.selectedGroup.name, 'name': $scope.selectedGroup.customPresentationName}).success(function (data) {
+        $scope.groups[$scope.groups.indexOf($scope.selectedGroup)] = data; $scope.selectedGroup = data;
+    });};
   $scope.min = Math.min;
 }]);
 

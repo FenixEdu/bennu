@@ -5,6 +5,7 @@ import java.util.Set;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentDynamicGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentNobodyGroup;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Optional;
@@ -60,6 +61,10 @@ public final class DynamicGroup extends Group {
 
     @Override
     public String getPresentationName() {
+        Optional<PersistentDynamicGroup> persistent = PersistentDynamicGroup.getInstance(name);
+        if (persistent.isPresent() && persistent.get().getCustomPresentationName() != null) {
+            return persistent.get().getCustomPresentationName().getContent();
+        }
         return name + ": (" + underlyingGroup().getPresentationName() + ")";
     }
 
@@ -168,6 +173,19 @@ public final class DynamicGroup extends Group {
                 persistent.get().rename(name);
             }
             return new DynamicGroup(name);
+        }
+
+        /**
+         * Sets a custom presentation name for this dynamic group.
+         * 
+         * @param presentationName
+         *            The new presentation name for this Dynamic Group.
+         * @return
+         *         This Dynamic Group, with the new presentation name.
+         */
+        public DynamicGroup setPresentationName(LocalizedString presentationName) {
+            toPersistentGroup().changePresentationName(presentationName);
+            return DynamicGroup.this;
         }
 
         public DynamicGroup and(Group group) {

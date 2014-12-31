@@ -20,6 +20,7 @@ import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.groups.DynamicGroup;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.Atomic;
@@ -123,5 +124,10 @@ public final class PersistentDynamicGroup extends PersistentDynamicGroup_Base {
         } else {
             return new PersistentDynamicGroup(name, overridingGroup);
         }
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public void changePresentationName(LocalizedString presentationName) {
+        setCustomPresentationName(presentationName);
     }
 }

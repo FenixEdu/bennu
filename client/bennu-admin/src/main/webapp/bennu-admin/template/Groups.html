@@ -10,7 +10,7 @@
 		</ul>
 	</div>
 	<div class="col-sm-9">
-		<div ng-show="selectedGroup">
+		<div ng-if="selectedGroup">
 			<h4>
 				{{selectedGroup.displayName}} <span class="badge">{{selectedGroup.members.length}}</span>
 				<input type="text" ng-model="filter" placeholder="Filter..." class="pull-right"/>
@@ -63,6 +63,20 @@
 				<div class="form-group">
 					<div class="col-sm-10 col-sm-offset-2">
 						<button type="submit" ng-disabled="!newUser" class="btn btn-success">Add User</button>
+					</div>
+				</div>
+			</form>
+			<form class="form-horizontal">
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="newUser">Custom Name:</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" ng-localized-string="selectedGroup.customPresentationName" required />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-10 col-sm-offset-2">
+						<button type="submit" ng-click="saveName()" class="btn btn-success">Change</button>
+						<button type="submit" ng-click="selectedGroup.customPresentationName = undefined; saveName()" class="btn btn-danger">Clear</button>
 					</div>
 				</div>
 			</form>
