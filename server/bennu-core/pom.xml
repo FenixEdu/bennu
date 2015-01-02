@@ -21,7 +21,7 @@
     </build>
 
     <properties>
-        <version.org.fenixedu.fenixedu-canvas>1.0.0</version.org.fenixedu.fenixedu-canvas>
+        <version.org.fenixedu.fenixedu-canvas>1.0.1</version.org.fenixedu.fenixedu-canvas>
     </properties>
 
     <dependencies>
