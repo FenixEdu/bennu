@@ -1,8 +1,8 @@
 <h2>Menu Management</h2>
 
-<link href="${pageContext.request.contextPath}/bennu-admin/fancytree/skin-lion/ui.fancytree.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath}/webjars/fenixedu-canvas/fancytree/skin-fenixedu/ui.fancytree.css" rel="stylesheet" type="text/css">
 <script src="${pageContext.request.contextPath}/bennu-admin/fancytree/jquery-ui.min.js" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/bennu-admin/fancytree/jquery.fancytree-all.min.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/webjars/fenixedu-canvas/fancytree/js/jquery.fancytree-all.js" type="text/javascript"></script>
 
 <style>
 .fancytree-container {
