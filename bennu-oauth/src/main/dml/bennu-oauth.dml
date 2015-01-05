@@ -35,8 +35,8 @@ class ApplicationUserAuthorization {
 
 class ExternalApplicationScope {
     String scopeKey (REQUIRED);
-    String name (REQUIRED);
-    String description (REQUIRED);
+    LocalizedString name (REQUIRED);
+    LocalizedString description (REQUIRED);
     Boolean service (REQUIRED);
 }
 

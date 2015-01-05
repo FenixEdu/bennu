@@ -320,7 +320,7 @@
 							<div for="" ng-repeat="scope in scopes">
 								<input type="checkbox" value="{{scope}}"
 									ng-checked="ifChecked(currentapp, scope)" ng-click="toggleSelection(currentapp, scope)">
-										{{scope.name}}
+										{{scope.name | i18n}}
 							</div>
 						</div>
 					</div>
@@ -409,7 +409,7 @@
 							<div for="" ng-repeat="scope in scopes">
 								<input type="checkbox" value="{{scope}}"
 									ng-checked="ifChecked(currentapp, scope)" ng-click="toggleSelection(currentapp, scope)">
-								{{scope.name}}
+								{{scope.name | i18n}}
 
 							</div>
 						</div>

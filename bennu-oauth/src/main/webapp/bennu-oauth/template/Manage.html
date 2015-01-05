@@ -41,8 +41,8 @@
 				<tr
 					ng-repeat="scope in scopes | filter: filterScopes | orderBy:predicate:reverse">
 					<td>{{scope.scopeKey}}</td>
-					<td>{{scope.name}}</td>
-					<td>{{scope.description}}</td>
+					<td>{{scope.name | i18n}}</td>
+					<td>{{scope.description | i18n}}</td>
 					<td>{{scope.service}}</td>
 					<td class="text-right">
 
@@ -235,7 +235,7 @@
 
 <div class="modal fade" id="addScope" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">
@@ -256,19 +256,18 @@
 					</div>
 
 					<div class="form-group">
-
-						<label for="name" class="col-sm-2 control-label">Name</label>
+						<label for="name" class="col-sm-2 control-label" translate>Name</label>
 						<div class="col-sm-10">
-							<input ng-model="currentscope.name" type="text"
+							<input ng-localized-string="currentscope.name" type="text"
 								class="form-control" id="name"
-								placeholder="{{'Name' | translate}}" required />
+								placeholder="{{'Name' | translate}}" />
 						</div>
 					</div>
 
 					<div class="form-group">
 						<label for="description" class="col-sm-2 control-label" translate>Description</label>
 						<div class="col-sm-10">
-							<textarea ng-model="currentscope.description"
+							<textarea ng-localized-string="currentscope.description"
 								class="form-control" id="description"
 								placeholder="{{'Description' | translate}}" rows="2" required />
 						</div>
@@ -297,7 +296,7 @@
 
 <div class="modal fade" id="editScope" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">
@@ -322,7 +321,7 @@
 					<div class="form-group">
 						<label for="name" class="col-sm-2 control-label" translate>Name</label>
 						<div class="col-sm-10">
-							<input ng-model="currentscope.name" type="text"
+							<input ng-localized-string="currentscope.name" type="text"
 								class="form-control" id="editName"
 								placeholder="{{'Name' | translate}}" required />
 						</div>
@@ -331,7 +330,7 @@
 					<div class="form-group">
 						<label for="description" class="col-sm-2 control-label" translate>Description</label>
 						<div class="col-sm-10">
-							<textarea ng-model="currentscope.description"
+							<textarea ng-localized-string="currentscope.description"
 								class="form-control" id="editDescription"
 								placeholder="{{'Description' | translate}}" rows="2" required />
 						</div>
@@ -537,7 +536,7 @@
 							<div for="" ng-repeat="scope in userscopes">
 								<input type="checkbox" value="{{scope}}"
 									ng-checked="ifChecked(currentapp, scope)" ng-click="toggleSelection(currentapp, scope)">
-								{{scope.name}}
+								{{scope.name | i18n}}
 							</div>
 
 						</div>

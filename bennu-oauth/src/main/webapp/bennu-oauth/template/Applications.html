@@ -76,9 +76,8 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="scope in scopes | orderBy:predicateScope:reverseScope"">
-			<td class="col-sm-2">{{scope.name}}</td>
-			<td class="col-sm-6">{{scope.description}}</td>
-
+			<td class="col-sm-2">{{scope.name | i18n}}</td>
+			<td class="col-sm-6">{{scope.description | i18n}}</td>
 		</tr>
 	</tbody>
 </table>
@@ -174,7 +173,7 @@
 							<div for="" ng-repeat="scope in scopes">
 								<input type="checkbox" value="{{scope}}"
 									ng-checked="ifChecked(currentapp, scope)" ng-click="toggleSelection(currentapp, scope)">
-								{{scope.name}}
+								{{scope.name | i18n}}
 							</div>
 
 						</div>
@@ -262,7 +261,7 @@
 							<div for="" ng-repeat="scope in scopes">
 								<input type="checkbox" value="{{scope}}"
 									ng-checked="ifChecked(currentapp, scope)" ng-click="toggleSelection(currentapp, scope)">
-								{{scope.name}}
+								{{scope.name | i18n}}
 							</div>
 
 

@@ -32,6 +32,7 @@
 	"Add Scope": "Adicionar Scope",
 	"Key already exists": "A chave já existe",
 	"Save": "Guardar",
+	"Service" : "Serviço",
 	"Edit Scope": "Editar Scope",
 	"Application Details": "Detalhes da Aplicação",
 	"Edit Application": "Editar Aplicação",
@@ -49,5 +50,4 @@
 	"Revoke Session": "Revogar Sessão",
 	"Do you wish to revoke the selected session?": "Deseja revogar a sessão seleccionada?",
 	"Authorizations by User": "Autorizações por Utilizador"
-	
 }

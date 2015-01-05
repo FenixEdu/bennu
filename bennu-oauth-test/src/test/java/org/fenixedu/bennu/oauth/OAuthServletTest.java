@@ -14,6 +14,7 @@ import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 import org.fenixedu.bennu.oauth.jaxrs.BennuOAuthFeature;
 import org.fenixedu.bennu.oauth.servlets.OAuthAuthorizationServlet;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
@@ -51,6 +52,9 @@ public class OAuthServletTest extends JerseyTest {
 
     @Atomic(mode = TxMode.WRITE)
     public static void initObjects() {
+        final Locale ptPT = Locale.forLanguageTag("pt-PT");
+        final Locale enGB = Locale.forLanguageTag("en-GB");
+
         if (user1 == null) {
             user1 = createUser("user1", "John", "Doe", "John Doe", "john.doe@fenixedu.org");
         }
@@ -73,8 +77,9 @@ public class OAuthServletTest extends JerseyTest {
             serviceApplicationWithScope.setDescription("Service App with scope SERVICE");
             ExternalApplicationScope scope = new ExternalApplicationScope();
             scope.setScopeKey("SERVICE");
-            scope.setName("Service Scope");
-            scope.setDescription("Service scope is for service only");
+
+            scope.setName(new LocalizedString.Builder().with(enGB, "Service Scope").build());
+            scope.setDescription(new LocalizedString.Builder().with(enGB, "Service scope is for service only").build());
             scope.setService(Boolean.TRUE);
             serviceApplicationWithScope.addScopes(scope);
         }

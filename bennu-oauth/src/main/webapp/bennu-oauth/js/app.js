@@ -1,16 +1,17 @@
 var bennuOAuth = angular.module('bennuOAuth', [
-                                               'ngRoute', 'pascalprecht.translate'
+                                               'ngRoute', 'pascalprecht.translate', 'bennuToolkit'
                                                ]);
 
-bennuOAuth.filter('scopeNames', function() {	
+bennuOAuth.filter('scopeNames', ['$filter', function($filter) {	
 	return function(scopes) {
 		var names = [];		
+		var i18n = $filter('i18n');
 		angular.forEach(scopes, function(scope) {
-			names.push(scope.name);
+			names.push(i18n(scope.name));
 		});		
 		return names.join(", ");
 	}
-});
+}]);
 
 bennuOAuth.factory('httpUnauthorizedFilter', ['$window', function httpUnauthorizedFilter($window) {
 
@@ -112,7 +113,8 @@ bennuOAuth.config(['$routeProvider','$httpProvider','$translateProvider',
 		prefix: window.contextPath + "/bennu-oauth/i18n/",
 		suffix: '.json'
 	});
-
+	
+	console.log(Bennu.locale.lang);
 	$translateProvider.preferredLanguage(Bennu.locale.lang);
 
 }]);
