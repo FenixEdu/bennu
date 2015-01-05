@@ -76,7 +76,7 @@
 		</dependency>
         <dependency>
             <groupId>org.fenixedu</groupId>
-            <artifactId>bennu-oauth-core</artifactId>
+            <artifactId>bennu-oauth</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
