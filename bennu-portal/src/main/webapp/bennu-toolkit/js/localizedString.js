@@ -166,15 +166,17 @@
             e = $(e); 
             var z = $(".bennu-localized-string-button-full", e)
             var x = $(".bennu-localized-string-button-short", e)
-            if ((z.width() / e.width()) > 1/3){
-                if (z[0].style.display !== "none"){
-                    x[0].style.display = "inline";
-                    z[0].style.display = "none";
-                }
-            }else{
-                if (x[0].style.display !== "none"){
-                    z[0].style.display = "inline";
-                    x[0].style.display = "none";
+            if(x.length && z.length){
+                if ((z.width() / e.width()) > 1/3){
+                    if (z[0].style.display !== "none"){
+                        x[0].style.display = "inline";
+                        z[0].style.display = "none";
+                    }
+                }else{
+                    if (x[0].style.display !== "none"){
+                        z[0].style.display = "inline";
+                        x[0].style.display = "none";
+                    }
                 }
             }
         });
