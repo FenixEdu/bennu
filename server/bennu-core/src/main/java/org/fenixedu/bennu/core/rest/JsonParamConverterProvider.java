@@ -37,6 +37,11 @@ public class JsonParamConverterProvider implements ParamConverterProvider {
 
     @Override
     public <T> ParamConverter<T> getConverter(final Class<T> rawType, final Type genericType, final Annotation[] annotations) {
+
+        if (!JsonElement.class.isAssignableFrom(rawType)) {
+            return null;
+        }
+
         final MessageBodyReader<T> reader =
                 providers.getMessageBodyReader(rawType, genericType, annotations, MediaType.APPLICATION_JSON_TYPE);
 
