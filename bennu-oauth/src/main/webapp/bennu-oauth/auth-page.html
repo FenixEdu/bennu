@@ -61,10 +61,11 @@
 				<p>Esta aplicação terá acesso a:</p>
 
 				<ul>
-					{% for scope in app.scopesSet %}
-					<li>{{scope.name}}</li> {% endfor %}
+				{% for scope in app.scopesSet %}
+					<li>{{scope.name.content}}</li>
+				{% endfor %}
 				</ul>
-				<form action="{{contextPath}}/oauth/userconfirmation">
+				<form action="{{contextPath}}/oauth/userconfirmation" method="POST">
 					<input type="hidden" name="client_id" value="{{app.externalId}}" />
 					<input type="hidden" name="redirect_uri" value="{{app.redirectUrl}}" />
 					
