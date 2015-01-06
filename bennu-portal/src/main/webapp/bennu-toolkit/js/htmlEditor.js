@@ -474,7 +474,12 @@
         e.on("change.bennu", function (ev) {
             var attr = e.attr("bennu-localized-string");
             if (attr !== null && attr !== undefined) {
-                var data = JSON.parse($(e).val());
+	        var value = $(e).val();
+		if (value === null || value === undefined){
+		   value = "{}";
+		   $(e).val(value);
+		}
+                var data = JSON.parse(value);
                 var locale = $(".bennu-localized-string-language", dom).data("locale");
                 var tag = locale.tag
 
