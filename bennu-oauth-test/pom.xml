@@ -10,7 +10,9 @@
 
 	<artifactId>bennu-oauth-test</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
+
 	<name>Bennu OAuth Test</name>
+	<inceptionYear>2015</inceptionYear>
 
 	<properties>
 		<code.generator.class>pt.ist.fenixframework.backend.jvstm.JVSTMCodeGenerator</code.generator.class>

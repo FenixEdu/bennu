@@ -9,9 +9,36 @@
     </parent>
 
     <artifactId>bennu-oauth-parent</artifactId>
-    <name>Bennu OAuth Parent</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <name>Bennu OAuth Parent</name>
+    <inceptionYear>2015</inceptionYear>
+    
+     <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/fenixedu/bennu-oauth/issues/</url>
+    </issueManagement>
+
+      <licenses>
+        <license>
+            <name>GNU Lesser General Public License v3.0</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/fenixedu/bennu-oauth</url>
+    </ciManagement>
+
+    <scm>
+        <connection>scm:git:git@github.com:fenixedu/bennu-oauth.git</connection>
+        <developerConnection>scm:git:git@github.com:fenixedu/bennu-oauth.git</developerConnection>
+        <url>https://github.com/fenixedu/bennu-oauth</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <repositories>
         <repository>
