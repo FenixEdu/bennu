@@ -490,7 +490,7 @@
                     }
                 }
 
-                var t = data[tag]
+                var t = data[tag] || "";
                 var r = $(".bennu-html-editor-editor", dom).html();
 
                 if (r !== t){
