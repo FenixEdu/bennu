@@ -14,7 +14,18 @@
             $(widget.data("related")).val("{}");
             val = "{}";
         }
-        var val = JSON.parse(val)[locale.tag]
+
+        var val = JSON.parse(val)
+        var tag = locale.tag;
+        
+        if (!(tag in val)){
+            singleTag = getSingleTag(locale).toLowerCase();
+            if (singleTag in val){
+                tag = singleTag;
+            }
+        }
+
+        val = val[tag]
         if (val !== inputField.val()){
             inputField.val(val || "");
             
@@ -29,7 +40,17 @@
 
     Bennu.localizedString.updateValueForLanguage = function (input, localeContainer, widget) {
         var data = JSON.parse($(widget.data("related")).val());
-        data[localeContainer.data("locale").tag] = input.val();
+        var locale = localeContainer.data("locale")
+        var tag = locale.tag
+
+        if (!(tag in data)){
+            var singleTag = getSingleTag(locale).toLowerCase();
+            if (singleTag in data){
+                tag = singleTag;
+            }
+        }
+
+        data[tag] = input.val();
         $(widget.data("related")).val(JSON.stringify(data));
         $(widget.data("related")).trigger("change");
     };
@@ -58,10 +79,13 @@
         if (tag in input) {
             return input[tag];
         }
+
         tag = tag.split('-')[0];
+        
         if (tag in input) {
             return input[tag];
         }
+        
         for (var lang in input) {
             if (lang.indexOf(tag) === 0) {
                 return input[lang];

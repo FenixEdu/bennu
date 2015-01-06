@@ -326,7 +326,17 @@
             var attr = e.attr("bennu-localized-string");
             if (attr !== null && attr !== undefined) {
                 var data = JSON.parse($(dom.data("related")).val());
-                data[$(".bennu-localized-string-language", dom).data("locale").tag] = widgetInput.val();
+                var locale = $(".bennu-localized-string-language", dom).data("locale");
+                var tag = locale.tag;
+
+                if (!(tag in data)){
+                    var singleTag = locale.tag.split("-")[0].toLowerCase();
+                    if (singleTag in data){
+                        tag = singleTag;
+                    }
+                }
+
+                data[tag] = widgetInput.val();
                 $(dom.data("related")).val(JSON.stringify(data));
                 $(".help-block", dom).empty();
                 dom.removeClass("has-error");
@@ -465,7 +475,17 @@
             var attr = e.attr("bennu-localized-string");
             if (attr !== null && attr !== undefined) {
                 var data = JSON.parse($(e).val());
-                var t = data[$(".bennu-localized-string-language", dom).data("locale").tag]
+                var locale = $(".bennu-localized-string-language", dom).data("locale");
+                var tag = locale.tag
+
+                if (!(tag in data)){
+                    var singleTag = locale.tag.split("-")[0].toLowerCase();
+                    if (singleTag in data){
+                        tag = singleTag;
+                    }
+                }
+
+                var t = data[tag]
                 var r = $(".bennu-html-editor-editor", dom).html();
 
                 if (r !== t){
@@ -498,7 +518,18 @@
                     $(".bennu-localized-string-button", dom).attr("disabled","");
                     if (attr !== null && attr !== undefined) {
                         var data = JSON.parse(handler.get());
-                        var t = data[$(".bennu-localized-string-language", dom).data("locale").tag]
+                        var locale = $(".bennu-localized-string-language", dom).data("locale");
+                        var tag = locale.tag;
+
+                        if (!(tag in data)){
+                            var singleTag = locale.tag.split("-")[0].toLowerCase();
+                            if (singleTag in data){
+                                tag = singleTag;
+                            }
+                        }
+
+                        var t = data[tag]
+
                         editor.setValue(t);
                     }else{
                         editor.setValue();
@@ -516,7 +547,17 @@
 
                     if (attr !== null && attr !== undefined) {
                         var data = JSON.parse(handler.get());
-                        data[$(".bennu-localized-string-language", dom).data("locale").tag] = editor.getValue();
+                        var locale = $(".bennu-localized-string-language", dom).data("locale");
+                        var tag = locale.tag;
+
+                        if (!(tag in data)){
+                            var singleTag = locale.tag.split("-")[0].toLowerCase();
+                            if (singleTag in data){
+                                tag = singleTag;
+                            }
+                        }
+
+                        data[tag] = editor.getValue();
                         handler.set(JSON.stringify(data));
                     }else{
                         handler.set(editor.getValue());
@@ -528,7 +569,17 @@
             editor.on("input",function(){
                 if (attr !== null && attr !== undefined) {
                     var data = JSON.parse(handler.get());
-                    data[$(".bennu-localized-string-language", dom).data("locale").tag] = editor.getValue();
+                    var locale = $(".bennu-localized-string-language", dom).data("locale");
+                    var tag = locale.tag;
+
+                    if (!(tag in data)){
+                        var singleTag = locale.tag.split("-")[0].toLowerCase();
+                        if (singleTag in data){
+                            tag = singleTag;
+                        }
+                    }
+
+                    data[tag] = editor.getValue();
                     handler.set(JSON.stringify(data));
                 }else{
                     handler.set(editor.getValue());
