@@ -475,7 +475,7 @@
             var attr = e.attr("bennu-localized-string");
             if (attr !== null && attr !== undefined) {
 	        var value = $(e).val();
-		if (value === null || value === undefined){
+		if (value === null || value === undefined || value === "") {
 		   value = "{}";
 		   $(e).val(value);
 		}
