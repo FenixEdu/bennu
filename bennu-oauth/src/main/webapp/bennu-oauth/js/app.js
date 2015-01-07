@@ -311,7 +311,7 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', '$cacheFactory', 
 		if (app) {
 			var found = false;
 			angular.forEach(app.scopes, function(key) {
-				if(key.name === scope.name) {
+				if(key.id === scope.id) {
 					found = true;
 					return;
 				}
@@ -326,7 +326,7 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', '$cacheFactory', 
 			var idx = -1;
 			var i = 0;
 			angular.forEach(app.scopes, function(key) {
-				if(key.name === scope.name) {
+				if(key.id === scope.id) {
 					idx = i;
 					return;
 				} 
@@ -390,7 +390,7 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', function (
 		if (app) {
 			var found = false;
 			angular.forEach(app.scopes, function(key) {
-				if(key.name === scope.name) {
+				if(key.id === scope.id) {
 					found = true;
 					return;
 				}
@@ -405,10 +405,10 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', function (
 			var idx  = -1;
 			var i = 0;
 			angular.forEach(app.scopes, function(key) {
-				if(key.name === scope.name) {
+				if(key.id === scope.id) {
 					idx = i;
 					return;
-				} 
+				}
 				i++;
 			});			
 			if (idx > -1) {

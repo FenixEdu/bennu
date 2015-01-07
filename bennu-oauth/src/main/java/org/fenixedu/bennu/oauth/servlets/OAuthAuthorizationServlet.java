@@ -24,10 +24,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -40,9 +44,11 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CookieReaderUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.bennu.oauth.OAuthProperties;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
@@ -65,6 +71,8 @@ import com.google.gson.JsonObject;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
+import com.mitchellbosecke.pebble.extension.AbstractExtension;
+import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
@@ -135,6 +143,15 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
             engine.setTemplateCache(null);
         }
+
+        engine.addExtension(new AbstractExtension() {
+            @Override
+            public Map<String, Function> getFunctions() {
+                Map<String, Function> functions = new HashMap<>();
+                functions.put("i18n", new I18NFunction());
+                return functions;
+            }
+        });
     }
 
     @Override
@@ -171,7 +188,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             break;
 
         default:
-            response.sendError(404);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
@@ -198,15 +215,22 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             return;
         }
 
-        String accessTokenDecoded = new String(Base64.getDecoder().decode(refreshToken));
-        String[] accessTokenBuilder = accessTokenDecoded.split(":");
-
-        if (accessTokenBuilder.length != 2) {
+        String refreshTokenDecoded = "";
+        try {
+            refreshTokenDecoded = new String(Base64.getDecoder().decode(refreshToken));
+        } catch (IllegalArgumentException iae) {
             sendOAuthErrorResponse(response, Status.UNAUTHORIZED, REFRESH_TOKEN_INVALID_FORMAT, REFRESH_TOKEN_NOT_RECOGNIZED);
             return;
         }
 
-        String appUserSessionExternalId = accessTokenBuilder[0];
+        String[] refreshTokenBuilder = refreshTokenDecoded.split(":");
+
+        if (refreshTokenBuilder.length != 2) {
+            sendOAuthErrorResponse(response, Status.UNAUTHORIZED, REFRESH_TOKEN_INVALID_FORMAT, REFRESH_TOKEN_NOT_RECOGNIZED);
+            return;
+        }
+
+        String appUserSessionExternalId = refreshTokenBuilder[0];
 
         ApplicationUserSession appUserSession = FenixFramework.getDomainObject(appUserSessionExternalId);
 
@@ -215,7 +239,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             return;
         }
 
-        if (!appUserSession.matchesRefreshToken(refreshToken)) {
+        if (!FenixFramework.isDomainObjectValid(appUserSession) || !appUserSession.matchesRefreshToken(refreshToken)) {
             sendOAuthErrorResponse(response, Status.UNAUTHORIZED, REFRESH_TOKEN_INVALID, REFRESH_TOKEN_DOESN_T_MATCH);
             return;
         }
@@ -226,7 +250,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
         JsonObject jsonResponse = new JsonObject();
         jsonResponse.addProperty(ACCESS_TOKEN, newAccessToken);
-        jsonResponse.addProperty(EXPIRES_IN, "3600");
+        jsonResponse.addProperty(EXPIRES_IN, OAuthProperties.getConfiguration().getAccessTokenExpirationSeconds());
 
         sendOAuthResponse(response, Status.OK, jsonResponse);
     }
@@ -309,7 +333,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             JsonObject jsonResponse = new JsonObject();
             jsonResponse.addProperty(ACCESS_TOKEN, accessToken);
             jsonResponse.addProperty(REFRESH_TOKEN, refreshToken);
-            jsonResponse.addProperty(EXPIRES_IN, "3600");
+            jsonResponse.addProperty(EXPIRES_IN, OAuthProperties.getConfiguration().getAccessTokenExpirationSeconds());
             sendOAuthResponse(response, Status.OK, jsonResponse);
         } else {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CODE_EXPIRED);
@@ -365,6 +389,32 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             template.evaluate(response.getWriter(), ctx, I18N.getLocale());
         } catch (PebbleException e) {
             throw new IOException(e);
+        }
+    }
+
+    private static class I18NFunction implements Function {
+        final List<String> variableArgs = Stream.of("arg0", "arg1", "arg2", "arg3", "arg4", "arg5").collect(Collectors.toList());
+
+        @Override
+        public List<String> getArgumentNames() {
+            return Stream.of("bundle", "key", "arg0", "arg1", "arg2", "arg3", "arg4", "arg5").collect(Collectors.toList());
+        }
+
+        @Override
+        public Object execute(Map<String, Object> args) {
+            String bundle = (String) args.get("bundle");
+            String key = args.get("key").toString();
+            return BundleUtil.getString(bundle, key, arguments(args));
+        }
+
+        public String[] arguments(Map<String, Object> args) {
+            List<String> values = new ArrayList<>();
+            for (String variableArg : variableArgs) {
+                if (args.containsKey(variableArg) && args.get(variableArg) instanceof String) {
+                    values.add((String) args.get(variableArg));
+                }
+            }
+            return values.toArray(new String[] {});
         }
     }
 

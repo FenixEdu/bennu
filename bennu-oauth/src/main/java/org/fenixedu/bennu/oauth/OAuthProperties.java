@@ -25,10 +25,10 @@ import org.fenixedu.commons.configuration.ConfigurationProperty;
 public class OAuthProperties {
     @ConfigurationManager(description = "OAuth Properties")
     public interface ConfigurationProperties {
-        @ConfigurationProperty(key = "code.timeout.seconds", defaultValue = "60")
+        @ConfigurationProperty(key = "bennu.oauth.code.timeout.seconds", defaultValue = "60")
         public Integer getCodeExpirationSeconds();
 
-        @ConfigurationProperty(key = "access.token.timeout.seconds", defaultValue = "21600")
+        @ConfigurationProperty(key = "bennu.oauth.access.token.timeout.seconds", defaultValue = "3600")
         public Integer getAccessTokenExpirationSeconds();
     }
 

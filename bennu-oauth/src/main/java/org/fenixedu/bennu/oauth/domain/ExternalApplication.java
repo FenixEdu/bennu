@@ -62,7 +62,7 @@ public class ExternalApplication extends ExternalApplication_Base {
     public void setScopeList(List<ExternalApplicationScope> newScopes) {
         Set<ExternalApplicationScope> oldScopes = getScopesSet();
 
-        Set<ExternalApplicationScope> result = Sets.symmetricDifference(Sets.newHashSet(newScopes), Sets.newHashSet(oldScopes));
+        Set<ExternalApplicationScope> result = Sets.difference(Sets.newHashSet(newScopes), Sets.newHashSet(oldScopes));
 
         if (result.size() > 0) {
             deleteAuthorizations();

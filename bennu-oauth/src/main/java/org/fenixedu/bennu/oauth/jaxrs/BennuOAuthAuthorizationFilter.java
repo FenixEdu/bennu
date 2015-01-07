@@ -198,26 +198,35 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
         if (Strings.isNullOrEmpty(accessToken)) {
             return Optional.empty();
         }
-        String fullToken = new String(Base64.getDecoder().decode(accessToken));
-        String[] accessTokenBuilder = fullToken.split(":");
-        if (accessTokenBuilder.length != 2) {
+
+        try {
+            String fullToken = new String(Base64.getDecoder().decode(accessToken));
+            String[] accessTokenBuilder = fullToken.split(":");
+            if (accessTokenBuilder.length != 2) {
+                return Optional.empty();
+            }
+            return getDomainObject(accessTokenBuilder[0], ServiceApplication.class);
+        } catch (IllegalArgumentException iea) {
             return Optional.empty();
         }
-
-        return getDomainObject(accessTokenBuilder[0], ServiceApplication.class);
     }
 
     private Optional<ApplicationUserSession> extractUserSession(String accessToken) {
         if (Strings.isNullOrEmpty(accessToken)) {
             return Optional.empty();
         }
-        String fullToken = new String(Base64.getDecoder().decode(accessToken));
-        String[] accessTokenBuilder = fullToken.split(":");
-        if (accessTokenBuilder.length != 2) {
+        try {
+            String fullToken = new String(Base64.getDecoder().decode(accessToken));
+            String[] accessTokenBuilder = fullToken.split(":");
+            if (accessTokenBuilder.length != 2) {
+                return Optional.empty();
+            }
+
+            return getDomainObject(accessTokenBuilder[0], ApplicationUserSession.class);
+        } catch (IllegalArgumentException iea) {
             return Optional.empty();
         }
 
-        return getDomainObject(accessTokenBuilder[0], ApplicationUserSession.class);
     }
 
     private String getAccessToken(ContainerRequestContext requestContext) {

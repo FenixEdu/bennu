@@ -67,18 +67,16 @@
 				<a href="{{app.siteUrl}}" target="_blank">{{app.name}}</a>
 			</h3>
 
-			<p class="small">{{app.author.name}}</p>
+			<p class="small">{{app.authorApplicationName}}</p>
 
 			{{app.description}}
 		</div>
 		<div class="col-sm-6">
 
 			<div class="login-content">
-				<h4>Autoriza a aplicação '{{app.name}}' a utilizar a sua conta
-					FenixEdu?</h4>
+				<h4>{{i18n('resources.OAuthResources', 'message.authorize.app', app.name)}}</h4>
 
-				<p>Esta aplicação terá acesso a:</p>
-
+				<p>{{i18n('resources.OAuthResources', 'message.scopes.header')}}</p>
 				<ul>
 				{% for scope in app.scopesSet %}
 					<li>{{scope.name.content}}</li>
@@ -88,8 +86,8 @@
 					<input type="hidden" name="client_id" value="{{app.externalId}}" />
 					<input type="hidden" name="redirect_uri" value="{{app.redirectUrl}}" />
 					
-					<a href="{{contextPath}}/logout" class="btn btn-default">Cancel</a>
-					<button type="submit" class="btn btn-primary">Authorize</button>
+					<a href="{{contextPath}}/logout" class="btn btn-default">{{i18n('resources.OAuthResources', 'label.cancel')}}</a>
+					<button type="submit" class="btn btn-primary">{{i18n('resources.OAuthResources', 'label.authorize')}}</button>
 				</form>
 			</div>
 		</div>
