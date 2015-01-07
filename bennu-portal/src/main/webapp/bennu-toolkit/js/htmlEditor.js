@@ -383,19 +383,6 @@
         Bennu.validation.attachToForm(dom);
         e.after(dom);
 
-        if ($(".bennu-html-code-editor", dom).length != 0){
-            Bennu.codeEditor.require();
-            var editor = ace.edit($(".bennu-html-code-editor", dom)[0])
-            editor.setFontSize(13);
-            editor.setTheme("ace/theme/clouds");
-            editor.getSession().setMode("ace/mode/html");
-            editor.setHighlightActiveLine(false);
-            editor.setShowPrintMargin(false);
-            editor.getSession().setUseWrapMode(true);
-            $(".bennu-html-code-editor", dom).data("editor",editor);
-            dom.data("showSrc", false);
-        }
-
         // table shit
 
         var PX_PER_EM = 18;
@@ -508,11 +495,50 @@
 
         var handler = Bennu.widgetHandler.makeFor(e);
 
-        if ($(".bennu-html-code-editor", dom).length != 0){
+        var setupEditor = function(dom, attr) {
             var editor = $(".bennu-html-code-editor", dom).data("editor");
+            if (editor) {
+                return editor;
+            }
+            Bennu.codeEditor.require();
+            editor = ace.edit($(".bennu-html-code-editor", dom)[0])
+            editor.setFontSize(13);
+            editor.setTheme("ace/theme/clouds");
+            editor.getSession().setMode("ace/mode/html");
+            editor.setHighlightActiveLine(false);
+            editor.setShowPrintMargin(false);
+            editor.getSession().setUseWrapMode(true);
+            $(".bennu-html-code-editor", dom).data("editor",editor);
+
+            editor.on("input",function(){
+                if (attr !== null && attr !== undefined) {
+                    var data = JSON.parse(handler.get());
+                    var locale = $(".bennu-localized-string-language", dom).data("locale");
+                    var tag = locale.tag;
+
+                    if (!(tag in data)){
+                        var singleTag = locale.tag.split("-")[0].toLowerCase();
+                        if (singleTag in data){
+                            tag = singleTag;
+                        }
+                    }
+
+                    data[tag] = editor.getValue();
+                    handler.set(JSON.stringify(data));
+                }else{
+                    handler.set(editor.getValue());
+                }
+            });
+
+            return editor;
+        }
+
+        if ($(".bennu-html-code-editor", dom).length != 0){
+            dom.data("showSrc", false);
             var attr = e.attr("bennu-localized-string");
 
             $(".switch-to-code", dom).on("click", function(){
+                var editor = setupEditor(dom, attr);
                 if (!dom.data("showSrc")){
                     $(".bennu-html-editor-toolbar .btn", dom).map(function (){ (!$(this).hasClass("switch-to-code")) && $(this).attr("disabled", ""); })
 
@@ -568,26 +594,6 @@
                         handler.set(editor.getValue());
                     }
                     dom.data("showSrc",false);
-                }
-            });
-
-            editor.on("input",function(){
-                if (attr !== null && attr !== undefined) {
-                    var data = JSON.parse(handler.get());
-                    var locale = $(".bennu-localized-string-language", dom).data("locale");
-                    var tag = locale.tag;
-
-                    if (!(tag in data)){
-                        var singleTag = locale.tag.split("-")[0].toLowerCase();
-                        if (singleTag in data){
-                            tag = singleTag;
-                        }
-                    }
-
-                    data[tag] = editor.getValue();
-                    handler.set(JSON.stringify(data));
-                }else{
-                    handler.set(editor.getValue());
                 }
             });
         }
