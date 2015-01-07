@@ -29,7 +29,9 @@ public class PortalInitializer implements ServletContextListener {
         Collection<String> themePaths = sce.getServletContext().getResourcePaths("/themes/");
         if (themePaths != null) {
             for (String themePath : themePaths) {
-                themes.add(themePath.substring("/themes/".length(), themePath.length() - 1));
+                if (sce.getServletContext().getResourceAsStream(themePath + "/default.html") != null) {
+                    themes.add(themePath.substring("/themes/".length(), themePath.length() - 1));
+                }
             }
         }
         logger.info("Available Themes : " + Arrays.toString(themes.toArray()));
