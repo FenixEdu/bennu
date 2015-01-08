@@ -30,10 +30,10 @@
     };
 
     Bennu.validation.validateInput = function (inputObject) {
+        var value = inputObject.val() ? JSON.parse(inputObject.val()) : null;
         if (inputObject.attr("required") != null || inputObject.attr("required") != undefined) {
             var val = Bennu.locales.map(function (x) {
-                var val = inputObject.val();
-                return val && JSON.parse(val)[x.tag] || false;
+                return Bennu.localizedString.getContent(value, x, true) || false;
             }).reduce(function (x, y) {
                 return x && y;
             }, true);
@@ -46,8 +46,7 @@
             return val;
         } else if (inputObject.attr("required-any") != null || inputObject.attr("required-any") != undefined) {
             var val = Bennu.locales.map(function (x) {
-                var val = inputObject.val();
-                return val && JSON.parse(val)[x.tag] || false;
+                return Bennu.localizedString.getContent(value, x, true) || false;
             }).reduce(function (x, y) {
                 return x || y;
             }, false);

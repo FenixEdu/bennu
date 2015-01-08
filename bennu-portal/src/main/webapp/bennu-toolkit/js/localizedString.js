@@ -65,7 +65,7 @@
         }
     };
 
-    Bennu.localizedString.getContent = function (input, locale) {
+    Bennu.localizedString.getContent = function (input, locale, exactMatch) {
         if (!input || typeof input === 'string') return input;
 
         if (locale && typeof locale !== "string"){
@@ -91,7 +91,7 @@
                 return input[lang];
             }
         }
-        return input[Object.keys(input)[0]];
+        return exactMatch ? null : input[Object.keys(input)[0]];
     };
 
     Bennu.localizedString.createWidget = function (input) {
