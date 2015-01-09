@@ -355,9 +355,7 @@
             $(".btn-toolbar input[name='pictureTlb']", dom).click();
         });
 
-        $(".btn-toolbar input[name='pictureTlb']", dom).on("change", function (evt) {
-            var z = e.data("fileHandler");
-            z && z($(".btn-toolbar input[name='pictureTlb']", dom)[0].files, function(urls){
+        var attachPicture = function(urls){
 
                 $(".bennu-html-editor-editor", dom).focus()
 
@@ -365,7 +363,11 @@
                     var o = urls[i];
                     document.execCommand('insertimage', 0, o);
                 }
-            });
+            };
+
+        $(".btn-toolbar input[name='pictureTlb']", dom).on("change", function (evt) {
+            var z = e.data("fileHandler");
+            z && z($(".btn-toolbar input[name='pictureTlb']", dom)[0].files, attachPicture);
         });
 
         dom.on('dragenter dragover', false)
@@ -375,7 +377,7 @@
                 evt.preventDefault();
                 if (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {
                     var z = e.data("fileHandler")
-                    z && z(dataTransfer.files);
+                    z && z(dataTransfer.files, attachPicture);
                 }
             });
         $('.bennu-html-editor-editor', dom).wysiwyg({ dragAndDropImages: false, fileUploadError: showErrorAlert});
