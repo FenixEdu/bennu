@@ -116,7 +116,11 @@ public final class Functionality implements Comparable<Functionality> {
         if (this.visible && !other.visible) {
             return 1;
         }
-        return this.title.compareTo(other.title);
+        int compareTo = this.title.compareTo(other.title);
+        if (compareTo != 0) {
+            return compareTo;
+        }
+        return this.path.compareTo(other.path);
     }
 
 }
