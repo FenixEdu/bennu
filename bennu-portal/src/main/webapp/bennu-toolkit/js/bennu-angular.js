@@ -35,11 +35,13 @@
         return {
             restrict: 'A',
             scope: {
-                model: '=ngHtmlEditor'
+				model: '=ngHtmlEditor',
+				onImageAdded: '=ngOnImageAdded'
             },
             link: function(scope, el, attr) {
                 el.hide();
-                var isLocalized = el[0].hasAttribute('bennu-localized-string');
+
+				var isLocalized = el[0].hasAttribute('bennu-localized-string');
                 var handler = Bennu.htmlEditor.createWidget(el);
                 scope.$watch('model', function(value) {
                     if(isLocalized) {
@@ -54,7 +56,14 @@
                         scope.model = isLocalized ? JSON.parse(handler.get()) : handler.get();
                     });
                 });
-            }
+
+
+				el.data("fileHandler", function (files, callback) {
+					if (scope.onImageAdded) {
+						scope.onImageAdded(files, callback, handler)
+					}
+				});
+			}
         }
     }]);
 
