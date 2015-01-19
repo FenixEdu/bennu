@@ -149,7 +149,8 @@ public class Signal {
         return registerWithoutTransaction(key, new LambdaHandler<T>(handler));
     }
 
-    private static HandlerRegistration registerInBus(String key, Object handler, Map<String, SignalEventBus> eventBuses, boolean throwsException) {
+    private static HandlerRegistration registerInBus(String key, Object handler, Map<String, SignalEventBus> eventBuses,
+            boolean throwsException) {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(handler, "handler");
         eventBuses.computeIfAbsent(key, (k) -> new SignalEventBus(k, throwsException)).register(handler);
