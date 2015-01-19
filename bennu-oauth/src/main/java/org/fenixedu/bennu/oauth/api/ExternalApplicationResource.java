@@ -20,6 +20,8 @@ package org.fenixedu.bennu.oauth.api;
 
 import static pt.ist.fenixframework.FenixFramework.atomic;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Base64;
 import java.util.Set;
 
@@ -45,6 +47,8 @@ import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.api.json.ExternalApplicationForManagersAdapter;
 import org.fenixedu.bennu.oauth.api.json.ExternalApplicationUsersAdapter;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
+
+import com.google.common.io.ByteStreams;
 
 @Path("/bennu-oauth/applications")
 public class ExternalApplicationResource extends BennuRestResource {
@@ -179,8 +183,14 @@ public class ExternalApplicationResource extends BennuRestResource {
                 return Response.notModified(etag).build();
             }
             return Response.ok(Base64.getDecoder().decode(app.getLogo()), "image/jpeg").tag(etag).build();
+        } else {
+            try {
+                InputStream placeholder = getClass().getResourceAsStream("/noapplication.png");
+                return Response.ok(ByteStreams.toByteArray(placeholder), "image/png").build();
+            } catch (IOException e) {
+                return Response.status(Status.NOT_FOUND).build();
+            }
         }
-        return Response.status(Status.NOT_FOUND).build();
     }
 
     private EntityTag buildETag(ExternalApplication instance) {

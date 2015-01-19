@@ -48,12 +48,10 @@
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th><a href=""
-						ng-click="predicate = 'scopeKey'; reverse=!reverse" translate>Key</a></th>
-					<th><a href="" ng-click="predicate = 'name'; reverse=!reverse"
-						translate>Name</a></th>
-					<th translate>Description</th>
-					<th translate>Service</th>
+					<th><a href="" ng-click="predicate = 'scopeKey'; reverse=!reverse"><span translate>Key</span></a></th>
+					<th><a href="" ng-click="predicate = 'name | i18n'; reverse=!reverse"><span translate>Name</span></a></th>
+					<th><a href="" ng-click="predicate = 'description | i18n'; reverse=!reverse"><span translate>Description</span></a></th>
+					<th><a href="" ng-click="predicate = 'service'; reverse=!reverse"><span translate>Service</span></a></th>
 					<th></th>
 				</tr>
 			</thead>
@@ -103,12 +101,26 @@
 			<thead>
 				<tr>
 					<th class="col-sm-1"></th>
-					<th translate class="col-sm-3"><a href=""
-						ng-click="predicateApplications = 'name'; reverseApplication=!reverseApplication">Information</a></th>
-					<th translate class="col-sm-2 text-center"><a href=""
-						ng-click="predicateApplications = 'authorizations'; reverseApplication=!reverseApplication">Authorizations</a></th>
-					<th translate class="col-sm-2">Redirect</th>
-					<th translate class="col-sm-1">State</th>
+					<th class="col-sm-3">
+						<a href="" ng-click="predicateApplications = 'name'; reverseApplication=!reverseApplication">
+							<span translate>Information</span>
+						</a>
+					</th>
+					<th class="col-sm-2 text-center">
+						<a href="" ng-click="predicateApplications = 'authorizations'; reverseApplication=!reverseApplication">
+							<span translate>Authorizations</span>
+						</a>
+					</th>
+					<th class="col-sm-2">
+						<a href="" ng-click="predicateApplications = 'redirectUrl'; reverseApplication=!reverseApplication">
+							<span translate>Redirect</span>
+						</a>
+					</th>	
+					<th class="col-sm-1">
+						<a href="" ng-click="predicateApplications = 'state | translate'; reverseApplication=!reverseApplication">
+							<span translate>State</span>
+						</a>
+					</th>
 					<th class="col-sm-4"></th>
 				</tr>
 			</thead>

@@ -35,7 +35,6 @@ import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 
 import pt.ist.fenixframework.FenixFramework;
 
-import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -147,13 +146,11 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
 
         json.add("scopes", ctx.view(obj.getScopesSet()));
 
-        if (obj.getLogo() != null && !Strings.isNullOrEmpty(obj.getLogo().toString())) {
-            String logoUrl =
-                    CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-oauth/applications/"
-                            + obj.getExternalId() + "/logo";
+        String logoUrl =
+                CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-oauth/applications/" + obj.getExternalId()
+                        + "/logo";
 
-            json.addProperty("logoUrl", logoUrl);
-        }
+        json.addProperty("logoUrl", logoUrl);
 
         return json;
     }

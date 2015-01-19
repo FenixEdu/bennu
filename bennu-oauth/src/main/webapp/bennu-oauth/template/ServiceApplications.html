@@ -44,11 +44,25 @@
 			<thead>
 				<tr>
 					<th class="col-sm-1"></th>
-					<th translate class="col-sm-3"><a href=""
-						ng-click="predicateApplications = 'name'; reverseApplication=!reverseApplication">Information</a></th>
-					<th translate class="col-sm-2 text-center"><a href=""
-						ng-click="predicateApplications = 'authorizations'; reverseApplication=!reverseApplication">Authorizations</a></th>
-					<th translate class="col-sm-1">State</th>
+			
+					<th class="col-sm-3">
+						<a href="" ng-click="predicateApplications = 'name'; reverseApplication=!reverseApplication">
+							<span translate>Information</span>
+						</a>
+					</th>
+					
+					<th class="col-sm-2 text-center">
+						<a href="" ng-click="predicateApplications = 'authorizations'; reverseApplication=!reverseApplication">
+							<span translate>Authorizations</span>
+						</a>
+					</th>					
+
+					<th class="col-sm-1">
+						<a href="" ng-click="predicateApplications = 'state'; reverseApplication=!reverseApplication">
+							<span translate>State</span>
+						</a>
+					</th>	
+
 					<th class="col-sm-4"></th>
 				</tr>
 			</thead>

@@ -363,14 +363,17 @@ bennuOAuth.controller('ApplicationsCtrl', [ '$scope', '$http', '$cacheFactory', 
 
 }]);
 
-bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', function ($scope, $http, $location) {
+bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', '$filter', function ($scope, $http, $location, $filter) {
+	
+	$scope.i18n = $filter('i18n');
 
 	$scope.ctx = contextPath;
 
 	$scope.applicationsBaseApiUrl = $scope.applicationsBaseApiUrl || '/api/bennu-oauth/applications/';
 
 	$scope.predicate = 'scopeKey';
-	$scope.predicateApplications = 'name';
+
+	$scope.predicateApplications = '-authorizations';
 
 
 	$http.get(contextPath + '/api/bennu-oauth/scopes/all').success(function (data) {
@@ -419,9 +422,8 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', function (
 		}
 	};
 
-
 	$scope.create = function() {
-		$('#addScope').modal('hide');
+		$('#addScope').modal('hide');		
 		$http.post(contextPath + '/api/bennu-oauth/scopes', $scope.currentscope).success(function (data) {
 			$http.get(contextPath + '/api/bennu-oauth/scopes/all').success(function (data) {
 				$scope.scopes = data;
@@ -527,14 +529,25 @@ bennuOAuth.controller('ManageCtrl', [ '$scope', '$http', '$location', function (
 	};
 
 	$scope.filterScopes = function(value, index) {
-		var found = false;
-		angular.forEach(['scopeKey', 'name'], function(key) {
-			if (!$scope.queryScopes || value[key].toLowerCase().indexOf($scope.queryScopes.toLowerCase()) >= 0) {
-				found = true;
-				return;
-			}
-		});
-		return found;
+		
+		if (!$scope.queryScopes) {
+			return true;
+		}
+		
+		var query = $scope.queryScopes.toLowerCase();
+		
+		if (value['scopeKey'].toLowerCase().indexOf(query) >= 0) {
+			return true;
+		}
+		
+		if ($scope.i18n(value['name']).toLowerCase().indexOf(query) >= 0) {
+			return true;
+		}
+		
+		if ($scope.i18n(value['description']).toLowerCase().indexOf(query) >= 0) {
+			return true;
+		}	
+		return false;
 	};
 
 	$scope.showDetailsApplication = function(application) {

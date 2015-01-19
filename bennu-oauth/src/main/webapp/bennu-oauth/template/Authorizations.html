@@ -40,13 +40,36 @@
 			<thead>
 				<tr>
 					<th></th>
-					<th><a href=""
-						ng-click="predicate = 'applicationName'; reverse=!reverse" translate>Name</a></th>
-					<th><a href=""
-						ng-click="predicate = 'applicationAuthor'; reverse=!reverse" translate>Author</a></th>
-					<th translate>Description</th>
-					<th translate>Scopes</th>
-					<th>Site</th>
+					<th>
+						<a href="" ng-click="predicate = 'applicationName'; reverse=!reverse">
+							<span translate>Name</span>
+						</a>
+					</th>
+					
+					<th>
+						<a href="" ng-click="predicate = 'applicationAuthor'; reverse=!reverse">
+							<span translate>Author</span>
+						</a>
+					</th>
+					
+					<th>
+						<a href="" ng-click="predicate = 'applicationDescription'; reverse=!reverse">
+							<span translate>Description</span>
+						</a>
+					</th>
+					
+					<th>
+						<a href="" ng-click="predicate = 'applicationScopes'; reverse=!reverse">
+							<span translate>Scopes</span>
+						</a>
+					</th>
+					
+					<th>
+						<a href="" ng-click="predicate = 'applicationSite'; reverse=!reverse">
+							<span translate>Site</span>
+						</a>
+					</th>					
+					
 					<th></th>
 				</tr>
 			</thead>
