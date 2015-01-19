@@ -23,10 +23,18 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th class="col-sm-1 text-center"><a href=""
-				ng-click="predicate = 'date'; reverse=!reverse" translate>Date</a></th>
-			<th class="col-sm-2 text-center"><a href=""
-				ng-click="predicate = 'device'; reverse=!reverse" translate>Device</a></th>
+			<th class="col-sm-1 text-center">
+				<a href="" ng-click="predicate = 'date'; reverse=!reverse">
+					<span translate>Date</span>
+				</a>
+			</th>
+					
+			<th class="col-sm-2 text-center">
+				<a href="" ng-click="predicate = 'device'; reverse=!reverse">
+					<span translate>Device</span>
+				</a>
+			</th>					
+					
 			<th class="col-sm-4 text-center">Refresh Token</th>
 			<th class="col-sm-4 text-center">Access Token</th>
 			<th></th>
