@@ -1,9 +1,7 @@
 package org.fenixedu.bennu.signals;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.SubscriberExceptionContext;
@@ -11,7 +9,9 @@ import com.google.common.eventbus.SubscriberExceptionHandler;
 
 class SignalEventBus extends EventBus {
 
-    private SignalLoggingSubscriberExceptionHandler exceptionHandler;
+    private static final Logger logger = LoggerFactory.getLogger(SignalEventBus.class);
+
+    private final SignalLoggingSubscriberExceptionHandler exceptionHandler;
     private boolean throwsExceptions = false;
 
     private SignalEventBus(SignalLoggingSubscriberExceptionHandler handler) {
@@ -41,21 +41,18 @@ class SignalEventBus extends EventBus {
 
     private static final class SignalLoggingSubscriberExceptionHandler implements SubscriberExceptionHandler {
 
-        private final Logger logger;
         private final String identifier;
 
         public Throwable exception;
 
         public SignalLoggingSubscriberExceptionHandler(String identifier) {
-            logger = Logger.getLogger(SignalEventBus.class.getName() + "." + checkNotNull(identifier));
             this.identifier = identifier;
         }
 
         @Override
         public void handleException(Throwable exception, SubscriberExceptionContext context) {
-            logger.log(Level.SEVERE,
-                    "Could not emit signal: " + context.getSubscriber() + " to " + context.getSubscriberMethod(),
-                    exception.getCause());
+            logger.error("Could not emit signal: " + context.getSubscriber() + " to " + context.getSubscriberMethod() + "("
+                    + identifier + ")", exception);
             this.exception = exception;
         }
 
