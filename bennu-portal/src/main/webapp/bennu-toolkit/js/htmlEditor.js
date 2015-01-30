@@ -15,6 +15,30 @@
         ["#9C0000","#B56308","#BD9400","#397B21","#104A5A","#085294","#311873","#731842"],
         ["#630000","#7B3900","#846300","#295218","#083139","#003163","#21104A","#4A1031"]];
 
+    Bennu.htmlEditor.saveSelection = function() {
+        if (window.getSelection) {
+            sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                return sel.getRangeAt(0);
+            }
+        } else if (document.selection && document.selection.createRange) {
+            return document.selection.createRange();
+        }
+        return null;
+    }
+
+    Bennu.htmlEditor.restoreSelection = function(range) {
+        if (range) {
+            if (window.getSelection) {
+                sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            } else if (document.selection && range.select) {
+                range.select();
+            }
+        }
+    }
+
     function generateColors(type){
         var result="";
         for (var i = 0; i < Bennu.htmlEditor.colors.length; i++) {
@@ -156,10 +180,10 @@
                     '</div></li></ul></div>');
             } else if (c === "links") {
                 $(".btn-toolbar", dom).append('<div class="btn-group">' +
-                    '<a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Hyperlink"><span class="glyphicon glyphicon-link"></span></a>' +
+                    '<a class="btn btn-sm btn-default link-to-add-ui-btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Hyperlink"><span class="glyphicon glyphicon-link"></span></a>' +
                     '<div class="dropdown-menu input-append add-url">' +
 
-                    '<div class="input-group"><input type="text" placeholder="URL" data-edit="createLink" class="form-control"><div class="input-group-btn"><button type="button" class="btn btn-default" aria-expanded="false">Add</button></div></div>'+
+                    '<div class="input-group"><input type="text" placeholder="URL" class="link-to-add form-control"><div class="input-group-btn"><button type="button" class="btn btn-default link-to-add-btn" aria-expanded="false">Add</button></div></div>'+
 
                     '</div>' +
                     '<a class="btn btn-sm btn-default" data-edit="unlink" title="" data-original-title="Remove Hyperlink"><span class="fa fa-chain-broken"></span></a>' +
@@ -460,6 +484,29 @@
 
         // end table shit
 
+
+        $(".link-to-add-ui-btn",dom).on("click",function(){
+            var select = Bennu.htmlEditor.saveSelection();
+            $(".bennu-html-editor-editor", dom).data("save-selection",select);
+            setTimeout(function(){
+                $(".link-to-add",dom).focus();
+            },100);
+        });
+
+
+        $(".link-to-add-btn", dom).on("click",function(){
+            var val = $(".bennu-html-editor-editor", dom).data("save-selection");
+            $(".bennu-html-editor-editor",dom).focus();
+            setTimeout(function(){
+                if (val){
+                    Bennu.htmlEditor.restoreSelection(val);
+                }
+
+                document.execCommand("CreateLink", false, $(".link-to-add").val());
+                $(".link-to-add").val("")
+            });
+        });
+
         e.on("change.bennu", function (ev) {
             var attr = e.attr("bennu-localized-string");
             if (attr !== null && attr !== undefined) {
@@ -644,6 +691,8 @@
                 changeColor($(".note-recent-color",dom).data("value"));
             });
         }
+
+
 
         return handler;
     };
