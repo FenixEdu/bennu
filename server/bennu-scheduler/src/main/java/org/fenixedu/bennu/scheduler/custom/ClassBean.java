@@ -10,7 +10,7 @@
  *
  *   The Scheduler Module is free software: you can
  *   redistribute it and/or modify it under the terms of the GNU Lesser General
- *   Public License as published by the Free Software Foundation, either version 
+ *   Public License as published by the Free Software Foundation, either version
  *   3 of the License, or (at your option) any later version.
  *
  *   The Scheduler Module is distributed in the hope that it will be useful,
@@ -37,12 +37,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
@@ -242,6 +244,11 @@ public class ClassBean implements Serializable {
             final List<File> files = new ArrayList<>();
             for (final URL url : urls) {
                 files.add(new File(url.toURI()));
+            }
+
+            CodeSource servletCodeSource = HttpServletRequest.class.getProtectionDomain().getCodeSource();
+            if (servletCodeSource != null && servletCodeSource.getLocation() != null) {
+                files.add(new File(servletCodeSource.getLocation().toURI()));
             }
 
             final JavaSourceFromString javaSourceFromString = new JavaSourceFromString(getClassName(), getContents());
