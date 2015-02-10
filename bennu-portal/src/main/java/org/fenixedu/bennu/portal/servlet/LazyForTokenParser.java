@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.stream.Stream;
 
 import com.mitchellbosecke.pebble.error.ParserException;
@@ -97,7 +98,7 @@ public class LazyForTokenParser extends AbstractTokenParser {
 
             Stream<?> stream = getStream(value);
 
-            context.pushScope();
+            context.pushScope(new HashMap<String, Object>());
             stream.forEach((obj) -> {
                 try {
                     context.put(variableName, obj);
