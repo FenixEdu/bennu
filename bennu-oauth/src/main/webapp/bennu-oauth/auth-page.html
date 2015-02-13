@@ -79,7 +79,7 @@
 				<p>{{i18n('resources.OAuthResources', 'message.scopes.header')}}</p>
 				<ul>
 				{% for scope in app.scopesSet %}
-					<li>{{scope.name.content}}</li>
+					<li><b>{{scope.name.content}}</b> - {{scope.description.content}}</li>
 				{% endfor %}
 				</ul>
 				<form action="{{contextPath}}/oauth/userconfirmation" method="POST">
