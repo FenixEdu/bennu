@@ -156,7 +156,7 @@ public class SignalsTest {
         }
         Assert.assertTrue("Exception not thrown", caught);
     }
-    
+
     @Test
     public void testSilentExceptionHandling() {
         AtomicBoolean bool = new AtomicBoolean(false);
@@ -198,7 +198,39 @@ public class SignalsTest {
             Assert.fail("Thrown exception");
             e.printStackTrace();
         }
-        
     }
 
+    @Test
+    public void testSignalEmitingWithinSignal() throws Exception {
+        AtomicBoolean bool = new AtomicBoolean(false);
+        Signal.register("signal1", (DomainObjectEvent<DomainRoot> event) -> {
+            Signal.emit("signal2", event);
+        });
+        Signal.register("signal2", (DomainObjectEvent<DomainRoot> event) -> {
+            bool.set(true);
+        });
+
+        TransactionManager manager = FenixFramework.getTransactionManager();
+        manager.begin();
+        Signal.emit("signal1", new DomainObjectEvent<>(FenixFramework.getDomainRoot()));
+        manager.commit();
+        Assert.assertTrue("Second signal wasn't emited", bool.get());
+    }
+
+    @Test
+    public void testSignalEmitingWithinSignalWithoutTransaction() throws Exception {
+        AtomicBoolean bool = new AtomicBoolean(false);
+        Signal.registerWithoutTransaction("signal1", (DomainObjectEvent<DomainRoot> event) -> {
+            Signal.emit("signal2", event);
+        });
+        Signal.registerWithoutTransaction("signal2", (DomainObjectEvent<DomainRoot> event) -> {
+            bool.set(true);
+        });
+
+        TransactionManager manager = FenixFramework.getTransactionManager();
+        manager.begin();
+        Signal.emit("signal1", new DomainObjectEvent<>(FenixFramework.getDomainRoot()));
+        manager.commit();
+        Assert.assertTrue("Second signal wasn't emited", bool.get());
+    }
 }
