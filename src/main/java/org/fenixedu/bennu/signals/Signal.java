@@ -233,25 +233,28 @@ public class Signal {
 
     private static void fireAllInCacheOutsideTransaction(Transaction transaction) {
         Map<String, ArrayList<Object>> cache = transaction.getFromContext("signals");
-        if (cache != null) {
+        /* allowing signal emiting within a signal */
+        while (cache != null) {
+            transaction.putInContext("signals", null);
             for (String key : cache.keySet()) {
                 for (Object event : cache.get(key)) {
                     withoutTransaction.get(key).emit(event);
                 }
             }
-            transaction.putInContext("signals", null);
+            cache = transaction.getFromContext("signals");
         }
     }
 
     private static void fireAllInCacheWithinTransaction(Transaction transaction) {
         Map<String, ArrayList<Object>> cache = transaction.getFromContext("signalsWithTransaction");
-        if (cache != null) {
+        while (cache != null) {
+            transaction.putInContext("signalsWithTransaction", null);
             for (String key : cache.keySet()) {
                 for (Object event : cache.get(key)) {
                     withTransaction.get(key).emit(event);
                 }
             }
-            transaction.putInContext("signalsWithTransaction", null);
+            cache = transaction.getFromContext("signalsWithTransaction");
         }
     }
 
