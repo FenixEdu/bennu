@@ -15,7 +15,9 @@ It includes tutorials and examples so you can learn how to use the Bennu Framewo
 
 ##Issue Tracking
 
-Issue Tracking for the Bennu Framework should be done using [GitHub Issues](https://github.com/FenixEdu/bennu/issues)
+Issue Tracking for the FenixEdu Academic project is done in the 
+
+Issue Tracking for the Bennu Framework should be done in the [FenixEdu JIRA](https://jira.fenixedu.org/browse/BNN).
 
 ## Contribute
 
