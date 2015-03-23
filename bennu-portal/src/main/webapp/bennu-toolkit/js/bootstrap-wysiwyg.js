@@ -26,11 +26,17 @@
             updateToolbar = function () {
                 if (options.activeToolbarClass) {
                     $(options.toolbarSelector, editor.parent()).find(toolbarBtnSelector).each(function () {
+
                         var command = $(this).data(options.commandRole);
-                        if (document.queryCommandState(command)) {
-                            $(this).addClass(options.activeToolbarClass);
-                        } else {
-                            $(this).removeClass(options.activeToolbarClass);
+                        try{
+                            if (document.queryCommandState(command)) {
+                                $(this).addClass(options.activeToolbarClass);
+                            } else {
+                                $(this).removeClass(options.activeToolbarClass);
+                            }
+                        }catch(e){
+                            console.log(e);
+                            console.log(command);
                         }
                     });
                 }
@@ -41,6 +47,9 @@
                     args = commandArr.join(' ') + (valueArg || '');
                 document.execCommand(command, 0, args);
                 updateToolbar();
+                if (window.navigator.userAgent.indexOf("MSIE ") > 0 || !!navigator.userAgent.match(/Trident.*/)){
+                    editor.trigger("change");
+                }
             },
             bindHotkeys = function (hotKeys) {
                 $.each(hotKeys, function (hotkey, command) {
