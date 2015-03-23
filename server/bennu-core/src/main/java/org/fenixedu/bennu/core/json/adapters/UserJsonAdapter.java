@@ -84,9 +84,6 @@ public class UserJsonAdapter implements JsonAdapter<User> {
     private void changeExpiration(User user, JsonObject json) {
         String expiration = JsonUtils.getString(json, "expiration");
 
-        // Clear expiration slot
-        user.setExpiration(null);
-
         if (Strings.isNullOrEmpty(expiration)) {
             UserLoginPeriod.createOpenPeriod(user);
         } else {
