@@ -27,6 +27,8 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
      */
     public UserLoginPeriod(User user, LocalDate beginDate, LocalDate endDate) {
         setUser(Objects.requireNonNull(user));
+        // if using periods user's legacy expiration slot must be null
+        user.setExpiration(null);
         setBeginDate(Objects.requireNonNull(beginDate, "beginDate cannot be null"));
         setEndDate(Objects.requireNonNull(endDate, "endDate cannot be null"));
     }
