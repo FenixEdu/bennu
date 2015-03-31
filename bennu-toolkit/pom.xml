@@ -50,6 +50,7 @@
                                 <jsSourceFile>validation.js</jsSourceFile>
                                 <jsSourceFile>localizedString.js</jsSourceFile>
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
+                                <jsSourceFile>alerts.js</jsSourceFile>
                                 <jsSourceFile>group.js</jsSourceFile>
                                 <jsSourceFile>semver.js</jsSourceFile>
                                 <jsSourceFile>userAutocomplete.js</jsSourceFile>
@@ -84,6 +85,7 @@
                                 <jsSourceFile>validation.js</jsSourceFile>
                                 <jsSourceFile>localizedString.js</jsSourceFile>
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
+                                <jsSourceFile>alerts.js</jsSourceFile>
                                 <jsSourceFile>group.js</jsSourceFile>
                                 <jsSourceFile>semver.js</jsSourceFile>
                                 <jsSourceFile>userAutocomplete.js</jsSourceFile>
