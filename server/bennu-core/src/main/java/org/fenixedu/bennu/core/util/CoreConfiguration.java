@@ -112,6 +112,11 @@ public class CoreConfiguration {
                 description = "the size threshold after which files will be written to disk", defaultValue = "67108864")
         public Integer multipartFileSizeThreshold();
 
+        @ConfigurationProperty(key = "api.csrf.filter.enabled",
+                description = "Enables the CSRF protection in POST, PUT and DELETE requests to API endpoints.",
+                defaultValue = "false")
+        public Boolean apiCSRFFilterEnabled();
+
         /**
          * Gets the maximum size allowed for multipart/form-data requests.
          * 

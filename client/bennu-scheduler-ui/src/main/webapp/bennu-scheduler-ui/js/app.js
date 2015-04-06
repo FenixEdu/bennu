@@ -1,5 +1,5 @@
 var bennuScheduler = angular.module('bennuScheduler', [
-  'ngRoute', 'ui.codemirror'
+  'ngRoute', 'ui.codemirror', 'bennuToolkit'
 ]);
 
 bennuScheduler.config(['$routeProvider',
@@ -160,6 +160,7 @@ bennuScheduler.controller('CustomLogDetailsCtrl', ['$scope', '$http', '$routePar
 bennuScheduler.controller('CustomTaskCtrl', ['$scope', '$http', '$location', function ($scope, $http, $location) {
   $scope.javaCode = window.code || ""; window.code = null;
   $scope.compiled = false;   $scope.editorOptions = { lineNumbers: true, mode: 'text/x-java', theme: 'eclipse'};
+
   $scope.compile = function() {
     var packageRegex = new RegExp("package (.*);").exec($scope.javaCode);
     var classNameRegex = new RegExp("public class (.*) extends").exec($scope.javaCode);
@@ -172,8 +173,8 @@ bennuScheduler.controller('CustomTaskCtrl', ['$scope', '$http', '$location', fun
       return;
     }
     var fqn = packageRegex[1] + "." + classNameRegex[1];
-    $http({ method: 'POST', url: contextPath + '/api/bennu-scheduler/custom/compile', data: $.param({'name': fqn, 'code': $scope.javaCode}),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).success(function (result) {
+    $http({ method: 'POST', url: contextPath + '/api/bennu-scheduler/custom/compile', data: {name: fqn, code: $scope.javaCode},
+          headers: {'Content-Type': 'application/json'}}).success(function (result) {
       if(result.compileOK) {
         $scope.result = 'The compilation was successful!'; $scope.compiled = true;
       } else {
@@ -185,8 +186,8 @@ bennuScheduler.controller('CustomTaskCtrl', ['$scope', '$http', '$location', fun
     var packageName = new RegExp("package (.*);").exec($scope.javaCode)[1];
     var className = new RegExp("public class (.*) extends").exec($scope.javaCode)[1];
     var fqn = packageName + "." + className;
-    $http({ method: 'POST', url: contextPath + '/api/bennu-scheduler/custom', data: $.param({'name': fqn, 'code': $scope.javaCode}),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).success(function (result) { $location.url('custom') });
+    $http({ method: 'POST', url: contextPath + '/api/bennu-scheduler/custom', data: {name: fqn, code: $scope.javaCode},
+          headers: {'Content-Type': 'application/json'}}).success(function (result) { $location.url('custom') });
   }
   $scope.$watch('javaCode', function (oldValue, newValue) {
     $scope.compiled = false; $scope.result = '';
