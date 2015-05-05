@@ -70,7 +70,7 @@ public class ServiceApplication extends ServiceApplication_Base {
 
     public boolean matchesIpAddress(String ipAddress) {
         Objects.requireNonNull(ipAddress);
-        return getWhitelist().contains(ipAddress);
+        return getWhitelist().isEmpty() || getWhitelist().contains(ipAddress);
     }
 
 }
