@@ -13,7 +13,7 @@
             <header class="row">
                 <div class="col-sm-10">
                     <h2 class="exception-class-name">{{exception.class.name}}</h2>
-                    {{exception.localizedMessage}}
+                    <pre>{{exception.localizedMessage}}</pre>
                 </div>
             </header>
             <main class="row main-body">
@@ -100,7 +100,7 @@
                             </strong>
                             <span class="class-package reference">{{stack.subject.class.package.name}}</span><!--
                                  -->.<strong class="class-name reference">{{stack.subject.class.simpleName}}</strong>:
-                            {{stack.localizedMessage | raw}}
+                            <code>{{stack.localizedMessage}}</code>
                         </div>
                         {% for element in stack.subjectInfo %}
                         <div class="trace-line {% if element.externalClass %}external-exception{% endif %}">
@@ -196,13 +196,10 @@
         font-family: "Menlo", "Monaco", "Inconsolata", "Mono", monospace;
     }
 
-    .values{
-        font-family: "Menlo", "Monaco", "Inconsolata", "Mono", monospace;
-    }
-
     .trace-line {
         padding-left: 30px;
         font-family: "Menlo", "Monaco", "Inconsolata", "Mono", monospace;
+        font-size: 90%;
     }
 
     .desc {
@@ -235,6 +232,15 @@
 
     .first-char{
         display: none;
+    }
+
+    pre {
+        font-size: 13px;
+        background-color: #fafafa;
+    }
+
+    .highlight-line {
+        font-size: 120%;
     }
 
     @media (max-width: 767px) {
@@ -283,6 +289,13 @@
         }
 
     });
+
+    var search = "An error occurred at line: ";
+    var lineIdx = $("pre").html().indexOf(search);
+    if(lineIdx != -1) {
+        var badLine = $("pre").html().substring(lineIdx + search.length, $("pre").html().indexOf(" ", lineIdx + search.length)).replace(',', '');
+        $("pre").html($("pre").html().replace(badLine + ":", "<strong class='highlight-line'>" + badLine + ":</strong>"));
+    }
 
     $(".class-package").map(function(i,e){
         e = $(e)
