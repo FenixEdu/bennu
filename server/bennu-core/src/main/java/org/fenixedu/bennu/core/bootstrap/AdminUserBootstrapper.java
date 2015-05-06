@@ -33,7 +33,7 @@ public class AdminUserBootstrapper {
 
         User adminUser =
                 new User(section.getAdminUsername(), new UserProfile(section.getAdminGivenNames(), section.getAdminFamilyNames(),
-                        section.getAdminName(), section.getAdminUserEmail(), null));
+                        null, section.getAdminUserEmail(), null));
         adminUser.changePassword(section.getAdminPassword());
 
         DynamicGroup.get("managers").changeGroup(UserGroup.of(adminUser));
@@ -48,24 +48,21 @@ public class AdminUserBootstrapper {
         @Field(name = "bootstrapper.admin.username", hint = "bootstrapper.admin.username", order = 1)
         public String getAdminUsername();
 
-        @Field(name = "bootstrapper.admin.adminName", hint = "bootstrapper.admin.adminName", order = 2)
-        public String getAdminName();
-
-        @Field(name = "bootstrapper.admin.adminGivenNames", hint = "bootstrapper.admin.adminGivenNames", order = 3)
+        @Field(name = "bootstrapper.admin.adminGivenNames", hint = "bootstrapper.admin.adminGivenNames", order = 2)
         public String getAdminGivenNames();
 
-        @Field(name = "bootstrapper.admin.adminFamilyNames", hint = "bootstrapper.admin.adminFamilyNames", order = 4)
+        @Field(name = "bootstrapper.admin.adminFamilyNames", hint = "bootstrapper.admin.adminFamilyNames", order = 3)
         public String getAdminFamilyNames();
 
-        @Field(name = "bootstrapper.admin.email", hint = "bootstrapper.admin.email.hint", fieldType = FieldType.EMAIL, order = 5)
+        @Field(name = "bootstrapper.admin.email", hint = "bootstrapper.admin.email.hint", fieldType = FieldType.EMAIL, order = 4)
         public String getAdminUserEmail();
 
         @Field(name = "bootstrapper.admin.password", hint = "bootstrapper.admin.password", fieldType = FieldType.PASSWORD,
-                order = 6)
+                order = 5)
         public String getAdminPassword();
 
         @Field(name = "bootstrapper.admin.retypedPassword", hint = "bootstrapper.admin.password", fieldType = FieldType.PASSWORD,
-                order = 7)
+                order = 6)
         public String getAdminPasswordRetyped();
 
     }
