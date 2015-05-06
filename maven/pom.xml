@@ -23,7 +23,6 @@
     </repositories>
 
     <modules>
-        <module>archetypes</module>
         <module>bennu-maven-plugin</module>
     </modules>
 </project>
