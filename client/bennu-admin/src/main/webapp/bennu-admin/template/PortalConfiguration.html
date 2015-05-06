@@ -37,12 +37,12 @@
         <div class="form-group">
             <label class="col-sm-2 control-label" for="logo">Logo</label>
             <div class="col-sm-4">
-                <img ng-src="data:{{menu.logoType}};base64,{{menu.logo}}"></img>
+                <img ng-src="{{logoUrl}}"></img>
                 <input type="file" name="logo" onchange="angular.element(this).scope().fileNameChanged(this,'logo')" />
             </div>
             <label class="col-sm-2 control-label" for="favicon">Favicon</label>
             <div class="col-sm-4">
-                <img ng-src="data:{{menu.faviconType}};base64,{{menu.favicon}}"></img>
+                <img ng-src="{{faviconUrl}}"></img>
                 <input type="file" name="favicon" onchange="angular.element(this).scope().fileNameChanged(this,'favicon')" />
             </div>
         </div>

@@ -35,18 +35,12 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         object.addProperty("systemEmailAddress", configuration.getSystemEmailAddress());
         object.addProperty("theme", configuration.getTheme());
         if (configuration.getLogo() != null) {
-            object.addProperty("logo", BaseEncoding.base64().encode(configuration.getLogo()));
-            object.addProperty("logoType", new String(configuration.getLogoType()));
             if (!Strings.isNullOrEmpty(configuration.getLogoLinkUrl())) {
                 object.addProperty("logoLinkUrl", configuration.getLogoLinkUrl());
             }
             if (!Strings.isNullOrEmpty(configuration.getLogoTooltip())) {
                 object.addProperty("logoTooltip", configuration.getLogoTooltip());
             }
-        }
-        if (configuration.getFavicon() != null) {
-            object.addProperty("favicon", BaseEncoding.base64().encode(configuration.getFavicon()));
-            object.addProperty("faviconType", new String(configuration.getLogoType()));
         }
         JsonArray themes = new JsonArray();
         for (String theme : PortalInitializer.getThemes()) {

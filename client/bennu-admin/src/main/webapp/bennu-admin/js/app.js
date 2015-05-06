@@ -71,6 +71,8 @@ bennuAdmin.config(['$routeProvider',
   }]);
 
 bennuAdmin.controller('PortalConfigurationCtrl', ['$scope', '$http', function ($scope, $http) {
+  $scope.logoUrl = contextPath + '/api/bennu-portal/configuration/logo?' + new Date().getTime();
+  $scope.faviconUrl = contextPath + '/api/bennu-portal/configuration/favicon?' + new Date().getTime();
   $http.get(contextPath + '/api/bennu-portal/configuration').success(function (data) {
     $scope.locales = BennuPortal.locales;
     $scope.menu = data;
@@ -101,12 +103,14 @@ bennuAdmin.controller('PortalConfigurationCtrl', ['$scope', '$http', function ($
               var picBase64 = content.substr(content.indexOf(",") + 1, content.length);
               if(type === "logo"){
             	  $scope.$apply(function () {
+                      $scope.logoUrl = 'data:' + file.type + ';base64,' + picBase64;
                       $scope.menu.logo = picBase64;
                       $scope.menu.logoType = file.type;
                     });
               }
               if(type === "favicon"){
             	  $scope.$apply(function () {
+                      $scope.faviconUrl = 'data:' + file.type + ';base64,' + picBase64;
                       $scope.menu.favicon = picBase64;
                       $scope.menu.faviconType = file.type;
                     });
