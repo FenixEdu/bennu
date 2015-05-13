@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Central place for {@link PortalBackends} to register themselves.
+ * Central place for {@link PortalBackend}s to register themselves.
  * 
  * Upon application startup, backends that wish to be discovered must register here.
  * 

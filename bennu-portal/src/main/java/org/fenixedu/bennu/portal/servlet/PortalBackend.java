@@ -17,12 +17,18 @@ public interface PortalBackend {
 
     /**
      * Returns the {@link SemanticURLHandler} for this backend.
+     * 
+     * @return
+     *         The URL Handler for this backend
      */
     public SemanticURLHandler getSemanticURLHandler();
 
     /**
      * Returns whether functionalities provider by this backend require the
      * server to wrap the response in the configured layout.
+     * 
+     * @return
+     *         Whether this backend requires server-side layouting
      */
     public boolean requiresServerSideLayout();
 
@@ -30,6 +36,9 @@ public interface PortalBackend {
      * Returns the unique key used to identify this backend.
      * 
      * This key MUST match the provider key of {@link Functionality}s declared by this backend.
+     * 
+     * @return
+     *         The unique key for this backend
      */
     public String getBackendKey();
 

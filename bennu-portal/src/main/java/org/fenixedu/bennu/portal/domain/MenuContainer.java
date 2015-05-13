@@ -43,6 +43,11 @@ public final class MenuContainer extends MenuContainer_Base {
     /**
      * Creates a new {@link MenuContainer} based on the given {@link Application}, and inserts it under the given parent.
      * 
+     * @param parent
+     *            The parent container for the new item
+     * @param application
+     *            The {@link Application} that will provide the require information for this container
+     * 
      * @throws IllegalArgumentException
      *             If {@code parent} is null.
      */
@@ -60,6 +65,19 @@ public final class MenuContainer extends MenuContainer_Base {
 
     /**
      * Creates a new {@link MenuContainer} based on the provider parameters, and inserts it under the given parent.
+     * 
+     * @param parent
+     *            The parent container for the new item
+     * @param visible
+     *            Whether this container is to be visible when rendering the menu
+     * @param accessGroup
+     *            The expression for this container's access group
+     * @param description
+     *            The textual description for this container
+     * @param title
+     *            The title for this container
+     * @param path
+     *            The semantic-url path for this container
      * 
      * @throws IllegalArgumentException
      *             If {@code parent} is null.
@@ -137,6 +155,9 @@ public final class MenuContainer extends MenuContainer_Base {
      * Returns a {@link Set} containing all the children of this container, that are available to the
      * current user.
      * 
+     * @return
+     *         This container's children that are available to the current user
+     * 
      * @deprecated
      *             Use {@link MenuContainer#getUserMenuStream()} and apply a {@link Collector}.
      */
@@ -153,6 +174,9 @@ public final class MenuContainer extends MenuContainer_Base {
     /**
      * Returns an {@link Iterable} containing all the child {@link MenuContainer}s of this container, that are available to the
      * current user.
+     * 
+     * @return
+     *         All the child {@link MenuContainer}s that are available to the current user.
      * 
      * @deprecated
      *             Use {@link MenuContainer#getUserMenuStream()} and apply another filter
@@ -195,6 +219,9 @@ public final class MenuContainer extends MenuContainer_Base {
 
     /**
      * Returns whether this container is the root of the functionality tree.
+     * 
+     * @return
+     *         {@code true} if this is the root container.
      */
     public boolean isRoot() {
         return getConfiguration() != null;
@@ -287,6 +314,7 @@ public final class MenuContainer extends MenuContainer_Base {
      * Returns the initial content of this container, i.e., the first {@link MenuFunctionality}.
      * 
      * @return
+     *         The initial content of this container
      */
     public MenuFunctionality findInitialContent() {
         for (MenuItem item : getOrderedChild()) {

@@ -61,9 +61,9 @@ public abstract class FileStorage extends FileStorage_Base {
     }
 
     /**
-     * Returns the 'sendfile' path for the given file. <br />
+     * Returns the 'sendfile' path for the given file.
      * 
-     * PRIVATE API:
+     * <strong>PRIVATE API:</strong>
      * Note that this is Bennu IO private API, and should not be used outside this module.
      * If you do use it, do it at your own risk, as this API is subject to change without
      * any warning.

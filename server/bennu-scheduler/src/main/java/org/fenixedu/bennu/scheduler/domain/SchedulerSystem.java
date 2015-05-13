@@ -313,6 +313,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * ProcessQueue threads will run pending tasks.
      * 
      * @param schedule
+     *            The task to be added to the queue
      */
     @Atomic(mode = TxMode.READ)
     public static void schedule(final TaskSchedule schedule) {
@@ -343,6 +344,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * Remove schedule from the scheduler. This will not delete the TaskSchedule, only removes the scheduling.
      * 
      * @param schedule
+     *            The task to be removed from the queue
      */
     public static void unschedule(TaskSchedule schedule) {
         if (isActive()) {

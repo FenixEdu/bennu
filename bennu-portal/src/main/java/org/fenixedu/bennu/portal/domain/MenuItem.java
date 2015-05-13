@@ -134,6 +134,9 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
 
     /**
      * Returns whether the Item should be visible when rendering a menu.
+     * 
+     * @return
+     *         {@code true} if this item is visible
      */
     public boolean isVisible() {
         return getVisible();

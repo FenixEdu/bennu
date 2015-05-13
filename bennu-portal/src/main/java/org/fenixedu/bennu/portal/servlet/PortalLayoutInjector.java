@@ -125,6 +125,11 @@ public class PortalLayoutInjector implements Filter {
 
     /**
      * Requests that layout injection be skipped on the given request
+     * 
+     * @param request
+     *            The request for which layouting should be skipped
+     * @throws NullPointerException
+     *             If the given {@code request} is {@code null}
      */
     public static void skipLayoutOn(HttpServletRequest request) {
         request.setAttribute(SKIP_LAYOUT_INJECTION, SKIP_LAYOUT_INJECTION);

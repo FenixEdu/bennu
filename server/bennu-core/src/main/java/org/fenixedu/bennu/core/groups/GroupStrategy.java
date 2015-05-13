@@ -31,7 +31,13 @@ public abstract class GroupStrategy extends CustomGroup {
      * Retrieves a {@link GroupStrategy} by the name of its type.
      * 
      * If the given type is no longer available (or the typeName is invalid), it returns a strategy that behaves the same as
-     * {@link NobodyGrou}.
+     * {@link NobodyGroup}.
+     * 
+     * @param typeName
+     *            The name of the group strategy to retrieve
+     * 
+     * @return
+     *         The instance of the requested type, or a strategy with similar behavior to {@link NobodyGroup}.
      */
     public static GroupStrategy strategyForType(String typeName) {
         try {

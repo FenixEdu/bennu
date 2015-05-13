@@ -28,6 +28,11 @@ public interface SemanticURLHandler {
      *            The outgoing response.
      * @param chain
      *            The filter chain that intercepted this request.
+     * 
+     * @throws IOException
+     *             If an input or output error occurs while the servlet is handling the HTTP request
+     * @throws ServletException
+     *             If the HTTP request cannot be handled
      */
     public void handleRequest(MenuFunctionality functionality, HttpServletRequest request, HttpServletResponse response,
             FilterChain chain) throws IOException, ServletException;

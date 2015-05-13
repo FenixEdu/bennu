@@ -155,7 +155,9 @@ public abstract class GenericFile extends GenericFile_Base {
      * Guessing file content type with {@link javax.activation.MimetypesFileTypeMap} is not enough.
      *
      * @param filename
+     *            The name of the file to evaluate
      * @return file content type
+     *         The detected file type, from the given file name
      * @deprecated content detection is done automatically, no need for this method
      */
     @Deprecated
@@ -165,6 +167,11 @@ public abstract class GenericFile extends GenericFile_Base {
 
     /**
      * Detect content type based on file content "magic" bytes. Fallback to filename extension if file content is inconclusive.
+     * 
+     * @param content
+     *            The content of the file, for magic byte analysis
+     * @param filename
+     *            The name of the file to evaluate
      *
      * @return the detected mime-type. application/octet-stream returned when detection was not successful.
      *

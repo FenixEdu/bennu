@@ -3,11 +3,12 @@ package org.fenixedu.bennu.portal.model;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.fenixedu.bennu.portal.domain.MenuContainer;
 import org.fenixedu.commons.i18n.LocalizedString;
 
 /**
  * An {@link Application} represents an aggregation of {@link Functionality}s. This class acts as a model descriptor, which is
- * used to create {@link MenuContainers}.
+ * used to create {@link MenuContainer}s.
  * 
  * <p>
  * Note that the key of an {@link Application} MUST be unique across your whole application.

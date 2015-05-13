@@ -74,6 +74,9 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
 
     /**
      * Returns the singleton instance of {@link PortalConfiguration} for this application.
+     * 
+     * @return
+     *         The one and only instance of {@link PortalConfiguration}
      */
     public static PortalConfiguration getInstance() {
         if (Bennu.getInstance().getConfiguration() == null) {

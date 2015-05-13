@@ -58,6 +58,9 @@ public final class Functionality implements Comparable<Functionality> {
     /**
      * Returns the {@link PortalBackend} that is responsible for handling this functionality. This name must match
      * the key of a provider registered at {@link PortalBackendRegistry}.
+     * 
+     * @return
+     *         The key of the backend associated with this functionality
      */
     public String getProvider() {
         return provider;

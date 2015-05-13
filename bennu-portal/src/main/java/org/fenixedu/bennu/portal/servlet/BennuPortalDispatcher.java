@@ -66,6 +66,13 @@ public class BennuPortalDispatcher implements Filter {
 
     /**
      * Returns the selected {@link MenuFunctionality} from the given request, or null if no functionality is selected.
+     * 
+     * @param request
+     *            The request for which to retrieve the functionality
+     * @return
+     *         The functionality associated with the given request. {@code null} if no functionality is mapped.
+     * @throws NullPointerException
+     *             If {@code request} is {@code null}
      */
     public static MenuFunctionality getSelectedFunctionality(HttpServletRequest request) {
         return (MenuFunctionality) request.getAttribute("PORTAL_SELECTED_FUNCTIONALITY");
@@ -73,6 +80,13 @@ public class BennuPortalDispatcher implements Filter {
 
     /**
      * Selects the given {@link MenuFunctionality} for the given request.
+     * 
+     * @param request
+     *            The request for which to select the given functionality
+     * @param functionality
+     *            The functionality to select
+     * @throws NullPointerException
+     *             If {@code request} is {@code null}
      */
     public static void selectFunctionality(HttpServletRequest request, MenuFunctionality functionality) {
         request.setAttribute("PORTAL_SELECTED_FUNCTIONALITY", functionality);

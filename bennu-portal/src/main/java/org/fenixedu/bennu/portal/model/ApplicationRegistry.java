@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fenixedu.bennu.portal.servlet.PortalBackend;
+
 /**
- * Central place for {@link PortalBackends} to register their specific {@link Applications}.
+ * Central place for {@link PortalBackend}s to register their specific {@link Application}s.
  * 
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
@@ -32,6 +34,9 @@ public final class ApplicationRegistry {
 
     /**
      * Returns all registered {@link Application}s
+     * 
+     * @return
+     *         An immutable collection with all the registered applications
      */
     public static Collection<Application> availableApplications() {
         return Collections.unmodifiableCollection(applications.values());
@@ -42,6 +47,8 @@ public final class ApplicationRegistry {
      * 
      * @param key
      *            The key of the desired application
+     * @return
+     *         The application for the given key
      * @throws IllegalStateException
      *             If no application with the given key is registered
      */
