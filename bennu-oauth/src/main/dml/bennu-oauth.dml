@@ -1,0 +1,117 @@
+package org.fenixedu.bennu.oauth.domain;
+
+enum org.fenixedu.bennu.oauth.domain.ExternalApplicationState as ExternalApplicationState;
+
+public class ExternalApplication  {
+    public String name (REQUIRED);
+    protected String secret (REQUIRED);
+    public String redirectUrl (REQUIRED);
+    public String description (REQUIRED);
+    public String siteUrl;
+    public bytearray logo;
+    protected ExternalApplicationState state;
+    public String authorName;
+}
+
+public class ServiceApplication extends ExternalApplication {
+    JsonElement ipAddresses;
+}
+
+class ServiceApplicationAuthorization {
+    DateTime creationDate (REQUIRED);
+    String accessToken (REQUIRED);
+}
+
+class ApplicationUserSession {
+    DateTime creationDate;
+    String code;
+    String accessToken;
+    String refreshToken;
+    String deviceId;
+}
+
+class ApplicationUserAuthorization {
+}
+
+class ExternalApplicationScope {
+    String scopeKey (REQUIRED);
+    LocalizedString name (REQUIRED);
+    LocalizedString description (REQUIRED);
+    Boolean service (REQUIRED);
+}
+
+relation BennuServiceApplications {
+    .org.fenixedu.bennu.core.domain.Bennu playsRole bennuServiceApplication;  
+    ServiceApplication playsRole serviceApplication {
+        multiplicity *;
+    }
+}
+
+relation ServiceApplicationAuthorizations {
+    ServiceApplicationAuthorization playsRole serviceAuthorization {
+        multiplicity *;
+    }
+    
+    ServiceApplication playsRole serviceApplication {
+        multiplicity 1..1;
+    }
+}
+
+relation BennuExternalApplications {
+    .org.fenixedu.bennu.core.domain.Bennu playsRole bennu;  
+    ExternalApplication playsRole applications {
+        multiplicity *;
+    }
+}
+
+relation BennuScopes {
+    .org.fenixedu.bennu.core.domain.Bennu playsRole bennu;  
+    ExternalApplicationScope playsRole scopes {
+        multiplicity *;
+    }
+}
+
+relation ApplicationAuthor {
+    .org.fenixedu.bennu.core.domain.User playsRole author {
+        multiplicity 1;
+    }
+    ExternalApplication playsRole ownedApplication {
+        multiplicity *;
+    }
+}
+
+relation PermissionsScope {
+    ExternalApplicationScope playsRole scopes {
+        multiplicity *;
+    }
+    ExternalApplication playsRole application {
+        multiplicity *;
+    }
+}
+
+relation ApplicationUserAuthorization {
+    ApplicationUserAuthorization playsRole applicationUserAuthorization {
+        multiplicity *;
+    }
+    ExternalApplication playsRole application {
+        multiplicity 1;
+    }
+}
+
+relation UserApplicationAuthorization {
+    ApplicationUserAuthorization playsRole applicationUserAuthorization {
+        multiplicity *;
+    }
+    .org.fenixedu.bennu.core.domain.User playsRole user {
+        multiplicity 1;
+    }
+}
+
+relation ApplicationUserAuthorizationSession {
+    ApplicationUserAuthorization playsRole applicationUserAuthorization {
+        multiplicity 1..1;
+    }
+    ApplicationUserSession playsRole session {
+        multiplicity *;
+    }
+}

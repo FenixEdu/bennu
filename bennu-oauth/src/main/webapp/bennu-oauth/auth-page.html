@@ -1,0 +1,109 @@
+<!--
+
+    Copyright © 2015 Instituto Superior Técnico
+
+    This file is part of Bennu OAuth.
+
+    Bennu OAuth is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Bennu OAuth is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with Bennu OAuth.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<!DOCTYPE html>
+<html dir="ltr" lang="{{currentLocale}}">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Language" content="{{currentLocale.language}}" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<title>Login · {{config.applicationTitle.content}}</title>
+
+<link href="{{contextPath}}/themes/{{config.theme}}/css/style.css"
+	rel="stylesheet">
+<link rel="shortcut icon" type="image/x-icon"
+	href="{{contextPath}}/api/bennu-portal/configuration/favicon">
+
+</head>
+
+<body>
+	<div class="navbar navbar-default hidden-xs fenixedu-bar">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="{{contextPath}}/" target="_blank">{{config.applicationTitle.content}}</a>
+				</li>
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a><img src="{{loggedUser.profile.avatarUrl}}?s=20"
+							width="20" heigth="20" style="margin-right: 10px"
+							class="img-circle" />{{loggedUser.profile.displayName}}</a></li>
+					<li class="active"><a href="{{contextPath}}/logout">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+
+		<div class="col-sm-6">
+			<hr class="visible-xs" />
+			<img
+				src="{{contextPath}}/api/bennu-oauth/applications/{{app.externalId}}/logo"
+				width="75" height="75" class="img-thumbnail" />
+
+			<h3>
+				<a href="{{app.siteUrl}}" target="_blank">{{app.name}}</a>
+			</h3>
+
+			<p class="small">{{app.authorApplicationName}}</p>
+
+			{{app.description}}
+		</div>
+		<div class="col-sm-6">
+
+			<div class="login-content">
+				<h4>{{i18n('resources.OAuthResources', 'message.authorize.app', app.name)}}</h4>
+
+				<p>{{i18n('resources.OAuthResources', 'message.scopes.header')}}</p>
+				<ul>
+				{% for scope in app.scopesSet %}
+					<li><b>{{scope.name.content}}</b> - {{scope.description.content}}</li>
+				{% endfor %}
+				</ul>
+				<form action="{{contextPath}}/oauth/userconfirmation" method="POST">
+					<input type="hidden" name="client_id" value="{{app.externalId}}" />
+					<input type="hidden" name="redirect_uri" value="{{app.redirectUrl}}" />
+					
+					<a href="{{contextPath}}/logout" class="btn btn-default">{{i18n('resources.OAuthResources', 'label.cancel')}}</a>
+					<button type="submit" class="btn btn-primary">{{i18n('resources.OAuthResources', 'label.authorize')}}</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+
+<style>
+.container {
+	margin: 80px auto 0 auto;
+	background-color: white;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	border-radius: 5px;
+	max-width: 750px;
+	border: solid 1px #eee;
+}
+</style>
+
+</html>

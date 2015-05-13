@@ -1,0 +1,95 @@
+<!--
+
+    Copyright © 2015 Instituto Superior Técnico
+
+    This file is part of Bennu OAuth.
+
+    Bennu OAuth is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Bennu OAuth is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with Bennu OAuth.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<h2 class="page-header" translate>Authorizations by Application</h2>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th class="col-sm-1 text-center">
+				<a href="" ng-click="predicate = 'date'; reverse=!reverse">
+					<span translate>Date</span>
+				</a>
+			</th>
+					
+			<th class="col-sm-2 text-center">
+				<a href="" ng-click="predicate = 'device'; reverse=!reverse">
+					<span translate>Device</span>
+				</a>
+			</th>					
+					
+			<th class="col-sm-4 text-center">Refresh Token</th>
+			<th class="col-sm-4 text-center">Access Token</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="session in sessions | orderBy:predicate:reverse">
+
+			<td class="col-sm-2 text-center" style="vertical-align: middle">{{session.date
+				| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+			<td class="col-sm-2 text-center" style="vertical-align: middle">{{session.device}}</td>
+			<td class="col-sm-4 text-center" style="vertical-align: middle">{{session.refresh_token}}</td>
+			<td class="col-sm-4 text-center" style="vertical-align: middle">{{session.access_token}}</td>
+
+
+
+			<td class="col-sm-1 text-center" style="vertical-align: middle">
+				<button data-target="#modal-revoke-menu" role="button"
+					class="btn btn-danger btn-sm"
+					ng-click="showRevokeSessionModal(session)" translate>Revoke</button>
+			</td>
+
+		</tr>
+	</tbody>
+</table>
+
+<div id="modal-revoke-session-menu" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3 translate>Revoke Session</h3>
+			</div>
+			<div class="modal-body">
+				<p translate>Do you wish to revoke the selected session?</p>
+
+			</div>
+			<div class="modal-footer">
+				<button data-dismiss="modal" class="btn secondary btn-sm" translate>No</button>
+
+				<button ng-click="revokeSession()" data-dismiss="modal"
+					class="btn btn-danger btn-sm" translate>Yes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+.table {
+	table-layout: fixed;
+	word-wrap: break-word;
+}
+
+a {
+	color: #4b565c;
+}
+</style>
