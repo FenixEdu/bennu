@@ -161,5 +161,6 @@
         <module>theme</module>
         <module>bennu-oauth</module>
         <module>bennu-oauth-test</module>
+        <module>bennu-spring</module>
     </modules>
 </project>
