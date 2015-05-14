@@ -19,24 +19,6 @@
                 <version>1.7</version>
                 <executions>
                     <execution>
-                        <id>default-minify</id>
-                        <phase>compile</phase>
-                        <configuration>
-                            <charset>utf-8</charset>
-                            <jsSourceDir>bennu-portal</jsSourceDir>
-                            <jsSourceFiles>
-                                <jsSourceFile>portal.js</jsSourceFile>
-                            </jsSourceFiles>
-                            <webappTargetDir>${project.build.outputDirectory}/META-INF/resources</webappTargetDir>
-                            <jsTargetDir />
-                            <jsFinalFile>portal.js</jsFinalFile>
-                            <nosuffix>true</nosuffix>
-                        </configuration>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>toolkit</id>
                         <phase>compile</phase>
                         <configuration>
