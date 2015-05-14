@@ -35,7 +35,8 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
         setApplicationCopyright(new LocalizedString(I18N.getLocale(), "Organization Copyright"));
         setHtmlTitle(getApplicationTitle());
         setTheme("default");
-        try (InputStream stream = this.getClass().getResourceAsStream("/img/logo_bennu.svg")) {
+        try (InputStream stream =
+                PortalConfiguration.class.getClassLoader().getResourceAsStream("META-INF/resources/img/logo_bennu.svg")) {
             if (stream == null) {
                 logger.error("Default logo not found in: img/logo_bennu.svg");
             } else {
@@ -45,7 +46,8 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
         } catch (IOException e) {
             logger.error("Default logo could not be read from: img/logo_bennu.svg");
         }
-        try (InputStream stream = this.getClass().getResourceAsStream("/img/favicon_bennu.png")) {
+        try (InputStream stream =
+                PortalConfiguration.class.getClassLoader().getResourceAsStream("META-INF/resources/img/favicon_bennu.png")) {
             if (stream == null) {
                 logger.error("Default favicon not found in: img/favicon_bennu.png");
             } else {
