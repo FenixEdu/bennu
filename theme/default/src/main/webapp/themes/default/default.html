@@ -79,7 +79,7 @@
 					<ul class="nav nav-tabs">
 						{% lazyFor item in config.menu.userMenuStream %}
 						<li class="menu {% if item == selectedTopLevel %}active{% endif %}" menu="{{item.id}}">
-							<a href="{{contextPath}}/{{item.path}}" alt="{{item.description.content}}">{{item.title.content}}</a>
+							<a href="{{contextPath}}/{{item.path}}" alt="{{item.description.content}}"><span class="{{item.icon}}"></span> {{item.title.content}}</a>
 						</li>
 						{% endLazyFor %}
 					</ul>
@@ -94,7 +94,7 @@
 					<ul class="nav nav-pills" menu="{{id}}">
 						{% lazyFor child in selectedTopLevel.userMenuStream %}
 						<li class="submenu">
-							<a href="{{contextPath}}{{child.fullPath}}" alt="{{ child.description.content }}"><span>{{ child.title.content }}</span></a>
+							<a href="{{contextPath}}{{child.fullPath}}" alt="{{ child.description.content }}"><span><span class="{{child.icon}}"></span> {{ child.title.content }}</span></a>
 						</li>
 						{% endLazyFor %}
 					</ul>

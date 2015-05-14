@@ -12,7 +12,7 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
   }
   $scope.saveSelected = function() {
     var data = { title: $scope.selected.title, description: $scope.selected.description, visible: $scope.selected.visible,
-                 layout: $scope.selected.layout, accessExpression: $scope.selected.accessExpression };
+                 layout: $scope.selected.layout, accessExpression: $scope.selected.accessExpression, icon: $scope.selected.icon };
     var promise;
     if($scope.selected.id) {
       promise = $http.put(contextPath + "/api/bennu-portal/menu/" + $scope.selected.id, data);

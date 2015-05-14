@@ -32,6 +32,11 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
         } else {
             item.setLayout(null);
         }
+        if (jsonObj.has("icon")) {
+            item.setIcon(jsonObj.get("icon").getAsString());
+        } else {
+            item.setIcon(null);
+        }
         if (jsonObj.has("visible")) {
             item.setVisible(jsonObj.get("visible").getAsBoolean());
         }
@@ -52,6 +57,7 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
         json.addProperty("functionality", obj.isMenuFunctionality());
         json.addProperty("visible", obj.isVisible());
         json.addProperty("layout", obj.getLayout());
+        json.addProperty("icon", obj.getIcon());
         json.add("description", ctx.view(obj.getDescription()));
         json.add("title", ctx.view(obj.getTitle()));
 

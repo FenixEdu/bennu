@@ -33,6 +33,7 @@ public class MenuItem {
 	protected String fullPath (REQUIRED);
 	public Boolean visible (REQUIRED);
 	public String layout;
+	public String icon;
 }
 
 public class MenuContainer extends MenuItem {

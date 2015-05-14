@@ -64,6 +64,13 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<label class="col-sm-2 control-label" for="icon">Icon</label>
+		<div class="col-sm-10">
+			<input type="text" name="icon" ng-model="selected.icon"
+				placeholder="Icon" class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
 		<label class="col-sm-2 control-label" for="visible">Visible</label>
 		<div class="col-sm-10">
 			<input type="checkbox" name="visible" ng-model="selected.visible" readonly="true">
