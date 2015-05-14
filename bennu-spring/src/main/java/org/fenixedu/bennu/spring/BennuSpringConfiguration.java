@@ -102,6 +102,10 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport impleme
         source.setBasenames(baseNames);
         // Reload resources only when in development mode
         source.setCacheSeconds(bennuCoreConfiguration().developmentMode() ? 1 : -1);
+
+        // Allow using the message code as the message itself, as it is preferable
+        // to have an interface without a proper label, than one that doesn't work at all
+        source.setUseCodeAsDefaultMessage(true);
         return source;
     }
 
