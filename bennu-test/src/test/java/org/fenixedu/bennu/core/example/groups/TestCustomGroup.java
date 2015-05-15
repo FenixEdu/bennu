@@ -3,6 +3,7 @@ package org.fenixedu.bennu.core.example.groups;
 import static org.junit.Assert.assertNotNull;
 
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

@@ -5,9 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentGroupStrategy;
-import org.fenixedu.bennu.core.groups.AnonymousGroup;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -35,14 +34,14 @@ public class TestAnonymous {
 
     @Test
     public void membership() {
-        assertTrue(AnonymousGroup.get().getMembers().isEmpty());
-        assertTrue(AnonymousGroup.get().isMember(null));
-        assertFalse(AnonymousGroup.get().isMember(user1));
+        assertTrue(Group.anonymous().getMembers().isEmpty());
+        assertTrue(Group.anonymous().isMember(null));
+        assertFalse(Group.anonymous().isMember(user1));
     }
 
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
-        assertEquals(AnonymousGroup.get().toPersistentGroup(), PersistentGroupStrategy.getInstance(AnonymousGroup.get()));
+        assertTrue(Group.anonymous().toPersistentGroup() != null);
     }
 }

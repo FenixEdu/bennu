@@ -6,11 +6,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentGroupStrategy;
 import org.fenixedu.bennu.core.groups.Group;
-import org.fenixedu.bennu.core.groups.LoggedGroup;
-import org.fenixedu.bennu.core.groups.UnionGroup;
-import org.fenixedu.bennu.core.groups.UserGroup;
+import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -39,26 +36,24 @@ public class TestLogged {
     @Test
     @Atomic(mode = TxMode.READ)
     public void membership() {
-        assertEquals(LoggedGroup.get().getMembers(), Bennu.getInstance().getUserSet());
-        assertTrue(LoggedGroup.get().isMember(user1));
-        assertFalse(LoggedGroup.get().isMember(null));
+        assertEquals(Group.logged().getMembers(), Bennu.getInstance().getUserSet());
+        assertTrue(Group.logged().isMember(user1));
+        assertFalse(Group.logged().isMember(null));
     }
 
     @Test
     @Atomic(mode = TxMode.READ)
     public void loggedCompression() {
-        assertEquals(LoggedGroup.get(), LoggedGroup.get().grant(user1));
-        assertEquals(LoggedGroup.get(), UserGroup.of(user1).or(LoggedGroup.get()));
-
-        assertEquals(UserGroup.of(user1), LoggedGroup.get().and(UserGroup.of(user1)));
-        assertEquals(UserGroup.of(user1), UserGroup.of(user1).and(LoggedGroup.get()));
-
-        assertEquals(LoggedGroup.get(), UnionGroup.of(UserGroup.of(user1), LoggedGroup.get()));
+        assertEquals(Group.logged(), Group.logged().grant(user1));
+        assertEquals(Group.logged(), user1.groupOf().or(Group.logged()));
+        assertEquals(user1.groupOf(), Group.logged().and(user1.groupOf()));
+        assertEquals(user1.groupOf(), user1.groupOf().and(Group.logged()));
+        assertEquals(Group.logged(), user1.groupOf().or(Group.logged()));
     }
 
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
-        assertEquals(LoggedGroup.get().toPersistentGroup(), PersistentGroupStrategy.getInstance(LoggedGroup.get()));
+        assertTrue(Group.logged().toPersistentGroup() != null);
     }
 }

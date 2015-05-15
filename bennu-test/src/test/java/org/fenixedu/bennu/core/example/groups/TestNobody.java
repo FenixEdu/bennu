@@ -5,9 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentGroupStrategy;
 import org.fenixedu.bennu.core.groups.Group;
-import org.fenixedu.bennu.core.groups.NobodyGroup;
+import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,14 +35,14 @@ public class TestNobody {
     @Test
     @Atomic(mode = TxMode.READ)
     public void membership() {
-        assertTrue(NobodyGroup.get().getMembers().isEmpty());
-        assertFalse(NobodyGroup.get().isMember(user1));
-        assertFalse(NobodyGroup.get().isMember(null));
+        assertTrue(Group.nobody().getMembers().isEmpty());
+        assertFalse(Group.nobody().isMember(user1));
+        assertFalse(Group.nobody().isMember(null));
     }
 
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
-        assertEquals(NobodyGroup.get().toPersistentGroup(), PersistentGroupStrategy.getInstance(NobodyGroup.get()));
+        assertTrue(Group.nobody().toPersistentGroup() != null);
     }
 }

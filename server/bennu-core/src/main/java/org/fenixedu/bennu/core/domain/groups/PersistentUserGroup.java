@@ -39,7 +39,7 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
 
     @Override
     public Group toGroup() {
-        return new DomainBackedUserGroup(this);
+        return Group.users(getMemberSet().stream());
     }
 
     @Override

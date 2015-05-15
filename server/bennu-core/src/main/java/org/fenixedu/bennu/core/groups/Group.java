@@ -1,8 +1,12 @@
 package org.fenixedu.bennu.core.groups;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
@@ -52,6 +56,43 @@ import com.google.common.collect.ImmutableSet;
  */
 public abstract class Group implements Serializable, Comparable<Group> {
     private static final long serialVersionUID = 1177210800165802668L;
+
+    private static final Group ANONYMOUS = new AnonymousGroup();
+    private static final Group ANYONE = new AnyoneGroup();
+    private static final Group LOGGED = new LoggedGroup();
+    private static final Group NOBODY = new NobodyGroup();
+
+    public static final Group anonymous() {
+        return ANONYMOUS;
+    }
+
+    public static final Group anyone() {
+        return ANYONE;
+    }
+
+    public static final Group logged() {
+        return LOGGED;
+    }
+
+    public static final Group nobody() {
+        return NOBODY;
+    }
+
+    public static Group users(User... members) {
+        return users(Arrays.stream(members));
+    }
+
+    public static Group users(Stream<User> members) {
+        Set<User> set = members.collect(Collectors.toSet());
+        if (set.size() == 0) {
+            return NOBODY;
+        }
+        return new UserGroup(Collections.unmodifiableSet(set));
+    }
+
+    public static DynamicGroup dynamic(String name) {
+        return new DynamicGroup(name);
+    }
 
     /**
      * Human readable, internationalized textual representation of this group.
@@ -136,7 +177,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
             return this;
         }
         if (group instanceof NobodyGroup) {
-            return NobodyGroup.get();
+            return group;
         }
         if (group instanceof AnyoneGroup) {
             return this;
@@ -162,7 +203,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
             return this;
         }
         if (group instanceof AnyoneGroup) {
-            return AnyoneGroup.get();
+            return group;
         }
         if (group instanceof LoggedGroup && !this.isMember(null)) {
             return group;
@@ -179,13 +220,13 @@ public abstract class Group implements Serializable, Comparable<Group> {
      */
     public Group minus(Group group) {
         if (this.equals(group)) {
-            return NobodyGroup.get();
+            return NOBODY;
         }
         if (group instanceof NobodyGroup) {
             return this;
         }
         if (group instanceof AnyoneGroup) {
-            return NobodyGroup.get();
+            return NOBODY;
         }
         return new DifferenceGroup(this, ImmutableSet.of(group));
     }
@@ -196,7 +237,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      * @return inverse group
      */
     public Group not() {
-        return NegationGroup.not(this);
+        return new NegationGroup(this);
     }
 
     /**
@@ -207,7 +248,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      * @return group resulting of the union between '{@code this}' and the group of the given user
      */
     public Group grant(User user) {
-        return or(UserGroup.of(user));
+        return or(user.groupOf());
     }
 
     /**
@@ -218,7 +259,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      * @return group resulting of the difference between '{@code this}' and the group of the given user
      */
     public Group revoke(User user) {
-        return minus(UserGroup.of(user));
+        return minus(user.groupOf());
     }
 
     /**
@@ -232,7 +273,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      */
     public static Group parse(String expression) {
         if (Strings.isNullOrEmpty(expression)) {
-            return NobodyGroup.get();
+            return NOBODY;
         }
         try {
             GroupLexer lexer = new GroupLexer(new ANTLRInputStream(expression));

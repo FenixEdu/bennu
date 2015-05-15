@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.fenixedu.bennu.core.groups.DifferenceGroup;
 import org.fenixedu.bennu.core.groups.Group;
 
 /**
@@ -39,7 +38,7 @@ public final class PersistentDifferenceGroup extends PersistentDifferenceGroup_B
 
     @Override
     public Group toGroup() {
-        return DifferenceGroup.between(getFirst().toGroup(), getRestSet().stream().map(g -> g.toGroup()));
+        return getRestSet().stream().map(PersistentGroup::toGroup).reduce(getFirst().toGroup(), Group::minus);
     }
 
     @Override

@@ -5,9 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentGroupStrategy;
-import org.fenixedu.bennu.core.groups.AnyoneGroup;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,14 +35,14 @@ public class TestAnyone {
     @Test
     @Atomic(mode = TxMode.READ)
     public void membership() {
-        assertEquals(AnyoneGroup.get().getMembers(), Bennu.getInstance().getUserSet());
-        assertTrue(AnyoneGroup.get().isMember(user1));
-        assertTrue(AnyoneGroup.get().isMember(null));
+        assertEquals(Group.anyone().getMembers(), Bennu.getInstance().getUserSet());
+        assertTrue(Group.anyone().isMember(user1));
+        assertTrue(Group.anyone().isMember(null));
     }
 
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
-        assertEquals(AnyoneGroup.get().toPersistentGroup(), PersistentGroupStrategy.getInstance(AnyoneGroup.get()));
+        assertTrue(Group.anyone().toPersistentGroup() != null);
     }
 }

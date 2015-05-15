@@ -20,9 +20,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentIntersectionGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
@@ -35,26 +35,14 @@ import com.google.common.collect.ImmutableSet;
  * @author Pedro Santos (pedro.miguel.santos@tecnico.ulisboa.pt)
  * @see Group
  */
-public final class IntersectionGroup extends Group {
+final class IntersectionGroup extends Group {
     private static final long serialVersionUID = -6302479291671819210L;
 
     private final ImmutableSet<Group> children;
 
-    protected IntersectionGroup(ImmutableSet<Group> children) {
+    IntersectionGroup(ImmutableSet<Group> children) {
         super();
         this.children = children;
-    }
-
-    public static Group of(Set<Group> groups) {
-        return of(groups.stream());
-    }
-
-    public static Group of(Group... groups) {
-        return of(Stream.of(groups));
-    }
-
-    public static Group of(Stream<Group> groups) {
-        return groups.reduce((result, group) -> result.and(group)).orElseGet(NobodyGroup::get);
     }
 
     @Override
@@ -68,12 +56,8 @@ public final class IntersectionGroup extends Group {
         return children.stream().map(g -> g.getExpression()).collect(Collectors.joining(" & "));
     }
 
-    public Set<Group> getChildren() {
-        return children;
-    }
-
     @Override
-    public PersistentIntersectionGroup toPersistentGroup() {
+    public PersistentGroup toPersistentGroup() {
         return PersistentIntersectionGroup.getInstance(children.stream().map(g -> g.toPersistentGroup())
                 .collect(Collectors.toSet()));
     }
@@ -136,7 +120,7 @@ public final class IntersectionGroup extends Group {
             return this;
         }
         if (group instanceof NobodyGroup) {
-            return NobodyGroup.get();
+            return Group.nobody();
         }
         if (group instanceof AnyoneGroup) {
             return this;

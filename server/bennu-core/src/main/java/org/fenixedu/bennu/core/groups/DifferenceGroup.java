@@ -20,10 +20,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentDifferenceGroup;
+import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
@@ -35,29 +35,17 @@ import com.google.common.collect.ImmutableSet;
  * @author Pedro Santos (pedro.miguel.santos@tecnico.ulisboa.pt)
  * @see Group
  */
-public final class DifferenceGroup extends Group {
+final class DifferenceGroup extends Group {
     private static final long serialVersionUID = 7610837328092733166L;
 
     private final Group first;
 
     private final ImmutableSet<Group> rest;
 
-    protected DifferenceGroup(Group first, ImmutableSet<Group> rest) {
+    DifferenceGroup(Group first, ImmutableSet<Group> rest) {
         super();
         this.first = first;
         this.rest = rest;
-    }
-
-    public static Group between(Group first, Set<Group> rest) {
-        return between(first, rest.stream());
-    }
-
-    public static Group between(Group first, Group... rest) {
-        return between(first, Stream.of(rest));
-    }
-
-    public static Group between(Group first, Stream<Group> rest) {
-        return rest.reduce(first, (result, group) -> result.minus(group));
     }
 
     @Override
@@ -72,16 +60,8 @@ public final class DifferenceGroup extends Group {
         return first.getExpression() + " - " + rest.stream().map(g -> g.getExpression()).collect(Collectors.joining(" - "));
     }
 
-    public Group getFirst() {
-        return first;
-    }
-
-    public Set<Group> getRest() {
-        return rest;
-    }
-
     @Override
-    public PersistentDifferenceGroup toPersistentGroup() {
+    public PersistentGroup toPersistentGroup() {
         return PersistentDifferenceGroup.getInstance(first.toPersistentGroup(), rest.stream().map(g -> g.toPersistentGroup())
                 .collect(Collectors.toSet()));
     }
@@ -135,13 +115,13 @@ public final class DifferenceGroup extends Group {
     @Override
     public Group minus(Group group) {
         if (this.equals(group)) {
-            return NobodyGroup.get();
+            return Group.nobody();
         }
         if (group instanceof NobodyGroup) {
             return this;
         }
         if (group instanceof AnyoneGroup) {
-            return NobodyGroup.get();
+            return Group.nobody();
         }
         return new DifferenceGroup(first, ImmutableSet.<Group> builder().addAll(rest).add(group).build());
     }

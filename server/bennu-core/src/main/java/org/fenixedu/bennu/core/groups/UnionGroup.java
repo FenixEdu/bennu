@@ -19,9 +19,9 @@ package org.fenixedu.bennu.core.groups;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentUnionGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
@@ -34,26 +34,14 @@ import com.google.common.collect.ImmutableSet;
  * @author Pedro Santos (pedro.miguel.santos@tecnico.ulisboa.pt)
  * @see Group
  */
-public final class UnionGroup extends Group {
+final class UnionGroup extends Group {
     private static final long serialVersionUID = -4752173215899798915L;
 
     private final ImmutableSet<Group> children;
 
-    protected UnionGroup(ImmutableSet<Group> children) {
+    UnionGroup(ImmutableSet<Group> children) {
         super();
         this.children = children;
-    }
-
-    public static Group of(Set<Group> groups) {
-        return of(groups.stream());
-    }
-
-    public static Group of(Group... groups) {
-        return of(Stream.of(groups));
-    }
-
-    public static Group of(Stream<Group> groups) {
-        return groups.reduce(NobodyGroup.get(), (result, group) -> result.or(group));
     }
 
     @Override
@@ -67,12 +55,8 @@ public final class UnionGroup extends Group {
         return children.stream().map(g -> g.getExpression()).collect(Collectors.joining(" | "));
     }
 
-    public Set<Group> getChildren() {
-        return children;
-    }
-
     @Override
-    public PersistentUnionGroup toPersistentGroup() {
+    public PersistentGroup toPersistentGroup() {
         return PersistentUnionGroup.getInstance(children.stream().map(g -> g.toPersistentGroup()).collect(Collectors.toSet()));
     }
 
@@ -123,7 +107,7 @@ public final class UnionGroup extends Group {
             return this;
         }
         if (group instanceof AnyoneGroup) {
-            return AnyoneGroup.get();
+            return Group.anyone();
         }
         if (group instanceof UnionGroup) {
             return new UnionGroup(ImmutableSet.<Group> builder().addAll(children).addAll(((UnionGroup) group).children).build());

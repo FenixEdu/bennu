@@ -18,16 +18,15 @@ package org.fenixedu.bennu.core.groups;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.annotation.GroupArgument;
 import org.fenixedu.bennu.core.annotation.GroupArgumentParser;
 import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentUserGroup;
 import org.joda.time.DateTime;
-
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 
 /**
  * Groups of an explicit set of users. Order is not relevant.
@@ -36,7 +35,7 @@ import com.google.common.collect.Sets;
  * @see Group
  */
 @GroupOperator("U")
-public/* final */class UserGroup extends CustomGroup {
+final class UserGroup extends CustomGroup {
     private static final long serialVersionUID = -6178473769354461857L;
 
     @GroupArgumentParser
@@ -60,54 +59,34 @@ public/* final */class UserGroup extends CustomGroup {
     @GroupArgument("")
     private Set<User> members;
 
-    protected UserGroup() {
+    UserGroup() {
         super();
     }
 
-    private UserGroup(ImmutableSet<User> members) {
+    UserGroup(Set<User> members) {
+        // this set must be immutable
         super();
         this.members = members;
     }
 
-    public static Group of(ImmutableSet<User> members) {
-        if (members.isEmpty()) {
-            return NobodyGroup.get();
-        }
-        return new UserGroup(members);
-    }
-
-    public static Group of(Set<User> members) {
-        if (members.isEmpty()) {
-            return NobodyGroup.get();
-        }
-        return new UserGroup(ImmutableSet.copyOf(members));
-    }
-
-    public static Group of(User... members) {
-        if (members.length == 0) {
-            return NobodyGroup.get();
-        }
-        return new UserGroup(ImmutableSet.copyOf(members));
-    }
-
     @Override
     public String getPresentationName() {
-        return members().stream().map(User::getUsername).collect(Collectors.joining(", "));
+        return members.stream().map(User::getUsername).collect(Collectors.joining(", "));
     }
 
     @Override
-    public PersistentUserGroup toPersistentGroup() {
-        return PersistentUserGroup.getInstance(members());
+    public PersistentGroup toPersistentGroup() {
+        return PersistentUserGroup.getInstance(members);
     }
 
     @Override
     public Set<User> getMembers() {
-        return members();
+        return members;
     }
 
     @Override
     public boolean isMember(User user) {
-        return user != null && members().contains(user);
+        return user != null && members.contains(user);
     }
 
     @Override
@@ -123,7 +102,7 @@ public/* final */class UserGroup extends CustomGroup {
     @Override
     public Group and(Group group) {
         if (group instanceof UserGroup) {
-            return UserGroup.of(Sets.intersection(members(), ((UserGroup) group).members()));
+            return Group.users(members.stream().filter(user -> ((UserGroup) group).members.contains(user)));
         }
         return super.and(group);
     }
@@ -131,7 +110,7 @@ public/* final */class UserGroup extends CustomGroup {
     @Override
     public Group or(Group group) {
         if (group instanceof UserGroup) {
-            return UserGroup.of(Sets.union(members(), ((UserGroup) group).members()));
+            return Group.users(Stream.concat(members.stream(), ((UserGroup) group).members.stream()).distinct());
         }
         return super.or(group);
     }
@@ -139,7 +118,7 @@ public/* final */class UserGroup extends CustomGroup {
     @Override
     public Group minus(Group group) {
         if (group instanceof UserGroup) {
-            return UserGroup.of(Sets.difference(members(), ((UserGroup) group).members()));
+            return Group.users(members.stream().filter(user -> !((UserGroup) group).members.contains(user)));
         }
         return super.minus(group);
     }
@@ -147,17 +126,13 @@ public/* final */class UserGroup extends CustomGroup {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserGroup) {
-            return members().equals(((UserGroup) object).members());
+            return members.equals(((UserGroup) object).members);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return members().hashCode();
-    }
-
-    protected Set<User> members() {
-        return members;
+        return members.hashCode();
     }
 }
