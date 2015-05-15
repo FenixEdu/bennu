@@ -1,9 +1,12 @@
 package org.fenixedu.bennu.io.servlets;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,6 +30,7 @@ public class FileDownloadServlet extends HttpServlet {
     private static final long serialVersionUID = -6697201298218837492L;
 
     static final String SERVLET_PATH = "/downloadFile/";
+    private static final Pattern RANGE_PATTERN = Pattern.compile("bytes=(?<start>\\d*)-(?<end>\\d*)");
 
     @Override
     public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException, ServletException {
@@ -42,23 +46,64 @@ public class FileDownloadServlet extends HttpServlet {
                 String etag = "W/\"" + file.getExternalId() + "\"";
                 response.setHeader("ETag", etag);
                 response.setHeader("Cache-Control", "max-age=43200");
+                response.setHeader("Accept-Ranges", "bytes");
+                response.setContentType(file.getContentType());
+
                 if (etag.equals(request.getHeader("If-None-Match"))) {
                     response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     return;
                 }
-                if (sendFile(file, request, response)) {
+
+                long length = file.getSize();
+                long start = 0;
+                long end = length - 1;
+
+                String range = request.getHeader("Range");
+                if (range != null) {
+                    Matcher matcher = RANGE_PATTERN.matcher(range);
+                    boolean match = matcher.matches();
+                    if (match) {
+                        try {
+                            String startGroup = matcher.group("start");
+                            start = startGroup.isEmpty() ? start : Long.valueOf(startGroup);
+                            start = start < 0 ? 0 : start;
+
+                            String endGroup = matcher.group("end");
+                            end = endGroup.isEmpty() ? end : Long.valueOf(endGroup);
+                            end = end > length - 1 ? length - 1 : end;
+                        } catch (NumberFormatException e) {
+                            match = false;
+                        }
+                    }
+                    if (!match) {
+                        response.setHeader("Content-Range", "bytes */" + length); // Required in 416.
+                        response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+                        return;
+                    }
+                }
+
+                long contentLength = end - start + 1;
+
+                response.setHeader("Content-Length", Long.toString(contentLength));
+                if (range != null) {
+                    response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + length);
+                    response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                }
+
+                if (sendFile(file, request, response, start, end)) {
                     return;
                 }
-                byte[] content = file.getContent();
-                if (content != null) {
-                    response.setContentType(file.getContentType());
-                    response.setContentLength(file.getSize().intValue());
-                    try (OutputStream stream = response.getOutputStream()) {
-                        stream.write(content);
-                        stream.flush();
+                try (InputStream stream = file.getStream()) {
+                    if (stream != null) {
+                        try (OutputStream out = response.getOutputStream()) {
+                            copyStream(stream, out, start, contentLength);
+                            out.flush();
+                        }
+                    } else {
+                        response.sendError(HttpServletResponse.SC_NO_CONTENT, "File empty");
                     }
-                } else {
-                    response.sendError(HttpServletResponse.SC_NO_CONTENT, "File empty");
                 }
             } else if (file.isPrivate() && !Authenticate.isLogged()
                     && request.getAttribute(CasAuthenticationFilter.AUTHENTICATION_EXCEPTION_KEY) == null) {
@@ -66,6 +111,27 @@ public class FileDownloadServlet extends HttpServlet {
                 response.sendRedirect(sendLoginRedirect(file));
             } else {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "File not accessible");
+            }
+        }
+    }
+
+    private static final int BUF_SIZE = 0x1000; // 4K
+
+    private void copyStream(InputStream in, OutputStream out, long start, long bytesToRead) throws IOException {
+        in.skip(start);
+        byte buffer[] = new byte[BUF_SIZE];
+        int len = buffer.length;
+        while ((bytesToRead > 0) && (len >= buffer.length)) {
+            len = in.read(buffer);
+            if (bytesToRead >= len) {
+                out.write(buffer, 0, len);
+                bytesToRead -= len;
+            } else {
+                out.write(buffer, 0, (int) bytesToRead);
+                bytesToRead = 0;
+            }
+            if (len < buffer.length) {
+                break;
             }
         }
     }
@@ -80,11 +146,11 @@ public class FileDownloadServlet extends HttpServlet {
      * be read to the Java Heap, only to be written to a socket, thus greatly
      * reducing memory consumption.
      */
-    private boolean sendFile(GenericFile file, HttpServletRequest request, HttpServletResponse response) {
+    private boolean sendFile(GenericFile file, HttpServletRequest request, HttpServletResponse response, long start, long end) {
         if (supportsSendfile(request)) {
             Optional<String> filePath = FileStorage.sendfilePath(file);
             if (filePath.isPresent()) {
-                handleSendfile(file, filePath.get(), request, response);
+                handleSendfile(file, filePath.get(), request, response, start, end);
                 return true;
             } else {
                 return false;
@@ -100,13 +166,12 @@ public class FileDownloadServlet extends HttpServlet {
      * For now, we only support the Tomcat-specific 'sendfile' implementation.
      * See: http://tomcat.apache.org/tomcat-7.0-doc/aio.html#Asynchronous_writes
      */
-    private void handleSendfile(GenericFile file, String filename, HttpServletRequest request, HttpServletResponse response) {
+    private void handleSendfile(GenericFile file, String filename, HttpServletRequest request, HttpServletResponse response,
+            long start, long end) {
         response.setHeader("X-Bennu-Sendfile", "true");
-        response.setContentType(file.getContentType());
-        response.setContentLength(file.getSize().intValue());
         request.setAttribute("org.apache.tomcat.sendfile.filename", filename);
-        request.setAttribute("org.apache.tomcat.sendfile.start", Long.valueOf(0l));
-        request.setAttribute("org.apache.tomcat.sendfile.end", file.getSize());
+        request.setAttribute("org.apache.tomcat.sendfile.start", Long.valueOf(start));
+        request.setAttribute("org.apache.tomcat.sendfile.end", Long.valueOf(end + 1));
     }
 
     /*
