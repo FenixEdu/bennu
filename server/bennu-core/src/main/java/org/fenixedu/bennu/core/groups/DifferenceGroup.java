@@ -17,6 +17,7 @@
 package org.fenixedu.bennu.core.groups;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,7 +27,6 @@ import org.fenixedu.bennu.core.domain.groups.PersistentDifferenceGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
 /**

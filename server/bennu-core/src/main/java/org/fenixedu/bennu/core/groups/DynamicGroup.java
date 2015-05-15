@@ -35,20 +35,14 @@ public final class DynamicGroup extends Group {
 
     @Override
     public PersistentDynamicGroup toPersistentGroup() {
-        Optional<PersistentDynamicGroup> persistent = PersistentDynamicGroup.getInstance(name);
-        if (persistent.isPresent()) {
-            return persistent.get();
-        }
-        return PersistentDynamicGroup.set(name, PersistentNobodyGroup.getInstance());
+        return PersistentDynamicGroup.getInstance(name).orElseGet(
+                () -> PersistentDynamicGroup.set(name, PersistentNobodyGroup.getInstance()));
     }
 
     @Override
     public String getPresentationName() {
-        Optional<PersistentDynamicGroup> persistent = PersistentDynamicGroup.getInstance(name);
-        if (persistent.isPresent() && persistent.get().getCustomPresentationName() != null) {
-            return persistent.get().getCustomPresentationName().getContent();
-        }
-        return name + ": (" + underlyingGroup().getPresentationName() + ")";
+        return PersistentDynamicGroup.getInstance(name).map(PersistentDynamicGroup::getCustomPresentationName)
+                .map(LocalizedString::getContent).orElseGet(() -> name + ": (" + underlyingGroup().getPresentationName() + ")");
     }
 
     @Override
