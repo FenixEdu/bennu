@@ -52,6 +52,22 @@ public class DomainBrowserResource extends BennuRestResource {
     }
 
     @GET
+    @Path("/{oid}/{role}/count")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response relationCounts(@PathParam("oid") String oid, @PathParam("role") String role) {
+        accessControl("#managers");
+        if (oid == null) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+        DomainObject obj = FenixFramework.getDomainObject(oid);
+        if (FenixFramework.isDomainObjectValid(obj)) {
+            return relationCount(obj, role);
+        } else {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
     @Path("/{oid}/{role}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showRelation(@PathParam("oid") String oid, @PathParam("role") String role) {
@@ -87,6 +103,23 @@ public class DomainBrowserResource extends BennuRestResource {
         }
 
         return Response.ok(array.toString()).build();
+    }
+
+    private Response relationCount(DomainObject obj, String role) {
+        DomainClass domClass = FenixFramework.getDomainModel().findClass(obj.getClass().getName());
+        Role roleSlot = domClass.findRoleSlot(role);
+        if (roleSlot == null) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+
+        Set<DomainObject> objects = getRelationSet(obj, roleSlot);
+        if (objects == null) {
+            return Response.serverError().build();
+        }
+        JsonObject json = new JsonObject();
+        json.addProperty("name", role);
+        json.addProperty("size", objects.size());
+        return Response.ok(json.toString()).build();
     }
 
     private String describeObject(DomainObject obj) {

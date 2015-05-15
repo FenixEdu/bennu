@@ -181,6 +181,13 @@ bennuAdmin.controller('DomainBrowserController', [ '$scope', '$http', '$routePar
       $scope.relations = chunk(data, 15); $scope.totalEntries = data.length;
     }).error(function (data, code) { $scope.relError = code; });
   }
+  $scope.relationCounts = {};
+  $scope.loadRelationCount = function(name) {
+    $scope.relationCounts[name] = -1;
+    $http.get(contextPath + '/api/bennu-core/domain-browser/' + $scope.oid + '/' + name + '/count').success(function (data) {
+      $scope.relationCounts[data.name] = data.size;
+    }).error(function (data, code) { $scope.relError = code; });
+  }
   $scope.nextPage = function() {
     if($scope.currentPage < $scope.relations.length - 1)
       $scope.currentPage++;

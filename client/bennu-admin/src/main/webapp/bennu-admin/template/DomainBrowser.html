@@ -83,6 +83,7 @@ kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial
 				<th>Name</th>
 				<th>Type</th>
 				<th>Modifiers</th>
+				<th>Count</th>
 			</thead>
 			<tbody>
 				<tr ng-repeat="role in data.relationSets | orderBy:'name'">
@@ -92,6 +93,11 @@ kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial
 						<span class="label" ng-class="{'label-success': mod == 'PUBLIC', 'label-warning': mod == 'PROTECTED'}" ng-repeat="mod in role.modifiers">
 							{{mod}}
 						</span>
+					</td>
+					<td>
+						<button class="btn btn-xs btn-default" ng-if="relationCounts[role.name] == null" ng-click="loadRelationCount(role.name)">Load</button>
+						<button class="btn btn-xs btn-default" ng-if="relationCounts[role.name] == -1" disabled>Loading...</button>
+						<code ng-if="relationCounts[role.name] != null && relationCounts[role.name] != -1">{{relationCounts[role.name]}}</code>
 					</td>
 				</tr>
 			</tbody>
