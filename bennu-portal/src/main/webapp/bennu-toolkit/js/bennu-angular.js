@@ -7,11 +7,11 @@
 		};
 	});
 
-	bennuToolkit.directive('ngLocalizedString', ['$timeout', function($timeout) {
+	bennuToolkit.directive('bennuLocalizedString', ['$timeout', function($timeout) {
 	  return {
 	    restrict: 'A',
 	    scope: {
-	      model: '=ngLocalizedString'
+	      model: '=bennuLocalizedString'
 	    },
 	    link: function(scope, el, attr) {
 	      el.hide();
@@ -60,12 +60,12 @@
 	toolkitDirective('bennuDate', Bennu.datetime.createDateWidget);
 	toolkitDirective('bennuTime', Bennu.datetime.createTimeWidget);
 
-    bennuToolkit.directive('ngHtmlEditor', ['$timeout', function($timeout) {
+    bennuToolkit.directive('bennuHtmlEditor', ['$timeout', function($timeout) {
         return {
             restrict: 'A',
             scope: {
-				model: '=ngHtmlEditor',
-				onImageAdded: '=ngOnImageAdded'
+				model: '=bennuHtmlEditor',
+				onImageAdded: '=onImageAdded'
             },
             link: function(scope, el, attr) {
                 el.hide();
@@ -119,11 +119,11 @@
 	});
 	
 	
-	bennuToolkit.directive('ngUserAutocomplete', ['$timeout', function($timeout) {
+	bennuToolkit.directive('bennuUserAutocomplete', ['$timeout', function($timeout) {
 		return {
 			restrict: 'A',
 			scope : {
-				model : '=ngUserAutocomplete'
+				model : '=bennuUserAutocomplete'
 			},
 			link : function(scope, el, attr) {
 				var result = Bennu.userAutocomplete.createWidget(el);

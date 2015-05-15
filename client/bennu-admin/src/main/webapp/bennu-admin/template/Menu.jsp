@@ -40,13 +40,13 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label" for="title">Title</label>
 		<div class="col-sm-10">
-			<input type="text" ng-localized-string="selected.title" class="form-control"/>
+			<input type="text" bennu-localized-string="selected.title" class="form-control"/>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label" for="description">Description</label>
 		<div class="col-sm-10">
-			<input type="text" ng-localized-string="selected.description" class="form-control"/>
+			<input type="text" bennu-localized-string="selected.description" class="form-control"/>
 		</div>
 	</div>
 	<div class="form-group">
