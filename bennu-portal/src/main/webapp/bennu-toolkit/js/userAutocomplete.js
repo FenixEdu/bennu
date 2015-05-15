@@ -45,9 +45,12 @@
     Bennu.userAutocomplete.createWidget = function (input) {
     	
         var input = $(input);
-        
-        var userAutocomplete = $("<input type='text'/>");
-        
+
+        var widget = $('<div class="bennu-user-autocomplete-input-group input-group"><input type="text" class="bennu-user-autocomplete-input form-control"/>'+
+            '<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span></div>');
+
+        var userAutocomplete = $("input", widget);
+
         var attrs = input.prop('attributes');
         
         $.each(attrs, function() {
@@ -56,17 +59,19 @@
         		this.name === "id" || this.name === "value") {
         		return true;
         	}
-        	userAutocomplete.attr(this.name, this.value);
+            var currValue = userAutocomplete.attr(this.name);
+            userAutocomplete.attr(this.name, (currValue ? currValue + ' ' : '') + this.value);
         });
         
         
         input.attr('type','hidden');
+        userAutocomplete.show();
         
         var id = "user-autocomplete-" + Bennu.gensym();
         
         userAutocomplete.attr('id', id);
         
-        userAutocomplete.insertAfter(input);
+        widget.insertAfter(input);
         
         var events = [];
         
@@ -102,6 +107,16 @@
 		            }
 		        },
         };
+
+        userAutocomplete.on('keyup', function (event) {
+            var text = userAutocomplete.val();
+            var value = result.get();
+            if(value && value.username != text) {
+                // Clear the result from the underlying model, but keep the text
+                result.clear();
+                userAutocomplete.typeahead('val', text);
+            }
+        });
         
         result.onchange(function() {
         	var value = this.get();

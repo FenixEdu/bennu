@@ -59,6 +59,7 @@
 	toolkitDirective('bennuDateTime', Bennu.datetime.createDateTimeWidget);
 	toolkitDirective('bennuDate', Bennu.datetime.createDateWidget);
 	toolkitDirective('bennuTime', Bennu.datetime.createTimeWidget);
+	toolkitDirective('bennuUserAutocomplete', Bennu.userAutocomplete.createWidget);
 
     bennuToolkit.directive('bennuHtmlEditor', ['$timeout', function($timeout) {
         return {
@@ -117,28 +118,5 @@
 	    }
 	  }
 	});
-	
-	
-	bennuToolkit.directive('bennuUserAutocomplete', ['$timeout', function($timeout) {
-		return {
-			restrict: 'A',
-			scope : {
-				model : '=bennuUserAutocomplete'
-			},
-			link : function(scope, el, attr) {
-				var result = Bennu.userAutocomplete.createWidget(el);
-				
-				scope.$watch('model', function(value) {
-					result.set(value);
-				});
-				
-				result.onchange(function() {
-					$timeout(function() {
-						scope.model = result.get();
-					});
-				});
-			}
-		};
-	}]);
 
 })();
