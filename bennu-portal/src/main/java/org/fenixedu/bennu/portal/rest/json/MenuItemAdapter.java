@@ -65,8 +65,10 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
             MenuContainer container = obj.getAsMenuContainer();
             if (container.isRoot()) {
                 json.add("title", ctx.view(PortalConfiguration.getInstance().getApplicationTitle()));
+                json.addProperty("appRoot", true);
             }
             json.add("menu", ctx.view(container.getOrderedChild(), MenuItemAdapter.class));
+            json.addProperty("subRoot", container.isSubRoot());
         } else {
             MenuFunctionality functionality = obj.getAsMenuFunctionality();
             json.addProperty("key", functionality.getItemKey());

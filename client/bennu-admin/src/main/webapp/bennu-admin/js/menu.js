@@ -16,6 +16,9 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
     var promise;
     if($scope.selected.id) {
       promise = $http.put(contextPath + "/api/bennu-portal/menu/" + $scope.selected.id, data);
+    } else if ($scope.selected.subRoot) {
+      data.key = $scope.selected.path;
+      promise = $http.post(contextPath + "/api/bennu-portal/menu/sub-root", data);
     } else {
       data.path = $scope.selected.path; data.parent = $scope.selected.parent;
       promise = $http.post(contextPath + "/api/bennu-portal/menu", data);
@@ -48,10 +51,10 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
       add(item, $scope.selected.node);
     }).error($scope.handleError);
   }
-  $scope.createChild = function() {
+  $scope.createChild = function(root) {
     var mls = {}; 
-    mls[BennuPortal.locale.tag] = 'New Entry';
-    var newChild = { title: mls, description: {}, visible: true, accessExpression: 'anyone', functionality: false, parent: $scope.selected.id };
+    mls[BennuPortal.locale.tag] = root ? 'New Sub-Root' : 'New Entry';
+    var newChild = { title: mls, description: {}, visible: true, accessExpression: 'anyone', functionality: false, parent: $scope.selected.id, subRoot: root };
     add(newChild, $scope.selected.node).setActive(true);
   }
   $scope.saveOrder = function() {
@@ -61,7 +64,7 @@ bennuAdmin.controller('MenuController', [ '$scope', '$routeParams', '$http', fun
   }
 
   var add = function(item, parent) {
-    var node = parent.addChildren({ title: i18n(item.title), key: item.id, folder: !item.functionality, item: item });
+    var node = parent.addChildren({ title: (item.subRoot? '[MENU] ' : '') + i18n(item.title), key: item.id, folder: !item.functionality, item: item });
     item.node = node;
     if(item.menu) {
       item.menu.forEach(function (entry) {

@@ -7,9 +7,12 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.groups.AnyoneGroup;
 import org.fenixedu.bennu.portal.model.Application;
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
+
+import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
@@ -205,12 +208,14 @@ public final class MenuContainer extends MenuContainer_Base {
     /**
      * Deletes this container, as well as all its children.
      */
+    @Atomic
     @Override
     public void delete() {
         if (getConfiguration() != null) {
             throw BennuPortalDomainException.cannotDeleteRootContainer();
         }
 
+        setConfigurationFromSubRoot(null);
         for (MenuItem child : getChildSet()) {
             child.delete();
         }
@@ -352,5 +357,22 @@ public final class MenuContainer extends MenuContainer_Base {
         }
         super.delete();
         return copy;
+    }
+
+    public boolean isSubRoot() {
+        return getConfigurationFromSubRoot() != null;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return !isSubRoot() && super.isVisible();
+    }
+
+    public static MenuContainer createSubRoot(String key, LocalizedString title, LocalizedString description) {
+        MenuContainer container =
+                new MenuContainer(PortalConfiguration.getInstance().getMenu(), false, AnyoneGroup.get().getExpression(),
+                        description, title, key);
+        PortalConfiguration.getInstance().addSubRoot(container);
+        return container;
     }
 }

@@ -53,6 +53,15 @@ relation ApplicationMenu {
     }
 }
 
+relation ApplicationSubRoots {
+    protected PortalConfiguration playsRole configurationFromSubRoot {
+        multiplicity 0..1;
+    }
+    protected MenuContainer playsRole subRoot {
+        multiplicity *;
+    }
+}
+
 relation MenuItemComposition {
 	protected MenuContainer playsRole parent {
         multiplicity 0..1;

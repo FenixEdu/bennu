@@ -2,6 +2,9 @@ package org.fenixedu.bennu.portal.domain;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -100,6 +103,15 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
     public MenuContainer getMenu() {
         //FIXME: remove when the framework enables read-only slots
         return super.getMenu();
+    }
+
+    @Override
+    public Set<MenuContainer> getSubRootSet() {
+        return Collections.unmodifiableSet(super.getSubRootSet());
+    }
+
+    public Optional<MenuContainer> findSubRoot(String key) {
+        return super.getSubRootSet().stream().filter(root -> root.getPath().equals(key)).findAny();
     }
 
 }

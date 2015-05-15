@@ -23,6 +23,7 @@ import org.fenixedu.bennu.portal.model.Application;
 import org.fenixedu.bennu.portal.model.ApplicationRegistry;
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.bennu.portal.rest.json.MenuItemAdapter;
+import org.fenixedu.commons.i18n.LocalizedString;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -53,6 +54,24 @@ public class MenuResource extends BennuRestResource {
     public String createMenu(final String jsonData) {
         accessControl("#managers");
         return viewMenu(create(jsonData, MenuContainer.class, MenuItemAdapter.class));
+    }
+
+    @POST
+    @Path("/sub-root")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createSubRoot(final String jsonData) {
+        accessControl("#managers");
+        JsonObject json = new JsonParser().parse(jsonData).getAsJsonObject();
+        String key = json.get("key").getAsString();
+        LocalizedString title = LocalizedString.fromJson(json.get("title"));
+        LocalizedString description = LocalizedString.fromJson(json.get("description"));
+        return viewMenu(createSubRoot(key, title, description));
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private MenuItem createSubRoot(String key, LocalizedString title, LocalizedString description) {
+        return MenuContainer.createSubRoot(key, title, description);
     }
 
     @PUT

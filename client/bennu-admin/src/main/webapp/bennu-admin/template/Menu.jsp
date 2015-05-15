@@ -70,13 +70,13 @@
 				placeholder="Icon" class="form-control">
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group" ng-if="!selected.subRoot && !selected.appRoot">
 		<label class="col-sm-2 control-label" for="visible">Visible</label>
 		<div class="col-sm-10">
 			<input type="checkbox" name="visible" ng-model="selected.visible" readonly="true">
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group" ng-if="!selected.subRoot && !selected.appRoot">
 		<label class="col-sm-2 control-label" for="accessExpression">Access Expression</label>
 		<div class="col-sm-10">
 			<input type="text" name="accessExpression" data-group="advanced" ng-model="selected.accessExpression" placeholder="Access Expression" class="form-control">
@@ -89,7 +89,8 @@
 	<button data-target="#modal-delete-menu" role="button" class="btn btn-danger btn-sm" data-toggle="modal">Delete</button>
 	<span ng-if="!selected.functionality && selected.id">
 		<button ng-click="loadApps()" data-target="#modal-install-application" data-toggle="modal" class="btn btn-primary btn-sm">Install</button>
-		<button ng-click="createChild()" class="btn btn-primary btn-sm">Create Child</button>
+		<button ng-click="createChild(false)" class="btn btn-primary btn-sm">Create Child</button>
+		<button ng-click="createChild(true)" ng-if="selected.appRoot" class="btn btn-primary btn-sm">Create Menu</button>
 	</span>
 	<span ng-if="selected.functionality" class="pull-right">
 		<span class="label label-default" title="Provider">{{selected.provider}}</span>
