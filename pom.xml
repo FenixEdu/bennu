@@ -23,7 +23,7 @@
         <version.joda.time.joda.time>2.3</version.joda.time.joda.time>
         <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
         <version.org.apache.lucene.lucene.core>4.7.2</version.org.apache.lucene.lucene.core>
-        <version.org.fenixedu.fenixedu.commons>1.0.1</version.org.fenixedu.fenixedu.commons>
+        <version.org.fenixedu.fenixedu.commons>1.1.0</version.org.fenixedu.fenixedu.commons>
         <version.org.jasig.cas.client.core>3.3.3</version.org.jasig.cas.client.core>
         <version.ch.qos.logback.logback.classic>1.0.13</version.ch.qos.logback.logback.classic>
         <version.com.google.code.gson.gson>2.2.4</version.com.google.code.gson.gson>

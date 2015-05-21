@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+import org.fenixedu.commons.stream.StreamUtils;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
@@ -52,9 +54,7 @@ public class JsonBuilder {
     }
 
     private JsonArray viewStream(Stream<?> stream, Class<? extends JsonViewer> jsonViewerClass) {
-        JsonArray array = new JsonArray();
-        stream.map(obj -> view(obj, jsonViewerClass)).forEach(array::add);
-        return array;
+        return stream.map(obj -> view(obj, jsonViewerClass)).collect(StreamUtils.toJsonArray());
     }
 
     private JsonArray views(Collection coll, Class<? extends JsonViewer> jsonViewerClass) {
