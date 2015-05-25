@@ -1,9 +1,11 @@
 package org.fenixedu.bennu.io.domain;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import pt.ist.fenixframework.DomainModelUtil;
 import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * 
@@ -33,16 +35,26 @@ public final class FileStorageConfiguration extends FileStorageConfiguration_Bas
     }
 
     public static void createMissingStorageConfigurations() {
-        final HashSet<String> existingFileTypes = new HashSet<>();
-        for (final FileStorageConfiguration fileStorageConfiguration : FileSupport.getInstance().getConfigurationSet()) {
-            existingFileTypes.add(fileStorageConfiguration.getFileType());
+        Map<String, FileStorageConfiguration> configs = new HashMap<>();
+        for (FileStorageConfiguration config : FileSupport.getInstance().getConfigurationSet()) {
+            if (FenixFramework.getDomainModel().findClass(config.getFileType()) == null) {
+                config.delete();
+            } else {
+                configs.put(config.getFileType(), config);
+            }
         }
 
         for (Class<? extends DomainObject> fileTypeClass : DomainModelUtil
                 .getDomainClassHierarchy(GenericFile.class, true, false)) {
-            if (!existingFileTypes.contains(fileTypeClass.getName())) {
+            if (!configs.containsKey(fileTypeClass.getName())) {
                 new FileStorageConfiguration(fileTypeClass);
             }
         }
+    }
+
+    private void delete() {
+        setFileSupport(null);
+        setStorage(null);
+        deleteDomainObject();
     }
 }
