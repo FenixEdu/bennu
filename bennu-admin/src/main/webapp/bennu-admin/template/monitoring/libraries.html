@@ -1,0 +1,24 @@
+<table class="table table-striped table-bordered table-condensed">
+    <thead>
+        <tr>
+            <th>GroupId</th>
+            <th>ArtifactId</th>
+            <th>Name</th>
+            <th>Version</th>
+            <th>Creation Date</th>
+            <th>Jdk Version</th>
+            <th>Built By</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="library in data.libraries">
+            <td>{{library.groupId}}</td>
+            <td>{{library.artifactId}}</td>
+            <td>{{library['Implementation-Title']}}</td>
+            <td>{{library.version}}</td>
+            <td>{{library.creation}}</td>
+            <td>{{library['Build-Jdk']}}</td>
+            <td>{{library['Built-By']}}</td>
+        </tr>
+    </tbody>
+</table>

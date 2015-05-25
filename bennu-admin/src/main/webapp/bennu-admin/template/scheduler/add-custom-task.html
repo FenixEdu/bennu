@@ -1,0 +1,15 @@
+<form>
+  <fieldset>
+    <legend>New Custom Task</legend>
+    <label>Code</label>
+    <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="javaCode"></ui-codemirror>
+  </fieldset>
+</form>
+<div>
+  <button class="btn btn-success" ng-disabled="compiled" ng-click="compile()">Compile</button>
+  <button class="btn btn-success" ng-disabled="!compiled" ng-click="run()">Run</button>
+</div>
+<div>
+	<legend>Output</legend>
+	<pre>{{result}}</pre>
+</div>

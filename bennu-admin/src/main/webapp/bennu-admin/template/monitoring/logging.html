@@ -1,0 +1,26 @@
+<form class="input-group">
+    <div class="input-group-addon"><span class="glyphicon glyphicon-pencil"></span></div>
+    <input type="text" class="form-control" placeholder="Filter by name..." ng-model="filter" />
+    <div class="input-group-addon">{{filtered.length}}/{{loggers.length}}</div>
+</form>
+<br />
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Level</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="logger in filtered = (loggers | filter: filter) ">
+            <td width="50%">{{logger.name}}</td>
+            <td>
+                <div class="button-group">
+                    <span ng-repeat="element in loggerMap">
+                        <button ng-click="changeLevel(logger, element[0])" ng-class="logger.level == element[0] ? element[1] : ''" class="btn btn-default btn-xs">{{element[0]}}</button>                                    
+                    </span>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

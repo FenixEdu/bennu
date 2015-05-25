@@ -95,11 +95,13 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         return getAbsolutePath() + transformIDInPath(uniqueIdentification) + File.separatorChar;
     }
 
+    private static final Pattern BRACES_PATTERN = Pattern.compile("(\\{.+?\\})");
+
     public String getAbsolutePath() {
         String path = getPath();
         if (path.indexOf("{") != -1 && path.indexOf("}") != -1) {
             // Compile regular expression
-            Matcher matcher = Pattern.compile("(\\{.+?\\})").matcher(path);
+            Matcher matcher = BRACES_PATTERN.matcher(path);
 
             // Replace all occurrences of pattern in input
             StringBuffer result = new StringBuffer();

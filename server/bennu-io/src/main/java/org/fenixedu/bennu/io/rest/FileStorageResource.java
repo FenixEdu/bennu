@@ -20,6 +20,8 @@ import org.fenixedu.bennu.io.domain.LocalFileSystemStorage;
 
 import pt.ist.fenixframework.Atomic;
 
+import com.google.gson.JsonObject;
+
 @Path("/bennu-io/storage")
 public class FileStorageResource extends BennuRestResource {
 
@@ -58,6 +60,18 @@ public class FileStorageResource extends BennuRestResource {
     public String all() {
         accessControl("#managers");
         return view(FileSupport.getInstance().getFileStorageSet(), "storages");
+    }
+
+    @GET
+    @Path("/count")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String fileCount() {
+        accessControl("#managers");
+        JsonObject json = new JsonObject();
+        for (FileStorage store : FileSupport.getInstance().getFileStorageSet()) {
+            json.addProperty(store.getExternalId(), store.getFileSet().size());
+        }
+        return json.toString();
     }
 
     @Atomic

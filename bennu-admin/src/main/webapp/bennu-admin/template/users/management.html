@@ -1,0 +1,76 @@
+<div>
+	<div class="row">
+		<div class="col-sm-4">
+			<form class="form-horizontal" ng-submit="doSearch()">
+				<div class="form-group">
+					<label for="searchText" class="col-sm-2 control-label">Find</label>
+					<div class="col-sm-10">
+						<input type="text" ng-model="query" class="form-control" />
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-4">
+			<button class="btn btn-default" ng-click="doSearch()"><span class="glyphicon glyphicon-search"></span> Find</button>
+			<a ui-sref="user-management-view({id: 'create'})" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Create User</a>
+			<a class="btn btn-default" ui-sref="user-groups"><span class="glyphicon glyphicon-user"></span> Groups</a>
+		</div>
+		<div class="col-sm-2">
+			<div class="pretty-number label-primary" data-toggle="tooltip" title="User Count" data-placement="bottom">
+				{{userData.userCount}}
+			</div>
+		</div>
+		<div class="col-sm-2" ng-show="userData.activeSessions">
+			<div class="pretty-number label-warning" data-toggle="tooltip" title="Active Sessions" data-placement="bottom">
+				{{userData.activeSessions}}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div ng-show="currentSearch">
+<h4>Search for '{{currentSearch}}' <span class="badge">{{users.length}}<span ng-if="users.length == 20">+</span> hit<span ng-if="users.length != 1">s</span></span></h4>
+
+<div class="table-responsive">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th width="40px"></th>
+				<th><a href="" ng-click="predicate = 'username'; reverse=!reverse">Username</a></th>
+				<th><a href="" ng-click="predicate = 'displayName'; reverse=!reverse">Display Name</a></th>
+				<th><a href="" ng-click="predicate = 'email'; reverse=!reverse">Email</a></th>
+				<th>Locale</th>
+				<th>Active</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="user in users | orderBy:predicate:reverse">
+				<td><img ng-src="{{user.avatar}}?s=40" class="img-circle" width="40" /></td>
+				<td><code>{{user.username}}</code></td>
+				<td>{{user.displayName}}</td>
+				<td>{{user.email}}</td>
+				<td>{{user.preferredLocale.displayName}}</td>
+				<td><span class="glyphicon glyphicon-ok" ng-if="user.active"></span></td>
+				<td><a ui-sref="user-management-view({id: user.username})" class="btn btn-xs btn-primary">Manage</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+</div>
+
+<style>
+.pretty-number {
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+	line-height: 50px;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	font-weight: bold;
+	color: white;
+	font-size: 13px;
+}
+</style>
+<script>$("[data-toggle=tooltip]").tooltip()</script>

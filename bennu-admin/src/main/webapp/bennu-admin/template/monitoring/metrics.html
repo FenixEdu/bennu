@@ -1,0 +1,93 @@
+<div class="col-lg-12">
+    <button class="btn btn-success" ng-click="reload(false)"><span class="glyphicon glyphicon-refresh"></span> Reload</button>
+    <button class="btn btn-default" ng-click="threadDump()"><span class="glyphicon glyphicon-list"></span> Thread Dump</button>
+    <button class="btn btn-default" ng-click="healthcheck()"><span class="glyphicon glyphicon-heart"></span> Healthchecks</button>
+
+    <span class="badge pull-right">{{data.metrics.project}}-{{data.metrics.version}} @ {{data.metrics.hostname}}</span>
+</div>
+<div class="row">
+<div class="col-lg-4">
+    <h4>Memory</h4>
+    <progress-bar header="Total Memory" current="data.metrics['jvm.memory.total.used']" total="data.metrics['jvm.memory.total.max']" divider="1e6" unit="M"></progress-bar>
+    <progress-bar header="Heap Memory" current="data.metrics['jvm.memory.heap.used']" total="data.metrics['jvm.memory.heap.max']" divider="1e6" unit="M"></progress-bar>
+    <progress-bar header="Non-heap Memory" current="data.metrics['jvm.memory.non-heap.used']" total="data.metrics['jvm.memory.non-heap.max']" divider="1e6" unit="M"></progress-bar>
+    <progress-bar header="Physical Memory" current="data.metrics['os.total.physical.memory'] - data.metrics['os.free.physical.memory']" total="data.metrics['os.total.physical.memory']" divider="1e6" unit="M"></progress-bar>
+    <p><strong>Committed VM Size:</strong> {{data.metrics['os.committed.vm.size'] / 10e5 | number:0}} MB</p>
+</div>
+<div class="col-lg-4">
+    <h4>JVM</h4>
+    <p><strong>Thread Count:</strong> {{data.metrics['jvm.threads.count']}}</p>
+    <p><strong>Total Loaded Classes:</strong> {{data.metrics['jvm.classloading.loaded.total'] | number}}</p>
+    <p><strong>Loaded Classes:</strong> {{data.metrics['jvm.classloading.loaded'] | number}}</p>
+    <p><strong>Unloaded Classes:</strong> {{data.metrics['jvm.classloading.unloaded'] | number}}</p>
+    <p><strong>Start Time:</strong> {{data.metrics['jvm.runtime.start.time'] | date:'dd/MM/yyyy HH:mm:ss'}}</p>
+    <p><strong>Server Time:</strong> {{data.metrics.now | date:'dd/MM/yyyy HH:mm:ss'}}</p>
+    <p><strong>Uptime:</strong> {{data.metrics['jvm.runtime.uptime'] | uptime}}</p>
+    <p><strong>Compiler Name:</strong> {{data.metrics['jit.name']}}</p>
+    <p><strong>Compilation Time:</strong> {{data.metrics['jit.total.time'] | number}} ms</p>
+    <p><strong>Fenix Framework Cache size:</strong> {{data.metrics.cacheSize | number}}</p>
+</div>
+<div class="col-lg-4">
+    <h4>OS</h4>
+    <progress-bar header="Load Average" current="data.metrics['os.load.average']" total="data.metrics['os.available.cpus']" precision="2"></progress-bar>
+    <progress-bar header="File Descriptors" current="data.metrics['os.process.open.fd.count']" total="data.metrics['os.process.max.fd.count']" ></progress-bar>
+    <progress-bar header="System CPU Usage" current="data.metrics['os.system.cpu.usage'] * data.metrics['os.available.cpus'] * 100" total="data.metrics['os.available.cpus'] * 100" unit="%"></progress-bar>
+    <progress-bar header="Process CPU Usage" current="data.metrics['os.process.cpu.usage'] * data.metrics['os.available.cpus'] * 100" total="data.metrics['os.available.cpus'] * 100" unit="%"></progress-bar>
+    <p><strong>Process CPU Time:</strong> {{data.metrics['os.process.cpu.time'] / 10e9 | number:0}} s</p>
+</div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-lg-4" ng-repeat="gc in data.metrics.gc">
+        <h4>GC: {{gc.name}}</h4>
+        <p><strong>Pools: </strong> {{gc.pools}}</p>
+        <p><strong>Count: </strong> {{gc.collectionCount | number}}</p>
+        <p><strong>Time: </strong> {{gc.collectionTime | number}} ms</p>
+    </div>
+</div>
+
+<div class="container" ng-if="threads">
+    <h3>Threads <button class="btn btn-default btn-xs" ng-click="threadDump()"><span class="glyphicon glyphicon-refresh"></span></button></h3>
+    <div class="col-lg-2">
+        <a href="" class="label label-primary" ng-click="threadDumpFilter = {}">All&nbsp;<span class="badge">{{threads.totalThreads}}</span></a><br />
+        <a href="" class="label label-success" ng-click="threadDumpFilter = {state: 'RUNNABLE'}">Runnable&nbsp;<span class="badge">{{threads.RUNNABLE}}</span></a><br />
+        <a href="" class="label label-info" ng-click="threadDumpFilter = {state: 'WAITING'}">Waiting&nbsp;<span class="badge">{{threads.WAITING}}</span></a><br />
+        <a href="" class="label label-warning" ng-click="threadDumpFilter = {state: 'TIMED_WAITING'}">Timed Waiting&nbsp;<span class="badge">{{threads.TIMED_WAITING}}</span></a><br />
+        <a href="" class="label label-danger" ng-click="threadDumpFilter = {state: 'BLOCKED'}">Blocked&nbsp;<span class="badge">{{threads.BLOCKED}}</span></a>
+    </div>
+
+    <div class="col-lg-10">
+        <input type="text" ng-model="threadFilter" class="pull-right" placeholder="Filter"/>
+        <div class="row" ng-repeat="thread in threads.threads | filter:threadDumpFilter:true | filter:threadFilter">
+            <h5><span class="label" ng-class="getLabelClass(thread.state)">&nbsp;</span>&nbsp;<a href="" ng-click="thread.shown = !thread.shown">{{thread.name}} ({{thread.id}})</a></h5>
+            <pre ng-show="thread.shown" style="overflow-y: scroll">{{thread.stacktrace}}</pre>
+        </div>
+    </div>
+</div>
+
+<div class="container" ng-if="healthchecks">
+    <h3>Healthchecks</h3>
+    <div class="col-lg-2">
+        <p ng-repeat="check in healthchecks">
+            <a href="" ng-click="setCheck(check)" class="label" ng-class="{'label-success': check.result.healthy, 'label-danger': !check.result.healthy}">{{check.name}}</a>
+        </p>
+    </div>
+    <div class="col-lg-10" ng-if="currentCheck">
+        <div class="panel" ng-class="{'panel-success': currentCheck.result.healthy, 'panel-danger': !currentCheck.result.healthy}">
+            <div class="panel-heading">
+                {{currentCheck.name}}
+                <span class="pull-right">
+                    {{currentCheck.time | number}} ms
+                </span>
+            </div>
+            <div class="panel-body">
+                <span class="pre" ng-if="currentCheck.result.healthy">{{currentCheck.result.message}}</span>
+                <span ng-if="!currentCheck.result.healthy">
+                    <h5>Message: </h5>
+                    {{currentCheck.result.message}}
+                    <pre class="pre" ng-if="currentCheck.result.error" style="overflow-x: scroll">{{currentCheck.result.error}}</pre>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

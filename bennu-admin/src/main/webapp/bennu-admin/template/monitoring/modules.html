@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-sm-4" ng-repeat="project in data.projects">
+        <div class="panel panel-success" ng-class="{'panel-warning': project.version.indexOf('SNAPSHOT') > -1}" ng-if="project.artifactId">
+            <div class="panel-heading">
+                {{project['Implementation-Title']}}
+                <span class="badge pull-right">{{project.version}}</span>
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horkizontal">
+                    <table class="table table-condensed">
+                        <tr>
+                            <th>Group Id</th>
+                            <td>{{project.groupId}}</td>
+                        </tr>
+                        <tr>
+                            <th>Artifact Id</th>
+                            <td>{{project.artifactId}}</td>
+                        </tr>
+                        <tr>
+                            <th>Built</th>
+                            <td>{{project.creation}} ({{project['Built-By']}}) - {{project['Build-Jdk']}}</td>
+                        </tr>
+                    </table>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

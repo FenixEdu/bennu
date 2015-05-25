@@ -1,0 +1,44 @@
+<div class="clearfix" ng-repeat="(name, domain) in jmxData">
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix" ng-click="shown = !shown">
+            <span class="badge">Domain</span> <small>{{name}}</small>
+        </div>
+        <div class="panel-body row" ng-if="shown">
+            <div class="col-sm-4">
+                <ul class="list-group">
+                    <a href="" class="list-group-item" ng-class="{'active':selected == bean}" ng-click="$parent.selected = bean" ng-repeat="bean in domain | filter: filter | orderBy:'name.properties.type'">
+                        {{bean.name.properties.name}} {{bean.name.properties.type}}
+                    </a>
+                </ul>
+            </div>
+            <div class="col-sm-8" ng-show="selected">
+                <h2>
+                    {{selected.name.properties.name}} {{selected.name.properties.type}}
+                    <p class="small">{{selected.description}}</p>
+                </h2>
+                <dl class="dl-horizontal">
+                    <dt>Class Name</dt>
+                    <dd>{{selected.className}}</dd>
+                    <span ng-repeat="(key, prop) in selected.name.properties">
+                        <dt>{{key}}</dt>
+                        <dd>{{prop}}</dd>
+                    </span>
+                </dl>
+                <h3 class="page-header">Attributes</h3>
+                <table class="table">
+                    <tbody>
+                        <tr ng-repeat="attr in selected.attributes">
+                            <td class="text-right" width="40%">
+                                <h4>{{attr.name}}<div class="small">{{attr.type}}</div></h4>
+                            </td>
+                            <td>
+                                <input type="text" ng-model="attr.value" class="form-control" disabled />
+                                <span class="help-block">{{attr.description}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
