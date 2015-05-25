@@ -155,7 +155,7 @@
 
     <modules>
         <module>bennu-portal</module>
-        <module>client</module>
+        <module>bennu-admin</module>
         <module>maven</module>
         <module>server</module>
         <module>theme</module>
