@@ -13,6 +13,35 @@
     <version>4.0.0-SNAPSHOT</version>
     <name>Bennu Admin</name>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.4</version>
+                <executions>
+                    <execution>
+                        <id>toolkit</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <jsSourceDir>bennu-admin/js</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>app.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <webappTargetDir>${project.build.outputDirectory}/META-INF/resources/</webappTargetDir>
+                            <jsFinalFile>app.js</jsFinalFile>
+                            <jsEngine>CLOSURE</jsEngine>
+                            <nosuffix>true</nosuffix>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <repositories>
         <repository>
             <id>fenixedu-maven-repository</id>

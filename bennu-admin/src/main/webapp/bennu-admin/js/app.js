@@ -1,11 +1,3 @@
-if(!window.functionality) {
-  if(BennuPortal.username) {
-    location.href = contextPath;
-  } else {
-    location.href = contextPath + '/login?callback=' + escape(location.href);
-  }
-}
-
 var app = angular.module('bennuAdmin', [
   'ui.router', 'bennuToolkit' , 'ui.codemirror'
 ]);
@@ -192,8 +184,8 @@ app.controller('IOController', ['$scope', '$http', '$timeout', function ($scope,
   $http.get(contextPath + '/api/bennu-io/storage/config').success(function (configs) {
     $scope.configs = configs.storageConfigurations;
   });
-  $scope.delete = function(storage) {
-    $http.delete(contextPath + '/api/bennu-io/storage/' + storage.id).success(function () {
+  $scope['delete'] = function(storage) {
+    $http['delete'](contextPath + '/api/bennu-io/storage/' + storage.id).success(function () {
       $scope.storages.splice($scope.storages.indexOf(storage), 1);
     }).error(function (data) { $scope.error = data; });
   }
@@ -374,7 +366,7 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
   $scope.handleError = function(data) { $scope.error = data; $scope.saving = false; };
   $scope.deleteSelected = function() {
     if($scope.selected.id) {
-      $http.delete(contextPath + "/api/bennu-portal/menu/" + $scope.selected.id).success(function (data) {
+      $http['delete'](contextPath + "/api/bennu-portal/menu/" + $scope.selected.id).success(function (data) {
         $scope.selected.node.remove(); $scope.selected = null;
       }).error($scope.handleError);
     } else {
@@ -463,7 +455,7 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
           });
           $scope.$apply();
         }
-      },
+      }
      });
     var tree = $("#tree").fancytree("getTree");
     $("#tree").bind("fancytreeactivate", function(event, data) {
@@ -651,14 +643,14 @@ app.controller('SchedulesController', ['$scope', '$http', function ($scope, $htt
       $scope.config = data; $scope.saving = false;
     });
   }
-  $scope.delete = function(schedule) {
-    $http.delete(contextPath + '/api/bennu-scheduler/schedule/' + schedule.id).success(function () {
+  $scope['delete'] = function(schedule) {
+    $http['delete'](contextPath + '/api/bennu-scheduler/schedule/' + schedule.id).success(function () {
       $scope.schedules.splice($scope.schedules.indexOf(schedule), 1);
     });
   }
   $scope.clear = function() {
     if(confirm('Are you sure you wish to clear all schedules?')) {
-      $http.delete(contextPath + '/api/bennu-scheduler/schedule').success(function () {
+      $http['delete'](contextPath + '/api/bennu-scheduler/schedule').success(function () {
         $scope.schedules = new Array();
       });
     }
@@ -708,7 +700,7 @@ app.controller('LogDetailsController', ['$scope', '$http', '$state', function ($
   $scope.refreshLog();
 }]);
 
-app.controller('CustomLogDetailsController', ['$scope', '$http', '$state', '$state', function ($scope, $http, $state, $state) {
+app.controller('CustomLogDetailsController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
   $scope.type = $state.params.type; $scope.id = $state.params.id; $scope.contextPath = contextPath;
   $scope.editorOptions = { lineNumbers: true, mode: 'text/x-java', theme: 'eclipse', readOnly: true};
   $scope.refreshLog = function() {
