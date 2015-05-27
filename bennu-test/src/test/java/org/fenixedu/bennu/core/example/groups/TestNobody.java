@@ -4,10 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
-import org.fenixedu.bennu.core.domain.groups.PersistentNobodyGroup;
+import org.fenixedu.bennu.core.domain.groups.PersistentGroupStrategy;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.NobodyGroup;
 import org.junit.BeforeClass;
@@ -46,15 +44,6 @@ public class TestNobody {
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
-        assertEquals(NobodyGroup.get().toPersistentGroup(), BennuGroupIndex.groupConstant(PersistentNobodyGroup.class).findAny()
-                .orElse(null));
+        assertEquals(NobodyGroup.get().toPersistentGroup(), PersistentGroupStrategy.getInstance(NobodyGroup.get()));
     }
-
-    @Test
-    @Atomic(mode = TxMode.WRITE)
-    public void gcDoesNotDelete() {
-        PersistentGroup.garbageCollect();
-        assertTrue(BennuGroupIndex.groupConstant(PersistentNobodyGroup.class).findAny().isPresent());
-    }
-
 }

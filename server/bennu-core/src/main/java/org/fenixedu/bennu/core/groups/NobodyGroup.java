@@ -21,11 +21,8 @@ import java.util.Set;
 
 import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentNobodyGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
-
-import com.google.common.base.Objects;
 
 /**
  * Group that always returns false.
@@ -34,7 +31,7 @@ import com.google.common.base.Objects;
  * @see Group
  */
 @GroupOperator("nobody")
-public final class NobodyGroup extends CustomGroup {
+public final class NobodyGroup extends GroupStrategy {
     private static final long serialVersionUID = -6691063224199800203L;
 
     private static final NobodyGroup INSTANCE = new NobodyGroup();
@@ -50,11 +47,6 @@ public final class NobodyGroup extends CustomGroup {
     @Override
     public String getPresentationName() {
         return BundleUtil.getString("resources.BennuResources", "label.bennu.group.nobody");
-    }
-
-    @Override
-    public PersistentNobodyGroup toPersistentGroup() {
-        return PersistentNobodyGroup.getInstance();
     }
 
     @Override
@@ -95,15 +87,5 @@ public final class NobodyGroup extends CustomGroup {
     @Override
     public Group not() {
         return AnyoneGroup.get();
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        return object instanceof NobodyGroup;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(NobodyGroup.class);
     }
 }
