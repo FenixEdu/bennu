@@ -76,7 +76,7 @@ public class PortalBean {
     private static String DEBUG_TOOLKIT_ANGULAR_TAG = null;
 
     private NodeList getFilesForId(String id) throws Exception {
-        InputStream is = this.getClass().getResource("/META-INF/maven/org.fenixedu/bennu-portal/pom.xml").openStream();
+        InputStream is = this.getClass().getResource("/META-INF/maven/org.fenixedu/bennu-toolkit/pom.xml").openStream();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder b = factory.newDocumentBuilder();

@@ -154,6 +154,7 @@
     </repositories>
 
     <modules>
+        <module>bennu-toolkit</module>
         <module>bennu-portal</module>
         <module>bennu-admin</module>
         <module>maven</module>
