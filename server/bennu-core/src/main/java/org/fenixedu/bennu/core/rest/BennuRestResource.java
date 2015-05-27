@@ -79,6 +79,12 @@ public abstract class BennuRestResource extends JsonAwareResource {
         throw AuthorizationException.unauthorized();
     }
 
+    /**
+     * @deprecated Use {@link BennuRestResource#accessControl(Group) } instead.
+     * @param accessExpression group expression to evaluate
+     * @return The user logged in or exception
+     */
+    @Deprecated
     protected User accessControl(String accessExpression) {
         try {
             return accessControl(Group.parse(accessExpression));
@@ -88,7 +94,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
     }
 
     protected User verifyAndGetRequestAuthor() {
-        return accessControl("logged");
+        return accessControl(Group.logged());
     }
 
     protected <T extends DomainObject> URI getURIFor(T domainObject, String relativePath) {

@@ -52,7 +52,7 @@ public class ExternalApplicationAuthorizationResources extends BennuRestResource
     }
 
     private boolean isManager(User user) {
-        return Group.parse("#managers").isMember(user);
+        return Group.managers().isMember(user);
     }
 
 }

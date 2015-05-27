@@ -7,6 +7,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.io.domain.LocalFileSystemStorage;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
@@ -20,7 +21,7 @@ public class SchedulerConfigResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getLoggingStorage() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(SchedulerSystem.getInstance());
     }
 
@@ -28,7 +29,7 @@ public class SchedulerConfigResource extends BennuRestResource {
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String changeLoggingStorage(@PathParam("oid") String loggingStorageExternalId) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         innerSetLoggingStorage(loggingStorageExternalId);
         return getLoggingStorage();
     }

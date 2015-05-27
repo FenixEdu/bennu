@@ -60,6 +60,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.json.adapters.KeyValuePropertiesViewer;
 import org.fenixedu.bennu.core.rest.Healthcheck.Result;
 import org.fenixedu.commons.configuration.ConfigurationInvocationHandler;
@@ -88,7 +89,7 @@ public class SystemResource extends BennuRestResource {
     @SuppressWarnings("restriction")
     @Produces({ MediaType.APPLICATION_JSON })
     public Response info(@Context HttpServletRequest request, @QueryParam("full") @DefaultValue("true") Boolean full) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject json = new JsonObject();
 
         if (full) {
@@ -244,7 +245,7 @@ public class SystemResource extends BennuRestResource {
     @Path("thread-dump")
     @Produces(MediaType.APPLICATION_JSON)
     public Response threadDump() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject json = new JsonObject();
         JsonArray array = new JsonArray();
 
@@ -283,7 +284,7 @@ public class SystemResource extends BennuRestResource {
     @Path("healthcheck")
     @Produces(MediaType.APPLICATION_JSON)
     public Response healthChecks() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonArray json = new JsonArray();
 
         for (Healthcheck check : healthchecks) {
@@ -310,7 +311,7 @@ public class SystemResource extends BennuRestResource {
     @Path("/jmx")
     @Produces(MediaType.APPLICATION_JSON)
     public String getJmxInfo() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         Set<ObjectInstance> objects = mbs.queryMBeans(null, null);
         JsonObject json = new JsonObject();

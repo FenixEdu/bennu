@@ -26,6 +26,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 
@@ -34,7 +35,7 @@ public class ServiceApplicationResource extends ExternalApplicationResource {
 
     @Override
     protected User verifyAndGetRequestAuthor() {
-        return accessControl("#managers");
+        return accessControl(Group.managers());
     }
 
     @Override

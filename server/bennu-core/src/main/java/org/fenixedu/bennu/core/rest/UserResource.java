@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response.Status;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
+import org.fenixedu.bennu.core.groups.Group;
 
 import com.google.gson.JsonObject;
 
@@ -55,7 +56,7 @@ public class UserResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return Response.ok(view(create(json, User.class))).build();
     }
 
@@ -64,7 +65,7 @@ public class UserResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(String json, @PathParam("username") String username) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         User user = User.findByUsername(username);
         if (user == null) {
             return Response.status(Status.NOT_FOUND).build();
@@ -77,7 +78,7 @@ public class UserResource extends BennuRestResource {
     @Path("/username/{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response byUsername(@PathParam("username") String username) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         User user = User.findByUsername(username);
         if (user == null) {
             return Response.status(Status.NOT_FOUND).build();
@@ -90,7 +91,7 @@ public class UserResource extends BennuRestResource {
     @Path("/data")
     @Produces(MediaType.APPLICATION_JSON)
     public Response userData(@Context HttpServletRequest request) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject json = new JsonObject();
 
         json.addProperty("userCount", Bennu.getInstance().getUserSet().size());
