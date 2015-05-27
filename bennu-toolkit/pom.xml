@@ -6,7 +6,6 @@
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu</artifactId>
         <version>4.0.0-SNAPSHOT</version>
-        <relativePath />
     </parent>
 
     <artifactId>bennu-toolkit</artifactId>
