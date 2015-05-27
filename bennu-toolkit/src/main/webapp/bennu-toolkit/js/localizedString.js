@@ -191,7 +191,7 @@
             var z = $(".bennu-localized-string-button-full", e)
             var x = $(".bennu-localized-string-button-short", e)
             if(x.length && z.length){
-                if ((z.width() / e.width()) > 1/3){
+                if ((z.width() < 0 || z.width() / e.width()) > 1/3){
                     if (z[0].style.display !== "none"){
                         x[0].style.display = "inline";
                         z[0].style.display = "none";
