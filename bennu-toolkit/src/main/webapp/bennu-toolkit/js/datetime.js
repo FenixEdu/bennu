@@ -9,7 +9,6 @@
                 var t = s.split(".");
                 s = t[0];
                 var mili = parseInt(t[1]);
-                console.log(s);
             }else{
                 var mili = 000;
             }
@@ -28,10 +27,19 @@
         return date;
     }
 
+    function verifyType(e){
+        e = $(e);
+
+        if (e.attr("type") !== "text" && e.attr("type") !== "hidden"){
+            throw "Date/Time input field using non aceptable type";
+        }
+    }
+
     Bennu.datetime = Bennu.datetime || {};
 
     Bennu.datetime.createWidget = function (e) {
         var e = $(e);
+        verifyType(e);
         var datetime = (e.attr("bennu-datetime") === "");
         var date = (e.attr("bennu-date") === "");
         var time = (e.attr("bennu-time") === "");
@@ -80,6 +88,7 @@
 
     Bennu.datetime.createDateWidget = function (e) {
         e = $(e);
+        verifyType(e);
         var widget = $('<div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
             '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY" type="text" class="bennu-datetime-input form-control"/></div>');
 
@@ -91,10 +100,7 @@
         }
 
         var options = {
-            language: Bennu.lang,
-            showToday: true,
-            pickDate: true,
-            pickTime: false,
+            //locale: Bennu.locale.tag,
         };
 
         if(currentDate){
@@ -111,6 +117,7 @@
                 e.trigger("change");
             }
         }).datetimepicker(options);
+
 
         e.after(widget);
 
@@ -155,6 +162,7 @@
 
     Bennu.datetime.createTimeWidget = function (e) {
         e = $(e);
+        verifyType(e);
         var widget = $('<div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
             '<span class="glyphicon glyphicon-time"></span></span><input type="text" data-date-format="HH:mm:ss" class="bennu-datetime-input form-control"/></div>');
 
@@ -166,10 +174,7 @@
         }
 
         var options = {
-            language: Bennu.lang,
-            pickDate: false,
-            pickTime: true,
-            useSeconds: true
+            //locale: Bennu.locale.tag,
         }
 
         if(currentDate){
@@ -220,6 +225,7 @@
 
     Bennu.datetime.createDateTimeWidget = function (e) {
         e = $(e);
+        verifyType(e);
         var widget = $('<div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
             '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY HH:mm:ss" type="text" class="bennu-datetime-input form-control"/></div>');
 
@@ -231,12 +237,8 @@
         }
 
         var options = {
-            sideBySide: true,
-            language: Bennu.lang,
-            pickDate: true,
-            pickTime: true,
-            useSeconds: true,
-            showToday: true,
+            //locale: Bennu.locale.tag,
+            sideBySide:true,
         };
 
         if(currentDate){
@@ -274,11 +276,12 @@
             }
             e.val(moment(data).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
 
-            var r = $(".bennu-datetime-input", widget).data("DateTimePicker").getDate().format("DD/MM/YYYY HH:mm:ss");
+            var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date()
+            var r = (r && r.format("DD/MM/YYYY HH:mm:ss"));
             var t = moment(data).format("DD/MM/YYYY HH:mm:ss");
 
             if (r !== t){
-                $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(t);
+                $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
             }
 
             e.data("handler").trigger();
