@@ -38,6 +38,7 @@
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
                                 <jsSourceFile>group.js</jsSourceFile>
                                 <jsSourceFile>userAutocomplete.js</jsSourceFile>
+                                <jsSourceFile>theme.js</jsSourceFile>
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>codeEditor.js</jsSourceFile>
                                 <jsSourceFile>libs/MutationObserverPolyfill.js</jsSourceFile>
@@ -73,6 +74,7 @@
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
                                 <jsSourceFile>group.js</jsSourceFile>
                                 <jsSourceFile>userAutocomplete.js</jsSourceFile>
+                                <jsSourceFile>theme.js</jsSourceFile>
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>codeEditor.js</jsSourceFile>
                                 <jsSourceFile>bennu-angular.js</jsSourceFile>
