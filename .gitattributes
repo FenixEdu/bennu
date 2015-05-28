@@ -1,0 +1,4 @@
+bennu-toolkit/src/main/webapp/bennu-toolkit/js/libs/* linguist-vendored
+bennu-portal/src/main/webapp/bennu-portal/js/* linguist-vendored
+server/bennu-core/src/main/webapp/bennu-core/js/angular.min.js linguist-vendored
+server/bennu-core/src/main/webapp/bennu-core/js/jquery.min.js linguist-vendored

@@ -25,13 +25,13 @@
                             <charset>utf-8</charset>
                             <jsSourceDir>bennu-toolkit/js</jsSourceDir>
                             <jsSourceFiles>
-                                <jsSourceFile>moment.js</jsSourceFile>
-                                <jsSourceFile>datepicker.js</jsSourceFile>
-                                <jsSourceFile>jquery.fullscreen.js</jsSourceFile>
-                                <jsSourceFile>jquery.hotkeys.js</jsSourceFile>
-                                <jsSourceFile>sanitize.js</jsSourceFile>
-                                <jsSourceFile>bootstrap-wysiwyg.js</jsSourceFile>
-                                <jsSourceFile>typeahead.bundle.js</jsSourceFile>
+                                <jsSourceFile>libs/moment.js</jsSourceFile>
+                                <jsSourceFile>libs/datepicker.js</jsSourceFile>
+                                <jsSourceFile>libs/jquery.fullscreen.js</jsSourceFile>
+                                <jsSourceFile>libs/jquery.hotkeys.js</jsSourceFile>
+                                <jsSourceFile>libs/sanitize.js</jsSourceFile>
+                                <jsSourceFile>libs/bootstrap-wysiwyg.js</jsSourceFile>
+                                <jsSourceFile>libs/typeahead.bundle.js</jsSourceFile>
                                 <jsSourceFile>bennu.js</jsSourceFile>
                                 <jsSourceFile>validation.js</jsSourceFile>
                                 <jsSourceFile>localizedString.js</jsSourceFile>
@@ -40,7 +40,7 @@
                                 <jsSourceFile>userAutocomplete.js</jsSourceFile>
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>codeEditor.js</jsSourceFile>
-                                <jsSourceFile>MutationObserverPolyfill.js</jsSourceFile>
+                                <jsSourceFile>libs/MutationObserverPolyfill.js</jsSourceFile>
                                 <jsSourceFile>mutations.js</jsSourceFile>
                             </jsSourceFiles>
                             <webappTargetDir>${project.build.outputDirectory}/META-INF/resources/</webappTargetDir>
@@ -60,13 +60,13 @@
                             <charset>utf-8</charset>
                             <jsSourceDir>bennu-toolkit/js</jsSourceDir>
                             <jsSourceFiles>
-                                <jsSourceFile>moment.js</jsSourceFile>
-                                <jsSourceFile>datepicker.js</jsSourceFile>
-                                <jsSourceFile>jquery.fullscreen.js</jsSourceFile>
-                                <jsSourceFile>jquery.hotkeys.js</jsSourceFile>
-                                <jsSourceFile>sanitize.js</jsSourceFile>
-                                <jsSourceFile>bootstrap-wysiwyg.js</jsSourceFile>
-                                <jsSourceFile>typeahead.bundle.js</jsSourceFile>
+                                <jsSourceFile>libs/moment.js</jsSourceFile>
+                                <jsSourceFile>libs/datepicker.js</jsSourceFile>
+                                <jsSourceFile>libs/jquery.fullscreen.js</jsSourceFile>
+                                <jsSourceFile>libs/jquery.hotkeys.js</jsSourceFile>
+                                <jsSourceFile>libs/sanitize.js</jsSourceFile>
+                                <jsSourceFile>libs/bootstrap-wysiwyg.js</jsSourceFile>
+                                <jsSourceFile>libs/typeahead.bundle.js</jsSourceFile>
                                 <jsSourceFile>bennu.js</jsSourceFile>
                                 <jsSourceFile>validation.js</jsSourceFile>
                                 <jsSourceFile>localizedString.js</jsSourceFile>
