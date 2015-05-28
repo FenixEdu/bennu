@@ -344,6 +344,14 @@
             if (e.val() === "") {
                 e.val("{}");
             }
+        }else{
+            var val = e.val();
+            if (val){
+                $(".bennu-html-editor-editor", dom).html(e.val());    
+            }else{
+                $(".bennu-html-editor-editor", dom).html("");    
+            }
+            
         }
 
         $(".bennu-html-editor-editor", dom).on('change', function () {
