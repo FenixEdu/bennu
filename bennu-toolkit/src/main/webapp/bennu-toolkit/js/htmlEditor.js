@@ -119,7 +119,7 @@
             '<div class="bennu-html-editor-tools">' +
             '<div class="bennu-html-editor-toolbar btn-toolbar" data-role="editor-toolbar" data-target=".bennu-html-editor-editor"></div>' +
             '</div>' +
-            '<div class="bennu-html-editor-editor editor-input" contenteditable="true"></div>' +
+            '<div class="bennu-html-editor-editor form-control editor-input" contenteditable="true"></div>' +
             '<span class="help-block"></span>' +
             '</div>');
 
