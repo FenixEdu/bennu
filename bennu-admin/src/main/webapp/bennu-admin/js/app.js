@@ -416,7 +416,7 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
   }
   $scope.createChild = function(root) {
     var mls = {}; 
-    mls[BennuPortal.locale.tag] = root ? 'New Sub-Root' : 'New Entry';
+    mls[Bennu.locale.tag] = root ? 'New Sub-Root' : 'New Entry';
     var newChild = { title: mls, description: {}, visible: true, accessExpression: 'anyone', functionality: false, parent: $scope.selected.id, subRoot: root };
     add(newChild, $scope.selected.node).setActive(true);
   }
@@ -438,7 +438,7 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
   }
 
   $http.get(contextPath + '/api/bennu-portal/menu/' + $scope.id).success(function (data) {
-    $scope.locales = BennuPortal.locales;
+    $scope.locales = Bennu.locales;
     $("#tree").fancytree({ source: [ ], extensions: ["dnd"],
       dnd: {
         preventRecursiveMoves: true,
@@ -554,7 +554,7 @@ app.controller('UserManagementController', [ '$scope', '$http', '$state', '$loca
     $scope.user = { preferredLocale: $scope.locales[0] };
   };
 
-  $scope.locales = BennuPortal.locales;
+  $scope.locales = Bennu.locales;
 
   if ($state.params.id) {
     if($state.params.id !== 'create') {

@@ -48,7 +48,7 @@ public class PortalBean {
     }
 
     /**
-     * Injects a Javascript context with contains the {@code BennuPortal} variable, which is a subset
+     * Injects a Javascript context with contains the {@code Bennu} variable, which is a subset
      * of the Bennu Portal Data REST API, containing information about the configured locales, the current
      * locale, as well as some information regarding the currently logged user.
      * 
@@ -56,13 +56,13 @@ public class PortalBean {
      * application.
      * 
      * @return
-     *         A {@code <script>} tag containing the {@code BennuPortal} and {@code contextPath} variables.
+     *         A {@code <script>} tag containing the {@code Bennu} and {@code contextPath} variables.
      */
     public String bennuPortal() {
         StringBuilder builder = new StringBuilder();
         builder.append("<script>");
         {
-            builder.append("window.BennuPortal = ");
+            builder.append("window.Bennu = ");
             builder.append(BennuRestResource.getBuilder().view(null, Void.class, AuthenticatedUserViewer.class)).append(";");
         }
         {

@@ -5,10 +5,6 @@
     $(function(){
 	Bennu.loaded = true;
     })
-    
-    if(window.BennuPortal) {
-        $.extend(window.Bennu, window.BennuPortal);
-    }
 
     Bennu.version = "1.0.0";
 
