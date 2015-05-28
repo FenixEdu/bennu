@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Locale;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -91,5 +92,11 @@ public class DomainObjectParamConverterTest extends JerseyTest {
 
         assertEquals(expectedEmail, newEmail);
         assertEquals(expectedEmail, user1.getProfile().getEmail());
+    }
+
+    @Atomic(mode = TxMode.READ)
+    @Test(expected = NotFoundException.class)
+    public void testNotFoundDomainObjectAsQueryParam() {
+        target("resource").path("username").queryParam("id", "THIS_IS_NOT_A_DOMAIN_OBJECT").request().get(String.class);
     }
 }
