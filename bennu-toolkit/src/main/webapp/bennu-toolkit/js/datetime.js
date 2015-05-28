@@ -29,9 +29,11 @@
 
     function verifyType(e){
         e = $(e);
-
-        if (e.attr("type") !== "text" && e.attr("type") !== "hidden"){
-            throw "Date/Time input field using non aceptable type";
+        var val = e.attr("type");
+        if(typeof val !== typeof undefined && val !== false){
+            if (val !== "text" && val !== "hidden"){
+                throw "Date/Time input field using non aceptable type";
+            }
         }
     }
 

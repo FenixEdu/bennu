@@ -73,6 +73,39 @@
         q.trigger.apply(q, arguments);
     };
 
+    // Utils
+    // ---------------------------------------------
+
+    Bennu.utils =  Bennu.utils || {};
+
+    Bennu.utils.updateAttrs = function(input, widgetInput, allowedAttrs){
+        input = $(input);
+
+        var cache = widgetInput.data("attrCache");
+
+        if (cache){
+            // If the attribute was removed after attaching to dom;
+            for (var i = 0; i < cache.length; i++) {
+                var attr = cache[i];
+                var val = input.attr(attr);
+                if (typeof val !== typeof undefined && val !== false){
+                    widgetInput.removeAttr(attr);
+                }
+            };
+        }
+
+        cache = [];
+
+        $.each(input[0].attributes, function(i, attrib){
+            if (!(allowedAttrs.indexOf(attrib.name) < 0)){
+                widgetInput.attr(attrib.name,attrib.value);
+                cache.push(attrib.name);
+            }
+        });
+
+        widgetInput.data("attrCache", cache)        
+    }
+
     Bennu.widgetHandler = Bennu.widgetHandler || {}
     Bennu.widgetHandler.makeFor = function (e, onremove){
         var events = [];
