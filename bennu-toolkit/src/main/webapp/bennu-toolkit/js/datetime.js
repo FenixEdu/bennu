@@ -95,8 +95,9 @@
             throw "Error: Due to limitations on the space-time continuum, choosing dates of past and future would break the causality principle."
         }
 
-        if (Bennu.utils.hasAttr(e, "unavaible-dates")) {
-            var dates = e.attr("unavaible-dates").split(",")
+        if (Bennu.utils.hasAttr(e, "unavailable-dates")) {
+
+            var dates = e.attr("unavailable-dates").split(",")
             var result = [];
             for (var i = 0; i < dates.length; i++) {
                 result.add(new Date(dates[i]));
@@ -104,8 +105,8 @@
             options.disabledDates = result;
         }
 
-        if (Bennu.utils.hasAttr(e, "avaible-dates")) {
-            var dates = e.attr("avaible-dates").split(",")
+        if (Bennu.utils.hasAttr(e, "available-dates")) {
+            var dates = e.attr("available-dates").split(",")
             var result = [];
             for (var i = 0; i < dates.length; i++) {
                 result.add(new Date(dates[i]));
