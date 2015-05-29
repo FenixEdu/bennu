@@ -180,6 +180,7 @@
             input.after(widget);
             Bennu.validation.attachToForm(widget);
             recalculateButtons(widget);
+            Bennu.attachFormNoValidate(input);
             return Bennu.widgetHandler.makeFor(input);
         }
     };

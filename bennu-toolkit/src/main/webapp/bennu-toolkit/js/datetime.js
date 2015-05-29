@@ -57,15 +57,27 @@
         }
     }
     function dateOptions(e, options){
-        if (e.attr("min-date") !== undefined) {
+        if (e.attr("min-date") !== undefined && e.attr("max-date") !== null) {
             options.minDate = new Date(e.attr("min-date"));
         }
 
-        if (e.attr("max-date") === "") {
+        if (e.attr("max-date") !== undefined && e.attr("max-date") !== null) {
             options.maxDate = new Date(e.attr("max-date"));
         }
 
-        if (e.attr("unavaible-dates") !== undefined) {
+        if (e.attr("requires-future") !== undefined && e.attr("requires-future") !== null) {
+            options.minDate = new moment();
+        }
+
+        if (e.attr("requires-past") !== undefined && e.attr("requires-past") !== null) {
+            options.maxDate = new moment();
+        }
+
+        if (e.attr("requires-future") !== undefined && e.attr("requires-future") !== null && e.attr("requires-past") !== undefined && e.attr("requires-past") !== null) {
+            throw "Error: Due to limitations on the space-time continuum, choosing dates of past and future would break the causality principle."
+        }
+
+        if (e.attr("unavaible-dates") !== undefined && e.attr("unavaible-dates") !== null) {
             var dates = e.attr("unavaible-dates").split(",")
             var result = [];
             for (var i = 0; i < dates.length; i++) {
@@ -74,7 +86,7 @@
             options.disabledDates = result;
         }
 
-        if (e.attr("avaible-dates") !== undefined) {
+        if (e.attr("avaible-dates") !== undefined && e.attr("avaible-dates") !== null) {
             var dates = e.attr("avaible-dates").split(",")
             var result = [];
             for (var i = 0; i < dates.length; i++) {
@@ -89,8 +101,8 @@
     Bennu.datetime.createDateWidget = function (e) {
         e = $(e);
         verifyType(e);
-        var widget = $('<div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
-            '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY" type="text" class="bennu-datetime-input form-control"/></div>');
+        var widget = $('<div class="bennu-datetime-input-group"><div class="input-group date"><span class="input-group-addon">' +
+            '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY" type="text" class="bennu-datetime-input form-control"/></div><p class="help-block"></p></div>');
 
         var currentDate = e.val();
 
@@ -141,6 +153,11 @@
             e.data("handler").trigger();
         });
 
+        e.data("input",widget);
+        widget.data("related", e);
+
+        Bennu.validation.attachToForm(widget);
+        Bennu.attachFormNoValidate(e);
         return Bennu.widgetHandler.makeFor(e);
     }
 
@@ -163,8 +180,8 @@
     Bennu.datetime.createTimeWidget = function (e) {
         e = $(e);
         verifyType(e);
-        var widget = $('<div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
-            '<span class="glyphicon glyphicon-time"></span></span><input type="text" data-date-format="HH:mm:ss" class="bennu-datetime-input form-control"/></div>');
+        var widget = $('<div class="bennu-datetime-input-group"><div class="input-group date"><span class="input-group-addon">' +
+            '<span class="glyphicon glyphicon-time"></span></span><input type="text" data-date-format="HH:mm:ss" class="bennu-datetime-input form-control"/></div><p class="help-block"></p></div>');
 
         var currentDate = e.val();
 
@@ -220,14 +237,19 @@
             e.data("handler").trigger();
         });
 
+        e.data("input",widget);
+        widget.data("related", e);
+
+        Bennu.validation.attachToForm(widget);
+        Bennu.attachFormNoValidate(e);
         return Bennu.widgetHandler.makeFor(e);
     }
 
     Bennu.datetime.createDateTimeWidget = function (e) {
         e = $(e);
         verifyType(e);
-        var widget = $('<div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
-            '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY HH:mm:ss" type="text" class="bennu-datetime-input form-control"/></div>');
+        var widget = $('<div class="bennu-datetime-input-group"><div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
+            '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY HH:mm:ss" type="text" class="bennu-datetime-input form-control"/></div><p class="help-block"></p></div>');
 
         var currentDate = e.val();
 
@@ -286,6 +308,12 @@
 
             e.data("handler").trigger();
         });
+
+        e.data("input",widget);
+        widget.data("related", e);
+
+        Bennu.validation.attachToForm(widget);
+        Bennu.attachFormNoValidate(e);
         return Bennu.widgetHandler.makeFor(e);
     }
 }());
