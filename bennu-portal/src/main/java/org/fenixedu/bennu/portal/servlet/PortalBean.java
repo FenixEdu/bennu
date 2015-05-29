@@ -97,7 +97,7 @@ public class PortalBean {
         if (DEBUG_TOOLKIT_TAG == null) {
             try {
                 NodeList nodes = getFilesForId("toolkit");
-                StringBuilder builder = new StringBuilder(bennuPortal());
+                StringBuilder builder = new StringBuilder();
                 for (int i = 0; i < nodes.getLength(); i++) {
                     Node currentItem = nodes.item(i);
 
@@ -114,14 +114,14 @@ public class PortalBean {
             }
         }
 
-        return DEBUG_TOOLKIT_TAG;
+        return bennuPortal() + DEBUG_TOOLKIT_TAG;
     }
 
     private String getDebugToolkitAngular() {
         if (DEBUG_TOOLKIT_ANGULAR_TAG == null) {
             try {
                 NodeList nodes = getFilesForId("toolkit-angular");
-                StringBuilder builder = new StringBuilder(bennuPortal());
+                StringBuilder builder = new StringBuilder();
                 builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
                         .append("/bennu-portal/js/angular.min.js\"></script>");
                 for (int i = 0; i < nodes.getLength(); i++) {
@@ -140,7 +140,7 @@ public class PortalBean {
             }
         }
 
-        return DEBUG_TOOLKIT_ANGULAR_TAG;
+        return bennuPortal() + DEBUG_TOOLKIT_ANGULAR_TAG;
     }
 
     private String getToolkit() {
