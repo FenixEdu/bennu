@@ -234,7 +234,7 @@ app.controller('JMXController', ['$scope', '$http', function ($scope, $http) {
 
 app.controller('LoggingController', ['$scope', '$http', function ($scope, $http) {
   $scope.changeLevel = function(logger, level) {
-    $http.get(contextPath + '/api/bennu-core/system/logger/' + logger.name + '/' + level).success(function (data) {
+    $http.post(contextPath + '/api/bennu-core/system/logger/' + logger.name + '/' + level).success(function (data) {
       $scope.loggers = data.loggers;
     });
   }

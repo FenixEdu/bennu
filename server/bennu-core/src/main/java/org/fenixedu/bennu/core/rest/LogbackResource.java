@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -43,7 +44,7 @@ public class LogbackResource extends BennuRestResource {
         }
     }
 
-    @GET
+    @POST
     @Path("/{name}/{level}")
     public String setLogLevel(@PathParam("name") String loggerName, @PathParam("level") String level) {
         accessControl("#managers");
