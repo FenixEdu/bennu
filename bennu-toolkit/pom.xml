@@ -37,6 +37,7 @@
                                 <jsSourceFile>localizedString.js</jsSourceFile>
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
                                 <jsSourceFile>group.js</jsSourceFile>
+                                <jsSourceFile>semver.js</jsSourceFile>
                                 <jsSourceFile>userAutocomplete.js</jsSourceFile>
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>codeEditor.js</jsSourceFile>
@@ -72,6 +73,7 @@
                                 <jsSourceFile>localizedString.js</jsSourceFile>
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
                                 <jsSourceFile>group.js</jsSourceFile>
+                                <jsSourceFile>semver.js</jsSourceFile>
                                 <jsSourceFile>userAutocomplete.js</jsSourceFile>
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>codeEditor.js</jsSourceFile>
