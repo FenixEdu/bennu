@@ -3,8 +3,7 @@ package org.fenixedu.bennu.core.rest;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
 import javax.ws.rs.ext.Provider;
@@ -48,12 +47,12 @@ public class DomainObjectParamConverter<E extends DomainObject> implements Param
         }
 
         if (!DomainObject.class.isAssignableFrom(rawType)) {
-            throw new WebApplicationException(Status.NOT_FOUND);
+            throw new NotFoundException(value + " could not be converted to a Domain Object");
         }
 
         final E domainObject = FenixFramework.getDomainObject(value);
         if (!FenixFramework.isDomainObjectValid(domainObject)) {
-            throw new WebApplicationException(Status.NOT_FOUND);
+            throw new NotFoundException(value + " could not be converted to a Domain Object");
         }
 
         return domainObject;
