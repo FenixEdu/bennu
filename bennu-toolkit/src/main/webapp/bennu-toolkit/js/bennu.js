@@ -6,7 +6,7 @@
 	Bennu.loaded = true;
     })
 
-    Bennu.version = "1.0.0";
+    Bennu.version = "${project.version}";
 
     Bennu.toString = function () {
         return "Bennu Toolkit v" + Bennu.version;
