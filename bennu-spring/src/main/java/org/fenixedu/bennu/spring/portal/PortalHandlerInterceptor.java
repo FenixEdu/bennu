@@ -40,8 +40,12 @@ public class PortalHandlerInterceptor implements HandlerInterceptor {
             MenuFunctionality functionality =
                     MenuFunctionality.findFunctionality(SpringPortalBackend.BACKEND_KEY, handlerMethod.getFunctionality()
                             .getKey());
-            if (functionality == null || !functionality.isAvailableForCurrentUser()) {
-                request.getRequestDispatcher("/bennu-spring/unauthorized.jsp").forward(request, response);
+            if (functionality == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "The selected functionality is not configured");
+                return false;
+            }
+            if (!functionality.isAvailableForCurrentUser()) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return false;
             }
             BennuPortalDispatcher.selectFunctionality(request, functionality);
