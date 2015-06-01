@@ -235,7 +235,7 @@
             } else if (c === "image") {
                 $(".btn-toolbar", dom).append('<div class="btn-group">' +
                         '<a class="pictureBtn btn btn-sm btn-default" title="" data-original-title="Insert picture (or just drag &amp; drop)"><span class="glyphicon glyphicon-picture"></span></a>' +
-                        '<input type="file" name="pictureTlb" style="position:absolute; top: -1000px;" multiple>'+
+                        '<input type="file" name="pictureTlb" style="display:none;" multiple>'+
                         '</div>');
             } else if (c === "undo") {
                 $(".btn-toolbar", dom).append('<div class="btn-group">' +
