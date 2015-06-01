@@ -12,6 +12,18 @@
         return "Bennu Toolkit v" + Bennu.version;
     };
 
+    // Waiting for utils packages
+    // ---------------------------
+    Bennu.replaceRequired = function(input){
+        input = $(input);
+        var attr = input.attr('required');
+
+        if (typeof attr !== typeof undefined && attr !== false) {
+            input.removeAttr("required");
+            input.attr("bennu-required","required");
+        }
+    }
+
     Bennu.gensym = function () {
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz0123456789";

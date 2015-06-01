@@ -406,9 +406,12 @@
             });
         $('.bennu-html-editor-editor', dom).wysiwyg({ dragAndDropImages: false, fileUploadError: showErrorAlert});
 
-        Bennu.validation.attachToForm(dom);
+        
+        
         e.after(dom);
-
+        Bennu.validation.attachToForm(dom);
+        Bennu.attachFormNoValidate(e);
+        
         // table shit
 
         var PX_PER_EM = 18;
