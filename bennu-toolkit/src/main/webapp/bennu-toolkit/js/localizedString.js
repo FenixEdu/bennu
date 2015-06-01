@@ -1,7 +1,9 @@
 (function () {
     Bennu.localizedString = Bennu.localizedString || {};
     Bennu.localizedString.attr = "bennu-localized-string";
-
+    Bennu.localizedString.inputValidAttr = ["readonly", "placeholder", "maxlength","disabled"]
+    Bennu.localizedString.textAreaValidAttr = ["readonly", "placeholder", "maxlength","disabled"]
+    
     function getSingleTag(locale){
         return locale.tag.split("-")[0].toUpperCase();
     }
@@ -101,7 +103,7 @@
         if (attr !== null && attr !== undefined) {
             return;
         }
-
+        
         if (!$(input).data("input")) {
 
             if (input.prop("tagName") == "INPUT") {
@@ -118,6 +120,8 @@
             } else if (input.prop("tagName") == "TEXTAREA") {
                 var widget = $('<div class="bennu-localized-string-textArea"><p><div class="btn-group bennu-localized-string-group"><button type="button" class="btn btn-default dropdown-toggle bennu-localized-string-button" data-toggle="dropdown"><span class="bennu-localized-string-language"></span><span class="caret"></span></button><ul class="dropdown-menu bennu-localized-string-menu" role="menu"></ul></div></p><p><textarea class="form-control bennu-localized-string-textarea"></textarea><p class="help-block"></p></div>');
             }
+
+
 
             widget.data("related", input);
             Bennu.localizedString.makeLocaleList($(".bennu-localized-string-menu", widget), widget, function (e) {
@@ -181,6 +185,16 @@
             Bennu.validation.attachToForm(widget);
             recalculateButtons(widget);
             Bennu.attachFormNoValidate(input);
+
+
+            if (input.prop("tagName") == "INPUT") {
+                var widgetInput = $('.bennu-localized-string-input',widget);
+                Bennu.utils.updateAttrs(input,widgetInput, Bennu.localizedString.inputValidAttr);
+            } else if (input.prop("tagName") == "TEXTAREA") {
+                var widgetInput = $('.bennu-localized-string-textarea', widget);
+                Bennu.utils.updateAttrs(input,widgetInput, Bennu.localizedString.textAreaValidAttr);
+            }
+            
             return Bennu.widgetHandler.makeFor(input);
         }
     };
@@ -192,7 +206,7 @@
             var z = $(".bennu-localized-string-button-full", e)
             var x = $(".bennu-localized-string-button-short", e)
             if(x.length && z.length){
-                if ((z.width() < 0 || z.width() / e.width()) > 1/3){
+                if ((z.width() / e.width()) > 1/3){
                     if (z[0].style.display !== "none"){
                         x[0].style.display = "inline";
                         z[0].style.display = "none";
