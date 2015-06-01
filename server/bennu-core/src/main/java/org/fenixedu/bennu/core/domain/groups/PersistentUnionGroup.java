@@ -17,6 +17,8 @@
 package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -26,6 +28,8 @@ import java.util.stream.Stream;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 import org.joda.time.DateTime;
+
+import pt.ist.fenixframework.dml.runtime.Relation;
 
 /**
  * Union composition group.
@@ -64,9 +68,8 @@ public final class PersistentUnionGroup extends PersistentUnionGroup_Base {
     }
 
     @Override
-    protected void gc() {
-        getChildrenSet().clear();
-        super.gc();
+    protected Collection<Relation<?, ?>> getContextRelations() {
+        return Collections.singleton(getRelationUnionGroupComposition());
     }
 
     /**

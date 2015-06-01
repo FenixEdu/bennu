@@ -17,6 +17,7 @@
 package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -27,6 +28,8 @@ import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 import org.joda.time.DateTime;
+
+import pt.ist.fenixframework.dml.runtime.Relation;
 
 /**
  * Groups of specific users.
@@ -65,9 +68,8 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
     }
 
     @Override
-    protected void gc() {
-        getMemberSet().clear();
-        super.gc();
+    protected Collection<Relation<?, ?>> getContextRelations() {
+        return Collections.singleton(getRelationUserGroupMembers());
     }
 
     /**
