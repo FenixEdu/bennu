@@ -418,7 +418,7 @@
         
         e.after(dom);
         Bennu.validation.attachToForm(dom);
-        Bennu.attachFormNoValidate(e);
+        Bennu.replaceRequired(e);
         
         // table shit
 
