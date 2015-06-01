@@ -159,7 +159,7 @@
         widget.data("related", e);
 
         Bennu.validation.attachToForm(widget);
-        Bennu.attachFormNoValidate(e);
+        Bennu.replaceRequired(e);
         return Bennu.widgetHandler.makeFor(e);
     }
 
@@ -243,7 +243,7 @@
         widget.data("related", e);
 
         Bennu.validation.attachToForm(widget);
-        Bennu.attachFormNoValidate(e);
+        Bennu.replaceRequired(e);
         return Bennu.widgetHandler.makeFor(e);
     }
 
@@ -315,7 +315,7 @@
         widget.data("related", e);
 
         Bennu.validation.attachToForm(widget);
-        Bennu.attachFormNoValidate(e);
+        Bennu.replaceRequired(e);
         return Bennu.widgetHandler.makeFor(e);
     }
 }());

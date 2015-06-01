@@ -184,7 +184,7 @@
             input.after(widget);
             Bennu.validation.attachToForm(widget);
             recalculateButtons(widget);
-            Bennu.attachFormNoValidate(input);
+            Bennu.replaceRequired(input);
 
 
             if (input.prop("tagName") == "INPUT") {
