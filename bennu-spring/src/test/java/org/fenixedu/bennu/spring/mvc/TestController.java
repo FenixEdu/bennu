@@ -18,6 +18,7 @@
  */
 package org.fenixedu.bennu.spring.mvc;
 
+import org.fenixedu.bennu.core.security.SkipCSRF;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,10 +49,24 @@ public class TestController {
         throw BennuSpringTestDomainException.status(500);
     }
 
+    @SkipCSRF
     @ResponseBody
     @RequestMapping("/localized")
     public String localized(@RequestParam LocalizedString localized) {
         return localized.json().toString();
+    }
+
+    @ResponseBody
+    @RequestMapping("/csrf")
+    public String csrfChecker() {
+        return "ok";
+    }
+
+    @SkipCSRF
+    @ResponseBody
+    @RequestMapping("/csrf-ignored")
+    public String csrfIgnored() {
+        return "ok";
     }
 
 }

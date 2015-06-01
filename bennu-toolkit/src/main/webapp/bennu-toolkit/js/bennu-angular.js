@@ -136,4 +136,9 @@
 	  }
 	});
 
+	bennuToolkit.config(['$httpProvider',function($httpProvider) {
+		$httpProvider.defaults.headers.common = $httpProvider.defaults.headers.common || {};
+		$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+	}]);
+
 })();
