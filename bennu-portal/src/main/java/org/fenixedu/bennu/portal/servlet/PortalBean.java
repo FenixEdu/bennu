@@ -98,13 +98,14 @@ public class PortalBean {
             try {
                 NodeList nodes = getFilesForId("toolkit");
                 StringBuilder builder = new StringBuilder();
+                builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
                 for (int i = 0; i < nodes.getLength(); i++) {
                     Node currentItem = nodes.item(i);
 
                     builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath).append("/bennu-toolkit/js/")
                             .append(currentItem.getTextContent()).append("\"></script>");
                 }
-                builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
+                
 
                 DEBUG_TOOLKIT_TAG = builder.toString();
             } catch (Exception e) {
@@ -122,6 +123,7 @@ public class PortalBean {
             try {
                 NodeList nodes = getFilesForId("toolkit-angular");
                 StringBuilder builder = new StringBuilder();
+                builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
                 builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
                         .append("/bennu-portal/js/angular.min.js\"></script>");
                 for (int i = 0; i < nodes.getLength(); i++) {
@@ -130,7 +132,7 @@ public class PortalBean {
                     builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath).append("/bennu-toolkit/js/")
                             .append(currentItem.getTextContent()).append("\"></script>");
                 }
-                builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
+                
 
                 DEBUG_TOOLKIT_ANGULAR_TAG = builder.toString();
             } catch (Exception e) {
@@ -145,19 +147,19 @@ public class PortalBean {
 
     private String getToolkit() {
         StringBuilder builder = new StringBuilder(bennuPortal());
+        builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
         builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
                 .append("/bennu-toolkit/js/toolkit.js\"></script>");
-        builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
         return builder.toString();
     }
 
     private String getAngularToolkit() {
         StringBuilder builder = new StringBuilder(bennuPortal());
+        builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
         builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
                 .append("/bennu-portal/js/angular.min.js\"></script>");
         builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
                 .append("/bennu-toolkit/js/toolkit-angular.js\"></script>");
-        builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
         return builder.toString();
     }
 
