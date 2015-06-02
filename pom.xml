@@ -161,7 +161,7 @@
         <module>server</module>
         <module>theme</module>
         <module>bennu-oauth</module>
-        <module>bennu-oauth-test</module>
         <module>bennu-spring</module>
+        <module>bennu-test</module>
     </modules>
 </project>
