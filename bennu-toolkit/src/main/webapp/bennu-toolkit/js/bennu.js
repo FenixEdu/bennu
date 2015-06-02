@@ -12,18 +12,6 @@
         return "Bennu Toolkit v" + Bennu.version;
     };
 
-    // Waiting for utils packages
-    // ---------------------------
-    Bennu.replaceRequired = function(input){
-        input = $(input);
-        var attr = input.attr('required');
-
-        if (typeof attr !== typeof undefined && attr !== false) {
-            input.removeAttr("required");
-            input.attr("bennu-required","required");
-        }
-    }
-
     Bennu.gensym = function () {
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -87,8 +75,7 @@
             // If the attribute was removed after attaching to dom;
             for (var i = 0; i < cache.length; i++) {
                 var attr = cache[i];
-                var val = input.attr(attr);
-                if (typeof val !== typeof undefined && val !== false){
+                if (Bennu.utils.hasAttr(input, attr)){
                     widgetInput.removeAttr(attr);
                 }
             };
@@ -105,6 +92,21 @@
 
         widgetInput.data("attrCache", cache)        
     }
+
+    Bennu.utils.hasAttr = function(obj,attr){
+        var val = obj.attr(attr);
+        return (typeof val !== typeof undefined && val !== false);
+    }
+
+    Bennu.utils.replaceRequired = function(input){
+        input = $(input);
+
+        if (Bennu.utils.hasAttr(input,'required')) {
+            input.removeAttr("required");
+            input.attr("bennu-required","required");
+        }
+    }
+
 
     Bennu.widgetHandler = Bennu.widgetHandler || {}
     Bennu.widgetHandler.makeFor = function (e, onremove){

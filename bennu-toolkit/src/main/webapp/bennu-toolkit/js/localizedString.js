@@ -8,6 +8,15 @@
         return locale.tag.split("-")[0].toUpperCase();
     }
 
+    function setLocale(locale,localeButton){
+        localeButton.html(locale.displayName || getSingleTag(locale));
+        localeButton.data("locale", locale);
+    }
+
+    function setTagButton(locale, tagButton){
+        if(tagButton && tagButton.length) { tagButton.html(getSingleTag(locale)) };
+    }
+
     Bennu.localizedString.changeData = function (locale, localeButton, inputField, widget, tagButton) {
         widget = $(widget);
         var val = $(widget.data("related")).val();
@@ -31,10 +40,8 @@
         if (val !== inputField.val()){
             inputField.val(val || "");
             
-            localeButton.html(locale.displayName || getSingleTag(locale));
-            if(tagButton && tagButton.length) { tagButton.html(getSingleTag(locale)) };
-
-            localeButton.data("locale", locale);
+            setLocale(locale,localeButton);
+            setTagButton(locale, tagButton);
             
             widget.data("locale", locale);
         }
@@ -99,8 +106,7 @@
     Bennu.localizedString.createWidget = function (input) {
         input = $(input);
 
-        var attr = input.attr("bennu-html-editor");
-        if (attr !== null && attr !== undefined) {
+        if (Bennu.utils.hasAttr(input,"bennu-html-editor")) {
             return;
         }
         
@@ -184,7 +190,7 @@
             input.after(widget);
             Bennu.validation.attachToForm(widget);
             recalculateButtons(widget);
-            Bennu.replaceRequired(input);
+            Bennu.utils.replaceRequired(input);
 
 
             if (input.prop("tagName") == "INPUT") {
