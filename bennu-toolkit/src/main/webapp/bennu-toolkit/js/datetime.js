@@ -29,8 +29,7 @@
 
     function verifyType(e){
         e = $(e);
-        var val = e.attr("type");
-        if(typeof val !== typeof undefined && val !== false){
+        if(Bennu.utils.hasAttr(e, "type")){
             if (val !== "text" && val !== "hidden"){
                 throw "Date/Time input field using non aceptable type";
             }
@@ -59,27 +58,27 @@
         }
     }
     function dateOptions(e, options){
-        if (e.attr("min-date") !== undefined && e.attr("max-date") !== null) {
+        if (Bennu.utils.hasAttr(e, "min-date")) {
             options.minDate = new Date(e.attr("min-date"));
         }
 
-        if (e.attr("max-date") !== undefined && e.attr("max-date") !== null) {
+        if (Bennu.utils.hasAttr(e, "max-date")) {
             options.maxDate = new Date(e.attr("max-date"));
         }
 
-        if (e.attr("requires-future") !== undefined && e.attr("requires-future") !== null) {
+        if (Bennu.utils.hasAttr(e, "requires-future")) {
             options.minDate = new moment();
         }
 
-        if (e.attr("requires-past") !== undefined && e.attr("requires-past") !== null) {
+        if (Bennu.utils.hasAttr(e, "requires-past")) {
             options.maxDate = new moment();
         }
 
-        if (e.attr("requires-future") !== undefined && e.attr("requires-future") !== null && e.attr("requires-past") !== undefined && e.attr("requires-past") !== null) {
+        if (Bennu.utils.hasAttr(e, "requires-future") && Bennu.utils.hasAttr(e, "requires-past")) {
             throw "Error: Due to limitations on the space-time continuum, choosing dates of past and future would break the causality principle."
         }
 
-        if (e.attr("unavaible-dates") !== undefined && e.attr("unavaible-dates") !== null) {
+        if (Bennu.utils.hasAttr(e, "unavaible-dates")) {
             var dates = e.attr("unavaible-dates").split(",")
             var result = [];
             for (var i = 0; i < dates.length; i++) {
@@ -88,7 +87,7 @@
             options.disabledDates = result;
         }
 
-        if (e.attr("avaible-dates") !== undefined && e.attr("avaible-dates") !== null) {
+        if (Bennu.utils.hasAttr(e, "avaible-dates")) {
             var dates = e.attr("avaible-dates").split(",")
             var result = [];
             for (var i = 0; i < dates.length; i++) {
@@ -159,22 +158,22 @@
         widget.data("related", e);
 
         Bennu.validation.attachToForm(widget);
-        Bennu.replaceRequired(e);
+        Bennu.utils.replaceRequired(e);
         return Bennu.widgetHandler.makeFor(e);
     }
 
     function timeOptions(e, options){
-        if (e.attr("only-hours") !== undefined) {
+        if (Bennu.utils.hasAttr(e,"only-hours")) {
             options.useSeconds = false
             options.useMinutes = false
         }
 
-        if (e.attr("no-seconds") !== undefined) {
+        if (Bennu.utils.hasAttr(e,"no-seconds")) {
             options.useSeconds = false
             options.useMinutes = true
         }
 
-        if (e.attr("minute-stepping") !== undefined) {
+        if (Bennu.utils.hasAttr(e,"minute-stepping")) {
             options.minuteStepping = parseInt(e.attr("minute-stepping"));
         }
     }
@@ -243,7 +242,7 @@
         widget.data("related", e);
 
         Bennu.validation.attachToForm(widget);
-        Bennu.replaceRequired(e);
+        Bennu.utils.replaceRequired(e);
         return Bennu.widgetHandler.makeFor(e);
     }
 
@@ -315,7 +314,7 @@
         widget.data("related", e);
 
         Bennu.validation.attachToForm(widget);
-        Bennu.replaceRequired(e);
+        Bennu.utils.replaceRequired(e);
         return Bennu.widgetHandler.makeFor(e);
     }
 }());

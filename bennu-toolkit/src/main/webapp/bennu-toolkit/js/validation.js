@@ -23,7 +23,7 @@
                     $("[bennu-html-editor]", form).map(function (i, xx) {
                         xx = $(xx);
 
-                        if(xx.attr("bennu-localized-string") != null || xx.attr("bennu-localized-string") != undefined){
+                        if(Bennu.utils.hasAttr(xx, "bennu-localized-string")){
                             // the other handler will check it;
                             return true;
                         }
@@ -57,22 +57,19 @@
     Bennu.validation.validateDateTime = function(inputObject){
         var value = inputObject.val();
         var val = true;
-        if (inputObject.attr("bennu-required") != null || inputObject.attr("bennu-required") != undefined) {
+        if (Bennu.utils.hasAttr(xx, "bennu-required")) {
             if (!value) {
                 inputObject.data("input").addClass("has-error");
 
-                var attr = inputObject.attr('bennu-time');
-                if (typeof attr !== typeof undefined && attr !== false) {
+                if (Bennu.utils.hasAttr(inputObject, "bennu-time")) {
                     $(".help-block", inputObject.data("input")).html(messages['bennu-time']);
                 }
 
-                attr = inputObject.attr('bennu-date');
-                if (typeof attr !== typeof undefined && attr !== false) {
+                if (Bennu.utils.hasAttr(inputObject, "bennu-date")) {
                     $(".help-block", inputObject.data("input")).html(messages['bennu-date']);
                 }
 
-                attr = inputObject.attr('bennu-datetime');
-                if (typeof attr !== typeof undefined && attr !== false) {
+                if (Bennu.utils.hasAttr(inputObject, "bennu-datetime")) {
                     $(".help-block", inputObject.data("input")).html(messages['bennu-date-time']);
                 }
                 val = false;
@@ -85,7 +82,7 @@
     Bennu.validation.validateInput = function (inputObject) {
         var value = inputObject.val();
         var val = true;
-        if (inputObject.attr("bennu-required") != null || inputObject.attr("bennu-required") != undefined) {
+        if (Bennu.utils.hasAttr(inputObject, "bennu-required")) {
             if (!value) {
                 inputObject.data("input").addClass("has-error");
                 $(".help-block", inputObject.data("input")).html('This field is required');
@@ -97,7 +94,7 @@
 
     Bennu.validation.validateLocalizedInput = function (inputObject) {
         var value = inputObject.val() ? JSON.parse(inputObject.val()) : null;
-        if (inputObject.attr("bennu-required") != null || inputObject.attr("bennu-required") != undefined) {
+        if (Bennu.utils.hasAttr(inputObject, "bennu-required")) {
             var val = Bennu.locales.map(function (x) {
                 return Bennu.localizedString.getContent(value, x, true) || false;
             }).reduce(function (x, y) {
@@ -110,7 +107,7 @@
             }
 
             return val;
-        } else if (inputObject.attr("required-any") != null || inputObject.attr("required-any") != undefined) {
+        } else if (Bennu.utils.hasAttr(inputObject, "required-any")) {
             var val = Bennu.locales.map(function (x) {
                 return Bennu.localizedString.getContent(value, x, true) || false;
             }).reduce(function (x, y) {
