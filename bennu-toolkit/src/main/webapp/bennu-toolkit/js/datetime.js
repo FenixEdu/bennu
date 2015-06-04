@@ -47,6 +47,7 @@
     function verifyType(e){
         e = $(e);
         if(Bennu.utils.hasAttr(e, "type")){
+            var val = e.attr("type");
             if (val !== "text" && val !== "hidden"){
                 throw "Date/Time input field using non aceptable type";
             }
@@ -180,26 +181,27 @@
     }
 
     function timeOptions(e, options){
-        if (Bennu.utils.hasAttr(e,"only-hours")) {
-            options.useSeconds = false
-            options.useMinutes = false
-        }
-
-        if (Bennu.utils.hasAttr(e,"no-seconds")) {
-            options.useSeconds = false
-            options.useMinutes = true
-        }
-
         if (Bennu.utils.hasAttr(e,"minute-stepping")) {
             options.minuteStepping = parseInt(e.attr("minute-stepping"));
+        }
+    }
+
+    function timeFormat(e){
+        if (Bennu.utils.hasAttr(e,"only-hours")) {
+            return "HH"
+        }else if (Bennu.utils.hasAttr(e,"no-seconds")) {
+            return "HH:mm"
+        }else{
+            return "HH:mm:ss"
         }
     }
 
     Bennu.datetime.createTimeWidget = function (e) {
         e = $(e);
         verifyType(e);
+
         var widget = $('<div class="bennu-datetime-input-group"><div class="input-group date"><span class="input-group-addon">' +
-            '<span class="glyphicon glyphicon-time"></span></span><input type="text" data-date-format="HH:mm:ss" class="bennu-datetime-input form-control"/></div><p class="help-block"></p></div>');
+            '<span class="glyphicon glyphicon-time"></span></span><input type="text" data-date-format="' + timeFormat(e) + '" class="bennu-datetime-input form-control"/></div><p class="help-block"></p></div>');
 
         var currentDate = e.val();
 
@@ -225,7 +227,19 @@
             if (value.trim() == ""){
                 var r = "";
             }else{
-                var r = moment(parseTime(value)).format("HH:mm:ss.SSS");
+                var tmp = moment(parseTime(value))
+                tmp.millisecond(0);
+                
+                if (Bennu.utils.hasAttr(e,"no-seconds")) {
+                    tmp = tmp.seconds(0);
+                }
+
+                if (Bennu.utils.hasAttr(e,"only-hours")) {
+                    tmp = tmp.seconds(0);
+                    tmp = tmp.minutes(0);
+                }
+
+                r = tmp.format("HH:mm:ss.SSS");
             }
 
             if (r !== e.val()){
@@ -233,6 +247,7 @@
                 e.trigger("change");
             }
         }).datetimepicker(options);
+
 
         e.after(widget);
 
@@ -267,7 +282,7 @@
         e = $(e);
         verifyType(e);
         var widget = $('<div class="bennu-datetime-input-group"><div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
-            '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY HH:mm:ss" type="text" class="bennu-datetime-input form-control"/></div><p class="help-block"></p></div>');
+            '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY ' + timeFormat(e) + '" type="text" class="bennu-datetime-input form-control"/></div><p class="help-block"></p></div>');
 
         var currentDate = e.val();
 
@@ -294,7 +309,19 @@
             if (value == ""){
                 e.val("");
             }else{
-                var r = moment(value, "DD/MM/YYYY HH:mm:ss").format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+                var tmp = moment(value, "DD/MM/YYYY " + timeFormat(e))
+                tmp.millisecond(0);
+                
+                if (Bennu.utils.hasAttr(e,"no-seconds")) {
+                    tmp = tmp.seconds(0);
+                }
+
+                if (Bennu.utils.hasAttr(e,"only-hours")) {
+                    tmp = tmp.seconds(0);
+                    tmp = tmp.minutes(0);
+                }
+
+                r = tmp.format("YYYY-MM-DDTHH:mm:ss.SSSZ");
                 if (r !== e.val()){
                     e.val(r);
                     e.trigger("change");
