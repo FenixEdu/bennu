@@ -35,6 +35,7 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
         }
         init(parent, functionality.isVisible(), functionality.getAccessGroup(), functionality.getTitle(),
                 functionality.getDescription(), functionality.getPath());
+        setDocumentationUrl("{base}");
         setItemKey(functionality.getKey());
         setProvider(functionality.getProvider());
     }
@@ -64,11 +65,23 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
      */
     public MenuFunctionality(MenuContainer parent, boolean visible, String key, String provider, String accessGroup,
             LocalizedString description, LocalizedString title, String path) {
+        this(parent, visible, key, provider, accessGroup, description, title, path, "");
+    }
+
+    /**
+     * Creates a new {@link MenuFunctionality} under the given container, based on the provider parameters.
+     *
+     * @throws IllegalArgumentException
+     *             If {@code parent} is null.
+     */
+    public MenuFunctionality(MenuContainer parent, boolean visible, String key, String provider, String accessGroup,
+            LocalizedString description, LocalizedString title, String path, String documentationUrl) {
         super();
         if (parent == null) {
             throw new IllegalArgumentException("MenuFunctionality cannot be created without a parent!");
         }
         init(parent, visible, accessGroup, title, description, path);
+        setDocumentationUrl(documentationUrl);
         setItemKey(key);
         setProvider(provider);
     }
@@ -82,6 +95,7 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
             throw new IllegalArgumentException("MenuFunctionality cannot be created without a parent!");
         }
         init(newParent, original);
+        setDocumentationUrl(original.getDocumentationUrl());
         setItemKey(original.getItemKey());
         setProvider(original.getProvider());
     }
@@ -133,6 +147,14 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
     public String getItemKey() {
         //FIXME: remove when the framework enables read-only slots
         return super.getItemKey();
+    }
+
+    public String getParsedDocumentationUrl() {
+        if (this.getDocumentationUrl() != null) {
+            return this.getDocumentationUrl().replaceAll("\\{base\\}",
+                    PortalConfiguration.getInstance().getDocumentationBaseUrl());
+        }
+        return "";
     }
 
     /**

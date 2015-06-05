@@ -54,6 +54,12 @@
 			placeholder="Path" class="form-control" required ng-readonly="selected.id">
 		</div>
 	</div>
+	<div class="form-group" ng-if="selected.functionality">
+		<label class="col-sm-2 control-label" for="path">Documentation Url</label>
+		<div class="col-sm-10">
+			<input type="text"  name="documentationUrl" ng-model="selected.documentationUrl"	placeholder="Documentation URL" class="form-control">
+		</div>
+	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label" for="layout">Layout</label>
 		<div class="col-sm-10">
@@ -163,3 +169,5 @@
 </div>
 
 </div>
+
+

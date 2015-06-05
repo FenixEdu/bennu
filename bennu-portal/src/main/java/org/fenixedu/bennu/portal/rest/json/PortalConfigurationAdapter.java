@@ -34,6 +34,7 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         object.addProperty("supportEmailAddress", configuration.getSupportEmailAddress());
         object.addProperty("systemEmailAddress", configuration.getSystemEmailAddress());
         object.addProperty("theme", configuration.getTheme());
+        object.addProperty("defaultDocumentationBaseUrl", configuration.getDocumentationBaseUrl());
         if (configuration.getLogo() != null) {
             if (!Strings.isNullOrEmpty(configuration.getLogoLinkUrl())) {
                 object.addProperty("logoLinkUrl", configuration.getLogoLinkUrl());
@@ -92,6 +93,9 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         }
         if (object.has("faviconType")) {
             configuration.setFaviconType(object.get("faviconType").getAsString());
+        }
+        if (object.has("defaultDocumentationBaseUrl")) {
+            configuration.setDocumentationBaseUrl(object.get("defaultDocumentationBaseUrl").getAsString());
         }
         return configuration;
     }
