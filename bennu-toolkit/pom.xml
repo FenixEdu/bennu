@@ -22,6 +22,9 @@
                 <targetPath>META-INF/resources</targetPath>
             </resource>
             <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
                 <directory>src/main/webapp</directory>
                 <includes>
                     <include>**/bennu.js</include>
@@ -57,6 +60,7 @@
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>codeEditor.js</jsSourceFile>
                                 <jsSourceFile>spinner.js</jsSourceFile>
+                                <jsSourceFile>browser.js</jsSourceFile>
                                 <jsSourceFile>libs/MutationObserverPolyfill.js</jsSourceFile>
                                 <jsSourceFile>mutations.js</jsSourceFile>
                             </jsSourceFiles>
@@ -91,6 +95,7 @@
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>codeEditor.js</jsSourceFile>
                                 <jsSourceFile>spinner.js</jsSourceFile>
+                                <jsSourceFile>browser.js</jsSourceFile>
                                 <jsSourceFile>bennu-angular.js</jsSourceFile>
                             </jsSourceFiles>
                             <webappTargetDir>${project.build.outputDirectory}/META-INF/resources/</webappTargetDir>
@@ -114,12 +119,32 @@
             <artifactId>bennu-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.8.2</version>
+		</dependency>
+		<dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>ace</artifactId>
             <version>1.1.9</version>
         </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+			<artifactId>owasp-java-html-sanitizer</artifactId>
+			<version>r239</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jsr305</artifactId>
+					<groupId>com.google.code.findbugs</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
 
     <repositories>
         <repository>

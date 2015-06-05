@@ -19,6 +19,20 @@
     var POST_ON_ERROR = false;
     Bennu.validation = {};
 
+    Bennu.validation.addError = function(el,errorMessage){
+        el.addClass("has-error");
+        if(errorMessage){
+            $(".help-block", el).html(errorMessage);
+        }
+    };
+
+    Bennu.validation.resetError = function(el,errorMessage){
+        el.removeClass("has-error");
+        if(errorMessage){
+            $(".help-block", el).html(errorMessage);
+        }
+    };
+
     Bennu.validation.attachToForm = function (widget) {
         var form = widget.closest("form");
         if (!form.data("bennu-validator")) {
@@ -27,14 +41,27 @@
                     var val = Array.prototype.reduce.apply([
                     $("[bennu-localized-string]", form).map(function (i, xx) {
                         xx = $(xx);
-                        xx.data("input").removeClass("has-error");
+                        Bennu.validation.resetError(xx.data("input"))
                         return Bennu.validation.validateLocalizedInput(xx);
                     }), 
 
                     $("[bennu-time],[bennu-date],[bennu-datetime]", form).map(function (i, xx) {
                         xx = $(xx);
-                        xx.data("input").removeClass("has-error");
+                        Bennu.validation.resetError(xx.data("input"));
                         return Bennu.validation.validateDateTime(xx);
+                    }),
+
+                    $("[requires-url]", form).map(function (i, xx) {
+                        xx = $(xx);
+                        Bennu.validation.resetError(xx.data("input"));
+
+                        if(Bennu.validation.isUrl(xx.val())){
+                            return true;
+                        }else{
+                            Bennu.validation.addError(xx.data("input"),"Requires a valid URL");
+                            return false;
+                        }
+                        
                     }),
 
                     $("[bennu-html-editor]", form).map(function (i, xx) {
@@ -45,7 +72,7 @@
                             return true;
                         }
 
-                        xx.data("input").removeClass("has-error");
+                        Bennu.validation.resetError(xx.data("input"));
                         return Bennu.validation.validateInput(xx);
                     })], [$.merge, []]);
 
@@ -76,19 +103,20 @@
         var val = true;
         if (Bennu.utils.hasAttr(xx, "bennu-required")) {
             if (!value) {
-                inputObject.data("input").addClass("has-error");
-
+                var errorMessage;
                 if (Bennu.utils.hasAttr(inputObject, "bennu-time")) {
-                    $(".help-block", inputObject.data("input")).html(messages['bennu-time']);
+                    errorMessage = messages['bennu-time'];
                 }
 
                 if (Bennu.utils.hasAttr(inputObject, "bennu-date")) {
-                    $(".help-block", inputObject.data("input")).html(messages['bennu-date']);
+                    errorMessage = messages['bennu-date'];
                 }
 
                 if (Bennu.utils.hasAttr(inputObject, "bennu-datetime")) {
-                    $(".help-block", inputObject.data("input")).html(messages['bennu-date-time']);
+                    errorMessage = messages['bennu-date-time'];
                 }
+
+                Bennu.validation.addError(inputObject.data("input"), errorMessage);
                 val = false;
             }
         }
@@ -101,8 +129,7 @@
         var val = true;
         if (Bennu.utils.hasAttr(inputObject, "bennu-required")) {
             if (!value) {
-                inputObject.data("input").addClass("has-error");
-                $(".help-block", inputObject.data("input")).html('This field is required');
+                Bennu.validation.addError(inputObject.data("input"), 'This field is required');
                 val = false;
             }
         }
@@ -119,8 +146,7 @@
             }, true);
 
             if (!val) {
-                inputObject.data("input").addClass("has-error");
-                $(".help-block", inputObject.data("input")).html('You need to to insert text in all languages');
+                Bennu.validation.addError(inputObject.data("input"), 'You need to to insert text in all languages');
             }
 
             return val;
@@ -131,12 +157,15 @@
                 return x || y;
             }, false);
             if (!val) {
-                inputObject.data("input").addClass("has-error");
-                $(".help-block", inputObject.data("input")).html('You need to to insert text in at least one language');
+                Bennu.validation.addError(inputObject.data("input"), 'You need to to insert text in at least one language');
             }
 
             return val;
         }
     };
+
+    Bennu.validation.isUrl = function(url){
+        return url.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/) && true || false;
+    }
 
 })();

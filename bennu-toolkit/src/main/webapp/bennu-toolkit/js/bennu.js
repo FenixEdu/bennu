@@ -88,6 +88,18 @@
 
     Bennu.utils =  Bennu.utils || {};
 
+    Bennu.utils.uniqueArray = function(arr){
+       var u = {}, a = [];
+       for(var i = 0, l = arr.length; i < l; ++i){
+          if(u.hasOwnProperty(arr[i])) {
+             continue;
+          }
+          a.push(arr[i]);
+          u[arr[i]] = 1;
+       }
+       return a;
+    };
+
     Bennu.utils.updateAttrs = function(input, widgetInput, allowedAttrs){
         input = $(input);
 
