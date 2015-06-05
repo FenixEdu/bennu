@@ -37,7 +37,6 @@
 
 							script.onload = function() {
 								loaded[file] = true;
-								console.log("loaded " + file);
 								for (var i = 0; i < cbs[file].length; i++) {
 									cbs[file][i].call();
 								};
@@ -56,7 +55,16 @@
 	    }
 	};
 
-	Bennu.ensure.isLoaded = function(x){
-		return loaded[x] || false;
+	Bennu.ensure.isLoaded = function(files){
+		if (typeof files == "string"){
+			return loaded[files] || false;
+		}else{
+			return Array.prototype.reduce.apply($.map(files, function(x){
+				return loaded[files] || false;;
+			}), [function (x, y) {
+                return x && y;
+            }, true]);
+		}
+
 	};
 })();

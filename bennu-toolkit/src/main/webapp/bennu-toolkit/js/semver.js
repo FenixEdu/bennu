@@ -17,7 +17,7 @@
 
 (function(){
 	Bennu.semanticVersion = Bennu.semanticVersion || function(version){
-		var match = /^[^\d]*(\d+)\.(\d+)\.(\d+)(.*)?/g.exec(version);
+		var match = /^[^\d]*(\d+)\.(\d+)(\.(\d+))?(.*)?/g.exec(version);
 
 		if (!match){
 			return null;
@@ -25,7 +25,7 @@
 
 		this.major    = parseInt(match[1]);
 		this.minor    = parseInt(match[2]);
-		this.revision = parseInt(match[3]);
+		this.revision = parseInt(match[4] || 0);
 
 		var rest = match[4];
 		if (rest){

@@ -1,16 +1,16 @@
 /*
  * htmlEditor.js
- * 
+ *
  * Copyright (c) 2014, Instituto Superior Técnico. All rights reserved.
- * 
+ *
  * This file is part of Bennu Toolkit.
- * 
+ *
  * Bennu Toolkit is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * Bennu Toolkit is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with Bennu Toolkit. If not, see
  * <http://www.gnu.org/licenses/>.
  */
@@ -19,7 +19,6 @@
     /** @const */ var ALLOW_VOICE = false;
     /** @const */ var ALLOW_FULLSCREEN = true;
 
-    
     Bennu.htmlEditor = Bennu.htmlEditor || {};
     Bennu.htmlEditor.attr = "bennu-html-editor";
     Bennu.htmlEditor.colors = [
@@ -43,6 +42,341 @@
         }
         return null;
     }
+
+    Bennu.htmlEditor.components = Bennu.htmlEditor.components || {};
+
+    Bennu.htmlEditor.components.get = function(k){
+        if(Bennu.htmlEditor.components.list){
+            for (var i = 0; i < Bennu.htmlEditor.components.list.length; i++) {
+                if(Bennu.htmlEditor.components.list[i].key === k){
+                    return Bennu.htmlEditor.components.list[i];
+                }
+            };
+        }
+    }
+
+    Bennu.htmlEditor.components.init = function(editor){
+        Bennu.htmlEditor.components.list = [];
+        Bennu.htmlEditor.components.provided = {};
+        $.get(Bennu.contextPath + "/api/bennu-toolkit/components",function(json){
+            for (var i = 0; i < json.length; i++) {
+                var component = json[i];
+
+                if(!component.order){
+                    component.order = 0;
+                }
+
+                Bennu.htmlEditor.components.list.push(component);
+            };
+            Bennu.htmlEditor.components.reflow(editor);
+        });
+
+        Bennu.htmlEditor.components.attachModal();
+    };
+
+    Bennu.htmlEditor.components.attachModal = function(){
+        if(!$(".bennu-html-editor-component-modal").length){
+            var template ='<div class="modal fade" id="bennu-html-editor-component-modal">'+
+                '<div class="modal-dialog">'+
+                    '<div class="modal-content">'+
+                        '<div class="modal-header">'+
+                            '<button type="button" class="close" data-dismiss="modal"><span class="sr-only">Close</span></button>'+
+                            '<h3 class="modal-title"></h3>'+
+                            '<small></small>'+
+                        '</div>'+
+                        '<div class="modal-body">'+
+
+                        '</div>'+
+                        '<div class="modal-footer">'+
+                            '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
+                            '<button type="button" class="btn btn-primary"></button>'+
+                        '</div>'+
+                    '</div><!-- /.modal-content -->'+
+                '</div><!-- /.modal-dialog -->'+
+            '</div><!-- /.modal -->'
+            $(document.body).append(template);
+        }
+    }
+
+    Bennu.htmlEditor.components.showModal = function(editor){
+        $("#bennu-html-editor-component-modal").data("editor",editor)
+        $("#bennu-html-editor-component-modal").modal("show")
+    };
+
+    Bennu.htmlEditor.components.hideModal = function(){
+        $("#bennu-html-editor-component-modal").modal("hide")
+        Bennu.htmlEditor.components.reflow($("#bennu-html-editor-component-modal").data("editor"));
+        $("#bennu-html-editor-component-modal").data("editor",null);
+    };
+
+    Bennu.htmlEditor.components.setTitle = function(t){
+        $("#bennu-html-editor-component-modal .modal-header h3").html(t);
+    };
+
+    Bennu.htmlEditor.components.setSubtitle = function(t){
+        $("#bennu-html-editor-component-modal .modal-header small").html(t);
+    };
+
+    Bennu.htmlEditor.components.setBody = function(t){
+        $("#bennu-html-editor-component-modal .modal-body").html(t);
+    };
+
+    Bennu.htmlEditor.components.hidePrimaryButton = function(){
+        $("#bennu-html-editor-component-modal .modal-footer button.btn-primary").hide();
+    };
+
+    Bennu.htmlEditor.components.showPrimaryButton = function(){
+        $("#bennu-html-editor-component-modal .modal-footer button.btn-primary").show();
+    };
+
+    Bennu.htmlEditor.components.setPrimaryButton = function(t){
+        $("#bennu-html-editor-component-modal .modal-footer button.btn-primary").html(t);
+    };
+
+    Bennu.htmlEditor.components.clickPrimaryButton = function(fn){
+        $("#bennu-html-editor-component-modal .modal-footer button.btn-primary").off("click.components").on("click.components",fn);
+    }
+
+    Bennu.htmlEditor.components.callback = {};
+    Bennu.htmlEditor.components.preview = {};
+    Bennu.htmlEditor.components.menu = {};
+
+    function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    Bennu.htmlEditor.components.mkHandler = function(editor,element){
+        return {
+            element:element,
+            editor : editor,
+            selection : Bennu.htmlEditor.saveSelection(),
+            files:function(files,cb){
+                this.editor.closest(".bennu-html-editor-input").data("related").data("fileHandler")(files,cb);
+            },
+            text: function(x){
+                if (x === undefined){
+                    var html = "";
+                    if (this.element){
+                        return this.element.html();
+                    }else if (typeof window.getSelection != "undefined") {
+                        var sel = this.selection;
+                        if (sel.cloneContents) {
+                            html = sel.cloneContents().textContent;
+                        }
+                    } else if (typeof document.selection != "undefined") {
+                        if (document.selection.type == "Text") {
+                            html = document.selection.createRange().htmlText;
+                        }
+                    }
+                    return html;
+                }else{
+                    var sel, range;
+                    if (this.element){
+                        var newEl = this.element.replaceWith(x);
+
+                        var r = document.createRange();
+                        r.selectNodeContents(newEl[0]);
+
+                        var sel=window.getSelection();
+                        sel.removeAllRanges();
+                        sel.addRange(r);
+                        this.selection = sel;
+
+                    }else if (window.getSelection) {
+                        if (this.selection && $(this.selection.commonAncestorContainer).closest(".bennu-html-editor-editor")[0] == this.editor[0]){
+                          this.selection.deleteContents();
+                        }else{
+                          this.editor.focus()
+                          this.selection = document.createRange();
+                          this.selection.setStart(this.editor[0],0)
+                          this.selection.setEnd(this.editor[0],0)
+                        }
+
+                        var jq = $(x);
+                        var that = this;
+
+                        // first asdd
+                        jq = $.map(jq,function(e){
+                          var z = $(e);
+                          that.selection.insertNode(z[0]);
+
+                          return z;
+                        });
+
+                        //r.selectNodeContents();
+                        var sel=window.getSelection();
+                        sel.removeAllRanges();
+
+                        // then select
+                        var selected = false
+                        $.map(jq,function(e){
+                          var r = document.createRange();
+                          r.selectNode(e[0]);
+                          sel.addRange(r);
+                        });
+
+                        this.selection = r;
+                    } else if (document.selection && document.selection.createRange) {
+                        range = document.selection.createRange();
+                        range.text = x;
+                    }
+                    return x;
+                }
+            },
+            restore : function () {
+                $(editor).focus();
+                Bennu.htmlEditor.restoreSelection(this.selection);
+            }
+        }
+    }
+
+    Bennu.htmlEditor.components.firstStep = function(editor){
+        var handler = Bennu.htmlEditor.components.mkHandler(editor);
+        Bennu.htmlEditor.components.clearModal();
+        Bennu.htmlEditor.components.setTitle("Add New Component");
+        Bennu.htmlEditor.components.setSubtitle("Choose something to add to your content");
+
+        var output = "";
+        output += '<div class="panel panel-default">'+
+        '<ul class="list-group">';
+
+        for (var i = 0; i < Bennu.htmlEditor.components.list.length; i++) {
+            var c = Bennu.htmlEditor.components.list[i]
+            output += '<li class="list-group-item">' +
+            '<h4><a data-type="' + c.key + '" href="#">' + c.name + '</a></h4>'+
+            '<p>' + c.description + '</p>'+
+            '</li>'
+        };
+
+        output += '</ul>'+
+        '</div>';
+
+        output = $(output);
+
+        $("a", output).on("click",function(e){
+            var key = $(e.target).data("type");
+
+            Bennu.htmlEditor.components.showEditorFor(key,null,handler);
+        });
+
+        Bennu.htmlEditor.components.setBody(output);
+        Bennu.htmlEditor.components.hidePrimaryButton();
+        Bennu.htmlEditor.components.showModal(editor);
+    };
+
+    Bennu.htmlEditor.components.showEditorFor = function(key,element,handler){
+        var c = Bennu.htmlEditor.components.get(key);
+
+        var files = $.map(c.files,function(e){
+            return Bennu.contextPath + e;
+        });
+
+        if (Bennu.ensure.isLoaded(files)){
+            Bennu.htmlEditor.components.callback[c.key](element,handler);
+        }else{
+            Bennu.htmlEditor.components.clearModal();
+            Bennu.htmlEditor.components.setTitle("Loading...");
+            Bennu.htmlEditor.components.setSubtitle("We are calling home");
+            Bennu.htmlEditor.components.setBody("<div style='text-align:center;'>" +
+                "<i bennu-spinner color='primary'></i>"+
+            "</div>");
+            Bennu.htmlEditor.components.hidePrimaryButton();
+
+            Bennu.ensure(files,function(){
+                Bennu.htmlEditor.components.clearModal();
+                Bennu.htmlEditor.components.callback[c.key](element,handler);
+            });
+        }
+    }
+
+    Bennu.htmlEditor.components.reflow = function(editor){
+        $("[bennu-component]",editor)
+        .off("dblclick.bennu-component").each(function(i,e){
+            e=$(e);
+            var context = e.data("context");
+            if (context) {
+                context.destroy();
+            };
+        }).on("dblclick.bennu-component", function(e){
+            e=$(e.target);
+            e=e.closest("[bennu-component]");
+            Bennu.htmlEditor.components.showModal(editor);
+            var handler = Bennu.htmlEditor.components.mkHandler(editor,e);
+            Bennu.htmlEditor.components.showEditorFor(e.attr("bennu-component"),e, handler);
+        }).each(function(i,element){
+            element = $(element)
+            var key = element.attr("bennu-component");
+
+            var c = Bennu.htmlEditor.components.get(key);
+
+            var files = $.map(c.files,function(e){
+                return Bennu.contextPath + e;
+            });
+
+            Bennu.ensure(files,function(){
+                element.removeAttr("style");
+                element.removeAttr("class");
+                var x = Bennu.htmlEditor.components.preview[key];
+
+                x && x(element);
+                element.contextmenu({
+                    target: $(".bennu-html-editor-context-menu", editor.closest(".bennu-html-editor-input")),
+                    before: function (e) {
+                      // This function is optional.
+                      // Here we use it to stop the event if the user clicks a span
+                      this.getMenu().find("ul").empty();
+                      e.preventDefault();
+                      var menu = Bennu.htmlEditor.components.menu[key]
+                      var that = this;
+                      menu && menu(element, {
+                        add:function(el){
+                            that.getMenu().find("ul").append(el);
+                        },
+                        target:function(){
+                            return $(e.target)
+                        },
+                        closeMenu:function(){
+                            that.closemenu(e);
+                        }
+                      });
+                      var edit = $("<li><a class='pointer' href='#'><i class='glyphicon glyphicon-pencil'></i> Edit</a></li>")
+                      edit.on("click",function(){
+                        that.closemenu(e);
+                        Bennu.htmlEditor.components.showModal(editor);
+                        var handler = Bennu.htmlEditor.components.mkHandler(editor,element);
+                        Bennu.htmlEditor.components.showEditorFor(element.attr("bennu-component"),element,handler);
+                      });
+
+                      that.getMenu().find("ul").append(edit);
+                      var del = $("<li><a class='pointer' href='#'><i class='glyphicon glyphicon-trash'></i> Delete</a></li>")
+                      del.on("click",function(){
+                        that.closemenu(e);
+                        element.remove()
+                      });
+                      that.getMenu().find("ul").append(del);
+                      return true;
+                    }
+                });
+            });
+        });
+        var components = $("[bennu-component]",editor)
+        if(components.length > 0){
+            components.each(function(i,e){
+                e=$(e);
+                e=e.closest("[bennu-component]");
+            });
+        }
+    };
+
+
+    Bennu.htmlEditor.components.clearModal = function(){
+        var modal = $("#bennu-html-editor-component-modal");
+        $(".modal-body", modal).empty();
+        $(".modal-header h3", modal).html("");
+        $(".modal-header small", modal).html("");
+        $(".modal-footer button.btn-primary", modal).html("");
+        $("#bennu-html-editor-component-modal .modal-footer button.btn-primary").off("click")
+    };
 
     Bennu.htmlEditor.restoreSelection = function(range) {
         if (range) {
@@ -138,7 +472,8 @@
             Bennu.contextPath + "/bennu-toolkit/js/libs/bootstrap-wysiwyg.js",
             Bennu.contextPath + "/bennu-toolkit/js/libs/jquery.fullscreen.js",
             Bennu.contextPath + "/bennu-toolkit/js/libs/sanitize.js",
-            Bennu.contextPath + "/bennu-toolkit/js/libs/jquery.hotkeys.js"
+            Bennu.contextPath + "/bennu-toolkit/js/libs/jquery.hotkeys.js",
+            Bennu.contextPath + "/bennu-toolkit/js/libs/bootstrap-contextmenu.js"
         ], function(){
         var dom = $('<div class="bennu-html-editor-input">' +
             '<div class="bennu-html-editor-tools">' +
@@ -146,8 +481,12 @@
             '</div>' +
             '<div class="bennu-html-editor-editor form-control editor-input" contenteditable="true"></div>' +
             '<span class="help-block"></span>' +
+                '<div class="bennu-html-editor-context-menu">'+
+                    '<ul class="dropdown-menu" role="menu">'+
+                    '</ul>'+
+                '</div>'+
             '</div>');
-        var toolbarReqs = "size,style,lists,align,links,table,image,undo,fullscreen,source";
+        var toolbarReqs = "size,style,lists,align,colors,links,table,image,components,undo,fullscreen,source";
         if (Bennu.utils.hasAttr(e,"toolbar")) {
             toolbarReqs = e.attr("toobar");
         }
@@ -204,29 +543,21 @@
                     '</div></li></ul></div>');
             } else if (c === "links") {
                 $(".btn-toolbar", dom).append('<div class="btn-group">' +
-                    '<a class="btn btn-sm btn-default link-to-add-ui-btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Hyperlink"><span class="glyphicon glyphicon-link"></span></a>' +
-                    '<div class="dropdown-menu input-append add-url">' +
-
-                    '<div class="input-group"><input type="text" placeholder="URL" class="link-to-add form-control"><div class="input-group-btn"><button type="button" class="btn btn-default link-to-add-btn" aria-expanded="false">Add</button></div></div>'+
-
-                    '</div>' +
+                    '<a class="btn btn-sm btn-default link-to-add-btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Hyperlink"><span class="glyphicon glyphicon-link"></span></a>' +
                     '<a class="btn btn-sm btn-default" data-edit="unlink" title="" data-original-title="Remove Hyperlink"><span class="fa fa-chain-broken"></span></a>' +
                     '</div>');
             } else if (c === "table"){
                 $(".btn-toolbar", dom).append('<div class="btn-group">' +
-                    '<button type="button" class="btn btn-default btn-sm btn-small dropdown-toggle" data-toggle="dropdown" title="" tabindex="-1" data-original-title="Table"><i class="fa fa-table icon-table"></i> <span class="caret"></span></button>'+
-
-                    '<div class="dropdown-menu input-append note-table">'+
-                        '<div class="note-dimension-picker">' +
-                           '<div class="note-dimension-picker-mousecatcher" data-event="insertTable" data-value="1x1"></div>' +
-                           '<div class="note-dimension-picker-highlighted"></div>' +
-                           '<div class="note-dimension-picker-unhighlighted"></div>' +
-                         '</div>' +
-                         '<div class="note-dimension-display"> 1 x 1 </div>' +
-                    '</div>'+
+                    '<button type="button" class="btn table-btn btn-default btn-sm btn-small dropdown-toggle" data-original-title="Table"><i class="fa fa-table icon-table"></i></button>'+
+                    '</div>');
+            } else if (c === "components"){
+                 $(".btn-toolbar", dom).append('<div class="btn-group">'+
+                    '<button type="button" class="btn btn-default btn-sm btn-small bennu-html-editor-components-button" title="" tabindex="-1" data-original-title="Components">'+
+                        '<i class="fa fa-puzzle-piece" ></i>'+
+                    '</button>'+
                     '</div>');
             } else if (c === "colors"){
-                $(".btn-toolbar", dom).append('<div class="note-color btn-group">'+
+                $(".btn-toolbar", dom).append('<div class="btn-group">'+
                     '<button type="button" class="btn btn-default btn-sm btn-small note-recent-color" title="" data-event="color" data-value="{&quot;backColor&quot;:&quot;yellow&quot;}" tabindex="-1" data-original-title="Recent Color">'+
                         '<i class="fa fa-font icon-font" style="color:black;background-color:yellow;"></i>'+
                     '</button>'+
@@ -243,8 +574,8 @@
                                 generateColors("backColor")+
                             '</div>'+
                         '</div>'+
-                        
-                        
+
+
                         '<div class="btn-group">'+
                             '<div class="note-palette-title">Foreground Color</div>'+
                             '<a href="#" class="note-color-reset" data-event="foreColor" data-value="inherit" title="Reset">Reset to default</a>'+
@@ -259,7 +590,6 @@
             } else if (c === "image") {
                 $(".btn-toolbar", dom).append('<div class="btn-group">' +
                         '<a class="pictureBtn btn btn-sm btn-default" title="" data-original-title="Insert picture (or just drag &amp; drop)"><span class="glyphicon glyphicon-picture"></span></a>' +
-                        '<input type="file" name="pictureTlb" style="display:none;" multiple>'+
                         '</div>');
             } else if (c === "undo") {
                 $(".btn-toolbar", dom).append('<div class="btn-group">' +
@@ -281,7 +611,6 @@
                     "</div>");
             }
         }
-
 
         $('a[title]', dom).tooltip({container: 'body'});
 
@@ -312,11 +641,45 @@
             else {
                 console.log("error uploading file", reason, detail);
             }
+
+            // TODO: attach this to the warning system
             $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>' +
                 '<strong>File upload error</strong> ' + msg + ' </div>').prependTo('#alerts');
         }
 
-        var s = new Sanitize(Sanitize.Config.RELAXED);
+        // HTML Sanitization Rules
+        var s = new Sanitize({
+          elements: [
+            'a', 'b', 'blockquote', 'br', 'caption', 'cite', 'code', 'col',
+            'colgroup', 'dd', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            'i', 'img', 'li', 'ol', 'p', 'pre', 'q', 'small', 'strike', 'strong',
+            'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'u',
+            'ul'],
+
+          attributes: {
+            'a'         : ['href', 'title'],
+            'blockquote': ['cite'],
+            'col'       : ['span', 'width'],
+            'colgroup'  : ['span', 'width'],
+            'img'       : ['align', 'alt', 'height', 'src', 'title', 'width'],
+            'ol'        : ['start', 'type'],
+            'q'         : ['cite'],
+            'table'     : ['summary', 'width'],
+            'td'        : ['abbr', 'axis', 'colspan', 'rowspan', 'width'],
+            'th'        : ['abbr', 'axis', 'colspan', 'rowspan', 'scope',
+                             'width'],
+            'ul'        : ['type'],
+            '__ALL__'   : ["bennu-component", "data-height","data-x","data-y", "data-width", "data-source", "data-metadata",]
+          },
+
+          protocols: {
+            'a'         : {'href': ['ftp', 'http', 'https', 'mailto',
+                                        Sanitize.RELATIVE]},
+            'blockquote': {'cite': ['http', 'https', Sanitize.RELATIVE]},
+            'img'       : {'src' : ['http', 'https', Sanitize.RELATIVE]},
+            'q'         : {'cite': ['http', 'https', Sanitize.RELATIVE]}
+          }
+        });
 
         $('.bennu-html-editor-editor', dom).on("paste", function () {
             setTimeout(function () {
@@ -360,6 +723,7 @@
 
             Bennu.localizedString.makeLocaleList($(".bennu-localized-string-menu", dom), dom, function (e) {
                 Bennu.localizedString.changeData($(e.target).parent().data("locale"), $(".bennu-localized-string-language", dom), widgetInput, dom);
+                Bennu.htmlEditor.components.reflow($(".bennu-html-editor-editor", dom));
             });
 
             Bennu.localizedString.changeData(Bennu.locale, $(".bennu-localized-string-language", dom), widgetInput, dom);
@@ -370,11 +734,19 @@
         }else{
             var val = e.val();
             if (val){
-                $(".bennu-html-editor-editor", dom).html(e.val());    
+                $(".bennu-html-editor-editor", dom).html(e.val());
             }else{
-                $(".bennu-html-editor-editor", dom).html("");    
+                $(".bennu-html-editor-editor", dom).html("");
             }
-            
+
+        }
+
+        if ($(".bennu-html-editor-components-button", dom).length){
+            var editor = $(".bennu-html-editor-editor",dom);
+            Bennu.htmlEditor.components.init(editor);
+            $(".bennu-html-editor-components-button", dom).on("click",function(){
+                Bennu.htmlEditor.components.firstStep(editor);
+            });
         }
 
         $(".bennu-html-editor-editor", dom).on('change', function () {
@@ -406,26 +778,54 @@
         });
 
         $(".btn-toolbar .pictureBtn", dom).on("click", function () {
-            $(".btn-toolbar input[name='pictureTlb']", dom).click();
+          var editor = $(".bennu-html-editor-editor", dom);
+          var handler = Bennu.htmlEditor.components.mkHandler(editor);
+          Bennu.htmlEditor.components.showModal(editor);
+          Bennu.htmlEditor.components.showEditorFor("image",null,handler);
         });
 
         var attachPicture = function(urls){
+          var c = Bennu.htmlEditor.components.get("image");
 
-                $(".bennu-html-editor-editor", dom).focus()
+          var files = $.map(c.files,function(e){
+              return Bennu.contextPath + e;
+          });
+
+          Bennu.ensure(files, function(){
+            var editor = $(".bennu-html-editor-editor", dom);
+
+            var handler = editor.data("handlerTMP");
+            editor.data("handlerTMP",null);
+            handler.restore();
+
+            if (urls.length == 1){
+                Bennu.htmlEditor.components.callback.image.renderer(urls[0],function(e){
+                    Bennu.htmlEditor.components.showModal(editor);
+                    Bennu.htmlEditor.components.showEditorFor("image",e,handler);
+                });
+            }else{
+                var arr = [];
 
                 for (var i = 0; i < urls.length; i++) {
                     var o = urls[i];
-                    document.execCommand('insertimage', 0, o);
+                    arr.push(Bennu.htmlEditor.components.callback.image.renderer(o));
                 }
-            };
+                handler.text(arr);
+                Bennu.htmlEditor.components.reflow(editor);
+            }
+          });
 
-        $(".btn-toolbar input[name='pictureTlb']", dom).on("change", function (evt) {
-            var z = e.data("fileHandler");
-            z && z($(".btn-toolbar input[name='pictureTlb']", dom)[0].files, attachPicture);
-        });
+        };
+
 
         dom.on('dragenter dragover', false)
             .on('drop', function (evt) {
+                var editor = $(".bennu-html-editor-editor", dom);
+                editor.focus();
+                var handler = Bennu.htmlEditor.components.mkHandler(editor);
+
+                editor.data("handlerTMP",handler);
+
                 var dataTransfer = evt.originalEvent.dataTransfer;
                 evt.stopPropagation();
                 evt.preventDefault();
@@ -436,117 +836,33 @@
             });
         $('.bennu-html-editor-editor', dom).wysiwyg({ dragAndDropImages: false, fileUploadError: showErrorAlert});
 
-        
-        
+
+
         e.after(dom);
         Bennu.validation.attachToForm(dom);
         Bennu.utils.replaceRequired(e);
-        
-        // table shit
 
-        var PX_PER_EM = 18;
-    var hDimensionPickerMove = function (event, options) {
-      var $picker = $(event.target.parentNode); // target is mousecatcher
-      var $dimensionDisplay = $picker.next();
-      var $catcher = $picker.find('.note-dimension-picker-mousecatcher');
-      var $highlighted = $picker.find('.note-dimension-picker-highlighted');
-      var $unhighlighted = $picker.find('.note-dimension-picker-unhighlighted');
-
-      var posOffset;
-      // HTML5 with jQuery - e.offsetX is undefined in Firefox
-      if (event.offsetX === undefined) {
-        var posCatcher = $(event.target).offset();
-        posOffset = {
-          x: event.pageX - posCatcher.left,
-          y: event.pageY - posCatcher.top
-        };
-      } else {
-        posOffset = {
-          x: event.offsetX,
-          y: event.offsetY
-        };
-      }
-
-      var dim = {
-        c: Math.ceil(posOffset.x / PX_PER_EM) || 1,
-        r: Math.ceil(posOffset.y / PX_PER_EM) || 1
-      };
-
-      $highlighted.css({ width: dim.c + 'em', height: dim.r + 'em' });
-      $catcher.attr('data-value', dim.c + 'x' + dim.r);
-
-      if (3 < dim.c && dim.c < 10) {
-        $unhighlighted.css({ width: dim.c + 1 + 'em'});
-      }
-
-      if (3 < dim.r && dim.r < 10) {
-        $unhighlighted.css({ height: dim.r + 1 + 'em'});
-      }
-
-      $dimensionDisplay.html(dim.c + ' x ' + dim.r);
-    };
-
-    var createTable = function (colCount, rowCount) {
-      var tds = [], tdHTML;
-      for (var idxCol = 0; idxCol < colCount; idxCol++) {
-        tds.push('<td>' + "&nbsp;" + '</td>');
-      }
-      tdHTML = tds.join('');
-
-      var trs = [], trHTML;
-      for (var idxRow = 0; idxRow < rowCount; idxRow++) {
-        trs.push('<tr>' + tdHTML + '</tr>');
-      }
-      trHTML = trs.join('');
-      return '<table class="table table-bordered">' + trHTML + '</table>';
-    };
-
-    var $catcher = $(".btn-toolbar", dom).find('.note-dimension-picker-mousecatcher');
-      $catcher.css({
-        width: 10 + 'em',
-        height: 10 + 'em'
-      }).on('mousemove', function (event) {
-        hDimensionPickerMove(event, {});
-      });
-
-      $(".note-dimension-picker-mousecatcher", dom).on("click",function(){
-        var val = $(this).attr("data-value").split("x");
-        $(".bennu-html-editor-editor", dom).focus();
-        document.execCommand("insertHTML", false,createTable(parseInt(val[0]), parseInt(val[1])));
-      });
-
-        // end table shit
-
-
-        $(".link-to-add-ui-btn",dom).on("click",function(){
-            var select = Bennu.htmlEditor.saveSelection();
-            $(".bennu-html-editor-editor", dom).data("save-selection",select);
-            setTimeout(function(){
-                $(".link-to-add",dom).focus();
-            },100);
-        });
-
+        $(".table-btn",dom).on("click",function(){
+            var editor = $(".bennu-html-editor-editor", dom);
+            var handler = Bennu.htmlEditor.components.mkHandler(editor);
+            Bennu.htmlEditor.components.showModal(editor);
+            Bennu.htmlEditor.components.showEditorFor("table",null,handler);
+        })
 
         $(".link-to-add-btn", dom).on("click",function(){
-            var val = $(".bennu-html-editor-editor", dom).data("save-selection");
-            $(".bennu-html-editor-editor",dom).focus();
-            setTimeout(function(){
-                if (val){
-                    Bennu.htmlEditor.restoreSelection(val);
-                }
-
-                document.execCommand("CreateLink", false, $(".link-to-add").val());
-                $(".link-to-add").val("")
-            });
+            var editor = $(".bennu-html-editor-editor", dom);
+            var handler = Bennu.htmlEditor.components.mkHandler(editor);
+            Bennu.htmlEditor.components.showModal(editor);
+            Bennu.htmlEditor.components.showEditorFor("link",null,handler);
         });
 
         e.on("change.bennu", function (ev) {
             if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
-	        var value = $(e).val();
-		if (value === null || value === undefined || value === "") {
-		   value = "{}";
-		   $(e).val(value);
-		}
+  	        var value = $(e).val();
+        		if (value === null || value === undefined || value === "") {
+        		   value = "{}";
+        		   $(e).val(value);
+        		}
                 var data = JSON.parse(value);
                 var locale = $(".bennu-localized-string-language", dom).data("locale");
                 var tag = locale.tag
@@ -571,10 +887,30 @@
                     $(".bennu-html-editor-editor", dom)[0].innerHTML = t;
                 }
             }
-	    e.data("handler").trigger();
+	          e.data("handler").trigger();
         });
 
-        
+        if (!e.data("fileHandler")){
+          e.data("fileHandler",function(files,cb){
+            var result = []
+            var total = files.length;
+            var proc = 0;
+
+            $.map(files, function(f,i){
+              var fileReader = new FileReader(f);
+              fileReader.onload = function (e) {
+                 result[i] = e.target.result;
+                 proc++;
+                 if (proc == total){
+                   cb(result);
+                 }
+              }
+              fileReader.readAsDataURL(f);
+            });
+          });
+        }
+
+        var handler = Bennu.widgetHandler.makeFor(e);
 
         var setupEditor = function(dom, cb) {
             var editor = $(".bennu-html-code-editor", dom).data("editor");
@@ -582,6 +918,7 @@
                 cb(editor);
                 return;
             }
+
             Bennu.codeEditor.require(function () {
                 editor = ace.edit($(".bennu-html-code-editor", dom)[0])
                 editor.setFontSize(13);
@@ -690,7 +1027,6 @@
                     document.execCommand("foreColor",false,json.foreColor);
                 }
             }
-            
         }
 
         if ($(".note-color", dom).length != 0){
@@ -723,10 +1059,6 @@
                 changeColor($(".note-recent-color",dom).data("value"));
             });
         }
-
-
-
-        
     });
     return handler;
     };
