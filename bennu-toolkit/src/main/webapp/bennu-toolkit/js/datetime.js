@@ -27,7 +27,7 @@
                 s = t[0];
                 var mili = parseInt(t[1]);
             }else{
-                var mili = 000;
+                var mili = 0;
             }
 
             var parts = s.split(":");
@@ -47,6 +47,7 @@
     function verifyType(e){
         e = $(e);
         if(Bennu.utils.hasAttr(e, "type")){
+            var val = e.attr("type");
             if (val !== "text" && val !== "hidden"){
                 throw "Date/Time input field using non aceptable type";
             }
@@ -125,9 +126,13 @@
 
         var currentDate = e.val();
 
-        if (currentDate && currentDate.trim() !== "") {
-            currentDate = new Date(currentDate);
-            e.val(moment(currentDate).format("YYYY-MM-DD"));
+        if (currentDate){
+            if (currentDate.trim() !== "") {
+                currentDate = new Date(currentDate);
+                e.val(moment(currentDate).format("YYYY-MM-DD"));
+            }
+        }else{
+            e.val("");
         }
 
         var options = {
@@ -142,12 +147,33 @@
 
         $("input", widget).on("change", function (x) {
             x = $(x.target);
-            var r = moment(x.val(), "DD/MM/YYYY").format("YYYY-MM-DD");
+            var r;
+            if(x.val() == ""){
+                r = "";
+            }else{
+                r = moment(x.val(), "DD/MM/YYYY").format("YYYY-MM-DD");    
+            }
+            
             if (r !== e.val()){
                 e.val(r);
                 e.trigger("change");
             }
-        }).datetimepicker(options);
+        }).datetimepicker(options).on('dp.change', function (ev) {
+            x = $("input", widget);
+            var r;
+            var val = x.val() || "";
+
+            if(val == ""){
+                r = "";
+            }else{
+                r = moment(val, "DD/MM/YYYY").format("YYYY-MM-DD");    
+            }
+            
+            if (r !== e.val()){
+                e.val(r);
+                e.trigger("change");
+            }
+        });
 
 
         e.after(widget);
@@ -155,18 +181,17 @@
         e.on("change.bennu", function(ev){
             var data = $(e).val();
 
-            if (data.trim() == "") {
-                data = new Date();
-            } else {
+            if (data.trim() !== "") {
                 data = new Date(data);
-            }
-            e.val(moment(data).format("YYYY-MM-DD"));
 
-            var r = $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(moment(data).format("DD/MM/YYYY"))
-            var t = moment(data).format("DD/MM/YYYY");
+                e.val(moment(data).format("YYYY-MM-DD"));
 
-            if (r !== t){
-                $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(t);
+                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date()
+                var t = moment(data).format("DD/MM/YYYY");
+
+                if (r !== t){
+                    $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
+                }
             }
 
             e.data("handler").trigger();
@@ -204,9 +229,13 @@
 
         var currentDate = e.val();
 
-        if (currentDate && currentDate.trim() != "") {
-            currentDate = parseTime(currentDate);
-            e.val(moment(currentDate).format("HH:mm:ss.SSS"));
+        if (currentDate){
+            if(currentDate.trim() != "") {
+                currentDate = parseTime(currentDate);
+                e.val(moment(currentDate).format("HH:mm:ss.SSS"));
+            }
+        }else{
+            e.val("");
         }
 
         var options = {
@@ -233,24 +262,38 @@
                 e.val(r);
                 e.trigger("change");
             }
-        }).datetimepicker(options);
+        }).datetimepicker(options).on("dp.change", function (x) {
+            x = $("input", widget);
+            var r;
+            var value = x.val() || "";
+
+            if (value.trim() == ""){
+                r = "";
+            }else{
+                r = moment(parseTime(value)).format("HH:mm:ss.SSS");
+            }
+
+            if (r !== e.val()){
+                e.val(r);
+                e.trigger("change");
+            }
+        });
 
         e.after(widget);
 
         e.on("change.bennu", function(ev){
             var data = $(e).val();
 
-            if (data.trim() == "") {
-                data = new Date();
-            } else {
+            if (data.trim() !== "") {
                 data = parseTime(data);
-            }
-            e.val(moment(data).format("HH:mm:ss.SSS"));
-            var r = $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(moment(data).format("HH:mm:ss"));
-            var t = moment(data).format("HH:mm:ss");
 
-            if (r !== t){
-                $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(t);
+                e.val(moment(data).format("HH:mm:ss.SSS"));
+                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date();
+                var t = moment(data).format("HH:mm:ss");
+
+                if (r !== t){
+                    $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
+                }
             }
 
             e.data("handler").trigger();
@@ -272,9 +315,13 @@
 
         var currentDate = e.val();
 
-        if (currentDate && currentDate.trim() != "") {
-            currentDate = new Date(currentDate);
-            e.val(moment(currentDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
+        if (currentDate){
+            if(currentDate.trim() != "") {
+                currentDate = new Date(currentDate);
+                e.val(moment(currentDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
+            }
+        }else{
+            e.val("");
         }
 
         var options = {
@@ -301,7 +348,20 @@
                     e.trigger("change");
                 }
             }
-        }).datetimepicker(options);
+        }).datetimepicker(options).on("dp.change", function (x) {
+            x = $("input", widget);
+            var value = x.val().trim()
+            if (value == ""){
+                e.val("");
+            }else{
+                var r = moment(value, "DD/MM/YYYY HH:mm:ss").format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+                if (r !== e.val()){
+                    e.val(r);
+                    e.trigger("change");
+                }
+            }
+        });
+
 
         e.after(widget);
         e.data("input");
@@ -310,20 +370,20 @@
         e.on("change.bennu", function(ev){
             var data = $(e).val();
 
-            if (data.trim() == "") {
-                data = new Date();
-            } else {
+            if (data.trim() !== "") {
                 data = new Date(data);
-            }
-            e.val(moment(data).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
 
-            var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date()
-            var r = (r && r.format("DD/MM/YYYY HH:mm:ss"));
-            var t = moment(data).format("DD/MM/YYYY HH:mm:ss");
+                e.val(moment(data).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
 
-            if (r !== t){
-                $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
+                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date()
+                var r = (r && r.format("DD/MM/YYYY HH:mm:ss"));
+                var t = moment(data).format("DD/MM/YYYY HH:mm:ss");
+
+                if (r !== t){
+                    $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
+                }
             }
+
 
             e.data("handler").trigger();
         });
