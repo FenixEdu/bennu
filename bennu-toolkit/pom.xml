@@ -52,6 +52,7 @@
                                 <jsSourceFile>libs/bootstrap-wysiwyg.js</jsSourceFile>
                                 <jsSourceFile>libs/typeahead.bundle.js</jsSourceFile>
                                 <jsSourceFile>bennu.js</jsSourceFile>
+                                <jsSourceFile>ensure.js</jsSourceFile>
                                 <jsSourceFile>validation.js</jsSourceFile>
                                 <jsSourceFile>localizedString.js</jsSourceFile>
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
@@ -90,6 +91,7 @@
                                 <jsSourceFile>libs/bootstrap-wysiwyg.js</jsSourceFile>
                                 <jsSourceFile>libs/typeahead.bundle.js</jsSourceFile>
                                 <jsSourceFile>bennu.js</jsSourceFile>
+                                <jsSourceFile>ensure.js</jsSourceFile>
                                 <jsSourceFile>validation.js</jsSourceFile>
                                 <jsSourceFile>localizedString.js</jsSourceFile>
                                 <jsSourceFile>htmlEditor.js</jsSourceFile>
