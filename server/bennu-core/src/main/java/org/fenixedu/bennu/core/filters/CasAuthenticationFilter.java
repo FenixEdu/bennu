@@ -64,21 +64,23 @@ public class CasAuthenticationFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        final String ticket = httpServletRequest.getParameter("ticket");
-        if (ticket != null) {
-            Authenticate.logout(httpServletRequest.getSession());
-            final String requestURL = URLDecoder.decode(httpServletRequest.getRequestURL().toString(), Charsets.UTF_8.name());
-            try {
-                String username = validator.validate(ticket, requestURL).getPrincipal().getName();
-                Authenticate.login(httpServletRequest.getSession(), username);
-                // Redirect to the same page, to prevent replaying the ticket parameter
-                HttpServletResponse resp = (HttpServletResponse) response;
-                resp.sendRedirect(httpServletRequest.getRequestURL().toString());
-                return;
-            } catch (TicketValidationException | AuthorizationException e) {
-                // its ok, the user just won't have his session
-                logger.warn(e.getMessage(), e);
-                request.setAttribute(AUTHENTICATION_EXCEPTION_KEY, e);
+        if ("get".equalsIgnoreCase(httpServletRequest.getMethod())) {
+            final String ticket = httpServletRequest.getParameter("ticket");
+            if (ticket != null) {
+                Authenticate.logout(httpServletRequest.getSession());
+                final String requestURL = URLDecoder.decode(httpServletRequest.getRequestURL().toString(), Charsets.UTF_8.name());
+                try {
+                    String username = validator.validate(ticket, requestURL).getPrincipal().getName();
+                    Authenticate.login(httpServletRequest.getSession(), username);
+                    // Redirect to the same page, to prevent replaying the ticket parameter
+                    HttpServletResponse resp = (HttpServletResponse) response;
+                    resp.sendRedirect(httpServletRequest.getRequestURL().toString());
+                    return;
+                } catch (TicketValidationException | AuthorizationException e) {
+                    // its ok, the user just won't have his session
+                    logger.warn(e.getMessage(), e);
+                    request.setAttribute(AUTHENTICATION_EXCEPTION_KEY, e);
+                }
             }
         }
         chain.doFilter(request, response);
