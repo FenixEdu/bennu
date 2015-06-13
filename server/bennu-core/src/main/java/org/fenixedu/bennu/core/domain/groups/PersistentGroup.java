@@ -31,8 +31,6 @@ import org.joda.time.DateTime;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
-import com.google.common.base.Function;
-
 /**
  * <p>
  * {@code PersistentGroup}s represent access groups. These groups are domain entities but immutable and unique in semantics (with
@@ -54,13 +52,6 @@ import com.google.common.base.Function;
  * @see GroupOperator
  */
 public abstract class PersistentGroup extends PersistentGroup_Base {
-    @Deprecated
-    public static final Function<PersistentGroup, Group> persistentGroupToGroup = new Function<PersistentGroup, Group>() {
-        @Override
-        public Group apply(PersistentGroup group) {
-            return group.toGroup();
-        }
-    };
 
     protected PersistentGroup() {
         super();

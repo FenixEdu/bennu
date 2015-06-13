@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.core.example.groups;
 
+import org.fenixedu.bennu.core.domain.UserProfile;
 import org.fenixedu.bennu.core.example.domain.groups.UsersCreatedAfterGroup.UsersCreatedAfter;
 import org.fenixedu.bennu.core.groups.AnonymousGroup;
 import org.fenixedu.bennu.core.groups.AnyoneGroup;
@@ -29,5 +30,9 @@ public class ManualGroupRegister {
             CustomGroupRegistry.registerArgumentParser(DateTimeParser.class);
             done = true;
         }
+    }
+
+    public static UserProfile newProfile() {
+        return new UserProfile("Test", "User", null, null, null);
     }
 }

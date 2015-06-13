@@ -16,6 +16,8 @@
  */
 package org.fenixedu.bennu.core.domain.groups;
 
+import java.util.Optional;
+
 import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.groups.DynamicGroup;
 import org.fenixedu.bennu.core.groups.Group;
@@ -25,8 +27,6 @@ import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
-
-import com.google.common.base.Optional;
 
 /**
  * <p>
@@ -113,7 +113,7 @@ public final class PersistentDynamicGroup extends PersistentDynamicGroup_Base {
     }
 
     public static Optional<PersistentDynamicGroup> getInstance(final String name) {
-        return BennuGroupIndex.getDynamic(name);
+        return BennuGroupIndex.dynamic(name);
     }
 
     @Atomic(mode = TxMode.WRITE)

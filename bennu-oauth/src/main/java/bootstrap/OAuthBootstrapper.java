@@ -34,7 +34,7 @@ public class OAuthBootstrapper {
 
     @Bootstrap
     public static List<BootstrapError> boostrap() {
-        DynamicGroup.get("developers").changeGroup(LoggedGroup.get());
+        DynamicGroup.get("developers").mutator().changeGroup(LoggedGroup.get());
         return Lists.newArrayList();
     }
 

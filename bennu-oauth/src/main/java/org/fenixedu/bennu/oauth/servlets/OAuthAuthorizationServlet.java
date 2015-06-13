@@ -46,7 +46,6 @@ import javax.ws.rs.core.Response.Status;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.bennu.core.util.CookieReaderUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.oauth.OAuthProperties;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
@@ -85,8 +84,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
 
     private static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
-
-    private static final String GRANT_TYPE_ACCESS_TOKEN = "access_token";
 
     private static final String CODE_EXPIRED = "code expired";
 
@@ -359,7 +356,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             }
         } else {
             if (user != null) {
-                final Cookie cookie = CookieReaderUtils.getCookieForName(OAUTH_SESSION_KEY, request);
+                final Cookie cookie = getOAuthSessionCookie(request);
                 if (cookie == null) {
                     errorPage(request, response);
                     return;
@@ -372,6 +369,18 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             }
         }
         errorPage(request, response);
+    }
+
+    private static Cookie getOAuthSessionCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equalsIgnoreCase(OAUTH_SESSION_KEY)) {
+                    return cookie;
+                }
+            }
+        }
+        return null;
     }
 
     private void errorPage(HttpServletRequest request, HttpServletResponse response) throws IOException {

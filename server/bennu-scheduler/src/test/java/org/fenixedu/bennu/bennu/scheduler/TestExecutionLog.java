@@ -46,7 +46,6 @@ public class TestExecutionLog {
     private static Object JSON_FILE_LOCK = new Object();
 
     @BeforeClass
-    @SuppressWarnings("unchecked")
     public static void setup() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(DateTime.class, new JsonSerializer<DateTime>() {
@@ -66,7 +65,7 @@ public class TestExecutionLog {
         });
 
         gson = gsonBuilder.create();
-        logs = new ConcurrentHashMap();
+        logs = new ConcurrentHashMap<>();
     }
 
     public ExecutionLog addLog() {

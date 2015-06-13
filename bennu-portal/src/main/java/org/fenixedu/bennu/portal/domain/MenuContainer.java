@@ -3,7 +3,6 @@ package org.fenixedu.bennu.portal.domain;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
@@ -13,10 +12,6 @@ import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
 
 import pt.ist.fenixframework.Atomic;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Ordering;
 
 /**
  * A {@link MenuContainer} represents an inner node in the functionality tree. It may hold {@link MenuFunctionality}s or other
@@ -152,46 +147,6 @@ public final class MenuContainer extends MenuContainer_Base {
      */
     public Set<MenuItem> getOrderedChild() {
         return Collections.unmodifiableSet(new TreeSet<>(getChildSet()));
-    }
-
-    /**
-     * Returns a {@link Set} containing all the children of this container, that are available to the
-     * current user.
-     * 
-     * @return
-     *         This container's children that are available to the current user
-     * 
-     * @deprecated
-     *             Use {@link MenuContainer#getUserMenuStream()} and apply a {@link Collector}.
-     */
-    @Deprecated
-    public Set<MenuItem> getUserMenu() {
-        return FluentIterable.from(getChildSet()).filter(new Predicate<MenuItem>() {
-            @Override
-            public boolean apply(MenuItem menu) {
-                return menu.isItemAvailableForCurrentUser() && menu.isVisible();
-            }
-        }).toSortedSet(Ordering.natural());
-    }
-
-    /**
-     * Returns an {@link Iterable} containing all the child {@link MenuContainer}s of this container, that are available to the
-     * current user.
-     * 
-     * @return
-     *         All the child {@link MenuContainer}s that are available to the current user.
-     * 
-     * @deprecated
-     *             Use {@link MenuContainer#getUserMenuStream()} and apply another filter
-     */
-    @Deprecated
-    public Iterable<MenuContainer> getAvailableChildContainers() {
-        return FluentIterable.from(getChildSet()).filter(MenuContainer.class).filter(new Predicate<MenuContainer>() {
-            @Override
-            public boolean apply(MenuContainer container) {
-                return container.isItemAvailableForCurrentUser() && container.isVisible();
-            }
-        }).toSortedList(Ordering.natural());
     }
 
     /**

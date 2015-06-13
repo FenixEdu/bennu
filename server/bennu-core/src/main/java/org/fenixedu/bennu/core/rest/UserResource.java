@@ -24,26 +24,11 @@ import javax.ws.rs.core.Response.Status;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 @Path("/bennu-core/users")
 public class UserResource extends BennuRestResource {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserResource.class);
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Deprecated
-    public Response getAllUsers() {
-        verifyAndGetRequestAuthor();
-        JsonObject users = new JsonObject();
-        users.add("users", new JsonArray());
-        return Response.ok(users.toString()).build();
-    }
 
     @POST
     @Path("find")

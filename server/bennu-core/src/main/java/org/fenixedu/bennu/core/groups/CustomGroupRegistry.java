@@ -201,6 +201,7 @@ public class CustomGroupRegistry {
 
     public static void registerArgumentParser(Class<? extends ArgumentParser<?>> parserType) {
         try {
+            @SuppressWarnings("unchecked")
             ArgumentParser<Object> parser = (ArgumentParser<Object>) parserType.newInstance();
             if (parsers.containsKey(parser.type())) {
                 throw new Error("GroupArgumentParser: duplicate parser for type: " + parser.type().getName());

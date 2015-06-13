@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.servlet.http.HttpSession;
 
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.UserProfile;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.I18N;
@@ -104,7 +105,7 @@ public class Authenticate {
         if (user != null) {
             return user;
         }
-        return new User(username);
+        return new User(username, new UserProfile("Unknown", "User", null, null, null));
     }
 
     public static void logout(HttpSession session) {

@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,8 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Table;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -29,12 +26,11 @@ public class ExecutionLogContext {
     private static final Logger LOG = LoggerFactory.getLogger(ExecutionLogContext.class);
 
     private Table<String, String, JsonObject> logsTable;
-    
+
     private Map<String, String> lastIdForTaskNameMap;
-    
-    
+
     private Long lastModified;
-    
+
     public ExecutionLogContext() {
         logsTable = HashBasedTable.create();
         lastModified = Long.MIN_VALUE;
@@ -50,7 +46,7 @@ public class ExecutionLogContext {
         }
         return false;
     }
-    
+
     private synchronized void updateLogTable() {
         final File file = new File(getLogFilePath());
         if (file.exists()) {
@@ -66,8 +62,8 @@ public class ExecutionLogContext {
                         if (jsonLogFromTable != null) {
                             update(jsonLog, jsonLogFromTable);
                         } else {
-                        	logsTable.put(jsonLogTaskName, jsonLogId, jsonLog);
-                        	lastIdForTaskNameMap.put(jsonLogTaskName, jsonLogId);
+                            logsTable.put(jsonLogTaskName, jsonLogId, jsonLog);
+                            lastIdForTaskNameMap.put(jsonLogTaskName, jsonLogId);
                         }
                     }
                 } catch (IOException e) {
@@ -98,37 +94,37 @@ public class ExecutionLogContext {
     }
 
     public SortedSet<JsonObject> get(String taskName) {
-    	updateLogTable();
-    	return FluentIterable.from(logsTable.row(taskName).values()).toSortedSet(new Comparator<JsonObject>() {
+        updateLogTable();
+        return FluentIterable.from(logsTable.row(taskName).values()).toSortedSet(new Comparator<JsonObject>() {
 
-			@Override
-			public int compare(JsonObject o1, JsonObject o2) {
-				return o1.get("id").getAsString().compareTo(o2.get("id").getAsString());
-			}
-		});
+            @Override
+            public int compare(JsonObject o1, JsonObject o2) {
+                return o1.get("id").getAsString().compareTo(o2.get("id").getAsString());
+            }
+        });
     }
-    
+
     public JsonObject get(String taskName, String logId) {
         updateLogTable();
         return logsTable.get(taskName, logId);
     }
-    
+
     public Collection<JsonObject> last() {
-    	updateLogTable();
-    	Collection<JsonObject> logs = new HashSet<>();
-    	for(String taskName : lastIdForTaskNameMap.keySet()) {
-    		logs.add(logsTable.get(taskName, lastIdForTaskNameMap.get(taskName)));
-    	}
-    	return logs;
+        updateLogTable();
+        Collection<JsonObject> logs = new HashSet<>();
+        for (String taskName : lastIdForTaskNameMap.keySet()) {
+            logs.add(logsTable.get(taskName, lastIdForTaskNameMap.get(taskName)));
+        }
+        return logs;
     }
-    
+
     public Collection<JsonObject> values() {
-    	updateLogTable();
+        updateLogTable();
         return logsTable.values();
     }
 
     public Boolean isEmpty() {
-    	updateLogTable();
+        updateLogTable();
         return logsTable.isEmpty();
     }
 }

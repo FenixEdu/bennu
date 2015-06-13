@@ -27,11 +27,11 @@ public class TestUserGroup {
         ManualGroupRegister.ensure();
         user1 = User.findByUsername("user1");
         if (user1 == null) {
-            user1 = new User("user1");
+            user1 = new User("user1", ManualGroupRegister.newProfile());
         }
         user2 = User.findByUsername("user2");
         if (user2 == null) {
-            user2 = new User("user2");
+            user2 = new User("user2", ManualGroupRegister.newProfile());
         }
         all = UserGroup.of(Bennu.getInstance().getUserSet());
     }

@@ -84,7 +84,8 @@ public class GroupResource extends BennuRestResource {
         if (user == null) {
             return Response.status(Status.NOT_FOUND).build();
         }
-        return Response.ok(view(group.changeGroup(group.underlyingGroup().grant(user)), DynamicGroupJsonAdapter.class)).build();
+        return Response.ok(view(group.mutator().changeGroup(group.underlyingGroup().grant(user)), DynamicGroupJsonAdapter.class))
+                .build();
     }
 
     @POST
@@ -99,7 +100,9 @@ public class GroupResource extends BennuRestResource {
         if (user == null) {
             return Response.status(Status.NOT_FOUND).build();
         }
-        return Response.ok(view(group.changeGroup(group.underlyingGroup().revoke(user)), DynamicGroupJsonAdapter.class)).build();
+        return Response
+                .ok(view(group.mutator().changeGroup(group.underlyingGroup().revoke(user)), DynamicGroupJsonAdapter.class))
+                .build();
     }
 
     public static class DynamicGroupJsonAdapter implements JsonViewer<DynamicGroup> {

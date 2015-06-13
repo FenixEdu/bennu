@@ -118,7 +118,6 @@ public class ClassBean implements Serializable {
         }
 
         @Override
-        @SuppressWarnings("resource")
         public InputStream getResourceAsStream(final String name) {
             final InputStream inputStream = parent.getResourceAsStream(name);
             return inputStream == null ? super.getResourceAsStream(name) : inputStream;
@@ -279,6 +278,7 @@ public class ClassBean implements Serializable {
 
                 urlClassLoader.loadClass(getClassName());
 
+                @SuppressWarnings("unchecked")
                 final Class<? extends CustomTask> clazz =
                         (Class<? extends CustomTask>) Class.forName(getClassName(), true, urlClassLoader);
                 task = clazz.newInstance();

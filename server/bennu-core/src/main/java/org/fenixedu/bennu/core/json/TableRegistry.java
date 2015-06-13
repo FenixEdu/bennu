@@ -23,6 +23,7 @@ class TableRegistry<T> {
         this.adapters = adapters;
     }
 
+    @SuppressWarnings("unchecked")
     private T getOrCreateRecord(Class<? extends T> recordClass) {
         if (adapters.containsKey(recordClass)) {
             return (T) adapters.get(recordClass);

@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.core.groups;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.User;
@@ -7,8 +8,6 @@ import org.fenixedu.bennu.core.domain.groups.PersistentDynamicGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentNobodyGroup;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.joda.time.DateTime;
-
-import com.google.common.base.Optional;
 
 /**
  * Named link to a group.
@@ -32,22 +31,6 @@ public final class DynamicGroup extends Group {
 
     public boolean isDefined() {
         return PersistentDynamicGroup.getInstance(name).isPresent();
-    }
-
-    /*
-     * Deprecated: use mutator().rename(String)
-     */
-    @Deprecated
-    public DynamicGroup rename(String name) {
-        return mutator().rename(name);
-    }
-
-    /*
-     * Deprecated: use mutator().changeGroup(Group)
-     */
-    @Deprecated
-    public DynamicGroup changeGroup(Group group) {
-        return mutator().changeGroup(group);
     }
 
     @Override

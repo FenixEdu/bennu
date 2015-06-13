@@ -36,7 +36,7 @@ public class AdminUserBootstrapper {
                         null, section.getAdminUserEmail(), null));
         adminUser.changePassword(section.getAdminPassword());
 
-        DynamicGroup.get("managers").changeGroup(UserGroup.of(adminUser));
+        DynamicGroup.get("managers").mutator().changeGroup(UserGroup.of(adminUser));
 
         return Collections.emptyList();
     }

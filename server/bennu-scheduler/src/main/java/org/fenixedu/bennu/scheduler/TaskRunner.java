@@ -7,6 +7,7 @@ public class TaskRunner implements Runnable {
     CronTask task;
     String taskId;
 
+    @SuppressWarnings("unchecked")
     public TaskRunner(String cronTaskClassName) throws Exception {
         Class<? extends CronTask> taskClass;
         try {

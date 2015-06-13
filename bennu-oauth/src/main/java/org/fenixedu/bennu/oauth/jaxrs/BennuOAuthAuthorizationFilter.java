@@ -164,7 +164,7 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
             }
 
         } else {
-            logger.debug("Scope '{}' is not defined!", endpoint.value());
+            logger.debug("Scope '{}' is not defined!", (Object) endpoint.value());
             requestContext.abortWith(Response.status(Status.NOT_FOUND).build());
         }
     }

@@ -18,7 +18,6 @@ import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 
@@ -53,32 +52,6 @@ import com.google.common.collect.ImmutableSet;
  */
 public abstract class Group implements Serializable, Comparable<Group> {
     private static final long serialVersionUID = 1177210800165802668L;
-
-    public static final Function<Group, PersistentGroup> groupToPersistentGroup = new Function<Group, PersistentGroup>() {
-        @Override
-        public PersistentGroup apply(Group group) {
-            return group.toPersistentGroup();
-        }
-    };
-
-    @Deprecated
-    public static final Function<Group, String> groupToGroupName = new Function<Group, String>() {
-        @Override
-        public String apply(Group group) {
-            return group.getPresentationName();
-        }
-    };
-
-    @Deprecated
-    public static final Function<Group, String> groupToExpression = new Function<Group, String>() {
-        @Override
-        public String apply(Group group) {
-            if (group instanceof IntersectionGroup || group instanceof DifferenceGroup || group instanceof UnionGroup) {
-                return "(" + group.getExpression() + ")";
-            }
-            return group.getExpression();
-        }
-    };
 
     /**
      * Human readable, internationalized textual representation of this group.

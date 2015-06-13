@@ -14,7 +14,7 @@ import pt.ist.fenixframework.FenixFramework;
 import com.google.common.collect.Sets;
 
 class NameIndex extends NameIndex_Base {
-    private static Map<String, NameIndex> map = new ConcurrentHashMap<>();
+    private static final Map<String, NameIndex> map = new ConcurrentHashMap<>();
 
     protected NameIndex() {
         super();
