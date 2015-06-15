@@ -37,6 +37,8 @@ import org.fenixedu.bennu.spring.portal.PortalHandlerInterceptor;
 import org.fenixedu.bennu.spring.portal.PortalHandlerMapping;
 import org.fenixedu.bennu.spring.resolvers.AuthenticatedUserArgumentResolver;
 import org.fenixedu.bennu.spring.resolvers.BennuSpringExceptionResolver;
+import org.fenixedu.bennu.spring.security.CSRFInterceptor;
+import org.fenixedu.bennu.spring.security.CSRFTokenRepository;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +49,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -85,6 +88,7 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport impleme
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new CSRFInterceptor(csrfTokenRepository()));
         registry.addInterceptor(new PortalHandlerInterceptor());
     }
 
@@ -107,6 +111,12 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport impleme
         // to have an interface without a proper label, than one that doesn't work at all
         source.setUseCodeAsDefaultMessage(true);
         return source;
+    }
+
+    @Bean
+    @Order
+    public CSRFTokenRepository csrfTokenRepository() {
+        return new CSRFTokenRepository();
     }
 
     private Set<String> getBaseNames(ApplicationContext context) {
