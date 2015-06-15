@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -50,13 +51,20 @@ public class ThrowableExceptionMapper implements ExceptionMapper<Throwable> {
 
     @Override
     public Response toResponse(Throwable exception) {
+        if (exception instanceof WebApplicationException) {
+            return ((WebApplicationException) exception).getResponse();
+        }
+
         JsonObject json = new JsonObject();
         if (Authenticate.getUser() != null) {
             json.addProperty("user", Authenticate.getUser().getUsername());
         }
-        json.addProperty("request-uri", request.getRequestURI());
-        json.addProperty("request-url", request.getRequestURL().toString());
-        json.addProperty("request-query", request.getQueryString());
+
+        if (request != null) {
+            json.addProperty("request-uri", request.getRequestURI());
+            json.addProperty("request-url", request.getRequestURL().toString());
+            json.addProperty("request-query", request.getQueryString());
+        }
 
         StringWriter errors = new StringWriter();
         exception.printStackTrace(new PrintWriter(errors));
