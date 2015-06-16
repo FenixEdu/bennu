@@ -60,4 +60,4 @@
 		return loaded[x] || false;
 	};
 
-})()
+})();
