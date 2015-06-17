@@ -6,7 +6,7 @@ import java.util.TreeSet;
 import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.groups.AnyoneGroup;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.portal.model.Application;
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
@@ -325,7 +325,7 @@ public final class MenuContainer extends MenuContainer_Base {
 
     public static MenuContainer createSubRoot(String key, LocalizedString title, LocalizedString description) {
         MenuContainer container =
-                new MenuContainer(PortalConfiguration.getInstance().getMenu(), false, AnyoneGroup.get().getExpression(),
+                new MenuContainer(PortalConfiguration.getInstance().getMenu(), false, Group.anyone().getExpression(),
                         description, title, key);
         PortalConfiguration.getInstance().addSubRoot(container);
         return container;

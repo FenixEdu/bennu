@@ -1,16 +1,10 @@
-package org.fenixedu.bennu.core.example.groups;
+package org.fenixedu.bennu.core.groups;
 
 import org.fenixedu.bennu.core.domain.UserProfile;
 import org.fenixedu.bennu.core.example.domain.groups.UsersCreatedAfterGroup.UsersCreatedAfter;
-import org.fenixedu.bennu.core.groups.AnonymousGroup;
-import org.fenixedu.bennu.core.groups.AnyoneGroup;
-import org.fenixedu.bennu.core.groups.CustomGroupRegistry;
 import org.fenixedu.bennu.core.groups.CustomGroupRegistry.BooleanParser;
 import org.fenixedu.bennu.core.groups.CustomGroupRegistry.DateTimeParser;
 import org.fenixedu.bennu.core.groups.CustomGroupRegistry.StringParser;
-import org.fenixedu.bennu.core.groups.LoggedGroup;
-import org.fenixedu.bennu.core.groups.NobodyGroup;
-import org.fenixedu.bennu.core.groups.UserGroup;
 
 public class ManualGroupRegister {
     private static boolean done = false;

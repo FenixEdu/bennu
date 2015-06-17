@@ -8,8 +8,7 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.groups.Group;
-import org.fenixedu.bennu.core.groups.NobodyGroup;
-import org.fenixedu.bennu.core.groups.UserGroup;
+import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,7 +32,7 @@ public class TestUserGroup {
         if (user2 == null) {
             user2 = new User("user2", ManualGroupRegister.newProfile());
         }
-        all = UserGroup.of(Bennu.getInstance().getUserSet());
+        all = Group.users(user1, user2);
     }
 
     @Test
@@ -41,8 +40,8 @@ public class TestUserGroup {
     public void creation() {
         Group allv1 = Group.parse("U(user1, user2)");
         Group allv2 = Group.parse("U(user2, user1)");
-        Group allv3 = UserGroup.of(user1, user2);
-        Group allv4 = UserGroup.of(user2, user1);
+        Group allv3 = Group.users(user1, user2);
+        Group allv4 = Group.users(user2, user1);
         assertEquals(all, allv1);
         assertEquals(all, allv2);
         assertEquals(all, allv3);
@@ -62,10 +61,10 @@ public class TestUserGroup {
     @Test
     @Atomic(mode = TxMode.READ)
     public void optimizations() {
-        Group one = UserGroup.of(user1);
-        Group two = UserGroup.of(user2);
+        Group one = user1.groupOf();
+        Group two = user2.groupOf();
 
-        assertEquals(one.and(two), NobodyGroup.get());
+        assertEquals(one.and(two), Group.nobody());
         assertEquals(all.and(two), two);
         assertEquals(all.and(all), all);
 
@@ -73,10 +72,10 @@ public class TestUserGroup {
         assertEquals(all.or(one), all);
         assertEquals(all.or(all), all);
 
-        assertEquals(all.minus(NobodyGroup.get()), all);
+        assertEquals(all.minus(Group.nobody()), all);
         assertEquals(all.minus(one), two);
-        assertEquals(all.minus(one).minus(two), NobodyGroup.get());
-        assertEquals(all.minus(all), NobodyGroup.get());
+        assertEquals(all.minus(one).minus(two), Group.nobody());
+        assertEquals(all.minus(all), Group.nobody());
 
         assertEquals(all.grant(user1), all);
 
@@ -89,8 +88,8 @@ public class TestUserGroup {
         PersistentGroup allP = all.toPersistentGroup();
         PersistentGroup allv1P = Group.parse("U(user1, user2)").toPersistentGroup();
         PersistentGroup allv2P = Group.parse("U(user2, user1)").toPersistentGroup();
-        PersistentGroup allv3P = UserGroup.of(user1, user2).toPersistentGroup();
-        PersistentGroup allv4P = UserGroup.of(user2, user1).toPersistentGroup();
+        PersistentGroup allv3P = Group.users(user1, user2).toPersistentGroup();
+        PersistentGroup allv4P = Group.users(user2, user1).toPersistentGroup();
         assertEquals(allP, allv1P);
         assertEquals(allP, allv2P);
         assertEquals(allP, allv3P);

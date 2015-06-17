@@ -19,7 +19,6 @@ package org.fenixedu.bennu.core.domain.groups;
 import java.util.Optional;
 
 import org.fenixedu.bennu.core.groups.Group;
-import org.fenixedu.bennu.core.groups.NegationGroup;
 
 /**
  * Inverse group of another group.
@@ -34,7 +33,7 @@ public final class PersistentNegationGroup extends PersistentNegationGroup_Base 
 
     @Override
     public Group toGroup() {
-        return NegationGroup.not(getNegated().toGroup());
+        return getNegated().toGroup().not();
     }
 
     @Override

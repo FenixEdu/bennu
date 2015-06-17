@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
+import org.fenixedu.bennu.core.groups.Group;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -266,6 +267,10 @@ public final class User extends User_Base implements Principal {
     @Deprecated
     public String getShortPresentationName() {
         return strategy.shortPresent(this);
+    }
+
+    public Group groupOf() {
+        return Group.users(this);
     }
 
     public static User findByUsername(final String username) {

@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentNegationGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
@@ -31,21 +32,14 @@ import org.joda.time.DateTime;
  * @author Pedro Santos (pedro.miguel.santos@tecnico.ulisboa.pt)
  * @see Group
  */
-public final class NegationGroup extends Group {
+final class NegationGroup extends Group {
     private static final long serialVersionUID = 2689363908571859594L;
 
     private final Group negated;
 
-    private NegationGroup(Group negated) {
+    NegationGroup(Group negated) {
         super();
         this.negated = negated;
-    }
-
-    public static Group not(Group group) {
-        if (group instanceof NegationGroup) {
-            return ((NegationGroup) group).negated;
-        }
-        return new NegationGroup(group);
     }
 
     @Override
@@ -58,12 +52,8 @@ public final class NegationGroup extends Group {
         return "! " + negated.getExpression();
     }
 
-    public Group getNegated() {
-        return negated;
-    }
-
     @Override
-    public PersistentNegationGroup toPersistentGroup() {
+    public PersistentGroup toPersistentGroup() {
         return PersistentNegationGroup.getInstance(negated.toPersistentGroup());
     }
 

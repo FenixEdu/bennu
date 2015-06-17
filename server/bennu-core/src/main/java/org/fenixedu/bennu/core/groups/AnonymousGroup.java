@@ -31,17 +31,11 @@ import org.joda.time.DateTime;
  * @see Group
  */
 @GroupOperator("anonymous")
-public final class AnonymousGroup extends GroupStrategy {
+final class AnonymousGroup extends GroupStrategy {
     private static final long serialVersionUID = 719303318142232943L;
 
-    private static final AnonymousGroup INSTANCE = new AnonymousGroup();
-
-    private AnonymousGroup() {
+    AnonymousGroup() {
         super();
-    }
-
-    public static AnonymousGroup get() {
-        return INSTANCE;
     }
 
     @Override
@@ -72,7 +66,7 @@ public final class AnonymousGroup extends GroupStrategy {
     @Override
     public Group and(Group group) {
         if (group instanceof LoggedGroup) {
-            return NobodyGroup.get();
+            return Group.nobody();
         }
         return super.and(group);
     }
@@ -80,7 +74,7 @@ public final class AnonymousGroup extends GroupStrategy {
     @Override
     public Group or(Group group) {
         if (group instanceof LoggedGroup) {
-            return AnyoneGroup.get();
+            return Group.anyone();
         }
         return super.or(group);
     }
@@ -95,6 +89,6 @@ public final class AnonymousGroup extends GroupStrategy {
 
     @Override
     public Group not() {
-        return LoggedGroup.get();
+        return Group.logged();
     }
 }

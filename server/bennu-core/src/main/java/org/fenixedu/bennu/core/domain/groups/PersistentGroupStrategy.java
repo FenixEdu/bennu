@@ -3,7 +3,7 @@ package org.fenixedu.bennu.core.domain.groups;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.GroupStrategy;
 
-public class PersistentGroupStrategy extends PersistentGroupStrategy_Base {
+public final class PersistentGroupStrategy extends PersistentGroupStrategy_Base {
     private PersistentGroupStrategy(GroupStrategy strategy) {
         super();
         setStrategy(strategy);

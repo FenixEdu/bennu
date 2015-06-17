@@ -2,6 +2,7 @@ package org.fenixedu.bennu.core.groups;
 
 import java.util.List;
 
+import org.fenixedu.bennu.core.groups.GroupParser;
 import org.fenixedu.bennu.core.groups.GroupParser.AndContext;
 import org.fenixedu.bennu.core.groups.GroupParser.ArgumentContext;
 import org.fenixedu.bennu.core.groups.GroupParser.AtomContext;
@@ -47,7 +48,7 @@ class ParseContextToGroupTranslator {
     private Group or(OrContext ctx) {
         List<AndContext> ands = ctx.and();
         if (ands.size() > 1) {
-            Group group = NobodyGroup.get();
+            Group group = Group.nobody();
             for (AndContext and : ands) {
                 group = group.or(and(and));
             }
@@ -60,7 +61,7 @@ class ParseContextToGroupTranslator {
     private Group and(AndContext ctx) {
         List<NotContext> nots = ctx.not();
         if (nots.size() > 1) {
-            Group group = AnyoneGroup.get();
+            Group group = Group.anyone();
             for (NotContext not : nots) {
                 group = group.and(not(not));
             }

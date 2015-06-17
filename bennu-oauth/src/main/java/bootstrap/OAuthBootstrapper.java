@@ -24,7 +24,7 @@ import org.fenixedu.bennu.core.bootstrap.BootstrapError;
 import org.fenixedu.bennu.core.bootstrap.annotations.Bootstrap;
 import org.fenixedu.bennu.core.bootstrap.annotations.Bootstrapper;
 import org.fenixedu.bennu.core.groups.DynamicGroup;
-import org.fenixedu.bennu.core.groups.LoggedGroup;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.portal.domain.PortalBootstrapper;
 
 import com.google.common.collect.Lists;
@@ -34,7 +34,7 @@ public class OAuthBootstrapper {
 
     @Bootstrap
     public static List<BootstrapError> boostrap() {
-        DynamicGroup.get("developers").mutator().changeGroup(LoggedGroup.get());
+        DynamicGroup.get("developers").mutator().changeGroup(Group.logged());
         return Lists.newArrayList();
     }
 

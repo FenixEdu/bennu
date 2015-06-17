@@ -19,7 +19,7 @@ public final class DynamicGroup extends Group {
 
     private final String name;
 
-    private DynamicGroup(String name) {
+    DynamicGroup(String name) {
         super();
         this.name = name;
     }
@@ -35,7 +35,7 @@ public final class DynamicGroup extends Group {
     @Override
     public PersistentDynamicGroup toPersistentGroup() {
         return PersistentDynamicGroup.getInstance(name).orElseGet(
-                () -> PersistentDynamicGroup.set(name, NobodyGroup.get().toPersistentGroup()));
+                () -> PersistentDynamicGroup.set(name, Group.nobody().toPersistentGroup()));
     }
 
     @Override
@@ -74,7 +74,7 @@ public final class DynamicGroup extends Group {
         if (persistent.isPresent()) {
             return persistent.get().getGroup().toGroup();
         }
-        return NobodyGroup.get();
+        return Group.nobody();
     }
 
     public Group underlyingGroup(DateTime when) {
@@ -82,7 +82,7 @@ public final class DynamicGroup extends Group {
         if (persistent.isPresent()) {
             return persistent.get().getGroup(when).toGroup();
         }
-        return NobodyGroup.get();
+        return Group.nobody();
     }
 
     public String getName() {

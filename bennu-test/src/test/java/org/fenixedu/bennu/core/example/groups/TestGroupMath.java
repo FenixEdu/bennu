@@ -4,10 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.groups.AnonymousGroup;
-import org.fenixedu.bennu.core.groups.AnyoneGroup;
-import org.fenixedu.bennu.core.groups.LoggedGroup;
-import org.fenixedu.bennu.core.groups.NobodyGroup;
+import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,10 +16,10 @@ public class TestGroupMath {
     private static User user1;
     private static User user2;
 
-    private static AnonymousGroup anonymous;
-    private static AnyoneGroup anyone;
-    private static LoggedGroup logged;
-    private static NobodyGroup nobody;
+    private static Group anonymous;
+    private static Group anyone;
+    private static Group logged;
+    private static Group nobody;
 
     @BeforeClass
     @Atomic(mode = TxMode.WRITE)
@@ -40,10 +38,10 @@ public class TestGroupMath {
     @BeforeClass
     @Atomic(mode = TxMode.WRITE)
     public static void setup() {
-        anonymous = AnonymousGroup.get();
-        anyone = AnyoneGroup.get();
-        logged = LoggedGroup.get();
-        nobody = NobodyGroup.get();
+        anonymous = Group.anonymous();
+        anyone = Group.anyone();
+        logged = Group.logged();
+        nobody = Group.nobody();
     }
 
     @Test

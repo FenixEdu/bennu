@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.groups.Group;
-import org.fenixedu.bennu.core.groups.UnionGroup;
 
 /**
  * Union composition group.
@@ -38,7 +37,7 @@ public final class PersistentUnionGroup extends PersistentUnionGroup_Base {
 
     @Override
     public Group toGroup() {
-        return UnionGroup.of(getChildrenSet().stream().map(g -> g.toGroup()));
+        return getChildrenSet().stream().map(PersistentGroup::toGroup).reduce(Group.nobody(), Group::or);
     }
 
     @Override

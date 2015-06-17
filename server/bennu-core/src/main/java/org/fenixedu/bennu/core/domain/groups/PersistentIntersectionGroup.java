@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.groups.Group;
-import org.fenixedu.bennu.core.groups.IntersectionGroup;
 
 /**
  * Intersection composition group.
@@ -38,7 +37,7 @@ public final class PersistentIntersectionGroup extends PersistentIntersectionGro
 
     @Override
     public Group toGroup() {
-        return IntersectionGroup.of(getChildrenSet().stream().map(g -> g.toGroup()));
+        return getChildrenSet().stream().map(PersistentGroup::toGroup).reduce(Group::and).orElseGet(Group::nobody);
     }
 
     @Override
