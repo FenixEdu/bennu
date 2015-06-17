@@ -22,11 +22,8 @@ import java.util.Set;
 import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentAnyoneGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
-
-import com.google.common.base.Objects;
 
 /**
  * Group that always returns <code>true</code> on membership tests.
@@ -35,7 +32,7 @@ import com.google.common.base.Objects;
  * @see Group
  */
 @GroupOperator("anyone")
-public final class AnyoneGroup extends CustomGroup {
+public final class AnyoneGroup extends GroupStrategy {
     private static final long serialVersionUID = -2799124523940818893L;
 
     private static final AnyoneGroup INSTANCE = new AnyoneGroup();
@@ -51,11 +48,6 @@ public final class AnyoneGroup extends CustomGroup {
     @Override
     public String getPresentationName() {
         return BundleUtil.getString("resources.BennuResources", "label.bennu.group.anyone");
-    }
-
-    @Override
-    public PersistentAnyoneGroup toPersistentGroup() {
-        return PersistentAnyoneGroup.getInstance();
     }
 
     @Override
@@ -102,15 +94,5 @@ public final class AnyoneGroup extends CustomGroup {
     @Override
     public Group not() {
         return NobodyGroup.get();
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        return object instanceof AnyoneGroup;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(AnyoneGroup.class);
     }
 }

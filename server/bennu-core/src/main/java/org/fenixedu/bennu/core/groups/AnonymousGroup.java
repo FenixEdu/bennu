@@ -21,11 +21,8 @@ import java.util.Set;
 
 import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentAnonymousGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
-
-import com.google.common.base.Objects;
 
 /**
  * Group for unauthenticated users.
@@ -34,7 +31,7 @@ import com.google.common.base.Objects;
  * @see Group
  */
 @GroupOperator("anonymous")
-public final class AnonymousGroup extends CustomGroup {
+public final class AnonymousGroup extends GroupStrategy {
     private static final long serialVersionUID = 719303318142232943L;
 
     private static final AnonymousGroup INSTANCE = new AnonymousGroup();
@@ -50,11 +47,6 @@ public final class AnonymousGroup extends CustomGroup {
     @Override
     public String getPresentationName() {
         return BundleUtil.getString("resources.BennuResources", "label.bennu.group.anonymous");
-    }
-
-    @Override
-    public PersistentAnonymousGroup toPersistentGroup() {
-        return PersistentAnonymousGroup.getInstance();
     }
 
     @Override
@@ -104,15 +96,5 @@ public final class AnonymousGroup extends CustomGroup {
     @Override
     public Group not() {
         return LoggedGroup.get();
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        return object instanceof AnonymousGroup;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(AnonymousGroup.class);
     }
 }

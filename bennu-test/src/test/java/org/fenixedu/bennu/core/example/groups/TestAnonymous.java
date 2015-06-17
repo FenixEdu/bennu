@@ -4,10 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentAnonymousGroup;
-import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
+import org.fenixedu.bennu.core.domain.groups.PersistentGroupStrategy;
 import org.fenixedu.bennu.core.groups.AnonymousGroup;
 import org.fenixedu.bennu.core.groups.Group;
 import org.junit.BeforeClass;
@@ -45,14 +43,6 @@ public class TestAnonymous {
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
-        assertEquals(AnonymousGroup.get().toPersistentGroup(), BennuGroupIndex.groupConstant(PersistentAnonymousGroup.class)
-                .findAny().orElse(null));
-    }
-
-    @Test
-    @Atomic(mode = TxMode.WRITE)
-    public void gcDoesNotDelete() {
-        PersistentGroup.garbageCollect();
-        assertTrue(BennuGroupIndex.groupConstant(PersistentAnonymousGroup.class).findAny().isPresent());
+        assertEquals(AnonymousGroup.get().toPersistentGroup(), PersistentGroupStrategy.getInstance(AnonymousGroup.get()));
     }
 }

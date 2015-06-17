@@ -5,10 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.fenixedu.bennu.core.domain.Bennu;
-import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
-import org.fenixedu.bennu.core.domain.groups.PersistentLoggedGroup;
+import org.fenixedu.bennu.core.domain.groups.PersistentGroupStrategy;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.LoggedGroup;
 import org.fenixedu.bennu.core.groups.UnionGroup;
@@ -61,14 +59,6 @@ public class TestLogged {
     @Test
     @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
-        assertEquals(LoggedGroup.get().toPersistentGroup(), BennuGroupIndex.groupConstant(PersistentLoggedGroup.class).findAny()
-                .orElse(null));
-    }
-
-    @Test
-    @Atomic(mode = TxMode.WRITE)
-    public void gcDoesNotDelete() {
-        PersistentGroup.garbageCollect();
-        assertTrue(BennuGroupIndex.groupConstant(PersistentLoggedGroup.class).findAny().isPresent());
+        assertEquals(LoggedGroup.get().toPersistentGroup(), PersistentGroupStrategy.getInstance(LoggedGroup.get()));
     }
 }

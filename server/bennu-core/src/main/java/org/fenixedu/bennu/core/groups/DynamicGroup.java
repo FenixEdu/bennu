@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentDynamicGroup;
-import org.fenixedu.bennu.core.domain.groups.PersistentNobodyGroup;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.joda.time.DateTime;
 
@@ -36,7 +35,7 @@ public final class DynamicGroup extends Group {
     @Override
     public PersistentDynamicGroup toPersistentGroup() {
         return PersistentDynamicGroup.getInstance(name).orElseGet(
-                () -> PersistentDynamicGroup.set(name, PersistentNobodyGroup.getInstance()));
+                () -> PersistentDynamicGroup.set(name, NobodyGroup.get().toPersistentGroup()));
     }
 
     @Override

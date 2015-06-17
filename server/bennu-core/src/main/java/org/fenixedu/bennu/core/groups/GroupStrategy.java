@@ -1,14 +1,7 @@
 package org.fenixedu.bennu.core.groups;
 
-import java.util.Collections;
-import java.util.Set;
-
-import org.fenixedu.bennu.core.annotation.GroupOperator;
-import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroupStrategy;
-import org.fenixedu.bennu.core.i18n.BundleUtil;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,37 +37,7 @@ public abstract class GroupStrategy extends CustomGroup {
             return (GroupStrategy) Class.forName(typeName).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | ClassCastException e) {
             logger.error("Exception de-serializing GroupStrategy '" + typeName + "'. Returning NobodyGroup.", e);
-            return new NobodyGroupStrategy();
-        }
-    }
-
-    @GroupOperator("nobody-strategy")
-    private static final class NobodyGroupStrategy extends GroupStrategy {
-        private static final long serialVersionUID = 584606595093061522L;
-
-        @Override
-        public String getPresentationName() {
-            return BundleUtil.getString("resources.BennuResources", "label.bennu.group.nobody");
-        }
-
-        @Override
-        public Set<User> getMembers() {
-            return Collections.emptySet();
-        }
-
-        @Override
-        public Set<User> getMembers(DateTime when) {
-            return Collections.emptySet();
-        }
-
-        @Override
-        public boolean isMember(User user) {
-            return false;
-        }
-
-        @Override
-        public boolean isMember(User user, DateTime when) {
-            return false;
+            return NobodyGroup.get();
         }
     }
 

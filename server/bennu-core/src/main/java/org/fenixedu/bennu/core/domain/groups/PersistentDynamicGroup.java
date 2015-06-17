@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.groups.DynamicGroup;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.groups.NobodyGroup;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.joda.time.DateTime;
@@ -77,7 +78,7 @@ public final class PersistentDynamicGroup extends PersistentDynamicGroup_Base {
         if (getPrevious() != null) {
             return getPrevious().getGroup(when);
         }
-        return PersistentNobodyGroup.getInstance();
+        return NobodyGroup.get().toPersistentGroup();
     }
 
     private void pushHistory() {

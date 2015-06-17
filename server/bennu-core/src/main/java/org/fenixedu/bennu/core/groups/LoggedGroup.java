@@ -22,11 +22,8 @@ import java.util.Set;
 import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.groups.PersistentLoggedGroup;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.joda.time.DateTime;
-
-import com.google.common.base.Objects;
 
 /**
  * Authenticated users group.
@@ -35,7 +32,7 @@ import com.google.common.base.Objects;
  * @see Group
  */
 @GroupOperator("logged")
-public final class LoggedGroup extends CustomGroup {
+public final class LoggedGroup extends GroupStrategy {
     private static final long serialVersionUID = -933443447959188208L;
 
     private static final LoggedGroup INSTANCE = new LoggedGroup();
@@ -51,11 +48,6 @@ public final class LoggedGroup extends CustomGroup {
     @Override
     public String getPresentationName() {
         return BundleUtil.getString("resources.BennuResources", "label.bennu.group.logged");
-    }
-
-    @Override
-    public PersistentLoggedGroup toPersistentGroup() {
-        return PersistentLoggedGroup.getInstance();
     }
 
     @Override
@@ -111,15 +103,5 @@ public final class LoggedGroup extends CustomGroup {
     @Override
     public Group not() {
         return AnonymousGroup.get();
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        return object instanceof LoggedGroup;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(LoggedGroup.class);
     }
 }
