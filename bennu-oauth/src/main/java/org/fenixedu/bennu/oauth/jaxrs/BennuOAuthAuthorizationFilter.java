@@ -27,6 +27,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -50,7 +51,7 @@ import com.google.gson.JsonObject;
 class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
 
     private final static String ACCESS_TOKEN = "access_token";
-
+    private final static String TOKEN_TYPE_HEADER_ACCESS_TOKEN = "Bearer";
     private final static String USER_HEADER = "__username__";
 
     private static final Logger logger = LoggerFactory.getLogger(BennuOAuthAuthorizationFilter.class);
@@ -237,8 +238,20 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
         return getHeaderOrQueryParam(requestContext, USER_HEADER);
     }
 
+    private String getAuthorizationHeader(ContainerRequestContext request) {
+        String authorization = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+        if (authorization != null && authorization.startsWith(TOKEN_TYPE_HEADER_ACCESS_TOKEN)) {
+            return authorization.substring(TOKEN_TYPE_HEADER_ACCESS_TOKEN.length()).trim();
+        }
+        return null;
+    }
+
     private String getHeaderOrQueryParam(ContainerRequestContext requestContext, String paramName) {
-        String paramValue = requestContext.getHeaderString(paramName);
+        String paramValue = getAuthorizationHeader(requestContext);
+        if (!Strings.isNullOrEmpty(paramValue)) {
+            return paramValue;
+        }
+        paramValue = requestContext.getHeaderString(paramName);
         if (Strings.isNullOrEmpty(paramValue)) {
             paramValue = requestContext.getUriInfo().getQueryParameters().getFirst(paramName);
         }
