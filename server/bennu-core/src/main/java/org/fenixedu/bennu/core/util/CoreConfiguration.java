@@ -131,7 +131,7 @@ public class CoreConfiguration {
     private static Set<Locale> supportedLocales = new HashSet<>();
 
     static {
-        String supportedLocalesString = getConfiguration().supportedLocales();
+        String supportedLocalesString = getConfiguration().supportedLocales().trim();
         if (!Strings.isNullOrEmpty(supportedLocalesString)) {
             for (String locale : supportedLocalesString.split("\\s*,\\s*")) {
                 try {
@@ -144,7 +144,7 @@ public class CoreConfiguration {
             supportedLocales.add(Locale.getDefault());
         }
         supportedLocales = Collections.unmodifiableSet(supportedLocales);
-        String defaultLocale = getConfiguration().defaultLocale();
+        String defaultLocale = getConfiguration().defaultLocale().trim();
         if (!Strings.isNullOrEmpty(defaultLocale)) {
             try {
                 Locale locale = new Builder().setLanguageTag(defaultLocale).build();
