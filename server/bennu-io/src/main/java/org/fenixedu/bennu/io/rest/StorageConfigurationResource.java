@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.io.domain.FileStorageConfiguration;
 import org.fenixedu.bennu.io.domain.FileSupport;
@@ -19,7 +20,7 @@ public class StorageConfigurationResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String all() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         createMissingConfigurations();
         return view(FileSupport.getInstance().getConfigurationSet(), "storageConfigurations");
     }
@@ -33,7 +34,7 @@ public class StorageConfigurationResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String post(String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         create(json, FileStorageConfiguration.class);
         return all();
     }

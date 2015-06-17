@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.portal.domain.MenuContainer;
 import org.fenixedu.bennu.portal.domain.MenuFunctionality;
@@ -40,7 +41,7 @@ public class MenuResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getMenu(@PathParam("oid") final String menuOid) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return viewMenu(getMenuItem(menuOid));
     }
 
@@ -52,7 +53,7 @@ public class MenuResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String createMenu(final String jsonData) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return viewMenu(create(jsonData, MenuContainer.class, MenuItemAdapter.class));
     }
 
@@ -61,7 +62,7 @@ public class MenuResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String createSubRoot(final String jsonData) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject json = new JsonParser().parse(jsonData).getAsJsonObject();
         String key = json.get("key").getAsString();
         LocalizedString title = LocalizedString.fromJson(json.get("title"));
@@ -79,7 +80,7 @@ public class MenuResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String updateMenu(final String jsonData, @PathParam("oid") final String oid) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return viewMenu(update(jsonData, getMenuItem(oid), MenuItemAdapter.class));
     }
 
@@ -87,7 +88,7 @@ public class MenuResource extends BennuRestResource {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteMenu(@PathParam("oid") final String menuOid) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         final MenuItem menuItem = getMenuItem(menuOid);
         final String rsp = viewMenu(menuItem);
         menuItem.delete();
@@ -98,7 +99,7 @@ public class MenuResource extends BennuRestResource {
     @Path("/order")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response reorderItems(final String jsonData) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject object = new JsonParser().parse(jsonData).getAsJsonObject();
         reorder(object);
         return Response.ok().build();
@@ -116,7 +117,7 @@ public class MenuResource extends BennuRestResource {
     @Path("/applications")
     @Produces(MediaType.APPLICATION_JSON)
     public String listApps() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(ApplicationRegistry.availableApplications());
     }
 
@@ -124,7 +125,7 @@ public class MenuResource extends BennuRestResource {
     @Path("/applications")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response installApp(String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject obj = new JsonParser().parse(json).getAsJsonObject();
         MenuContainer container = readDomainObject(obj.get("root").getAsString());
         Application app = ApplicationRegistry.getAppByKey(obj.get("key").getAsString());
@@ -138,7 +139,7 @@ public class MenuResource extends BennuRestResource {
     @Path("/functionalities")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response installFunctionality(String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject obj = parse(json).getAsJsonObject();
         MenuContainer container = readDomainObject(obj.get("root").getAsString());
         Application app = ApplicationRegistry.getAppByKey(obj.get("appKey").getAsString());

@@ -6,6 +6,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.scheduler.custom.ClassBean;
 import org.fenixedu.bennu.scheduler.log.CustomExecutionLogContext;
 import org.fenixedu.bennu.scheduler.log.ExecutionLog;
@@ -21,7 +22,7 @@ public class CustomTaskResource extends ExecutionLogResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addCustomTask(String jsonCode) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         getClassBean(jsonCode).run();
         return Response.ok().build();
     }
@@ -35,7 +36,7 @@ public class CustomTaskResource extends ExecutionLogResource {
     @Path("compile")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response compileCustomTask(String jsonCode) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return Response.ok(ExecutionLog.getGson().toJson(getClassBean(jsonCode).compile())).build();
     }
 

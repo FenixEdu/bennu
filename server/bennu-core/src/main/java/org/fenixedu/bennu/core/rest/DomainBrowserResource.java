@@ -15,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.fenixedu.bennu.core.groups.Group;
+
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.ValueTypeSerializer;
@@ -39,7 +41,7 @@ public class DomainBrowserResource extends BennuRestResource {
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewObject(@PathParam("oid") String oid) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         if (oid == null) {
             return Response.status(Status.NOT_FOUND).build();
         }
@@ -55,7 +57,7 @@ public class DomainBrowserResource extends BennuRestResource {
     @Path("/{oid}/{role}/count")
     @Produces(MediaType.APPLICATION_JSON)
     public Response relationCounts(@PathParam("oid") String oid, @PathParam("role") String role) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         if (oid == null) {
             return Response.status(Status.NOT_FOUND).build();
         }
@@ -71,7 +73,7 @@ public class DomainBrowserResource extends BennuRestResource {
     @Path("/{oid}/{role}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showRelation(@PathParam("oid") String oid, @PathParam("role") String role) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         if (oid == null) {
             return Response.status(Status.NOT_FOUND).build();
         }

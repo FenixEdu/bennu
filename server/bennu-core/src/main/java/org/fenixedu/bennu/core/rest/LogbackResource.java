@@ -10,6 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.fenixedu.bennu.core.groups.Group;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -36,7 +37,7 @@ public class LogbackResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAllLoggers() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         if (available) {
             return Holder.getAllLoggers().toString();
         } else {
@@ -47,7 +48,7 @@ public class LogbackResource extends BennuRestResource {
     @POST
     @Path("/{name}/{level}")
     public String setLogLevel(@PathParam("name") String loggerName, @PathParam("level") String level) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         if (available) {
             Holder.setLevel(loggerName, level);
         }

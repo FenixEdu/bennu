@@ -54,7 +54,7 @@ import com.google.common.io.ByteStreams;
 public class ExternalApplicationResource extends BennuRestResource {
 
     protected boolean isManager(User user) {
-        return Group.parse("#managers").isMember(user);
+        return Group.managers().isMember(user);
     }
 
     private boolean isDeveloper(User user) {
@@ -96,7 +96,7 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{app}/authorizations")
     public String applicationsAuthorizations(@PathParam("app") ExternalApplication application) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(application, ExternalApplicationUsersAdapter.class);
     }
 
@@ -104,7 +104,7 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/all")
     public String allApplications() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(getAllApplications());
     }
 
@@ -145,7 +145,7 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{app}/ban")
     public Response banApplication(@PathParam("app") ExternalApplication application, String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         atomic(() -> {
             application.setBanned();
         });
@@ -157,7 +157,7 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{app}/active")
     public Response unbanApplication(@PathParam("app") ExternalApplication application, String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         atomic(() -> {
             application.setActive();
         });

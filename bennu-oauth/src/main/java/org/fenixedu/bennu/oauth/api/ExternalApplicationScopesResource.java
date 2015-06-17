@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
@@ -50,7 +51,7 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/all")
     public String getAllScopes() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(Bennu.getInstance().getScopesSet());
     }
 
@@ -58,7 +59,7 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String createScope(String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(create(json, ExternalApplicationScope.class));
     }
 
@@ -67,14 +68,14 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{scope}")
     public String updateScope(@PathParam("scope") ExternalApplicationScope scope, String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(update(json, scope));
     }
 
     @DELETE
     @Path("/{scope}")
     public Response delete(@PathParam("scope") ExternalApplicationScope scope) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         atomic(() -> {
             for (ExternalApplication externalApplication : Bennu.getInstance().getApplicationsSet()) {
                 externalApplication.removeScope(scope);

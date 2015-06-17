@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.joda.time.DateTime;
@@ -23,7 +24,7 @@ public class PortalConfigurationResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String viewConfig() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(PortalConfiguration.getInstance());
     }
 
@@ -64,7 +65,7 @@ public class PortalConfigurationResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String updateConfig(String jsonData, @PathParam("oid") String oid) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(update(jsonData, readDomainObject(oid)));
     }
 

@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.scheduler.annotation.Task;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
@@ -29,7 +30,7 @@ public class TaskResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getTasks() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         final JsonObject objContainer = new JsonObject();
         final JsonArray tasks = new JsonArray();
         for (Entry<String, Task> taskEntry : SchedulerSystem.getTasks().entrySet()) {
@@ -46,7 +47,7 @@ public class TaskResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{name}")
     public Response runTaskNow(@PathParam("name") String name) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         try {
             createRunOnceTaskSchedule(name);
         } catch (Exception e) {

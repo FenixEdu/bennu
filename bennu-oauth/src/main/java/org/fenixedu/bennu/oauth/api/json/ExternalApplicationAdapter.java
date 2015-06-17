@@ -43,7 +43,7 @@ import com.google.gson.JsonObject;
 public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplication> {
 
     protected boolean isManager(User user) {
-        return Group.parse("#managers").isMember(user);
+        return Group.managers().isMember(user);
     }
 
     protected ExternalApplication create(JsonElement json) {

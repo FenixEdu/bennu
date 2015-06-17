@@ -62,6 +62,6 @@ public class ExternalApplicationAuthorizationSessionResources extends BennuRestR
     }
 
     private boolean isManager(User user) {
-        return Group.parse("#managers").isMember(user);
+        return Group.managers().isMember(user);
     }
 }

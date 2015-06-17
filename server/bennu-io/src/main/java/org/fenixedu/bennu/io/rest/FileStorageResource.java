@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.io.domain.DomainStorage;
 import org.fenixedu.bennu.io.domain.FileStorage;
@@ -28,7 +29,7 @@ public class FileStorageResource extends BennuRestResource {
     @POST
     @Path("/default/{storage}")
     public String setDefault(@PathParam("storage") String storageId) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         innerSetDefault(this.<FileStorage> readDomainObject(storageId));
         return all();
     }
@@ -42,7 +43,7 @@ public class FileStorageResource extends BennuRestResource {
     @Path("/domain/{name}")
     @Produces(MediaType.APPLICATION_JSON)
     public String createDomainStorage(@PathParam("name") String name) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(createDomainStorageService(name));
     }
 
@@ -51,14 +52,14 @@ public class FileStorageResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String createLFSStorage(String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(create(json, LocalFileSystemStorage.class));
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String all() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(FileSupport.getInstance().getFileStorageSet(), "storages");
     }
 
@@ -66,7 +67,7 @@ public class FileStorageResource extends BennuRestResource {
     @Path("/count")
     @Produces(MediaType.APPLICATION_JSON)
     public String fileCount() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject json = new JsonObject();
         for (FileStorage store : FileSupport.getInstance().getFileStorageSet()) {
             json.addProperty(store.getExternalId(), store.getFileSet().size());
@@ -83,7 +84,7 @@ public class FileStorageResource extends BennuRestResource {
     @Path("{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("oid") String storageOid) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         final FileStorage fileStorage = (FileStorage) readDomainObject(storageOid);
         final String response = view(fileStorage);
         Boolean deleteStorage = deleteStorage(fileStorage);
@@ -101,7 +102,7 @@ public class FileStorageResource extends BennuRestResource {
     @PUT
     @Path("/convert/{oid}")
     public Response convertFileStorage(@PathParam("oid") String fileStorageOid) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         GenericFile.convertFileStorages((FileStorage) readDomainObject(fileStorageOid));
         return Response.ok().build();
     }

@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.scheduler.CronTask;
 import org.fenixedu.bennu.scheduler.log.ExecutionLog;
@@ -35,7 +36,7 @@ public class ExecutionLogResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String view() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         final JsonObject view = new JsonObject();
         final JsonArray logs = new JsonArray();
         if (!getContext().isEmpty()) {
@@ -51,7 +52,7 @@ public class ExecutionLogResource extends BennuRestResource {
     @Path("{taskname}")
     @Produces(MediaType.APPLICATION_JSON)
     public String view(@PathParam("taskname") String taskname) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         final JsonObject view = new JsonObject();
         final JsonArray logs = new JsonArray();
 
@@ -68,7 +69,7 @@ public class ExecutionLogResource extends BennuRestResource {
     @Path("{taskname}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String view(@PathParam("taskname") String taskname, @PathParam("id") String id) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         final JsonObject jsonLog = getContext().get(taskname, id);
         if (jsonLog != null) {
             return ExecutionLog.getGson().toJson(jsonLog);
@@ -80,7 +81,7 @@ public class ExecutionLogResource extends BennuRestResource {
     @Path("cat/{taskname}/{id}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response logging(@PathParam("taskname") String taskname, @PathParam("id") String id) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         final JsonObject jsonLog = getContext().get(taskname, id);
         if (jsonLog != null) {
             try {
@@ -101,7 +102,7 @@ public class ExecutionLogResource extends BennuRestResource {
     @Path("{taskname}/{id}/{filename}")
     public Response downloadFile(@PathParam("taskname") String taskname, @PathParam("id") String id,
             @PathParam("filename") String filename) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         final JsonObject jsonLog = getContext().get(taskname, id);
         if (jsonLog != null && hasFile(jsonLog, filename)) {
             return Response.ok(getFile(jsonLog, filename)).build();

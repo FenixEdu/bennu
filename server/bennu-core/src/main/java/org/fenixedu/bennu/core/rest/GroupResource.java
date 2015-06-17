@@ -56,7 +56,7 @@ public class GroupResource extends BennuRestResource {
     @Path("/dynamic")
     @Produces(MediaType.APPLICATION_JSON)
     public String listDynamicGroups() {
-        accessControl("#managers");
+        accessControl(Group.managers());
         return view(BennuGroupIndex.allDynamicGroups(), DynamicGroupJsonAdapter.class);
     }
 
@@ -64,7 +64,7 @@ public class GroupResource extends BennuRestResource {
     @Path("/dynamic")
     @Consumes(MediaType.APPLICATION_JSON)
     public String changeDynamicGroupName(String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject obj = parse(json).getAsJsonObject();
         DynamicGroup group = DynamicGroup.get(obj.get("group").getAsString());
         LocalizedString name = obj.has("name") ? LocalizedString.fromJson(obj.get("name")) : null;
@@ -77,7 +77,7 @@ public class GroupResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addUserToDynamicGroup(String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject obj = parse(json).getAsJsonObject();
         DynamicGroup group = DynamicGroup.get(obj.get("group").getAsString());
         User user = User.findByUsername(obj.get("user").getAsString());
@@ -93,7 +93,7 @@ public class GroupResource extends BennuRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeUserFromDynamicGroup(String json) {
-        accessControl("#managers");
+        accessControl(Group.managers());
         JsonObject obj = parse(json).getAsJsonObject();
         DynamicGroup group = DynamicGroup.get(obj.get("group").getAsString());
         User user = User.findByUsername(obj.get("user").getAsString());
