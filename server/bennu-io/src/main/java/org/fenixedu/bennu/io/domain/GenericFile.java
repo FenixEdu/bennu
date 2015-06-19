@@ -1,5 +1,7 @@
 package org.fenixedu.bennu.io.domain;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -50,6 +52,27 @@ public abstract class GenericFile extends GenericFile_Base {
         setDisplayName(displayName);
         setFilename(filename);
         setContent(content);
+    }
+
+    /**
+     * Initializes this file with the contents of the provided {@link File}.
+     * 
+     * @param displayName
+     *            The pretty name for this file
+     * @param filename
+     *            The low-level filename for this file
+     * @param file
+     *            The file from which the contents of the newly created file are based upon
+     * @throws IOException
+     *             If an error occurs while reading the input file or storing it in the underlying storage
+     */
+    protected void init(String displayName, String filename, File file) throws IOException {
+        if (file == null) {
+            throw new NullPointerException("Content is null");
+        }
+        setDisplayName(displayName);
+        setFilename(filename);
+        setContent(file, filename);
     }
 
     public abstract boolean isAccessible(User user);
@@ -144,6 +167,22 @@ public abstract class GenericFile extends GenericFile_Base {
         }
     }
 
+    private void setContent(File file, String filename) throws IOException {
+        long size = file.length();
+        setSize(Long.valueOf(size));
+        final FileStorage fileStorage = getFileStorage();
+        final String uniqueIdentification =
+                fileStorage.store(Strings.isNullOrEmpty(getContentKey()) ? getExternalId() : getContentKey(), file);
+        setStorage(fileStorage);
+
+        if (Strings.isNullOrEmpty(uniqueIdentification)) {
+            throw new RuntimeException();
+        }
+
+        setContentKey(uniqueIdentification);
+        setContentType(detectContentType(file, filename));
+    }
+
     private void setContent(byte[] content) {
         long size = (content == null) ? 0 : content.length;
         setSize(Long.valueOf(size));
@@ -227,6 +266,19 @@ public abstract class GenericFile extends GenericFile_Base {
      */
     protected String detectContentType(byte[] content, String filename) {
         return tika.detect(content, filename);
+    }
+
+    /**
+     * Detect content type based on file content "magic" bytes. Fallback to filename extension if file content is inconclusive.
+     *
+     * @return the detected mime-type. application/octet-stream returned when detection was not successful.
+     *
+     * @see Tika
+     */
+    private static final String detectContentType(File file, String filename) throws IOException {
+        try (InputStream stream = new FileInputStream(file)) {
+            return tika.detect(stream, filename);
+        }
     }
 
     public void delete() {

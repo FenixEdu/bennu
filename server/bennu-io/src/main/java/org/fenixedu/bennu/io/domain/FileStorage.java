@@ -1,9 +1,13 @@
 package org.fenixedu.bennu.io.domain;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+
+import com.google.common.io.Files;
 
 /**
  * 
@@ -26,6 +30,27 @@ public abstract class FileStorage extends FileStorage_Base {
     public Set<GenericFile> getFileSet() {
         //FIXME: remove when the framework enables read-only slots
         return Collections.unmodifiableSet(super.getFileSet());
+    }
+
+    /**
+     * Stores the given file in this storage, and associates it with the given identifier.
+     * 
+     * This differs from the {@link #store(String, byte[])} variant in that it does not require the whole file to be loaded in
+     * memory.
+     * 
+     * Due to performance reasons, the given file may be locked, moved to another location or even removed.
+     * 
+     * @param uniqueIdentification
+     *            The unique identifier for the newly created file
+     * @param file
+     *            The file to store
+     * @return
+     *         The identification associated with the newly created file
+     * @throws IOException
+     *             If any error occurs while accessing the provided file or storing it in the underlying storage
+     */
+    public String store(String uniqueIdentification, File file) throws IOException {
+        return store(uniqueIdentification, Files.toByteArray(file));
     }
 
     abstract public String store(String uniqueIdentification, byte[] content);
