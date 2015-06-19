@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.io.domain;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,11 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 
 import com.google.common.base.Strings;
+import com.google.common.hash.Funnels;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
+import com.google.common.io.ByteStreams;
 
 /**
  * 
@@ -45,8 +50,6 @@ public abstract class GenericFile extends GenericFile_Base {
         setDisplayName(displayName);
         setFilename(filename);
         setContent(content);
-        setChecksum(Hashing.sha1().hashBytes(content).toString());
-        setChecksumAlgorithm("SHA");
     }
 
     public abstract boolean isAccessible(User user);
@@ -73,16 +76,61 @@ public abstract class GenericFile extends GenericFile_Base {
         return super.getContentType();
     }
 
+    /**
+     * Returns the checksum for this file, using the algorithm specified by {@link #getChecksumAlgorithm()}.
+     * 
+     * Due to performance concerns, this value is computed lazily, and may be cached in the domain. To ensure the value is cached,
+     * you should invoke the {@link #ensureChecksum()} method before any operation that manipulates a large number of files.
+     * 
+     * @return
+     *         The checksum of this file, never {@code null}
+     */
     @Override
     public String getChecksum() {
-        //FIXME: remove when the framework enables read-only slots
-        return super.getChecksum();
+        if (super.getChecksum() == null) {
+            return computeChecksum();
+        } else {
+            return super.getChecksum();
+        }
     }
 
+    /**
+     * Returns the algorithm used to compute the checksum of this file.
+     * 
+     * @return
+     *         The algorithm used to compute the checksum of this file, never {@code null}
+     */
     @Override
     public String getChecksumAlgorithm() {
-        //FIXME: remove when the framework enables read-only slots
-        return super.getChecksumAlgorithm();
+        if (super.getChecksumAlgorithm() == null) {
+            return DEFAULT_CHECKSUM_ALGORITHM;
+        } else {
+            return super.getChecksumAlgorithm();
+        }
+    }
+
+    /**
+     * Ensures that this file's checksum is stored in the database, thus increasing the performance of {@link #getChecksum()}.
+     */
+    public void ensureChecksum() {
+        if (super.getChecksum() == null) {
+            setChecksum(computeChecksum());
+            setChecksumAlgorithm(DEFAULT_CHECKSUM_ALGORITHM);
+        }
+    }
+
+    // Always ensure these two are synchronized
+    private static final String DEFAULT_CHECKSUM_ALGORITHM = "murmur3_128";
+    private static final HashFunction DEFAULT_HASH_FUNCTION = Hashing.murmur3_128();
+
+    private String computeChecksum() {
+        try (InputStream stream = getStream()) {
+            Hasher hasher = DEFAULT_HASH_FUNCTION.newHasher();
+            ByteStreams.copy(stream, Funnels.asOutputStream(hasher));
+            return hasher.hash().toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot compute checksum for " + getExternalId(), e);
+        }
     }
 
     @Override
