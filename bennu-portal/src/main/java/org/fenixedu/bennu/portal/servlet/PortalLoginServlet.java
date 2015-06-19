@@ -59,7 +59,7 @@ public class PortalLoginServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String callback = req.getParameter("callback");
-        if (callback != null && !callback.startsWith(CoreConfiguration.getConfiguration().applicationUrl())) {
+        if (!Strings.isNullOrEmpty(callback) && !callback.startsWith(CoreConfiguration.getConfiguration().applicationUrl())) {
             throw new IllegalArgumentException("Callback URL '" + callback + "' is invalid!");
         }
         strategy.showLoginPage(req, resp, callback);
