@@ -20,7 +20,7 @@ public final class GroupBasedFile extends GroupBasedFile_Base {
 
     @Override
     public boolean isAccessible(User user) {
-        return getAccessGroup().isMember(user);
+        return getGroup().isMember(user);
     }
 
     @Override

@@ -22,7 +22,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
+import org.joda.time.DateTime;
 
 /**
  * Intersection composition group.
@@ -38,6 +40,22 @@ public final class PersistentIntersectionGroup extends PersistentIntersectionGro
     @Override
     public Group toGroup() {
         return getChildrenSet().stream().map(PersistentGroup::toGroup).reduce(Group::and).orElseGet(Group::nobody);
+    }
+
+    @Override
+    public boolean isMember(User user) {
+        if (getChildrenSet().isEmpty()) {
+            return false;
+        }
+        return getChildrenSet().stream().allMatch(group -> group.isMember(user));
+    }
+
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        if (getChildrenSet().isEmpty()) {
+            return false;
+        }
+        return getChildrenSet().stream().allMatch(group -> group.isMember(user, when));
     }
 
     @Override

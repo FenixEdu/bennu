@@ -17,8 +17,10 @@
 package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.BennuGroupIndex;
+import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.DynamicGroup;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
@@ -68,6 +70,26 @@ public final class PersistentDynamicGroup extends PersistentDynamicGroup_Base {
     public PersistentGroup getGroup() {
         //FIXME: remove when the framework enables read-only slots
         return super.getGroup();
+    }
+
+    @Override
+    public Set<User> getMembers() {
+        return getGroup().getMembers();
+    }
+
+    @Override
+    public Set<User> getMembers(DateTime when) {
+        return getGroup(when).getMembers(when);
+    }
+
+    @Override
+    public boolean isMember(User user) {
+        return getGroup().isMember(user);
+    }
+
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        return getGroup(when).isMember(user, when);
     }
 
     public PersistentGroup getGroup(DateTime when) {

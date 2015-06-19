@@ -17,6 +17,7 @@
 package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -25,6 +26,7 @@ import java.util.stream.Stream;
 import org.fenixedu.bennu.core.domain.BennuGroupIndex;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
+import org.joda.time.DateTime;
 
 /**
  * Groups of specific users.
@@ -35,6 +37,26 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
     protected PersistentUserGroup(Set<User> members) {
         super();
         getMemberSet().addAll(members);
+    }
+
+    @Override
+    public Set<User> getMembers() {
+        return Collections.unmodifiableSet(getMemberSet());
+    }
+
+    @Override
+    public Set<User> getMembers(DateTime when) {
+        return getMembers();
+    }
+
+    @Override
+    public boolean isMember(User user) {
+        return getMemberSet().contains(user);
+    }
+
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        return isMember(user);
     }
 
     @Override

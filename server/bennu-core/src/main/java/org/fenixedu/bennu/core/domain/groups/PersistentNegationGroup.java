@@ -18,7 +18,9 @@ package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Optional;
 
+import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
+import org.joda.time.DateTime;
 
 /**
  * Inverse group of another group.
@@ -34,6 +36,16 @@ public final class PersistentNegationGroup extends PersistentNegationGroup_Base 
     @Override
     public Group toGroup() {
         return getNegated().toGroup().not();
+    }
+
+    @Override
+    public boolean isMember(User user) {
+        return !getNegated().isMember(user);
+    }
+
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        return !getNegated().isMember(user, when);
     }
 
     @Override

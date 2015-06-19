@@ -20,9 +20,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
+import org.joda.time.DateTime;
 
 /**
  * Union composition group.
@@ -38,6 +41,26 @@ public final class PersistentUnionGroup extends PersistentUnionGroup_Base {
     @Override
     public Group toGroup() {
         return getChildrenSet().stream().map(PersistentGroup::toGroup).reduce(Group.nobody(), Group::or);
+    }
+
+    @Override
+    public boolean isMember(User user) {
+        return getChildrenSet().stream().anyMatch(group -> group.isMember(user));
+    }
+
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        return getChildrenSet().stream().anyMatch(group -> group.isMember(user, when));
+    }
+
+    @Override
+    public Set<User> getMembers() {
+        return getChildrenSet().stream().flatMap(group -> group.getMembers().stream()).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<User> getMembers(DateTime when) {
+        return getChildrenSet().stream().flatMap(group -> group.getMembers(when).stream()).collect(Collectors.toSet());
     }
 
     @Override
