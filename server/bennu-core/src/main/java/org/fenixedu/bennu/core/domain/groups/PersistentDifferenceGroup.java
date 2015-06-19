@@ -22,7 +22,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
+import org.joda.time.DateTime;
 
 /**
  * Difference composition group. Can be read as members of first group except members of the remaining ones.
@@ -39,6 +41,22 @@ public final class PersistentDifferenceGroup extends PersistentDifferenceGroup_B
     @Override
     public Group toGroup() {
         return getRestSet().stream().map(PersistentGroup::toGroup).reduce(getFirst().toGroup(), Group::minus);
+    }
+
+    @Override
+    public boolean isMember(User user) {
+        if (getFirst().isMember(user)) {
+            return !getRestSet().stream().anyMatch(group -> group.isMember(user));
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isMember(User user, DateTime when) {
+        if (getFirst().isMember(user, when)) {
+            return !getRestSet().stream().anyMatch(group -> group.isMember(user, when));
+        }
+        return false;
     }
 
     @Override

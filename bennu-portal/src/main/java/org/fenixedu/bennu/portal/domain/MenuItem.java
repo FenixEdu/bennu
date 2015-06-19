@@ -110,7 +110,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
      *         Whether the given user can access this item
      */
     public boolean isAvailable(User user) {
-        return getAccessGroup().isMember(user) && getParent().isAvailable(user);
+        return getGroup().isMember(user) && getParent().isAvailable(user);
     }
 
     /**
@@ -129,7 +129,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
      * Implementation Node: This method ONLY checks the current node, not the full chain!
      */
     protected boolean isItemAvailableForCurrentUser() {
-        return getAccessGroup().isMember(Authenticate.getUser());
+        return getGroup().isMember(Authenticate.getUser());
     }
 
     /**

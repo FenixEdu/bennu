@@ -48,6 +48,12 @@ import pt.ist.fenixframework.Atomic.TxMode;
  * of groups instead of changing the current one.
  * </p>
  * 
+ * <p>
+ * <b>Note:</b> Whereas in most situations users will not deal with {@link PersistentGroup} subclasses directly, if possible, the
+ * core methods ( {@link #isMember(User)}, {@link #getMembers()}) should be invoked directly, as subclasses may have a more
+ * performant way of computing the proper values.
+ * </p>
+ * 
  * @see PersistentDynamicGroup
  * @see GroupOperator
  */
@@ -84,7 +90,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      * 
      * @return all member users in the system at the exact moment of the invocation
      */
-    public final Set<User> getMembers() {
+    public Set<User> getMembers() {
         return toGroup().getMembers();
     }
 
@@ -95,7 +101,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      *            moment when to fetch the user list.
      * @return all member users in the system at the requested moment
      */
-    public final Set<User> getMembers(DateTime when) {
+    public Set<User> getMembers(DateTime when) {
         return toGroup().getMembers(when);
     }
 
@@ -108,7 +114,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      * 
      * @see #verify()
      */
-    public final boolean isMember(User user) {
+    public boolean isMember(User user) {
         return toGroup().isMember(user);
     }
 
@@ -121,7 +127,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      *            moment when to test the user.
      * @return <code>true</code> if member, <code>false</code> otherwise
      */
-    public final boolean isMember(User user, DateTime when) {
+    public boolean isMember(User user, DateTime when) {
         return toGroup().isMember(user, when);
     }
 
