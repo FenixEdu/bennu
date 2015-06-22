@@ -19,6 +19,8 @@ public @interface Field {
 
     String hint() default "";
 
+    String defaultValue() default "";
+
     boolean isMandatory() default true;
 
     FieldType fieldType() default FieldType.TEXT;

@@ -27,6 +27,7 @@ import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -140,7 +141,10 @@ public class BootstrapResource extends BennuRestResource {
         json.addProperty("isMandatory", field.isMandatory());
         json.addProperty("fieldType", field.fieldType().name());
         json.add("name", getLocalizedString(bundle, field.name()).json());
-        json.add("hint", getLocalizedString(bundle, field.hint()).json());
+        if (!Strings.isNullOrEmpty(field.hint())) {
+            json.add("hint", getLocalizedString(bundle, field.hint()).json());
+        }
+        json.addProperty("defaultValue", field.defaultValue());
         json.addProperty("key", fieldMethod.getDeclaringClass().getName() + "." + fieldMethod.getName());
         return json;
     }

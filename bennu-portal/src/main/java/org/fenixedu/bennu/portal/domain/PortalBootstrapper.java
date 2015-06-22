@@ -41,12 +41,10 @@ public class PortalBootstrapper {
             bundle = "resources.BennuPortalResources")
     public static interface PortalSection {
 
-        @Field(name = "bootstrapper.portalSection.installationName", hint = "bootstrapper.portalSection.installationName.hint",
-                order = 4)
+        @Field(name = "bootstrapper.portalSection.installationName", defaultValue = "FenixEdu Demo App", order = 4)
         public String getApplicationTitle();
 
-        @Field(name = "bootstrapper.portalSection.organizationName", hint = "bootstrapper.portalSection.organizationName.hint",
-                order = 3)
+        @Field(name = "bootstrapper.portalSection.organizationName", defaultValue = "FenixEdu", order = 3)
         public String getOrganizationName();
 
     }
