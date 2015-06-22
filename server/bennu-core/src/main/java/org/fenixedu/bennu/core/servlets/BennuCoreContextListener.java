@@ -25,6 +25,7 @@ import org.fenixedu.bennu.core.bootstrap.BootstrapperRegistry;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.rest.Healthcheck;
 import org.fenixedu.bennu.core.rest.SystemResource;
+import org.fenixedu.bennu.core.signals.Signal;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,10 +88,13 @@ public class BennuCoreContextListener implements ServletContextListener {
                 return Result.healthy();
             }
         });
+
+        Signal.init();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
+        Signal.shutdown();
         FenixFramework.shutdown();
         interruptThreads();
     }
