@@ -15,12 +15,14 @@ import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
+import com.google.gson.JsonElement;
+
 @Path("/bennu-scheduler/config")
 public class SchedulerConfigResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getLoggingStorage() {
+    public JsonElement getLoggingStorage() {
         accessControl(Group.managers());
         return view(SchedulerSystem.getInstance());
     }
@@ -28,7 +30,7 @@ public class SchedulerConfigResource extends BennuRestResource {
     @PUT
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String changeLoggingStorage(@PathParam("oid") String loggingStorageExternalId) {
+    public JsonElement changeLoggingStorage(@PathParam("oid") String loggingStorageExternalId) {
         accessControl(Group.managers());
         innerSetLoggingStorage(loggingStorageExternalId);
         return getLoggingStorage();

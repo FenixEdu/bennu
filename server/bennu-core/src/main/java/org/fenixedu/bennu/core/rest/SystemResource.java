@@ -58,7 +58,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.json.adapters.KeyValuePropertiesViewer;
@@ -88,7 +87,7 @@ public class SystemResource extends BennuRestResource {
     @Path("info")
     @SuppressWarnings("restriction")
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response info(@Context HttpServletRequest request, @QueryParam("full") @DefaultValue("true") Boolean full) {
+    public JsonObject info(@Context HttpServletRequest request, @QueryParam("full") @DefaultValue("true") Boolean full) {
         accessControl(Group.managers());
         JsonObject json = new JsonObject();
 
@@ -206,7 +205,7 @@ public class SystemResource extends BennuRestResource {
 
         json.add("metrics", metrics);
 
-        return Response.ok(toJson(json)).build();
+        return json;
     }
 
     private static JsonElement libs;
@@ -244,7 +243,7 @@ public class SystemResource extends BennuRestResource {
     @GET
     @Path("thread-dump")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response threadDump() {
+    public JsonObject threadDump() {
         accessControl(Group.managers());
         JsonObject json = new JsonObject();
         JsonArray array = new JsonArray();
@@ -277,13 +276,13 @@ public class SystemResource extends BennuRestResource {
 
         json.addProperty("totalThreads", total);
         json.add("threads", array);
-        return Response.ok(toJson(json)).build();
+        return json;
     }
 
     @GET
     @Path("healthcheck")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response healthChecks() {
+    public JsonArray healthChecks() {
         accessControl(Group.managers());
         JsonArray json = new JsonArray();
 
@@ -298,7 +297,7 @@ public class SystemResource extends BennuRestResource {
             json.add(obj);
         }
 
-        return Response.ok(toJson(json)).build();
+        return json;
     }
 
     private static final Collection<Healthcheck> healthchecks = new ConcurrentLinkedQueue<>();
@@ -310,7 +309,7 @@ public class SystemResource extends BennuRestResource {
     @GET
     @Path("/jmx")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJmxInfo() {
+    public JsonObject getJmxInfo() {
         accessControl(Group.managers());
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         Set<ObjectInstance> objects = mbs.queryMBeans(null, null);
@@ -322,13 +321,13 @@ public class SystemResource extends BennuRestResource {
             }
             json.get(domain).getAsJsonArray().add(getBuilder().view(instance.getObjectName()));
         }
-        return toJson(json);
+        return json;
     }
 
     @GET
     @Path("/modules")
     @Produces(MediaType.APPLICATION_JSON)
-    public String moduleInfo() {
+    public JsonElement moduleInfo() {
         return view(FenixFramework.getProject().getProjects(), "modules");
     }
 

@@ -34,6 +34,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -49,6 +50,7 @@ import org.fenixedu.bennu.oauth.api.json.ExternalApplicationUsersAdapter;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 
 import com.google.common.io.ByteStreams;
+import com.google.gson.JsonElement;
 
 @Path("/bennu-oauth/applications")
 public class ExternalApplicationResource extends BennuRestResource {
@@ -88,14 +90,14 @@ public class ExternalApplicationResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String myApplications() {
+    public JsonElement myApplications() {
         return view(verifyAndGetRequestAuthor().getOwnedApplicationSet().stream().filter(p -> p.isActive()));
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{app}/authorizations")
-    public String applicationsAuthorizations(@PathParam("app") ExternalApplication application) {
+    public JsonElement applicationsAuthorizations(@PathParam("app") ExternalApplication application) {
         accessControl(Group.managers());
         return view(application, ExternalApplicationUsersAdapter.class);
     }
@@ -103,7 +105,7 @@ public class ExternalApplicationResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/all")
-    public String allApplications() {
+    public JsonElement allApplications() {
         accessControl(Group.managers());
         return view(getAllApplications());
     }
@@ -115,12 +117,12 @@ public class ExternalApplicationResource extends BennuRestResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String createApplication(String json) {
+    public JsonElement createApplication(JsonElement json) {
         verifyAndGetRequestAuthor();
         return view(create(json));
     }
 
-    protected ExternalApplication create(String json) {
+    protected ExternalApplication create(JsonElement json) {
         return create(json, ExternalApplication.class);
     }
 
@@ -128,12 +130,12 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{app}")
-    public String updateApplication(@PathParam("app") ExternalApplication application, String json) {
+    public JsonElement updateApplication(@PathParam("app") ExternalApplication application, JsonElement json) {
         User currentUser = verifyAndGetRequestAuthor(application);
         return update(application, json, currentUser);
     }
 
-    protected String update(ExternalApplication application, String json, User currentUser) {
+    protected JsonElement update(ExternalApplication application, JsonElement json, User currentUser) {
         if (isManager(currentUser)) {
             return view(update(json, application, ExternalApplicationForManagersAdapter.class));
         }
@@ -144,24 +146,24 @@ public class ExternalApplicationResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{app}/ban")
-    public Response banApplication(@PathParam("app") ExternalApplication application, String json) {
+    public Response banApplication(@PathParam("app") ExternalApplication application, JsonElement json) {
         accessControl(Group.managers());
         atomic(() -> {
             application.setBanned();
         });
-        return Response.ok().build();
+        return ok();
     }
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{app}/active")
-    public Response unbanApplication(@PathParam("app") ExternalApplication application, String json) {
+    public Response unbanApplication(@PathParam("app") ExternalApplication application, JsonElement json) {
         accessControl(Group.managers());
         atomic(() -> {
             application.setActive();
         });
-        return Response.ok().build();
+        return ok();
     }
 
     @DELETE
@@ -171,7 +173,7 @@ public class ExternalApplicationResource extends BennuRestResource {
         atomic(() -> {
             app.setDeleted();
         });
-        return Response.ok().build();
+        return ok();
     }
 
     @GET
@@ -188,7 +190,7 @@ public class ExternalApplicationResource extends BennuRestResource {
                 InputStream placeholder = getClass().getResourceAsStream("/noapplication.png");
                 return Response.ok(ByteStreams.toByteArray(placeholder), "image/png").build();
             } catch (IOException e) {
-                return Response.status(Status.NOT_FOUND).build();
+                throw new WebApplicationException(Status.NOT_FOUND);
             }
         }
     }

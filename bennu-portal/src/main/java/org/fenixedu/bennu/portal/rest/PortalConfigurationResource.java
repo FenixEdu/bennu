@@ -7,6 +7,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
@@ -17,12 +18,14 @@ import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 
+import com.google.gson.JsonElement;
+
 @Path("/bennu-portal/configuration")
 public class PortalConfigurationResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String viewConfig() {
+    public JsonElement viewConfig() {
         accessControl(Group.managers());
         return view(PortalConfiguration.getInstance());
     }
@@ -40,7 +43,7 @@ public class PortalConfigurationResource extends BennuRestResource {
             }
             return Response.ok(instance.getLogo(), instance.getLogoType()).cacheControl(CACHE_CONTROL).tag(etag).build();
         }
-        return Response.status(Status.NOT_FOUND).build();
+        throw new WebApplicationException(Status.NOT_FOUND);
     }
 
     private EntityTag buildETag(PortalConfiguration instance) {
@@ -54,14 +57,14 @@ public class PortalConfigurationResource extends BennuRestResource {
         if (instance != null && instance.getFavicon() != null) {
             return Response.ok(instance.getFavicon(), instance.getFaviconType()).cacheControl(CACHE_CONTROL).build();
         }
-        return Response.status(Status.NOT_FOUND).build();
+        throw new WebApplicationException(Status.NOT_FOUND);
     }
 
     @PUT
     @Path("{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateConfig(String jsonData, @PathParam("oid") String oid) {
+    public JsonElement updateConfig(JsonElement jsonData, @PathParam("oid") String oid) {
         accessControl(Group.managers());
         return view(update(jsonData, readDomainObject(oid)));
     }

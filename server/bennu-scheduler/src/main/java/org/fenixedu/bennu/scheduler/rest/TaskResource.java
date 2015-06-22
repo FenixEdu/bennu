@@ -29,7 +29,7 @@ public class TaskResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getTasks() {
+    public JsonObject getTasks() {
         accessControl(Group.managers());
         final JsonObject objContainer = new JsonObject();
         final JsonArray tasks = new JsonArray();
@@ -40,7 +40,7 @@ public class TaskResource extends BennuRestResource {
             tasks.add(taskJson);
         }
         objContainer.add("tasks", tasks);
-        return toJson(objContainer);
+        return objContainer;
     }
 
     @POST
@@ -53,7 +53,7 @@ public class TaskResource extends BennuRestResource {
         } catch (Exception e) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
-        return Response.status(Status.OK).build();
+        return ok();
     }
 
     @Atomic(mode = TxMode.WRITE)

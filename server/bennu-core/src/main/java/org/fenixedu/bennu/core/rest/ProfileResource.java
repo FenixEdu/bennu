@@ -37,11 +37,13 @@ import org.fenixedu.commons.i18n.I18N;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
+import com.google.gson.JsonElement;
+
 @Path("/bennu-core/profile")
 public class ProfileResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getProfile() {
+    public JsonElement getProfile() {
         return view(null, Void.class, AuthenticatedUserViewer.class);
     }
 
@@ -60,7 +62,7 @@ public class ProfileResource extends BennuRestResource {
     @POST
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
-    public String login(@FormParam("username") String username, @FormParam("password") String password) {
+    public JsonElement login(@FormParam("username") String username, @FormParam("password") String password) {
         if (!CoreConfiguration.casConfig().isCasEnabled()) {
             Authenticate.login(request.getSession(true), username, password);
             return view(null, Void.class, AuthenticatedUserViewer.class);
@@ -71,7 +73,7 @@ public class ProfileResource extends BennuRestResource {
     @GET
     @Path("logout")
     @Produces(MediaType.APPLICATION_JSON)
-    public String logout(@Context HttpServletResponse response) {
+    public JsonElement logout(@Context HttpServletResponse response) {
         accessControl(Group.logged());
         Authenticate.logout(request.getSession(false));
         if (CoreConfiguration.casConfig().isCasEnabled()) {
@@ -88,7 +90,7 @@ public class ProfileResource extends BennuRestResource {
     @POST
     @Path("locale/{tag}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String changeLocale(@PathParam("tag") String localeTag) {
+    public JsonElement changeLocale(@PathParam("tag") String localeTag) {
         try {
             Locale locale = new Builder().setLanguageTag(localeTag).build();
             if (CoreConfiguration.supportedLocales().contains(locale)) {
@@ -111,7 +113,7 @@ public class ProfileResource extends BennuRestResource {
     @POST
     @Path("preferred-locale/{tag}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String changePreferredLocale(@PathParam("tag") String localeTag) {
+    public JsonElement changePreferredLocale(@PathParam("tag") String localeTag) {
         accessControl(Group.logged());
         try {
             Locale locale = new Builder().setLanguageTag(localeTag).build();

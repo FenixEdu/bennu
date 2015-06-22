@@ -14,12 +14,14 @@ import org.fenixedu.bennu.io.domain.FileSupport;
 
 import pt.ist.fenixframework.Atomic;
 
+import com.google.gson.JsonElement;
+
 @Path("/bennu-io/storage/config")
 public class StorageConfigurationResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String all() {
+    public JsonElement all() {
         accessControl(Group.managers());
         createMissingConfigurations();
         return view(FileSupport.getInstance().getConfigurationSet(), "storageConfigurations");
@@ -33,7 +35,7 @@ public class StorageConfigurationResource extends BennuRestResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String post(String json) {
+    public JsonElement post(JsonElement json) {
         accessControl(Group.managers());
         create(json, FileStorageConfiguration.class);
         return all();

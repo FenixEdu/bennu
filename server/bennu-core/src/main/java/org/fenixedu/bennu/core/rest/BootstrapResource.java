@@ -15,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.bootstrap.BootstrapError;
 import org.fenixedu.bennu.core.bootstrap.BootstrapperRegistry;
@@ -30,7 +31,6 @@ import org.fenixedu.bennu.core.util.CoreConfiguration;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -40,24 +40,24 @@ public class BootstrapResource extends BennuRestResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(final String json) throws Throwable {
+    public Response create(final JsonObject json) throws Throwable {
         checkApplicationNotBootstrapped();
         try {
-            SectionsBootstrapper.bootstrapAll(parse(json).getAsJsonObject());
-            return Response.ok().build();
+            SectionsBootstrapper.bootstrapAll(json);
+            return ok();
         } catch (BootstrapException e) {
-            return Response.status(412).entity(toJson(createErrors(e.getErrors()))).build();
+            return Response.status(Status.PRECONDITION_FAILED).entity(toJson(createErrors(e.getErrors()))).build();
         }
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getData() {
+    public JsonObject getData() {
         checkApplicationNotBootstrapped();
         JsonObject json = new JsonObject();
         json.add("bootstrappers", getBootstrappers());
         json.add("availableLocales", getLocales());
-        return toJson(json);
+        return json;
     }
 
     private void checkApplicationNotBootstrapped() {
@@ -118,7 +118,7 @@ public class BootstrapResource extends BennuRestResource {
         return bootstrappersJson;
     }
 
-    private JsonElement createSection(Section section, Class<?> sectionClass) {
+    private JsonObject createSection(Section section, Class<?> sectionClass) {
         JsonObject json = new JsonObject();
         JsonArray fields = new JsonArray();
         for (Method method : BootstrapperRegistry.getSectionFields(sectionClass)) {
@@ -131,7 +131,7 @@ public class BootstrapResource extends BennuRestResource {
         return json;
     }
 
-    private JsonElement createField(Field field, Method fieldMethod, String bundle) {
+    private JsonObject createField(Field field, Method fieldMethod, String bundle) {
         JsonObject json = new JsonObject();
         JsonArray validValues = new JsonArray();
         for (String validValue : field.validValues()) {

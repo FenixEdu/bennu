@@ -48,51 +48,52 @@ public class JsonAwareResource {
         BUILDER.setDefault(objectClass, registeeClass);
     }
 
-    public final String view(Object object) {
+    public final JsonElement view(Object object) {
         return view(object, (Class<? extends JsonViewer<?>>) null);
     }
 
-    public final String view(Object object, Class<? extends JsonViewer<?>> viewerClass) {
+    public final JsonElement view(Object object, Class<? extends JsonViewer<?>> viewerClass) {
         if (object == null) {
             return view(object, (Class<?>) null, viewerClass);
         }
         return view(object, object.getClass(), viewerClass);
     }
 
-    public final String view(Object object, Class<?> objectClass, Class<? extends JsonViewer<?>> viewerClass) {
-        return GSON.toJson(BUILDER.view(object, objectClass, viewerClass));
+    public final JsonElement view(Object object, Class<?> objectClass, Class<? extends JsonViewer<?>> viewerClass) {
+        return BUILDER.view(object, objectClass, viewerClass);
     }
 
-    public final String view(Object object, String collectionKey) {
+    public final JsonElement view(Object object, String collectionKey) {
         return view(object, collectionKey, null);
     }
 
-    public final String view(Object object, String collectionKey, Class<? extends JsonViewer<?>> viewerClass) {
+    public final JsonElement view(Object object, String collectionKey, Class<? extends JsonViewer<?>> viewerClass) {
         if (object == null) {
             return view(object, (Class<?>) null, collectionKey, viewerClass);
         }
         return view(object, object.getClass(), collectionKey, viewerClass);
     }
 
-    public final String view(Object object, Class<?> objectClass, String collectionKey, Class<? extends JsonViewer<?>> viewerClass) {
+    public final JsonElement view(Object object, Class<?> objectClass, String collectionKey,
+            Class<? extends JsonViewer<?>> viewerClass) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add(collectionKey, BUILDER.view(object, objectClass, viewerClass));
-        return GSON.toJson(jsonObject);
+        return jsonObject;
     }
 
-    public final String viewPaginated(List<?> object, String collectionKey, int skip, int pageSize) {
+    public final JsonElement viewPaginated(List<?> object, String collectionKey, int skip, int pageSize) {
         return viewPaginated(object, collectionKey, null, skip, pageSize);
     }
 
-    public final String viewPaginated(List<?> object, String collectionKey, Class<? extends JsonViewer<?>> viewerClass, int skip,
-            int pageSize) {
+    public final JsonElement viewPaginated(List<?> object, String collectionKey, Class<? extends JsonViewer<?>> viewerClass,
+            int skip, int pageSize) {
         if (object == null) {
             return viewPaginated(null, (Class<?>) null, collectionKey, viewerClass, skip, pageSize);
         }
         return viewPaginated(object, object.getClass(), collectionKey, viewerClass, skip, pageSize);
     }
 
-    public final String viewPaginated(List<?> object, Class<?> objectClass, String collectionKey,
+    public final JsonElement viewPaginated(List<?> object, Class<?> objectClass, String collectionKey,
             Class<? extends JsonViewer<?>> viewerClass, int skip, int pageSize) {
         JsonObject jsonObject = new JsonObject();
         if (object == null) {
@@ -104,39 +105,37 @@ public class JsonAwareResource {
                     viewerClass));
             jsonObject.addProperty("total", object.size());
         }
-        return GSON.toJson(jsonObject);
+        return jsonObject;
     }
 
-    public <T> T create(String jsonData, Class<T> clazz) {
+    public <T> T create(JsonElement jsonData, Class<T> clazz) {
         return create(jsonData, clazz, null);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T create(String jsonData, Class<T> clazz, Class<? extends JsonCreator<? extends T>> jsonCreatorClass) {
+    public <T> T create(JsonElement jsonData, Class<T> clazz, Class<? extends JsonCreator<? extends T>> jsonCreatorClass) {
         LOG.trace("Create instance of {} with data {}", clazz.getSimpleName(), jsonData);
         return (T) innerCreate(jsonData, clazz, jsonCreatorClass);
     }
 
     @Atomic(mode = TxMode.WRITE)
-    private Object innerCreate(String jsonData, Class<?> clazz, Class<? extends JsonCreator<?>> jsonCreatorClass) {
-        final JsonElement parse = parse(jsonData);
-        return BUILDER.create(parse, clazz, jsonCreatorClass);
+    private Object innerCreate(JsonElement jsonData, Class<?> clazz, Class<? extends JsonCreator<?>> jsonCreatorClass) {
+        return BUILDER.create(jsonData, clazz, jsonCreatorClass);
     }
 
-    public <T> T update(String jsonData, T object) {
+    public <T> T update(JsonElement jsonData, T object) {
         return update(jsonData, object, null);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T update(String jsonData, T object, Class<? extends JsonUpdater<? extends T>> jsonUpdaterClass) {
+    public <T> T update(JsonElement jsonData, T object, Class<? extends JsonUpdater<? extends T>> jsonUpdaterClass) {
         LOG.trace("Update instance {} with data {}", object.toString(), jsonData);
         return (T) innerUpdate(jsonData, object, jsonUpdaterClass);
     }
 
     @Atomic(mode = TxMode.WRITE)
-    private Object innerUpdate(String jsonData, Object object, Class<? extends JsonUpdater<?>> jsonUpdaterClass) {
-        final JsonElement parse = parse(jsonData);
-        return BUILDER.update(parse, object, jsonUpdaterClass);
+    private Object innerUpdate(JsonElement jsonData, Object object, Class<? extends JsonUpdater<?>> jsonUpdaterClass) {
+        return BUILDER.update(jsonData, object, jsonUpdaterClass);
     }
 
     protected JsonElement parse(String jsonString) {

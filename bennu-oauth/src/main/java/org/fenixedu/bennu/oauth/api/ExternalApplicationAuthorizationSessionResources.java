@@ -34,13 +34,15 @@ import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
 
+import com.google.gson.JsonElement;
+
 @Path("/bennu-oauth/sessions/")
 public class ExternalApplicationAuthorizationSessionResources extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{session}")
-    public String authorizations(@PathParam("session") ApplicationUserAuthorization authorization) {
+    public JsonElement authorizations(@PathParam("session") ApplicationUserAuthorization authorization) {
         User user = verifyAndGetRequestAuthor();
         if (authorization.getUser() == user || isManager(user)) {
             return view(authorization.getSessionSet());
@@ -56,7 +58,7 @@ public class ExternalApplicationAuthorizationSessionResources extends BennuRestR
             atomic(() -> {
                 session.delete();
             });
-            return Response.ok().build();
+            return ok();
         }
         return null;
     }

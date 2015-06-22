@@ -50,7 +50,8 @@ public class JsonBodyReaderWriter<T extends JsonElement> implements MessageBodyR
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return (JsonElement.class.isAssignableFrom(type) || JsonElement.class.isAssignableFrom((Class<?>) genericType));
+        // ignore media type parameters
+        return MediaType.APPLICATION_JSON_TYPE.equals(new MediaType(mediaType.getType(), mediaType.getSubtype()));
     }
 
     @Override

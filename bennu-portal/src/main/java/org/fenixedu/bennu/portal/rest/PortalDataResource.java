@@ -16,11 +16,11 @@ import com.google.gson.JsonObject;
 public class PortalDataResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getMenu() {
+    public JsonObject getMenu() {
         final JsonObject hostMenuView = new JsonObject();
         merge(hostMenuView, getBuilder().view(PortalConfiguration.getInstance(), PortalMenuViewer.class).getAsJsonObject());
         merge(hostMenuView, getBuilder().view(getCasConfigContext()).getAsJsonObject());
         merge(hostMenuView, getBuilder().view(null, Void.class, AuthenticatedUserViewer.class).getAsJsonObject());
-        return toJson(hostMenuView);
+        return hostMenuView;
     }
 }

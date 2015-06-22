@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.ParamConverter;
@@ -60,7 +61,7 @@ public class JsonParamConverterProvider implements ParamConverterProvider {
                     return reader.readFrom(rawType, genericType, annotations, MediaType.APPLICATION_JSON_TYPE, null,
                             new ByteArrayInputStream(value.getBytes()));
                 } catch (WebApplicationException | IOException e) {
-                    return null;
+                    throw new WebApplicationException(e, Status.BAD_REQUEST);
                 }
             }
 
@@ -71,7 +72,7 @@ public class JsonParamConverterProvider implements ParamConverterProvider {
                     writer.writeTo(value, rawType, genericType, annotations, MediaType.APPLICATION_JSON_TYPE, null, baos);
                     baos.flush();
                 } catch (IOException e) {
-                    return null;
+                    throw new WebApplicationException(e, Status.BAD_REQUEST);
                 }
                 return baos.toString();
             }
