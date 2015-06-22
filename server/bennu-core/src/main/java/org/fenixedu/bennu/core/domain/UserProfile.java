@@ -95,11 +95,11 @@ public class UserProfile extends UserProfile_Base {
      */
     public String getFullName() {
         StringBuilder builder = new StringBuilder();
-        if (getGivenNames() != null) {
+        if (!Strings.isNullOrEmpty(getGivenNames())) {
             builder.append(getGivenNames());
         }
         builder.append(" ");
-        if (getFamilyNames() != null) {
+        if (!Strings.isNullOrEmpty(getFamilyNames())) {
             builder.append(getFamilyNames());
         }
         return builder.toString().trim();

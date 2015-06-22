@@ -45,7 +45,7 @@ public class DomainObjectParamConverterTest extends JerseyTest {
         @POST
         public String postUserAsMessageBody(@PathParam("id") User user, @QueryParam("email") String email) {
             setUserEmail(user, email);
-            return user.getProfile().getEmail();
+            return user.getEmail();
         }
 
         private void setUserEmail(User user, String email) {
@@ -91,7 +91,7 @@ public class DomainObjectParamConverterTest extends JerseyTest {
                         .request().post(null, String.class);
 
         assertEquals(expectedEmail, newEmail);
-        assertEquals(expectedEmail, user1.getProfile().getEmail());
+        assertEquals(expectedEmail, user1.getEmail());
     }
 
     @Atomic(mode = TxMode.READ)

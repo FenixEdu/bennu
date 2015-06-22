@@ -27,25 +27,24 @@ public class UserJsonAdapter implements JsonAdapter<User> {
     @Override
     public JsonElement view(User user, JsonBuilder ctx) {
         JsonObject jsonObject = new JsonObject();
+        UserProfile profile = user.getProfile();
         jsonObject.addProperty("id", user.getExternalId());
         jsonObject.addProperty("username", user.getUsername());
-        jsonObject.addProperty("name", user.getPresentationName());
+        jsonObject.addProperty("name", profile.getFullName());
+        jsonObject.addProperty("displayName", user.getDisplayName());
+        jsonObject.addProperty("givenNames", profile.getGivenNames());
+        jsonObject.addProperty("familyNames", profile.getFamilyNames());
+        JsonUtils.put(jsonObject, "email", user.getEmail());
         jsonObject.addProperty("active", !user.isLoginExpired());
         LocalDate expiration = user.getExpiration();
         if (expiration != null) {
             jsonObject.addProperty("expiration", ISODateTimeFormat.date().print(expiration));
         }
-
-        UserProfile profile = user.getProfile();
-        //FIXME: remove on the next major when profile is mandatory
-        if (profile != null) {
-            JsonUtils.put(jsonObject, "givenNames", profile.getGivenNames());
-            JsonUtils.put(jsonObject, "familyNames", profile.getFamilyNames());
-            JsonUtils.put(jsonObject, "displayName", profile.getDisplayName());
-            JsonUtils.put(jsonObject, "avatar", profile.getAvatarUrl());
+        JsonUtils.put(jsonObject, "avatar", profile.getAvatarUrl());
+        if (profile.getPreferredLocale() != null) {
+            jsonObject.add("preferredLocale", ctx.view(profile.getPreferredLocale()));
         }
-        JsonUtils.put(jsonObject, "email", user.getEmail());
-        JsonUtils.put(jsonObject, "preferredLocale", ctx.view(user.getPreferredLocale()));
+
         return jsonObject;
     }
 
@@ -70,11 +69,7 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         } else {
             return null;
         }
-        UserProfile profile = parseAndUpdateOrCreateProfile(object, ctx, user.getProfile());
-        //FIXME: remove on the next major when profile is mandatory
-        if (user.getProfile() == null) {
-            user.setProfile(profile);
-        }
+        parseAndUpdateOrCreateProfile(object, ctx, user.getProfile());
         changePassword(user, object);
         changeAvatar(user.getProfile(), object);
         changeExpiration(user, object);

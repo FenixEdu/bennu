@@ -47,7 +47,7 @@ public class ExternalApplicationUsersAdapter implements JsonAdapter<ExternalAppl
         for (ApplicationUserAuthorization applicationUserAuthorization : obj.getApplicationUserAuthorizationSet()) {
             JsonObject jobj = new JsonObject();
             jobj.addProperty("id", applicationUserAuthorization.getExternalId());
-            jobj.addProperty("name", applicationUserAuthorization.getUser().getProfile().getDisplayName());
+            jobj.addProperty("name", applicationUserAuthorization.getUser().getDisplayName());
             jobj.addProperty("authorizations", applicationUserAuthorization.getSessionSet().size());
             jarr.add(jobj);
         }

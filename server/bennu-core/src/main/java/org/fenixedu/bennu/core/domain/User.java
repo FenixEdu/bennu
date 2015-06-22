@@ -20,7 +20,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Function;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 
@@ -58,58 +56,11 @@ public final class User extends User_Base implements Principal {
         }
     }
 
-    @Deprecated
-    public interface UserPresentationStrategy {
-        public String present(User user);
-
-        public String shortPresent(User user);
-    }
-
-    private static final UserPresentationStrategy defaultStrategy = new UserPresentationStrategy() {
-
-        @Override
-        public String present(User user) {
-            return user.getUsername();
-        }
-
-        @Override
-        public String shortPresent(User user) {
-            return user.getUsername();
-        }
-
-    };
-
-    public static final Comparator<User> COMPARATOR_BY_NAME = Comparator.comparing(u -> u.getProfile().getDisplayName());
-
-    @Deprecated
-    public static class UserToUsername implements Function<User, String> {
-        @Override
-        public String apply(User user) {
-            return user.getUsername();
-        }
-    }
-
-    @Deprecated
-    public static class UsernameToUser implements Function<String, User> {
-        @Override
-        public User apply(String username) {
-            return User.findByUsername(username);
-        }
-    }
-
-    private static UserPresentationStrategy strategy = defaultStrategy;
+    public static final Comparator<User> COMPARATOR_BY_NAME = Comparator.comparing(User::getDisplayName).thenComparing(
+            User::getUsername);
 
     public static interface UsernameGenerator {
         public String doGenerate(UserProfile parameter);
-    }
-
-    /**
-     * @param username the unique username
-     * @deprecated Use {@link User#User(String, UserProfile)} instead.
-     */
-    @Deprecated
-    public User(final String username) {
-        this(username, new UserProfile());
     }
 
     public User(UserProfile profile) {
@@ -139,11 +90,7 @@ public final class User extends User_Base implements Principal {
         return super.getCreated();
     }
 
-    @Override
     public LocalDate getExpiration() {
-        if (super.getExpiration() != null) {
-            return super.getExpiration();
-        }
         LocalDate latest = null;
         for (UserLoginPeriod period : getLoginValiditySet()) {
             // If there is an open period, set the user's expiration to null (i.e. open)
@@ -160,63 +107,17 @@ public final class User extends User_Base implements Principal {
         return latest;
     }
 
-    @Deprecated
-    @Override
-    public void setExpiration(LocalDate expiration) {
-        super.setExpiration(expiration);
-    }
-
-    /**
-     * @deprecated Use {@link UserProfile#getFullName()} instead
-     */
-    @Deprecated
     @Override
     public String getName() {
-        return getProfile() != null ? getProfile().getFullName() : getUsername();
+        return getUsername();
     }
 
-    /**
-     * @deprecated Use {@link UserProfile#getEmail()} instead
-     */
-    @Deprecated
-    @Override
+    public String getDisplayName() {
+        return getProfile().getDisplayName();
+    }
+
     public String getEmail() {
-        return getProfile() != null ? getProfile().getEmail() : super.getEmail();
-    }
-
-    /**
-     * @deprecated Use {@link UserProfile#setEmail(String) }
-     */
-    @Deprecated
-    @Override
-    public void setEmail(String email) {
-        if (getProfile() == null) {
-            bootstrapProfile();
-        }
-        getProfile().setEmail(email);
-        super.setEmail(email);
-    }
-
-    /**
-     * @deprecated Use {@link UserProfile#getPreferredLocale() }
-     */
-    @Deprecated
-    @Override
-    public Locale getPreferredLocale() {
-        return getProfile() != null ? getProfile().getPreferredLocale() : super.getPreferredLocale();
-    }
-
-    /**
-     * @deprecated Use {@link UserProfile#setPreferredLocale(Locale) }
-     */
-    @Deprecated
-    @Override
-    public void setPreferredLocale(Locale preferredLocale) {
-        if (getProfile() == null) {
-            bootstrapProfile();
-        }
-        getProfile().setPreferredLocale(preferredLocale);
-        super.setPreferredLocale(preferredLocale);
+        return getProfile().getEmail();
     }
 
     public String generatePassword() {
@@ -251,24 +152,6 @@ public final class User extends User_Base implements Principal {
         return hash.equals(getPassword());
     }
 
-    /**
-     * @return the user's name
-     * @deprecated Use {@link UserProfile#getFullName() } instead
-     */
-    @Deprecated
-    public String getPresentationName() {
-        return strategy.present(this);
-    }
-
-    /**
-     * @return the short version of the user's name
-     * @deprecated Use {@link UserProfile#getDisplayName() } instead
-     */
-    @Deprecated
-    public String getShortPresentationName() {
-        return strategy.shortPresent(this);
-    }
-
     public Group groupOf() {
         return Group.users(this);
     }
@@ -296,24 +179,6 @@ public final class User extends User_Base implements Principal {
 
     public static void setUsernameGenerator(UsernameGenerator generator) {
         usernameGenerator = generator;
-    }
-
-    /**
-     * @param newStrategy {@link UserPresentationStrategy} instance
-     * @deprecated User now has native name field rendering the need for these strategies obsolete
-     */
-    @Deprecated
-    public static void registerUserPresentationStrategy(UserPresentationStrategy newStrategy) {
-        if (strategy != defaultStrategy) {
-            logger.warn("Overriding non-default strategy");
-        }
-        strategy = newStrategy;
-    }
-
-    private void bootstrapProfile() {
-        setProfile(new UserProfile());
-        getProfile().setEmail(super.getEmail());
-        getProfile().setPreferredLocale(super.getPreferredLocale());
     }
 
     private static UsernameGenerator usernameGenerator = new UsernameGenerator() {

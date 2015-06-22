@@ -106,7 +106,7 @@ public class ProfileResource extends BennuRestResource {
 
     @Atomic(mode = TxMode.WRITE)
     private void setPreferredLocale(Locale locale) {
-        Authenticate.getUser().setPreferredLocale(locale);
+        Authenticate.getUser().getProfile().setPreferredLocale(locale);
     }
 
     @POST
@@ -117,7 +117,7 @@ public class ProfileResource extends BennuRestResource {
         try {
             Locale locale = new Builder().setLanguageTag(localeTag).build();
             if (CoreConfiguration.supportedLocales().contains(locale)) {
-                Authenticate.getUser().setPreferredLocale(locale);
+                Authenticate.getUser().getProfile().setPreferredLocale(locale);
                 I18N.setLocale(request.getSession(true), locale);
                 return view(null, Void.class, AuthenticatedUserViewer.class);
             }

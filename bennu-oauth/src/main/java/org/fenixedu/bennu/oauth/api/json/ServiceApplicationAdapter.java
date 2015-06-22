@@ -34,7 +34,7 @@ public class ServiceApplicationAdapter extends ExternalApplicationAdapter {
     @Override
     protected ExternalApplication create(JsonElement json) {
         ServiceApplication serviceApplication = new ServiceApplication();
-        serviceApplication.setAuthorName(Authenticate.getUser().getProfile().getDisplayName());
+        serviceApplication.setAuthorName(Authenticate.getUser().getDisplayName());
         JsonElement ipAddresses = json.getAsJsonObject().get("ipAddresses");
         if (ipAddresses != null && ipAddresses.isJsonArray()) {
             serviceApplication.setIpAddresses(ipAddresses);

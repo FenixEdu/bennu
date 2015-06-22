@@ -130,7 +130,7 @@ public class ExternalApplication extends ExternalApplication_Base {
         if (!Strings.isNullOrEmpty(name)) {
             return name;
         } else {
-            return getAuthor().getProfile().getDisplayName();
+            return getAuthor().getDisplayName();
         }
     }
 

@@ -77,9 +77,6 @@ public class User {
 	protected String password;
 	protected String salt;
 	protected DateTime created;
-	public LocalDate expiration; // remove on the next major
-	public String email; // remove on the next major
-	public Locale preferredLocale; // remove on the next major
 }
 
 public class UserLoginPeriod {
@@ -88,9 +85,9 @@ public class UserLoginPeriod {
 }
 
 public class UserProfile {
-    protected String displayName;
-    protected String givenNames;
-    protected String familyNames;
+    protected String displayName (REQUIRED);
+    protected String givenNames (REQUIRED);
+    protected String familyNames (REQUIRED);
     public String avatarUrl;
     public String email;
     public Locale preferredLocale;
@@ -137,7 +134,7 @@ relation UserProfileUser {
         multiplicity 0..1;
     }
     public UserProfile playsRole profile {
-        multiplicity 0..1; // make required in the next major
+        multiplicity 1..1;
     }
 }
 

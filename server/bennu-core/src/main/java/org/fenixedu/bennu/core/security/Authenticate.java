@@ -88,7 +88,7 @@ public class Authenticate {
 
         loggedUser.set(user);
         session.setAttribute(LOGGED_USER_ATTRIBUTE, user);
-        final Locale preferredLocale = user.getPreferredLocale();
+        final Locale preferredLocale = user.getProfile().getPreferredLocale();
         if (preferredLocale != null) {
             I18N.setLocale(session, preferredLocale);
         }

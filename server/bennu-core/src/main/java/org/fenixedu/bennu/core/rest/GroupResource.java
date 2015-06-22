@@ -123,9 +123,7 @@ public class GroupResource extends BennuRestResource {
 
                 userJson.addProperty("username", user.getUsername());
                 userJson.addProperty("name", user.getName());
-                if (user.getProfile() != null) {
-                    userJson.addProperty("avatar", user.getProfile().getAvatarUrl());
-                }
+                userJson.addProperty("avatar", user.getProfile().getAvatarUrl());
 
                 users.add(userJson);
             }

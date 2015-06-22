@@ -70,7 +70,7 @@ public class Avatar extends Avatar_Base {
     }
 
     public static Avatar getForUser(User user) {
-        return user.getProfile() != null ? user.getProfile().getLocalAvatar() : null;
+        return user.getProfile().getLocalAvatar();
     }
 
     public static String mysteryManUrl(User user) {
