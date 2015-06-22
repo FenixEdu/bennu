@@ -276,7 +276,7 @@ app.controller('DomainBrowserController', [ '$scope', '$http', '$state',
   }
   $scope.oid = $state.params.id;
   $scope.$root.pageTitle = $scope.oid + ' - System Monitoring';
-  $scope.reload = $state.reload;
+  $scope.reload = function() { $state.go('domain-browser-object', {id: $scope.oid}); };
   $scope.exploreRelation = function(name) {
     $scope.relation = name; $scope.relations = $scope.relError = null; $scope.currentPage = 0;
     $http.get(contextPath + '/api/bennu-core/domain-browser/' + $scope.oid + '/' + name).success(function (data) {

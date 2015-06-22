@@ -34,7 +34,7 @@
       <td>{{schedule.schedule}}</td>
       <td>
         <button class="btn btn-danger btn-sm" ng-click="delete(schedule)">Delete</button>
-        <a href="#logs/{{schedule.type}}" class="btn btn-success btn-sm">Logs</a>
+        <a ui-sref="scheduler.logs({type: schedule.type})" class="btn btn-success btn-sm">Logs</a>
       </td>
     </tr>
   </tbody>
