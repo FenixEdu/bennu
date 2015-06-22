@@ -1,6 +1,6 @@
 @import url(font-awesome.min.css);
 
-[bennu-html-editor] {
+[bennu-html-editor],[bennu-spinner] {
     display: none !important;
 }
 
@@ -738,3 +738,14 @@ ul.menu-paragraph li{
 
 /* --- */
 
+.bennu-spinner-faster{
+      -webkit-animation: spin .25s infinite ease-in-out;
+      -o-animation: spin .25s infinite ease-in-out;
+      animation: spin .25s infinite ease-in-out;
+}
+
+.bennu-spinner-slower{
+      -webkit-animation: spin 1.25s infinite ease-in-out;
+      -o-animation: spin 1.25s infinite ease-in-out;
+      animation: spin 1.25s infinite ease-in-out;
+}

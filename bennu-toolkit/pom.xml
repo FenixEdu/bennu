@@ -62,6 +62,7 @@
                                 <jsSourceFile>theme.js</jsSourceFile>
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>codeEditor.js</jsSourceFile>
+                                <jsSourceFile>spinner.js</jsSourceFile>
                                 <jsSourceFile>libs/MutationObserverPolyfill.js</jsSourceFile>
                                 <jsSourceFile>mutations.js</jsSourceFile>
                             </jsSourceFiles>
@@ -101,6 +102,7 @@
                                 <jsSourceFile>theme.js</jsSourceFile>
                                 <jsSourceFile>datetime.js</jsSourceFile>
                                 <jsSourceFile>codeEditor.js</jsSourceFile>
+                                <jsSourceFile>spinner.js</jsSourceFile>
                                 <jsSourceFile>bennu-angular.js</jsSourceFile>
                             </jsSourceFiles>
                             <webappTargetDir>${project.build.outputDirectory}/META-INF/resources/</webappTargetDir>

@@ -170,6 +170,25 @@
                 }
             }
         });
+
+        // Spinner
+        // -------
+        var spinner = $("[" + Bennu.spinner.attr + "]");
+        
+        spinner.map(function (i, e) {
+            Bennu.spinner.createWidget(e);
+        });
+        
+        Bennu.monitor.checkFor(Bennu.spinner.attr, {
+            add: function (e) {
+                Bennu.spinner.createWidget(e);
+            },
+            remove: function (e) {
+                if ($(e).attr(Bennu.spinner.attr) === "") {
+                    $(e).data("widget").remove();
+                }
+            }
+        });
         
     });
 })();
