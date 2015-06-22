@@ -123,16 +123,6 @@ app.config(['$stateProvider', '$urlRouterProvider',
         url: '/custom/add',
         templateUrl: contextPath + '/bennu-admin/template/scheduler/add-custom-task.html',
         controller: 'CustomTaskController'
-      }).
-      state('scheduler.custom', {
-        url: '/custom/:type',
-        templateUrl: contextPath + '/bennu-admin/template/scheduler/custom-logs.html',
-        controller: 'CustomTaskLogsController'
-      }).
-      state('scheduler.custom-log-details', {
-        url: '/custom/:type/:id',
-        templateUrl: contextPath + '/bennu-admin/template/scheduler/log-details.html',
-        controller: 'CustomLogDetailsController'
       });
   }]);
 
@@ -676,7 +666,7 @@ app.controller('LogsController', ['$scope', '$http', '$state', function ($scope,
   var url = $state.params.type ? contextPath + '/api/bennu-scheduler/log/' + $scope.type : contextPath + '/api/bennu-scheduler/log/';
   $scope.reload = function () {
     $http.get(url).success(function (data) {
-      $scope.logs = data.logs;
+      $scope.logs = data;
     });
   }
   $scope.reload();
@@ -684,6 +674,7 @@ app.controller('LogsController', ['$scope', '$http', '$state', function ($scope,
 
 app.controller('LogDetailsController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
   $scope.type = $state.params.type; $scope.id = $state.params.id; $scope.contextPath = contextPath;
+  $scope.editorOptions = { lineNumbers: true, mode: 'text/x-java', theme: 'eclipse', readOnly: true};
   $scope.refreshLog = function() {
     $http.get(contextPath + '/api/bennu-scheduler/log/' + $scope.type + '/' + $scope.id).success(function (data) {
       $scope.log = data;
@@ -692,27 +683,8 @@ app.controller('LogDetailsController', ['$scope', '$http', '$state', function ($
       $scope.logs = data;
     });
   }
-  setInterval(function () {
-    if($scope.log && !$scope.log.end) {
-      $scope.refreshLog();
-    }
-  }, 3000);
-  $scope.refreshLog();
-}]);
-
-app.controller('CustomLogDetailsController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
-  $scope.type = $state.params.type; $scope.id = $state.params.id; $scope.contextPath = contextPath;
-  $scope.editorOptions = { lineNumbers: true, mode: 'text/x-java', theme: 'eclipse', readOnly: true};
-  $scope.refreshLog = function() {
-    $http.get(contextPath + '/api/bennu-scheduler/custom/' + $scope.type + '/' + $scope.id).success(function (data) {
-      $scope.log = data;
-    });
-    $http.get(contextPath + '/api/bennu-scheduler/custom/cat/' + $scope.type + '/' + $scope.id).success(function (data) {
-      $scope.logs = data;
-    });
-  }
   $scope.load = function() {
-    window.code = $scope.log.javaCode; $state.go('scheduler.custom-new');
+    window.code = $scope.log.code; $state.go('scheduler.custom-new');
   }
   setInterval(function () {
     if($scope.log && !$scope.log.end) {
@@ -750,7 +722,7 @@ app.controller('CustomTaskController', ['$scope', '$http', '$state', function ($
     var packageName = new RegExp("package (.*);").exec($scope.javaCode)[1];
     var className = new RegExp("public class (.*) extends").exec($scope.javaCode)[1];
     var fqn = packageName + "." + className;
-    $http.put(contextPath + '/api/bennu-scheduler/custom', {'name': fqn, 'code': $scope.javaCode}).success(function (result) { $state.go('scheduler.custom') });
+    $http.put(contextPath + '/api/bennu-scheduler/custom', {'name': fqn, 'code': $scope.javaCode}).success(function (result) { $state.go('scheduler.logs') });
   }
   $scope.$watch('javaCode', function (oldValue, newValue) {
     $scope.compiled = false; $scope.result = '';

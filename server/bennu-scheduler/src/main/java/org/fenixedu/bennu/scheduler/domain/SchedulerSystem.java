@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +21,8 @@ import org.fenixedu.bennu.io.domain.FileStorage;
 import org.fenixedu.bennu.scheduler.SchedulerConfiguration;
 import org.fenixedu.bennu.scheduler.TaskRunner;
 import org.fenixedu.bennu.scheduler.annotation.Task;
+import org.fenixedu.bennu.scheduler.log.ExecutionLogRepository;
+import org.fenixedu.bennu.scheduler.log.FileSystemLogRepository;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -446,5 +449,31 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                 LOG.debug("Don't add to queue. Already exists {}", taskRunner.getTaskName());
             }
         }
+    }
+
+    private static ExecutionLogRepository repository = new FileSystemLogRepository(3);
+
+    /**
+     * Configures a new log repository to be used by the scheduler system.
+     * 
+     * @param repo
+     *            The new log repository
+     * @throws NullPointerException
+     *             If the provided repository is {@code null}
+     */
+    public static void setLogRepository(ExecutionLogRepository repo) {
+        repository = Objects.requireNonNull(repo);
+    }
+
+    /**
+     * Returns the currently configured {@link ExecutionLogRepository}.
+     * 
+     * By default, a {@link FileSystemLogRepository} is used, with a dispersion factor of {@code 3}.
+     * 
+     * @return
+     *         The current log repository
+     */
+    public static ExecutionLogRepository getLogRepository() {
+        return repository;
     }
 }

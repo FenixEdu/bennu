@@ -8,9 +8,9 @@
  * 
  *   This file is part of the Bennu Web Application Infrastructure.
  *
- *   The Bennu Web Application Infrastructure is free software: you can 
- *   redistribute it and/or modify it under the terms of the GNU Lesser General 
- *   Public License as published by the Free Software Foundation, either version 
+ *   The Bennu Web Application Infrastructure is free software: you can
+ *   redistribute it and/or modify it under the terms of the GNU Lesser General
+ *   Public License as published by the Free Software Foundation, either version
  *   3 of the License, or (at your option) any later version.*
  *
  *   Bennu is distributed in the hope that it will be useful,
@@ -26,16 +26,27 @@
 package org.fenixedu.bennu.scheduler.custom;
 
 import org.fenixedu.bennu.scheduler.CronTask;
-import org.fenixedu.bennu.scheduler.log.CustomExecutionLog;
 import org.fenixedu.bennu.scheduler.log.ExecutionLog;
 
 import pt.ist.fenixframework.Atomic.TxMode;
 
 public abstract class CustomTask extends CronTask {
 
+    private String code;
+    private String user;
+
+    public void init(String code, String user) {
+        if (this.code != null || this.user != null) {
+            throw new IllegalStateException("CustomTask already initialized!");
+        }
+        this.code = code;
+        this.user = user;
+    }
+
     @Override
-    public ExecutionLog createLog() {
-        return new CustomExecutionLog(getClassName());
+    protected ExecutionLog createExecutionLog() {
+        // this will blow up if either code or user are null
+        return ExecutionLog.newCustomExecution(getClassName(), code, user);
     }
 
     @Override

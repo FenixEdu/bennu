@@ -1,10 +1,5 @@
 package org.fenixedu.bennu.scheduler;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.concurrent.Callable;
 
 import org.fenixedu.bennu.core.security.Authenticate;
@@ -19,12 +14,9 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 
-import com.google.common.base.Joiner;
-
 public abstract class CronTask implements Runnable {
     private Logger logger;
     protected transient ExecutionLog log;
-    private PrintWriter taskLogWriter;
     private final Atomic atomic;
 
     public CronTask() {
@@ -51,49 +43,31 @@ public abstract class CronTask implements Runnable {
         return logger;
     }
 
-    public PrintWriter getTaskLogWriter() {
-        if (taskLogWriter == null) {
-            try {
-                File logFile = createFile("log");
-                taskLogWriter = new PrintWriter(new FileOutputStream(logFile, true), true);
-            } catch (FileNotFoundException e) {
-                throw new Error(e);
-            }
-        }
-        return taskLogWriter;
-    }
-
     public abstract void runTask() throws Exception;
 
     @Override
     public final void run() {
-        getExecutionLog().start();
+        log = createExecutionLog();
+        SchedulerSystem.getLogRepository().newExecution(log);
         try {
             innerAtomicRun();
-            getExecutionLog().setSuccess(true);
+            updateLog(log.withSuccess());
         } catch (Throwable t) {
             t.printStackTrace();
-            getExecutionLog().setSuccess(false);
-            getExecutionLog().setError(t);
+            updateLog(log.withError(t));
         } finally {
-            getExecutionLog().end();
             resetLoggers();
             Authenticate.unmock();
         }
     }
 
+    protected ExecutionLog createExecutionLog() {
+        return ExecutionLog.newExecutionFor(getClassName());
+    }
+
     private void resetLoggers() {
         logger = null;
         log = null;
-        if (taskLogWriter != null) {
-            taskLogWriter.close();
-            taskLogWriter = null;
-        }
-
-    }
-
-    public ExecutionLog createLog() {
-        return new ExecutionLog(getClassName());
     }
 
     private void innerAtomicRun() throws Exception {
@@ -108,65 +82,20 @@ public abstract class CronTask implements Runnable {
         }, atomic);
     }
 
-    /**
-     * AbsolutePath is className/executionId/filename
-     * 
-     * @param filename
-     * @return
-     */
-    private String getAbsolutePath(String filename) {
-        return getAbsolutePath(filename, getClassName(), log.getId());
+    public void output(String filename, byte[] fileContent, boolean append) {
+        SchedulerSystem.getLogRepository().storeFile(log, filename, fileContent, append);
+        updateLog(log.withFile(filename));
     }
 
-    public static String getAbsolutePath(String filename, String className, String id) {
-        return Joiner.on("/").join(SchedulerSystem.getLogsPath(), className.replace('.', '_'), id.replace('-', '_'), filename);
-    }
-
-    private File createFile(String filename) {
-        final String absPath = getAbsolutePath(filename);
-        final File file = new File(absPath);
-        try {
-            File dir = file.getParentFile();
-            if (!dir.exists()) {
-                getLogger().debug("create log dir {}", dir.getAbsolutePath());
-                dir.mkdirs();
-            }
-
-            if (!file.exists()) {
-                getLogger().debug("create log file {}", file.getAbsolutePath());
-                file.createNewFile();
-            }
-            return file;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-
-    public File output(String filename, byte[] fileContent, boolean append) {
-        File file = createFile(filename);
-        try (FileOutputStream fos = new FileOutputStream(file, append)) {
-            fos.write(fileContent);
-            fos.flush();
-            log.addFile(filename);
-            return file;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public File output(String filename, byte[] fileContent) {
-        return output(filename, fileContent, false);
+    public void output(String filename, byte[] fileContent) {
+        output(filename, fileContent, false);
     }
 
     protected final void taskLog(String format, Object... args) {
-        PrintWriter writer = getTaskLogWriter();
         if (args == null || args.length < 1) {
-            writer.println(format);
+            SchedulerSystem.getLogRepository().appendTaskLog(log, format + "\n");
         } else {
-            writer.printf(format, args);
+            SchedulerSystem.getLogRepository().appendTaskLog(log, String.format(format, args));
         }
     }
 
@@ -174,11 +103,9 @@ public abstract class CronTask implements Runnable {
         taskLog("");
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends ExecutionLog> T getExecutionLog() {
-        if (log == null) {
-            log = createLog();
-        }
-        return (T) log;
+    private void updateLog(ExecutionLog log) {
+        this.log = log;
+        SchedulerSystem.getLogRepository().update(log);
     }
+
 }

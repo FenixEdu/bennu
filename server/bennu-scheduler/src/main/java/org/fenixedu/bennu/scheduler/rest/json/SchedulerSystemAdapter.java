@@ -8,7 +8,6 @@ import org.fenixedu.bennu.io.domain.FileSupport;
 import org.fenixedu.bennu.io.domain.LocalFileSystemStorage;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
 
-import com.google.common.collect.FluentIterable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -22,8 +21,8 @@ public class SchedulerSystemAdapter implements JsonViewer<SchedulerSystem> {
         json.add("loggingStorage", ctx.view(obj.getLoggingStorage(), LocalFileSystemStorage.class, DomainObjectViewer.class));
         json.add(
                 "availableStorages",
-                ctx.view(FluentIterable.from(FileSupport.getInstance().getFileStorageSet()).filter(LocalFileSystemStorage.class)
-                        .toSet()));
+                ctx.view(FileSupport.getInstance().getFileStorageSet().stream()
+                        .filter(store -> store instanceof LocalFileSystemStorage)));
         return json;
     }
 }
