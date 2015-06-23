@@ -17,6 +17,7 @@
 package org.fenixedu.bennu.core.domain.groups;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -25,6 +26,10 @@ import java.util.stream.Stream;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 import org.joda.time.DateTime;
+
+import pt.ist.fenixframework.dml.runtime.Relation;
+
+import com.google.common.collect.Sets;
 
 /**
  * Difference composition group. Can be read as members of first group except members of the remaining ones.
@@ -60,10 +65,8 @@ public final class PersistentDifferenceGroup extends PersistentDifferenceGroup_B
     }
 
     @Override
-    protected void gc() {
-        setFirst(null);
-        getRestSet().clear();
-        super.gc();
+    protected Collection<Relation<?, ?>> getContextRelations() {
+        return Sets.newHashSet(getRelationDifferenceGroupFirst(), getRelationDifferenceGroupRest());
     }
 
     /**

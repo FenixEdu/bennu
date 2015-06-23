@@ -16,11 +16,15 @@
  */
 package org.fenixedu.bennu.core.domain.groups;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 import org.joda.time.DateTime;
+
+import pt.ist.fenixframework.dml.runtime.Relation;
 
 /**
  * Inverse group of another group.
@@ -49,9 +53,8 @@ public final class PersistentNegationGroup extends PersistentNegationGroup_Base 
     }
 
     @Override
-    protected void gc() {
-        setNegated(null);
-        super.gc();
+    protected Collection<Relation<?, ?>> getContextRelations() {
+        return Collections.singleton(getRelationGroupNegationGroup());
     }
 
     /**

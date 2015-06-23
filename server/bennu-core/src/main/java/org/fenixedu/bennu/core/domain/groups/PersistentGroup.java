@@ -16,6 +16,8 @@
  */
 package org.fenixedu.bennu.core.domain.groups;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -30,6 +32,7 @@ import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.dml.runtime.Relation;
 
 /**
  * <p>
@@ -143,32 +146,27 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
         }
     }
 
-    /**
-     * Should return true is the instance can be discarded without damaging the system. As a general rule, if this is not in use
-     * and can be recovered from the language, it can be discarded. Acceptable exceptions to this rule are singleton groups, since
-     * they do not save up that many space and are too often used.
-     * 
-     * @return {@code true} if can be discarded, {@code false} otherwise
-     */
-    protected boolean isGarbageCollectable() {
-        return getNegation() == null && getUnionsSet().isEmpty() && getIntersectionsSet().isEmpty()
-                && getDifferenceAtFirstSet().isEmpty() && getDifferenceAtRestSet().isEmpty() && getDynamicGroupSet().isEmpty();
+    protected Collection<Relation<?, ?>> getContextRelations() {
+        return Collections.emptySet();
     }
 
     /**
-     * Delete the object from the system. Assume true in {@link #isGarbageCollectable()} since it is tested before invoking this.
+     * Delete the object from the system if not in use. Works by disconnecting from the context relations.
      */
     protected void gc() {
-        setRoot(null);
-        deleteDomainObject();
+        if (GroupGC.emptyCustomRelations(this)) {
+            setRoot(null);
+            GroupGC.cleanContext(this);
+            deleteDomainObject();
+        }
     }
 
     public static void garbageCollect() {
-        for (PersistentGroup group : Bennu.getInstance().getGroupSet()) {
-            if (group.isGarbageCollectable()) {
-                group.gc();
-            }
-        }
+        GroupGC.gc();
+    }
+
+    public static void garbageCollect(PersistentGroup group) {
+        group.gc();
     }
 
     protected static <T extends PersistentGroup> T singleton(Supplier<Optional<T>> selector, Supplier<T> creator) {

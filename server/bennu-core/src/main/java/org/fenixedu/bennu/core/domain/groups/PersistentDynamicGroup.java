@@ -16,6 +16,7 @@
  */
 package org.fenixedu.bennu.core.domain.groups;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,6 +30,9 @@ import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.dml.runtime.Relation;
+
+import com.google.common.collect.Sets;
 
 /**
  * <p>
@@ -129,9 +133,25 @@ public final class PersistentDynamicGroup extends PersistentDynamicGroup_Base {
     }
 
     @Override
-    protected boolean isGarbageCollectable() {
-        // Dynamic (named) groups cannot be recovered only from language, therefore we can never safely delete.
-        return false;
+    protected void gc() {
+        //Dynamic groups are never garbage collected automatically
+    }
+
+    public boolean isDeletable() {
+        return GroupGC.emptyCustomRelations(this);
+    }
+
+    public void delete() {
+        if (getPrevious() != null) {
+            getPrevious().gc();
+        }
+        super.gc();
+    }
+
+    @Override
+    protected Collection<Relation<?, ?>> getContextRelations() {
+        return Sets.newHashSet(getRelationDynamicGroupHistoric(), getRelationPersistentDynamicGroupCreator(),
+                getRelationPersistentDynamicGroups(), getRelationPersistentDynamicGroupWrapper());
     }
 
     public static Optional<PersistentDynamicGroup> getInstance(final String name) {
