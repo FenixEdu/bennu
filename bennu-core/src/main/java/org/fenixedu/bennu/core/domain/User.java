@@ -19,6 +19,7 @@ package org.fenixedu.bennu.core.domain;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
@@ -26,6 +27,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.groups.Group;
@@ -46,17 +50,14 @@ import com.google.common.io.BaseEncoding;
 public final class User extends User_Base implements Principal {
     private static final Logger logger = LoggerFactory.getLogger(User.class);
 
-    private static SecureRandom prng = null;
+    private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
+
+    // The following constants may be changed without breaking existing hashes.
+    private static final int SALT_BYTE_SIZE = 24;
+    private static final int HASH_BYTE_SIZE = 24;
+    private static final int PBKDF2_ITERATIONS = 1000;
 
     private static Map<String, User> map = new ConcurrentHashMap<>();
-
-    static {
-        try {
-            prng = SecureRandom.getInstance("SHA1PRNG");
-        } catch (NoSuchAlgorithmException e) {
-            throw new Error("Please provide SHA1PRNG implementation", e);
-        }
-    }
 
     public static final Comparator<User> COMPARATOR_BY_NAME = Comparator.comparing(User::getDisplayName).thenComparing(
             User::getUsername);
@@ -167,36 +168,101 @@ public final class User extends User_Base implements Principal {
         return getProfile().getEmail();
     }
 
+    /**
+     * Generates and returns a random password for this user.
+     * 
+     * @return a {@code String} containing the generated password
+     */
     public String generatePassword() {
         final String password = UUID.randomUUID().toString().replace("-", "").substring(0, 15);
         changePassword(password);
         return password;
     }
 
+    /**
+     * Sets the user's password. The password is salted and hashed with a large number of iterations. Fails with {@link Error} if
+     * the necessary cryptographic algorithm is not present in the environment.
+     * 
+     * @param password the password to be set
+     */
     public void changePassword(final String password) {
-        if (getPassword() != null) {
-            String newHashWithOldSalt = Hashing.sha512().hashString(getSalt() + password, Charsets.UTF_8).toString();
-            if (newHashWithOldSalt.equals(getPassword())) {
-                throw BennuCoreDomainException.badOldPassword();
-            }
+        try {
+            SecureRandom random = new SecureRandom();
+            byte[] salt = new byte[SALT_BYTE_SIZE];
+            random.nextBytes(salt);
+
+            byte[] hash = pbkdf2(PBKDF2_ALGORITHM, password.toCharArray(), salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
+            setPassword(PBKDF2_ALGORITHM + ":" + PBKDF2_ITERATIONS + ":" + BaseEncoding.base64().encode(salt) + ":"
+                    + BaseEncoding.base64().encode(hash));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new Error("Please provide proper cryptographic algorithm implementation");
         }
-        byte salt[] = new byte[64];
-        prng.nextBytes(salt);
-        setSalt(BaseEncoding.base64().encode(salt));
-        String hash = Hashing.sha512().hashString(getSalt() + password, Charsets.UTF_8).toString();
-        setPassword(hash);
     }
 
+    /**
+     * Verifies that the given password matches the user's password. Fails with {@link Error} if the necessary cryptographic
+     * algorithm is not present in the environment.
+     * 
+     * @param password the password to verify
+     * @return true if matches, false otherwise
+     */
     public boolean matchesPassword(final String password) {
         if (getPassword() == null) {
-            return true;
+            return false;
         }
-        final String hash = Hashing.sha512().hashString(getSalt() + password, Charsets.UTF_8).toString();
-        return hash.equals(getPassword());
+        if (!getPassword().contains(":")) {
+            final String hash = Hashing.sha512().hashString(getSalt() + password, Charsets.UTF_8).toString();
+            return hash.equals(getPassword());
+        } else {
+            try {
+                String[] params = getPassword().split(":");
+                String algorithm = params[0];
+                int iterations = Integer.parseInt(params[1]);
+                byte[] salt = BaseEncoding.base64().decode(params[2]);
+                byte[] hash = BaseEncoding.base64().decode(params[3]);
+                byte[] testHash = pbkdf2(algorithm, password.toCharArray(), salt, iterations, hash.length);
+                return slowEquals(hash, testHash);
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                throw new Error("Please provide proper cryptographic algorithm implementation");
+            }
+        }
     }
 
     public Group groupOf() {
         return Group.users(this);
+    }
+
+    /**
+     * Compares two byte arrays in length-constant time. This comparison method
+     * is used so that password hashes cannot be extracted from an on-line
+     * system using a timing attack and then attacked off-line.
+     * 
+     * @param a the first byte array
+     * @param b the second byte array
+     * @return true if both byte arrays are the same, false if not
+     */
+    private static boolean slowEquals(byte[] a, byte[] b) {
+        int diff = a.length ^ b.length;
+        for (int i = 0; i < a.length && i < b.length; i++)
+            diff |= a[i] ^ b[i];
+        return diff == 0;
+    }
+
+    /**
+     * Computes the PBKDF2 hash of a password.
+     *
+     * @param algorithm the algorithm name
+     * @param password the password to hash.
+     * @param salt the salt
+     * @param iterations the iteration count (slowness factor)
+     * @param bytes the length of the hash to compute in bytes
+     * @return the PBDKF2 hash of the password
+     */
+    private static byte[] pbkdf2(String algorithm, char[] password, byte[] salt, int iterations, int bytes)
+            throws NoSuchAlgorithmException, InvalidKeySpecException {
+        PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
+        SecretKeyFactory skf = SecretKeyFactory.getInstance(algorithm);
+        return skf.generateSecret(spec).getEncoded();
     }
 
     public static User findByUsername(final String username) {

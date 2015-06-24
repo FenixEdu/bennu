@@ -44,10 +44,6 @@ public class BennuCoreDomainException extends DomainException {
         super(cause, status, BUNDLE, key, args);
     }
 
-    public static BennuCoreDomainException badOldPassword() {
-        return new BennuCoreDomainException("error.bennu.core.bad.old.password");
-    }
-
     public static BennuCoreDomainException resourceNotFound(String id) {
         return new BennuCoreDomainException(Status.NOT_FOUND, "error.bennu.core.resourcenotfound", id);
     }
@@ -94,6 +90,10 @@ public class BennuCoreDomainException extends DomainException {
 
     public static BennuCoreDomainException cannotDeleteStartedLoginPeriod() {
         return new BennuCoreDomainException("cannot.delete.started.login.period");
+    }
+
+    public static BennuCoreDomainException passwordIsTheSame() {
+        return new BennuCoreDomainException("error.bennu.core.user.passwordIsTheSame");
     }
 
     public static BennuCoreDomainException passwordCheckDoesNotMatch() {
