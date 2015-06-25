@@ -76,9 +76,9 @@
 							<ng-form class="row" ng-class="{'has-error': field.hasError}">
 								<label for="input" class="col-sm-2 control-label">{{field.name[locale.key]}}:</label>
 
-								<div class="col-sm-9">
+								<div class="col-sm-9" ng-init="field.value = field.defaultValue">
 									<input name="input" class="form-control" type="{{field.fieldType}}" 
-										placeholder="{{field.hint[locale.key]}}" ng-required="{{field.isMandatory}}" 
+										placeholder="{{field.defaultValue}}" ng-required="{{field.isMandatory}}" 
 										ng-show="{{field.validValues.length == 0}}" ng-model="field.value"
 										ng-keyup="$event.keyCode == 13 ? advance() : null" />
 
@@ -88,6 +88,9 @@
 										<option value="">Choose One</option>
 									</select>
 									
+									<div class="help-block" ng-show="field.hint">
+										{{field.hint[locale.key]}}
+									</div>
 									<div class="help-block" ng-show="field.hasRequiredError">This field is required.</div>
 									<div class="help-block" ng-show="field.hasError && field.error">{{field.error.message[locale.key]}}</div>
 								</div>

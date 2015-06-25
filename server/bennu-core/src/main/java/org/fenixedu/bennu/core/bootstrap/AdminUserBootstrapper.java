@@ -44,24 +44,23 @@ public class AdminUserBootstrapper {
             bundle = "resources.BennuResources")
     public static interface AdminUserSection {
 
-        @Field(name = "bootstrapper.admin.username", hint = "bootstrapper.admin.username", order = 1)
+        @Field(name = "bootstrapper.admin.username", defaultValue = "admin", order = 1)
         public String getAdminUsername();
 
-        @Field(name = "bootstrapper.admin.adminGivenNames", hint = "bootstrapper.admin.adminGivenNames", order = 2)
+        @Field(name = "bootstrapper.admin.adminGivenNames", defaultValue = "Admin", order = 2)
         public String getAdminGivenNames();
 
-        @Field(name = "bootstrapper.admin.adminFamilyNames", hint = "bootstrapper.admin.adminFamilyNames", order = 3)
+        @Field(name = "bootstrapper.admin.adminFamilyNames", defaultValue = "User", order = 3)
         public String getAdminFamilyNames();
 
-        @Field(name = "bootstrapper.admin.email", hint = "bootstrapper.admin.email.hint", fieldType = FieldType.EMAIL, order = 4)
+        @Field(name = "bootstrapper.admin.email", defaultValue = "noreply@fenixedu.org", fieldType = FieldType.EMAIL, order = 4)
         public String getAdminUserEmail();
 
-        @Field(name = "bootstrapper.admin.password", hint = "bootstrapper.admin.password", fieldType = FieldType.PASSWORD,
-                order = 5)
+        @Field(name = "bootstrapper.admin.password", hint = "bootstrapper.admin.password.hint", defaultValue = "admin",
+                fieldType = FieldType.PASSWORD, order = 5)
         public String getAdminPassword();
 
-        @Field(name = "bootstrapper.admin.retypedPassword", hint = "bootstrapper.admin.password", fieldType = FieldType.PASSWORD,
-                order = 6)
+        @Field(name = "bootstrapper.admin.retypedPassword", defaultValue = "admin", fieldType = FieldType.PASSWORD, order = 6)
         public String getAdminPasswordRetyped();
 
     }
