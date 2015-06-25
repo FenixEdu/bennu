@@ -3,9 +3,9 @@ package org.fenixedu.bennu.io.domain;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,14 +35,42 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 
         private final String path;
         private final byte[] contents;
+        private final File file;
 
         FileWriteIntention(String path, byte[] contents) {
             this.path = path;
             this.contents = contents;
+            this.file = null;
+        }
+
+        FileWriteIntention(String path, File file) {
+            this.path = path;
+            this.contents = null;
+            this.file = file;
         }
 
         public void write() throws IOException {
-            Files.write(contents, new File(path));
+            if (contents != null) {
+                Files.write(contents, new File(path));
+            } else {
+                java.nio.file.Files.move(file.toPath(), Paths.get(path));
+            }
+        }
+
+        public byte[] asByteArray() throws IOException {
+            if (contents != null) {
+                return contents;
+            } else {
+                return Files.toByteArray(file);
+            }
+        }
+
+        public InputStream asInputStream() throws IOException {
+            if (contents != null) {
+                return new ByteArrayInputStream(contents);
+            } else {
+                return new FileInputStream(file);
+            }
         }
     }
 
@@ -63,6 +91,28 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     public Integer getTreeDirectoriesNameLength() {
         //FIXME: remove when the framework enables read-only slots
         return super.getTreeDirectoriesNameLength();
+    }
+
+    @Override
+    public String store(String uniqueIdentification, File file) {
+
+        final String fullPath = getFullPath(uniqueIdentification);
+
+        File directory = new File(fullPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        } else {
+            if (!directory.isDirectory()) {
+                throw new RuntimeException("Trying to create " + fullPath
+                        + " as a directory but, it already exists and it's not a directory");
+            }
+        }
+
+        Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
+        map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, file));
+        getPerTxBox().put(map);
+        return uniqueIdentification;
+
     }
 
     @Override
@@ -146,7 +196,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         try {
             Map<String, FileWriteIntention> map = getPerTxBox().get();
             if (map.containsKey(uniqueIdentification)) {
-                return map.get(uniqueIdentification).contents;
+                return map.get(uniqueIdentification).asByteArray();
             }
 
             return Files.toByteArray(new File(getFullPath(uniqueIdentification) + uniqueIdentification));
@@ -160,11 +210,11 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         try {
             Map<String, FileWriteIntention> map = getPerTxBox().get();
             if (map.containsKey(uniqueIdentification)) {
-                return new ByteArrayInputStream(map.get(uniqueIdentification).contents);
+                return map.get(uniqueIdentification).asInputStream();
             }
 
             return new FileInputStream(new File(getFullPath(uniqueIdentification) + uniqueIdentification));
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("file.not.found", e);
         }
