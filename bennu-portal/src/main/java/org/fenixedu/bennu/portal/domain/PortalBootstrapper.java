@@ -26,6 +26,8 @@ public class PortalBootstrapper {
         portalConfiguration.setApplicationCopyright(makeLocalized(portalSection.getOrganizationName()));
         portalConfiguration.setApplicationTitle(makeLocalized(portalSection.getApplicationTitle()));
         portalConfiguration.setApplicationSubTitle(makeLocalized(portalSection.getApplicationTitle()));
+        portalConfiguration.setDocumentationBaseUrl(portalSection.getDocumentationUrl());
+
         return Collections.emptyList();
     }
 
@@ -46,6 +48,10 @@ public class PortalBootstrapper {
 
         @Field(name = "bootstrapper.portalSection.organizationName", defaultValue = "FenixEdu", order = 3)
         public String getOrganizationName();
+
+        @Field(name = "bootstrapper.portalSection.documentationUrl", hint = "bootstrapper.portalSection.documentationUrl.hint",
+                order = 5)
+        public String getDocumentationUrl();
 
     }
 }
