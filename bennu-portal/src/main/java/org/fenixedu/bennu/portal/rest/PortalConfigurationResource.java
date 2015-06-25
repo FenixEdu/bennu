@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response.Status;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
-import org.joda.time.DateTime;
 
 @Path("/bennu-portal/configuration")
 public class PortalConfigurationResource extends BennuRestResource {
@@ -39,8 +38,7 @@ public class PortalConfigurationResource extends BennuRestResource {
             if (etag.toString().equals(ifNoneMatch)) {
                 return Response.notModified(etag).build();
             }
-            return Response.ok(instance.getLogo(), instance.getLogoType()).cacheControl(CACHE_CONTROL)
-                    .expires(DateTime.now().plusHours(12).toDate()).tag(etag).build();
+            return Response.ok(instance.getLogo(), instance.getLogoType()).cacheControl(CACHE_CONTROL).tag(etag).build();
         }
         return Response.status(Status.NOT_FOUND).build();
     }
@@ -54,8 +52,7 @@ public class PortalConfigurationResource extends BennuRestResource {
     public Response favicon() {
         final PortalConfiguration instance = PortalConfiguration.getInstance();
         if (instance != null && instance.getFavicon() != null) {
-            return Response.ok(instance.getFavicon(), instance.getFaviconType()).cacheControl(CACHE_CONTROL)
-                    .expires(DateTime.now().plusHours(12).toDate()).build();
+            return Response.ok(instance.getFavicon(), instance.getFaviconType()).cacheControl(CACHE_CONTROL).build();
         }
         return Response.status(Status.NOT_FOUND).build();
     }
