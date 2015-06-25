@@ -33,7 +33,6 @@ import org.fenixedu.bennu.core.json.adapters.AuthenticatedUserViewer;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.I18N;
-import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -140,13 +139,12 @@ public class ProfileResource extends BennuRestResource {
                 return Response.notModified(etag).build();
             }
             if (avatar != null) {
-                return Response.ok(avatar.getData(size), avatar.getMimeType()).cacheControl(CACHE_CONTROL)
-                        .expires(DateTime.now().plusHours(12).toDate()).tag(etag).build();
+                return Response.ok(avatar.getData(size), avatar.getMimeType()).cacheControl(CACHE_CONTROL).tag(etag).build();
             } else {
                 try (InputStream mm =
                         ProfileResource.class.getClassLoader().getResourceAsStream("META-INF/resources/img/mysteryman.png")) {
-                    return Response.ok(Avatar.process(mm, "image/png", size), "image/png").cacheControl(CACHE_CONTROL)
-                            .expires(DateTime.now().plusHours(12).toDate()).tag(etag).build();
+                    return Response.ok(Avatar.process(mm, "image/png", size), "image/png").cacheControl(CACHE_CONTROL).tag(etag)
+                            .build();
                 } catch (IOException e) {
                     throw BennuCoreDomainException.resourceNotFound(username);
                 }
