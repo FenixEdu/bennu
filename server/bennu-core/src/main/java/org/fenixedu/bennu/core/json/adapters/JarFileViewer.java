@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.core.json.adapters;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -14,6 +15,8 @@ import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.json.JsonViewer;
 import org.joda.time.DateTime;
 
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.google.gson.JsonElement;
 
 @DefaultJsonAdapter(JarFile.class)
@@ -22,6 +25,11 @@ public class JarFileViewer implements JsonViewer<JarFile> {
     public JsonElement view(JarFile file, JsonBuilder ctx) {
         Properties properties = new Properties();
         properties.put("jar", file.getName());
+        try {
+            properties.put("checksum", Hashing.sha1().hashBytes(Files.toByteArray(new File(file.getName()))).toString());
+        } catch (IOException e) {
+            // Cannot compute checksum :(
+        }
 
         ZipEntry manifest = file.getEntry("META-INF/MANIFEST.MF");
         if (manifest != null) {

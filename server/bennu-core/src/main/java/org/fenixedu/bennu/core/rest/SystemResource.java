@@ -325,4 +325,11 @@ public class SystemResource extends BennuRestResource {
         return toJson(json);
     }
 
+    @GET
+    @Path("/modules")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String moduleInfo() {
+        return view(FenixFramework.getProject().getProjects(), "modules");
+    }
+
 }
