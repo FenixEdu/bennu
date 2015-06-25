@@ -131,9 +131,9 @@ public class CoreConfiguration {
     private static Set<Locale> supportedLocales = new HashSet<>();
 
     static {
-        String supportedLocalesString = getConfiguration().supportedLocales().trim();
+        String supportedLocalesString = getConfiguration().supportedLocales();
         if (!Strings.isNullOrEmpty(supportedLocalesString)) {
-            for (String locale : supportedLocalesString.split("\\s*,\\s*")) {
+            for (String locale : supportedLocalesString.trim().split("\\s*,\\s*")) {
                 try {
                     supportedLocales.add(new Builder().setLanguageTag(locale).build());
                 } catch (IllformedLocaleException e) {
@@ -144,10 +144,10 @@ public class CoreConfiguration {
             supportedLocales.add(Locale.getDefault());
         }
         supportedLocales = Collections.unmodifiableSet(supportedLocales);
-        String defaultLocale = getConfiguration().defaultLocale().trim();
+        String defaultLocale = getConfiguration().defaultLocale();
         if (!Strings.isNullOrEmpty(defaultLocale)) {
             try {
-                Locale locale = new Builder().setLanguageTag(defaultLocale).build();
+                Locale locale = new Builder().setLanguageTag(defaultLocale.trim()).build();
                 if (supportedLocales.contains(locale)) {
                     Locale.setDefault(locale);
                 } else {
