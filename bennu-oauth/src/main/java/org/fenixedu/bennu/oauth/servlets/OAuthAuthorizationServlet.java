@@ -23,12 +23,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -192,11 +194,22 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     //refreshAccessToken
     private void handleRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String clientId = request.getParameter(CLIENT_ID);
-        String clientSecret = request.getParameter(CLIENT_SECRET);
+        String[] authorizationHeader = getAuthorizationHeader(request);
+
+        String clientId;
+        String clientSecret;
+
+        if (authorizationHeader == null) {
+            clientId = request.getParameter(CLIENT_ID);
+            clientSecret = request.getParameter(CLIENT_SECRET);
+        } else {
+            clientId = authorizationHeader[0];
+            clientSecret = authorizationHeader[1];
+        }
+
         String refreshToken = request.getParameter(REFRESH_TOKEN);
 
-        ExternalApplication externalApplication = getExternalApplication(clientId);
+        ExternalApplication externalApplication = getDomainObject(clientId, ExternalApplication.class).orElse(null);
 
         if (externalApplication == null) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
@@ -252,11 +265,39 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         sendOAuthResponse(response, Status.OK, jsonResponse);
     }
 
+    private String[] getAuthorizationHeader(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        if (authorization != null && authorization.startsWith("Basic")) {
+            String base64Credentials = authorization.substring("Basic".length()).trim();
+            String[] values;
+            try {
+                String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
+                values = credentials.split(":", 2);
+            } catch (IllegalArgumentException iae) {
+                return null;
+            }
+            return values.length != 2 ? null : values;
+        }
+
+        return null;
+    }
+
     //getTokens
     private void handleAccessToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String clientId = request.getParameter(CLIENT_ID);
-        String clientSecret = request.getParameter(CLIENT_SECRET);
+        String[] authorizationHeader = getAuthorizationHeader(request);
+
+        String clientId;
+        String clientSecret;
+
+        if (authorizationHeader == null) {
+            clientId = request.getParameter(CLIENT_ID);
+            clientSecret = request.getParameter(CLIENT_SECRET);
+        } else {
+            clientId = authorizationHeader[0];
+            clientSecret = authorizationHeader[1];
+        }
+
         String redirectUrl = request.getParameter(REDIRECT_URI);
         String authCode = request.getParameter(CODE);
         String grantType = request.getParameter(GRANT_TYPE);
@@ -285,7 +326,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             }
         }
 
-        ExternalApplication externalApplication = getExternalApplication(clientId);
+        ExternalApplication externalApplication = getDomainObject(clientId, ExternalApplication.class).orElse(null);
 
         if (externalApplication == null) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
@@ -460,7 +501,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private void redirectToRedirectUrl(HttpServletRequest request, HttpServletResponse response, User user, String clientId,
             String redirectUrl) throws IOException {
 
-        ExternalApplication externalApplication = getExternalApplication(clientId);
+        ExternalApplication externalApplication = getDomainObject(clientId, ExternalApplication.class).orElse(null);
 
         if (externalApplication == null || externalApplication instanceof ServiceApplication) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
@@ -572,16 +613,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
     }
 
-    private ExternalApplication getExternalApplication(String clientId) {
-        DomainObject domainObject = FenixFramework.getDomainObject(clientId);
-        if (domainObject == null || !FenixFramework.isDomainObjectValid(domainObject)
-                || !(domainObject instanceof ExternalApplication)) {
-            return null;
-        }
-
-        return (ExternalApplication) domainObject;
-    }
-
     private static String generateCode() {
         return Hashing.sha512().hashString(UUID.randomUUID().toString(), StandardCharsets.UTF_8).toString();
     }
@@ -613,4 +644,17 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
         return ((st > 0) || (len < value.length())) ? value.substring(st, len) : value;
     }
+
+    public static final <T extends DomainObject> Optional<T> getDomainObject(final String externalId, final Class<T> clazz) {
+        try {
+            T domainObject = FenixFramework.getDomainObject(externalId);
+            if (!FenixFramework.isDomainObjectValid(domainObject) || !clazz.isAssignableFrom(domainObject.getClass())) {
+                return Optional.empty();
+            }
+            return Optional.of(domainObject);
+        } catch (Exception nfe) {
+            return Optional.empty();
+        }
+    }
+
 }

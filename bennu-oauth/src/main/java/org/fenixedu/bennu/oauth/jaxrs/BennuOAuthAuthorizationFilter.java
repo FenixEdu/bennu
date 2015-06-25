@@ -38,11 +38,9 @@ import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
+import org.fenixedu.bennu.oauth.servlets.OAuthAuthorizationServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pt.ist.fenixframework.DomainObject;
-import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
@@ -205,7 +203,7 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
             if (accessTokenBuilder.length != 2) {
                 return Optional.empty();
             }
-            return getDomainObject(accessTokenBuilder[0], ServiceApplication.class);
+            return OAuthAuthorizationServlet.getDomainObject(accessTokenBuilder[0], ServiceApplication.class);
         } catch (IllegalArgumentException iea) {
             return Optional.empty();
         }
@@ -222,7 +220,7 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
                 return Optional.empty();
             }
 
-            return getDomainObject(accessTokenBuilder[0], ApplicationUserSession.class);
+            return OAuthAuthorizationServlet.getDomainObject(accessTokenBuilder[0], ApplicationUserSession.class);
         } catch (IllegalArgumentException iea) {
             return Optional.empty();
         }
@@ -244,17 +242,4 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
         }
         return paramValue;
     }
-
-    public static final <T extends DomainObject> Optional<T> getDomainObject(final String externalId, final Class<T> clazz) {
-        try {
-            T domainObject = FenixFramework.getDomainObject(externalId);
-            if (!FenixFramework.isDomainObjectValid(domainObject) || !clazz.isAssignableFrom(domainObject.getClass())) {
-                return Optional.empty();
-            }
-            return Optional.of(domainObject);
-        } catch (Exception nfe) {
-            return Optional.empty();
-        }
-    }
-
 }
