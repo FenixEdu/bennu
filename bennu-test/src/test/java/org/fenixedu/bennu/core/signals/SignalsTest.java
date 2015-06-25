@@ -18,6 +18,8 @@
  */
 package org.fenixedu.bennu.core.signals;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Assert;
@@ -26,6 +28,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.slf4j.impl.SimpleLogger;
 
 import pt.ist.fenixframework.DomainRoot;
 import pt.ist.fenixframework.FenixFramework;
@@ -37,7 +40,8 @@ import com.google.common.eventbus.Subscribe;
 public class SignalsTest {
 
     @BeforeClass
-    public static void init() {
+    public static void init() throws IOException {
+        System.setProperty(SimpleLogger.LOG_FILE_KEY, File.createTempFile("log", "log").getAbsolutePath());
         Signal.init();
     }
 
