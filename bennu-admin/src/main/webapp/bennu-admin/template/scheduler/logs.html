@@ -32,12 +32,12 @@
 	</thead>
 	<tbody ng-init="totalDisplayed = 20">
 		<tr ng-repeat="log in logs | orderBy:'-start' | filter: filter | limitTo: totalDisplayed">
-			<td>{{log.taskName}}</td>
+			<td>{{log.taskName}} <span class="label label-success" ng-if="log.code">Custom</span></td>
 			<td>{{(log.start | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
 			<td>{{(log.end | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
 			<td ng-if="log.end">
-				<i class="glyphicon glyphicon-ok" ng-if="log.success" />
-				<i class="glyphicon glyphicon-remove" ng-if="!log.success" />
+				<i class="glyphicon glyphicon-ok" ng-if="log.state == 'SUCCESS'" />
+				<i class="glyphicon glyphicon-remove" ng-if="log.state == 'FAILURE'" />
 			</td>
 			<td ng-if="!log.end">
 				<i class="glyphicon glyphicon-play" />

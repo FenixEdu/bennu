@@ -54,7 +54,6 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
 import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.bennu.scheduler.log.CustomExecutionLog;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,8 +204,6 @@ public class ClassBean implements Serializable {
 
         private final Writer out = new StringWriter();
 
-        private CustomTask task;
-
         private final String username = Authenticate.isLogged() ? Authenticate.getUser().getUsername() : null;
 
         public Executer() {
@@ -281,10 +278,8 @@ public class ClassBean implements Serializable {
                 @SuppressWarnings("unchecked")
                 final Class<? extends CustomTask> clazz =
                         (Class<? extends CustomTask>) Class.forName(getClassName(), true, urlClassLoader);
-                task = clazz.newInstance();
-                task.<CustomExecutionLog> getExecutionLog().setJavaCode(contents);
-                task.<CustomExecutionLog> getExecutionLog().setUsername(username);
-                task.<CustomExecutionLog> getExecutionLog().start();
+                CustomTask task = clazz.newInstance();
+                task.init(contents, username);
                 task.run();
             }
         }
