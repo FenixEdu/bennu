@@ -4,6 +4,16 @@
     display: none !important;
 }
 
+[bennu-code-editor] {
+    height:500px;
+}
+
+.bennu-code-editor-statusbar{
+    border :1px solid #ddd;
+    padding:5px;
+    margin-top: -11px;
+}
+
 button.voiceBtn {
     background-color: transparent;
     border: 0;

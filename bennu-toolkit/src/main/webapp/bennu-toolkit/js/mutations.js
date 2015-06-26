@@ -65,7 +65,7 @@
                 Bennu.datetime.createWidget(e);
             },
             remove: function (e) {
-                if ($(e).attr("bennu-date") === "") {
+                if (Bennu.utils.hasAttr(e,"bennu-date")) {
                     $(e).data("handler").remove();
                 }
             }
@@ -76,7 +76,7 @@
                 Bennu.datetime.createWidget(e);
             },
             remove: function (e) {
-                if ($(e).attr("bennu-time") === "") {
+                if (Bennu.utils.hasAttr(e,"bennu-time")) {
                     $(e).data("handler").remove();
                 }
             }
@@ -87,7 +87,7 @@
                 Bennu.datetime.createWidget(e);
             },
             remove: function (e) {
-                if ($(e).attr("bennu-datetime") === "") {
+                if (Bennu.utils.hasAttr(e,"bennu-datetime")) {
                     $(e).data("handler").remove();
                 }
             }
@@ -111,7 +111,7 @@
             },
             remove: function (e) {
                 e = $(e);
-                if ($(e).attr(Bennu.group.attr) === "") {
+                if (Bennu.utils.hasAttr(e,Bennu.group.attr)) {
                     $(e).data("handler").remove();
                 }
             }
@@ -128,7 +128,7 @@
                 Bennu.localizedString.createWidget(e);
             },
             remove: function (e) {
-                if ($(e).attr(Bennu.localizedString.attr) === "") {
+                if (Bennu.utils.hasAttr(e,Bennu.localizedString.attr)) {
                     $(e).data("handler").remove();
                 }
             }
@@ -145,13 +145,33 @@
                 Bennu.htmlEditor.createWidget(e);
             },
             remove: function (e) {
-                if ($(e).attr(Bennu.htmlEditor.attr) === "") {
+                if (Bennu.utils.hasAttr(e,Bennu.htmlEditor.attr)) {
                     $(e).data("handler").remove();
                 }
             }
         });
         
         
+        // Code Editor
+        // -----------
+        var editors = $("[" + Bennu.codeEditor.attr + "]");
+        
+        editors.map(function (i, e) {
+            Bennu.codeEditor.createWidget(e);
+        });
+
+        Bennu.monitor.checkFor(Bennu.codeEditor.attr, {
+            add: function (e) {
+                Bennu.codeEditor.createWidget(e);
+            },
+            remove: function (e) {
+                if (Bennu.utils.hasAttr(e,Bennu.codeEditor.attr)) {
+                    $(e).data("handler").remove();
+                }
+            }
+        });
+
+
         // User Autocomplete
         // -----------------
         var autocompletes = $("[" + Bennu.userAutocomplete.attr + "]");
@@ -165,7 +185,7 @@
                 Bennu.userAutocomplete.createWidget(e);
             },
             remove: function (e) {
-                if ($(e).attr(Bennu.userAutocomplete.attr) === "") {
+                if (Bennu.utils.hasAttr(e,Bennu.userAutocomplete.attr)) {
                     $(e).data("handler").remove();
                 }
             }

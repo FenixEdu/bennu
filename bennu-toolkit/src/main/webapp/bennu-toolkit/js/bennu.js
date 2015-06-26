@@ -116,7 +116,7 @@
     }
 
     Bennu.utils.hasAttr = function(obj,attr){
-        var val = obj.attr(attr);
+        var val = $(obj).attr(attr);
         return (typeof val !== typeof undefined && val !== false);
     }
 
