@@ -131,7 +131,15 @@
 
 
     Bennu.htmlEditor.createWidget = function (e) {
-        e = $(e)
+        e = $(e);
+        var handler = Bennu.widgetHandler.makeFor(e);
+
+        Bennu.ensure([
+            Bennu.contextPath + "/bennu-toolkit/js/libs/bootstrap-wysiwyg.js",
+            Bennu.contextPath + "/bennu-toolkit/js/libs/jquery.fullscreen.js",
+            Bennu.contextPath + "/bennu-toolkit/js/libs/sanitize.js",
+            Bennu.contextPath + "/bennu-toolkit/js/libs/jquery.hotkeys.js"
+        ], function(){
         var dom = $('<div class="bennu-html-editor-input">' +
             '<div class="bennu-html-editor-tools">' +
             '<div class="bennu-html-editor-toolbar btn-toolbar" data-role="editor-toolbar" data-target=".bennu-html-editor-editor"></div>' +
@@ -566,7 +574,7 @@
 	    e.data("handler").trigger();
         });
 
-        var handler = Bennu.widgetHandler.makeFor(e);
+        
 
         var setupEditor = function(dom) {
             var editor = $(".bennu-html-code-editor", dom).data("editor");
@@ -716,6 +724,8 @@
 
 
 
-        return handler;
+        
+    });
+    return handler;
     };
 })();

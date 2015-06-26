@@ -1,6 +1,7 @@
 @import url(font-awesome.min.css);
 
-[bennu-html-editor],[bennu-spinner] {
+
+[bennu-localized-string],[bennu-html-editor],[bennu-user-autocomplete],[bennu-spinner]{
     display: none !important;
 }
 
@@ -118,10 +119,6 @@ button.voiceBtn {
     -webkit-transition-duration: .4s;
     transition-duration: .4s;
     border-color: #ccc
-}
-
-[bennu-localized-string] {
-    display: none !important;
 }
 
 /* datepicker */
@@ -700,7 +697,7 @@ ul.menu-paragraph li{
 
 .bennu-html-code-editor{
     height:500px;
-    
+
 }
 /* ----- */
 .note-color .dropdown-menu {

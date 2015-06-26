@@ -1,16 +1,16 @@
 /*
  * datetime.js
- * 
+ *
  * Copyright (c) 2014, Instituto Superior Técnico. All rights reserved.
- * 
+ *
  * This file is part of Bennu Toolkit.
- * 
+ *
  * Bennu Toolkit is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * Bennu Toolkit is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with Bennu Toolkit. If not, see
  * <http://www.gnu.org/licenses/>.
  */
@@ -115,94 +115,101 @@
             options.enabledDates = result;
         }
 
-        return 
+        return
     };
 
     Bennu.datetime.createDateWidget = function (e) {
-        e = $(e);
-        verifyType(e);
-        var widget = $('<div class="bennu-datetime-input-group"><div class="input-group date"><span class="input-group-addon">' +
-            '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY" type="text" class="bennu-datetime-input form-control"/></div><p class="help-block"></p></div>');
+        var handler = Bennu.widgetHandler.makeFor(e);
 
-        var currentDate = e.val();
+        Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/moment.js", function(){
+            Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/datepicker.js", function(){
+            e = $(e);
+            verifyType(e);
+            var widget = $('<div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
+                '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY" type="text" class="bennu-datetime-input form-control"/></div>');
 
-        if (currentDate){
-            if (currentDate.trim() !== "") {
-                currentDate = new Date(currentDate);
-                e.val(moment(currentDate).format("YYYY-MM-DD"));
-            }
-        }else{
-            e.val("");
-        }
+            var currentDate = e.val();
 
-        var options = {
-            //locale: Bennu.locale.tag,
-        };
-
-        if(currentDate){
-            options['defaultDate'] = currentDate;
-        }
-
-        dateOptions(e, options);
-
-        $("input", widget).on("change", function (x) {
-            x = $(x.target);
-            var r;
-            if(x.val() == ""){
-                r = "";
+            if (currentDate){
+                if (currentDate.trim() !== "") {
+                    currentDate = new Date(currentDate);
+                    e.val(moment(currentDate).format("YYYY-MM-DD"));
+                }
             }else{
-                r = moment(x.val(), "DD/MM/YYYY").format("YYYY-MM-DD");    
+                e.val("");
             }
-            
-            if (r !== e.val()){
-                e.val(r);
-                e.trigger("change");
+
+            var options = {
+                //locale: Bennu.locale.tag,
+            };
+
+            if(currentDate){
+                options['defaultDate'] = currentDate;
             }
-        }).datetimepicker(options).on('dp.change', function (ev) {
-            x = $("input", widget);
-            var r;
-            var val = x.val() || "";
 
-            if(val == ""){
-                r = "";
-            }else{
-                r = moment(val, "DD/MM/YYYY").format("YYYY-MM-DD");    
-            }
-            
-            if (r !== e.val()){
-                e.val(r);
-                e.trigger("change");
-            }
-        });
+            dateOptions(e, options);
+
+            $("input", widget).on("change", function (x) {
+                x = $(x.target);
+                var r;
+                if(x.val() == ""){
+                    r = "";
+                }else{
+                    r = moment(x.val(), "DD/MM/YYYY").format("YYYY-MM-DD");
+                }
+
+                if (r !== e.val()){
+                    e.val(r);
+                    e.trigger("change");
+                }
+            }).datetimepicker(options).on('dp.change', function (ev) {
+                x = $("input", widget);
+                var r;
+                var val = x.val() || "";
+
+                if(val == ""){
+                    r = "";
+                }else{
+                    r = moment(val, "DD/MM/YYYY").format("YYYY-MM-DD");
+                }
+
+                if (r !== e.val()){
+                    e.val(r);
+                    e.trigger("change");
+                }
+            });
 
 
-        e.after(widget);
+            e.after(widget);
 
-        e.on("change.bennu", function(ev){
-            var data = $(e).val();
+            e.on("change.bennu", function(ev){
+                var data = $(e).val();
 
-            if (data.trim() !== "") {
-                data = new Date(data);
-
+                if (data.trim() == "") {
+                    data = new Date();
+                } else {
+                    data = new Date(data);
+                }
                 e.val(moment(data).format("YYYY-MM-DD"));
 
-                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date()
+                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(moment(data).format("DD/MM/YYYY"))
                 var t = moment(data).format("DD/MM/YYYY");
 
                 if (r !== t){
-                    $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
+                    $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(t);
                 }
-            }
 
-            e.data("handler").trigger();
+                e.data("handler").trigger();
+            });
+
+            e.data("input",widget);
+            widget.data("related", e);
+
+            Bennu.validation.attachToForm(widget);
+            Bennu.utils.replaceRequired(e);
         });
-
-        e.data("input",widget);
-        widget.data("related", e);
-
-        Bennu.validation.attachToForm(widget);
-        Bennu.utils.replaceRequired(e);
-        return Bennu.widgetHandler.makeFor(e);
+        });
+        return handler;
     }
 
     function timeOptions(e, options){
@@ -222,81 +229,76 @@
     }
 
     Bennu.datetime.createTimeWidget = function (e) {
-        e = $(e);
-        verifyType(e);
+        var handler = Bennu.widgetHandler.makeFor(e);
 
-        var widget = $('<div class="bennu-datetime-input-group"><div class="input-group date"><span class="input-group-addon">' +
-            '<span class="glyphicon glyphicon-time"></span></span><input type="text" data-date-format="' + timeFormat(e) + '" class="bennu-datetime-input form-control"/></div><p class="help-block"></p></div>');
+        Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/moment.js", function(){
+            Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/datepicker.js", function(){
+            e = $(e);
+            verifyType(e);
+            var widget = $('<div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
+                '<span class="glyphicon glyphicon-time"></span></span><input type="text" data-date-format="HH:mm:ss" class="bennu-datetime-input form-control"/></div>');
 
-        var currentDate = e.val();
+            var currentDate = e.val();
 
-        if (currentDate){
-            if(currentDate.trim() != "") {
+            if (currentDate && currentDate.trim() != "") {
                 currentDate = parseTime(currentDate);
                 e.val(moment(currentDate).format("HH:mm:ss.SSS"));
             }
-        }else{
-            e.val("");
-        }
 
-        var options = {
-            //locale: Bennu.locale.tag,
-        }
+            var options = {
+                //locale: Bennu.locale.tag,
+            }
 
-        if(currentDate){
-            options['defaultDate'] = currentDate;
-        }
+            if(currentDate){
+                options['defaultDate'] = currentDate;
+            }
 
-        timeOptions(e, options);
+            timeOptions(e, options);
 
-        $("input", widget).on("change", function (x) {
-            x = $(x.target);
+            $("input", widget).on("change", function (x) {
+                x = $(x.target);
 
-            var value = x.val()
-            if (value.trim() == ""){
-                var r = "";
-            }else{
-                var tmp = moment(parseTime(value))
-                tmp.millisecond(0);
-                
-                if (Bennu.utils.hasAttr(e,"no-seconds")) {
-                    tmp = tmp.seconds(0);
+                var value = x.val()
+                if (value.trim() == ""){
+                    var r = "";
+                }else{
+                    var tmp = moment(parseTime(value))
+                    tmp.millisecond(0);
+
+                    if (Bennu.utils.hasAttr(e,"no-seconds")) {
+                        tmp = tmp.seconds(0);
+                    }
+
+                    if (Bennu.utils.hasAttr(e,"only-hours")) {
+                        tmp = tmp.seconds(0);
+                        tmp = tmp.minutes(0);
+                    }
+
+                    r = tmp.format("HH:mm:ss.SSS");
                 }
 
-                if (Bennu.utils.hasAttr(e,"only-hours")) {
-                    tmp = tmp.seconds(0);
-                    tmp = tmp.minutes(0);
+                if (r !== e.val()){
+                    e.val(r);
+                    e.trigger("change");
+                }
+            }).datetimepicker(options).on("dp.change", function (x) {
+                x = $("input", widget);
+                var r;
+                var value = x.val() || "";
+
+                if (value.trim() == ""){
+                    r = "";
+                }else{
+                    r = moment(parseTime(value)).format("HH:mm:ss.SSS");
                 }
 
-                r = tmp.format("HH:mm:ss.SSS");
-            }
-
-            if (r !== e.val()){
-                e.val(r);
-                e.trigger("change");
-            }
-        }).datetimepicker(options).on("dp.change", function (x) {
-            x = $("input", widget);
-            var r;
-            var value = x.val() || "";
-
-            if (value.trim() == ""){
-                r = "";
-            }else{
-                r = moment(parseTime(value)).format("HH:mm:ss.SSS");
-            }
-
-            if (r !== e.val()){
-                e.val(r);
-                e.trigger("change");
-            }
-        });
-
-
-        e.after(widget);
-
-        e.on("change.bennu", function(ev){
-            var data = $(e).val();
+                if (r !== e.val()){
+                    e.val(r);
+                    e.trigger("change");
+                }
+            });
+            
+            e.after(widget);
 
             if (data.trim() !== "") {
                 data = parseTime(data);
@@ -310,95 +312,116 @@
                 }
             }
 
-            e.data("handler").trigger();
+            e.on("change.bennu", function(ev){
+                var data = $(e).val();
+
+                if (data.trim() == "") {
+                    data = new Date();
+                } else {
+                    data = parseTime(data);
+                }
+                e.val(moment(data).format("HH:mm:ss.SSS"));
+                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(moment(data).format("HH:mm:ss"));
+                var t = moment(data).format("HH:mm:ss");
+
+                if (r !== t){
+                    $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(t);
+                }
+
+                e.data("handler").trigger();
+            });
+
+            e.data("input",widget);
+            widget.data("related", e);
+
+            Bennu.validation.attachToForm(widget);
+            Bennu.utils.replaceRequired(e);
+        });
         });
 
-        e.data("input",widget);
-        widget.data("related", e);
-
-        Bennu.validation.attachToForm(widget);
-        Bennu.utils.replaceRequired(e);
-        return Bennu.widgetHandler.makeFor(e);
+        return handler;
     }
 
     Bennu.datetime.createDateTimeWidget = function (e) {
-        e = $(e);
-        verifyType(e);
-        var widget = $('<div class="bennu-datetime-input-group"><div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
-            '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY ' + timeFormat(e) + '" type="text" class="bennu-datetime-input form-control"/></div><p class="help-block"></p></div>');
+        var handler = Bennu.widgetHandler.makeFor(e);
 
-        var currentDate = e.val();
 
-        if (currentDate){
-            if(currentDate.trim() != "") {
+        Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/moment.js", function(){
+            Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/datepicker.js", function(){
+            e = $(e);
+            verifyType(e);
+            var widget = $('<div class="bennu-datetime-input-group input-group date"><span class="input-group-addon">' +
+                '<span class="glyphicon glyphicon-calendar"></span></span><input data-date-format="DD/MM/YYYY HH:mm:ss" type="text" class="bennu-datetime-input form-control"/></div>');
+
+            var currentDate = e.val();
+
+            if (currentDate && currentDate.trim() != "") {
                 currentDate = new Date(currentDate);
                 e.val(moment(currentDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
             }
-        }else{
-            e.val("");
-        }
 
-        var options = {
-            //locale: Bennu.locale.tag,
-            sideBySide:true,
-        };
+            var options = {
+                //locale: Bennu.locale.tag,
+                sideBySide:true,
+            };
 
-        if(currentDate){
-            options['defaultDate'] = currentDate;
-        }
-
-        dateOptions(e,options);
-        timeOptions(e,options);
-
-        $("input", widget).on("change", function (x) {
-            x = $(x.target);
-            var value = x.val().trim()
-            if (value == ""){
-                e.val("");
-            }else{
-                var tmp = moment(value, "DD/MM/YYYY " + timeFormat(e))
-                tmp.millisecond(0);
-                
-                if (Bennu.utils.hasAttr(e,"no-seconds")) {
-                    tmp = tmp.seconds(0);
-                }
-
-                if (Bennu.utils.hasAttr(e,"only-hours")) {
-                    tmp = tmp.seconds(0);
-                    tmp = tmp.minutes(0);
-                }
-
-                r = tmp.format("YYYY-MM-DDTHH:mm:ss.SSSZ");
-                if (r !== e.val()){
-                    e.val(r);
-                    e.trigger("change");
-                }
+            if(currentDate){
+                options['defaultDate'] = currentDate;
             }
-        }).datetimepicker(options).on("dp.change", function (x) {
-            x = $("input", widget);
-            var value = x.val().trim()
-            if (value == ""){
-                e.val("");
-            }else{
-                var r = moment(value, "DD/MM/YYYY HH:mm:ss").format("YYYY-MM-DDTHH:mm:ss.SSSZ");
-                if (r !== e.val()){
-                    e.val(r);
-                    e.trigger("change");
+
+            dateOptions(e,options);
+            timeOptions(e,options);
+
+            $("input", widget).on("change", function (x) {
+                x = $(x.target);
+                var value = x.val().trim()
+                if (value == ""){
+                    e.val("");
+                }else{
+                    var tmp = moment(value, "DD/MM/YYYY " + timeFormat(e))
+                    tmp.millisecond(0);
+
+                    if (Bennu.utils.hasAttr(e,"no-seconds")) {
+                        tmp = tmp.seconds(0);
+                    }
+
+                    if (Bennu.utils.hasAttr(e,"only-hours")) {
+                        tmp = tmp.seconds(0);
+                        tmp = tmp.minutes(0);
+                    }
+
+                    r = tmp.format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+                    if (r !== e.val()){
+                        e.val(r);
+                        e.trigger("change");
+                    }
                 }
-            }
-        });
+            }).datetimepicker(options).on("dp.change", function (x) {
+                x = $("input", widget);
+                var value = x.val().trim()
+                if (value == ""){
+                    e.val("");
+                }else{
+                    var r = moment(value, "DD/MM/YYYY HH:mm:ss").format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+                    if (r !== e.val()){
+                        e.val(r);
+                        e.trigger("change");
+                    }
+                }
+            });
 
+            e.after(widget);
+            e.data("input");
+            widget.data("related", e);
 
-        e.after(widget);
-        e.data("input");
-        widget.data("related", e);
+            e.on("change.bennu", function(ev){
+                var data = $(e).val();
 
-        e.on("change.bennu", function(ev){
-            var data = $(e).val();
-
-            if (data.trim() !== "") {
-                data = new Date(data);
-
+                if (data.trim() == "") {
+                    data = new Date();
+                } else {
+                    data = new Date(data);
+                }
                 e.val(moment(data).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
 
                 var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date()
@@ -408,17 +431,18 @@
                 if (r !== t){
                     $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
                 }
-            }
 
+                e.data("handler").trigger();
+            });
 
-            e.data("handler").trigger();
+            e.data("input",widget);
+            widget.data("related", e);
+
+            Bennu.validation.attachToForm(widget);
+            Bennu.utils.replaceRequired(e);
+        });
         });
 
-        e.data("input",widget);
-        widget.data("related", e);
-
-        Bennu.validation.attachToForm(widget);
-        Bennu.utils.replaceRequired(e);
-        return Bennu.widgetHandler.makeFor(e);
+        return handler;
     }
 }());

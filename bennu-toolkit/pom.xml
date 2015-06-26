@@ -44,12 +44,6 @@
                             <webappSourceDir>${project.build.outputDirectory}/META-INF/resources/</webappSourceDir>
                             <jsSourceDir>bennu-toolkit/js</jsSourceDir>
                             <jsSourceFiles>
-                                <jsSourceFile>libs/moment.js</jsSourceFile>
-                                <jsSourceFile>libs/datepicker.js</jsSourceFile>
-                                <jsSourceFile>libs/jquery.fullscreen.js</jsSourceFile>
-                                <jsSourceFile>libs/jquery.hotkeys.js</jsSourceFile>
-                                <jsSourceFile>libs/sanitize.js</jsSourceFile>
-                                <jsSourceFile>libs/bootstrap-wysiwyg.js</jsSourceFile>
                                 <jsSourceFile>libs/typeahead.bundle.js</jsSourceFile>
                                 <jsSourceFile>bennu.js</jsSourceFile>
                                 <jsSourceFile>ensure.js</jsSourceFile>
@@ -84,12 +78,6 @@
                             <webappSourceDir>${project.build.outputDirectory}/META-INF/resources/</webappSourceDir>
                             <jsSourceDir>bennu-toolkit/js</jsSourceDir>
                             <jsSourceFiles>
-                                <jsSourceFile>libs/moment.js</jsSourceFile>
-                                <jsSourceFile>libs/datepicker.js</jsSourceFile>
-                                <jsSourceFile>libs/jquery.fullscreen.js</jsSourceFile>
-                                <jsSourceFile>libs/jquery.hotkeys.js</jsSourceFile>
-                                <jsSourceFile>libs/sanitize.js</jsSourceFile>
-                                <jsSourceFile>libs/bootstrap-wysiwyg.js</jsSourceFile>
                                 <jsSourceFile>libs/typeahead.bundle.js</jsSourceFile>
                                 <jsSourceFile>bennu.js</jsSourceFile>
                                 <jsSourceFile>ensure.js</jsSourceFile>
