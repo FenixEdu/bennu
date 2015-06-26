@@ -55,9 +55,8 @@
 	    	cb();
 	    }
 	};
-	
+
 	Bennu.ensure.isLoaded = function(x){
 		return loaded[x] || false;
 	};
-
 })();
