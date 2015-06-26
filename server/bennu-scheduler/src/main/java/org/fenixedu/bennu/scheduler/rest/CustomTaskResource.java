@@ -17,23 +17,22 @@ public class CustomTaskResource extends BennuRestResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addCustomTask(String jsonCode) {
+    public Response addCustomTask(JsonObject jsonCode) {
         accessControl(Group.managers());
         getClassBean(jsonCode).run();
-        return Response.ok().build();
+        return ok();
     }
 
-    private ClassBean getClassBean(String jsonCode) {
-        JsonObject parse = parse(jsonCode).getAsJsonObject();
-        return new ClassBean(parse.get("name").getAsString(), parse.get("code").getAsString());
+    private ClassBean getClassBean(JsonObject jsonCode) {
+        return new ClassBean(jsonCode.get("name").getAsString(), jsonCode.get("code").getAsString());
     }
 
     @PUT
     @Path("compile")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response compileCustomTask(String jsonCode) {
+    public JsonObject compileCustomTask(JsonObject jsonCode) {
         accessControl(Group.managers());
-        return Response.ok(toJson(getClassBean(jsonCode).compile())).build();
+        return getClassBean(jsonCode).compile();
     }
 
 }

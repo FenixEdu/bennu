@@ -37,12 +37,14 @@ import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 
+import com.google.gson.JsonElement;
+
 @Path("/bennu-oauth/scopes")
 public class ExternalApplicationScopesResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getScopes() {
+    public JsonElement getScopes() {
         verifyAndGetRequestAuthor();
         return view(Bennu.getInstance().getScopesSet().stream().filter(s -> !s.getService()));
     }
@@ -50,7 +52,7 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/all")
-    public String getAllScopes() {
+    public JsonElement getAllScopes() {
         accessControl(Group.managers());
         return view(Bennu.getInstance().getScopesSet());
     }
@@ -58,7 +60,7 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String createScope(String json) {
+    public JsonElement createScope(JsonElement json) {
         accessControl(Group.managers());
         return view(create(json, ExternalApplicationScope.class));
     }
@@ -67,7 +69,7 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{scope}")
-    public String updateScope(@PathParam("scope") ExternalApplicationScope scope, String json) {
+    public JsonElement updateScope(@PathParam("scope") ExternalApplicationScope scope, JsonElement json) {
         accessControl(Group.managers());
         return view(update(json, scope));
     }
@@ -82,7 +84,7 @@ public class ExternalApplicationScopesResource extends BennuRestResource {
             }
             Bennu.getInstance().removeScopes(scope);
         });
-        return Response.ok().build();
+        return ok();
     }
 
 }

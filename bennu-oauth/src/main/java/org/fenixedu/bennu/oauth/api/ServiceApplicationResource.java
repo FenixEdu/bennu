@@ -30,6 +30,8 @@ import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 
+import com.google.gson.JsonElement;
+
 @Path("/bennu-oauth/service-applications")
 public class ServiceApplicationResource extends ExternalApplicationResource {
 
@@ -44,7 +46,7 @@ public class ServiceApplicationResource extends ExternalApplicationResource {
     }
 
     @Override
-    public String myApplications() {
+    public JsonElement myApplications() {
         throw new WebApplicationException(Status.NOT_FOUND);
     }
 
@@ -54,12 +56,12 @@ public class ServiceApplicationResource extends ExternalApplicationResource {
     }
 
     @Override
-    protected ExternalApplication create(String json) {
+    protected ExternalApplication create(JsonElement json) {
         return create(json, ServiceApplication.class);
     }
 
     @Override
-    protected String update(ExternalApplication application, String json, User currentUser) {
+    protected JsonElement update(ExternalApplication application, JsonElement json, User currentUser) {
         return view(update(json, application));
     }
 

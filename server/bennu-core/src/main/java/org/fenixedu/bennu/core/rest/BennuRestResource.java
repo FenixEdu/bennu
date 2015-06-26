@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
@@ -107,6 +108,10 @@ public abstract class BennuRestResource extends JsonAwareResource {
 
     protected String getHost() {
         return request.getServerName();
+    }
+
+    protected Response ok() {
+        return Response.ok().build();
     }
 
 }

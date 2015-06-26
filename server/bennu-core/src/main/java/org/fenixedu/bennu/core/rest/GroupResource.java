@@ -6,6 +6,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -35,27 +36,27 @@ public class GroupResource extends BennuRestResource {
     @GET
     @Path("/grant")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response grantUserMembershipGroup(@QueryParam("groupExpression") String groupExpression,
+    public JsonElement grantUserMembershipGroup(@QueryParam("groupExpression") String groupExpression,
             @QueryParam("username") String username) {
         verifyAndGetRequestAuthor();
         User user = User.findByUsername(username);
-        return Response.ok(view(Group.parse(groupExpression).grant(user))).build();
+        return view(Group.parse(groupExpression).grant(user));
     }
 
     @GET
     @Path("/revoke")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response revokeUserFromGroup(@QueryParam("groupExpression") String groupExpression,
+    public JsonElement revokeUserFromGroup(@QueryParam("groupExpression") String groupExpression,
             @QueryParam("username") String username) {
         verifyAndGetRequestAuthor();
         User user = User.findByUsername(username);
-        return Response.ok(view(Group.parse(groupExpression).revoke(user))).build();
+        return view(Group.parse(groupExpression).revoke(user));
     }
 
     @GET
     @Path("/dynamic")
     @Produces(MediaType.APPLICATION_JSON)
-    public String listDynamicGroups() {
+    public JsonElement listDynamicGroups() {
         accessControl(Group.managers());
         return view(BennuGroupIndex.allDynamicGroups(), DynamicGroupJsonAdapter.class);
     }
@@ -63,9 +64,8 @@ public class GroupResource extends BennuRestResource {
     @POST
     @Path("/dynamic")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String changeDynamicGroupName(String json) {
+    public JsonElement changeDynamicGroupName(JsonObject obj) {
         accessControl(Group.managers());
-        JsonObject obj = parse(json).getAsJsonObject();
         DynamicGroup group = DynamicGroup.get(obj.get("group").getAsString());
         LocalizedString name = obj.has("name") ? LocalizedString.fromJson(obj.get("name")) : null;
         group.mutator().setPresentationName(name);
@@ -76,33 +76,28 @@ public class GroupResource extends BennuRestResource {
     @Path("/dynamic/grant")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addUserToDynamicGroup(String json) {
+    public JsonElement addUserToDynamicGroup(JsonObject obj) {
         accessControl(Group.managers());
-        JsonObject obj = parse(json).getAsJsonObject();
         DynamicGroup group = DynamicGroup.get(obj.get("group").getAsString());
         User user = User.findByUsername(obj.get("user").getAsString());
         if (user == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            throw new WebApplicationException(Status.NOT_FOUND);
         }
-        return Response.ok(view(group.mutator().changeGroup(group.underlyingGroup().grant(user)), DynamicGroupJsonAdapter.class))
-                .build();
+        return view(group.mutator().changeGroup(group.underlyingGroup().grant(user)), DynamicGroupJsonAdapter.class);
     }
 
     @POST
     @Path("/dynamic/revoke")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeUserFromDynamicGroup(String json) {
+    public JsonElement removeUserFromDynamicGroup(JsonObject obj) {
         accessControl(Group.managers());
-        JsonObject obj = parse(json).getAsJsonObject();
         DynamicGroup group = DynamicGroup.get(obj.get("group").getAsString());
         User user = User.findByUsername(obj.get("user").getAsString());
         if (user == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            throw new WebApplicationException(Status.NOT_FOUND);
         }
-        return Response
-                .ok(view(group.mutator().changeGroup(group.underlyingGroup().revoke(user)), DynamicGroupJsonAdapter.class))
-                .build();
+        return view(group.mutator().changeGroup(group.underlyingGroup().revoke(user)), DynamicGroupJsonAdapter.class);
     }
 
     public static class DynamicGroupJsonAdapter implements JsonViewer<DynamicGroup> {

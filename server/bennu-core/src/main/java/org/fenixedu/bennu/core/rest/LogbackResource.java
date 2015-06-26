@@ -36,18 +36,19 @@ public class LogbackResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAllLoggers() {
+    public JsonObject getAllLoggers() {
         accessControl(Group.managers());
         if (available) {
-            return Holder.getAllLoggers().toString();
-        } else {
-            return "{ 'loggers': [] }";
+            return Holder.getAllLoggers();
         }
+        JsonObject empty = new JsonObject();
+        empty.add("loggers", new JsonArray());
+        return empty;
     }
 
     @POST
     @Path("/{name}/{level}")
-    public String setLogLevel(@PathParam("name") String loggerName, @PathParam("level") String level) {
+    public JsonObject setLogLevel(@PathParam("name") String loggerName, @PathParam("level") String level) {
         accessControl(Group.managers());
         if (available) {
             Holder.setLevel(loggerName, level);
@@ -62,16 +63,18 @@ public class LogbackResource extends BennuRestResource {
      */
     private static final class Holder {
         public static JsonObject getAllLoggers() {
+            JsonArray loggers = new JsonArray();
+
             LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-            JsonArray array = new JsonArray();
             for (Logger logger : context.getLoggerList()) {
                 JsonObject obj = new JsonObject();
                 obj.addProperty("name", logger.getName());
                 obj.addProperty("level", logger.getEffectiveLevel().toString());
-                array.add(obj);
+                loggers.add(obj);
             }
+
             JsonObject obj = new JsonObject();
-            obj.add("loggers", array);
+            obj.add("loggers", loggers);
             obj.addProperty("server", serverName);
             return obj;
         }

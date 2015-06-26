@@ -11,6 +11,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -32,7 +33,6 @@ import pt.ist.fenixframework.FenixFramework;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 @Path("/bennu-portal/menu")
 public class MenuResource extends BennuRestResource {
@@ -40,19 +40,19 @@ public class MenuResource extends BennuRestResource {
     @Path("{oid}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getMenu(@PathParam("oid") final String menuOid) {
+    public JsonElement getMenu(@PathParam("oid") final String menuOid) {
         accessControl(Group.managers());
         return viewMenu(getMenuItem(menuOid));
     }
 
-    private String viewMenu(MenuItem menuItem) {
+    private JsonElement viewMenu(MenuItem menuItem) {
         return view(menuItem, MenuItemAdapter.class);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String createMenu(final String jsonData) {
+    public JsonElement createMenu(final JsonElement jsonData) {
         accessControl(Group.managers());
         return viewMenu(create(jsonData, MenuContainer.class, MenuItemAdapter.class));
     }
@@ -61,9 +61,8 @@ public class MenuResource extends BennuRestResource {
     @Path("/sub-root")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String createSubRoot(final String jsonData) {
+    public JsonElement createSubRoot(final JsonObject json) {
         accessControl(Group.managers());
-        JsonObject json = new JsonParser().parse(jsonData).getAsJsonObject();
         String key = json.get("key").getAsString();
         LocalizedString title = LocalizedString.fromJson(json.get("title"));
         LocalizedString description = LocalizedString.fromJson(json.get("description"));
@@ -79,7 +78,7 @@ public class MenuResource extends BennuRestResource {
     @Path("{oid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateMenu(final String jsonData, @PathParam("oid") final String oid) {
+    public JsonElement updateMenu(final JsonElement jsonData, @PathParam("oid") final String oid) {
         accessControl(Group.managers());
         return viewMenu(update(jsonData, getMenuItem(oid), MenuItemAdapter.class));
     }
@@ -87,10 +86,10 @@ public class MenuResource extends BennuRestResource {
     @Path("{oid}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public String deleteMenu(@PathParam("oid") final String menuOid) {
+    public JsonElement deleteMenu(@PathParam("oid") final String menuOid) {
         accessControl(Group.managers());
         final MenuItem menuItem = getMenuItem(menuOid);
-        final String rsp = viewMenu(menuItem);
+        final JsonElement rsp = viewMenu(menuItem);
         menuItem.delete();
         return rsp;
     }
@@ -98,11 +97,10 @@ public class MenuResource extends BennuRestResource {
     @POST
     @Path("/order")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response reorderItems(final String jsonData) {
+    public Response reorderItems(final JsonObject object) {
         accessControl(Group.managers());
-        JsonObject object = new JsonParser().parse(jsonData).getAsJsonObject();
         reorder(object);
-        return Response.ok().build();
+        return ok();
     }
 
     @Atomic
@@ -116,7 +114,7 @@ public class MenuResource extends BennuRestResource {
     @GET
     @Path("/applications")
     @Produces(MediaType.APPLICATION_JSON)
-    public String listApps() {
+    public JsonElement listApps() {
         accessControl(Group.managers());
         return view(ApplicationRegistry.availableApplications());
     }
@@ -124,38 +122,37 @@ public class MenuResource extends BennuRestResource {
     @POST
     @Path("/applications")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response installApp(String json) {
+    public JsonElement installApp(JsonObject obj) {
         accessControl(Group.managers());
-        JsonObject obj = new JsonParser().parse(json).getAsJsonObject();
         MenuContainer container = readDomainObject(obj.get("root").getAsString());
         Application app = ApplicationRegistry.getAppByKey(obj.get("key").getAsString());
         if (app == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            throw new WebApplicationException(Status.NOT_FOUND);
         }
-        return Response.ok(viewMenu(doInstall(app, container))).build();
+        return viewMenu(doInstall(app, container));
     }
 
     @POST
     @Path("/functionalities")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response installFunctionality(String json) {
+    public JsonElement installFunctionality(JsonObject obj) {
         accessControl(Group.managers());
-        JsonObject obj = parse(json).getAsJsonObject();
         MenuContainer container = readDomainObject(obj.get("root").getAsString());
         Application app = ApplicationRegistry.getAppByKey(obj.get("appKey").getAsString());
         if (app == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            throw new WebApplicationException(Status.NOT_FOUND);
         }
         Optional<MenuFunctionality> functionality =
                 app.getFunctionalities()
                         .stream()
                         .filter(f -> f.getProvider().equals(obj.get("provider").getAsString())
                                 && f.getKey().equals(obj.get("key").getAsString())).findAny().map(f -> doInstall(container, f));
+
         if (functionality.isPresent()) {
-            return Response.ok(viewMenu(functionality.get())).build();
-        } else {
-            return Response.status(Status.NOT_FOUND).build();
+            return viewMenu(functionality.get());
         }
+
+        throw new WebApplicationException(Status.NOT_FOUND);
     }
 
     @Atomic(mode = TxMode.WRITE)
