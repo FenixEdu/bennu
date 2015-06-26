@@ -76,7 +76,7 @@ public class User {
 	protected String username  (REQUIRED);
 	protected String password;
 	protected String salt;
-	protected DateTime created;
+	protected DateTime created (REQUIRED);
 }
 
 public class UserLoginPeriod {

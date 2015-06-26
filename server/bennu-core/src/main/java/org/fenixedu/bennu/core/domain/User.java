@@ -21,6 +21,8 @@ import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -90,21 +92,66 @@ public final class User extends User_Base implements Principal {
         return super.getCreated();
     }
 
-    public LocalDate getExpiration() {
-        LocalDate latest = null;
-        for (UserLoginPeriod period : getLoginValiditySet()) {
-            // If there is an open period, set the user's expiration to null (i.e. open)
-            if (period.getEndDate() == null) {
-                return null;
-            }
+    /**
+     * Ensures the existence of an open (i.e. without end date) period for this user.
+     * 
+     * @return a {@link UserLoginPeriod} instance
+     */
+    public UserLoginPeriod openLoginPeriod() {
+        return getLoginValiditySet().stream().filter(p -> p.getEndDate() == null).findAny()
+                .orElseGet(() -> new UserLoginPeriod(this));
+    }
 
-            // If no expiration is defined, or the current expiration is before the period's end date,
-            // set it as the expiration.
-            if (latest == null || latest.isBefore(period.getEndDate())) {
-                latest = period.getEndDate();
-            }
+    /**
+     * Creates (if not already) a login period with the given dates for this user.
+     * 
+     * @param start The first day of the login period (inclusive)
+     * @param end The last day of the login period (inclusive)
+     * @return a {@link UserLoginPeriod} instance
+     */
+    public UserLoginPeriod createLoginPeriod(LocalDate start, LocalDate end) {
+        Objects.requireNonNull(start);
+        Objects.requireNonNull(end);
+        return getLoginValiditySet().stream().filter(p -> p.matches(start, end)).findAny()
+                .orElseGet(() -> new UserLoginPeriod(this, start, end));
+    }
+
+    /**
+     * Closes any not closed period setting the end day to yesterday (to effectively close, since end date is inclusive).
+     */
+    public void closeLoginPeriod() {
+        closeLoginPeriod(LocalDate.now().minusDays(1));
+    }
+
+    /**
+     * Closes any not closed period setting the end day to the given day.
+     * 
+     * @param end the last active login day
+     */
+    public void closeLoginPeriod(LocalDate end) {
+        if (getLoginValiditySet().isEmpty()) {
+            new UserLoginPeriod(this, getCreated().toLocalDate(), end);
+        } else {
+            getLoginValiditySet().stream().filter(p -> !p.isClosed()).forEach(p -> p.setEndDate(end));
         }
-        return latest;
+    }
+
+    /**
+     * Returns the expiration day for this user, that is, the last day he or she can login in the system.
+     * 
+     * @return An optional {@link LocalDate} value that is empty when the login is open (null ended).
+     */
+    public Optional<LocalDate> getExpiration() {
+        return getLoginValiditySet().stream().min(Comparator.naturalOrder()).map(UserLoginPeriod::getEndDate);
+    }
+
+    /**
+     * Tests whether this user can login or not
+     * 
+     * @return true if login is possible, false otherwise
+     */
+    public boolean isLoginExpired() {
+        return getExpiration().map(p -> LocalDate.now().isAfter(p)).orElse(false);
     }
 
     @Override
@@ -138,10 +185,6 @@ public final class User extends User_Base implements Principal {
         setSalt(BaseEncoding.base64().encode(salt));
         String hash = Hashing.sha512().hashString(getSalt() + password, Charsets.UTF_8).toString();
         setPassword(hash);
-    }
-
-    public boolean isLoginExpired() {
-        return getExpiration() != null && new LocalDate().isAfter(getExpiration());
     }
 
     public boolean matchesPassword(final String password) {

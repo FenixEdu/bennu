@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.core.domain;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 import jvstm.cps.ConsistencyPredicate;
@@ -16,7 +17,11 @@ import org.joda.time.LocalDate;
  * @author João Carvalho (joao.pedro.carvalho@ist.utl.pt)
  * 
  */
-public class UserLoginPeriod extends UserLoginPeriod_Base {
+public class UserLoginPeriod extends UserLoginPeriod_Base implements Comparable<UserLoginPeriod> {
+    UserLoginPeriod(User user) {
+        setUser(user);
+        super.setBeginDate(LocalDate.now());
+    }
 
     /**
      * Creates a {@link UserLoginPeriod} for the given {@link User} with the exact dates.
@@ -73,7 +78,7 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
      * @return true if period is closed (ended), false otherwise
      */
     public boolean isClosed() {
-        return getEndDate() != null && getEndDate().isBefore(new LocalDate());
+        return getEndDate() != null && getEndDate().isBefore(LocalDate.now());
     }
 
     /**
@@ -82,7 +87,7 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
      * @return true if period has started, false otherwise
      */
     public boolean isStarted() {
-        return !getBeginDate().isAfter(new LocalDate());
+        return !getBeginDate().isAfter(LocalDate.now());
     }
 
     /**
@@ -110,51 +115,14 @@ public class UserLoginPeriod extends UserLoginPeriod_Base {
         }
     }
 
-    /**
-     * Returns an open (i.e. without end date) period for the given {@link User}, or creates one with today's start date if
-     * necessary.
-     * 
-     * @param user the {@link User} to add the period to
-     * @return a {@link UserLoginPeriod} instance
-     */
-    public static UserLoginPeriod createOpenPeriod(User user) {
-        UserLoginPeriod period = getOpenPeriod(user);
-        return period == null ? new UserLoginPeriod(user) : period;
-    }
-
-    /**
-     * Closes the open (i.e. without end date) period for the given {@link User} if it exists.
-     * 
-     * @param user the {@link User} to close the period
-     */
-    public static void closeOpenPeriod(User user) {
-        UserLoginPeriod period = getOpenPeriod(user);
-        if (period != null) {
-            period.edit(period.getBeginDate(), new LocalDate());
-        }
-    }
-
-    // Private API
-
-    private UserLoginPeriod(User user) {
-        setUser(user);
-        super.setBeginDate(new LocalDate());
+    @Override
+    public int compareTo(UserLoginPeriod o) {
+        return Comparator.comparing(UserLoginPeriod::getEndDate,
+                Comparator.nullsLast(Comparator.<LocalDate> naturalOrder()).reversed()).compare(this, o);
     }
 
     @ConsistencyPredicate
     protected boolean checkDateInterval() {
         return getEndDate() == null || !getBeginDate().isAfter(getEndDate());
-    }
-
-    /*
-     * Note that each user can only have at most one open period.
-     */
-    private static UserLoginPeriod getOpenPeriod(User user) {
-        for (UserLoginPeriod loginPeriod : user.getLoginValiditySet()) {
-            if (loginPeriod.getEndDate() == null) {
-                return loginPeriod;
-            }
-        }
-        return null;
     }
 }

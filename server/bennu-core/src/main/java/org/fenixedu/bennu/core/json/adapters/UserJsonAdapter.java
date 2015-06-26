@@ -6,13 +6,11 @@ import java.util.Objects;
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
 import org.fenixedu.bennu.core.domain.Avatar;
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.UserLoginPeriod;
 import org.fenixedu.bennu.core.domain.UserProfile;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.json.JsonAdapter;
 import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.json.JsonUtils;
-import org.joda.time.LocalDate;
 import org.joda.time.format.ISODateTimeFormat;
 
 import pt.ist.fenixframework.FenixFramework;
@@ -36,10 +34,7 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         jsonObject.addProperty("familyNames", profile.getFamilyNames());
         JsonUtils.put(jsonObject, "email", user.getEmail());
         jsonObject.addProperty("active", !user.isLoginExpired());
-        LocalDate expiration = user.getExpiration();
-        if (expiration != null) {
-            jsonObject.addProperty("expiration", ISODateTimeFormat.date().print(expiration));
-        }
+        user.getExpiration().ifPresent(e -> jsonObject.addProperty("expiration", ISODateTimeFormat.date().print(e)));
         JsonUtils.put(jsonObject, "avatar", profile.getAvatarUrl());
         if (profile.getPreferredLocale() != null) {
             jsonObject.add("preferredLocale", ctx.view(profile.getPreferredLocale()));
@@ -80,29 +75,10 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         String expiration = JsonUtils.getString(json, "expiration");
 
         if (Strings.isNullOrEmpty(expiration)) {
-            UserLoginPeriod.createOpenPeriod(user);
+            user.openLoginPeriod();
         } else {
-            LocalDate endDate = ISODateTimeFormat.date().parseLocalDate(expiration);
-            UserLoginPeriod current = getCurrentUserLoginPeriod(user);
-            if (current == null || current.isClosed()) {
-                new UserLoginPeriod(user, LocalDate.now(), endDate);
-            } else {
-                current.edit(current.getBeginDate(), endDate);
-            }
+            user.closeLoginPeriod(ISODateTimeFormat.date().parseLocalDate(expiration));
         }
-    }
-
-    private UserLoginPeriod getCurrentUserLoginPeriod(User user) {
-        UserLoginPeriod latest = null;
-        for (UserLoginPeriod current : user.getLoginValiditySet()) {
-            if (current.getEndDate() == null) {
-                return current;
-            }
-            if (latest == null || latest.getEndDate().isBefore(current.getEndDate())) {
-                latest = current;
-            }
-        }
-        return latest;
     }
 
     private UserProfile parseAndUpdateOrCreateProfile(JsonObject json, JsonBuilder ctx, UserProfile current) {
