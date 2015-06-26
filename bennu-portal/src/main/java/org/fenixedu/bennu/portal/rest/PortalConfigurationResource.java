@@ -8,14 +8,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 
 import com.google.gson.JsonElement;
@@ -30,8 +31,6 @@ public class PortalConfigurationResource extends BennuRestResource {
         return view(PortalConfiguration.getInstance());
     }
 
-    private static final CacheControl CACHE_CONTROL = CacheControl.valueOf("max-age=43200");
-
     @GET
     @Path("logo")
     public Response logo(@HeaderParam("If-None-Match") String ifNoneMatch) {
@@ -41,7 +40,9 @@ public class PortalConfigurationResource extends BennuRestResource {
             if (etag.toString().equals(ifNoneMatch)) {
                 return Response.notModified(etag).build();
             }
-            return Response.ok(instance.getLogo(), instance.getLogoType()).cacheControl(CACHE_CONTROL).tag(etag).build();
+            return Response.ok(instance.getLogo(), instance.getLogoType())
+                    .header(HttpHeaders.CACHE_CONTROL, CoreConfiguration.getConfiguration().staticCacheControl()).tag(etag)
+                    .build();
         }
         throw new WebApplicationException(Status.NOT_FOUND);
     }
@@ -55,7 +56,8 @@ public class PortalConfigurationResource extends BennuRestResource {
     public Response favicon() {
         final PortalConfiguration instance = PortalConfiguration.getInstance();
         if (instance != null && instance.getFavicon() != null) {
-            return Response.ok(instance.getFavicon(), instance.getFaviconType()).cacheControl(CACHE_CONTROL).build();
+            return Response.ok(instance.getFavicon(), instance.getFaviconType())
+                    .header(HttpHeaders.CACHE_CONTROL, CoreConfiguration.getConfiguration().staticCacheControl()).build();
         }
         throw new WebApplicationException(Status.NOT_FOUND);
     }

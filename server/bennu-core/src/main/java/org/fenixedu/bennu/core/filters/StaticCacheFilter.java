@@ -10,6 +10,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.HttpHeaders;
+
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 
 /**
  * Filter that adds caching headers to static resources.
@@ -30,7 +33,7 @@ public class StaticCacheFilter implements Filter {
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
         final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        httpServletResponse.setHeader("Cache-Control", "max-age=43200");
+        httpServletResponse.setHeader(HttpHeaders.CACHE_CONTROL, CoreConfiguration.getConfiguration().staticCacheControl());
         chain.doFilter(request, response);
     }
 
