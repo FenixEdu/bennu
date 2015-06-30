@@ -18,9 +18,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -127,8 +127,6 @@ public class ProfileResource extends BennuRestResource {
         throw BennuCoreDomainException.resourceNotFound(localeTag);
     }
 
-    private static final CacheControl CACHE_CONTROL = CacheControl.valueOf("max-age=43200");
-
     @GET
     @Path("localavatar/{username}")
     public Response localAvatar(@PathParam("username") String username, @QueryParam("s") @DefaultValue("100") Integer size,
@@ -141,12 +139,15 @@ public class ProfileResource extends BennuRestResource {
                 return Response.notModified(etag).build();
             }
             if (avatar != null) {
-                return Response.ok(avatar.getData(size), avatar.getMimeType()).cacheControl(CACHE_CONTROL).tag(etag).build();
+                return Response.ok(avatar.getData(size), avatar.getMimeType())
+                        .header(HttpHeaders.CACHE_CONTROL, CoreConfiguration.getConfiguration().staticCacheControl()).tag(etag)
+                        .build();
             } else {
                 try (InputStream mm =
                         ProfileResource.class.getClassLoader().getResourceAsStream("META-INF/resources/img/mysteryman.png")) {
-                    return Response.ok(Avatar.process(mm, "image/png", size), "image/png").cacheControl(CACHE_CONTROL).tag(etag)
-                            .build();
+                    return Response.ok(Avatar.process(mm, "image/png", size), "image/png")
+                            .header(HttpHeaders.CACHE_CONTROL, CoreConfiguration.getConfiguration().staticCacheControl())
+                            .tag(etag).build();
                 } catch (IOException e) {
                     throw BennuCoreDomainException.resourceNotFound(username);
                 }

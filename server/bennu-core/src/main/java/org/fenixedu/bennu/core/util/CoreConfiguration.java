@@ -112,6 +112,11 @@ public class CoreConfiguration {
                 description = "the size threshold after which files will be written to disk", defaultValue = "67108864")
         public Integer multipartFileSizeThreshold();
 
+        @ConfigurationProperty(key = "static.cache.control",
+                description = "The String value for the Cache-Control header for static resources",
+                defaultValue = "max-age=86400")
+        public String staticCacheControl();
+
         /**
          * Gets the maximum size allowed for multipart/form-data requests.
          * 
