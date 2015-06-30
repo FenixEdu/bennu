@@ -19,6 +19,7 @@
 package org.fenixedu.bennu.oauth;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Locale;
 
@@ -69,11 +70,11 @@ public class OAuthServletTest extends JerseyTest {
     private final static String CODE = "code";
     private final static String REFRESH_TOKEN = "refresh_token";
 
-    private static ExternalApplication externalApplication;
-    private static ServiceApplication serviceApplication;
-    private static OAuthAuthorizationServlet oauthServlet;
-    private static User user1;
-    private static ServiceApplication serviceApplicationWithScope;
+    private static volatile ExternalApplication externalApplication;
+    private static volatile ServiceApplication serviceApplication;
+    private static volatile OAuthAuthorizationServlet oauthServlet;
+    private static volatile User user1;
+    private static volatile ServiceApplication serviceApplicationWithScope;
 
     @Override
     protected Application configure() {
@@ -134,7 +135,8 @@ public class OAuthServletTest extends JerseyTest {
     private String generateToken(DomainObject domainObject) {
         String random = "fenix";
         String token = Joiner.on(":").join(domainObject.getExternalId(), random);
-        return Base64.getEncoder().encodeToString(token.getBytes()).replace("=", "").replace("+", "-").replace("/", "-");
+        return Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8)).replace("=", "").replace("+", "-")
+                .replace("/", "-");
     }
 
     @Test
@@ -157,7 +159,8 @@ public class OAuthServletTest extends JerseyTest {
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
         String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes()));
+        req.addHeader(HttpHeaders.AUTHORIZATION,
+                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
         req.addParameter(REDIRECT_URI, externalApp.getRedirectUrl());
         req.addParameter(CODE, applicationUserSession.getCode());
         req.addParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE);
@@ -199,7 +202,8 @@ public class OAuthServletTest extends JerseyTest {
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
         String clientSecret = "fenixedu:fenixedu";
-        req.addHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes()));
+        req.addHeader(HttpHeaders.AUTHORIZATION,
+                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
         req.addParameter(REDIRECT_URI, externalApp.getRedirectUrl());
         req.addParameter(CODE, applicationUserSession.getCode());
         req.addParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE);
@@ -235,7 +239,8 @@ public class OAuthServletTest extends JerseyTest {
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
         String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes()));
+        req.addHeader(HttpHeaders.AUTHORIZATION,
+                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
         req.addParameter(REFRESH_TOKEN, applicationUserSession.getRefreshToken());
         req.addParameter(GRANT_TYPE, GRANT_TYPE_REFRESH_TOKEN);
         req.setMethod("POST");
@@ -277,7 +282,8 @@ public class OAuthServletTest extends JerseyTest {
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
         String clientSecret = "fenixedu:fenixedu";
-        req.addHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes()));
+        req.addHeader(HttpHeaders.AUTHORIZATION,
+                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
         req.addParameter(REFRESH_TOKEN, applicationUserSession.getRefreshToken());
         req.addParameter(GRANT_TYPE, GRANT_TYPE_REFRESH_TOKEN);
         req.setMethod("POST");
@@ -298,7 +304,8 @@ public class OAuthServletTest extends JerseyTest {
         Authenticate.unmock();
         String clientSecret = "";
 
-        req.addHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encode(clientSecret.getBytes()));
+        req.addHeader(HttpHeaders.AUTHORIZATION,
+                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
         req.addParameter(GRANT_TYPE, GRANT_TYPE_CLIENT_CREDENTIALS);
         req.setMethod("POST");
         req.setPathInfo("/access_token");
@@ -318,7 +325,8 @@ public class OAuthServletTest extends JerseyTest {
         MockHttpServletResponse res = new MockHttpServletResponse();
         Authenticate.unmock();
         String clientSecret = serviceApplication.getExternalId() + ":" + serviceApplication.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes()));
+        req.addHeader(HttpHeaders.AUTHORIZATION,
+                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
         req.addParameter(GRANT_TYPE, GRANT_TYPE_CLIENT_CREDENTIALS);
         req.setMethod("POST");
         req.setPathInfo("/access_token");
@@ -504,8 +512,10 @@ public class OAuthServletTest extends JerseyTest {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         req.addParameter("client_id", serviceApplication.getExternalId());
-        req.addParameter("client_secret",
-                BaseEncoding.base64().encode((serviceApplication.getExternalId() + ":lasdlkasldksladkalskdsal").getBytes()));
+        req.addParameter(
+                "client_secret",
+                BaseEncoding.base64().encode(
+                        (serviceApplication.getExternalId() + ":lasdlkasldksladkalskdsal").getBytes(StandardCharsets.UTF_8)));
         req.addParameter("grant_type", "client_credentials");
         req.setMethod("POST");
         req.setPathInfo("/access_token");

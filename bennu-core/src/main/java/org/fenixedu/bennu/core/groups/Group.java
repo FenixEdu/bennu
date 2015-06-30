@@ -61,7 +61,6 @@ public abstract class Group implements Serializable, Comparable<Group> {
     private static final Group ANYONE = new AnyoneGroup();
     private static final Group LOGGED = new LoggedGroup();
     private static final Group NOBODY = new NobodyGroup();
-    private static final DynamicGroup MANAGERS = DynamicGroup.get("managers");
 
     public static final Group anonymous() {
         return ANONYMOUS;
@@ -80,7 +79,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
     }
 
     public static DynamicGroup managers() {
-        return MANAGERS;
+        return DynamicGroup.MANAGERS;
     }
 
     public static Group users(User... members) {

@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -59,7 +60,7 @@ public class JsonParamConverterProvider implements ParamConverterProvider {
             public T fromString(String value) {
                 try {
                     return reader.readFrom(rawType, genericType, annotations, MediaType.APPLICATION_JSON_TYPE, null,
-                            new ByteArrayInputStream(value.getBytes()));
+                            new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8)));
                 } catch (WebApplicationException | IOException e) {
                     throw new WebApplicationException(e, Status.BAD_REQUEST);
                 }
@@ -67,14 +68,14 @@ public class JsonParamConverterProvider implements ParamConverterProvider {
 
             @Override
             public String toString(T value) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 try {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     writer.writeTo(value, rawType, genericType, annotations, MediaType.APPLICATION_JSON_TYPE, null, baos);
                     baos.flush();
+                    return baos.toString(StandardCharsets.UTF_8.name());
                 } catch (IOException e) {
                     throw new WebApplicationException(e, Status.BAD_REQUEST);
                 }
-                return baos.toString();
             }
         };
     }

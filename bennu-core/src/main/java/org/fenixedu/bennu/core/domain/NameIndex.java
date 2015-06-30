@@ -60,7 +60,7 @@ class NameIndex extends NameIndex_Base {
             map.remove(keyword, match);
             return find(keyword);
         }
-        return match != null ? match.getProfileSet() : Collections.emptySet();
+        return match.getProfileSet();
     }
 
     private static Optional<NameIndex> manualFind(String keyword) {

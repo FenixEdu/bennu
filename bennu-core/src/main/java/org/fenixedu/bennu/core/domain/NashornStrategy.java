@@ -61,6 +61,9 @@ public final class NashornStrategy<T> {
         try {
             ScriptEngineManager engineManager = new ScriptEngineManager();
             ScriptEngine engine = engineManager.getEngineByName("nashorn");
+            if (engine == null) {
+                throw new Error("A javascript engine could not be found!");
+            }
             Invocable invocable = (Invocable) engine;
             engine.eval(code);
             return (T) invocable.getInterface(type);

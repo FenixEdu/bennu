@@ -21,6 +21,7 @@ package org.fenixedu.bennu.spring.portal;
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +38,12 @@ public class SpringPortalBackend implements PortalBackend {
         @Override
         public void handleRequest(MenuFunctionality functionality, HttpServletRequest request, HttpServletResponse response,
                 FilterChain chain) throws IOException, ServletException {
-            request.getRequestDispatcher(functionality.getItemKey()).forward(request, response);
+            RequestDispatcher dispatcher = request.getRequestDispatcher(functionality.getItemKey());
+            if (dispatcher != null) {
+                dispatcher.forward(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "No forward url could be processed");
+            }
         }
     };
 

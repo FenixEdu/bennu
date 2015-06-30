@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -239,9 +240,9 @@ public class Signal {
         /* allowing signal emiting within a signal */
         while (cache != null) {
             transaction.putInContext("signals", null);
-            for (String key : cache.keySet()) {
-                for (Object event : cache.get(key)) {
-                    withoutTransaction.get(key).emit(event);
+            for (Entry<String, ArrayList<Object>> entry : cache.entrySet()) {
+                for (Object event : entry.getValue()) {
+                    withoutTransaction.get(entry.getKey()).emit(event);
                 }
             }
             cache = transaction.getFromContext("signals");
@@ -252,9 +253,9 @@ public class Signal {
         Map<String, ArrayList<Object>> cache = transaction.getFromContext("signalsWithTransaction");
         while (cache != null) {
             transaction.putInContext("signalsWithTransaction", null);
-            for (String key : cache.keySet()) {
-                for (Object event : cache.get(key)) {
-                    withTransaction.get(key).emit(event);
+            for (Entry<String, ArrayList<Object>> entry : cache.entrySet()) {
+                for (Object event : entry.getValue()) {
+                    withTransaction.get(entry.getKey()).emit(event);
                 }
             }
             cache = transaction.getFromContext("signalsWithTransaction");

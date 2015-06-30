@@ -114,7 +114,6 @@ public class Authenticate {
             if (user != null) {
                 fireLogoutListeners(session, user);
             }
-            session.removeAttribute(LOGGED_USER_ATTRIBUTE);
             session.invalidate();
         }
         loggedUser.set(null);

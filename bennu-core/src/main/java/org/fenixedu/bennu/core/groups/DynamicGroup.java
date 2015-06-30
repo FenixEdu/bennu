@@ -17,6 +17,12 @@ import org.joda.time.DateTime;
 public final class DynamicGroup extends Group {
     private static final long serialVersionUID = -8544141315269000405L;
 
+    /**
+     * This instance must be defined here to prevent cyclical initialization issues (i.e., trying to create a new DynamicGroup
+     * before the Group class is fully initialized).
+     */
+    static final DynamicGroup MANAGERS = DynamicGroup.get("managers");
+
     private final String name;
 
     DynamicGroup(String name) {

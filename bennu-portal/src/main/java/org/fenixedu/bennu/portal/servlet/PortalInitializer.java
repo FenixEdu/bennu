@@ -1,5 +1,7 @@
 package org.fenixedu.bennu.portal.servlet;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,8 +31,12 @@ public class PortalInitializer implements ServletContextListener {
         Collection<String> themePaths = sce.getServletContext().getResourcePaths("/themes/");
         if (themePaths != null) {
             for (String themePath : themePaths) {
-                if (sce.getServletContext().getResourceAsStream(themePath + "/default.html") != null) {
-                    themes.add(themePath.substring("/themes/".length(), themePath.length() - 1));
+                try (InputStream stream = sce.getServletContext().getResourceAsStream(themePath + "/default.html")) {
+                    if (stream != null) {
+                        themes.add(themePath.substring("/themes/".length(), themePath.length() - 1));
+                    }
+                } catch (IOException e) {
+                    logger.warn("Could not detect default layout for theme " + themePath, e);
                 }
             }
         }

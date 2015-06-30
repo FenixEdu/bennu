@@ -19,6 +19,7 @@
 package org.fenixedu.bennu.oauth.jaxrs;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -198,7 +199,7 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
         }
 
         try {
-            String fullToken = new String(Base64.getDecoder().decode(accessToken));
+            String fullToken = new String(Base64.getDecoder().decode(accessToken), StandardCharsets.UTF_8);
             String[] accessTokenBuilder = fullToken.split(":");
             if (accessTokenBuilder.length != 2) {
                 return Optional.empty();
@@ -214,7 +215,7 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
             return Optional.empty();
         }
         try {
-            String fullToken = new String(Base64.getDecoder().decode(accessToken));
+            String fullToken = new String(Base64.getDecoder().decode(accessToken), StandardCharsets.UTF_8);
             String[] accessTokenBuilder = fullToken.split(":");
             if (accessTokenBuilder.length != 2) {
                 return Optional.empty();

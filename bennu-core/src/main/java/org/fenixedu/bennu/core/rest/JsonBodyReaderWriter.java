@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -57,7 +58,7 @@ public class JsonBodyReaderWriter<T extends JsonElement> implements MessageBodyR
     @Override
     public T readFrom(Class<T> type, Type genericType, Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
-        try (InputStreamReader reader = new InputStreamReader(entityStream)) {
+        try (InputStreamReader reader = new InputStreamReader(entityStream, StandardCharsets.UTF_8)) {
             return gson.fromJson(reader, genericType);
         } catch (Throwable e) {
             throw new WebApplicationException(e.getMessage(), Status.BAD_REQUEST);
@@ -77,7 +78,7 @@ public class JsonBodyReaderWriter<T extends JsonElement> implements MessageBodyR
     @Override
     public void writeTo(T t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
-        try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(entityStream))) {
+        try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(entityStream, StandardCharsets.UTF_8))) {
             gson.toJson(t, writer);
         } catch (Throwable e) {
             throw new WebApplicationException(e.getMessage(), Status.BAD_REQUEST);

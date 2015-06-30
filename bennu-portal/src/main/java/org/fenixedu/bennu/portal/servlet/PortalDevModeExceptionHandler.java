@@ -2,6 +2,7 @@ package org.fenixedu.bennu.portal.servlet;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -29,7 +30,8 @@ public class PortalDevModeExceptionHandler extends PortalExceptionHandler {
         super(new ClasspathLoader() {
             @Override
             public Reader getReader(String themeName) throws LoaderException {
-                return new InputStreamReader(context.getResourceAsStream("/bennu-portal/debugExceptionPage.html"));
+                return new InputStreamReader(context.getResourceAsStream("/bennu-portal/debugExceptionPage.html"),
+                        StandardCharsets.UTF_8);
             }
         });
     }

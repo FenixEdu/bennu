@@ -3,6 +3,7 @@ package org.fenixedu.bennu.portal.client;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContextEvent;
@@ -43,7 +44,7 @@ public class ClientSiteBackendInitilizer implements ServletContextListener {
         final JsonParser parser = new JsonParser();
         while (resources.hasMoreElements()) {
             URL appsJsonURL = resources.nextElement();
-            final InputStreamReader appJsonReader = new InputStreamReader(appsJsonURL.openStream());
+            final InputStreamReader appJsonReader = new InputStreamReader(appsJsonURL.openStream(), StandardCharsets.UTF_8);
             logger.debug("parsing apps.json for {}", appsJsonURL.toExternalForm());
             JsonArray appsJson = parser.parse(appJsonReader).getAsJsonObject().get("apps").getAsJsonArray();
             for (JsonElement appJson : appsJson) {

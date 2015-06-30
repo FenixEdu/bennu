@@ -1,6 +1,7 @@
 package org.fenixedu.bennu.scheduler.example;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 import org.fenixedu.bennu.scheduler.CronTask;
@@ -20,7 +21,7 @@ public class ExampleTask extends CronTask {
         for (int i = 0; i < 32; i++) {
             final String filename = next();
             taskLog("Writing number %d to file %s\n", i, filename);
-            output(filename, new Integer(i).toString().getBytes());
+            output(filename, new Integer(i).toString().getBytes(StandardCharsets.UTF_8));
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {

@@ -24,6 +24,8 @@ import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
+import com.google.common.io.ByteStreams;
 
 @WebServlet(urlPatterns = FileDownloadServlet.SERVLET_PATH + "*")
 public class FileDownloadServlet extends HttpServlet {
@@ -65,11 +67,11 @@ public class FileDownloadServlet extends HttpServlet {
                     if (match) {
                         try {
                             String startGroup = matcher.group("start");
-                            start = startGroup.isEmpty() ? start : Long.valueOf(startGroup);
+                            start = Strings.isNullOrEmpty(startGroup) ? start : Long.valueOf(startGroup);
                             start = start < 0 ? 0 : start;
 
                             String endGroup = matcher.group("end");
-                            end = endGroup.isEmpty() ? end : Long.valueOf(endGroup);
+                            end = Strings.isNullOrEmpty(endGroup) ? end : Long.valueOf(endGroup);
                             end = end > length - 1 ? length - 1 : end;
                         } catch (NumberFormatException e) {
                             match = false;
@@ -118,7 +120,7 @@ public class FileDownloadServlet extends HttpServlet {
     private static final int BUF_SIZE = 0x1000; // 4K
 
     private void copyStream(InputStream in, OutputStream out, long start, long bytesToRead) throws IOException {
-        in.skip(start);
+        ByteStreams.skipFully(in, start);
         byte buffer[] = new byte[BUF_SIZE];
         int len = buffer.length;
         while ((bytesToRead > 0) && (len >= buffer.length)) {

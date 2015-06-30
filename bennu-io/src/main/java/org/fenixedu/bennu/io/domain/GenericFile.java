@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,9 +148,9 @@ public abstract class GenericFile extends GenericFile_Base {
     private static final HashFunction DEFAULT_HASH_FUNCTION = Hashing.murmur3_128();
 
     private String computeChecksum() {
-        try (InputStream stream = getStream()) {
-            Hasher hasher = DEFAULT_HASH_FUNCTION.newHasher();
-            ByteStreams.copy(stream, Funnels.asOutputStream(hasher));
+        Hasher hasher = DEFAULT_HASH_FUNCTION.newHasher();
+        try (InputStream stream = getStream(); OutputStream out = Funnels.asOutputStream(hasher)) {
+            ByteStreams.copy(stream, out);
             return hasher.hash().toString();
         } catch (IOException e) {
             throw new RuntimeException("Cannot compute checksum for " + getExternalId(), e);

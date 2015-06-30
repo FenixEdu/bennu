@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,12 +61,12 @@ public class PortalLayoutInjector implements Filter {
                 // Try loading the specified template...
                 InputStream stream = servletContext.getResourceAsStream("/themes/" + templateName + ".html");
                 if (stream != null) {
-                    return new InputStreamReader(stream);
+                    return new InputStreamReader(stream, StandardCharsets.UTF_8);
                 } else {
                     // ... fallback to default if it doesn't exist
                     logger.warn("Could not find template named {}, falling back to default!", templateName);
                     return new InputStreamReader(servletContext.getResourceAsStream("/themes/"
-                            + PortalConfiguration.getInstance().getTheme() + "/default.html"));
+                            + PortalConfiguration.getInstance().getTheme() + "/default.html"), StandardCharsets.UTF_8);
                 }
             }
         });

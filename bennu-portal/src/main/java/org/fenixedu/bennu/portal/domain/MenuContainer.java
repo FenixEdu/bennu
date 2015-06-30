@@ -31,7 +31,7 @@ public final class MenuContainer extends MenuContainer_Base {
      */
     MenuContainer(PortalConfiguration configuration) {
         super();
-        if (configuration.getMenu() != null && getConfiguration().getMenu() != this) {
+        if (configuration.getMenu() != null && configuration.getMenu() != this) {
             throw new RuntimeException("There can be only one root menu!");
         }
         setConfiguration(configuration);

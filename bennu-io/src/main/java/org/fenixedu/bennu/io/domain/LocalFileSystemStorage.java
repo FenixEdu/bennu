@@ -29,7 +29,7 @@ import com.google.common.io.Files;
 public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     private static final Logger logger = LoggerFactory.getLogger(LocalFileSystemStorage.class);
 
-    private PerTxBox<Map<String, FileWriteIntention>> fileIntentions;
+    private transient PerTxBox<Map<String, FileWriteIntention>> fileIntentions;
 
     private static class FileWriteIntention {
 

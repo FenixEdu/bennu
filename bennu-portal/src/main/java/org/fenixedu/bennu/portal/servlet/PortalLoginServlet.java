@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -140,10 +141,11 @@ public class PortalLoginServlet extends HttpServlet {
                     // Try to resolve the page from the theme...
                     InputStream stream = context.getResourceAsStream("/themes/" + themeName + "/login.html");
                     if (stream != null) {
-                        return new InputStreamReader(stream);
+                        return new InputStreamReader(stream, StandardCharsets.UTF_8);
                     } else {
                         // ... and fall back if none is provided.
-                        return new InputStreamReader(context.getResourceAsStream("/bennu-portal/login.html"));
+                        return new InputStreamReader(context.getResourceAsStream("/bennu-portal/login.html"),
+                                StandardCharsets.UTF_8);
                     }
                 }
             });

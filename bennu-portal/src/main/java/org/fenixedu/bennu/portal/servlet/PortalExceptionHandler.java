@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,10 +55,10 @@ public class PortalExceptionHandler implements ExceptionHandler {
                 // Try to resolve the page from the theme...
                 InputStream stream = context.getResourceAsStream("/themes/" + themeName + "/500.html");
                 if (stream != null) {
-                    return new InputStreamReader(stream);
+                    return new InputStreamReader(stream, StandardCharsets.UTF_8);
                 } else {
                     // ... and fall back if none is provided.
-                    return new InputStreamReader(context.getResourceAsStream("/bennu-portal/500.html"));
+                    return new InputStreamReader(context.getResourceAsStream("/bennu-portal/500.html"), StandardCharsets.UTF_8);
                 }
             }
         });
