@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.fenixedu.bennu.core.domain.groups.GroupConstant;
 import org.fenixedu.bennu.core.domain.groups.PersistentDynamicGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentUserGroup;
@@ -12,7 +11,7 @@ import org.fenixedu.bennu.core.groups.Group;
 
 public class BennuGroupIndex {
 
-    public static <T extends GroupConstant> Stream<T> groupConstant(Class<T> type) {
+    public static <T extends PersistentGroup> Stream<T> groupConstant(Class<T> type) {
         return Bennu.getInstance().getGroupConstantSet().stream().filter(g -> type.isInstance(g)).map(type::cast);
     }
 

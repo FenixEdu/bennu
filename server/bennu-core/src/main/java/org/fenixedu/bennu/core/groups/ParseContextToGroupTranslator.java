@@ -2,7 +2,6 @@ package org.fenixedu.bennu.core.groups;
 
 import java.util.List;
 
-import org.fenixedu.bennu.core.groups.GroupParser;
 import org.fenixedu.bennu.core.groups.GroupParser.AndContext;
 import org.fenixedu.bennu.core.groups.GroupParser.ArgumentContext;
 import org.fenixedu.bennu.core.groups.GroupParser.AtomContext;

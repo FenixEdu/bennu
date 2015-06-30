@@ -2,10 +2,6 @@ package org.fenixedu.bennu.core.json;
 
 import java.lang.reflect.Type;
 
-import org.junit.BeforeClass;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -32,24 +28,4 @@ class OtherSerializer implements JsonSerializer<User> {
         return obj;
     }
 
-}
-
-//@RunWith(JUnit4.class)
-public class TestGsonRegistry {
-
-    private static GsonBuilder builder;
-    private static Person user;
-
-    @BeforeClass
-    public static void setup() {
-        builder = new GsonBuilder();
-        user = new User("test", "testpwd", "1");
-        builder.registerTypeAdapter(User.class, new Serializer());
-        builder.registerTypeAdapter(User.class, new OtherSerializer());
-    }
-
-    //@Test
-    public void testGson() {
-        final Gson create = builder.create();
-    }
 }

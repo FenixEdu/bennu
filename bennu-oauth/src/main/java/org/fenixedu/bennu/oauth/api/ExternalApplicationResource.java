@@ -186,8 +186,7 @@ public class ExternalApplicationResource extends BennuRestResource {
             }
             return Response.ok(Base64.getDecoder().decode(app.getLogo()), "image/jpeg").tag(etag).build();
         } else {
-            try {
-                InputStream placeholder = getClass().getResourceAsStream("/noapplication.png");
+            try (InputStream placeholder = getClass().getResourceAsStream("/noapplication.png")) {
                 return Response.ok(ByteStreams.toByteArray(placeholder), "image/png").build();
             } catch (IOException e) {
                 throw new WebApplicationException(Status.NOT_FOUND);

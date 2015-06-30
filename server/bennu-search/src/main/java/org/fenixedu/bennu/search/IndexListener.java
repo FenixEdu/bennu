@@ -62,6 +62,7 @@ public class IndexListener implements CommitListener {
                                 indexed++;
                             }
                         } else {
+                            @SuppressWarnings("unchecked")
                             IndexWriter writer =
                                     getWriterFor(directories, writers, (Class<? extends Indexable>) domainObject.getClass());
                             writer.deleteDocuments(new Term(DefaultIndexFields.IDENTIFIER_FIELD.getFieldName(), domainObject

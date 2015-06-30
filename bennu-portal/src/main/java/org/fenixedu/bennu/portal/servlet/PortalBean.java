@@ -76,21 +76,21 @@ public class PortalBean {
     private static String DEBUG_TOOLKIT_ANGULAR_TAG = null;
 
     private NodeList getFilesForId(String id) throws Exception {
-        InputStream is = this.getClass().getResource("/META-INF/maven/org.fenixedu/bennu-toolkit/pom.xml").openStream();
+        try (InputStream is = this.getClass().getResource("/META-INF/maven/org.fenixedu/bennu-toolkit/pom.xml").openStream()) {
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder b = factory.newDocumentBuilder();
-        Document doc = b.parse(is);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder b = factory.newDocumentBuilder();
+            Document doc = b.parse(is);
 
-        XPathFactory xPathfactory = XPathFactory.newInstance();
-        XPath xpath = xPathfactory.newXPath();
+            XPathFactory xPathfactory = XPathFactory.newInstance();
+            XPath xpath = xPathfactory.newXPath();
 
-        XPathExpression expr =
-                xpath.compile("//project/build/plugins/plugin/executions/execution[id = '" + id
-                        + "']/configuration/jsSourceFiles/jsSourceFile");
-        Object result = expr.evaluate(doc, XPathConstants.NODESET);
-        return (NodeList) result;
-
+            XPathExpression expr =
+                    xpath.compile("//project/build/plugins/plugin/executions/execution[id = '" + id
+                            + "']/configuration/jsSourceFiles/jsSourceFile");
+            Object result = expr.evaluate(doc, XPathConstants.NODESET);
+            return (NodeList) result;
+        }
     }
 
     private String getDebugToolkit() {
@@ -105,7 +105,6 @@ public class PortalBean {
                     builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath).append("/bennu-toolkit/js/")
                             .append(currentItem.getTextContent()).append("\"></script>");
                 }
-                
 
                 DEBUG_TOOLKIT_TAG = builder.toString();
             } catch (Exception e) {
@@ -132,7 +131,6 @@ public class PortalBean {
                     builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath).append("/bennu-toolkit/js/")
                             .append(currentItem.getTextContent()).append("\"></script>");
                 }
-                
 
                 DEBUG_TOOLKIT_ANGULAR_TAG = builder.toString();
             } catch (Exception e) {

@@ -602,12 +602,9 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private void sendOAuthResponse(HttpServletResponse response, Status status, JsonObject jsonResponse) {
         response.setContentType("application/json; charset=UTF-8");
         response.setStatus(status.getStatusCode());
-        PrintWriter pw;
-        try {
-            pw = response.getWriter();
+        try (PrintWriter pw = response.getWriter()) {
             pw.print(jsonResponse.toString());
             pw.flush();
-            pw.close();
         } catch (IOException e) {
             throw new WebApplicationException(e);
         }

@@ -34,10 +34,11 @@ public class Avatar extends Avatar_Base {
                 BufferedImage crop = img.getSubimage(x1, y1, x2 - x1, y2 - y1);
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
-                ImageOutputStream outstream = ImageIO.createImageOutputStream(out);
-                writer.setOutput(outstream);
-                writer.write(crop);
-                return new Avatar(out.toByteArray(), mimeType);
+                try (ImageOutputStream outstream = ImageIO.createImageOutputStream(out)) {
+                    writer.setOutput(outstream);
+                    writer.write(crop);
+                    return new Avatar(out.toByteArray(), mimeType);
+                }
             }
             throw BennuCoreDomainException.errorProcessingImage();
         } catch (IOException e) {
@@ -84,10 +85,11 @@ public class Avatar extends Avatar_Base {
             BufferedImage scaled = Scalr.resize(img, Method.QUALITY, Mode.FIT_EXACT, size, size);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
-            ImageOutputStream outstream = ImageIO.createImageOutputStream(out);
-            writer.setOutput(outstream);
-            writer.write(scaled);
-            return out.toByteArray();
+            try (ImageOutputStream outstream = ImageIO.createImageOutputStream(out)) {
+                writer.setOutput(outstream);
+                writer.write(scaled);
+                return out.toByteArray();
+            }
         } catch (IOException e) {
             throw BennuCoreDomainException.errorProcessingImage();
         }

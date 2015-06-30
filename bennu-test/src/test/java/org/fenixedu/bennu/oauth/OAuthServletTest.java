@@ -86,7 +86,6 @@ public class OAuthServletTest extends JerseyTest {
 
     @Atomic(mode = TxMode.WRITE)
     public static void initObjects() {
-        final Locale ptPT = Locale.forLanguageTag("pt-PT");
         final Locale enGB = Locale.forLanguageTag("en-GB");
 
         if (user1 == null) {
