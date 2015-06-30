@@ -4,12 +4,12 @@
 
     <parent>
         <groupId>org.fenixedu</groupId>
-        <artifactId>bennu-server-aggregator</artifactId>
+        <artifactId>bennu</artifactId>
         <version>4.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>bennu-core</artifactId>
-    <name>Bennu Framework Core</name>
+    <name>Bennu Core</name>
 
     <build>
         <plugins>

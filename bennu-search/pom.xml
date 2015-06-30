@@ -1,14 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.fenixedu</groupId>
-        <artifactId>bennu-server-aggregator</artifactId>
+        <artifactId>bennu</artifactId>
         <version>4.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bennu-scheduler</artifactId>
-    <name>Bennu Scheduler</name>
+    <artifactId>bennu-search</artifactId>
+    <name>Bennu Search</name>
 
     <dependencies>
         <dependency>
@@ -22,12 +23,20 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.fenixedu</groupId>
-            <artifactId>fenixedu-commons</artifactId>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.sf.cron4j</groupId>
-            <artifactId>cron4j</artifactId>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queryparser</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>fenixedu-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -40,10 +49,6 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
     </dependencies>
 

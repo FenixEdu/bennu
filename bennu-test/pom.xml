@@ -10,7 +10,7 @@
 
     <artifactId>bennu-test</artifactId>
     <version>4.0.0-SNAPSHOT</version>
-    <name>Bennu Framework Tests</name>
+    <name>Bennu Tests</name>
 
     <properties>
         <code.generator.class>pt.ist.fenixframework.backend.jvstm.JVSTMCodeGenerator</code.generator.class>

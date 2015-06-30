@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -9,11 +8,27 @@
         <relativePath />
     </parent>
 
-    <artifactId>bennu-maven</artifactId>
+    <artifactId>default-theme</artifactId>
     <version>4.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
-    <name>Bennu Maven Tools</name>
+    <name>Bennu Default Theme</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/webapp</directory>
+                <targetPath>META-INF/resources</targetPath>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+    </build>
 
     <repositories>
         <repository>
@@ -22,7 +37,4 @@
         </repository>
     </repositories>
 
-    <modules>
-        <module>bennu-maven-plugin</module>
-    </modules>
 </project>
