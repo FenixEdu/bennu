@@ -33,6 +33,7 @@ import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
+import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 
 import com.google.gson.JsonElement;
 
@@ -44,9 +45,15 @@ public class ExternalApplicationAuthorizationSessionResources extends BennuRestR
     @Path("/{session}")
     public JsonElement authorizations(@PathParam("session") ApplicationUserAuthorization authorization) {
         User user = verifyAndGetRequestAuthor();
+
+        if (!isManager(user) && authorization.getApplication() instanceof ServiceApplication) {
+            return null;
+        }
+
         if (authorization.getUser() == user || isManager(user)) {
             return view(authorization.getSessionSet());
         }
+
         return null;
     }
 
@@ -54,6 +61,11 @@ public class ExternalApplicationAuthorizationSessionResources extends BennuRestR
     @Path("/{session}")
     public Response delete(@PathParam("session") ApplicationUserSession session) {
         User user = verifyAndGetRequestAuthor();
+
+        if (!isManager(user) && session.getApplicationUserAuthorization().getApplication() instanceof ServiceApplication) {
+            return null;
+        }
+
         if (session.getApplicationUserAuthorization().getUser() == user || isManager(user)) {
             atomic(() -> {
                 session.delete();

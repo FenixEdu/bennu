@@ -24,14 +24,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -49,11 +46,11 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
-import org.fenixedu.bennu.oauth.OAuthProperties;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
+import org.fenixedu.bennu.oauth.util.OAuthUtils;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
@@ -61,12 +58,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import com.google.common.hash.Hashing;
 import com.google.common.net.HttpHeaders;
 import com.google.gson.JsonObject;
 import com.mitchellbosecke.pebble.PebbleEngine;
@@ -171,14 +166,14 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             }
             userConfirmation(request, response);
             break;
-        case "access_token":
+        case OAuthUtils.ACCESS_TOKEN:
             if (!"POST".equals(request.getMethod())) {
                 response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 return;
             }
             handleAccessToken(request, response);
             break;
-        case "refresh_token":
+        case OAuthUtils.REFRESH_TOKEN:
             if (!"POST".equals(request.getMethod())) {
                 response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 return;
@@ -207,9 +202,9 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             clientSecret = authorizationHeader[1];
         }
 
-        String refreshToken = request.getParameter(REFRESH_TOKEN);
+        String refreshToken = request.getParameter(OAuthUtils.REFRESH_TOKEN);
 
-        ExternalApplication externalApplication = getDomainObject(clientId, ExternalApplication.class).orElse(null);
+        ExternalApplication externalApplication = OAuthUtils.getDomainObject(clientId, ExternalApplication.class).orElse(null);
 
         if (externalApplication == null) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
@@ -254,15 +249,9 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             return;
         }
 
-        String newAccessToken = generateToken(appUserSession);
-
+        String newAccessToken = OAuthUtils.generateToken(appUserSession);
         appUserSession.setNewAccessToken(newAccessToken);
-
-        JsonObject jsonResponse = new JsonObject();
-        jsonResponse.addProperty(ACCESS_TOKEN, newAccessToken);
-        jsonResponse.addProperty(EXPIRES_IN, OAuthProperties.getConfiguration().getAccessTokenExpirationSeconds());
-
-        sendOAuthResponse(response, Status.OK, jsonResponse);
+        sendOAuthResponse(response, Status.OK, OAuthUtils.getJsonTokens(newAccessToken));
     }
 
     private String[] getAuthorizationHeader(HttpServletRequest request) {
@@ -326,7 +315,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             }
         }
 
-        ExternalApplication externalApplication = getDomainObject(clientId, ExternalApplication.class).orElse(null);
+        ExternalApplication externalApplication = OAuthUtils.getDomainObject(clientId, ExternalApplication.class).orElse(null);
 
         if (externalApplication == null) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
@@ -348,11 +337,9 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
 
         if (externalApplication instanceof ServiceApplication) {
-            final String accessToken = generateToken(externalApplication);
+            final String accessToken = OAuthUtils.generateToken(externalApplication);
             ((ServiceApplication) externalApplication).createServiceAuthorization(accessToken);
-            JsonObject jsonResponse = new JsonObject();
-            jsonResponse.addProperty(ACCESS_TOKEN, accessToken);
-            sendOAuthResponse(response, Status.OK, jsonResponse);
+            sendOAuthResponse(response, Status.OK, OAuthUtils.getJsonTokens(accessToken));
             return;
         }
 
@@ -364,15 +351,10 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
 
         if (appUserSession.isCodeValid()) {
-            String accessToken = generateToken(appUserSession);
-            String refreshToken = generateToken(appUserSession);
+            String accessToken = OAuthUtils.generateToken(appUserSession);
+            String refreshToken = OAuthUtils.generateToken(appUserSession);
             appUserSession.setTokens(accessToken, refreshToken);
-
-            JsonObject jsonResponse = new JsonObject();
-            jsonResponse.addProperty(ACCESS_TOKEN, accessToken);
-            jsonResponse.addProperty(REFRESH_TOKEN, refreshToken);
-            jsonResponse.addProperty(EXPIRES_IN, OAuthProperties.getConfiguration().getAccessTokenExpirationSeconds());
-            sendOAuthResponse(response, Status.OK, jsonResponse);
+            sendOAuthResponse(response, Status.OK, OAuthUtils.getJsonTokens(appUserSession));
         } else {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CODE_EXPIRED);
         }
@@ -501,7 +483,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private void redirectToRedirectUrl(HttpServletRequest request, HttpServletResponse response, User user, String clientId,
             String redirectUrl) throws IOException {
 
-        ExternalApplication externalApplication = getDomainObject(clientId, ExternalApplication.class).orElse(null);
+        ExternalApplication externalApplication = OAuthUtils.getDomainObject(clientId, ExternalApplication.class).orElse(null);
 
         if (externalApplication == null || externalApplication instanceof ServiceApplication) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
@@ -545,7 +527,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         String clientId = request.getParameter(CLIENT_ID);
         String redirectUrl = request.getParameter(REDIRECT_URI);
 
-        ExternalApplication externalApplication = FenixFramework.getDomainObject(clientId);
+        ExternalApplication externalApplication = (ExternalApplication) OAuthUtils.getDomainObject(clientId).orElse(null);
 
         if (externalApplication == null || externalApplication instanceof ServiceApplication) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
@@ -581,7 +563,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     @Atomic
     private static String createAppUserSession(ExternalApplication application, User user, HttpServletRequest request,
             HttpServletResponse response) {
-        String code = generateCode();
+        String code = OAuthUtils.generateCode();
         ApplicationUserAuthorization appUserAuthorization =
                 application.getApplicationUserAuthorization(user).orElseGet(
                         () -> new ApplicationUserAuthorization(user, application));
@@ -610,22 +592,12 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
     }
 
-    private static String generateCode() {
-        return Hashing.sha512().hashString(UUID.randomUUID().toString(), StandardCharsets.UTF_8).toString();
-    }
-
     private static String getDeviceId(HttpServletRequest request) {
         String deviceId = request.getParameter(DEVICE_ID);
         if (Strings.isNullOrEmpty(deviceId)) {
             return request.getHeader(HttpHeaders.USER_AGENT);
         }
         return deviceId;
-    }
-
-    private String generateToken(DomainObject domainObject) {
-        String random = generateCode();
-        String token = Joiner.on(":").join(domainObject.getExternalId(), random);
-        return Base64.getEncoder().encodeToString(token.getBytes()).replace("=", "").replace("+", "-").replace("/", "-");
     }
 
     private String trim(String value) {
@@ -640,18 +612,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             len--;
         }
         return ((st > 0) || (len < value.length())) ? value.substring(st, len) : value;
-    }
-
-    public static final <T extends DomainObject> Optional<T> getDomainObject(final String externalId, final Class<T> clazz) {
-        try {
-            T domainObject = FenixFramework.getDomainObject(externalId);
-            if (!FenixFramework.isDomainObjectValid(domainObject) || !clazz.isAssignableFrom(domainObject.getClass())) {
-                return Optional.empty();
-            }
-            return Optional.of(domainObject);
-        } catch (Exception nfe) {
-            return Optional.empty();
-        }
     }
 
 }

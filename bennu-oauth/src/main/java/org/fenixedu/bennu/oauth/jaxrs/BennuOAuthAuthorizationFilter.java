@@ -39,7 +39,7 @@ import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
-import org.fenixedu.bennu.oauth.servlets.OAuthAuthorizationServlet;
+import org.fenixedu.bennu.oauth.util.OAuthUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,10 +47,6 @@ import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
-
-    private final static String ACCESS_TOKEN = "access_token";
-
-    private final static String USER_HEADER = "__username__";
 
     private static final Logger logger = LoggerFactory.getLogger(BennuOAuthAuthorizationFilter.class);
 
@@ -101,17 +97,8 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
             Optional<ExternalApplicationScope> scope = ExternalApplicationScope.forKey(endpoint.value());
 
             if (scope.isPresent() && !serviceApplication.get().getScopesSet().contains(scope.get())) {
-                sendError(requestContext, "invalidScope", "Application doesn't have permissions to this getEndpoint().");
+                sendError(requestContext, "invalidScope", "Application doesn't have permissions to this endpoint.");
                 return;
-            }
-
-            String username = getUserParam(requestContext);
-
-            if (!Strings.isNullOrEmpty(username)) {
-                User user = User.findByUsername(username);
-                if (user != null) {
-                    Authenticate.mock(user);
-                }
             }
 
             return;
@@ -204,7 +191,7 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
             if (accessTokenBuilder.length != 2) {
                 return Optional.empty();
             }
-            return OAuthAuthorizationServlet.getDomainObject(accessTokenBuilder[0], ServiceApplication.class);
+            return OAuthUtils.getDomainObject(accessTokenBuilder[0], ServiceApplication.class);
         } catch (IllegalArgumentException iea) {
             return Optional.empty();
         }
@@ -221,7 +208,7 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
                 return Optional.empty();
             }
 
-            return OAuthAuthorizationServlet.getDomainObject(accessTokenBuilder[0], ApplicationUserSession.class);
+            return OAuthUtils.getDomainObject(accessTokenBuilder[0], ApplicationUserSession.class);
         } catch (IllegalArgumentException iea) {
             return Optional.empty();
         }
@@ -229,11 +216,7 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
     }
 
     private String getAccessToken(ContainerRequestContext requestContext) {
-        return getHeaderOrQueryParam(requestContext, ACCESS_TOKEN);
-    }
-
-    private String getUserParam(ContainerRequestContext requestContext) {
-        return getHeaderOrQueryParam(requestContext, USER_HEADER);
+        return getHeaderOrQueryParam(requestContext, OAuthUtils.ACCESS_TOKEN);
     }
 
     private String getHeaderOrQueryParam(ContainerRequestContext requestContext, String paramName) {
