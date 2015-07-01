@@ -16,9 +16,8 @@
  */
 package org.fenixedu.bennu.core.groups;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
@@ -61,12 +60,8 @@ final class UnionGroup extends Group {
     }
 
     @Override
-    public Set<User> getMembers() {
-        final Set<User> users = new HashSet<>();
-        for (final Group group : children) {
-            users.addAll(group.getMembers());
-        }
-        return users;
+    public Stream<User> getMembers() {
+        return children.stream().flatMap(Group::getMembers);
     }
 
     @Override
@@ -80,12 +75,8 @@ final class UnionGroup extends Group {
     }
 
     @Override
-    public Set<User> getMembers(DateTime when) {
-        final Set<User> users = new HashSet<>();
-        for (final Group group : children) {
-            users.addAll(group.getMembers(when));
-        }
-        return users;
+    public Stream<User> getMembers(DateTime when) {
+        return children.stream().flatMap(group -> group.getMembers(when));
     }
 
     @Override

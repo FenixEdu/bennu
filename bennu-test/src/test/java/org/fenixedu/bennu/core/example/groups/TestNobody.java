@@ -35,7 +35,7 @@ public class TestNobody {
     @Test
     @Atomic(mode = TxMode.READ)
     public void membership() {
-        assertTrue(Group.nobody().getMembers().isEmpty());
+        assertTrue(Group.nobody().getMembers().count() == 0);
         assertFalse(Group.nobody().isMember(user1));
         assertFalse(Group.nobody().isMember(null));
     }

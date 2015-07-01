@@ -125,7 +125,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      * 
      * @return all member users in the system at the exact moment of the invocation
      */
-    public abstract Set<User> getMembers();
+    public abstract Stream<User> getMembers();
 
     /**
      * Same as {@link #getMembers()} but at a given moment in time. This is like a time-machine for the groups domain.
@@ -134,7 +134,7 @@ public abstract class Group implements Serializable, Comparable<Group> {
      *            moment when to fetch the user list.
      * @return all member users in the system at the requested moment
      */
-    public abstract Set<User> getMembers(DateTime when);
+    public abstract Stream<User> getMembers(DateTime when);
 
     /**
      * Tests if the given user is a member of the group.

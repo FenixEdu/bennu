@@ -16,8 +16,7 @@
  */
 package org.fenixedu.bennu.core.groups;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.Bennu;
@@ -45,8 +44,8 @@ final class AnyoneGroup extends GroupStrategy {
     }
 
     @Override
-    public Set<User> getMembers() {
-        return Collections.unmodifiableSet(Bennu.getInstance().getUserSet());
+    public Stream<User> getMembers() {
+        return Bennu.getInstance().getUserSet().stream();
     }
 
     @Override
@@ -55,7 +54,7 @@ final class AnyoneGroup extends GroupStrategy {
     }
 
     @Override
-    public Set<User> getMembers(DateTime when) {
+    public Stream<User> getMembers(DateTime when) {
         return getMembers();
     }
 

@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
@@ -58,13 +57,13 @@ public final class PersistentUnionGroup extends PersistentUnionGroup_Base {
     }
 
     @Override
-    public Set<User> getMembers() {
-        return getChildrenSet().stream().flatMap(group -> group.getMembers().stream()).collect(Collectors.toSet());
+    public Stream<User> getMembers() {
+        return getChildrenSet().stream().flatMap(group -> group.getMembers());
     }
 
     @Override
-    public Set<User> getMembers(DateTime when) {
-        return getChildrenSet().stream().flatMap(group -> group.getMembers(when).stream()).collect(Collectors.toSet());
+    public Stream<User> getMembers(DateTime when) {
+        return getChildrenSet().stream().flatMap(group -> group.getMembers(when));
     }
 
     @Override

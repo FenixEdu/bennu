@@ -3,6 +3,8 @@ package org.fenixedu.bennu.core.example.groups;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.stream.Collectors;
+
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
@@ -35,7 +37,7 @@ public class TestAnyone {
     @Test
     @Atomic(mode = TxMode.READ)
     public void membership() {
-        assertEquals(Group.anyone().getMembers(), Bennu.getInstance().getUserSet());
+        assertEquals(Group.anyone().getMembers().collect(Collectors.toSet()), Bennu.getInstance().getUserSet());
         assertTrue(Group.anyone().isMember(user1));
         assertTrue(Group.anyone().isMember(null));
     }

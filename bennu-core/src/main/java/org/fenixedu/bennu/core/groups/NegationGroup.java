@@ -16,8 +16,7 @@
  */
 package org.fenixedu.bennu.core.groups;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
@@ -58,10 +57,8 @@ final class NegationGroup extends Group {
     }
 
     @Override
-    public Set<User> getMembers() {
-        Set<User> users = new HashSet<>(Bennu.getInstance().getUserSet());
-        users.removeAll(negated.getMembers());
-        return users;
+    public Stream<User> getMembers() {
+        return Bennu.getInstance().getUserSet().stream().filter(user -> !negated.isMember(user));
     }
 
     @Override
@@ -70,10 +67,8 @@ final class NegationGroup extends Group {
     }
 
     @Override
-    public Set<User> getMembers(DateTime when) {
-        Set<User> users = new HashSet<>(Bennu.getInstance().getUserSet());
-        users.removeAll(negated.getMembers(when));
-        return users;
+    public Stream<User> getMembers(DateTime when) {
+        return Bennu.getInstance().getUserSet().stream().filter(user -> !negated.isMember(user, when));
     }
 
     @Override

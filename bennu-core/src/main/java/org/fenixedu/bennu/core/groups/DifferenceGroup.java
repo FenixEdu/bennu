@@ -16,10 +16,9 @@
  */
 package org.fenixedu.bennu.core.groups;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentDifferenceGroup;
@@ -67,23 +66,13 @@ final class DifferenceGroup extends Group {
     }
 
     @Override
-    public Set<User> getMembers() {
-        final Set<User> users = new HashSet<>();
-        users.addAll(first.getMembers());
-        for (Group group : rest) {
-            users.removeAll(group.getMembers());
-        }
-        return users;
+    public Stream<User> getMembers() {
+        return first.getMembers().filter(user -> !rest.stream().anyMatch(g -> g.isMember(user)));
     }
 
     @Override
-    public Set<User> getMembers(DateTime when) {
-        final Set<User> users = new HashSet<>();
-        users.addAll(first.getMembers(when));
-        for (Group group : rest) {
-            users.removeAll(group.getMembers(when));
-        }
-        return users;
+    public Stream<User> getMembers(DateTime when) {
+        return first.getMembers(when).filter(user -> !rest.stream().anyMatch(g -> g.isMember(user, when)));
     }
 
     @Override

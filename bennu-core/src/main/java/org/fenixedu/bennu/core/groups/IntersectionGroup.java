@@ -16,11 +16,10 @@
  */
 package org.fenixedu.bennu.core.groups;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.domain.groups.PersistentIntersectionGroup;
@@ -63,16 +62,8 @@ final class IntersectionGroup extends Group {
     }
 
     @Override
-    public Set<User> getMembers() {
-        final Set<User> users = new HashSet<>();
-        Iterator<Group> iterator = children.iterator();
-        if (iterator.hasNext()) {
-            users.addAll(iterator.next().getMembers());
-            while (iterator.hasNext()) {
-                users.retainAll(iterator.next().getMembers());
-            }
-        }
-        return users;
+    public Stream<User> getMembers() {
+        return Bennu.getInstance().getUserSet().stream().filter(user -> isMember(user));
     }
 
     @Override
@@ -89,16 +80,8 @@ final class IntersectionGroup extends Group {
     }
 
     @Override
-    public Set<User> getMembers(DateTime when) {
-        final Set<User> users = new HashSet<>();
-        Iterator<Group> iterator = children.iterator();
-        if (iterator.hasNext()) {
-            users.addAll(iterator.next().getMembers(when));
-            while (iterator.hasNext()) {
-                users.retainAll(iterator.next().getMembers(when));
-            }
-        }
-        return users;
+    public Stream<User> getMembers(DateTime when) {
+        return Bennu.getInstance().getUserSet().stream().filter(user -> isMember(user, when));
     }
 
     @Override

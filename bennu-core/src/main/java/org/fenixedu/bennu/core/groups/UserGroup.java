@@ -80,8 +80,8 @@ final class UserGroup extends CustomGroup {
     }
 
     @Override
-    public Set<User> getMembers() {
-        return members;
+    public Stream<User> getMembers() {
+        return members.stream();
     }
 
     @Override
@@ -90,7 +90,7 @@ final class UserGroup extends CustomGroup {
     }
 
     @Override
-    public Set<User> getMembers(DateTime when) {
+    public Stream<User> getMembers(DateTime when) {
         return getMembers();
     }
 

@@ -43,12 +43,12 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
     }
 
     @Override
-    public Set<User> getMembers() {
-        return Collections.unmodifiableSet(getMemberSet());
+    public Stream<User> getMembers() {
+        return getMemberSet().stream();
     }
 
     @Override
-    public Set<User> getMembers(DateTime when) {
+    public Stream<User> getMembers(DateTime when) {
         return getMembers();
     }
 

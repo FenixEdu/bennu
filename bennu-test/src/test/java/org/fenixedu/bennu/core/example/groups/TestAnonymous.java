@@ -34,7 +34,7 @@ public class TestAnonymous {
 
     @Test
     public void membership() {
-        assertTrue(Group.anonymous().getMembers().isEmpty());
+        assertTrue(Group.anonymous().getMembers().count() == 0);
         assertTrue(Group.anonymous().isMember(null));
         assertFalse(Group.anonymous().isMember(user1));
     }
