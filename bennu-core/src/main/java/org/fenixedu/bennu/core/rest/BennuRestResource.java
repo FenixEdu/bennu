@@ -1,10 +1,5 @@
 package org.fenixedu.bennu.core.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.domain.User;
@@ -25,9 +20,6 @@ public abstract class BennuRestResource extends JsonAwareResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(BennuRestResource.class);
 
-    @Context
-    HttpServletRequest request;
-
     protected CasConfigContext getCasConfigContext() {
         return new CasConfigContext(CoreConfiguration.casConfig());
     }
@@ -44,9 +36,6 @@ public abstract class BennuRestResource extends JsonAwareResource {
             return casConfig;
         }
 
-        public HttpServletRequest getRequest() {
-            return request;
-        }
     }
 
     protected <T extends DomainObject> T readDomainObject(final String externalId) {
@@ -96,18 +85,6 @@ public abstract class BennuRestResource extends JsonAwareResource {
 
     protected User verifyAndGetRequestAuthor() {
         return accessControl(Group.logged());
-    }
-
-    protected <T extends DomainObject> URI getURIFor(T domainObject, String relativePath) {
-        try {
-            return new URI("http", getHost(), relativePath + "/" + domainObject.getExternalId(), null);
-        } catch (URISyntaxException e) {
-            throw BennuCoreDomainException.cannotCreateEntity();
-        }
-    }
-
-    protected String getHost() {
-        return request.getServerName();
     }
 
     protected Response ok() {

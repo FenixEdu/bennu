@@ -18,7 +18,7 @@ public class CasConfigContextViewer implements JsonViewer<CasConfigContext> {
         CasConfig casConfig = casConfigContext.getCasConfig();
         if (casConfig != null && casConfig.isCasEnabled()) {
             jsonObject.addProperty("casEnabled", true);
-            jsonObject.addProperty("loginUrl", casConfig.getCasLoginUrl(casConfigContext.getRequest()));
+            jsonObject.addProperty("loginUrl", casConfig.getCasLoginUrl());
             jsonObject.addProperty("logoutUrl", casConfig.getCasLogoutUrl());
         } else {
             jsonObject.addProperty("casEnabled", false);
