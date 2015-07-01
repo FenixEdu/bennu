@@ -110,6 +110,10 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
             if (!Strings.isNullOrEmpty(username)) {
                 User user = User.findByUsername(username);
                 if (user != null) {
+                    if (user.isLoginExpired()) {
+                        sendError(requestContext, "accessTokenInvalidFormat", "Access Token not recognized.");
+                        return;
+                    }
                     Authenticate.mock(user);
                 }
             }
@@ -156,6 +160,12 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
                 }
 
                 User foundUser = appUserSession.getApplicationUserAuthorization().getUser();
+
+                if (foundUser.isLoginExpired()) {
+                    sendError(requestContext, "accessTokenInvalidFormat", "Access Token not recognized.");
+                    return;
+                }
+
                 Authenticate.mock(foundUser);
             } else {
                 sendError(requestContext, "accessTokenInvalidFormat", "Access Token not recognized.");
