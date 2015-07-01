@@ -30,6 +30,7 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
+import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 
 import com.google.gson.JsonElement;
 
@@ -39,7 +40,8 @@ public class ExternalApplicationAuthorizationResources extends BennuRestResource
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonElement myAuthorizations() {
-        return view(verifyAndGetRequestAuthor().getApplicationUserAuthorizationSet());
+        return view(verifyAndGetRequestAuthor().getApplicationUserAuthorizationSet().stream()
+                .filter(auth -> !(auth.getApplication() instanceof ServiceApplication)));
     }
 
     @DELETE

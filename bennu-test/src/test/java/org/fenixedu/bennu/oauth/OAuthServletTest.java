@@ -31,7 +31,17 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
+import org.fenixedu.bennu.core.rest.DomainObjectParamConverter;
+import org.fenixedu.bennu.core.rest.JsonAwareResource;
+import org.fenixedu.bennu.core.rest.JsonBodyReaderWriter;
 import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.oauth.api.ExternalApplicationAuthorizationResources;
+import org.fenixedu.bennu.oauth.api.OAuthAuthorizationProvider;
+import org.fenixedu.bennu.oauth.api.json.ExternalApplicationAdapter;
+import org.fenixedu.bennu.oauth.api.json.ExternalApplicationAuthorizationAdapter;
+import org.fenixedu.bennu.oauth.api.json.ExternalApplicationAuthorizationSessionAdapter;
+import org.fenixedu.bennu.oauth.api.json.ExternalApplicationScopeAdapter;
+import org.fenixedu.bennu.oauth.api.json.ServiceApplicationAdapter;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
@@ -40,6 +50,7 @@ import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 import org.fenixedu.bennu.oauth.jaxrs.BennuOAuthFeature;
 import org.fenixedu.bennu.oauth.servlets.OAuthAuthorizationServlet;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
@@ -56,6 +67,8 @@ import pt.ist.fenixframework.test.core.FenixFrameworkRunner;
 
 import com.google.common.base.Joiner;
 import com.google.common.io.BaseEncoding;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -79,12 +92,20 @@ public class OAuthServletTest extends JerseyTest {
     private static volatile User user1;
     private static volatile ServiceApplication serviceApplicationWithScope;
     private static volatile ExternalApplicationScope externalApplicationScope;
+    private static volatile ExternalApplicationScope serviceApplicationOAuthAccessProvider;
+    private static volatile ExternalApplicationScope loggedScope;
 
     private static final Locale enGB = Locale.forLanguageTag("en-GB");
 
     @Override
+    protected void configureClient(ClientConfig config) {
+        config.register(JsonBodyReaderWriter.class);
+    }
+
+    @Override
     protected Application configure() {
-        return new ResourceConfig(TestResource.class, BennuOAuthFeature.class);
+        return new ResourceConfig(TestResource.class, BennuOAuthFeature.class, ExternalApplicationAuthorizationResources.class,
+                JsonBodyReaderWriter.class, DomainObjectParamConverter.class, OAuthAuthorizationProvider.class);
     }
 
     private static User createUser(String username, String firstName, String lastName, String fullName, String email) {
@@ -137,6 +158,28 @@ public class OAuthServletTest extends JerseyTest {
             externalApplicationScope.setDescription(new LocalizedString.Builder().with(enGB, "TEST scope").build());
             externalApplicationScope.setService(Boolean.FALSE);
         }
+
+        if (serviceApplicationOAuthAccessProvider == null) {
+            serviceApplicationOAuthAccessProvider = new ExternalApplicationScope();
+            serviceApplicationOAuthAccessProvider.setScopeKey("OAUTH_AUTHORIZATION_PROVIDER");
+            serviceApplicationOAuthAccessProvider.setName(new LocalizedString.Builder().with(enGB,
+                    "OAuth Authorization Provider Scope").build());
+            serviceApplicationOAuthAccessProvider.setDescription(new LocalizedString.Builder().with(enGB,
+                    "OAuth Authorization Provider Scope").build());
+        }
+
+        if (loggedScope == null) {
+            loggedScope = new ExternalApplicationScope();
+            loggedScope.setScopeKey("LOGGED");
+            loggedScope.setName(new LocalizedString.Builder().with(enGB, "Logged Scope").build());
+            loggedScope.setDescription(new LocalizedString.Builder().with(enGB, "Logged Scope").build());
+        }
+
+        JsonAwareResource.setDefault(ExternalApplication.class, ExternalApplicationAdapter.class);
+        JsonAwareResource.setDefault(ApplicationUserAuthorization.class, ExternalApplicationAuthorizationAdapter.class);
+        JsonAwareResource.setDefault(ApplicationUserSession.class, ExternalApplicationAuthorizationSessionAdapter.class);
+        JsonAwareResource.setDefault(ExternalApplicationScope.class, ExternalApplicationScopeAdapter.class);
+        JsonAwareResource.setDefault(ServiceApplication.class, ServiceApplicationAdapter.class);
 
     }
 
@@ -885,9 +928,7 @@ public class OAuthServletTest extends JerseyTest {
         externalApp.setName("Test External Application");
         externalApp.setDescription("This is a test external application");
         externalApp.setRedirectUrl("http://test.url/callback");
-        ExternalApplicationScope scope = new ExternalApplicationScope();
-        scope.setScopeKey("LOGGED");
-        externalApp.addScopes(scope);
+        externalApp.addScopes(loggedScope);
 
         ApplicationUserSession applicationUserSession = new ApplicationUserSession();
 
@@ -915,6 +956,65 @@ public class OAuthServletTest extends JerseyTest {
                         .request().get(String.class);
 
         Assert.assertEquals("this is an endpoint with TEST scope: testEndpointWithAccessTokenLoginExpired", result);
+    }
+
+    @Test
+    public void testServiceApplicationOAuthAccessProvider() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        Authenticate.unmock();
+
+        User user = createUser("testServiceApplicationOAuthAccessProvider", "John", "Doe", "John Doe", "john.doe@fenixedu.org");
+
+        ServiceApplication serviceApplication = new ServiceApplication();
+        serviceApplication.setAuthor(user1);
+        serviceApplication.addScopes(serviceApplicationOAuthAccessProvider);
+        serviceApplication.addScopes(loggedScope);
+
+        req.addParameter("client_id", serviceApplication.getExternalId());
+        req.addParameter("client_secret", serviceApplication.getSecret());
+        req.addParameter("grant_type", "client_credentials");
+        req.setMethod("POST");
+        req.setPathInfo("/access_token");
+
+        try {
+            oauthServlet.service(req, res);
+
+            Assert.assertEquals("must return status OK", 200, res.getStatus());
+
+            String tokenJson = res.getContentAsString();
+
+            final String serviceAccessToken =
+                    new JsonParser().parse(tokenJson).getAsJsonObject().get("access_token").getAsString();
+
+            String result =
+                    target("oauth").path("provider").path(serviceApplication.getExternalId()).path(user.getUsername())
+                            .queryParam("access_token", serviceAccessToken).request().post(null, String.class);
+
+            Authenticate.unmock();
+
+            final String userAccessToken = new JsonParser().parse(result).getAsJsonObject().get("access_token").getAsString();
+
+            result =
+                    target("bennu-oauth").path("test").path("test-scope-with-logged-user")
+                            .queryParam("access_token", userAccessToken).request().get(String.class);
+
+            Assert.assertEquals("this is an endpoint with TEST scope: testServiceApplicationOAuthAccessProvider", result);
+
+            Authenticate.mock(user);
+
+            JsonArray authorizations =
+                    target("bennu-oauth").path("authorizations").request().get(JsonElement.class).getAsJsonArray();
+
+            Assert.assertEquals("no authorizations because it is a service application", 0, authorizations.size());
+
+        } catch (ServletException | IOException e) {
+            Assert.fail(e.getMessage());
+        } finally {
+            serviceApplication.removeScope(serviceApplicationOAuthAccessProvider);
+            serviceApplication.removeScope(loggedScope);
+        }
+
     }
 
 }
