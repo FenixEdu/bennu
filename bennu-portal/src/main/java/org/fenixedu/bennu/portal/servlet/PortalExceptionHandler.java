@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.bennu.core.servlets.ExceptionHandlerFilter.ExceptionHandler;
+import org.fenixedu.bennu.core.servlet.ExceptionHandlerFilter.ExceptionHandler;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
