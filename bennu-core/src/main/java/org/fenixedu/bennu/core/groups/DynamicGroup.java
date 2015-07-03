@@ -1,7 +1,7 @@
 package org.fenixedu.bennu.core.groups;
 
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentDynamicGroup;
@@ -56,12 +56,12 @@ public final class DynamicGroup extends Group {
     }
 
     @Override
-    public Set<User> getMembers() {
+    public Stream<User> getMembers() {
         return underlyingGroup().getMembers();
     }
 
     @Override
-    public Set<User> getMembers(DateTime when) {
+    public Stream<User> getMembers(DateTime when) {
         return underlyingGroup(when).getMembers(when);
     }
 

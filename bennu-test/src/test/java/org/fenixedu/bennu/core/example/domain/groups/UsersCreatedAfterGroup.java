@@ -1,8 +1,8 @@
 package org.fenixedu.bennu.core.example.domain.groups;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.annotation.GroupArgument;
 import org.fenixedu.bennu.core.annotation.GroupOperator;
@@ -54,18 +54,12 @@ public class UsersCreatedAfterGroup extends UsersCreatedAfterGroup_Base {
         }
 
         @Override
-        public Set<User> getMembers() {
-            Set<User> users = new HashSet<>();
-            for (User user : Bennu.getInstance().getUserSet()) {
-                if (user.getCreated().isAfter(date)) {
-                    users.add(user);
-                }
-            }
-            return users;
+        public Stream<User> getMembers() {
+            return Bennu.getInstance().getUserSet().stream().filter(user -> user.getCreated().isAfter(date));
         }
 
         @Override
-        public Set<User> getMembers(DateTime when) {
+        public Stream<User> getMembers(DateTime when) {
             return getMembers();
         }
 

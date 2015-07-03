@@ -19,8 +19,8 @@ package org.fenixedu.bennu.core.domain.groups;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.Bennu;
@@ -93,7 +93,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      * 
      * @return all member users in the system at the exact moment of the invocation
      */
-    public Set<User> getMembers() {
+    public Stream<User> getMembers() {
         return toGroup().getMembers();
     }
 
@@ -104,7 +104,7 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
      *            moment when to fetch the user list.
      * @return all member users in the system at the requested moment
      */
-    public Set<User> getMembers(DateTime when) {
+    public Stream<User> getMembers(DateTime when) {
         return toGroup().getMembers(when);
     }
 

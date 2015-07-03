@@ -19,6 +19,7 @@ import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.json.JsonViewer;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.commons.stream.StreamUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -112,17 +113,13 @@ public class GroupResource extends BennuRestResource {
             if (customPresentationName != null) {
                 json.add("customPresentationName", customPresentationName.json());
             }
-            JsonArray users = new JsonArray();
-
-            for (User user : obj.getMembers()) {
+            JsonArray users = obj.getMembers().map(user -> {
                 JsonObject userJson = new JsonObject();
-
                 userJson.addProperty("username", user.getUsername());
                 userJson.addProperty("name", user.getName());
                 userJson.addProperty("avatar", user.getProfile().getAvatarUrl());
-
-                users.add(userJson);
-            }
+                return json;
+            }).collect(StreamUtils.toJsonArray());
 
             json.add("members", users);
             return json;

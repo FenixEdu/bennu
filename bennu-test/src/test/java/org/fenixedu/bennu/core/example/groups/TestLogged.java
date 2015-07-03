@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.stream.Collectors;
+
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
@@ -36,7 +38,7 @@ public class TestLogged {
     @Test
     @Atomic(mode = TxMode.READ)
     public void membership() {
-        assertEquals(Group.logged().getMembers(), Bennu.getInstance().getUserSet());
+        assertEquals(Group.logged().getMembers().collect(Collectors.toSet()), Bennu.getInstance().getUserSet());
         assertTrue(Group.logged().isMember(user1));
         assertFalse(Group.logged().isMember(null));
     }
