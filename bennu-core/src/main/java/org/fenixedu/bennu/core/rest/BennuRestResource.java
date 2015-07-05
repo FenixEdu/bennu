@@ -24,7 +24,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
         return new CasConfigContext(CoreConfiguration.casConfig());
     }
 
-    public class CasConfigContext {
+    public static class CasConfigContext {
 
         private final CasConfig casConfig;
 
