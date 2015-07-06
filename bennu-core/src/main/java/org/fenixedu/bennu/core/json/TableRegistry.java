@@ -68,12 +68,21 @@ class TableRegistry<T> {
     }
 
     private Class<? extends T> internalGet(Class<?> objectClass) {
+
         if (objectClass == null) {
             return null;
         }
+
         if (defaultValues.containsKey(objectClass)) {
             return defaultValues.get(objectClass);
         }
+
+        for (Class<?> objectInterface : objectClass.getInterfaces()) {
+            if (defaultValues.containsKey(objectInterface)) {
+                return defaultValues.get(objectInterface);
+            }
+        }
+
         return internalGet(objectClass.getSuperclass());
     }
 
