@@ -100,13 +100,18 @@ public class UserJsonAdapter implements JsonAdapter<User> {
     private void changePassword(User user, JsonObject json) {
         String password = JsonUtils.getString(json, "password");
         if (Strings.isNullOrEmpty(password)) {
-            // Dont' change the password
+            // Don't change the password.
             return;
         }
         String passwordCheck = JsonUtils.getString(json, "passwordCheck");
         if (!Objects.equals(password, passwordCheck)) {
             throw BennuCoreDomainException.passwordCheckDoesNotMatch();
         }
+        //avoid same password
+        if (user.matchesPassword(password)) {
+            throw BennuCoreDomainException.passwordIsTheSame();
+        }
+
         user.changePassword(password);
     }
 
