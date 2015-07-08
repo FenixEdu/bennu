@@ -24,6 +24,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.fenixedu.bennu.core.rest.BennuRestResource;
+import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.oauth.annotation.OAuthEndpoint;
 
 @Path("/bennu-oauth/test")
@@ -33,8 +34,9 @@ public class TestResource extends BennuRestResource {
     @Path("/test-scope")
     @GET
     @OAuthEndpoint(value = "TEST")
-    public String test() {
-        return "this is an endpoint with TEST scope";
+    public String testScope() {
+        return "this is an endpoint with TEST scope "
+                + (Authenticate.getUser() == null ? "" : Authenticate.getUser().getUsername());
     }
 
     @Produces(MediaType.TEXT_PLAIN)
