@@ -619,7 +619,6 @@
             dom.data("showSrc", false);
             $(".switch-to-code", dom).on("click", function(){
                 setupEditor(dom, function(editor) {
-                    debugger;
                     if (!dom.data("showSrc")){
                         $(".bennu-html-editor-toolbar .btn", dom).map(function (){ (!$(this).hasClass("switch-to-code")) && $(this).attr("disabled", ""); })
 
