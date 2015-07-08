@@ -256,7 +256,7 @@
   	}
 
  	Bennu.codeEditor.require = function(callback){
-		Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/ace/ace.js", function(){
+		Bennu.ensure(Bennu.contextPath + "/webjars/ace/1.1.9/src-min-noconflict/ace.js", function(){
 			if (callback) {
 				callback();
 			}
@@ -299,8 +299,8 @@
 
 	Bennu.codeEditor.createWidget = function(el){
 
-		Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/ace/ace.js", function(){
-			Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/ace/ext-statusbar.js", function(){	
+		Bennu.ensure(Bennu.contextPath + "/webjars/ace/1.1.9/src-min-noconflict/ace.js", function(){
+			Bennu.ensure(Bennu.contextPath + "/webjars/ace/1.1.9/src-min-noconflict/ext-statusbar.js", function(){	
 			el = $(el);
 
 			var sbel = $('<div class="bennu-code-editor-statusbar">Mode: <a href="#" class="bennu-code-editor-lang"></a> &#8212; </div>');

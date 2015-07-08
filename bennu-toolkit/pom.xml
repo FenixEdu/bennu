@@ -114,6 +114,11 @@
             <artifactId>bennu-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>ace</artifactId>
+            <version>1.1.9</version>
+        </dependency>
     </dependencies>
 
     <repositories>
