@@ -254,6 +254,11 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             return;
         }
 
+        if (appUserSession.getApplicationUserAuthorization().getUser().isLoginExpired()) {
+            sendOAuthErrorResponse(response, Status.BAD_REQUEST, REFRESH_TOKEN_INVALID_FORMAT, REFRESH_TOKEN_NOT_RECOGNIZED);
+            return;
+        }
+
         String newAccessToken = generateToken(appUserSession);
 
         appUserSession.setNewAccessToken(newAccessToken);
@@ -360,6 +365,11 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
         if (appUserSession == null) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CODE_INVALID);
+            return;
+        }
+
+        if (appUserSession.getApplicationUserAuthorization().getUser().isLoginExpired()) {
+            sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CODE_EXPIRED);
             return;
         }
 

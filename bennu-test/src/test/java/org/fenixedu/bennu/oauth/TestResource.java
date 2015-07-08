@@ -23,10 +23,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.oauth.annotation.OAuthEndpoint;
 
 @Path("/bennu-oauth/test")
-public class TestResource {
+public class TestResource extends BennuRestResource {
 
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/test-scope")
@@ -57,6 +58,14 @@ public class TestResource {
     @Path("/normal")
     public String test4() {
         return "this is a normal endpoint";
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/test-scope-with-logged-user")
+    @GET
+    @OAuthEndpoint(value = "LOGGED")
+    public String testWithLoggedUser() {
+        return "this is an endpoint with TEST scope: " + verifyAndGetRequestAuthor().getUsername();
     }
 
 }

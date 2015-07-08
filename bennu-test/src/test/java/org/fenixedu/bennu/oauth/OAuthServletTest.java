@@ -27,6 +27,7 @@ import javax.servlet.ServletException;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
@@ -529,4 +530,153 @@ public class OAuthServletTest extends JerseyTest {
             Assert.fail(e.getMessage());
         }
     }
+
+    @Test
+    public void testOAuthServletAccessTokenRequestWithLoginExpired() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        Authenticate.unmock();
+
+        User user =
+                createUser("testOAuthServletAccessTokenRequestWithLoginExpired", "John", "Doe", "John Doe",
+                        "john.doe@fenixedu.org");
+
+        user.closeLoginPeriod();
+
+        ExternalApplication externalApp = new ExternalApplication();
+        externalApp.setAuthor(user1);
+        externalApp.setName("Test External Application");
+        externalApp.setDescription("This is a test external application");
+        externalApp.setRedirectUrl("http://test.url/callback");
+
+        ApplicationUserSession applicationUserSession = new ApplicationUserSession();
+        applicationUserSession.setCode("fenixedu");
+
+        ApplicationUserAuthorization applicationUserAuthorization = new ApplicationUserAuthorization(user, externalApp);
+        applicationUserAuthorization.addSession(applicationUserSession);
+        externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
+
+        String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
+        req.addHeader(HttpHeaders.AUTHORIZATION,
+                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
+        req.addParameter(REDIRECT_URI, externalApp.getRedirectUrl());
+        req.addParameter(CODE, applicationUserSession.getCode());
+        req.addParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE);
+        req.setMethod("POST");
+        req.setPathInfo("/access_token");
+
+        try {
+            oauthServlet.service(req, res);
+            Assert.assertEquals("must return bad request", Status.BAD_REQUEST.getStatusCode(), res.getStatus());
+
+            user.openLoginPeriod();
+            res = new MockHttpServletResponse();
+            oauthServlet.service(req, res);
+
+            final JsonObject token = new JsonParser().parse(res.getContentAsString()).getAsJsonObject();
+
+            Assert.assertTrue("response must be a valid json and have access_token field", token.has("access_token")
+                    && token.get("access_token").getAsString().length() > 0);
+
+        } catch (ServletException | IOException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testOAuthServletRefreshTokenRequestWithLoginExpired() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        Authenticate.unmock();
+
+        User user =
+                createUser("testOAuthServletRefreshTokenRequestWithLoginExpired", "John", "Doe", "John Doe",
+                        "john.doe@fenixedu.org");
+
+        user.closeLoginPeriod();
+
+        ExternalApplication externalApp = new ExternalApplication();
+        externalApp.setAuthor(user1);
+        externalApp.setName("Test External Application");
+        externalApp.setDescription("This is a test external application");
+        externalApp.setRedirectUrl("http://test.url/callback");
+
+        ApplicationUserSession applicationUserSession = new ApplicationUserSession();
+        applicationUserSession.setTokens(generateToken(applicationUserSession), generateToken(applicationUserSession));
+
+        ApplicationUserAuthorization applicationUserAuthorization = new ApplicationUserAuthorization(user, externalApp);
+        applicationUserAuthorization.addSession(applicationUserSession);
+
+        externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
+
+        String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
+        req.addHeader(HttpHeaders.AUTHORIZATION,
+                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
+        req.addParameter(REFRESH_TOKEN, applicationUserSession.getRefreshToken());
+        req.addParameter(GRANT_TYPE, GRANT_TYPE_REFRESH_TOKEN);
+        req.setMethod("POST");
+        req.setPathInfo("/refresh_token");
+
+        try {
+            oauthServlet.service(req, res);
+            Assert.assertEquals("must return bad request", Status.BAD_REQUEST.getStatusCode(), res.getStatus());
+
+            user.openLoginPeriod();
+            res = new MockHttpServletResponse();
+            oauthServlet.service(req, res);
+
+            final JsonObject token = new JsonParser().parse(res.getContentAsString()).getAsJsonObject();
+
+            Assert.assertTrue("response must be a valid json and have access_token field", token.has("access_token")
+                    && token.get("access_token").getAsString().length() > 0);
+
+        } catch (ServletException | IOException e) {
+            Assert.fail(e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void testEndpointWithAccessTokenLoginExpired() {
+
+        User user = createUser("testEndpointWithAccessTokenLoginExpired", "John", "Doe", "John Doe", "john.doe@fenixedu.org");
+        Authenticate.unmock();
+
+        ExternalApplication externalApp = new ExternalApplication();
+        externalApp.setAuthor(user1);
+        externalApp.setName("Test External Application");
+        externalApp.setDescription("This is a test external application");
+        externalApp.setRedirectUrl("http://test.url/callback");
+        ExternalApplicationScope scope = new ExternalApplicationScope();
+        scope.setScopeKey("LOGGED");
+        externalApp.addScopes(scope);
+
+        ApplicationUserSession applicationUserSession = new ApplicationUserSession();
+
+        String accessToken = generateToken(applicationUserSession);
+
+        ApplicationUserAuthorization applicationUserAuthorization = new ApplicationUserAuthorization(user, externalApp);
+        externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
+
+        applicationUserSession.setTokens(accessToken, null);
+
+        applicationUserAuthorization.addSession(applicationUserSession);
+
+        user.closeLoginPeriod();
+
+        Response responseKO =
+                target("bennu-oauth").path("test").path("test-scope-with-logged-user").queryParam("access_token", accessToken)
+                        .request().get();
+
+        Assert.assertEquals(Status.UNAUTHORIZED, responseKO.getStatusInfo());
+
+        user.openLoginPeriod();
+
+        String result =
+                target("bennu-oauth").path("test").path("test-scope-with-logged-user").queryParam("access_token", accessToken)
+                        .request().get(String.class);
+
+        Assert.assertEquals("this is an endpoint with TEST scope: testEndpointWithAccessTokenLoginExpired", result);
+    }
+
 }
