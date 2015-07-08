@@ -576,86 +576,24 @@
 
         
 
-        var setupEditor = function(dom) {
+        var setupEditor = function(dom, cb) {
             var editor = $(".bennu-html-code-editor", dom).data("editor");
             if (editor) {
-                return editor;
+                cb(editor);
+                return;
             }
-            Bennu.codeEditor.require();
-            editor = ace.edit($(".bennu-html-code-editor", dom)[0])
-            editor.setFontSize(13);
-            editor.setTheme("ace/theme/clouds");
-            editor.getSession().setMode("ace/mode/html");
-            editor.setHighlightActiveLine(false);
-            editor.setShowPrintMargin(false);
-            editor.getSession().setUseWrapMode(true);
-            $(".bennu-html-code-editor", dom).data("editor",editor);
+            Bennu.codeEditor.require(function () {
+                editor = ace.edit($(".bennu-html-code-editor", dom)[0])
+                editor.setFontSize(13);
+                editor.setTheme("ace/theme/clouds");
+                editor.getSession().setMode("ace/mode/html");
+                editor.setHighlightActiveLine(false);
+                editor.setShowPrintMargin(false);
+                editor.getSession().setUseWrapMode(true);
+                $(".bennu-html-code-editor", dom).data("editor",editor);
 
-            editor.on("input",function(){
-                if (Bennu.utils.hasAttr(dom.related, "bennu-localized-string")) {
-                    var data = JSON.parse(handler.get());
-                    var locale = $(".bennu-localized-string-language", dom).data("locale");
-                    var tag = locale.tag;
-
-                    if (!(tag in data)){
-                        var singleTag = locale.tag.split("-")[0].toLowerCase();
-                        if (singleTag in data){
-                            tag = singleTag;
-                        }
-                    }
-
-                    data[tag] = editor.getValue();
-                    handler.set(JSON.stringify(data));
-                }else{
-                    handler.set(editor.getValue());
-                }
-            });
-
-            return editor;
-        }
-
-        if ($(".bennu-html-code-editor", dom).length != 0){
-            dom.data("showSrc", false);
-            $(".switch-to-code", dom).on("click", function(){
-                var editor = setupEditor(dom);
-                if (!dom.data("showSrc")){
-                    $(".bennu-html-editor-toolbar .btn", dom).map(function (){ (!$(this).hasClass("switch-to-code")) && $(this).attr("disabled", ""); })
-
-                    $(".switch-to-code", dom).addClass("active btn-primary");
-
-                    $(".bennu-html-editor-editor", dom).hide();
-                    $(".bennu-html-code-editor-container", dom).show();
-                    $(".bennu-localized-string-button", dom).attr("disabled","");
-                    if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
-                        var data = JSON.parse(handler.get());
-                        var locale = $(".bennu-localized-string-language", dom).data("locale");
-                        var tag = locale.tag;
-
-                        if (!(tag in data)){
-                            var singleTag = locale.tag.split("-")[0].toLowerCase();
-                            if (singleTag in data){
-                                tag = singleTag;
-                            }
-                        }
-
-                        var t = data[tag]
-
-                        editor.setValue(t);
-                    }else{
-                        editor.setValue();
-                    }
-
-                    dom.data("showSrc",true);
-                }else{
-                    $(".bennu-html-editor-toolbar .btn", dom).map(function (){ $(this).removeAttr("disabled"); })
-
-                    $(".switch-to-code", dom).removeClass("active btn-primary");
-                    $(".bennu-localized-string-button", dom).removeAttr("disabled");
-                    $(".bennu-html-editor-editor", dom).show();
-                    $(".bennu-html-code-editor-container", dom).hide();
-                    //
-
-                    if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
+                editor.on("input",function(){
+                    if (Bennu.utils.hasAttr(dom.data("related"), "bennu-localized-string")) {
                         var data = JSON.parse(handler.get());
                         var locale = $(".bennu-localized-string-language", dom).data("locale");
                         var tag = locale.tag;
@@ -672,8 +610,73 @@
                     }else{
                         handler.set(editor.getValue());
                     }
-                    dom.data("showSrc",false);
-                }
+                });
+                cb(editor);
+            });
+        }
+
+        if ($(".bennu-html-code-editor", dom).length != 0){
+            dom.data("showSrc", false);
+            $(".switch-to-code", dom).on("click", function(){
+                setupEditor(dom, function(editor) {
+                    debugger;
+                    if (!dom.data("showSrc")){
+                        $(".bennu-html-editor-toolbar .btn", dom).map(function (){ (!$(this).hasClass("switch-to-code")) && $(this).attr("disabled", ""); })
+
+                        $(".switch-to-code", dom).addClass("active btn-primary");
+
+                        $(".bennu-html-editor-editor", dom).hide();
+                        $(".bennu-html-code-editor-container", dom).show();
+                        $(".bennu-localized-string-button", dom).attr("disabled","");
+                        if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
+                            var data = JSON.parse(handler.get());
+                            var locale = $(".bennu-localized-string-language", dom).data("locale");
+                            var tag = locale.tag;
+
+                            if (!(tag in data)){
+                                var singleTag = locale.tag.split("-")[0].toLowerCase();
+                                if (singleTag in data){
+                                    tag = singleTag;
+                                }
+                            }
+
+                            var t = data[tag]
+
+                            editor.setValue(t);
+                        }else{
+                            editor.setValue();
+                        }
+
+                        dom.data("showSrc",true);
+                    }else{
+                        $(".bennu-html-editor-toolbar .btn", dom).map(function (){ $(this).removeAttr("disabled"); })
+
+                        $(".switch-to-code", dom).removeClass("active btn-primary");
+                        $(".bennu-localized-string-button", dom).removeAttr("disabled");
+                        $(".bennu-html-editor-editor", dom).show();
+                        $(".bennu-html-code-editor-container", dom).hide();
+                        //
+
+                        if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
+                            var data = JSON.parse(handler.get());
+                            var locale = $(".bennu-localized-string-language", dom).data("locale");
+                            var tag = locale.tag;
+
+                            if (!(tag in data)){
+                                var singleTag = locale.tag.split("-")[0].toLowerCase();
+                                if (singleTag in data){
+                                    tag = singleTag;
+                                }
+                            }
+
+                            data[tag] = editor.getValue();
+                            handler.set(JSON.stringify(data));
+                        }else{
+                            handler.set(editor.getValue());
+                        }
+                        dom.data("showSrc",false);
+                    }
+                });
             });
         }
 

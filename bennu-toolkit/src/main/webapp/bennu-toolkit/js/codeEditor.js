@@ -255,10 +255,12 @@
 
   	}
 
-  	Bennu.codeEditor.require = function(){
-    	if (!window.ace){
-    		Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/ace/ace.js", function(){});
-   		}
+ 	Bennu.codeEditor.require = function(callback){
+		Bennu.ensure(Bennu.contextPath + "/bennu-toolkit/js/libs/ace/ace.js", function(){
+			if (callback) {
+				callback();
+			}
+		});
   	};
 
   	Bennu.codeEditor.changeMode = function(mime, el){
