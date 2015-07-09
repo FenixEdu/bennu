@@ -1,9 +1,10 @@
 package org.fenixedu.bennu.core.rest;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.exceptions.DomainException;
 import org.fenixedu.bennu.core.groups.Group;
@@ -66,7 +67,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
         if (group.isMember(user)) {
             return user;
         }
-        throw AuthorizationException.unauthorized();
+        throw new WebApplicationException(Status.NOT_FOUND);
     }
 
     /**
@@ -79,7 +80,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
         try {
             return accessControl(Group.parse(accessExpression));
         } catch (DomainException e) {
-            throw AuthorizationException.unauthorized();
+            throw new WebApplicationException(Status.NOT_FOUND);
         }
     }
 
