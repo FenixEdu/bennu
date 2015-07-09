@@ -97,6 +97,11 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
 
             Optional<ExternalApplicationScope> scope = ExternalApplicationScope.forKey(endpoint.value());
 
+            if (!scope.isPresent() && endpoint.value().length > 0) { // endpoint has scope but no scope in domain 
+                sendError(requestContext, "invalidScope", "Application doesn't have permissions to this endpoint.");
+                return;
+            }
+
             if (scope.isPresent() && !serviceApplication.get().getScopesSet().contains(scope.get())) {
                 sendError(requestContext, "invalidScope", "Application doesn't have permissions to this endpoint.");
                 return;

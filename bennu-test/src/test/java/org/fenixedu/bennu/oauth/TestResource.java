@@ -70,4 +70,20 @@ public class TestResource extends BennuRestResource {
         return "this is an endpoint with TEST scope: " + verifyAndGetRequestAuthor().getUsername();
     }
 
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/service-only-with-unexisting-scope")
+    @GET
+    @OAuthEndpoint(value = "UNEXISTING_SCOPE", serviceOnly = true)
+    public String test5() {
+        return "this is an endpoint for with UNEXISTING_SCOPE scope, serviceOnly";
+    }
+
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/test-scope-with-unexisting-scope")
+    @GET
+    @OAuthEndpoint(value = "UNEXISTING_SCOPE")
+    public String test6() {
+        return "this is an endpoint for with UNEXISTING_SCOPE scope";
+    }
+
 }

@@ -24,6 +24,7 @@ import java.util.Base64;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -665,6 +666,58 @@ public class OAuthServletTest extends JerseyTest {
     }
 
     @Test
+    public void testOAuthEndpointWithoutToken() {
+        Authenticate.unmock();
+
+        try {
+            target("bennu-oauth").path("test-scope").request().get();
+        } catch (WebApplicationException e) {
+            Assert.assertNotEquals("invocation of oauth endpoint without tokens must fail", Status.OK.getStatusCode(), e
+                    .getResponse().getStatus());
+        }
+    }
+
+    @Test
+    public void testOAuthEndpointWithTokenWithDifferentScope() {
+        Authenticate.unmock();
+
+        User user = createUser("testOAuthEndpointWithToken", "John", "Doe", "John Doe", "john.doe@fenixedu.org");
+
+        ExternalApplication externalApp = new ExternalApplication();
+        externalApp.setAuthor(user);
+        externalApp.setName("Test External Application");
+        externalApp.setDescription("This is a test external application");
+        externalApp.setRedirectUrl("http://test.url/callback");
+
+        ExternalApplicationScope testScope = new ExternalApplicationScope();
+        testScope.setScopeKey("TEST2");
+        testScope.setName(new LocalizedString.Builder().with(enGB, "Test Scope").build());
+        testScope.setDescription(new LocalizedString.Builder().with(enGB, "Test Scope").build());
+
+        externalApp.addScopes(testScope);
+
+        ApplicationUserSession applicationUserSession = new ApplicationUserSession();
+
+        String accessToken = generateToken(applicationUserSession);
+
+        ApplicationUserAuthorization applicationUserAuthorization = new ApplicationUserAuthorization(user, externalApp);
+        externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
+
+        applicationUserSession.setTokens(accessToken, null);
+
+        applicationUserAuthorization.addSession(applicationUserSession);
+
+        try {
+            target("bennu-oauth").path("test-scope").queryParam("access_token", accessToken).request().get(String.class);
+        } catch (WebApplicationException e) {
+            Assert.assertNotEquals("invocation of oauth endpoint with wrong scope must fail", Status.OK.getStatusCode(), e
+                    .getResponse().getStatus());
+        } finally {
+            testScope.setBennu(null);
+        }
+    }
+
+    @Test
     public void testServiceOnlyEndpoint() {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -1013,6 +1066,85 @@ public class OAuthServletTest extends JerseyTest {
         } finally {
             serviceApplication.removeScope(serviceApplicationOAuthAccessProvider);
             serviceApplication.removeScope(loggedScope);
+        }
+
+    }
+
+    @Test
+    public void testServiceApplicationWithUnexistingScope() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        Authenticate.unmock();
+
+        User user = createUser("testServiceApplicationWithUnexistingScope", "John", "Doe", "John Doe", "john.doe@fenixedu.org");
+
+        ServiceApplication serviceApplication = new ServiceApplication();
+        serviceApplication.setAuthor(user);
+
+        req.addParameter("client_id", serviceApplication.getExternalId());
+        req.addParameter("client_secret", serviceApplication.getSecret());
+        req.addParameter("grant_type", "client_credentials");
+        req.setMethod("POST");
+        req.setPathInfo("/access_token");
+
+        try {
+            oauthServlet.service(req, res);
+
+            Assert.assertEquals("must return status OK", 200, res.getStatus());
+
+            String tokenJson = res.getContentAsString();
+
+            final String serviceAccessToken =
+                    new JsonParser().parse(tokenJson).getAsJsonObject().get("access_token").getAsString();
+
+            Response response =
+                    target("bennu-oauth").path("test").path("service-only-with-unexisting-scope")
+                            .queryParam("access_token", serviceAccessToken).request().get();
+
+            Assert.assertNotEquals("request must fail since scope does not exist", 200, response.getStatus());
+
+        } catch (ServletException | IOException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testApplicationWithUnexistingScope() {
+        Authenticate.unmock();
+
+        User user = createUser("testApplicationWithUnexistingScope", "John", "Doe", "John Doe", "john.doe@fenixedu.org");
+
+        ExternalApplication externalApp = new ExternalApplication();
+        externalApp.setAuthor(user);
+        externalApp.setName("Test External Application");
+        externalApp.setDescription("This is a test external application");
+        externalApp.setRedirectUrl("http://test.url/callback");
+
+        ApplicationUserSession applicationUserSession = new ApplicationUserSession();
+
+        String accessToken = generateToken(applicationUserSession);
+
+        ApplicationUserAuthorization applicationUserAuthorization = new ApplicationUserAuthorization(user, externalApp);
+        externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
+
+        applicationUserSession.setTokens(accessToken, null);
+
+        applicationUserAuthorization.addSession(applicationUserSession);
+
+        try {
+            target("bennu-oauth").path("test").path("test-scope-with-unexisting-scope").queryParam("access_token", accessToken)
+                    .request().get(String.class);
+
+        } catch (WebApplicationException e) {
+            Assert.assertNotEquals("request must fail since scope does not exist", 200, e.getResponse().getStatus());
+        }
+
+        try {
+            target("bennu-oauth").path("test").path("service-only-with-unexisting-scope").queryParam("access_token", accessToken)
+                    .request().get(String.class);
+
+        } catch (WebApplicationException e) {
+            Assert.assertNotEquals("request must fail since scope does not exist", 200, e.getResponse().getStatus());
         }
 
     }
