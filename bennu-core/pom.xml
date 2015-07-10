@@ -20,10 +20,6 @@
         </plugins>
     </build>
 
-    <properties>
-        <version.org.fenixedu.fenixedu-canvas>1.0.5</version.org.fenixedu.fenixedu-canvas>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.fenixedu</groupId>
@@ -70,9 +66,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.fenixedu</groupId>
-            <artifactId>fenixedu-canvas</artifactId>
-            <version>${version.org.fenixedu.fenixedu-canvas}</version>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>3.3.5</version>
         </dependency>
     </dependencies>
 

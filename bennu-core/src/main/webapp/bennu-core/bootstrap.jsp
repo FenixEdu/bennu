@@ -7,7 +7,7 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-core/js/jquery.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/bennu-core/js/bootstrap.js"></script>
 	
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/fenixedu-canvas/css/bootstrap.min.css"></link>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/bootstrap/3.3.5/css/bootstrap.min.css"></link>
 	
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/bennu-core/css/bootstrapWizard.css"></link>
 	<title>FenixEdu - Bootstrap</title>
