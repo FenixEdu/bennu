@@ -150,12 +150,17 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      * {@inheritDoc}
      */
     @Override
-    public Stream<ExecutionLog> executionsFor(String taskName, int max) {
-        JsonObject index = readIndexJson();
-        if (!index.has(taskName)) {
-            return Stream.empty();
+    public Stream<ExecutionLog> executionsFor(String taskName, Optional<String> start, int max) {
+        String id;
+        if (start.isPresent()) {
+            id = start.get();
+        } else {
+            JsonObject index = readIndexJson();
+            if (!index.has(taskName)) {
+                return Stream.empty();
+            }
+            id = index.get(taskName).getAsString();
         }
-        String id = index.get(taskName).getAsString();
         List<ExecutionLog> logs = new ArrayList<>(Math.min(max, 100));
         while (id != null && max > 0) {
             Optional<JsonObject> optional = readJson(logFileFor(taskName, id));
