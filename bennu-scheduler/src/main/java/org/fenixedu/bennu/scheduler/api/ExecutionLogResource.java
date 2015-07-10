@@ -1,5 +1,7 @@
 package org.fenixedu.bennu.scheduler.api;
 
+import java.util.Optional;
+
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -29,9 +31,10 @@ public class ExecutionLogResource extends BennuRestResource {
     @GET
     @Path("{taskName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement executionsFor(@PathParam("taskName") String taskName, @QueryParam("count") @DefaultValue("20") int max) {
+    public JsonElement executionsFor(@PathParam("taskName") String taskName, @QueryParam("count") @DefaultValue("20") int max,
+            @QueryParam("start") String start) {
         accessControl(Group.managers());
-        return view(SchedulerSystem.getLogRepository().executionsFor(taskName, max));
+        return view(SchedulerSystem.getLogRepository().executionsFor(taskName, Optional.ofNullable(start), max));
     }
 
     @GET
