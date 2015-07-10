@@ -100,6 +100,21 @@ public class FileSystemLogRepositoryTest {
     }
 
     @Test
+    public void testExecutionLogsWithInvalidId() {
+        ExecutionLog original = ExecutionLog.newExecutionFor(TASK_NAME);
+        repository.newExecution(original);
+        ExecutionLog newLog1 = ExecutionLog.newExecutionFor(TASK_NAME);
+        repository.newExecution(newLog1);
+        ExecutionLog newLog2 = ExecutionLog.newExecutionFor(TASK_NAME);
+        repository.newExecution(newLog2);
+        ExecutionLog newLog3 = ExecutionLog.newExecutionFor(TASK_NAME);
+        repository.newExecution(newLog3);
+
+        assertEquals("The returned stream is not empty", 0,
+                repository.executionsFor(TASK_NAME, Optional.of("XPTO"), Integer.MAX_VALUE).count());
+    }
+
+    @Test
     public void testFindLog() {
         ExecutionLog log = ExecutionLog.newExecutionFor(TASK_NAME);
         repository.newExecution(log);

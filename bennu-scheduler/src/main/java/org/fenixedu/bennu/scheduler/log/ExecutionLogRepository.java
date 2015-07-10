@@ -70,7 +70,8 @@ public interface ExecutionLogRepository {
      * @param taskName
      *            The name of the task for which to retrieve the logs
      * @param startId
-     *            The optional task id for which to start returning the logs
+     *            The optional task id for which to start returning the logs. If empty, the latest executions are returned, if
+     *            invalid, an empty stream is returned.
      * @param max
      *            The maximum number of elements to return
      * @return
