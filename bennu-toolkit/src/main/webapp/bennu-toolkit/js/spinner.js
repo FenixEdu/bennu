@@ -45,4 +45,4 @@
       e.data("widget").addClass("bennu-spinner-slower");
     }
 
-})()
+})();
