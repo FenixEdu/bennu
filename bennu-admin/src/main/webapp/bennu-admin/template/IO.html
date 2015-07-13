@@ -15,10 +15,15 @@
 			Loading...
 			</div>
 
-			<p>
-				<button class="btn btn-primary" data-toggle="modal" data-target="#newStorageModal"><span class="glyphicon glyphicon-plus"></span> New</button>
-			</p>
-			<table class="table table-condensed table-striped" ng-if="storages">
+			<div class="row">
+				<div class="col-sm-6">
+					<button class="btn btn-primary" data-toggle="modal" data-target="#newStorageModal"><span class="glyphicon glyphicon-plus"></span> New</button>
+				</div>
+				<div class="col-sm-offset-3 col-sm-3">
+					<input type="text" class="form-control" ng-model="filter" placeholder="Filter...">
+				</div>
+			</div>
+			<table class="table table-striped" ng-if="storages">
 				<thead>
 					<tr>
 						<th>Name</th>
@@ -29,16 +34,16 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="storage in storages | orderBy:'name'">
+					<tr ng-repeat="storage in storages | filter:filter | orderBy:'name'">
 						<td>{{storage.name}}</td>
 						<td>{{storage.type}}</td>
 						<td>{{storage.path}}</td>
 						<td ng-if="counts"><code>{{counts[storage.id]}}</code></td>
 						<td ng-if="!counts">Loading...</td>
 						<td>
-							<button class="btn btn-xs btn-default" ng-if="!storage.default" ng-click="setDefault(storage)">Set Default</button>
-							<button class="btn btn-xs btn-default" ng-if="storage.default" disabled>Default</button>
-							<button class="btn btn-xs btn-danger" ng-class="{disabled: storage.default || !counts || counts[storage.id] > 0}" ng-click="delete(storage)">Delete</button>
+							<button class="btn btn-sm btn-default" ng-if="!storage.default" ng-click="setDefault(storage)">Set Default</button>
+							<button class="btn btn-sm btn-default" ng-if="storage.default" disabled>Default</button>
+							<button class="btn btn-sm btn-danger" ng-class="{disabled: storage.default || !counts || counts[storage.id] > 0}" ng-click="delete(storage)">Delete</button>
 						</td>
 					</tr>
 				</tbody>
@@ -57,7 +62,7 @@
 								<li><a href="" data-target="#localFSStore" data-toggle="tab">File System Store</a></li>
 							</ul>
 							<br />
-							<div class="tab-content">
+							<div class="tab-content clearfix">
 								<div class="tab-pane active" id="domainStore">
 									<form class="form-horizontal" ng-submit="newDomainStorage()">
 										<div class="form-group">
@@ -66,7 +71,7 @@
 												<input type="text" class="form-control" id="name" ng-model="domainName" required placeholder="Name">
 											</div>
 										</div>
-									    <button type="submit" class="btn btn-success pull-right">Create</button>
+									    <button type="submit" class="btn btn-primary pull-right">Create</button>
 									</form>
 								</div>
 								<div class="tab-pane" id="localFSStore">
@@ -94,8 +99,6 @@
 								</div>
 							</div>
 						</div>
-						<div class="modal-footer">
-						</div>
 					</div>
 				</div>
 			</div>
@@ -105,7 +108,12 @@
 			Loading...
 			</div>
 
-			<table class="table table-condensed table-striped" ng-if="configs">
+			<div class="row">
+				<div class="col-sm-offset-9 col-sm-3">
+					<input type="text" class="form-control" ng-model="configFilter" placeholder="Filter...">
+				</div>
+			</div>
+			<table class="table table-striped" ng-if="configs">
 				<thead>
 					<tr>
 						<th>File Type</th>
@@ -113,10 +121,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="config in configs | orderBy:'type'" ng-class="{success: config.success}" >
+					<tr ng-repeat="config in configs | filter: configFilter | orderBy:'type'" ng-class="{success: config.success}" >
 						<td>{{config.type}}</td>
 						<td>
-							<select ng-model="config.storage.id" ng-change="save(config)" ng-options="storage.id as storage.name group by storage.type for storage in storages | orderBy:'name'">
+							<select class="form-control" ng-model="config.storage.id" ng-change="save(config)" ng-options="storage.id as storage.name group by storage.type for storage in storages | orderBy:'name'">
 								<option value="null">----</option>
 							</select>
 						</td>

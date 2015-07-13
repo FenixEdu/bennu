@@ -1,8 +1,55 @@
+<h2 class="page-header">
+	Scheduler <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#scheduler-config"><span class="glyphicon glyphicon-cog"></span></button>
+</h2>
+
 <ul class="nav nav-tabs">
+	<li ui-sref-active="active"><a ui-sref="scheduler.logs">Task Logs</a></li>
 	<li ui-sref-active="active"><a ui-sref="scheduler.tasks">Tasks</a></li>
 	<li ui-sref-active="active"><a ui-sref="scheduler.schedules">Schedules</a></li>
-	<li ui-sref-active="active"><a ui-sref="scheduler.logs">Task Logs</a></li>
 	<li ui-sref-active="active"><a ui-sref="scheduler.custom-new">New Custom Task</a></li>
 </ul>
 <br />
 <div ui-view></div>
+
+
+<div class="modal fade" id="scheduler-config">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Scheduler Configuration</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group" ng-class="{'has-success': storeSuccess}">
+						<label class="col-sm-4 control-label" for="store">Logging Storage</label>
+						<div class="col-sm-8">
+							<select class="form-control" ng-model="config.loggingStorage.id" ng-options="store.id as store.name for store in config.availableStorages"
+									ng-change="saveStore()">
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-4 col-sm-8">
+							<button class="btn btn-default" ng-click="clear()"><span class="glyphicon glyphicon-trash"></span> Delete all schedules</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-4 col-sm-8">
+							<a href="{{contextPath}}/api/bennu-scheduler/schedule/dump" class="btn btn-default"><span class="glyphicon glyphicon-cloud-download"></span> Download Schedules</a>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-4 col-sm-8">
+							<input type="file" id="input-load-dump-file" style="display:none;">
+							<button class="btn btn-default" ng-click="load()"><span class="glyphicon glyphicon-cloud-upload"></span> Upload Schedules</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>

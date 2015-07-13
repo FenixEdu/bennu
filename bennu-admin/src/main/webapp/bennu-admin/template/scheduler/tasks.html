@@ -1,4 +1,13 @@
-<table class="table table-condensed">
+<div class="row">
+	<div class="col-sm-6 lead">
+		Tasks <span class="badge">{{tasks.length}}</span>
+	</div>
+	<div class="col-sm-offset-3 col-sm-3">
+		<input type="text" class="form-control" ng-model="filter" placeholder="Filter...">
+	</div>
+</div>
+
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th>Type</th>
@@ -7,12 +16,12 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="task in tasks">
+		<tr ng-repeat="task in tasks | filter:filter | orderBy:'type'">
 			<td>{{task.type}}</td>
-			<td>{{task.name}}</td>
+			<td><small>{{task.name}}</small></td>
 			<td>
-				<button class="btn btn-xs btn-link" data-toggle="modal" data-target="#newScheduleModal" title="Schedule" ng-click="$parent.type = task.type"><span class="glyphicon glyphicon-calendar"></span></button>
-				<button class="btn btn-xs btn-link" ng-click="runNow(task)" title="Run Now"><span class="glyphicon glyphicon-play-circle"></span></button>
+				<button class="btn btn-sm btn-default" data-toggle="modal" data-target="#newScheduleModal" title="Schedule" ng-click="$parent.type = task.type"><span class="glyphicon glyphicon-calendar"></span> Schedule</button>
+				<button class="btn btn-sm btn-default" ng-click="runNow(task)" title="Run Now"><span class="glyphicon glyphicon-play-circle"></span> Run Now</button>
 			</td>
 		</tr>
 	</tbody>
@@ -57,7 +66,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-primary" type="submit" form="addScheduleForm" value="Add">Add</button>
+				<button class="btn btn-primary" type="submit" form="addScheduleForm" value="Add">Schedule</button>
 			</div>
 		</div>
 	</div>

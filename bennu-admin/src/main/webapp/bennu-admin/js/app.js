@@ -9,7 +9,7 @@ app.config(['$stateProvider', '$urlRouterProvider',
 
     $urlRouterProvider.otherwise("/monitoring/metrics");
     $urlRouterProvider.when("/monitoring", "/monitoring/metrics");
-    $urlRouterProvider.when("/scheduler", "/scheduler/tasks");
+    $urlRouterProvider.when("/scheduler", "/scheduler/logs/");
 
       // IO
       $stateProvider.
@@ -147,6 +147,12 @@ app.filter('capitalize', function() {
   return function(input, scope) {
     input = input.toLowerCase();
     return input.substring(0,1).toUpperCase()+input.substring(1);
+  }
+});
+
+app.filter('filename', function () {
+  return function(fullPath) {
+    return (fullPath || '').split('\\').pop().split('/').pop();
   }
 });
 
@@ -596,8 +602,41 @@ app.controller('GroupsController', ['$scope', '$http', function($scope, $http) {
 
 // Scheduler
 
-app.controller('SchedulerController', ['$scope', function ($scope) {
-  $scope.$root.pageTitle = 'Scheduler';
+app.controller('SchedulerController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+  $scope.$root.pageTitle = undefined;
+  $scope.contextPath = Bennu.contextPath;
+  $http.get(contextPath + '/api/bennu-scheduler/config').success(function (data) {
+    $scope.config = data;
+  });
+  $scope.saveStore = function() {
+    $http.put(contextPath + '/api/bennu-scheduler/config/' + $scope.config.loggingStorage.id).success(function (data) {
+      $scope.config = data; $scope.storeSuccess = true;
+      $timeout(function () {
+        $scope.storeSuccess = false;
+      }, 2000);
+    });
+  };
+  $scope.clear = function() {
+    if(confirm('Are you sure you wish to clear all schedules?')) {
+      $http['delete'](contextPath + '/api/bennu-scheduler/schedule').success(function () {
+        location.reload();
+      });
+    }
+  };
+  $scope.load = function() {
+    $("#input-load-dump-file").on('change', function (e) {
+      e.preventDefault();
+      var file = e.target.files[0];
+      var reader = new FileReader();
+      reader.onload = function() {
+        $http.post(contextPath + '/api/bennu-scheduler/schedule/load-dump', reader.result).success(function (data) {
+          location.reload();
+        });
+      };
+      reader.readAsText(file);
+    });
+    $("#input-load-dump-file").click();
+  };
 }]);
 
 app.controller('TasksController', ['$scope', '$http', '$state', '$timeout', function ($scope, $http, $state, $timeout) {
@@ -623,52 +662,27 @@ app.controller('SchedulesController', ['$scope', '$http', function ($scope, $htt
   $http.get(contextPath + '/api/bennu-scheduler/schedule').success(function (data) {
     $scope.schedules = data.schedule;
   });
-  $http.get(contextPath + '/api/bennu-scheduler/config').success(function (data) {
-    $scope.config = data;
-  });
-  $scope.contextPath = window.contextPath;
-  $scope.saveStore = function() {
-    $scope.saving = true;
-    $http.put(contextPath + '/api/bennu-scheduler/config/' + $scope.config.loggingStorage.id).success(function (data) {
-      $scope.config = data; $scope.saving = false;
-    });
-  }
   $scope['delete'] = function(schedule) {
     $http['delete'](contextPath + '/api/bennu-scheduler/schedule/' + schedule.id).success(function () {
       $scope.schedules.splice($scope.schedules.indexOf(schedule), 1);
     });
   }
-  $scope.clear = function() {
-    if(confirm('Are you sure you wish to clear all schedules?')) {
-      $http['delete'](contextPath + '/api/bennu-scheduler/schedule').success(function () {
-        $scope.schedules = new Array();
-      });
-    }
-  }
-  $scope.load = function() {
-    $("#input-load-dump-file").on('change', function (e) {
-      e.preventDefault();
-      var file = e.target.files[0];
-      var reader = new FileReader();
-      reader.onload = function() {
-        $http.post(contextPath + '/api/bennu-scheduler/schedule/load-dump', reader.result).success(function (data) {
-         $scope.schedules = data.schedule;
-        });
-      };
-      reader.readAsText(file);
-    });
-    $("#input-load-dump-file").click();
-  }
 }]);
 
 app.controller('LogsController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
-  $scope.type = $state.params.type;
+  $scope.type = $state.params.type; $scope.numResults = 20;
   var url = $state.params.type ? contextPath + '/api/bennu-scheduler/log/' + $scope.type : contextPath + '/api/bennu-scheduler/log/';
   $scope.reload = function () {
-    $http.get(url).success(function (data) {
-      $scope.logs = data;
+    $http.get(url + '?count=' + $scope.numResults).success(function (data) {
+      $scope.logs = data; $scope.moreResults = data.length == $scope.numResults;
     });
   }
+  $scope.loadMore = function() {
+    $http.get(url + '?count=' + ($scope.numResults + 1) + '&start=' + $scope.logs[$scope.logs.length -1].id).success(function(data) {
+      data.shift();
+      $scope.logs = $scope.logs.concat(data); $scope.moreResults = data.length == $scope.numResults;
+    });
+  };
   $scope.reload();
 }]);
 

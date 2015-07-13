@@ -1,8 +1,17 @@
-<table class="table table-striped">
+<div class="row">
+    <h4 class="col-sm-6">
+        Static Configurations
+    </h4>
+    <div class="col-sm-offset-3 col-sm-3">
+        <input type="text" class="form-control" ng-model="sys.filter" placeholder="Filter..." />
+    </div>
+</div>
+<br />
+<table class="table table-striped" style="table-layout: fixed">
     <tbody>
-        <tr ng-repeat="property in data.conf | orderBy:'key'">
-            <th>{{property.key}}</th>
-            <td>{{property.value}}</td>
+        <tr ng-repeat="property in data.conf | filter:sys.filter | orderBy:'key'">
+            <th class="col-sm-4" style="word-wrap: break-word">{{property.key}}</th>
+            <td class="col-sm-8" style="word-wrap: break-word">{{property.value}}</td>
         </tr>
     </tbody>
 </table>

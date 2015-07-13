@@ -1,15 +1,16 @@
 <div class="clearfix" ng-repeat="(name, domain) in jmxData">
     <div class="panel panel-default">
-        <div class="panel-heading clearfix" ng-click="shown = !shown">
+        <div class="panel-heading clearfix" ng-click="shown = !shown" role="button">
             <span class="badge">Domain</span> <small>{{name}}</small>
         </div>
         <div class="panel-body row" ng-if="shown">
             <div class="col-sm-4">
                 <ul class="list-group">
-                    <a href="" class="list-group-item" ng-class="{'active':selected == bean}" ng-click="$parent.selected = bean" ng-repeat="bean in domain | filter: filter | orderBy:'name.properties.type'">
+                    <a href="" class="list-group-item" ng-class="{'active':selected == bean}" ng-click="$parent.selected = bean" ng-repeat="bean in domain | filter: filter | orderBy:'name.properties.name'">
                         {{bean.name.properties.name}} {{bean.name.properties.type}}
                     </a>
                 </ul>
+                <input type="text" class="form-control" ng-model="filter" placeholder="Filter..."/>
             </div>
             <div class="col-sm-8" ng-show="selected">
                 <h2>

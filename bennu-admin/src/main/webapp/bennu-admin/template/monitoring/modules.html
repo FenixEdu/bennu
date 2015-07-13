@@ -1,8 +1,8 @@
 <div class="row">
-    <div class="col-sm-4" ng-repeat="project in data.projects">
+    <div class="col-sm-4" ng-repeat="project in data.projects | orderBy:'artifactId'">
         <div class="panel panel-success" ng-class="{'panel-warning': project.version.indexOf('SNAPSHOT') > -1}" ng-if="project.artifactId">
-            <div class="panel-heading">
-                {{project['Implementation-Title']}}
+            <div class="panel-heading clearfix">
+                <span class="pull-left">{{project['Implementation-Title']}}</span>
                 <span class="badge pull-right">{{project.version}}</span>
             </div>
             <div class="panel-body">

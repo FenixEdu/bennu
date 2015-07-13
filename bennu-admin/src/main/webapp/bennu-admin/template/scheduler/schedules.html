@@ -1,41 +1,43 @@
-<form class="form-horizontal">
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="loggingStorage">Logging Storage</label>
-    <div class="col-sm-4 controls">
-      <select ng-model="config.loggingStorage.id" ng-options="store.id as store.name for store in config.availableStorages">
-      </select>
-      <button type="submit" class="btn btn-success" ng-click="saveStore()" ng-class="{'disabled': saving }">Save</button>
-    </div>
-    <label>Running:</label> {{config.running}}
+<div class="row">
+  <div class="col-sm-6 lead">
+    Schedules <span class="badge">{{schedules.length}}</span>
   </div>
-</form>
-
-<h3>Batch Operations</h3>
-<div class="btn-toolbar">
-  <button class="btn btn-danger" ng-click="clear()">Clear all</button>
-  <a href="{{contextPath}}/api/bennu-scheduler/schedule/dump" class="btn btn-success">Download</a>
-  <input type="file" id="input-load-dump-file" style="display:none;">
-  <button class="btn btn-success" ng-click="load()">Load</button>
+  <div class="col-sm-offset-3 col-sm-3">
+    <input type="text" class="form-control" ng-model="filter" placeholder="Filter...">
+  </div>
 </div>
 
-<h3>Schedules</h3>
-<table class="table table-condensed">
+<table class="table table-striped" ng-show="schedules.length">
   <thead>
     <tr>
       <th>Type</th>
-      <th>Title</th>
       <th>Schedule</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="schedule in schedules">
+    <tr ng-repeat="schedule in schedules | filter: filter | orderBy:'type'">
       <td>{{schedule.type}}</td>
-      <td>{{schedule.name}}</td>
-      <td>{{schedule.schedule}}</td>
+      <td><code>{{schedule.schedule}}</code></td>
       <td>
-        <button class="btn btn-danger btn-sm" ng-click="delete(schedule)">Delete</button>
-        <a ui-sref="scheduler.logs({type: schedule.type})" class="btn btn-success btn-sm">Logs</a>
+        <a ui-sref="scheduler.logs({type: schedule.type})" ng-show="!showDelete" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-search"></span> Logs</a>
+        <button class="btn btn-default btn-sm" ng-show="!showDelete" ng-click="showDelete = true"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+        <span ng-show="showDelete">
+          Are you sure?
+          <div>
+            <button class="btn btn-danger btn-sm" href="" ng-click="delete(schedule)">Yes</button>
+            <button class="btn btn-default btn-sm" href="" ng-click="showDelete = false">No</button>
+          </div>
+        </span>
       </td>
     </tr>
   </tbody>
 </table>
+
+
+<div class="panel panel-default" ng-show="!schedules.length">
+    <div class="panel-body">
+        <p><span class="glyphicon glyphicon-info-sign"></span> There are no scheduled tasks</p>
+        <small>You can create new schedules <a ui-sref="scheduler.tasks">here</a>, or upload a previous configuration.</small>
+    </div>
+</div>

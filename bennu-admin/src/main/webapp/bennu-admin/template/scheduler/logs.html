@@ -1,26 +1,20 @@
-<style>
-	.table {
-		margin-bottom: 0px;
-	}
-</style>
-<h3>
-	Task Logs
-	<small>{{type}}</small>
-
-	<div class="pull-right btn-group">
-		<a ui-sref="scheduler.logs({type: ''})" class="btn btn-default" ng-if="type">« Back</a>
-		<button class="btn btn-default" ng-click="reload()"><i class="glyphicon glyphicon-refresh"/></button>
+<div class="row">
+	<div class="col-sm-6 lead">
+		Task Logs <span class="badge">{{logs.length}}</span>
 	</div>
-</h3>
 
-<div class="text-center" ng-if="logs == null">
-	<h3>Loading...</h3>
+	<div class="col-sm-3 text-right">
+		<div class="btn-group">
+			<a ui-sref="scheduler.logs({type: ''})" class="btn btn-default" ng-if="type">« Back</a>
+			<button class="btn btn-default" ng-click="reload()"><i class="glyphicon glyphicon-refresh"/></button>
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<input type="text" class="form-control pull-right" ng-model="filter" placeholder="Filter..."/>
+	</div>
 </div>
 
-<div ng-show="logs">
-	Search: <input type="text" ng-model="filter"/>
-</div>
-<table class="table table-condensed" ng-show="logs != null">
+<table class="table table-striped" ng-show="logs != null && logs.length">
 	<thead>
 		<tr>
 			<th>Task Name</th>
@@ -30,9 +24,9 @@
 			<th></th>
 		</tr>
 	</thead>
-	<tbody ng-init="totalDisplayed = 20">
-		<tr ng-repeat="log in logs | orderBy:'-start' | filter: filter | limitTo: totalDisplayed">
-			<td>{{log.taskName}} <span class="label label-success" ng-if="log.code">Custom</span></td>
+	<tbody>
+		<tr ng-repeat="log in logs | orderBy:'-start' | filter: filter">
+			<td>{{log.taskName}} <span class="badge" ng-if="log.code">Custom</span></td>
 			<td>{{(log.start | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
 			<td>{{(log.end | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
 			<td ng-if="log.end">
@@ -43,18 +37,20 @@
 				<i class="glyphicon glyphicon-play" />
 			</td>
 			<td>
-				<a ui-sref="scheduler.log-details({type: log.taskName, id: log.id})" class="btn btn-success">Details</a>
-				<a ui-sref="scheduler.logs({type: log.taskName})" class="btn btn-success" ng-if="!type">More</a>
+				<a ui-sref="scheduler.log-details({type: log.taskName, id: log.id})" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-search"></span> Details</a>
+				<a ui-sref="scheduler.logs({type: log.taskName})" class="btn btn-sm btn-default" ng-if="!type"><span class="glyphicon glyphicon-list"></span> More</a>
 			</td>
 		</tr>
 	</tbody>
 </table>
-<div class="row" ng-show="logs != null">
-	<hr />
-	<div class="col-sm-2">
-		Showing {{totalDisplayed > logs.length ? logs.length : totalDisplayed}} of {{logs.length}}
-	</div>
-	<div class="col-sm-8 text-center">
-		<button class="btn btn-success" ng-show="totalDisplayed < logs.length" ng-click="totalDisplayed = totalDisplayed + 20">Load More</button>
+
+<div ng-show="moreResults && type && logs.length">
+	<em>Not all results may be shown. <a ng-click="loadMore()" role="button">Click here to load more</a>.</em>
+</div>
+
+<div class="panel panel-default" ng-show="logs != null && !logs.length">
+	<div class="panel-body">
+        <p><span class="glyphicon glyphicon-info-sign"></span> There are no task logs</p>
+        <small>No tasks have been run yet. You can schedule tasks <a ui-sref="scheduler.tasks">here</a>, or run a custom task <a ui-sref="scheduler.custom-new">here</a>.</small>
 	</div>
 </div>

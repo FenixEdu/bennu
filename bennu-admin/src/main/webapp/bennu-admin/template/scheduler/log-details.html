@@ -1,38 +1,39 @@
-<h3>
-	Task Log
-	<small>{{log.taskName}}</small>
-
-	<div class="pull-right btn-group">
-		<a ui-sref="scheduler.logs({type: log.taskName})" class="btn btn-default">« Back</a>
-		<button class="btn btn-default" ng-click="refreshLog()"><i class="glyphicon glyphicon-refresh"/></button>
+<div class="row">
+	<div class="col-sm-6 lead">
+		Log Details
 	</div>
-
-</h3>
+	<div class="col-sm-6">
+		<div class="pull-right btn-group">
+			<a ui-sref="scheduler.logs({type: log.taskName})" class="btn btn-default">« Back</a>
+			<button class="btn btn-default" ng-click="refreshLog()"><i class="glyphicon glyphicon-refresh"/></button>
+		</div>
+	</div>
+</div>
 
 <table class="table">
 	<tbody>
 		<tr>
-			<td>TaskName</td>
-			<td>{{log.taskName}}</td>
+			<th width="15%">Task</th>
+			<td>{{log.taskName}} <samp class="small">{{log.id}}</samp></td>
 		</tr>
 		<tr>
-			<td>Start Time</td>
+			<th>Start Time</th>
 			<td>{{(log.start | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
 		</tr>
 		<tr>
-			<td>End Time</td>
+			<th>End Time</th>
 			<td>{{(log.end | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
 		</tr>
 		<tr ng-if="log.user">
-			<td>User</td>
+			<th>User</th>
 			<td>{{log.user}}</td>
 		</tr>
 		<tr ng-if="log.hostname">
-			<td>Host</td>
+			<th>Host</th>
 			<td>{{log.hostname}}</td>
 		</tr>
 		<tr>
-			<td>Status</td>
+			<th>Status</th>
 			<td ng-if="log.end">
 				<i class="glyphicon glyphicon-ok" ng-if="log.state == 'SUCCESS'" />
 				<i class="glyphicon glyphicon-remove" ng-if="log.state == 'FAILURE'" />
@@ -42,7 +43,7 @@
 			</td>
 		</tr>
 		<tr ng-show="log.code">
-			<td>Code</td>
+			<th>Code</th>
 			<td>
 				<div class="control-group">
 					<div class="controls">
@@ -56,27 +57,27 @@
 				</div>
 			</td>
 		</tr>
-		<tr ng-if="log.files">
-			<td>Files</td>
+		<tr ng-if="log.stackTrace">
+			<th>Stacktrace</th>
 			<td>
-				<ul>
+				<pre>{{log.stackTrace}}</pre>
+			</td>
+		</tr>
+		<tr ng-if="logs">
+			<th>Log</th>
+			<td>
+				<pre>{{logs}}</pre>
+			</td>
+		</tr>
+		<tr ng-if="log.files">
+			<th>Files</th>
+			<td>
+				<ul class="list-unstyled">
 					<li ng-repeat="file in log.files">
 						<a href="{{contextPath}}/api/bennu-scheduler/log/{{log.taskName}}/{{log.id}}/{{file}}">{{file}}</a>
 					</li>
 				</ul>
 			</td>
 		</tr>
-		<tr ng-if="log.stackTrace">
-			<td>Stacktrace</td>
-			<td>
-				<pre>{{log.stackTrace}}</pre>
-			</td>
-		</tr>
-			<tr ng-if="logs">
-				<td>Log</td>
-				<td>
-					<pre>{{logs}}</pre>
-				</td>
-			</tr>
 	</tbody>
 </table>

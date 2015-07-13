@@ -4,7 +4,7 @@
     <div class="input-group-addon">{{filtered.length}}/{{loggers.length}}</div>
 </form>
 <br />
-<table class="table table-striped">
+<table class="table table-striped" style="table-layout: fixed" ng-init="maxElements = 50">
     <thead>
         <tr>
             <th>Name</th>
@@ -12,15 +12,17 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="logger in filtered = (loggers | filter: filter) ">
-            <td width="50%">{{logger.name}}</td>
-            <td>
-                <div class="button-group">
-                    <span ng-repeat="element in loggerMap">
-                        <button ng-click="changeLevel(logger, element[0])" ng-class="logger.level == element[0] ? element[1] : ''" class="btn btn-default btn-xs">{{element[0]}}</button>                                    
-                    </span>
+        <tr ng-repeat="logger in filtered = (loggers | filter: filter) | limitTo:maxElements">
+            <td style="word-wrap: break-word">{{logger.name}}</td>
+            <td style="word-wrap: break-word">
+                <div class="btn-group">
+                    <button ng-repeat="element in loggerMap" ng-click="changeLevel(logger, element[0])" ng-class="logger.level == element[0] ? element[1] : ''" class="btn btn-default btn-xs">{{element[0]}}</button>
                 </div>
             </td>
         </tr>
     </tbody>
 </table>
+
+<small ng-show="maxElements < filtered.length">
+    <em>Only showing the first {{maxElements}} loggers. You can filter your search on the top of the page, or click <a role="button" ng-click="maxElements = loggers.length">here</a> to show all.
+</small>
