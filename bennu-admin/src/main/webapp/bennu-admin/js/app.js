@@ -257,6 +257,11 @@ app.controller('MonitoringController', [ '$scope', '$http', function ($scope, $h
       $scope.healthchecks = data; $scope.currentCheck = null;
     });
   }
+  $scope.fullGC = function() {
+    $http.put(contextPath + '/api/bennu-core/system/full-gc').success(function (data) {
+      $scope.data.metrics = data.metrics;
+    });
+  }
   $scope.setCheck = function(check) { $scope.currentCheck = check; };
   $scope.getLabelClass = function(threadState) {
     return 'label-' + app.threadMap[threadState];

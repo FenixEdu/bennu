@@ -28,6 +28,8 @@ import java.lang.management.CompilationMXBean;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.MemoryUsage;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
@@ -53,6 +55,7 @@ import javax.management.ObjectInstance;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -159,6 +162,13 @@ public class SystemResource extends BennuRestResource {
 
         RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
 
+        metrics.addProperty("jvm.runtime.name", runtime.getName());
+        metrics.addProperty("jvm.runtime.vm.name", runtime.getVmName());
+        metrics.addProperty("jvm.runtime.vm.vendor", runtime.getVmVendor());
+        metrics.addProperty("jvm.runtime.vm.version", runtime.getVmVersion());
+        metrics.addProperty("jvm.runtime.spec.name", runtime.getSpecName());
+        metrics.addProperty("jvm.runtime.spec.vendor", runtime.getSpecVendor());
+        metrics.addProperty("jvm.runtime.spec.version", runtime.getSpecVersion());
         metrics.addProperty("jvm.runtime.uptime", runtime.getUptime() / 1000);
         metrics.addProperty("jvm.runtime.start.time", runtime.getStartTime());
         metrics.addProperty("now", System.currentTimeMillis());
@@ -172,6 +182,9 @@ public class SystemResource extends BennuRestResource {
 
         OperatingSystemMXBean os = ManagementFactory.getOperatingSystemMXBean();
 
+        metrics.addProperty("os.name", os.getName());
+        metrics.addProperty("os.arch", os.getArch());
+        metrics.addProperty("os.version", os.getVersion());
         metrics.addProperty("os.available.cpus", os.getAvailableProcessors());
         metrics.addProperty("os.load.average", os.getSystemLoadAverage());
 
@@ -205,14 +218,38 @@ public class SystemResource extends BennuRestResource {
 
         metrics.add("gc", gc);
 
+        JsonArray memory = new JsonArray();
+        for (MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
+            JsonObject beanJson = new JsonObject();
+            beanJson.addProperty("name", pool.getName());
+            beanJson.addProperty("type", pool.getType().toString());
+            beanJson.add("usage", addUsage(pool.getUsage()));
+            beanJson.add("peak", addUsage(pool.getPeakUsage()));
+            beanJson.add("collection", addUsage(pool.getCollectionUsage()));
+            beanJson.addProperty("managers", Arrays.stream(pool.getMemoryManagerNames()).collect(Collectors.joining(", ")));
+            memory.add(beanJson);
+        }
+        metrics.add("memory", memory);
+
         json.add("metrics", metrics);
 
         return json;
     }
 
+    private static final JsonObject addUsage(MemoryUsage usage) {
+        JsonObject json = new JsonObject();
+        if (usage != null) {
+            json.addProperty("init", usage.getInit());
+            json.addProperty("used", usage.getUsed());
+            json.addProperty("committed", usage.getCommitted());
+            json.addProperty("max", usage.getMax() < 0 ? usage.getUsed() : usage.getMax());
+        }
+        return json;
+    }
+
     private static JsonElement libs;
 
-    /* 
+    /*
      * Going through all the libs can be slow, and they never change,
      * so cache them.
      */
@@ -240,6 +277,14 @@ public class SystemResource extends BennuRestResource {
             }
         }
         return json;
+    }
+
+    @PUT
+    @Path("/full-gc")
+    public JsonObject fullGC(@Context HttpServletRequest request) {
+        accessControl(Group.managers());
+        System.gc();
+        return info(request, false);
     }
 
     @GET

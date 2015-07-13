@@ -1,13 +1,17 @@
-<div class="col-lg-12">
-    <button class="btn btn-success" ng-click="reload(false)"><span class="glyphicon glyphicon-refresh"></span> Reload</button>
-    <button class="btn btn-default" ng-click="threadDump()"><span class="glyphicon glyphicon-list"></span> Thread Dump</button>
-    <button class="btn btn-default" ng-click="healthcheck()"><span class="glyphicon glyphicon-heart"></span> Healthchecks</button>
+<div class="row">
+    <div class="col-lg-12">
+        <button class="btn btn-success" ng-click="reload(false)"><span class="glyphicon glyphicon-refresh"></span> Reload</button>
+        <button class="btn btn-default" ng-click="threadDump()"><span class="glyphicon glyphicon-list"></span> Thread Dump</button>
+        <button class="btn btn-default" ng-click="healthcheck()"><span class="glyphicon glyphicon-heart"></span> Healthchecks</button>
+        <button class="btn btn-default" ng-click="fullGC()"><span class="glyphicon glyphicon-trash"></span> Full GC</button>
 
-    <span class="badge pull-right">{{data.metrics.project}}-{{data.metrics.version}} @ {{data.metrics.hostname}}</span>
+        <span class="badge pull-right">{{data.metrics.project}}-{{data.metrics.version}} @ {{data.metrics.hostname}}</span>
+        <hr />
+    </div>
 </div>
 <div class="row">
 <div class="col-lg-4">
-    <h4>Memory</h4>
+    <h4>Memory <a href="" class="small" ng-click="memoryInfo = !memoryInfo">+ Info</a></h4>
     <progress-bar header="Total Memory" current="data.metrics['jvm.memory.total.used']" total="data.metrics['jvm.memory.total.max']" divider="1e6" unit="M"></progress-bar>
     <progress-bar header="Heap Memory" current="data.metrics['jvm.memory.heap.used']" total="data.metrics['jvm.memory.heap.max']" divider="1e6" unit="M"></progress-bar>
     <progress-bar header="Non-heap Memory" current="data.metrics['jvm.memory.non-heap.used']" total="data.metrics['jvm.memory.non-heap.max']" divider="1e6" unit="M"></progress-bar>
@@ -15,7 +19,10 @@
     <p><strong>Committed VM Size:</strong> {{data.metrics['os.committed.vm.size'] / 10e5 | number:0}} MB</p>
 </div>
 <div class="col-lg-4">
-    <h4>JVM</h4>
+    <h4>JVM <small>{{data.metrics['jvm.runtime.spec.version']}}.{{data.metrics['jvm.runtime.vm.version']}}</small></h4>
+    <p><strong>Runtime Name:</strong> {{data.metrics['jvm.runtime.name']}}</p>
+    <p><strong>Compiler Name:</strong> {{data.metrics['jit.name']}}</p>
+    <p><strong>Compilation Time:</strong> {{data.metrics['jit.total.time'] | number}} ms</p>
     <p><strong>Thread Count:</strong> {{data.metrics['jvm.threads.count']}}</p>
     <p><strong>Total Loaded Classes:</strong> {{data.metrics['jvm.classloading.loaded.total'] | number}}</p>
     <p><strong>Loaded Classes:</strong> {{data.metrics['jvm.classloading.loaded'] | number}}</p>
@@ -23,12 +30,10 @@
     <p><strong>Start Time:</strong> {{data.metrics['jvm.runtime.start.time'] | date:'dd/MM/yyyy HH:mm:ss'}}</p>
     <p><strong>Server Time:</strong> {{data.metrics.now | date:'dd/MM/yyyy HH:mm:ss'}}</p>
     <p><strong>Uptime:</strong> {{data.metrics['jvm.runtime.uptime'] | uptime}}</p>
-    <p><strong>Compiler Name:</strong> {{data.metrics['jit.name']}}</p>
-    <p><strong>Compilation Time:</strong> {{data.metrics['jit.total.time'] | number}} ms</p>
     <p><strong>Fenix Framework Cache size:</strong> {{data.metrics.cacheSize | number}}</p>
 </div>
 <div class="col-lg-4">
-    <h4>OS</h4>
+    <h4>OS <small>{{data.metrics['os.name']}} {{data.metrics['os.arch']}} @ {{data.metrics['os.version']}}</small></h4>
     <progress-bar header="Load Average" current="data.metrics['os.load.average']" total="data.metrics['os.available.cpus']" precision="2"></progress-bar>
     <progress-bar header="File Descriptors" current="data.metrics['os.process.open.fd.count']" total="data.metrics['os.process.max.fd.count']" ></progress-bar>
     <progress-bar header="System CPU Usage" current="data.metrics['os.system.cpu.usage'] * data.metrics['os.available.cpus'] * 100" total="data.metrics['os.available.cpus'] * 100" unit="%"></progress-bar>
@@ -36,13 +41,34 @@
     <p><strong>Process CPU Time:</strong> {{data.metrics['os.process.cpu.time'] / 10e9 | number:0}} s</p>
 </div>
 </div>
+
 <hr />
+
 <div class="row">
-    <div class="col-lg-4" ng-repeat="gc in data.metrics.gc">
+    <div class="col-sm-4" ng-repeat="gc in data.metrics.gc">
         <h4>GC: {{gc.name}}</h4>
         <p><strong>Pools: </strong> {{gc.pools}}</p>
         <p><strong>Count: </strong> {{gc.collectionCount | number}}</p>
         <p><strong>Time: </strong> {{gc.collectionTime | number}} ms</p>
+    </div>
+</div>
+
+<hr ng-show="memoryInfo" />
+
+<div class="row" ng-show="memoryInfo">
+    <div class="col-sm-4" ng-repeat="pool in data.metrics.memory | orderBy:'type'">
+        <h4>{{pool.name}} <small>{{pool.type}}</small></h4>
+        <p><strong>Used</strong> {{pool.usage.used / 1e6 | number: 0}}M <strong>Peak</strong> {{pool.peak.used / 1e6 | number: 0}}M <strong>Max</strong> {{ pool.peak.max / 1e6 | number:0}}M </p>
+        <div class="progress" ng-init="usagePercent = (pool.usage.used * 100) / pool.peak.max; peakPercent = (pool.peak.used * 100) / pool.peak.max">
+            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: {{usagePercent}}%">
+                <span class="sr-only">35% Complete (success)</span>
+                 {{ usagePercent | number:0 }}%
+            </div>
+            <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: {{peakPercent - usagePercent}}%">
+                <span class="sr-only">35% Complete (success)</span>
+                {{ peakPercent | number:0 }}%
+            </div>
+        </div>
     </div>
 </div>
 
