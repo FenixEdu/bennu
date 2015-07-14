@@ -85,7 +85,7 @@ public class Signal {
      * and removes the FenixFramework transactional listener.
      */
     public static void shutdown() {
-        clear();
+        innerClear();
         FenixFramework.getTransactionManager().removeCommitListener(listener);
     }
 
@@ -176,6 +176,10 @@ public class Signal {
      */
     public static void clear() {
         logger.warn("Detaching all handlers. Be sure what you are doing.");
+        innerClear();
+    }
+
+    private static void innerClear() {
         withTransaction.clear();
         withoutTransaction.clear();
     }

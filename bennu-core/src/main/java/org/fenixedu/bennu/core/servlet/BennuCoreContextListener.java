@@ -108,7 +108,7 @@ public class BennuCoreContextListener implements ServletContextListener {
             }
 
             if (thread.isAlive()) {
-                System.out.println("Killing initiated thread: " + thread + " of class " + thread.getClass());
+                logger.info("Killing initiated thread: {} of class {}", thread, thread.getClass().getName());
                 thread.interrupt();
             }
         }
