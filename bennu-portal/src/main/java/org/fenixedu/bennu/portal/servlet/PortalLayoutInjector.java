@@ -72,7 +72,7 @@ public class PortalLayoutInjector implements Filter {
         });
         // Disable auto-escaping
         engine.getExtension(EscaperExtension.class).setAutoEscaping(false);
-        engine.addExtension(new PortalExtension());
+        engine.addExtension(new PortalExtension(servletContext));
 
         if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
             logger.info("Theme Development Mode Enabled!");

@@ -33,7 +33,7 @@ public class PortalDevModeExceptionHandler extends PortalExceptionHandler {
                 return new InputStreamReader(context.getResourceAsStream("/bennu-portal/debugExceptionPage.html"),
                         StandardCharsets.UTF_8);
             }
-        });
+        }, context);
     }
 
     @Override

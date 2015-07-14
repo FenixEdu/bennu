@@ -9,6 +9,7 @@ public class PortalConfiguration {
 	public String supportEmailAddress;
 	public String systemEmailAddress;
 	public bytearray logo;
+	protected String logoChecksum;
 	public String logoType;
 	public String logoLinkUrl;
 	public String logoTooltip;
