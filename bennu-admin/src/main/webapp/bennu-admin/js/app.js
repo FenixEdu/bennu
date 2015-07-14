@@ -261,6 +261,9 @@ app.controller('MonitoringController', [ '$scope', '$http', function ($scope, $h
   $scope.getLabelClass = function(threadState) {
     return 'label-' + app.threadMap[threadState];
   };
+  $scope.hideProperty = function(key) {
+    return key.indexOf('pass') > -1 || key.indexOf('secret') > -1 || key.indexOf('private') > -1;
+  };
   $scope.reload(true);
 }]);
 

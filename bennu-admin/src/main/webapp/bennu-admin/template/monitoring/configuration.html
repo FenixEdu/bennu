@@ -11,7 +11,12 @@
     <tbody>
         <tr ng-repeat="property in data.conf | filter:sys.filter | orderBy:'key'">
             <th class="col-sm-4" style="word-wrap: break-word">{{property.key}}</th>
-            <td class="col-sm-8" style="word-wrap: break-word">{{property.value}}</td>
+            <td class="col-sm-8" style="word-wrap: break-word" ng-init="hide = hideProperty(property.key)">
+                <span ng-show="!hide">{{property.value}}</span>
+                <em ng-show="hide">
+                    Sensitive value hidden. <a ng-click="hide = false" role="button">Click to show</a>.
+                </em>
+            </td>
         </tr>
     </tbody>
 </table>
