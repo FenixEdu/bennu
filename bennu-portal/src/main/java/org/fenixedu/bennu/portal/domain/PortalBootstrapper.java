@@ -49,8 +49,7 @@ public class PortalBootstrapper {
         @Field(name = "bootstrapper.portalSection.organizationName", defaultValue = "FenixEdu", order = 3)
         public String getOrganizationName();
 
-        @Field(name = "bootstrapper.portalSection.documentationUrl", hint = "bootstrapper.portalSection.documentationUrl.hint",
-                order = 5)
+        @Field(name = "bootstrapper.portalSection.documentationUrl", defaultValue = "https://fenixedu.org/dev", order = 5)
         public String getDocumentationUrl();
 
     }
