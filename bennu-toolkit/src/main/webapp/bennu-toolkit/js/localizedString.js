@@ -54,7 +54,7 @@
         }
 
         val = val[tag]
-        if (val !== inputField.val()){
+        if (val !== inputField.val() || locale !== widget.data("locale")){
             inputField.val(val || "");
             
             setLocale(locale,localeButton);
