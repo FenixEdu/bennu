@@ -77,6 +77,7 @@
 	toolkitDirective('bennuDate', Bennu.datetime.createDateWidget);
 	toolkitDirective('bennuTime', Bennu.datetime.createTimeWidget);
 	toolkitDirective('bennuUserAutocomplete', Bennu.userAutocomplete.createWidget);
+	toolkitDirective('bennuGroup', Bennu.group.createWidget);
 
     bennuToolkit.directive('bennuHtmlEditor', ['$timeout', function($timeout) {
         return {
@@ -88,7 +89,7 @@
             link: function(scope, el, attr) {
                 el.hide();
 
-				var isLocalized = el[0].hasAttribute('bennu-localized-string');
+				var isLocalized = el[0].hasAttribute('bennu-localized-html-editor');
                 var handler = Bennu.htmlEditor.createWidget(el);
                 scope.$watch('model', function(value) {
                     if(isLocalized) {
