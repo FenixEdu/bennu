@@ -132,7 +132,12 @@ public class PortalExceptionHandler implements ExceptionHandler {
         Enumeration<String> names = req.getAttributeNames();
         while (names.hasMoreElements()) {
             String name = names.nextElement();
-            attrs.put(name, req.getAttribute(name));
+            try {
+                Object attribute = req.getAttribute(name);
+                attrs.put(name, attribute != null ? attribute.toString() : "");
+            } catch (Throwable t) {
+                attrs.put(name, "Unable to retrieve attribute due to exception " + t.getLocalizedMessage());
+            }
         }
         return attrs.entrySet();
     }
