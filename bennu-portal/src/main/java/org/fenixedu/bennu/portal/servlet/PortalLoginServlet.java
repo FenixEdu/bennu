@@ -149,7 +149,7 @@ public class PortalLoginServlet extends HttpServlet {
                     }
                 }
             });
-            pebble.addExtension(new PortalExtension());
+            pebble.addExtension(new PortalExtension(req.getServletContext()));
             if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
                 pebble.setTemplateCache(null);
             }

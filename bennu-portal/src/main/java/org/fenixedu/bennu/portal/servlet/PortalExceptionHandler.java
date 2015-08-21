@@ -61,12 +61,12 @@ public class PortalExceptionHandler implements ExceptionHandler {
                     return new InputStreamReader(context.getResourceAsStream("/bennu-portal/500.html"), StandardCharsets.UTF_8);
                 }
             }
-        });
+        }, context);
     }
 
-    protected PortalExceptionHandler(Loader loader) {
+    protected PortalExceptionHandler(Loader loader, ServletContext context) {
         this.engine = new PebbleEngine(loader);
-        engine.addExtension(new PortalExtension());
+        engine.addExtension(new PortalExtension(context));
         if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
             engine.setTemplateCache(null);
         }

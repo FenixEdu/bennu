@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
+import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
 
 /**
@@ -114,4 +115,24 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
         return super.getSubRootSet().stream().filter(root -> root.getPath().equals(key)).findAny();
     }
 
+    /**
+     * Returns the checksum of the current application's logo.
+     * 
+     * This value is meant to be used as a mechanism for cache busting, as as such, its correctness is not guarranteed, and it may
+     * even be {@code null}.
+     * 
+     * @return
+     *         The checksum of the application's logo. May be null
+     */
+    @Override
+    public String getLogoChecksum() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getLogoChecksum();
+    }
+
+    @Override
+    public void setLogo(byte[] logo) {
+        super.setLogo(logo);
+        setLogoChecksum(logo == null ? null : Hashing.sha1().hashBytes(logo).toString().substring(0, 12));
+    }
 }

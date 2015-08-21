@@ -9,7 +9,7 @@
     <meta name="author" content="fenixedu">
 
     <title>{% block title %}{{ functionality.title.content }}{% endblock %}</title>
-    <link href="{{contextPath}}/themes/default/css/style.css" rel="stylesheet">
+    <link href="{{asset('/themes/default/css/style.css')}}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -17,8 +17,8 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-	<script src="{{contextPath}}/bennu-portal/js/jquery.min.js"></script>
-	<script src="{{contextPath}}/webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="{{asset('/bennu-portal/js/jquery.min.js')}}"></script>
+	<script src="{{asset('/webjars/bootstrap/3.3.5/js/bootstrap.min.js')}}"></script>
 	<script> setLang = function(l) {
 	  $.post('{{contextPath}}/api/bennu-core/profile/locale/' + l.replace('_', '-')).always(function() { location.reload(); });
 	}
@@ -34,10 +34,10 @@
 				<nav class="navbar navbar-default" style="margin-top: 10px; margin-bottom: 5px">
 					{% if not config.logoLinkUrl is empty %}
 					<a href="{{config.logoLinkUrl}}" title="{{config.logoTooltip}}">
-						<img class="app-logo" width="200px"  src="{{contextPath}}/api/bennu-portal/configuration/logo" alt="{{config.applicationTitle.content}}">
+						<img class="app-logo" width="200px"  src="{{contextPath}}/api/bennu-portal/configuration/logo?v={{config.logoChecksum}}" alt="{{config.applicationTitle.content}}">
 					</a>
 					{% else %}
-					<img class="app-logo" width="200px" src="{{contextPath}}/api/bennu-portal/configuration/logo" alt="{{config.applicationTitle.content}}">
+					<img class="app-logo" width="200px" src="{{contextPath}}/api/bennu-portal/configuration/logo?v={{config.logoChecksum}}" alt="{{config.applicationTitle.content}}">
 					{% endif %}
 					<div class="navbar-brand">
 						<h4 class="media-heading">{{config.applicationTitle.content}} <span class="small">{{config.applicationSubTitle.content}}</span></h4>
