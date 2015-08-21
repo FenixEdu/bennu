@@ -36,14 +36,20 @@ public class UserResource extends BennuRestResource {
     @POST
     @Path("find")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement findUser(@QueryParam("query") String query, @QueryParam("maxHits") @DefaultValue("20") Integer maxHits) {
+    public JsonElement findUser(@QueryParam("query") String query,
+            @QueryParam("includeInactive") @DefaultValue("false") Boolean includeInactive,
+            @QueryParam("maxHits") @DefaultValue("20") Integer maxHits) {
         if (query == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
         Stream<User> results =
                 Stream.concat(Stream.of(User.findByUsername(query)),
                         UserProfile.searchByName(query, Integer.MAX_VALUE).map(UserProfile::getUser)).filter(Objects::nonNull)
-                        .distinct().limit(maxHits);
+                        .distinct();
+        if (!includeInactive) {
+            results = results.filter(u -> !u.isLoginExpired());
+        }
+        results = results.limit(maxHits);
         return view(results, "users");
     }
 
