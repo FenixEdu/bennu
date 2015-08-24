@@ -49,7 +49,12 @@ public class PortalDevModeExceptionHandler extends PortalExceptionHandler {
             Enumeration<String> names = session.getAttributeNames();
             while (names.hasMoreElements()) {
                 String name = names.nextElement();
-                attrs.put(name, session.getAttribute(name));
+                try {
+                    Object attribute = session.getAttribute(name);
+                    attrs.put(name, attribute != null ? attribute.toString() : "");
+                } catch (Throwable t) {
+                    attrs.put(name, "Unable to retrieve attribute due to exception " + t.getLocalizedMessage());
+                }
             }
             return attrs.entrySet();
         }
