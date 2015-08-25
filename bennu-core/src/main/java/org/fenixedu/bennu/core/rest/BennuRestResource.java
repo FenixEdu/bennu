@@ -9,8 +9,6 @@ import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.exceptions.DomainException;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.bennu.core.util.CoreConfiguration;
-import org.fenixedu.bennu.core.util.CoreConfiguration.CasConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,24 +18,6 @@ import pt.ist.fenixframework.FenixFramework;
 public abstract class BennuRestResource extends JsonAwareResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(BennuRestResource.class);
-
-    protected CasConfigContext getCasConfigContext() {
-        return new CasConfigContext(CoreConfiguration.casConfig());
-    }
-
-    public static class CasConfigContext {
-
-        private final CasConfig casConfig;
-
-        public CasConfigContext(CasConfig casConfig) {
-            this.casConfig = casConfig;
-        }
-
-        public CasConfig getCasConfig() {
-            return casConfig;
-        }
-
-    }
 
     protected <T extends DomainObject> T readDomainObject(final String externalId) {
         boolean error = false;

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.bennu.core.servlet.CasAuthenticationFilter;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.io.domain.GenericFile;
 import org.fenixedu.bennu.io.util.DownloadUtil;
@@ -38,8 +37,7 @@ public class FileDownloadServlet extends HttpServlet {
             }
             if (file.isAccessible(Authenticate.getUser())) {
                 DownloadUtil.downloadFile(file, request, response, "max-age=31536000");
-            } else if (file.isPrivate() && !Authenticate.isLogged()
-                    && request.getAttribute(CasAuthenticationFilter.AUTHENTICATION_EXCEPTION_KEY) == null) {
+            } else if (file.isPrivate() && !Authenticate.isLogged() && !"true".equals(request.getParameter("login_failed"))) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.sendRedirect(sendLoginRedirect(file));
             } else {

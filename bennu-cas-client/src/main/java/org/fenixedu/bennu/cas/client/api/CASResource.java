@@ -1,0 +1,104 @@
+package org.fenixedu.bennu.cas.client.api;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.fenixedu.bennu.cas.client.CASClientConfiguration;
+import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.UserProfile;
+import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
+import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.portal.servlet.PortalLoginServlet;
+import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+import org.jasig.cas.client.validation.TicketValidationException;
+import org.jasig.cas.client.validation.TicketValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
+import com.google.common.base.Strings;
+
+@Path("/cas-client/login")
+public class CASResource {
+
+    private static final Logger logger = LoggerFactory.getLogger(CASResource.class);
+
+    private final TicketValidator validator = new Cas20ServiceTicketValidator(CASClientConfiguration.getConfiguration()
+            .casServerUrl());
+
+    @GET
+    @Path("/{callback}")
+    public Response returnFromCAS(@QueryParam("ticket") String ticket, @PathParam("callback") String callback,
+            @Context HttpServletRequest request, @Context HttpServletResponse response) throws UnsupportedEncodingException,
+            URISyntaxException {
+
+        // Fail fast if CAS is not enabled
+        if (!CASClientConfiguration.getConfiguration().casEnabled()) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+
+        // We should always have a ticket here, so fail fast if not
+        if (Strings.isNullOrEmpty(ticket)) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+
+        // Check the callback is valid
+        String actualCallback = new String(Base64.getUrlDecoder().decode(callback), StandardCharsets.UTF_8);
+        if (!PortalLoginServlet.validateCallback(actualCallback)) {
+            return Response.status(Status.BAD_REQUEST).entity("The provided callback URL is invalid!").build();
+        }
+
+        try {
+            // Begin by logging out
+            Authenticate.logout(request, response);
+
+            // Validate the ticket
+            String requestURL = URLDecoder.decode(request.getRequestURL().toString(), "UTF-8");
+
+            String username = validator.validate(ticket, requestURL).getPrincipal().getName();
+            User user = getUser(username);
+            Authenticate.login(request, response, user);
+            logger.trace("Logged in user {}, redirecting to {}", username, actualCallback);
+        } catch (TicketValidationException | AuthorizationException e) {
+            logger.error(e.getMessage(), e);
+            // Append the login_failed parameter to the callback
+            actualCallback = actualCallback + (actualCallback.contains("?") ? "&" : "?") + "login_failed=true";
+        }
+        return Response.status(Status.FOUND).location(new URI(actualCallback)).build();
+    }
+
+    private User getUser(String username) {
+        User user = User.findByUsername(username);
+        if (user == null) {
+            user = attemptBootstrapUser(username);
+        }
+        return user;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static User attemptBootstrapUser(String username) {
+        User user = User.findByUsername(username);
+        if (user != null) {
+            return user;
+        }
+        logger.info("Created new user for {}", username);
+        return new User(username, new UserProfile("Unknown", "User", null, null, null));
+    }
+
+}

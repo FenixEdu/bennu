@@ -13,6 +13,8 @@ public class BennuPortalConfiguration {
                 description = "Disables Theme Caching and allows live-reloading of themes")
         public Boolean themeDevelopmentMode();
 
+        @ConfigurationProperty(key = "logout.url", description = "The URL to redirect the user to upon logout.")
+        public String logoutURL();
     }
 
     public static ConfigurationProperties getConfiguration() {

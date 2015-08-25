@@ -11,6 +11,7 @@
 
     <title>Login · {{config.applicationTitle.content}}</title>
 
+    <link href="{{contextPath}}/webjars/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{contextPath}}/bennu-portal/css/login.css" rel="stylesheet">
     <script src="{{contextPath}}/bennu-portal/js/jquery.min.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="{{contextPath}}/api/bennu-portal/configuration/favicon">
@@ -18,48 +19,76 @@
   </head>
 
   <body>
-  	<div class="container">
-  		<img src="{{contextPath}}/api/bennu-portal/configuration/logo" />
-  		<div class="login-content">
-  			<div class="app-name">
-  				{{config.applicationTitle.content}}
-  			</div>
-  			<div class="content">
-	  			<div class="alert">
-	  				{{i18n('resources.BennuPortalResources', 'label.invalid.authentication')}}
-	  			</div>
-	  			<div class="alert-login">
-	  				{{i18n('resources.BennuPortalResources', 'label.logging.in')}}
-	  			</div>
-	  			<form method="POST">
-	  				<input type="hidden" name="callback" value="{{callback}}" />
+    <div class="container text-center">
+      <img class="app-logo" src="{{contextPath}}/api/bennu-portal/configuration/logo" />
+      <div class="app-name">
+        {{config.applicationTitle.content}}
+      </div>
+      {% if localLogin %}
+      <div class="content">
+        <div class="auth-failed text-danger" style="display: none">
+          {{i18n('resources.BennuPortalResources', 'label.invalid.authentication')}}
+        </div>
+        <div class="auth-success text-success" style="display: none">
+          {{i18n('resources.BennuPortalResources', 'label.logging.in')}}
+        </div>
+        <form method="POST" class="login-form">
+          <input type="hidden" name="callback" value="{{callback}}" />
 
-			  		<input type="text" class="form-control" name="username" autocapitalize="off" autocorrect="off" placeholder="Username" autofocus />
-			  		<input type="password" name="password" placeholder="Password" />
+          <input type="text" name="username" autocapitalize="off" autocorrect="off" placeholder="Username" autofocus />
+          <input type="password" name="password" placeholder="Password" />
 
-		  			<div class="footer">
-		  				<input type="submit" value="&#10003;" />
-		  			</div>
-	  			</form>
-  			</div>
-  		</div>
-  	</div>
+          <div class="footer">
+            <input type="submit" value="&#10003;" />
+          </div>
+        </form>
+      </div>
+      {% endif %}
+
+      <form class="list-group provider-list" method="POST">
+      {% if localLogin and (not providers is empty) %}
+        <hr />
+      {% endif %}
+        <input type="hidden" name="callback" value="{{callback}}">
+      {% lazyFor provider in providers %}
+        <button class="list-group-item" type="submit" formaction="{{contextPath}}/login/{{provider.key}}">
+          <span style="padding-right: 5px">
+            {% if provider.iconPath.present %}
+              <img src="{{provider.iconPath.get()}}" width="22" height="22" />
+            {% else %}
+              <span class="glyphicon glyphicon-user no-icon"></span>
+            {% endif %}
+          </span>
+          {{provider.name}}
+        </button>
+      {% endLazyFor %}
+      </form>
+
+      {% if (not localLogin) and providers is empty %}
+        <div class="alert alert-warning">
+          {{i18n('resources.BennuPortalResources', 'message.login.not.configured')}}
+        </div>
+      {% endif %}
+    </div>
   </body>
 
+  {% if localLogin %}
   <script>
-  	$('form').on('submit', function (event) {
-  		event.preventDefault();
-  		var username = $(event.target).find('input[type=text]').val();
-  		var password = $(event.target).find('input[type=password]').val();
-  		$('.alert-login').show(); $('form').hide(); $('.alert').hide();
-  		$.post('{{contextPath}}/api/bennu-core/profile/login', {username: username, password: password}).done(function (data) {
-  			var url = $('input[type=hidden]').val() || '{{contextPath}}/';
-  			$('.alert-login').text("{{i18n('resources.BennuPortalResources', 'label.welcome')}} " + data.name + '!'); window.location = url;
-  		}).error(function (error) {
-  			$('.alert').show();
-  			$('form').show();
-  			$('.alert-login').hide();
-  		});
-  	});
+    $('.login-form').on('submit', function (event) {
+      event.preventDefault();
+      var username = $(event.target).find('input[type=text]').val();
+      var password = $(event.target).find('input[type=password]').val();
+      $('.auth-success').show(); $('.login-form').hide(); $('.auth-failed').hide();
+      $.post('{{contextPath}}/api/bennu-core/profile/login', {username: username, password: password}).done(function (data) {
+        var url = $('input[type=hidden]').val() || '{{contextPath}}/';
+        $('.auth-success').text("{{i18n('resources.BennuPortalResources', 'label.welcome')}}, " + data.name + '!'); window.location = url;
+        $('.provider-list').hide();
+      }).error(function (error) {
+        $('.auth-failed').show();
+        $('.login-form').show();
+        $('.auth-success').hide();
+      });
+    });
   </script>
+  {% endif %}
 </html>

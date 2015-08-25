@@ -1,0 +1,82 @@
+package org.fenixedu.bennu.portal.login;
+
+import java.io.IOException;
+import java.util.Optional;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.fenixedu.bennu.core.security.Authenticate;
+
+/**
+ * Login Providers allow users to select the way they prefer to authenticate into the application.
+ * 
+ * After the user has been successfuly identified, providers may use the
+ * {@link Authenticate#login(HttpServletRequest, HttpServletResponse, org.fenixedu.bennu.core.domain.User)} method to authenticate
+ * the user with the application.
+ * 
+ * Upon login, the provider is expected to redirect the user to the desired callback URL. If login is unsuccessful, the user
+ * should still be redirected, only with the added parameter "login_failed" set to "true".
+ * 
+ * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
+ */
+public interface LoginProvider {
+
+    /**
+     * Presents the user with a page on which he can authenticate with this application.
+     * 
+     * Typical implementations will either present a manual login page, or redirect to an external service
+     * (like Twitter, Google, GitHub or a CAS instance), so that authentication is performed by a third-party service, and later
+     * validated by the provider.
+     * 
+     * @param request
+     *            The request that originated the login request
+     * @param response
+     *            The response associated with the login request
+     * @param callback
+     *            The URL for which to redirect the user upon login. May be {@code null}. This callback was already validated, so
+     *            that is does not redirect the user to an external location
+     * @throws IOException
+     *             If an exception occurs when processing the request
+     * @throws ServletException
+     *             If an exception occurs when processing the request
+     */
+    public void showLogin(HttpServletRequest request, HttpServletResponse response, String callback) throws IOException,
+            ServletException;
+
+    /**
+     * Returns the key associated with this provider. This key should be unique across all providers.
+     * 
+     * This key should be a simple, url-safe string, as it will be used for URL parameters.
+     * 
+     * @return
+     *         This provider's key
+     */
+    public String getKey();
+
+    /**
+     * Returns the human-readable name of this provider. This will be presented to the end user when choosing a provider to login
+     * with.
+     * 
+     * @return
+     *         The name of this provider
+     */
+    public String getName();
+
+    /**
+     * Returns an optional path for the logo associated with this provider. This will be presented to the end user when choosing a
+     * provider to login with. If empty, a generic icon will be shown.
+     * 
+     * The returned path must be an absolute path to the image.
+     * 
+     * By default, return an empty {@link Optional}.
+     * 
+     * @return
+     *         The optional location of this provider's logo
+     */
+    public default Optional<String> getIconPath() {
+        return Optional.empty();
+    }
+
+}
