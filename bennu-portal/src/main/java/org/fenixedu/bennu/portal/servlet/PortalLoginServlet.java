@@ -5,10 +5,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
+import org.fenixedu.bennu.portal.login.LoginProvider;
 import org.fenixedu.commons.i18n.I18N;
 
 import com.google.common.base.Strings;
@@ -29,18 +32,11 @@ import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
 /**
+ * Servlet responsible for exposing the various {@link LoginProvider}s to the end user, as a way for him to login into the
+ * application.
  * 
- * Configurable servlet responsible for handling application logins.
- * 
- * As Bennu supports multiple authentication backends, this servlet can
- * be configured to present the user with the most suitable interface for
- * authentication, be it presenting a login page or redirecting to an external
- * service.
- * 
- * Out of the box, Bennu Portal supports CAS authentication (redirecting the user
- * to the correct CAS URL), and local authentication (via a themeable login page).
- * By default, the right one is chosen according to the system's configuration, but
- * can be manually overridden.
+ * This servlet shows to the user a login page that shows him a login form (if local login is enabled), or the option to choose an
+ * alternative provider with which he can log in.
  * 
  * Additionally, this servlet supports specifying a callback URL, to which the user
  * should be redirected after authentication is successful. For security purposes,
@@ -54,135 +50,125 @@ public class PortalLoginServlet extends HttpServlet {
 
     private static final long serialVersionUID = -4298321185506045304L;
 
-    private static PortalLoginStrategy strategy =
-            CoreConfiguration.casConfig().isCasEnabled() ? new CasLoginStrategy() : new LocalLoginStrategy();
+    private PebbleEngine engine;
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String callback = req.getParameter("callback");
-        if (!Strings.isNullOrEmpty(callback) && !callback.startsWith(CoreConfiguration.getConfiguration().applicationUrl())) {
-            throw new IllegalArgumentException("Callback URL '" + callback + "' is invalid!");
-        }
-        strategy.showLoginPage(req, resp, callback);
-    }
-
-    /**
-     * Override the configured {@link PortalLoginStrategy} with the provided one.
-     * 
-     * @param loginStrategy
-     *            The new strategy to be used
-     * @throws NullPointerException
-     *             If the provided strategy is null
-     */
-    public static void setLoginStrategy(PortalLoginStrategy loginStrategy) {
-        strategy = Objects.requireNonNull(loginStrategy);
-    }
-
-    /**
-     * Login strategy that redirects the user to the configured CAS URL.
-     * 
-     * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
-     *
-     */
-    private static class CasLoginStrategy implements PortalLoginStrategy {
-        @Override
-        public void showLoginPage(HttpServletRequest req, HttpServletResponse resp, String callback) throws IOException,
-                ServletException {
-            resp.sendRedirect(CoreConfiguration.casConfig().getCasLoginUrl(
-                    Strings.isNullOrEmpty(callback) ? CoreConfiguration.casConfig().getCasServiceUrl() : callback));
-        }
-    }
-
-    /**
-     * Login strategy that shows a themeable login page.
-     * 
-     * If the selected theme contains a file 'login.html', it will be rendered to the user.
-     * This rendering uses Twig, just like regular theme pages.
-     * 
-     * If the theme does not provide a custom login page, a default one will be shown.
-     * 
-     * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
-     *
-     */
-    public static class LocalLoginStrategy implements PortalLoginStrategy {
-
-        private volatile PebbleEngine engine;
-
-        @Override
-        public void showLoginPage(HttpServletRequest req, HttpServletResponse resp, String callback) throws IOException,
-                ServletException {
-            Map<String, Object> ctx = new HashMap<>();
-            PortalConfiguration config = PortalConfiguration.getInstance();
-            // Add relevant variables
-            ctx.put("config", config);
-            ctx.put("callback", callback);
-            ctx.put("url", req.getRequestURI());
-            ctx.put("currentLocale", I18N.getLocale());
-            ctx.put("contextPath", req.getContextPath());
-            ctx.put("locales", CoreConfiguration.supportedLocales());
-
-            try {
-                resp.setContentType("text/html;charset=UTF-8");
-                PebbleTemplate template = getEngine(req).getTemplate(config.getTheme());
-                template.evaluate(resp.getWriter(), ctx, I18N.getLocale());
-            } catch (PebbleException e) {
-                throw new IOException(e);
-            }
-        }
-
-        private PebbleEngine getEngine(HttpServletRequest req) {
-            if (engine != null) {
-                return engine;
-            }
-            final ServletContext context = req.getServletContext();
-            PebbleEngine pebble = new PebbleEngine(new ClasspathLoader() {
-                @Override
-                public Reader getReader(String themeName) throws LoaderException {
-                    // Try to resolve the page from the theme...
-                    InputStream stream = context.getResourceAsStream("/themes/" + themeName + "/login.html");
-                    if (stream != null) {
-                        return new InputStreamReader(stream, StandardCharsets.UTF_8);
-                    } else {
-                        // ... and fall back if none is provided.
-                        return new InputStreamReader(context.getResourceAsStream("/bennu-portal/login.html"),
-                                StandardCharsets.UTF_8);
-                    }
+    public void init(ServletConfig config) throws ServletException {
+        final ServletContext context = config.getServletContext();
+        engine = new PebbleEngine(new ClasspathLoader() {
+            @Override
+            public Reader getReader(String themeName) throws LoaderException {
+                // Try to resolve the page from the theme...
+                InputStream stream = context.getResourceAsStream("/themes/" + themeName + "/login.html");
+                if (stream != null) {
+                    return new InputStreamReader(stream, StandardCharsets.UTF_8);
+                } else {
+                    // ... and fall back if none is provided.
+                    return new InputStreamReader(context.getResourceAsStream("/bennu-portal/login.html"), StandardCharsets.UTF_8);
                 }
-            });
-            pebble.addExtension(new PortalExtension(req.getServletContext()));
-            if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
-                pebble.setTemplateCache(null);
             }
-            this.engine = pebble;
-            return pebble;
+        });
+        engine.addExtension(new PortalExtension(context));
+        if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
+            engine.setTemplateCache(null);
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String callback = req.getParameter("callback");
+        if (!validateCallback(callback)) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid callback URL");
+            return;
+        }
+        boolean localLogin = CoreConfiguration.getConfiguration().localLoginEnabled();
+        Collection<LoginProvider> providers = providers();
+
+        // If there is only one login option, show it right away
+        if (!localLogin && providers.size() == 1) {
+            providers.iterator().next().showLogin(req, resp, callback);
+            return;
         }
 
+        Map<String, Object> ctx = new HashMap<>();
+        PortalConfiguration config = PortalConfiguration.getInstance();
+        // Add relevant variables
+        ctx.put("config", config);
+        ctx.put("callback", callback);
+        ctx.put("url", req.getRequestURI());
+        ctx.put("currentLocale", I18N.getLocale());
+        ctx.put("contextPath", req.getContextPath());
+        ctx.put("locales", CoreConfiguration.supportedLocales());
+        ctx.put("providers", providers);
+        ctx.put("localLogin", localLogin);
+
+        try {
+            resp.setContentType("text/html;charset=UTF-8");
+            PebbleTemplate template = engine.getTemplate(config.getTheme());
+            template.evaluate(resp.getWriter(), ctx, I18N.getLocale());
+        } catch (PebbleException e) {
+            throw new IOException(e);
+        }
     }
 
     /**
-     * Strategy for dealing with login page requests from the user.
+     * Validates that the provided callback is valid, i.e., it is either not provided, or is a URL internal to the application.
      * 
-     * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
-     *
+     * @param callback
+     *            The callback to validate. May be {@code null}
+     * @return
+     *         Whether the provided callback is valid
      */
-    public static interface PortalLoginStrategy {
+    public static boolean validateCallback(String callback) {
+        return Strings.isNullOrEmpty(callback) || callback.startsWith(CoreConfiguration.getConfiguration().applicationUrl());
+    }
 
-        /**
-         * Present the user with a page which will allow her to identify herself with the system.
-         * 
-         * @param req
-         *            The user's request
-         * @param resp
-         *            The response
-         * @param callback
-         *            The requested callback. May be null.
-         * @throws IOException
-         *             If an exception occurs when writing to the response
-         * @throws ServletException
-         *             If an exception occurs when writing to the response
-         */
-        public void showLoginPage(HttpServletRequest req, HttpServletResponse resp, String callback) throws IOException,
-                ServletException;
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String callback = req.getParameter("callback");
+        if (!validateCallback(callback)) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid callback URL");
+            return;
+        }
+
+        LoginProvider provider = providerFor(req.getPathInfo());
+        if (provider == null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unrecognized Login Provider");
+        } else {
+            provider.showLogin(req, resp, callback);
+        }
+    }
+
+    private LoginProvider providerFor(String pathInfo) {
+        return pathInfo == null ? null : providers.get(pathInfo.replaceFirst("/", ""));
+    }
+
+    @Override
+    public void destroy() {
+        engine = null;
+    }
+
+    private static final Map<String, LoginProvider> providers = new HashMap<>();
+
+    /**
+     * Registers the given provider.
+     * 
+     * @param provider
+     *            The provider to register
+     * @throws NullPointerException
+     *             If the given provider is {@code null}
+     * @throws IllegalArgumentException
+     *             If another provider with the same key is already registered
+     */
+    public static void registerProvider(LoginProvider provider) {
+        if (providers.containsKey(provider.getKey())) {
+            throw new IllegalArgumentException("Another provider with key " + provider.getKey() + " already exists");
+        }
+        providers.put(provider.getKey(), provider);
+    }
+
+    private static Collection<LoginProvider> providers() {
+        return Collections.unmodifiableCollection(providers.values());
     }
 
 }

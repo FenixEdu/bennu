@@ -1,18 +1,16 @@
 body {
-	font: 17px 'Roboto', sans-serif;
 	background-color: #F1F1F1;
-	text-align: center;
-	font-weight:100;
 	color:#617383;
 }
 
 .container {
-	margin: 80px auto 0 auto;
+	margin-top: 80px;
 	max-width: 350px;
 	min-width: 200px;
 	background-color: white;
-	padding: 0 0 20px 0;
 	border-radius: 5px;
+	padding-right: 25px;
+	padding-left: 25px;
 }
 
 @media(max-height: 510px) {
@@ -23,31 +21,14 @@ body {
 	margin-top:2px;
 	margin-bottom:10px;
 	font-size: 22px;
+	text-align: center;
 }
-
-.content {
-	width: 90%;
-	margin: 0 auto;
-}
-
-.alert {
-	color: #c00;
-	margin-top: 20px;
-	margin-bottom: 4px;
-	display: none;
-	font-size: 14px;
-}
-
-.alert-login {
-	color: #090;
-	margin-top: 40px;
-	margin-bottom: 20px;
-	display: none;
-}
-
-form { padding: 10px; }
 
 .footer { padding-top: 10px; }
+
+.auth-success {
+	margin-top: 20px;
+}
 
 input {
   font-family: Roboto,Arial,Helvetica,sans-serif;
@@ -62,6 +43,7 @@ input {
   width:100%;
   box-sizing:border-box;
 }
+
 input[type=text]:focus, input[type=password]:focus{
 	border-color: rgba(153,153,153,.9);
   -webkit-box-shadow: rgba(0,0,0,.2) 0 1px 1px inset;
@@ -102,8 +84,23 @@ input[type=submit]:hover{
 	border-color: #106b80;
 }
 
-img {
+.app-logo {
 	padding: 30px;
 	max-width: 100%;
 	box-sizing: border-box;
+}
+
+.provider-list {
+	font-size: 17px;
+}
+
+.content {
+	margin-bottom: 20px;
+}
+
+.no-icon {
+	color: black;
+	width: 22px;
+	height: 22px;
+	text-align: center;
 }

@@ -20,72 +20,47 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.UserProfile;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
-import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 
 public class Authenticate {
     private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
 
-    public static final String LOGGED_USER_ATTRIBUTE = "LOGGED_USER_ATTRIBUTE";
+    private static final String LOGGED_USER_ATTRIBUTE = "LOGGED_USER_ATTRIBUTE";
 
     private static final InheritableThreadLocal<User> loggedUser = new InheritableThreadLocal<>();
 
     private static Set<UserAuthenticationListener> userAuthenticationListeners;
 
     /**
-     * Login user with the specified username, intended for use with an external user authentication mechanism, local password is
-     * ignored. For password based authentication use: {@link #login(HttpSession, String, String)}.
+     * Logs in the given User, associating it with the browser session for the current user.
      * 
-     * @param session session on with to log the user
-     * @param username username of the user to login
-     * @return user user logged in.
+     * @param request
+     *            The request that triggered the login
+     * @param response
+     *            The response associated with the request that triggered the login
+     * @param user
+     *            The user to log in
+     * @return
+     *         The logged in user
+     * @throws AuthorizationException
+     *             If the provided user is {@code null} or if the user has its login expired
      */
-    public static User login(HttpSession session, String username) {
-        return internalLogin(session, username, null, false);
-    }
-
-    /**
-     * Login user with the specified username and password, intended for password based authentication. For external
-     * authentication mechanisms use: {@link #login(HttpSession, String)}.
-     * 
-     * @param session session on with to log the user
-     * @param username username of the user to login
-     * @param password password of the user to login
-     * @return user user logged in.
-     */
-    public static User login(HttpSession session, String username, String password) {
-        return internalLogin(session, username, password, true);
-    }
-
-    private static User internalLogin(HttpSession session, String username, String password, boolean checkPassword) {
-        User user = User.findByUsername(username);
-        if (checkPassword && !CoreConfiguration.getConfiguration().developmentMode()) {
-            if (user == null || !user.matchesPassword(password)) {
-                throw AuthorizationException.authenticationFailed();
-            }
-        }
-        if (user == null) {
-            if (CoreConfiguration.casConfig().isCasEnabled()) {
-                user = attemptBootstrapUser(username);
-            } else {
-                throw AuthorizationException.authenticationFailed();
-            }
-        }
-        if (user.isLoginExpired()) {
+    public static User login(HttpServletRequest request, HttpServletResponse response, User user) {
+        if (user == null || user.isLoginExpired()) {
             throw AuthorizationException.authenticationFailed();
         }
 
+        HttpSession session = request.getSession();
         loggedUser.set(user);
         session.setAttribute(LOGGED_USER_ATTRIBUTE, user);
         final Locale preferredLocale = user.getProfile().getPreferredLocale();
@@ -99,16 +74,18 @@ public class Authenticate {
         return user;
     }
 
-    @Atomic(mode = TxMode.WRITE)
-    private static User attemptBootstrapUser(String username) {
-        User user = User.findByUsername(username);
-        if (user != null) {
-            return user;
-        }
-        return new User(username, new UserProfile("Unknown", "User", null, null, null));
-    }
-
-    public static void logout(HttpSession session) {
+    /**
+     * Invalidates the current session, logging out the current user.
+     * 
+     * Calling this method will cause subsequent calls to {{@link #getUser()} to return {@code null}.
+     * 
+     * @param request
+     *            The request that triggered the logout
+     * @param response
+     *            The response associated with the requires that triggered the logout
+     */
+    public static void logout(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
         if (session != null) {
             User user = (User) session.getAttribute(LOGGED_USER_ATTRIBUTE);
             if (user != null) {

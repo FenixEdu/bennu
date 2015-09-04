@@ -2,8 +2,6 @@ package org.fenixedu.bennu.core.api;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.IllformedLocaleException;
 import java.util.Locale;
 import java.util.Locale.Builder;
@@ -49,25 +47,18 @@ public class ProfileResource extends BennuRestResource {
         return view(null, Void.class, AuthenticatedUserViewer.class);
     }
 
-    @GET
-    @Path("caslogin")
-    public Response caslogin(@Context HttpServletRequest request) {
-        if (CoreConfiguration.casConfig().isCasEnabled()) {
-            try {
-                return Response.temporaryRedirect(new URI(CoreConfiguration.casConfig().getCasLoginUrl(request))).build();
-            } catch (URISyntaxException e) {
-            }
-        }
-        throw AuthorizationException.authenticationFailed();
-    }
-
     @POST
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement login(@Context HttpServletRequest request, @FormParam("username") String username,
-            @FormParam("password") String password) {
-        if (!CoreConfiguration.casConfig().isCasEnabled()) {
-            Authenticate.login(request.getSession(true), username, password);
+    public JsonElement login(@Context HttpServletRequest request, @Context HttpServletResponse response,
+            @FormParam("username") String username, @FormParam("password") String password) {
+        if (CoreConfiguration.getConfiguration().localLoginEnabled()) {
+            User user = User.findByUsername(username);
+            if (user != null && (CoreConfiguration.getConfiguration().developmentMode() || user.matchesPassword(password))) {
+                Authenticate.login(request, response, user);
+            } else {
+                throw AuthorizationException.authenticationFailed();
+            }
             return view(null, Void.class, AuthenticatedUserViewer.class);
         }
         throw AuthorizationException.authenticationFailed();
@@ -78,16 +69,8 @@ public class ProfileResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public JsonElement logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
         accessControl(Group.logged());
-        Authenticate.logout(request.getSession(false));
-        if (CoreConfiguration.casConfig().isCasEnabled()) {
-            try {
-                response.sendRedirect(CoreConfiguration.casConfig().getCasLogoutUrl());
-            } catch (IOException e) {
-            }
-        } else {
-            return view(null, Void.class, AuthenticatedUserViewer.class);
-        }
-        throw AuthorizationException.authenticationFailed();
+        Authenticate.logout(request, response);
+        return view(null, Void.class, AuthenticatedUserViewer.class);
     }
 
     @POST
