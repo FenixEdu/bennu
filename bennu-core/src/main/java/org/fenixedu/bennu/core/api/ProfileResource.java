@@ -29,10 +29,10 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.i18n.I18NFilter;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
-import org.fenixedu.commons.i18n.I18N;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -76,11 +76,12 @@ public class ProfileResource extends BennuRestResource {
     @POST
     @Path("locale/{tag}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement changeLocale(@Context HttpServletRequest request, @PathParam("tag") String localeTag) {
+    public JsonElement changeLocale(@Context HttpServletRequest request, @Context HttpServletResponse response,
+            @PathParam("tag") String localeTag) {
         try {
             Locale locale = new Builder().setLanguageTag(localeTag).build();
             if (CoreConfiguration.supportedLocales().contains(locale)) {
-                I18N.setLocale(request.getSession(true), locale);
+                I18NFilter.updateLocale(locale, request, response);
                 if (Authenticate.isLogged()) {
                     setPreferredLocale(locale);
                 }
@@ -94,23 +95,6 @@ public class ProfileResource extends BennuRestResource {
     @Atomic(mode = TxMode.WRITE)
     private void setPreferredLocale(Locale locale) {
         Authenticate.getUser().getProfile().setPreferredLocale(locale);
-    }
-
-    @POST
-    @Path("preferred-locale/{tag}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement changePreferredLocale(@Context HttpServletRequest request, @PathParam("tag") String localeTag) {
-        accessControl(Group.logged());
-        try {
-            Locale locale = new Builder().setLanguageTag(localeTag).build();
-            if (CoreConfiguration.supportedLocales().contains(locale)) {
-                Authenticate.getUser().getProfile().setPreferredLocale(locale);
-                I18N.setLocale(request.getSession(true), locale);
-                return view(null, Void.class, AuthenticatedUserViewer.class);
-            }
-        } catch (IllformedLocaleException e) {
-        }
-        throw BennuCoreDomainException.resourceNotFound(localeTag);
     }
 
     @GET
