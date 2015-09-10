@@ -16,6 +16,7 @@
  */
 package org.fenixedu.bennu.core.domain;
 
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.SecureRandom;
@@ -221,7 +222,7 @@ public final class User extends User_Base implements Principal {
                 byte[] salt = BaseEncoding.base64().decode(params[2]);
                 byte[] hash = BaseEncoding.base64().decode(params[3]);
                 byte[] testHash = pbkdf2(algorithm, password.toCharArray(), salt, iterations, hash.length);
-                return slowEquals(hash, testHash);
+                return MessageDigest.isEqual(hash, testHash);
             } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                 throw new Error("Please provide proper cryptographic algorithm implementation");
             }
@@ -230,22 +231,6 @@ public final class User extends User_Base implements Principal {
 
     public Group groupOf() {
         return Group.users(this);
-    }
-
-    /**
-     * Compares two byte arrays in length-constant time. This comparison method
-     * is used so that password hashes cannot be extracted from an on-line
-     * system using a timing attack and then attacked off-line.
-     * 
-     * @param a the first byte array
-     * @param b the second byte array
-     * @return true if both byte arrays are the same, false if not
-     */
-    private static boolean slowEquals(byte[] a, byte[] b) {
-        int diff = a.length ^ b.length;
-        for (int i = 0; i < a.length && i < b.length; i++)
-            diff |= a[i] ^ b[i];
-        return diff == 0;
     }
 
     /**
