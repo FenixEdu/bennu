@@ -94,7 +94,11 @@ public class Signal {
      * handler can still abort the transaction.
      * 
      * @param key
+     *            The key in which to register this handler.
      * @param handler
+     *            The handler to register.
+     * @return
+     *         The {@link HandlerRegistration} associated with this handler
      */
     public static HandlerRegistration register(String key, Object handler) {
         return registerInBus(key, handler, withTransaction, true);
@@ -106,6 +110,8 @@ public class Signal {
      * The advantage of this method is that it is lambda-ready, removing the necessity of creating an {@link EventBus} compatible
      * class.
      * 
+     * @param <T>
+     *            The type of the object sent with the signal
      * @param key
      *            The key in which to register this handler.
      * @param handler
@@ -124,7 +130,11 @@ public class Signal {
      * successful. If you want the chance to abort the transaction, use {@link #register(String, Object)} .
      * 
      * @param key
+     *            The key in which to register this handler.
      * @param handler
+     *            The handler to register.
+     * @return
+     *         The {@link HandlerRegistration} associated with this handler.
      */
     public static HandlerRegistration registerWithoutTransaction(String key, Object handler) {
         return registerInBus(key, handler, withoutTransaction, false);
@@ -137,6 +147,8 @@ public class Signal {
      * The advantage of this method is that it is lambda-ready, removing the necessity of creating an {@link EventBus} compatible
      * class.
      * 
+     * @param <T>
+     *            The type of the object sent with the signal
      * @param key
      *            The key in which to register this handler.
      * @param handler

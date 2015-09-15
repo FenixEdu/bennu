@@ -71,6 +71,24 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
     /**
      * Creates a new {@link MenuFunctionality} under the given container, based on the provider parameters.
      *
+     * @param parent
+     *            The parent container for the new item
+     * @param visible
+     *            Whether this functionality is to be visible when rendering the menu
+     * @param key
+     *            The unique key that represents this functionality
+     * @param provider
+     *            The provider backend that will be responsible for rendering this functionality
+     * @param accessGroup
+     *            The expression for this functionality's access group
+     * @param description
+     *            The textual description for this functionality
+     * @param title
+     *            The title for this functionality
+     * @param path
+     *            The semantic-url path for this functionality
+     * @param documentationUrl
+     *            The URL for the documentation of this functionality
      * @throws IllegalArgumentException
      *             If {@code parent} is null.
      */
