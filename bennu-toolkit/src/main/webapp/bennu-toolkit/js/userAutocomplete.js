@@ -140,9 +140,11 @@
         	if (value && value.hasOwnProperty('username') && value.hasOwnProperty('name')) {
         		$(input).val(value.username);
         		userAutocomplete.typeahead('val', value.name);
+                $(input).change();
         	} else {
         		$(input).val("");
         		userAutocomplete.typeahead('val', '');
+                $(input).change();
         	}
         });
         
