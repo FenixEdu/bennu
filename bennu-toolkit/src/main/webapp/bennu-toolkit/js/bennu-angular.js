@@ -78,41 +78,50 @@
 	toolkitDirective('bennuTime', Bennu.datetime.createTimeWidget);
 	toolkitDirective('bennuUserAutocomplete', Bennu.userAutocomplete.createWidget);
 
-    bennuToolkit.directive('bennuHtmlEditor', ['$timeout', function($timeout) {
-        return {
-            restrict: 'A',
-            scope: {
-				model: '=bennuHtmlEditor',
-				onImageAdded: '=onImageAdded'
-            },
-            link: function(scope, el, attr) {
-                el.hide();
+	htmlEditor('bennuHtmlEditor', false);
+	htmlEditor('bennuLocalizedHtmlEditor', true);
 
-				var isLocalized = el[0].hasAttribute('bennu-localized-string');
-                var handler = Bennu.htmlEditor.createWidget(el);
-                scope.$watch('model', function(value) {
-                    if(isLocalized) {
-                        value = JSON.stringify(value);
-                    }
-                    if(value !== handler.get()) {
-                        handler.set(value);
-                    }
-                });
-                handler.onchange(function () {
-                    $timeout(function () {
-                        scope.model = isLocalized ? JSON.parse(handler.get()) : handler.get();
-                    });
-                });
+	function htmlEditor(name, isLocalized) {
+	    bennuToolkit.directive(name, ['$timeout', function($timeout) {
+	        return {
+	            restrict: 'A',
+	            scope: {
+					model: '=' + name,
+					onImageAdded: '=onImageAdded'
+	            },
+	            link: function(scope, el, attr) {
+	                el.hide();
+
+	                if (isLocalized) {
+	                	// The htmlEditor's createWidget should receive this as a flag,
+	                	// not require the attribute to be present.
+	                	el.attr('bennu-localized-string', 'true');
+	                }
+	                var handler = Bennu.htmlEditor.createWidget(el);
+	                scope.$watch('model', function(value) {
+	                    if(isLocalized) {
+	                        value = JSON.stringify(value);
+	                    }
+	                    if(value !== handler.get()) {
+	                        handler.set(value);
+	                    }
+	                });
+	                handler.onchange(function () {
+	                    $timeout(function () {
+	                        scope.model = isLocalized ? JSON.parse(handler.get()) : handler.get();
+	                    });
+	                });
 
 
-				el.data("fileHandler", function (files, callback) {
-					if (scope.onImageAdded) {
-						scope.onImageAdded(files, callback, handler)
-					}
-				});
-			}
-        }
-    }]);
+					el.data("fileHandler", function (files, callback) {
+						if (scope.onImageAdded) {
+							scope.onImageAdded(files, callback, handler)
+						}
+					});
+				}
+	        }
+	    }]);
+	};
 
 	bennuToolkit.directive('progressBar', function() {
 	  return {
