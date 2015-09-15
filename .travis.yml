@@ -2,4 +2,3 @@ language: java
 script: "mvn clean install javadoc:javadoc"
 jdk:
   - oraclejdk8
-sudo: false
