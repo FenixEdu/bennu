@@ -349,7 +349,7 @@
             }
         }
 
-        if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
+        if (Bennu.utils.hasAttr(e,"bennu-localized-html-editor")) {
             var menu = $('<div class="btn-group bennu-localized-string-group">' +
                 '<button type="button" class="btn btn-default dropdown-toggle bennu-localized-string-button" data-toggle="dropdown">' +
                 '<span class="bennu-localized-string-language"></span> <span class="caret"></span>' +
@@ -378,7 +378,7 @@
         }
 
         $(".bennu-html-editor-editor", dom).on('change', function () {
-            if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
+            if (Bennu.utils.hasAttr(e,"bennu-localized-html-editor")) {
                 var data = JSON.parse($(dom.data("related")).val());
                 var locale = $(".bennu-localized-string-language", dom).data("locale");
                 var tag = locale.tag;
@@ -541,7 +541,7 @@
         });
 
         e.on("change.bennu", function (ev) {
-            if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
+            if (Bennu.utils.hasAttr(e,"bennu-localized-html-editor")) {
 	        var value = $(e).val();
 		if (value === null || value === undefined || value === "") {
 		   value = "{}";
@@ -593,7 +593,7 @@
                 $(".bennu-html-code-editor", dom).data("editor",editor);
 
                 editor.on("input",function(){
-                    if (Bennu.utils.hasAttr(dom.data("related"), "bennu-localized-string")) {
+                    if (Bennu.utils.hasAttr(dom.data("related"), "bennu-localized-html-editor")) {
                         var data = JSON.parse(handler.get());
                         var locale = $(".bennu-localized-string-language", dom).data("locale");
                         var tag = locale.tag;
@@ -627,7 +627,7 @@
                         $(".bennu-html-editor-editor", dom).hide();
                         $(".bennu-html-code-editor-container", dom).show();
                         $(".bennu-localized-string-button", dom).attr("disabled","");
-                        if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
+                        if (Bennu.utils.hasAttr(e,"bennu-localized-html-editor")) {
                             var data = JSON.parse(handler.get());
                             var locale = $(".bennu-localized-string-language", dom).data("locale");
                             var tag = locale.tag;
@@ -656,7 +656,7 @@
                         $(".bennu-html-code-editor-container", dom).hide();
                         //
 
-                        if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
+                        if (Bennu.utils.hasAttr(e,"bennu-localized-html-editor")) {
                             var data = JSON.parse(handler.get());
                             var locale = $(".bennu-localized-string-language", dom).data("locale");
                             var tag = locale.tag;
