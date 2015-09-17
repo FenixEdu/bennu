@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
-import org.fenixedu.commons.i18n.I18N;
+import org.fenixedu.bennu.core.i18n.I18NFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class Authenticate {
         session.setAttribute(LOGGED_USER_ATTRIBUTE, user);
         final Locale preferredLocale = user.getProfile().getPreferredLocale();
         if (preferredLocale != null) {
-            I18N.setLocale(session, preferredLocale);
+            I18NFilter.updateLocale(preferredLocale, request, response);
         }
 
         fireLoginListeners(session, user);
