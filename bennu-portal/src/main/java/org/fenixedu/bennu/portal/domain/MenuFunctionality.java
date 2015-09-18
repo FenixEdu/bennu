@@ -168,7 +168,7 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
     }
 
     public String getParsedDocumentationUrl() {
-        if (this.getDocumentationUrl() != null) {
+        if (this.getDocumentationUrl() != null && PortalConfiguration.getInstance().getDocumentationBaseUrl() != null) {
             return this.getDocumentationUrl().replaceAll("\\{base\\}",
                     PortalConfiguration.getInstance().getDocumentationBaseUrl());
         }
