@@ -910,8 +910,6 @@
           });
         }
 
-        var handler = Bennu.widgetHandler.makeFor(e);
-
         var setupEditor = function(dom, cb) {
             var editor = $(".bennu-html-code-editor", dom).data("editor");
             if (editor) {
