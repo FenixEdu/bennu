@@ -15,6 +15,9 @@ import java.util.regex.Pattern;
 
 import jvstm.PerTxBox;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -221,13 +224,62 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     /*
+     * Attempt to use the 'sendfile' primitive to download the file.
+     * 
+     * This feature may not be supported, or the file may not be stored in the
+     * filesystem, causing this not to work.
+     * 
+     * However, when it works, it provides great benefits, as the file must not
+     * be read to the Java Heap, only to be written to a socket, thus greatly
+     * reducing memory consumption.
+     */
+    @Override
+    protected boolean tryLowLevelDownload(GenericFile file, HttpServletRequest request, HttpServletResponse response, long start,
+            long end) {
+        if (supportsSendfile(request)) {
+            Optional<String> filePath = getSendfilePath(file.getContentKey());
+            if (filePath.isPresent()) {
+                handleSendfile(file, filePath.get(), request, response, start, end);
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /*
+     * Sendfile is available, and the file is stored in the filesystem, so instruct
+     * the container to directly write the file.
+     * 
+     * For now, we only support the Tomcat-specific 'sendfile' implementation.
+     * See: http://tomcat.apache.org/tomcat-7.0-doc/aio.html#Asynchronous_writes
+     */
+    private static void handleSendfile(GenericFile file, String filename, HttpServletRequest request,
+            HttpServletResponse response, long start, long end) {
+        response.setHeader("X-Bennu-Sendfile", "true");
+        request.setAttribute("org.apache.tomcat.sendfile.filename", filename);
+        request.setAttribute("org.apache.tomcat.sendfile.start", Long.valueOf(start));
+        request.setAttribute("org.apache.tomcat.sendfile.end", Long.valueOf(end + 1));
+    }
+
+    /*
+     * Checks if the container supports usage of the 'sendfile' primitive.
+     * 
+     * For now, we only support the Tomcat-specific 'sendfile' implementation. 
+     * See: http://tomcat.apache.org/tomcat-7.0-doc/aio.html#Asynchronous_writes
+     */
+    private static boolean supportsSendfile(HttpServletRequest request) {
+        return Boolean.TRUE.equals(request.getAttribute("org.apache.tomcat.sendfile.support"));
+    }
+
+    /*
      * Returns the absolute path for the given content key.
      * 
      * It must first check if the file indeed exists, in order
      * for the application to throw the proper exception.
      */
-    @Override
-    Optional<String> getSendfilePath(String uniqueIdentification) {
+    private Optional<String> getSendfilePath(String uniqueIdentification) {
         String path = getFullPath(uniqueIdentification) + uniqueIdentification;
         if (new File(path).exists()) {
             return Optional.of(path);
