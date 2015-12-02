@@ -35,13 +35,13 @@ public abstract class FileStorage extends FileStorage_Base {
     /**
      * Stores the given file in this storage, and associates it with the given identifier.
      * 
-     * This differs from the {@link #store(String, byte[])} variant in that it does not require the whole file to be loaded in
+     * This differs from the {@link #store(GenericFile, byte[])} variant in that it does not require the whole file to be loaded in
      * memory.
      * 
      * Due to performance reasons, the given file may be locked, moved to another location or even removed.
      * 
-     * @param uniqueIdentification
-     *            The unique identifier for the newly created file
+     * @param genericFile
+     *            The {@link GenericFile} instance to store
      * @param file
      *            The file to store
      * @return
@@ -49,15 +49,15 @@ public abstract class FileStorage extends FileStorage_Base {
      * @throws IOException
      *             If any error occurs while accessing the provided file or storing it in the underlying storage
      */
-    public String store(String uniqueIdentification, File file) throws IOException {
-        return store(uniqueIdentification, Files.toByteArray(file));
+    public String store(GenericFile genericFile, File file) throws IOException {
+        return store(genericFile, Files.toByteArray(file));
     }
 
-    abstract public String store(String uniqueIdentification, byte[] content);
+    abstract public String store(GenericFile file, byte[] content);
 
-    abstract public byte[] read(String uniqueIdentification);
+    abstract public byte[] read(GenericFile file);
 
-    abstract public InputStream readAsInputStream(String uniqueIdentification);
+    abstract public InputStream readAsInputStream(GenericFile file);
 
     public static DomainStorage createNewDomainStorage(final String name) {
         return new DomainStorage(name);

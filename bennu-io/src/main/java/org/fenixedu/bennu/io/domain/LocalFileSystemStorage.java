@@ -94,8 +94,9 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     @Override
-    public String store(String uniqueIdentification, File file) {
-
+    public String store(GenericFile genericFile, File file) {
+        String uniqueIdentification =
+                genericFile.getContentKey() == null ? genericFile.getExternalId() : genericFile.getContentKey();
         final String fullPath = getFullPath(uniqueIdentification);
 
         File directory = new File(fullPath);
@@ -116,7 +117,8 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     @Override
-    public String store(String uniqueIdentification, byte[] content) {
+    public String store(GenericFile file, byte[] content) {
+        String uniqueIdentification = file.getContentKey() == null ? file.getExternalId() : file.getContentKey();
 
         final String fullPath = getFullPath(uniqueIdentification);
 
@@ -192,7 +194,8 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     @Override
-    public byte[] read(String uniqueIdentification) {
+    public byte[] read(GenericFile file) {
+        String uniqueIdentification = file.getContentKey();
         try {
             Map<String, FileWriteIntention> map = getPerTxBox().get();
             if (map.containsKey(uniqueIdentification)) {
@@ -206,7 +209,8 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     @Override
-    public InputStream readAsInputStream(String uniqueIdentification) {
+    public InputStream readAsInputStream(GenericFile file) {
+        String uniqueIdentification = file.getContentKey();
         try {
             Map<String, FileWriteIntention> map = getPerTxBox().get();
             if (map.containsKey(uniqueIdentification)) {
