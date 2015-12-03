@@ -48,6 +48,29 @@
 	  }
 	}]);
 
+	bennuToolkit.directive('bennuGroup', ['$timeout', function($timeout) {
+        return {
+            restrict: 'A',
+            scope: {
+                model: '=bennuGroup'
+            },
+            link: function(scope, el, attr) {
+                el.hide();
+                var handler = Bennu.group.createWidget(el);
+                scope.$watch('model', function(value) {
+                    if(value !== handler.get()) {
+                        handler.set(value);
+                    }
+                });
+                handler.onchange(function () {
+                    $timeout(function () {
+                        scope.model = handler.get();
+                    });
+                });
+            }
+        }
+    }]);
+
 	function toolkitDirective(name, widgetProvider) {
 		bennuToolkit.directive(name, ['$timeout', function($timeout) {
 		  return {
