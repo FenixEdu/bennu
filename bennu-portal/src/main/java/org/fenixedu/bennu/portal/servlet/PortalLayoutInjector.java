@@ -20,6 +20,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.fenixedu.bennu.alerts.Alert;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
@@ -30,6 +31,7 @@ import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonArray;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
@@ -110,6 +112,8 @@ public class PortalLayoutInjector implements Filter {
                     ctx.put("selectedTopLevel", path.get(0));
                     ctx.put("locales", CoreConfiguration.supportedLocales());
                     ctx.put("currentLocale", I18N.getLocale());
+                    ctx.put("alerts", Alert.getAlertsAsJson(request, response));
+
                     PebbleTemplate template = engine.getTemplate(config.getTheme() + "/" + functionality.resolveLayout());
                     template.evaluate(response.getWriter(), ctx, I18N.getLocale());
                 } catch (PebbleException e) {
