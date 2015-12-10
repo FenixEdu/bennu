@@ -145,18 +145,17 @@ public class DownloadUtil {
     private static void copyStream(InputStream in, OutputStream out, long start, long bytesToRead) throws IOException {
         ByteStreams.skipFully(in, start);
         byte buffer[] = new byte[BUF_SIZE];
-        int len = buffer.length;
-        while ((bytesToRead > 0) && (len >= buffer.length)) {
-            len = in.read(buffer);
+        while (bytesToRead > 0) {
+            int len = in.read(buffer);
+            if (len == -1) {
+                break;
+            }
             if (bytesToRead >= len) {
                 out.write(buffer, 0, len);
                 bytesToRead -= len;
             } else {
                 out.write(buffer, 0, (int) bytesToRead);
                 bytesToRead = 0;
-            }
-            if (len < buffer.length) {
-                break;
             }
         }
     }
