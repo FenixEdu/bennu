@@ -3,7 +3,6 @@ package org.fenixedu.bennu.io.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -126,7 +125,7 @@ public class DownloadUtil {
             response.setStatus(HttpServletResponse.SC_OK);
         }
 
-        if (sendFile(file, request, response, start, end)) {
+        if (FileStorage.tryDownloadFile(file, request, response, start, end)) {
             return;
         }
         try (InputStream stream = file.getStream()) {
@@ -160,55 +159,6 @@ public class DownloadUtil {
                 break;
             }
         }
-    }
-
-    /*
-     * Attempt to use the 'sendfile' primitive to download the file.
-     * 
-     * This feature may not be supported, or the file may not be stored in the
-     * filesystem, causing this not to work.
-     * 
-     * However, when it works, it provides great benefits, as the file must not
-     * be read to the Java Heap, only to be written to a socket, thus greatly
-     * reducing memory consumption.
-     */
-    private static boolean sendFile(GenericFile file, HttpServletRequest request, HttpServletResponse response, long start,
-            long end) {
-        if (supportsSendfile(request)) {
-            Optional<String> filePath = FileStorage.sendfilePath(file);
-            if (filePath.isPresent()) {
-                handleSendfile(file, filePath.get(), request, response, start, end);
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    /*
-     * Sendfile is available, and the file is stored in the filesystem, so instruct
-     * the container to directly write the file.
-     * 
-     * For now, we only support the Tomcat-specific 'sendfile' implementation.
-     * See: http://tomcat.apache.org/tomcat-7.0-doc/aio.html#Asynchronous_writes
-     */
-    private static void handleSendfile(GenericFile file, String filename, HttpServletRequest request,
-            HttpServletResponse response, long start, long end) {
-        response.setHeader("X-Bennu-Sendfile", "true");
-        request.setAttribute("org.apache.tomcat.sendfile.filename", filename);
-        request.setAttribute("org.apache.tomcat.sendfile.start", Long.valueOf(start));
-        request.setAttribute("org.apache.tomcat.sendfile.end", Long.valueOf(end + 1));
-    }
-
-    /*
-     * Checks if the container supports usage of the 'sendfile' primitive.
-     * 
-     * For now, we only support the Tomcat-specific 'sendfile' implementation.
-     * See: http://tomcat.apache.org/tomcat-7.0-doc/aio.html#Asynchronous_writes
-     */
-    private static boolean supportsSendfile(HttpServletRequest request) {
-        return Boolean.TRUE.equals(request.getAttribute("org.apache.tomcat.sendfile.support"));
     }
 
 }

@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.io.Files;
 
@@ -86,30 +88,58 @@ public abstract class FileStorage extends FileStorage_Base {
     }
 
     /**
-     * Returns the 'sendfile' path for the given file.
+     * Attempts to download the given file into the given response, in a more efficient manner than loading the file into memory
+     * and dumping it into the output stream.
      * 
-     * <strong>PRIVATE API:</strong>
-     * Note that this is Bennu IO private API, and should not be used outside this module.
-     * If you do use it, do it at your own risk, as this API is subject to change without
-     * any warning.
+     * This method returns a boolean indicating whether the low-level download was performed. If not, callers are expected to
+     * handle the file download in the regular manner.
      * 
      * @param file
-     *            The file to check
+     *            The file to download
+     * @param request
+     *            The HttpServletRequest that originated the file download request
+     * @param response
+     *            The HttpServletResponse to which the response should be written to
+     * @param start
+     *            The start offset within the file. The value of this number MUST be between 0 and the size of the file
+     * @param end
+     *            The end offset within the file. The value within this number MUST be between 1 and the size of the file
      * @return
-     *         An optional sendfile path
+     *         Whether a low-level download was performed
+     * @throws IOException
+     *             If an exception occurs while downloading the file
+     * @throws NullPointerException
+     *             If any of the arguments is null
      */
-    public static Optional<String> sendfilePath(GenericFile file) {
-        return file.getStorage().getSendfilePath(file.getContentKey());
+    public static boolean tryDownloadFile(GenericFile file, HttpServletRequest request, HttpServletResponse response, long start,
+            long end) throws IOException {
+        return file.getFileStorage().tryLowLevelDownload(file, request, response, start, end);
     }
 
-    /*
-     * Retrieves the file path for the given content key,
-     * if this storage supports it, and the file is indeed stored
-     * in the file system.
+    /**
+     * Attempts to perform a low-level download of the given file into the given response. {@link FileStorage} instances are
+     * expected to implement this whenever possible.
      * 
-     * By default returns an empty optional.
+     * The default implementation returns {@code false}, as just tells any caller to fallback to downloading the file in the
+     * regular manner.
+     * 
+     * @param file
+     *            The file to download
+     * @param request
+     *            The HttpServletRequest that originated the file download request
+     * @param response
+     *            The HttpServletResponse to which the response should be written to
+     * @param start
+     *            The start offset within the file. The value of this number MUST be between 0 and the size of the file
+     * @param end
+     *            The end offset within the file. The value within this number MUST be between 1 and the size of the file
+     * @return
+     *         Whether a low-level download was performed
+     * @throws IOException
+     *             If an exception occurs while downloading the file
      */
-    Optional<String> getSendfilePath(String contentKey) {
-        return Optional.empty();
+    protected boolean tryLowLevelDownload(GenericFile file, HttpServletRequest request, HttpServletResponse response, long start,
+            long end) throws IOException {
+        return false;
     }
 }
