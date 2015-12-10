@@ -100,6 +100,12 @@ public abstract class GenericFile extends GenericFile_Base {
         return super.getContentType();
     }
 
+    @Override
+    public String getContentKey() {
+        //FIXME: remove when the framework enables read-only slots
+        return super.getContentKey();
+    }
+
     /**
      * Returns the checksum for this file, using the algorithm specified by {@link #getChecksumAlgorithm()}.
      * 
@@ -172,8 +178,7 @@ public abstract class GenericFile extends GenericFile_Base {
         long size = file.length();
         setSize(Long.valueOf(size));
         final FileStorage fileStorage = getFileStorage();
-        final String uniqueIdentification =
-                fileStorage.store(Strings.isNullOrEmpty(getContentKey()) ? getExternalId() : getContentKey(), file);
+        final String uniqueIdentification = fileStorage.store(this, file);
         setStorage(fileStorage);
 
         if (Strings.isNullOrEmpty(uniqueIdentification)) {
@@ -188,8 +193,7 @@ public abstract class GenericFile extends GenericFile_Base {
         long size = (content == null) ? 0 : content.length;
         setSize(Long.valueOf(size));
         final FileStorage fileStorage = getFileStorage();
-        final String uniqueIdentification =
-                fileStorage.store(Strings.isNullOrEmpty(getContentKey()) ? getExternalId() : getContentKey(), content);
+        final String uniqueIdentification = fileStorage.store(this, content);
         setStorage(fileStorage);
 
         if (Strings.isNullOrEmpty(uniqueIdentification) && content != null) {
@@ -203,11 +207,11 @@ public abstract class GenericFile extends GenericFile_Base {
     }
 
     public byte[] getContent() {
-        return getStorage().read(getContentKey());
+        return getStorage().read(this);
     }
 
     public InputStream getStream() {
-        return getStorage().readAsInputStream(getContentKey());
+        return getStorage().readAsInputStream(this);
     }
 
     public static void convertFileStorages(final FileStorage fileStorageToUpdate) {

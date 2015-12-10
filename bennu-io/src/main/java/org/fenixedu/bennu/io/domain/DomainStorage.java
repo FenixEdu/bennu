@@ -18,27 +18,29 @@ public final class DomainStorage extends DomainStorage_Base {
     }
 
     @Override
-    public String store(String uniqueIdentification, byte[] content) {
+    public String store(GenericFile file, byte[] content) {
+        String uniqueIdentification = file.getContentKey();
         final DomainObject existingRawData = FenixFramework.getDomainObject(uniqueIdentification);
         if (existingRawData != null && existingRawData instanceof FileRawData) {
             ((FileRawData) existingRawData).delete();
         }
 
         if (content != null) {
-            return new FileRawData(uniqueIdentification, content).getExternalId();
+            return new FileRawData(uniqueIdentification == null ? file.getExternalId() : uniqueIdentification, content)
+                    .getExternalId();
         }
         return null;
     }
 
     @Override
-    public byte[] read(String uniqueIdentification) {
-        final FileRawData rawData = FenixFramework.getDomainObject(uniqueIdentification);
+    public byte[] read(GenericFile file) {
+        final FileRawData rawData = FenixFramework.getDomainObject(file.getContentKey());
         return rawData != null ? rawData.getContent() : null;
     }
 
     @Override
-    public InputStream readAsInputStream(String uniqueIdentification) {
-        byte[] read = read(uniqueIdentification);
+    public InputStream readAsInputStream(GenericFile file) {
+        byte[] read = read(file);
         return read != null ? new ByteArrayInputStream(read) : null;
     }
 }
