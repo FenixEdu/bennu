@@ -19,7 +19,7 @@ import com.google.gson.JsonObject;
  * ensuring a right delivery to the user. Users should only use the static methods to emit new messages to users.
  *
  * @author Artur Ventura (artur.ventura@tecnico.pt)
- * @since 3.5.0
+ * @since 4.0
  */
 public class Alert {
     private static final Logger LOGGER = LoggerFactory.getLogger(Alert.class);
@@ -97,20 +97,19 @@ public class Alert {
      *
      * @param request the current request
      * @param response the current response
-     * @return a list of alerts to process
+     * @return a list of alerts to process. May be {@code null} if no alerts are found.
      */
     public static List<Alert> getAlerts(HttpServletRequest request, HttpServletResponse response) {
         ArrayList<Alert> alerts = (ArrayList<Alert>) RedirectAttributes.getInputFlashMap(request).get(ATTRIB_NAME);
-
-        if (alerts == null) {
-            alerts = new ArrayList<Alert>();
-        }
 
         if (response.getStatus() == HttpServletResponse.SC_OK) {
             FlashMap map = RedirectAttributes.getOutputFlashMap(request);
             if (map != null) {
                 ArrayList<Alert> newAlerts = (ArrayList<Alert>) map.remove(ATTRIB_NAME);
                 if (newAlerts != null) {
+                    if (alerts == null) {
+                        return newAlerts;
+                    }
                     alerts.addAll(newAlerts);
                 }
             }
@@ -128,11 +127,15 @@ public class Alert {
      *
      * @param request the current request
      * @param response the current response
-     * @return a JsonArray of alerts to process
+     * @return a JsonArray of alerts to process. May be {@code null} if no alerts are found.
      */
     public static JsonArray getAlertsAsJson(HttpServletRequest request, HttpServletResponse response) {
-        JsonArray array = new JsonArray();
         List<Alert> alerts = getAlerts(request, response);
+        if (alerts == null || alerts.isEmpty()) {
+            return null;
+        }
+
+        JsonArray array = new JsonArray();
 
         for (Alert alert : alerts) {
             JsonObject o = new JsonObject();

@@ -8,7 +8,7 @@
     <meta name="description" content="fenixedu">
     <meta name="author" content="fenixedu">
 		
-	{% if alerts.size != 0 %}
+	{% if alerts is not null %}
 	<meta name="alerts" content='{{ alerts }}'>		
 	{% endif %}
 
@@ -124,7 +124,7 @@
 
 		{% endblock %}
 		
-		{% if alerts.size != 0 %}
+		{% if alerts is not null %}
 		<script src="{{contextPath}}/bennu-toolkit/js/alerts.js"></script>
 		{% endif %}
 		
