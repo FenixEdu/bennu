@@ -144,8 +144,21 @@ public class Alert {
             o.addProperty("type", alert.getTag());
             array.add(o);
         }
-        RedirectAttributes.flush(request, response);
+        flush(request, response);
         return array;
+    }
+
+    /**
+     * Ensures that all the alerts created during this request are properly propagated to the rendered layout, or to the next
+     * request in case of a redirect.
+     * 
+     * @param request
+     *            The request in which alerts may have been created
+     * @param response
+     *            The response associated with the given request
+     */
+    public static void flush(HttpServletRequest request, HttpServletResponse response) {
+        RedirectAttributes.flush(request, response);
     }
 
     /**
