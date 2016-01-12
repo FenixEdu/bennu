@@ -31,7 +31,6 @@ import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonArray;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
@@ -91,6 +90,7 @@ public class PortalLayoutInjector implements Filter {
         PortalResponseWrapper wrapper = new PortalResponseWrapper(response);
 
         chain.doFilter(request, wrapper);
+        Alert.flush(request, response);
 
         MenuFunctionality functionality = BennuPortalDispatcher.getSelectedFunctionality(request);
         if (functionality != null && wrapper.hasData() && request.getAttribute(SKIP_LAYOUT_INJECTION) == null) {
