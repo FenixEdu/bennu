@@ -9,7 +9,7 @@
     <meta name="author" content="fenixedu">
 		
 	{% if alerts is not null %}
-	<meta name="alerts" content='{{ alerts }}'>		
+	<meta name="alerts" content="{{ alerts.toString() | escape }}">
 	{% endif %}
 
     <title>{% block title %}{{ functionality.title.content }}{% endblock %}</title>
