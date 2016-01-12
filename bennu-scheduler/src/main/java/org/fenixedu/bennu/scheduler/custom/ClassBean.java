@@ -39,6 +39,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -257,9 +258,11 @@ public class ClassBean implements Serializable {
 
                 final Collection<JavaFileObject> javaFileObjects = new ArrayList<>();
                 javaFileObjects.add(javaSourceFromString);
-
+                
+                final Iterable<String> options = Arrays.asList("-g");
+                
                 final CompilationTask compilationTask =
-                        javaCompiler.getTask(out, standardJavaFileManager, null, null, null, javaFileObjects);
+                        javaCompiler.getTask(out, standardJavaFileManager, null, options, null, javaFileObjects);
                 if (compilationTask.call() == false) {
                     return false;
                 }
