@@ -12,6 +12,10 @@
 .project
 .classpath
 
+# IntelliJ #
+.idea/
+*.iml
+
 # Maven #
 target/
 bin/
