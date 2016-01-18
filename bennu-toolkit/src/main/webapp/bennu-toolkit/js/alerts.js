@@ -11,7 +11,30 @@
 		});
 	}
 
+	var _cbs = [];
+
 	var _alert = function(message,type){
+		var cb = function() { _notify(message,type); };
+		if ($.notify) {
+			// Library loaded, show message
+			cb();
+		} else {
+			var scriptUrl = Bennu.contextPath + "/bennu-toolkit/js/libs/bootstrap-notify.min.js";
+			if (Bennu.ensure) {
+				Bennu.ensure(scriptUrl, cb);
+			} else {
+				_cbs.push(cb);
+				if (_cbs.length == 1) {
+					$.getScript(scriptUrl).done(function () {
+						_cbs.map(function (el) { el(); });
+						_cbs = [];
+					});
+				}
+			}
+		}
+	}
+
+	var _notify = function(message,type){
 		$.notify({
 			// options
 			message: message
@@ -46,17 +69,15 @@
 	}
 
 	$(function(){
-		$.getScript(Bennu.contextPath + "/bennu-toolkit/js/libs/bootstrap-notify.js").done(function () {
-			var a = $("meta[name='alerts']");
-			if (a.size()){
-				var x = JSON.parse(a.attr("content"));
+		var a = $("meta[name='alerts']");
+		if (a.size()){
+			var x = JSON.parse(a.attr("content"));
 
-				for (var i = 0; i < x.length; i++) {
-					var alert = x[i];
-					_alert(alert.message, alert.type);
-				};
-			}
-		});
+			for (var i = 0; i < x.length; i++) {
+				var alert = x[i];
+				_alert(alert.message, alert.type);
+			};
+		}
 	});
 
 })();
