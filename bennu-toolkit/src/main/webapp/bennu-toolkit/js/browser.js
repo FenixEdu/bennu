@@ -454,4 +454,4 @@
   Bennu.browser.toString = function() {
       return this.name() + " " + this.version().toString();
   }
-})()
+})();
