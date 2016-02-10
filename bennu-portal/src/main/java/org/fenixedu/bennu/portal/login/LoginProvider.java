@@ -79,4 +79,15 @@ public interface LoginProvider {
         return Optional.empty();
     }
 
+    /**
+     * Returns whether this provider is currently enabled.
+     *
+     * This mechanism allows for runtime configuration of providers.
+     *
+     * @return Whether this provider is enabled
+     */
+    public default boolean isEnabled() {
+        return true;
+    }
+
 }

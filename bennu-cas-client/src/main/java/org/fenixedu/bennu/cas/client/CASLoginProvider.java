@@ -40,4 +40,8 @@ public class CASLoginProvider implements LoginProvider {
         return "CAS";
     }
 
+    @Override
+    public boolean isEnabled() {
+        return CASClientConfiguration.getConfiguration().casEnabled();
+    }
 }

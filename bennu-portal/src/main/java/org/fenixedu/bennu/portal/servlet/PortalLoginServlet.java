@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -168,7 +169,7 @@ public class PortalLoginServlet extends HttpServlet {
     }
 
     private static Collection<LoginProvider> providers() {
-        return Collections.unmodifiableCollection(providers.values());
+        return providers.values().stream().filter(LoginProvider::isEnabled).collect(Collectors.toList());
     }
 
 }
