@@ -14,14 +14,37 @@ public class TestCustomGroup {
     }
 
     @Test
-    public void test() {
+    public void testNoArguments() {
         assertNotNull(Group.parse("after"));
+    }
+
+    @Test
+    public void testBooleanArgument() {
         assertNotNull(Group.parse("after(inclusive=true)"));
+    }
+
+    @Test
+    public void testDefaultArgument() {
         assertNotNull(Group.parse("after('2013')"));
+    }
+
+    @Test
+    public void testAliasedArgument() {
         assertNotNull(Group.parse("after(things='abc')"));
+    }
+
+    @Test
+    public void testMultiValueArguments() {
         assertNotNull(Group.parse("after(things=['a b c', def])"));
+    }
+
+    @Test
+    public void testMultiValueArgumentsOnArrays() {
         assertNotNull(Group.parse("after(x1=['a b c', def])"));
-        assertNotNull(Group.parse("after(x1=['a b c', def])"));
+    }
+
+    @Test
+    public void testEmptyMultiValueArgument() {
         assertNotNull(Group.parse("after(x1=[])"));
     }
 
