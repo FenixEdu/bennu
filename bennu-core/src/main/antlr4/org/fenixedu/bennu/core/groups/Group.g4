@@ -54,6 +54,6 @@ fragment ESC :   '\\' ([\'\\/bfnrt] | UNICODE) ;
 fragment UNICODE : 'u' HEX HEX HEX HEX ;
 fragment HEX : [0-9a-fA-F] ;
 
-IDENTIFIER : ('a'..'z'|'A'..'Z'|'_'|'0'..'9')+;
+IDENTIFIER : ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'.')+;
 
 WS : [ \t\r\n]+ -> skip ;
