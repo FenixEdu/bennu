@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.core.example.domain.groups;
 
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -13,8 +14,7 @@ import org.fenixedu.bennu.core.groups.CustomGroup;
 import org.fenixedu.bennu.core.groups.Group;
 import org.joda.time.DateTime;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
 
 public class UsersCreatedAfterGroup extends UsersCreatedAfterGroup_Base {
     @GroupOperator("after")
@@ -97,8 +97,11 @@ public class UsersCreatedAfterGroup extends UsersCreatedAfterGroup_Base {
         return new UsersCreatedAfter(getDate());
     }
 
-    @Atomic(mode = TxMode.WRITE)
     public static PersistentGroup getInstance(DateTime date) {
-        return new UsersCreatedAfterGroup(date);
+        try {
+            return FenixFramework.atomic(() -> new UsersCreatedAfterGroup(date));
+        } catch (Exception e) {
+            throw new UndeclaredThrowableException(e);
+        }
     }
 }

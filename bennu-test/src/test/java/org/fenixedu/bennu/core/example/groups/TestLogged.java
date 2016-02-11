@@ -12,21 +12,24 @@ import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.test.core.FenixFrameworkRunner;
 
+@RunWith(FenixFrameworkRunner.class)
 public class TestLogged {
     private static User user1;
 
     @BeforeClass
-    @Atomic(mode = TxMode.WRITE)
     public static void setupUsers() {
         ManualGroupRegister.ensure();
-        user1 = User.findByUsername("user1");
-        if (user1 == null) {
-            user1 = new User("user1", ManualGroupRegister.newProfile());
-        }
+        FenixFramework.atomic(() -> {
+            user1 = User.findByUsername("user1");
+            if (user1 == null) {
+                user1 = new User("user1", ManualGroupRegister.newProfile());
+            }
+        });
     }
 
     @Test
@@ -36,7 +39,6 @@ public class TestLogged {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void membership() {
         assertEquals(Group.logged().getMembers().collect(Collectors.toSet()), Bennu.getInstance().getUserSet());
         assertTrue(Group.logged().isMember(user1));
@@ -44,7 +46,6 @@ public class TestLogged {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void loggedCompression() {
         assertEquals(Group.logged(), Group.logged().grant(user1));
         assertEquals(Group.logged(), user1.groupOf().or(Group.logged()));
@@ -54,7 +55,6 @@ public class TestLogged {
     }
 
     @Test
-    @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
         assertTrue(Group.logged().toPersistentGroup() != null);
     }

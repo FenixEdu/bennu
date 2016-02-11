@@ -13,32 +13,34 @@ import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.test.core.FenixFrameworkRunner;
 
+@RunWith(FenixFrameworkRunner.class)
 public class TestUserGroup {
     private static User user1;
     private static User user2;
     private static Group all;
 
     @BeforeClass
-    @Atomic(mode = TxMode.WRITE)
     public static void setupUsers() {
         ManualGroupRegister.ensure();
-        user1 = User.findByUsername("user1");
-        if (user1 == null) {
-            user1 = new User("user1", ManualGroupRegister.newProfile());
-        }
-        user2 = User.findByUsername("user2");
-        if (user2 == null) {
-            user2 = new User("user2", ManualGroupRegister.newProfile());
-        }
-        all = Group.users(user1, user2);
+        FenixFramework.atomic(() -> {
+            user1 = User.findByUsername("user1");
+            if (user1 == null) {
+                user1 = new User("user1", ManualGroupRegister.newProfile());
+            }
+            user2 = User.findByUsername("user2");
+            if (user2 == null) {
+                user2 = new User("user2", ManualGroupRegister.newProfile());
+            }
+            all = Group.users(user1, user2);
+        });
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void creation() {
         Group allv1 = Group.parse("U(user1, user2)");
         Group allv2 = Group.parse("U(user2, user1)");
@@ -51,7 +53,6 @@ public class TestUserGroup {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void membership() {
         assertEquals(all.getMembers().collect(Collectors.toSet()), Bennu.getInstance().getUserSet());
         for (User user : Bennu.getInstance().getUserSet()) {
@@ -61,7 +62,6 @@ public class TestUserGroup {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void optimizations() {
         Group one = user1.groupOf();
         Group two = user2.groupOf();
@@ -85,7 +85,6 @@ public class TestUserGroup {
     }
 
     @Test
-    @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
         PersistentGroup allP = all.toPersistentGroup();
         PersistentGroup allv1P = Group.parse("U(user1, user2)").toPersistentGroup();

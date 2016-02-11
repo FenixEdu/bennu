@@ -61,9 +61,8 @@ import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.test.core.FenixFrameworkRunner;
 
 import com.google.common.base.Joiner;
@@ -113,9 +112,7 @@ public class OAuthServletTest extends JerseyTest {
         return new User(username, new UserProfile(firstName, lastName, fullName, email, Locale.getDefault()));
     }
 
-    @Atomic(mode = TxMode.WRITE)
     public static void initObjects() {
-
         if (user1 == null) {
             user1 = createUser("user1", "John", "Doe", "John Doe", "john.doe@fenixedu.org");
         }
@@ -186,7 +183,7 @@ public class OAuthServletTest extends JerseyTest {
 
     @BeforeClass
     public static void setup() {
-        initObjects();
+        FenixFramework.atomic(OAuthServletTest::initObjects);
     }
 
     private String generateToken(DomainObject domainObject) {

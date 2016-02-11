@@ -9,21 +9,24 @@ import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.test.core.FenixFrameworkRunner;
 
+@RunWith(FenixFrameworkRunner.class)
 public class TestNobody {
     private static User user1;
 
     @BeforeClass
-    @Atomic(mode = TxMode.WRITE)
     public static void setupUsers() {
         ManualGroupRegister.ensure();
-        user1 = User.findByUsername("user1");
-        if (user1 == null) {
-            user1 = new User("user1", ManualGroupRegister.newProfile());
-        }
+        FenixFramework.atomic(() -> {
+            user1 = User.findByUsername("user1");
+            if (user1 == null) {
+                user1 = new User("user1", ManualGroupRegister.newProfile());
+            }
+        });
     }
 
     @Test
@@ -33,7 +36,6 @@ public class TestNobody {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void membership() {
         assertTrue(Group.nobody().getMembers().count() == 0);
         assertFalse(Group.nobody().isMember(user1));
@@ -41,7 +43,6 @@ public class TestNobody {
     }
 
     @Test
-    @Atomic(mode = TxMode.WRITE)
     public void createPersistent() {
         assertTrue(Group.nobody().toPersistentGroup() != null);
     }

@@ -9,8 +9,7 @@ import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
 
 public class TestGroupMath {
     private static User user1;
@@ -22,21 +21,21 @@ public class TestGroupMath {
     private static Group nobody;
 
     @BeforeClass
-    @Atomic(mode = TxMode.WRITE)
     public static void setupUsers() {
         ManualGroupRegister.ensure();
-        user1 = User.findByUsername("user1");
-        if (user1 == null) {
-            user1 = new User("user1", ManualGroupRegister.newProfile());
-        }
-        user2 = User.findByUsername("user2");
-        if (user2 == null) {
-            user2 = new User("user2", ManualGroupRegister.newProfile());
-        }
+        FenixFramework.atomic(() -> {
+            user1 = User.findByUsername("user1");
+            if (user1 == null) {
+                user1 = new User("user1", ManualGroupRegister.newProfile());
+            }
+            user2 = User.findByUsername("user2");
+            if (user2 == null) {
+                user2 = new User("user2", ManualGroupRegister.newProfile());
+            }
+        });
     }
 
     @BeforeClass
-    @Atomic(mode = TxMode.WRITE)
     public static void setup() {
         anonymous = Group.anonymous();
         anyone = Group.anyone();
@@ -45,7 +44,6 @@ public class TestGroupMath {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void andMath() {
         try {
             anonymous.and(null);
@@ -76,7 +74,6 @@ public class TestGroupMath {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void orMath() {
         try {
             anonymous.or(null);
@@ -106,7 +103,6 @@ public class TestGroupMath {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void minusMath() {
         try {
             anonymous.minus(null);
@@ -136,7 +132,6 @@ public class TestGroupMath {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void notMath() {
         assertEquals(anonymous.not(), logged);
         assertEquals(anyone.not(), nobody);
@@ -147,7 +142,6 @@ public class TestGroupMath {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void grantMath() {
         try {
             anonymous.grant(null);
@@ -157,7 +151,6 @@ public class TestGroupMath {
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void revokeMath() {
         try {
             anonymous.revoke(null);

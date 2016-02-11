@@ -23,8 +23,11 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
-import pt.ist.fenixframework.Atomic;
+import pt.ist.esw.advice.pt.ist.fenixframework.AtomicInstance;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
+
+import java.lang.reflect.UndeclaredThrowableException;
 
 public class FenixFrameworkRunner extends BlockJUnit4ClassRunner {
 
@@ -33,9 +36,15 @@ public class FenixFrameworkRunner extends BlockJUnit4ClassRunner {
     }
 
     @Override
-    @Atomic(mode = TxMode.WRITE)
     protected void runChild(FrameworkMethod method, RunNotifier notifier) {
-        super.runChild(method, notifier);
+        try {
+            FenixFramework.getTransactionManager().withTransaction(() -> {
+                super.runChild(method, notifier);
+                return null;
+            }, new AtomicInstance(TxMode.WRITE, true));
+        } catch (Exception e) {
+            throw new UndeclaredThrowableException(e);
+        }
     }
 
 }

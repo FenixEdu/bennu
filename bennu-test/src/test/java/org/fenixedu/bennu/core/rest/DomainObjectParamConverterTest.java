@@ -18,9 +18,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.test.core.FenixFrameworkRunner;
 
 /***
  * Tests for DomainObjectParamConverter
@@ -31,6 +32,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
  * @see JerseyTest
  *
  */
+@RunWith(FenixFrameworkRunner.class)
 public class DomainObjectParamConverterTest extends JerseyTest {
 
     @Path("resource")
@@ -61,19 +63,19 @@ public class DomainObjectParamConverterTest extends JerseyTest {
     private static User user1;
 
     @BeforeClass
-    @Atomic(mode = TxMode.WRITE)
     public static void setupUsers() {
         final String username = "user1";
-        user1 = User.findByUsername(username);
-        if (user1 == null) {
-            user1 =
-                    new User(username,
-                            new UserProfile(username, username, username, username + "@gmail.com", Locale.getDefault()));
-        }
+        FenixFramework.atomic(() -> {
+            user1 = User.findByUsername(username);
+            if (user1 == null) {
+                user1 =
+                        new User(username,
+                                new UserProfile(username, username, username, username + "@gmail.com", Locale.getDefault()));
+            }
+        });
     }
 
     @Test
-    @Atomic(mode = TxMode.READ)
     public void testDomainObjectAsQueryParam() {
         final String username =
                 target("resource").path("username").queryParam("id", user1.getExternalId()).request().get(String.class);
@@ -82,7 +84,6 @@ public class DomainObjectParamConverterTest extends JerseyTest {
     }
 
     @Test
-    @Atomic(mode = TxMode.WRITE)
     public void testDomainObjecAsPathParam() {
         final String expectedEmail = "user1@fanfans.com";
 
@@ -94,7 +95,6 @@ public class DomainObjectParamConverterTest extends JerseyTest {
         assertEquals(expectedEmail, user1.getEmail());
     }
 
-    @Atomic(mode = TxMode.READ)
     @Test(expected = NotFoundException.class)
     public void testNotFoundDomainObjectAsQueryParam() {
         target("resource").path("username").queryParam("id", "THIS_IS_NOT_A_DOMAIN_OBJECT").request().get(String.class);
