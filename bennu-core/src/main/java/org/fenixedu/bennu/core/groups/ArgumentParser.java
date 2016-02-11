@@ -1,7 +1,7 @@
 package org.fenixedu.bennu.core.groups;
 
 /**
- * API for argument parsers. for any parser {@code parse(serialize(t)) == t} must be true.
+ * API for argument parsers. for any parser {@code parse(serialize(t)).equals(t)} must be true.
  * 
  * @author Pedro Santos (pedro.miguel.santos@tecnico.ulisboa.pt)
  * @param <T> The type being parsed.
