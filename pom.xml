@@ -20,7 +20,7 @@
         <!-- ************************************************************************************************ -->
         <version.org.antlr.antlr4.runtime>4.2.2</version.org.antlr.antlr4.runtime>
         <version.javax.ws.rs.javax.ws.rs.api>2.0</version.javax.ws.rs.javax.ws.rs.api>
-        <version.joda.time.joda.time>2.3</version.joda.time.joda.time>
+        <version.joda.time.joda.time>2.9.2</version.joda.time.joda.time>
         <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
         <version.org.apache.lucene.lucene.core>4.7.2</version.org.apache.lucene.lucene.core>
         <version.org.fenixedu.fenixedu.commons>1.1.0</version.org.fenixedu.fenixedu.commons>
