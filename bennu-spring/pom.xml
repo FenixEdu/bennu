@@ -11,10 +11,6 @@
     <name>Bennu Spring</name>
     <description>Spring MVC Bennu Integration</description>
 
-    <properties>
-        <version.org.springframework.spring.webmvc>4.2.1.RELEASE</version.org.springframework.spring.webmvc>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -41,12 +37,10 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${version.org.springframework.spring.webmvc}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${version.org.springframework.spring.webmvc}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
