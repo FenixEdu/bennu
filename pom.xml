@@ -27,7 +27,7 @@
         <version.org.jasig.cas.client.core>3.4.1</version.org.jasig.cas.client.core>
         <version.ch.qos.logback.logback.classic>1.0.13</version.ch.qos.logback.logback.classic>
         <version.com.google.code.gson.gson>2.2.4</version.com.google.code.gson.gson>
-        <version.com.google.guava.guava>17.0</version.com.google.guava.guava>
+        <version.com.google.guava.guava>19.0</version.com.google.guava.guava>
         <version.com.mitchellbosecke.pebble>1.4.0</version.com.mitchellbosecke.pebble>
         <version.org.apache.tika.tika-core>1.5</version.org.apache.tika.tika-core>
 
