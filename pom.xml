@@ -18,7 +18,6 @@
         <!-- * DEPENDENCIES VERSIONS * -->
         <!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
         <!-- ************************************************************************************************ -->
-        <version.org.antlr.antlr4.runtime>4.2.2</version.org.antlr.antlr4.runtime>
         <version.javax.ws.rs.javax.ws.rs.api>2.0</version.javax.ws.rs.javax.ws.rs.api>
         <version.joda.time.joda.time>2.9.2</version.joda.time.joda.time>
         <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
@@ -31,12 +30,6 @@
         <version.com.google.guava.guava>19.0</version.com.google.guava.guava>
         <version.com.mitchellbosecke.pebble>1.4.0</version.com.mitchellbosecke.pebble>
         <version.org.apache.tika.tika-core>1.11</version.org.apache.tika.tika-core>
-
-        <!-- ************************************************************************************************ -->
-        <!-- * PLUGIN VERSIONS * -->
-        <!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
-        <!-- ************************************************************************************************ -->
-        <version.org.antlr.antlr4.maven.plugin>4.2.2</version.org.antlr.antlr4.maven.plugin>
     </properties>
 
     <scm>
@@ -45,26 +38,6 @@
         <url>http://fenixedu.github.io/bennu</url>
         <tag>HEAD</tag>
     </scm>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.antlr</groupId>
-                    <artifactId>antlr4-maven-plugin</artifactId>
-                    <version>${version.org.antlr.antlr4.maven.plugin}</version>
-                    <executions>
-                        <execution>
-                            <id>antlr</id>
-                            <goals>
-                                <goal>antlr4</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 
     <dependencyManagement>
         <dependencies>
@@ -98,11 +71,6 @@
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>${version.joda.time.joda.time}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr4-runtime</artifactId>
-                <version>${version.org.antlr.antlr4.runtime}</version>
             </dependency>
             <dependency>
                 <groupId>javax.ws.rs</groupId>
