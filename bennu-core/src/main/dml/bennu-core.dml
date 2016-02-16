@@ -61,6 +61,7 @@ valueType org.fenixedu.bennu.core.domain.NashornStrategy as NashornStrategy {
 }
 
 public class Bennu {
+	protected JsonElement propertyData;
 }
 
 relation DomainRootBennu {
