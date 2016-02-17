@@ -22,7 +22,6 @@
         <version.javax.ws.rs.javax.ws.rs.api>2.0</version.javax.ws.rs.javax.ws.rs.api>
         <version.joda.time.joda.time>2.9.2</version.joda.time.joda.time>
         <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
-        <version.org.apache.lucene.lucene.core>4.7.2</version.org.apache.lucene.lucene.core>
         <version.org.fenixedu.fenixedu.commons>1.1.1</version.org.fenixedu.fenixedu.commons>
         <version.org.jasig.cas.client.core>3.4.1</version.org.jasig.cas.client.core>
         <version.org.springframework.spring.webmvc>4.2.4.RELEASE</version.org.springframework.spring.webmvc>
@@ -110,21 +109,6 @@
                 <version>${version.javax.ws.rs.javax.ws.rs.api}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-core</artifactId>
-                <version>${version.org.apache.lucene.lucene.core}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-analyzers-common</artifactId>
-                <version>${version.org.apache.lucene.lucene.core}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-queryparser</artifactId>
-                <version>${version.org.apache.lucene.lucene.core}</version>
-            </dependency>
-            <dependency>
                 <groupId>net.sf.cron4j</groupId>
                 <artifactId>cron4j</artifactId>
                 <version>${version.net.sf.cron4j.cron4j}</version>
@@ -169,7 +153,6 @@
         <module>bennu-core</module>
         <module>bennu-io</module>
         <module>bennu-scheduler</module>
-        <module>bennu-search</module>
         <module>bennu-toolkit</module>
         <module>bennu-portal</module>
         <module>bennu-cas-client</module>
