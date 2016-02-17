@@ -51,7 +51,7 @@ final class UnionGroup extends Group {
 
     @Override
     public String getExpression() {
-        return children.stream().map(g -> g.getExpression()).collect(Collectors.joining(" | "));
+        return children.stream().map(Group::compositeExpression).collect(Collectors.joining(" | "));
     }
 
     @Override
