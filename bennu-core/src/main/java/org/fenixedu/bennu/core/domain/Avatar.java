@@ -1,5 +1,8 @@
 package org.fenixedu.bennu.core.domain;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,9 +15,6 @@ import javax.imageio.stream.ImageOutputStream;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
-import org.imgscalr.Scalr;
-import org.imgscalr.Scalr.Method;
-import org.imgscalr.Scalr.Mode;
 
 public class Avatar extends Avatar_Base {
     protected Avatar(byte[] data, String mimeType) {
@@ -82,7 +82,7 @@ public class Avatar extends Avatar_Base {
     public static byte[] process(InputStream stream, String mimeType, int size) {
         try {
             BufferedImage img = ImageIO.read(stream);
-            BufferedImage scaled = Scalr.resize(img, Method.QUALITY, Mode.FIT_EXACT, size, size);
+            BufferedImage scaled = scale(img, size);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
             try (ImageOutputStream outstream = ImageIO.createImageOutputStream(out)) {
@@ -93,5 +93,15 @@ public class Avatar extends Avatar_Base {
         } catch (IOException e) {
             throw BennuCoreDomainException.errorProcessingImage();
         }
+    }
+
+    private static BufferedImage scale(BufferedImage src, int size) {
+        BufferedImage result = new BufferedImage(size, size,
+                (src.getTransparency() == Transparency.OPAQUE ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB));
+        Graphics2D resultGraphics = result.createGraphics();
+        resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        resultGraphics.drawImage(src, 0, 0, size, size, null);
+        resultGraphics.dispose();
+        return result;
     }
 }
