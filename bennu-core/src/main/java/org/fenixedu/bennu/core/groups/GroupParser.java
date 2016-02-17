@@ -290,9 +290,24 @@ final class GroupParser {
      */
 
     /*
+     * Determines whether the given string constitutes a valid Identifier
+     */
+    static boolean isValidIdentifier(String value) {
+        if (value.isEmpty()) {
+            return false;
+        }
+        for (char c : value.toCharArray()) {
+            if (!isIdentifierChar(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*
      * Determines whether the given character is part of a valid identifier
      */
-    private boolean isIdentifierChar(char c) {
+    private static boolean isIdentifierChar(char c) {
         return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_';
     }
 
