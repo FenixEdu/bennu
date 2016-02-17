@@ -31,12 +31,15 @@ public class CustomGroupRegistry {
 
         private final Class<? extends CustomGroup> type;
 
+        private final Constructor<? extends CustomGroup> constructor;
+
         private final Map<String, Field> fields = new HashMap<>();
 
         public CustomGroupMetadata(Class<? extends CustomGroup> type) {
             GroupOperator operator = type.getAnnotation(GroupOperator.class);
             this.operator = operator.value();
             this.type = type;
+            this.constructor = findConstructor(type);
             Class<?> current = type;
             while (current != null) {
                 for (Field field : current.getDeclaredFields()) {
@@ -54,10 +57,18 @@ public class CustomGroupRegistry {
             }
         }
 
-        public CustomGroup parse(Multimap<String, String> arguments) {
+        private Constructor<? extends CustomGroup> findConstructor(Class<? extends CustomGroup> type) {
             try {
                 Constructor<? extends CustomGroup> constructor = type.getDeclaredConstructor();
                 constructor.setAccessible(true);
+                return constructor;
+            } catch (NoSuchMethodException e) {
+                throw new Error("Custom Group type " + type.getName() + " does not declare a default constructor", e);
+            }
+        }
+
+        public CustomGroup parse(Multimap<String, String> arguments) {
+            try {
                 CustomGroup group = constructor.newInstance();
                 for (String name : arguments.keySet()) {
                     Field field = fields.get(name);
@@ -71,8 +82,7 @@ public class CustomGroupRegistry {
                     }
                 }
                 return group;
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException
-                    | IllegalArgumentException | InvocationTargetException e) {
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new Error(e);
             }
         }
