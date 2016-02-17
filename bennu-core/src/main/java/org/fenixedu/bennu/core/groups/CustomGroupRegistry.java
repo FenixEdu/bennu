@@ -11,7 +11,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.fenixedu.bennu.core.annotation.GroupArgument;
 import org.fenixedu.bennu.core.annotation.GroupArgumentParser;
@@ -21,7 +23,6 @@ import org.joda.time.DateTime;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import com.google.common.collect.Multimap;
 
 public class CustomGroupRegistry {
     public static final String ARGUMENT_NAME_AS_FIELD_NAME = "QEHyHHkCEL6F2L0wZA6R";
@@ -67,18 +68,20 @@ public class CustomGroupRegistry {
             }
         }
 
-        public CustomGroup parse(Multimap<String, String> arguments) {
+        public CustomGroup parse(Map<String, List<String>> arguments) {
             try {
                 CustomGroup group = constructor.newInstance();
-                for (String name : arguments.keySet()) {
-                    Field field = fields.get(name);
-                    if (field != null) {
-                        Collection<String> args = arguments.get(name);
-                        if (args != null && !args.isEmpty()) {
-                            field.set(group, parseField(field, args));
+                if (arguments != null) {
+                    for (Entry<String, List<String>> entry : arguments.entrySet()) {
+                        Field field = fields.get(entry.getKey());
+                        if (field != null) {
+                            Collection<String> args = entry.getValue();
+                            if (args != null && !args.isEmpty()) {
+                                field.set(group, parseField(field, args));
+                            }
+                        } else {
+                            throw new Error("No field found with name '" + entry.getKey() + "' on group ");
                         }
-                    } else {
-                        throw new Error("No field found with name '" + name + "' on group ");
                     }
                 }
                 return group;
@@ -181,18 +184,24 @@ public class CustomGroupRegistry {
         }
     }
 
-    private static final Map<String, CustomGroupMetadata> metadata = new HashMap<>();
+    /*
+     * Here I chose using a TreeMap instead of a HashMap, as the String instances that are
+     * passed in the group parsing process are never reused, thus the string's hashCode must
+     * be continuously recomputed.
+     */
+    private static final TreeMap<String, CustomGroupMetadata> metadata = new TreeMap<>();
 
     private static final Map<Class<?>, ArgumentParser<Object>> parsers = new HashMap<>();
 
     private static final CustomGroupMetadata resolveMetadata(String operator) {
-        if (metadata.containsKey(operator)) {
-            return metadata.get(operator);
+        CustomGroupMetadata group = metadata.get(operator);
+        if (group == null) {
+            throw BennuCoreDomainException.groupParsingNoGroupForOperator(operator);
         }
-        throw BennuCoreDomainException.groupParsingNoGroupForOperator(operator);
+        return group;
     }
 
-    public static CustomGroup parse(String operator, Multimap<String, String> arguments) {
+    public static CustomGroup parse(String operator, Map<String, List<String>> arguments) {
         return resolveMetadata(operator).parse(arguments);
     }
 

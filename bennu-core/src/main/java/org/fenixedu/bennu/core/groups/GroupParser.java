@@ -1,12 +1,13 @@
 package org.fenixedu.bennu.core.groups;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.exceptions.DomainException;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 
 final class GroupParser {
 
@@ -136,8 +137,9 @@ final class GroupParser {
      */
     private Group function() {
         String name = identifier();
-        Multimap<String, String> arguments = ArrayListMultimap.create();
+        Map<String, List<String>> arguments = null;
         if (consumeIfMatches('(')) {
+            arguments = new HashMap<>();
             argument(arguments);
             while (consumeIfMatches(',')) {
                 argument(arguments);
@@ -150,7 +152,7 @@ final class GroupParser {
     /*
      * argument: (IDENTIFIER '=')? (value | '[' (value (',' value)*)? ']')
      */
-    private void argument(Multimap<String, String> arguments) {
+    private void argument(Map<String, List<String>> arguments) {
         String name = "";
         if (hasArgumentName()) {
             name = identifier();
@@ -159,7 +161,7 @@ final class GroupParser {
         if (consumeIfMatches('[')) {
             argumentList(name, arguments);
         } else {
-            arguments.put(name, value());
+            arguments.computeIfAbsent(name, k -> new ArrayList<>()).add(value());
         }
     }
 
@@ -168,12 +170,12 @@ final class GroupParser {
      *
      * Assumes that the '[' character has already been consumed
      */
-    private void argumentList(String name, Multimap<String, String> arguments) {
+    private void argumentList(String name, Map<String, List<String>> arguments) {
         // Argument list may be empty, so we cannot simply try and get a value
         if (!consumeIfMatches(']')) {
-            arguments.put(name, value());
+            arguments.computeIfAbsent(name, k -> new ArrayList<>()).add(value());
             while (consumeIfMatches(',')) {
-                arguments.put(name, value());
+                arguments.computeIfAbsent(name, k -> new ArrayList<>()).add(value());
             }
             consume(']');
         }
