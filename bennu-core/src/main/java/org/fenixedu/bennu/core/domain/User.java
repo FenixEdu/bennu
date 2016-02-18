@@ -51,12 +51,12 @@ import com.google.common.io.BaseEncoding;
 public final class User extends User_Base implements Principal {
     private static final Logger logger = LoggerFactory.getLogger(User.class);
 
-    private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
+    private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA512";
 
     // The following constants may be changed without breaking existing hashes.
     private static final int SALT_BYTE_SIZE = 24;
     private static final int HASH_BYTE_SIZE = 24;
-    private static final int PBKDF2_ITERATIONS = 1000;
+    private static final int PBKDF2_ITERATIONS = 150_000;
 
     private static Map<String, User> map = new ConcurrentHashMap<>();
 
