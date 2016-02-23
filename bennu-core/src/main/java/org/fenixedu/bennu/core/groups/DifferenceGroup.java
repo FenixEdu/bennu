@@ -56,7 +56,7 @@ final class DifferenceGroup extends Group {
 
     @Override
     public String getExpression() {
-        return first.getExpression() + " - " + rest.stream().map(g -> g.getExpression()).collect(Collectors.joining(" - "));
+        return first.getExpression() + " - " + rest.stream().map(Group::compositeExpression).collect(Collectors.joining(" - "));
     }
 
     @Override

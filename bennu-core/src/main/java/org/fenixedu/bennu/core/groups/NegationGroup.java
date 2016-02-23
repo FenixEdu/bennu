@@ -48,7 +48,7 @@ final class NegationGroup extends Group {
 
     @Override
     public String getExpression() {
-        return "! " + negated.getExpression();
+        return "! " + Group.compositeExpression(negated);
     }
 
     @Override

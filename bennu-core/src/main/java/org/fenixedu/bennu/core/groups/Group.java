@@ -294,4 +294,13 @@ public abstract class Group implements Serializable, Comparable<Group> {
         }
         return getExpression().compareTo(getExpression());
     }
+
+    static String compositeExpression(Group group) {
+        if (group instanceof UnionGroup || group instanceof IntersectionGroup || group instanceof DifferenceGroup || group
+                instanceof NegationGroup) {
+            return "(" + group.getExpression() + ")";
+        } else {
+            return group.getExpression();
+        }
+    }
 }

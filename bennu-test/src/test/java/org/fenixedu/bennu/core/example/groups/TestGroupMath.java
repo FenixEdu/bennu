@@ -8,9 +8,12 @@ import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.groups.ManualGroupRegister;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.test.core.FenixFrameworkRunner;
 
+@RunWith(FenixFrameworkRunner.class)
 public class TestGroupMath {
     private static User user1;
     private static User user2;
@@ -157,5 +160,13 @@ public class TestGroupMath {
             fail();
         } catch (NullPointerException e) {
         }
+    }
+
+    @Test
+    public void precedenceRules() {
+        Group group = (Group.dynamic("managers").minus(user1.groupOf())).or(user1.groupOf());
+        Group parsedGroup = Group.parse(group.getExpression());
+        assertEquals("UnionGroup", parsedGroup.getClass().getSimpleName());
+        assertEquals("(#managers - U(user1)) | U(user1)", parsedGroup.getExpression());
     }
 }
