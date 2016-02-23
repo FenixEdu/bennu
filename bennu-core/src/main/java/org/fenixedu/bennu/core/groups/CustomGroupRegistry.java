@@ -21,7 +21,6 @@ import org.fenixedu.bennu.core.annotation.GroupOperator;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.joda.time.DateTime;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 
 public class CustomGroupRegistry {
@@ -138,7 +137,7 @@ public class CustomGroupRegistry {
                 for (String name : fields.keySet()) {
                     List<String> values = serializeField(fields.get(name), group);
                     if (!values.isEmpty()) {
-                        String serialized = Joiner.on(", ").join(values);
+                        String serialized = String.join(", ", values);
                         if (Strings.isNullOrEmpty(name)) {
                             arguments.add(serialized);
                         } else if (values.size() == 1) {
@@ -148,7 +147,7 @@ public class CustomGroupRegistry {
                         }
                     }
                 }
-                return arguments.isEmpty() ? operator : operator + "(" + Joiner.on(", ").join(arguments) + ")";
+                return arguments.isEmpty() ? operator : operator + "(" + String.join(", ", arguments) + ")";
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 throw new Error(e);
             }
@@ -180,6 +179,7 @@ public class CustomGroupRegistry {
                     serialized.add(parser.serialize(value));
                 }
             }
+            serialized.replaceAll(value -> GroupParser.isValidIdentifier(value) ? value : "'" + value + "'");
             return serialized;
         }
     }
