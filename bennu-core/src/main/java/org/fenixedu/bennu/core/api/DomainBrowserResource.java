@@ -248,7 +248,7 @@ public class DomainBrowserResource extends BennuRestResource {
 
     @SuppressWarnings("unchecked")
     private Set<DomainObject> getRelationSet(final DomainObject domainObject, final Role role) {
-        final Method method = getMethod(domainObject, role.getName());
+        final Method method = getMethod(domainObject, role.getName() + "Set");
         if (method != null) {
             try {
                 return (Set<DomainObject>) method.invoke(domainObject);

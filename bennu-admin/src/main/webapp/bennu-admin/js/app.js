@@ -267,7 +267,8 @@ app.controller('MonitoringController', [ '$scope', '$http', function ($scope, $h
     return 'label-' + app.threadMap[threadState];
   };
   $scope.hideProperty = function(key) {
-    return key.indexOf('pass') > -1 || key.indexOf('secret') > -1 || key.indexOf('private') > -1;
+    key = key.toLowerCase();
+    return key.indexOf('pass') > -1 || key.indexOf('secret') > -1 || key.indexOf('private') > -1 || key.indexOf('key') > -1;
   };
   $scope.reload(true);
 }]);
@@ -694,7 +695,7 @@ app.controller('LogsController', ['$scope', '$http', '$state', function ($scope,
   $scope.reload();
 }]);
 
-app.controller('LogDetailsController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
+app.controller('LogDetailsController', ['$scope', '$http', '$state', '$interval', function ($scope, $http, $state, $interval) {
   $scope.type = $state.params.type; $scope.id = $state.params.id; $scope.contextPath = contextPath;
   $scope.editorOptions = { lineNumbers: true, mode: 'text/x-java', theme: 'eclipse', readOnly: true};
   $scope.refreshLog = function() {
@@ -708,11 +709,17 @@ app.controller('LogDetailsController', ['$scope', '$http', '$state', function ($
   $scope.load = function() {
     window.code = $scope.log.code; $state.go('scheduler.custom-new');
   }
-  setInterval(function () {
+  var promise = $interval(function () {
     if($scope.log && !$scope.log.end) {
       $scope.refreshLog();
     }
-  }, 3000);
+  }, 5000);
+  $scope.$on('$destroy', function() {
+    if (angular.isDefined(promise)) {
+      $interval.cancel(promise);
+      promise = undefined;
+    }
+  });
   $scope.codemirrorLoaded = function(_editor) { setTimeout(function() { _editor.refresh();}, 200); }
   $scope.refreshLog();
 }]);

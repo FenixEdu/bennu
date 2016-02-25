@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
+import org.fenixedu.bennu.scheduler.api.json.SimpleExecutionLogJsonAdapter;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
 
 import com.google.gson.JsonElement;
@@ -25,7 +26,7 @@ public class ExecutionLogResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public JsonElement latest() {
         accessControl(Group.managers());
-        return view(SchedulerSystem.getLogRepository().latest());
+        return view(SchedulerSystem.getLogRepository().latest(), SimpleExecutionLogJsonAdapter.class);
     }
 
     @GET
@@ -34,7 +35,8 @@ public class ExecutionLogResource extends BennuRestResource {
     public JsonElement executionsFor(@PathParam("taskName") String taskName, @QueryParam("count") @DefaultValue("20") int max,
             @QueryParam("start") String start) {
         accessControl(Group.managers());
-        return view(SchedulerSystem.getLogRepository().executionsFor(taskName, Optional.ofNullable(start), max));
+        return view(SchedulerSystem.getLogRepository().executionsFor(taskName, Optional.ofNullable(start), max),
+                SimpleExecutionLogJsonAdapter.class);
     }
 
     @GET
@@ -51,8 +53,7 @@ public class ExecutionLogResource extends BennuRestResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String taskLog(@PathParam("taskName") String taskName, @PathParam("id") String id) {
         accessControl(Group.managers());
-        return SchedulerSystem.getLogRepository().getTaskLog(taskName, id)
-                .orElseThrow(() -> new WebApplicationException(Status.NOT_FOUND));
+        return SchedulerSystem.getLogRepository().getTaskLog(taskName, id).orElse("");
     }
 
     @GET

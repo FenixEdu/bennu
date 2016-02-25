@@ -95,9 +95,12 @@ kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial
 						</span>
 					</td>
 					<td>
-						<button class="btn btn-xs btn-default" ng-if="relationCounts[role.name] == null" ng-click="loadRelationCount(role.name)">Load</button>
+						<button class="btn btn-xs btn-default" ng-if="relationCounts[role.name] == null"
+								ng-click="loadRelationCount(role.name)" data-count-loader>Load</button>
 						<button class="btn btn-xs btn-default" ng-if="relationCounts[role.name] == -1" disabled>Loading...</button>
-						<code ng-if="relationCounts[role.name] != null && relationCounts[role.name] != -1">{{relationCounts[role.name]}}</code>
+						<code ng-if="relationCounts[role.name] != null && relationCounts[role.name] != -1">
+							{{relationCounts[role.name] | number}}
+						</code>
 					</td>
 				</tr>
 			</tbody>
