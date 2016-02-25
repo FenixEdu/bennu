@@ -83,7 +83,7 @@ class GroupGC {
     @Atomic(mode = TxMode.READ)
     private static void processor(List<PersistentGroup> groups, List<PersistentGroup> candidates, LongAdder processed) {
         for (PersistentGroup group : groups) {
-            if (emptyCustomRelations(group)) {
+            if (!(group instanceof PersistentDynamicGroup) && emptyCustomRelations(group)) {
                 candidates.add(group);
             }
             processed.increment();
