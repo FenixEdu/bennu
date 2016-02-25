@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.groups.PersistentDynamicGroup;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.joda.time.DateTime;
@@ -27,7 +28,14 @@ public final class DynamicGroup extends Group {
 
     DynamicGroup(String name) {
         super();
-        this.name = name;
+        this.name = validateName(name);
+    }
+
+    private String validateName(String name) {
+        if (!GroupParser.isValidIdentifier(name)) {
+            throw BennuCoreDomainException.invalidGroupIdentifier(name);
+        }
+        return name;
     }
 
     public static DynamicGroup get(String name) {

@@ -64,6 +64,10 @@ public class BennuCoreDomainException extends DomainException {
         return new BennuCoreDomainException("error.bennu.core.groups.parse.noGroupForOperator", operator);
     }
 
+    public static BennuCoreDomainException invalidGroupIdentifier(String name) {
+        return new BennuCoreDomainException("error.bennu.core.groups.invalid.identifier", name);
+    }
+
     public static BennuCoreDomainException errorOnDeleteDomainObject() {
         return new BennuCoreDomainException("error.bennu.core.cant.delete.domainObject");
     }
