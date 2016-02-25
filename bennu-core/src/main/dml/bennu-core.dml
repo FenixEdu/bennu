@@ -86,9 +86,9 @@ public class UserLoginPeriod {
 }
 
 public class UserProfile {
-    protected String displayName (REQUIRED);
+    protected String displayName;
     protected String givenNames (REQUIRED);
-    protected String familyNames (REQUIRED);
+    protected String familyNames;
     public String avatarUrl;
     public String email;
     public Locale preferredLocale;
