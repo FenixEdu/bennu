@@ -18,6 +18,7 @@ public class BennuIOContextListener implements ServletContextListener {
         if (!initialized) {
             FileSupport.getInstance();
             Thread thread = new Thread(new FileDeleterThread());
+            thread.setName("FileDeleterThread");
             thread.start();
             initialized = true;
         }

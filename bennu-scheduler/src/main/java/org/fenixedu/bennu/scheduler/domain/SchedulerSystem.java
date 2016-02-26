@@ -280,6 +280,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         for (int i = 1; i <= getQueueThreadsNumber(); i++) {
             LOG.debug("Launching queue consumer {}", i);
             Thread thread = new Thread(new ProcessQueue());
+            thread.setName("SchedulerConsumer-" + i);
             thread.start();
             activeConsumers.add(thread);
         }
