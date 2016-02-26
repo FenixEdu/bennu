@@ -17,6 +17,7 @@ public class SimpleExecutionLogJsonAdapter implements JsonViewer<ExecutionLog> {
         obj.getEnd().ifPresent(val -> json.addProperty("end", val.toString()));
         json.addProperty("state", obj.getState().name());
         json.addProperty("taskName", obj.getTaskName());
+        obj.getCode().ifPresent(code -> json.addProperty("custom", true));
         return json;
     }
 }
