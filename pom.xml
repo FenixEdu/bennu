@@ -27,7 +27,7 @@
         <version.ch.qos.logback.logback.classic>1.1.3</version.ch.qos.logback.logback.classic>
         <version.com.google.code.gson.gson>2.6.1</version.com.google.code.gson.gson>
         <version.com.google.guava.guava>19.0</version.com.google.guava.guava>
-        <version.com.mitchellbosecke.pebble>1.4.0</version.com.mitchellbosecke.pebble>
+        <version.com.mitchellbosecke.pebble>2.1.0</version.com.mitchellbosecke.pebble>
         <version.org.apache.tika.tika-core>1.11</version.org.apache.tika.tika-core>
     </properties>
 

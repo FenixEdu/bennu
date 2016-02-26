@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +26,7 @@ import org.fenixedu.commons.i18n.I18N;
 
 import com.google.common.base.Strings;
 import com.mitchellbosecke.pebble.PebbleEngine;
+import com.mitchellbosecke.pebble.PebbleEngine.Builder;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
@@ -56,7 +56,7 @@ public class PortalLoginServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         final ServletContext context = config.getServletContext();
-        engine = new PebbleEngine(new ClasspathLoader() {
+        this.engine = new Builder().extension(new PortalExtension(context)).loader(new ClasspathLoader() {
             @Override
             public Reader getReader(String themeName) throws LoaderException {
                 // Try to resolve the page from the theme...
@@ -68,11 +68,7 @@ public class PortalLoginServlet extends HttpServlet {
                     return new InputStreamReader(context.getResourceAsStream("/bennu-portal/login.html"), StandardCharsets.UTF_8);
                 }
             }
-        });
-        engine.addExtension(new PortalExtension(context));
-        if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
-            engine.setTemplateCache(null);
-        }
+        }).cacheActive(!BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()).build();
     }
 
     @Override
