@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,10 +60,11 @@ public class CASResource {
         }
 
         // Check the callback is valid
-        String actualCallback = new String(Base64.getUrlDecoder().decode(callback), StandardCharsets.UTF_8);
-        if (!PortalLoginServlet.validateCallback(actualCallback)) {
-            return Response.status(Status.BAD_REQUEST).entity("The provided callback URL is invalid!").build();
+        Optional<String> cb = decode(callback).filter(PortalLoginServlet::validateCallback);
+        if (!cb.isPresent()) {
+            return Response.status(Status.BAD_REQUEST).build();
         }
+        String actualCallback = cb.get();
 
         try {
             // Begin by logging out
@@ -76,11 +78,20 @@ public class CASResource {
             Authenticate.login(request, response, user);
             logger.trace("Logged in user {}, redirecting to {}", username, actualCallback);
         } catch (TicketValidationException | AuthorizationException e) {
-            logger.error(e.getMessage(), e);
+            logger.debug(e.getMessage(), e);
             // Append the login_failed parameter to the callback
             actualCallback = actualCallback + (actualCallback.contains("?") ? "&" : "?") + "login_failed=true";
         }
         return Response.status(Status.FOUND).location(new URI(actualCallback)).build();
+    }
+
+    private static Optional<String> decode(String base64Callback) {
+        try {
+            return Optional.of(new String(Base64.getUrlDecoder().decode(base64Callback), StandardCharsets.UTF_8));
+        } catch (IllegalArgumentException e) {
+            // Invalid Base64, return an empty Optional
+            return Optional.empty();
+        }
     }
 
     private User getUser(String username) {
