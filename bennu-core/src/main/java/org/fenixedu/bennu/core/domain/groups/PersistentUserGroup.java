@@ -54,6 +54,9 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
 
     @Override
     public boolean isMember(User user) {
+        if (user == null) {
+            return false;
+        }
         /* We have to include this 'optimization', as the 'contains' method
          * on a Fenix Framework Set is O(n) on the number of members, making it
          * too slow for large groups.
@@ -66,7 +69,7 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
          * Note that this does not affect the non-persistent version, as it never
          * keeps FF Sets, and thus hopefully have better 'contains' performance.
          */
-        if (getMemberSet().size() > 100) {
+        if (getMemberSet().size() > 250) {
             return BennuGroupIndex.isUserGroupMember(user, this);
         }
         return getMemberSet().contains(user);
