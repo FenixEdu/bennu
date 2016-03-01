@@ -18,12 +18,14 @@ import org.junit.runner.RunWith;
 public class TestExpressionCornerCases {
 
     private static final String USERNAME = "foo@bar.com";
+    private static final String QUOTED_USERNAME = "foo'bar";
 
     @BeforeClass
     public static void setupUsers() {
         ManualGroupRegister.ensure();
         FenixFramework.atomic(() -> {
             new User(USERNAME, ManualGroupRegister.newProfile());
+            new User(QUOTED_USERNAME, ManualGroupRegister.newProfile());
         });
     }
 
@@ -45,5 +47,8 @@ public class TestExpressionCornerCases {
         assertEquals("U('" + USERNAME + "')", group.getExpression());
         Group otherGroup = Group.parse(group.getExpression());
         assertEquals(group, otherGroup);
+
+        User quotedUser = User.findByUsername(QUOTED_USERNAME);
+        assertEquals(quotedUser.groupOf(), Group.parse(quotedUser.groupOf().getExpression()));
     }
 }

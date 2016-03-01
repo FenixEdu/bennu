@@ -179,7 +179,7 @@ public class CustomGroupRegistry {
                     serialized.add(parser.serialize(value));
                 }
             }
-            serialized.replaceAll(value -> GroupParser.isValidIdentifier(value) ? value : "'" + value + "'");
+            serialized.replaceAll(value -> GroupParser.isValidIdentifier(value) ? value : "'" + value.replace("'", "\\'") + "'");
             return serialized;
         }
     }
