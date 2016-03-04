@@ -65,6 +65,7 @@ import com.google.common.base.Strings;
 import com.google.common.net.HttpHeaders;
 import com.google.gson.JsonObject;
 import com.mitchellbosecke.pebble.PebbleEngine;
+import com.mitchellbosecke.pebble.PebbleEngine.Builder;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.extension.AbstractExtension;
@@ -116,7 +117,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        engine = new PebbleEngine(new ClasspathLoader() {
+        engine = new Builder().loader(new ClasspathLoader() {
             @Override
             public Reader getReader(String pageName) throws LoaderException {
                 InputStream stream =
@@ -130,20 +131,14 @@ public class OAuthAuthorizationServlet extends HttpServlet {
                             "/bennu-oauth/" + pageName + ".html"));
                 }
             }
-        });
-        //engine.addExtension(new PortalExtension());
-        if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
-            engine.setTemplateCache(null);
-        }
-
-        engine.addExtension(new AbstractExtension() {
+        }).cacheActive(!BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()).extension(new AbstractExtension() {
             @Override
             public Map<String, Function> getFunctions() {
                 Map<String, Function> functions = new HashMap<>();
                 functions.put("i18n", new I18NFunction());
                 return functions;
             }
-        });
+        }).build();
     }
 
     @Override

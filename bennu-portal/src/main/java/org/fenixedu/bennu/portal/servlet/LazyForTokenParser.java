@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.stream.Stream;
 
 import com.mitchellbosecke.pebble.error.ParserException;
@@ -16,8 +15,10 @@ import com.mitchellbosecke.pebble.node.AbstractRenderableNode;
 import com.mitchellbosecke.pebble.node.BodyNode;
 import com.mitchellbosecke.pebble.node.RenderableNode;
 import com.mitchellbosecke.pebble.node.expression.Expression;
+import com.mitchellbosecke.pebble.parser.Parser;
 import com.mitchellbosecke.pebble.template.EvaluationContext;
 import com.mitchellbosecke.pebble.template.PebbleTemplateImpl;
+import com.mitchellbosecke.pebble.template.ScopeChain;
 import com.mitchellbosecke.pebble.tokenParser.AbstractTokenParser;
 import com.mitchellbosecke.pebble.tokenParser.TokenParser;
 
@@ -49,24 +50,24 @@ import com.mitchellbosecke.pebble.tokenParser.TokenParser;
 public class LazyForTokenParser extends AbstractTokenParser {
 
     @Override
-    public RenderableNode parse(Token token) throws ParserException {
-        TokenStream stream = this.parser.getStream();
+    public RenderableNode parse(Token token, Parser parser) throws ParserException {
+        TokenStream stream = parser.getStream();
         int lineNumber = token.getLineNumber();
 
         // skip the 'lazyFor' token
         stream.next();
 
         // get the iteration variable
-        String iterationVariable = this.parser.getExpressionParser().parseNewVariableName();
+        String iterationVariable = parser.getExpressionParser().parseNewVariableName();
 
         stream.expect(Token.Type.NAME, "in");
 
         // get the iterable variable
-        Expression<?> iterable = this.parser.getExpressionParser().parseExpression();
+        Expression<?> iterable = parser.getExpressionParser().parseExpression();
 
         stream.expect(Token.Type.EXECUTE_END);
 
-        BodyNode body = this.parser.subparse((test) -> test.test(Token.Type.NAME, "endLazyFor"));
+        BodyNode body = parser.subparse(test -> test.test(Token.Type.NAME, "endLazyFor"));
 
         // skip the 'endLazyFor' token
         stream.next();
@@ -98,16 +99,18 @@ public class LazyForTokenParser extends AbstractTokenParser {
 
             Stream<?> stream = getStream(value);
 
-            context.pushScope(new HashMap<String, Object>());
+            ScopeChain scopeChain = context.getScopeChain();
+
+            scopeChain.pushScope();
             stream.forEach((obj) -> {
                 try {
-                    context.put(variableName, obj);
+                    scopeChain.put(variableName, obj);
                     body.render(self, writer, context);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             });
-            context.popScope();
+            scopeChain.popScope();
         }
 
         private Stream<?> getStream(Object obj) {

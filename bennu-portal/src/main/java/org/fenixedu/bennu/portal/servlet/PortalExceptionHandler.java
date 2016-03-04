@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mitchellbosecke.pebble.PebbleEngine;
+import com.mitchellbosecke.pebble.PebbleEngine.Builder;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
@@ -65,11 +66,8 @@ public class PortalExceptionHandler implements ExceptionHandler {
     }
 
     protected PortalExceptionHandler(Loader loader, ServletContext context) {
-        this.engine = new PebbleEngine(loader);
-        engine.addExtension(new PortalExtension(context));
-        if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
-            engine.setTemplateCache(null);
-        }
+        this.engine = new Builder().loader(loader).extension(new PortalExtension(context))
+                .cacheActive(!BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()).build();
     }
 
     @Override

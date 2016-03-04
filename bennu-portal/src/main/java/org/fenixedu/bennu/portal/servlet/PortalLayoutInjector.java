@@ -32,9 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mitchellbosecke.pebble.PebbleEngine;
+import com.mitchellbosecke.pebble.PebbleEngine.Builder;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
-import com.mitchellbosecke.pebble.extension.escaper.EscaperExtension;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
@@ -56,7 +56,7 @@ public class PortalLayoutInjector implements Filter {
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
         final ServletContext servletContext = filterConfig.getServletContext();
-        engine = new PebbleEngine(new ClasspathLoader() {
+        this.engine = new Builder().extension(new PortalExtension(servletContext)).loader(new ClasspathLoader() {
             @Override
             public Reader getReader(String templateName) throws LoaderException {
                 // Try loading the specified template...
@@ -70,15 +70,7 @@ public class PortalLayoutInjector implements Filter {
                             + PortalConfiguration.getInstance().getTheme() + "/default.html"), StandardCharsets.UTF_8);
                 }
             }
-        });
-        // Disable auto-escaping
-        engine.getExtension(EscaperExtension.class).setAutoEscaping(false);
-        engine.addExtension(new PortalExtension(servletContext));
-
-        if (BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()) {
-            logger.info("Theme Development Mode Enabled!");
-            engine.setTemplateCache(null);
-        }
+        }).cacheActive(!BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()).build();
     }
 
     @Override
