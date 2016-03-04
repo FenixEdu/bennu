@@ -38,6 +38,9 @@ public class CustomGroupRegistry {
         public CustomGroupMetadata(Class<? extends CustomGroup> type) {
             GroupOperator operator = type.getAnnotation(GroupOperator.class);
             this.operator = operator.value();
+            if (!GroupParser.isValidIdentifier(this.operator)) {
+                throw BennuCoreDomainException.invalidGroupIdentifier(this.operator);
+            }
             this.type = type;
             this.constructor = findConstructor(type);
             Class<?> current = type;
@@ -48,6 +51,9 @@ public class CustomGroupRegistry {
                         String name = argument.value().equals(ARGUMENT_NAME_AS_FIELD_NAME) ? field.getName() : argument.value();
                         if (fields.containsKey(name)) {
                             throw new Error("Duplicate field for name: '" + name + "'");
+                        }
+                        if (!name.isEmpty() && !GroupParser.isValidIdentifier(name)) {
+                            throw BennuCoreDomainException.invalidGroupIdentifier(name);
                         }
                         fields.put(name, field);
                         field.setAccessible(true);
