@@ -2,3 +2,16 @@ language: java
 script: "mvn clean install javadoc:javadoc"
 jdk:
   - oraclejdk8
+
+env:
+  global:
+   - secure: "PIcxkQpAT7oa0aN0JnRozSCIodEU3smoG6spTAgmqH4SfuGkki6+WUSZE4qSCGZry8cleEcWOe5NGzAPSPZ/EBocaD6/y1v/DlGn5iO9AjjNiuwPFyx3HYa3ZikK6wNsBtNZKbxVAteZm9WRnB8QUMIShaYTyh3hEQSE4ZX6i78="
+
+addons:
+  coverity_scan:
+    project:
+      name: "FenixEdu/bennu"
+      description: "Build submitted via Travis CI"
+    build_command_prepend: "mvn clean"
+    build_command:   "mvn -DskipTests=true compile"
+    branch_pattern: coverity_scan
