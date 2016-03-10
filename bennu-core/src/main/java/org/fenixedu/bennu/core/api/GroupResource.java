@@ -42,6 +42,9 @@ public class GroupResource extends BennuRestResource {
             @QueryParam("username") String username) {
         verifyAndGetRequestAuthor();
         User user = User.findByUsername(username);
+        if (user == null) {
+            throw new WebApplicationException(Status.NOT_FOUND);
+        }
         return view(Group.parse(groupExpression).grant(user));
     }
 
@@ -52,6 +55,9 @@ public class GroupResource extends BennuRestResource {
             @QueryParam("username") String username) {
         verifyAndGetRequestAuthor();
         User user = User.findByUsername(username);
+        if (user == null) {
+            throw new WebApplicationException(Status.NOT_FOUND);
+        }
         return view(Group.parse(groupExpression).revoke(user));
     }
 

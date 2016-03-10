@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletConfig;
@@ -145,7 +147,7 @@ public class PortalLoginServlet extends HttpServlet {
         engine = null;
     }
 
-    private static final Map<String, LoginProvider> providers = new HashMap<>();
+    private static final ConcurrentMap<String, LoginProvider> providers = new ConcurrentHashMap<>();
 
     /**
      * Registers the given provider.

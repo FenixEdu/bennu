@@ -82,6 +82,9 @@ public class Avatar extends Avatar_Base {
     public static byte[] process(InputStream stream, String mimeType, int size) {
         try {
             BufferedImage img = ImageIO.read(stream);
+            if (img == null) {
+                throw BennuCoreDomainException.errorProcessingImage();
+            }
             BufferedImage scaled = scale(img, size);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();

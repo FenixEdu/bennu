@@ -61,6 +61,9 @@ public class UserJsonAdapter implements JsonAdapter<User> {
             user = FenixFramework.getDomainObject(object.get("id").getAsString());
         } else if (object.has("username")) {
             user = User.findByUsername(object.get("username").getAsString());
+            if (user == null) {
+                return null;
+            }
         } else {
             return null;
         }
