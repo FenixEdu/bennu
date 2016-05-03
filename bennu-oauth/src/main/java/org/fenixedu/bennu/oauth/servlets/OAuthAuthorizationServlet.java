@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -54,8 +55,6 @@ import org.fenixedu.bennu.oauth.util.OAuthUtils;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
@@ -86,8 +85,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private static final String CODE_EXPIRED = "code expired";
 
     private static final String CODE_INVALID = "code invalid";
-
-    Logger logger = LoggerFactory.getLogger(OAuthAuthorizationServlet.class);
 
     private static final long serialVersionUID = 1L;
 
@@ -124,11 +121,11 @@ public class OAuthAuthorizationServlet extends HttpServlet {
                         config.getServletContext().getResourceAsStream(
                                 "/themes/" + PortalConfiguration.getInstance().getTheme() + "/oauth/" + pageName + ".html");
                 if (stream != null) {
-                    return new InputStreamReader(stream);
+                    return new InputStreamReader(stream, StandardCharsets.UTF_8);
                 } else {
                     // ... and fall back if none is provided.
                     return new InputStreamReader(config.getServletContext().getResourceAsStream(
-                            "/bennu-oauth/" + pageName + ".html"));
+                            "/bennu-oauth/" + pageName + ".html"), StandardCharsets.UTF_8);
                 }
             }
         }).cacheActive(!BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()).extension(new AbstractExtension() {
@@ -213,9 +210,9 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             return;
         }
 
-        String refreshTokenDecoded = "";
+        String refreshTokenDecoded;
         try {
-            refreshTokenDecoded = new String(Base64.getDecoder().decode(refreshToken));
+            refreshTokenDecoded = new String(Base64.getDecoder().decode(refreshToken), StandardCharsets.UTF_8);
         } catch (IllegalArgumentException iae) {
             sendOAuthErrorResponse(response, Status.UNAUTHORIZED, REFRESH_TOKEN_INVALID_FORMAT, REFRESH_TOKEN_NOT_RECOGNIZED);
             return;
@@ -372,7 +369,8 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         if (!Strings.isNullOrEmpty(clientId) && !Strings.isNullOrEmpty(redirectUrl)) {
             if (user == null) {
                 final String cookieValue = clientId + "|" + redirectUrl;
-                response.addCookie(new Cookie(OAUTH_SESSION_KEY, Base64.getEncoder().encodeToString(cookieValue.getBytes())));
+                response.addCookie(new Cookie(OAUTH_SESSION_KEY,
+                        Base64.getEncoder().encodeToString(cookieValue.getBytes(StandardCharsets.UTF_8))));
                 response.sendRedirect(request.getContextPath() + "/login?callback="
                         + CoreConfiguration.getConfiguration().applicationUrl() + "/oauth/userdialog");
                 return;
@@ -476,7 +474,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
     private void redirectToRedirectUrl(HttpServletRequest request, HttpServletResponse response, User user, final Cookie cookie)
             throws IOException {
-        String cookieValue = new String(Base64.getDecoder().decode(cookie.getValue()));
+        String cookieValue = new String(Base64.getDecoder().decode(cookie.getValue()), StandardCharsets.UTF_8);
         final int indexOf = cookieValue.indexOf("|");
         String clientApplicationId = cookieValue.substring(0, indexOf);
         String redirectUrl = cookieValue.substring(indexOf + 1, cookieValue.length());

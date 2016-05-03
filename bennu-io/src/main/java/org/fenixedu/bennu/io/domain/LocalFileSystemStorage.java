@@ -102,15 +102,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
                 genericFile.getContentKey() == null ? genericFile.getExternalId() : genericFile.getContentKey();
         final String fullPath = getFullPath(uniqueIdentification);
 
-        File directory = new File(fullPath);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        } else {
-            if (!directory.isDirectory()) {
-                throw new RuntimeException("Trying to create " + fullPath
-                        + " as a directory but, it already exists and it's not a directory");
-            }
-        }
+        ensureDirectoryExists(fullPath);
 
         Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
         map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, file));
@@ -128,15 +120,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         if (content == null) {
             new LocalFileToDelete(fullPath + uniqueIdentification);
         } else {
-            File directory = new File(fullPath);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            } else {
-                if (!directory.isDirectory()) {
-                    throw new RuntimeException("Trying to create " + fullPath
-                            + " as a directory but, it already exists and it's not a directory");
-                }
-            }
+            ensureDirectoryExists(fullPath);
 
             Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
             map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, content));
@@ -144,6 +128,20 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         }
         return uniqueIdentification;
 
+    }
+
+    private static void ensureDirectoryExists(String fullPath) {
+        File directory = new File(fullPath);
+        if (!directory.exists()) {
+            if (!directory.mkdirs()) {
+                throw new RuntimeException("Could not create directory " + directory.getName());
+            }
+        } else {
+            if (!directory.isDirectory()) {
+                throw new RuntimeException("Trying to create " + fullPath
+                        + " as a directory but, it already exists and it's not a directory");
+            }
+        }
     }
 
     private String getFullPath(final String uniqueIdentification) {
@@ -154,7 +152,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 
     public String getAbsolutePath() {
         String path = getPath();
-        if (path.indexOf("{") != -1 && path.indexOf("}") != -1) {
+        if (path.contains("{") && path.contains("}")) {
             // Compile regular expression
             Matcher matcher = BRACES_PATTERN.matcher(path);
 
@@ -173,7 +171,9 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         File dir = new File(path);
         if (!dir.exists()) {
             logger.debug("Filesystem storage {} directory does not exist, creating: {}", getName(), path);
-            dir.mkdir();
+            if (!dir.mkdir()) {
+                throw new RuntimeException("Could not create base directory for " + this.getExternalId() + ": " + path);
+            }
         }
         return path;
     }
@@ -243,7 +243,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         if (supportsSendfile(request)) {
             Optional<String> filePath = getSendfilePath(file.getContentKey());
             if (filePath.isPresent()) {
-                handleSendfile(file, filePath.get(), request, response, start, end);
+                handleSendfile(filePath.get(), request, response, start, end);
                 return true;
             } else {
                 return false;
@@ -259,12 +259,12 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
      * For now, we only support the Tomcat-specific 'sendfile' implementation.
      * See: http://tomcat.apache.org/tomcat-7.0-doc/aio.html#Asynchronous_writes
      */
-    private static void handleSendfile(GenericFile file, String filename, HttpServletRequest request,
-            HttpServletResponse response, long start, long end) {
+    private static void handleSendfile(String filename, HttpServletRequest request, HttpServletResponse response, long start,
+            long end) {
         response.setHeader("X-Bennu-Sendfile", "true");
         request.setAttribute("org.apache.tomcat.sendfile.filename", filename);
-        request.setAttribute("org.apache.tomcat.sendfile.start", Long.valueOf(start));
-        request.setAttribute("org.apache.tomcat.sendfile.end", Long.valueOf(end + 1));
+        request.setAttribute("org.apache.tomcat.sendfile.start", start);
+        request.setAttribute("org.apache.tomcat.sendfile.end", end + 1);
     }
 
     /*
