@@ -189,7 +189,8 @@ public final class MenuContainer extends MenuContainer_Base {
 
     public String resolveLayout() {
         if (getConfiguration() != null) {
-            return "default";
+            // Portal root might have specific layout
+            return getLayout() != null ? getLayout() : "default";
         }
         if (getLayout() != null) {
             return getLayout();
