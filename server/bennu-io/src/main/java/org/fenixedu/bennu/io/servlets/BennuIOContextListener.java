@@ -1,5 +1,9 @@
 package org.fenixedu.bennu.io.servlets;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -13,12 +17,12 @@ import pt.ist.fenixframework.Atomic;
 public class BennuIOContextListener implements ServletContextListener {
     private static boolean initialized = false;
 
+    private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
     @Atomic
     public void initialize() {
         if (!initialized) {
             FileSupport.getInstance();
-            Thread thread = new Thread(new FileDeleterThread());
-            thread.start();
             initialized = true;
         }
     }
@@ -26,9 +30,17 @@ public class BennuIOContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
         initialize();
+        FileDeleterThread thread = new FileDeleterThread();
+        thread.run();
+        executor.scheduleAtFixedRate(thread, 5, 5, TimeUnit.MINUTES);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
+        try {
+            executor.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            //oh well
+        }
     }
 }
