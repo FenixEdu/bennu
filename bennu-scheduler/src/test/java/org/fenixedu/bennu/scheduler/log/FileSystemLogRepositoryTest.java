@@ -29,7 +29,7 @@ public class FileSystemLogRepositoryTest {
     public void setupRepository() {
         File file = Files.createTempDir();
         file.deleteOnExit();
-        repository = new FileSystemLogRepository(() -> file.getAbsolutePath(), 6);
+        repository = new FileSystemLogRepository(file.getAbsolutePath(), 6);
     }
 
     @Test
