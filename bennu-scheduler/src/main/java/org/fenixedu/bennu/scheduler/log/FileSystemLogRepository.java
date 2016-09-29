@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
@@ -61,21 +60,21 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
 
     private static final JsonParser parser = new JsonParser();
 
-    private final Supplier<String> basePath;
+    private final String basePath;
     private final int dispersionFactor;
 
     /**
-     * Creates a new {@link FileSystemLogRepository} with the given dispersion factor, and the given base path provider.
+     * Creates a new {@link FileSystemLogRepository} with the given dispersion factor, and the given base path.
      * 
      * The dispersion factor is used to determine the maximum length that each execution's folder name has, thus dispersing the
      * log files in a file tree, instead of a flat list.
      * 
      * @param basePath
-     *            A supplier that returns the base path to use to store the logs
+     *            The base path to use to store the logs
      * @param dispersionFactor
      *            The dispersion factor to be used
      */
-    public FileSystemLogRepository(Supplier<String> basePath, int dispersionFactor) {
+    public FileSystemLogRepository(String basePath, int dispersionFactor) {
         this.basePath = basePath;
         this.dispersionFactor = dispersionFactor;
     }
@@ -87,7 +86,7 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      *            The dispersion factor to be used
      */
     public FileSystemLogRepository(int dispersionFactor) {
-        this(SchedulerSystem::getLogsPath, dispersionFactor);
+        this(SchedulerSystem.getLogsPath(), dispersionFactor);
     }
 
     /**
@@ -207,7 +206,7 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
     }
 
     private String indexFilePath() {
-        return basePath.get() + "/index.json";
+        return basePath + "/index.json";
     }
 
     private String fullPathFor(String taskName, String id, String fileName) {
@@ -223,7 +222,7 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
     }
 
     private String basePathFor(String taskName, String id) {
-        return basePath.get() + "/" + taskName.replace('.', '_') + "/"
+        return basePath + "/" + taskName.replace('.', '_') + "/"
                 + Joiner.on('/').join(Splitter.fixedLength(dispersionFactor).split(id));
     }
 
