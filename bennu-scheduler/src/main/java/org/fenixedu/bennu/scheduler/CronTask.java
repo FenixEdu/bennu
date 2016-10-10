@@ -6,6 +6,7 @@ import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.scheduler.annotation.Task;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
 import org.fenixedu.bennu.scheduler.log.ExecutionLog;
+import org.fenixedu.commons.StringNormalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,8 +84,9 @@ public abstract class CronTask implements Runnable {
     }
 
     public void output(String filename, byte[] fileContent, boolean append) {
-        SchedulerSystem.getLogRepository().storeFile(log, filename, fileContent, append);
-        updateLog(log.withFile(filename));
+        String sanitized = StringNormalizer.slugify(filename);
+        SchedulerSystem.getLogRepository().storeFile(log, sanitized, fileContent, append);
+        updateLog(log.withFile(sanitized));
     }
 
     public void output(String filename, byte[] fileContent) {

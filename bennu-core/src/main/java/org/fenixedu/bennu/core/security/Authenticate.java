@@ -16,9 +16,9 @@
  */
 package org.fenixedu.bennu.core.security;
 
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.Locale;
-import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +39,7 @@ public class Authenticate {
 
     private static final InheritableThreadLocal<User> loggedUser = new InheritableThreadLocal<>();
 
-    private static Set<UserAuthenticationListener> userAuthenticationListeners;
+    private static final Collection<UserAuthenticationListener> userAuthenticationListeners = new ConcurrentLinkedQueue<>();
 
     /**
      * Logs in the given User, associating it with the browser session for the current user.
@@ -68,7 +68,7 @@ public class Authenticate {
             I18NFilter.updateLocale(preferredLocale, request, response);
         }
 
-        fireLoginListeners(session, user);
+        fireLoginListeners(request, response, user);
         logger.debug("Logged in user: " + user.getUsername());
 
         return user;
@@ -89,7 +89,7 @@ public class Authenticate {
         if (session != null) {
             User user = (User) session.getAttribute(LOGGED_USER_ATTRIBUTE);
             if (user != null) {
-                fireLogoutListeners(session, user);
+                fireLogoutListeners(request, response, user);
             }
             session.invalidate();
         }
@@ -126,31 +126,22 @@ public class Authenticate {
     }
 
     public static void addUserAuthenticationListener(UserAuthenticationListener listener) {
-        if (userAuthenticationListeners == null) {
-            userAuthenticationListeners = new HashSet<>();
-        }
         userAuthenticationListeners.add(listener);
     }
 
     public static void removeUserAuthenticationListener(UserAuthenticationListener listener) {
-        if (userAuthenticationListeners != null) {
-            userAuthenticationListeners.remove(listener);
+        userAuthenticationListeners.remove(listener);
+    }
+
+    private static void fireLoginListeners(HttpServletRequest request, HttpServletResponse response, final User user) {
+        for (UserAuthenticationListener listener : userAuthenticationListeners) {
+            listener.onLogin(request, response, user);
         }
     }
 
-    private static void fireLoginListeners(HttpSession session, final User user) {
-        if (userAuthenticationListeners != null) {
-            for (UserAuthenticationListener listener : userAuthenticationListeners) {
-                listener.onLogin(session, user);
-            }
-        }
-    }
-
-    private static void fireLogoutListeners(HttpSession session, final User user) {
-        if (userAuthenticationListeners != null) {
-            for (UserAuthenticationListener listener : userAuthenticationListeners) {
-                listener.onLogout(session, user);
-            }
+    private static void fireLogoutListeners(HttpServletRequest request, HttpServletResponse response, final User user) {
+        for (UserAuthenticationListener listener : userAuthenticationListeners) {
+            listener.onLogout(request, response, user);
         }
     }
 }
