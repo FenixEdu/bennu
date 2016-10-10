@@ -92,7 +92,7 @@ public class OAuthUtils {
         try {
             T domainObject = FenixFramework.getDomainObject(externalId);
             if (!FenixFramework.isDomainObjectValid(domainObject)
-                    || (clazz == null || !clazz.isAssignableFrom(domainObject.getClass()))) {
+                    || (clazz != null && !clazz.isAssignableFrom(domainObject.getClass()))) {
                 return Optional.empty();
             }
             return Optional.of(domainObject);
