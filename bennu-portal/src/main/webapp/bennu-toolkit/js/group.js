@@ -179,6 +179,7 @@
             var list = group(dom);
             list.push(y.username);
             storeGroup(list, dom);
+            dom.data("related").trigger("change");
         });
 // -------------------------------------
 // -------------------------------------
