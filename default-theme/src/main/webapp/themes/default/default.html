@@ -22,7 +22,7 @@
     <![endif]-->
 
 	<script src="{{asset('/bennu-portal/js/jquery.min.js')}}"></script>
-	<script src="{{asset('/webjars/bootstrap/3.3.5/js/bootstrap.min.js')}}"></script>
+	<script src="{{asset('/webjars/bootstrap/3.3.7/js/bootstrap.min.js')}}"></script>
 	<script> setLang = function(l) {
 	  $.post('{{contextPath}}/api/bennu-core/profile/locale/' + l.replace('_', '-')).always(function() { location.reload(); });
 	}
