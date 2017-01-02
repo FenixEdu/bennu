@@ -171,7 +171,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         File dir = new File(path);
         if (!dir.exists()) {
             logger.debug("Filesystem storage {} directory does not exist, creating: {}", getName(), path);
-            if (!dir.mkdir()) {
+            if (!dir.mkdirs()) {
                 throw new RuntimeException("Could not create base directory for " + this.getExternalId() + ": " + path);
             }
         }
