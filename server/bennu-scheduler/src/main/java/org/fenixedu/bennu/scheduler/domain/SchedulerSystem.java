@@ -41,6 +41,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     public static Set<TaskSchedule> scheduledTasks;
     private static final List<Thread> activeConsumers = new ArrayList<>();
     private static Set<Timer> timers;
+    private static DateTime latestOwnedLease;
 
     private static transient Integer leaseTime;
     private static transient Integer queueThreadsNumber;
@@ -142,13 +143,31 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     /**
-     * Set's lease time
-     * 
-     * @return
+     * Set's lease time, and stores that time in memory.
+     *
+     * Note: the timestamp is considered without milliseconds due to lack of precision from the default DB data type for DateTime.
+     *
+     * @return the timestamp of the created lease.
      */
     private DateTime lease() {
-        setLease(new DateTime());
-        return getLease();
+        DateTime lease = new DateTime().withMillisOfSecond(0);
+        setLease(lease);
+        latestOwnedLease = lease;
+        return lease;
+    }
+
+    /**
+     * Checks whether the lease is held by this server.
+     * <p>
+     * Each time a lease is renewed we keep the timestamp in memory, if the persistent lease timestamp is the same as in memory
+     * it is almost certain it is ours, otherwise another server must have stolen the lease. The lease must also be checked to
+     * be within the lease time span, or another server could race condition the ownership.
+     *
+     * @return true if is help by current server, false otherwise.
+     */
+    private boolean isHoldingLease() {
+        final DateTime lease = getLease();
+        return lease != null && lease.equals(latestOwnedLease) && lease.plusMinutes(getLeaseTimeMinutes()).isAfterNow();
     }
 
     /**
@@ -230,8 +249,14 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
             @Atomic(mode = TxMode.WRITE)
             private void lease() {
-                final DateTime lease = SchedulerSystem.getInstance().lease();
-                LOG.debug("Leasing until {}", lease);
+                if (SchedulerSystem.getInstance().isHoldingLease()) {
+                    final DateTime lease = SchedulerSystem.getInstance().lease();
+                    LOG.debug("Leasing until {}", lease);
+                } else {
+                    LOG.debug("Lost lease, stopping the scheduler");
+                    destroy(false);
+                    init();
+                }
             }
 
         }, 0, period);
@@ -383,11 +408,17 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     public static void destroy() {
+        destroy(true);
+    }
+
+    private static void destroy(boolean resetLease) {
 
         for (final Timer timer : timers) {
             LOG.debug("interrupted timer thread {}", timer.toString());
             timer.cancel();
         }
+        queue.clear();
+        latestOwnedLease = null;
 
         if (isActive()) {
             LOG.info("stopping scheduler");
@@ -396,7 +427,9 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                 LOG.debug("interrupted consumer thread {}", consumer.getName());
                 consumer.interrupt();
             }
-            resetLease();
+            if (resetLease) {
+                resetLease();
+            }
         }
     }
 
