@@ -2,6 +2,7 @@ package org.fenixedu.bennu.io.domain;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
@@ -32,6 +33,14 @@ public final class GroupBasedFile extends GroupBasedFile_Base {
         init(displayName, filename, file);
         setAccessGroup(accessGroup);
     }
+    
+    
+    public GroupBasedFile(String displayName, String filename, InputStream stream, Group accessGroup) throws IOException {
+        super();
+        init(displayName, filename, stream);
+        setAccessGroup(accessGroup);
+    }
+    
 
     public Group getAccessGroup() {
         return getGroup().toGroup();

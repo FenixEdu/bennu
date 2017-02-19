@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import com.google.common.io.CountingInputStream;
 import org.apache.tika.Tika;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.commons.StringNormalizer;
@@ -75,7 +76,29 @@ public abstract class GenericFile extends GenericFile_Base {
         setFilename(filename);
         setContent(file, filename);
     }
-
+    
+    /**
+     * Initializes this file with the contents of the provided {@link InputStream}.
+     *
+     * @param displayName
+     *            The pretty name for this file
+     * @param filename
+     *            The low-level filename for this file
+     * @param stream
+     *            The stream from which the contents of the newly created file are based upon
+     * @throws IOException
+     *             If an error occurs while reading the input strean or storing it in the underlying storage
+     */
+    protected void init(String displayName, String filename, InputStream stream) throws IOException {
+        if (stream == null) {
+            throw new NullPointerException("Stream is empty");
+        }
+        setDisplayName(displayName);
+        setFilename(filename);
+        setContent(stream, filename);
+    }
+    
+    
     public abstract boolean isAccessible(User user);
 
     public boolean isPrivate() {
@@ -188,6 +211,24 @@ public abstract class GenericFile extends GenericFile_Base {
         setContentKey(uniqueIdentification);
         setContentType(detectContentType(file, filename));
     }
+    
+    
+    private void setContent(InputStream stream, String filename) throws IOException {
+        
+        final FileStorage fileStorage = getFileStorage();
+        setContentType(tika.detect(stream, filename));
+        CountingInputStream countingStream = new CountingInputStream(stream);
+        final String uniqueIdentification = fileStorage.store(this, countingStream);
+        setStorage(fileStorage);
+        setSize(countingStream.getCount());
+        if (Strings.isNullOrEmpty(uniqueIdentification)) {
+            throw new RuntimeException();
+        }
+        
+        setContentKey(uniqueIdentification);
+        
+    }
+    
 
     private void setContent(byte[] content) {
         long size = (content == null) ? 0 : content.length;
