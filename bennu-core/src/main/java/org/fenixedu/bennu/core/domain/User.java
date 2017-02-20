@@ -254,7 +254,7 @@ public final class User extends User_Base implements Principal {
         if (username == null) {
             return null;
         }
-        User match = map.computeIfAbsent(username, User::manualFind);
+        User match = (match = map.get(username)) == null ? manualFind(username) : match;
         if (match == null) {
             return null;
         }
@@ -267,8 +267,13 @@ public final class User extends User_Base implements Principal {
     }
 
     private static User manualFind(String username) {
-        return Bennu.getInstance().getUserSet().stream().filter(user -> user.getUsername().equals(username)).findAny()
+        return Bennu.getInstance().getUserSet().stream().peek(User::cacheUser)
+                .filter(user -> user.getUsername().equals(username)).findAny()
                 .orElse(null);
+    }
+
+    private static void cacheUser(User user) {
+        map.put(user.getUsername(), user);
     }
 
     public static void setUsernameGenerator(UsernameGenerator generator) {
