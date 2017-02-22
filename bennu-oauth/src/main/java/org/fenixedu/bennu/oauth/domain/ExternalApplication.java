@@ -84,7 +84,8 @@ public class ExternalApplication extends ExternalApplication_Base {
     }
 
     public boolean matchesUrl(String redirectUrl) {
-        return !Strings.isNullOrEmpty(redirectUrl) && redirectUrl.equals(getRedirectUrl());
+        return !Strings.isNullOrEmpty(redirectUrl) &&
+                 Arrays.asList(getRedirectUrl().split("\\|")).contains(redirectUrl);
     }
 
     public boolean matchesSecret(String secret) {
