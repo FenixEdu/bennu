@@ -47,6 +47,7 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.bennu.oauth.OAuthProperties;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
@@ -94,10 +95,15 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private final static String CLIENT_SECRET = "client_secret";
     private final static String REDIRECT_URI = "redirect_uri";
     private final static String CODE = "code";
-
+    
+    private final static String ACCESS_TOKEN = "access_token";
+    private final static String REFRESH_TOKEN = "refresh_token";
     private final static String GRANT_TYPE = "grant_type";
     private final static String DEVICE_ID = "device_id";
     private final static String STATE = "state";
+    private final static String EXPIRES_IN = "expires_in";
+    private final static String TOKEN_TYPE = "token_type";
+    private final static String TOKEN_TYPE_VALUE = "Bearer";
 
     private final static String INVALID_GRANT = "invalid_grant";
     private static final String REFRESH_TOKEN_DOESN_T_MATCH = "refresh token doesn't match";
@@ -247,8 +253,13 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
         String newAccessToken = OAuthUtils.generateToken(appUserSession);
         appUserSession.setNewAccessToken(newAccessToken);
-        sendOAuthResponse(response, Status.OK, OAuthUtils.getJsonTokens(appUserSession));
-    }
+        
+        JsonObject jsonResponse = new JsonObject();
+        jsonResponse.addProperty(ACCESS_TOKEN, newAccessToken);
+        jsonResponse.addProperty(REFRESH_TOKEN, refreshToken);
+        jsonResponse.addProperty(TOKEN_TYPE, TOKEN_TYPE_VALUE);
+        jsonResponse.addProperty(EXPIRES_IN, OAuthProperties.getConfiguration().getAccessTokenExpirationSeconds());
+        sendOAuthResponse(response, Status.OK, jsonResponse);    }
 
     private String[] getAuthorizationHeader(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
@@ -335,7 +346,9 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         if (externalApplication instanceof ServiceApplication) {
             final String accessToken = OAuthUtils.generateToken(externalApplication);
             ((ServiceApplication) externalApplication).createServiceAuthorization(accessToken);
-            sendOAuthResponse(response, Status.OK, OAuthUtils.getJsonTokens(accessToken));
+            JsonObject jsonResponse = new JsonObject();
+            jsonResponse.addProperty(ACCESS_TOKEN, accessToken);
+            sendOAuthResponse(response, Status.OK, jsonResponse);
             return;
         }
 
@@ -355,7 +368,13 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             String accessToken = OAuthUtils.generateToken(appUserSession);
             String refreshToken = OAuthUtils.generateToken(appUserSession);
             appUserSession.setTokens(accessToken, refreshToken);
-            sendOAuthResponse(response, Status.OK, OAuthUtils.getJsonTokens(appUserSession));
+
+            JsonObject jsonResponse = new JsonObject();
+            jsonResponse.addProperty(ACCESS_TOKEN, accessToken);
+            jsonResponse.addProperty(REFRESH_TOKEN, refreshToken);
+            jsonResponse.addProperty(TOKEN_TYPE, TOKEN_TYPE_VALUE);
+            jsonResponse.addProperty(EXPIRES_IN, OAuthProperties.getConfiguration().getAccessTokenExpirationSeconds());
+            sendOAuthResponse(response, Status.OK, jsonResponse);
         } else {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CODE_EXPIRED);
         }
