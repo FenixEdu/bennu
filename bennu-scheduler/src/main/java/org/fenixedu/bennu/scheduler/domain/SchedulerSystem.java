@@ -485,7 +485,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         }
     }
 
-    private static ExecutionLogRepository repository = new FileSystemLogRepository(3);
+    private static ExecutionLogRepository repository = null;
 
     /**
      * Configures a new log repository to be used by the scheduler system.
@@ -508,6 +508,9 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      *         The current log repository
      */
     public static ExecutionLogRepository getLogRepository() {
+        if (repository == null) {
+            repository = new FileSystemLogRepository(3);
+        }
         return repository;
     }
 }
