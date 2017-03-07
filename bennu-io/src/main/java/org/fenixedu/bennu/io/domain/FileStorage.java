@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.io.Files;
+import org.apache.tika.io.IOUtils;
 
 /**
  * 
@@ -53,6 +54,10 @@ public abstract class FileStorage extends FileStorage_Base {
      */
     public String store(GenericFile genericFile, File file) throws IOException {
         return store(genericFile, Files.toByteArray(file));
+    }
+    
+    public String store(GenericFile genericFile, InputStream stream) throws IOException {
+        return store(genericFile, IOUtils.toByteArray(stream));
     }
 
     abstract public String store(GenericFile file, byte[] content);

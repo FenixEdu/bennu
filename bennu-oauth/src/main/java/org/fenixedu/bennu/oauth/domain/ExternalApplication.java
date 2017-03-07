@@ -21,13 +21,7 @@ package org.fenixedu.bennu.oauth.domain;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
@@ -84,7 +78,8 @@ public class ExternalApplication extends ExternalApplication_Base {
     }
 
     public boolean matchesUrl(String redirectUrl) {
-        return !Strings.isNullOrEmpty(redirectUrl) && redirectUrl.equals(getRedirectUrl());
+        return !Strings.isNullOrEmpty(redirectUrl) &&
+                 Arrays.asList(getRedirectUrl().split("\\|")).contains(redirectUrl);
     }
 
     public boolean matchesSecret(String secret) {

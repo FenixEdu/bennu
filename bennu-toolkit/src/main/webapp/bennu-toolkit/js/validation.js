@@ -101,7 +101,7 @@
     Bennu.validation.validateDateTime = function(inputObject){
         var value = inputObject.val();
         var val = true;
-        if (Bennu.utils.hasAttr(xx, "bennu-required")) {
+        if (Bennu.utils.hasAttr(inputObject, "bennu-required")) {
             if (!value) {
                 var errorMessage;
                 if (Bennu.utils.hasAttr(inputObject, "bennu-time")) {

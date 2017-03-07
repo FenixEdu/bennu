@@ -1,10 +1,6 @@
 package org.fenixedu.bennu.io.domain;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +9,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.io.ByteStreams;
 import jvstm.PerTxBox;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,22 +36,38 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         private final String path;
         private final byte[] contents;
         private final File file;
-
+        private final InputStream stream;
+    
         FileWriteIntention(String path, byte[] contents) {
             this.path = path;
             this.contents = contents;
             this.file = null;
+            this.stream = null;
         }
 
         FileWriteIntention(String path, File file) {
             this.path = path;
             this.contents = null;
             this.file = file;
+            this.stream = null;
         }
-
+    
+        public FileWriteIntention(String path, InputStream stream) {
+            this.path = path;
+            this.contents = null;
+            this.file = null;
+            this.stream = stream;
+        }
+    
         public void write() throws IOException {
             if (contents != null) {
                 Files.write(contents, new File(path));
+            } else if (stream!=null){
+                File file = new File(path);
+                OutputStream outputStream = new FileOutputStream(file);
+                ByteStreams.copy(stream, outputStream);
+                outputStream.close();
+                
             } else {
                 java.nio.file.Files.move(file.toPath(), Paths.get(path));
             }
@@ -110,7 +123,23 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         return uniqueIdentification;
 
     }
-
+    
+    
+    @Override
+    public String store(GenericFile genericFile, InputStream stream) {
+        String uniqueIdentification =
+                genericFile.getContentKey() == null ? genericFile.getExternalId() : genericFile.getContentKey();
+        final String fullPath = getFullPath(uniqueIdentification);
+        
+        ensureDirectoryExists(fullPath);
+        
+        Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
+        map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, stream));
+        getPerTxBox().put(map);
+        return uniqueIdentification;
+        
+    }
+    
     @Override
     public String store(GenericFile file, byte[] content) {
         String uniqueIdentification = file.getContentKey() == null ? file.getExternalId() : file.getContentKey();
@@ -171,7 +200,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         File dir = new File(path);
         if (!dir.exists()) {
             logger.debug("Filesystem storage {} directory does not exist, creating: {}", getName(), path);
-            if (!dir.mkdir()) {
+            if (!dir.mkdirs()) {
                 throw new RuntimeException("Could not create base directory for " + this.getExternalId() + ": " + path);
             }
         }

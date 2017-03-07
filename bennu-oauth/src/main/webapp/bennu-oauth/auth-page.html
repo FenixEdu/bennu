@@ -85,6 +85,9 @@
 				<form action="{{contextPath}}/oauth/userconfirmation" method="POST">
 					<input type="hidden" name="client_id" value="{{app.externalId}}" />
 					<input type="hidden" name="redirect_uri" value="{{app.redirectUrl}}" />
+					{% if state is not empty %}
+					<input type="hidden" name="state" value="{{state}}"/>
+					{% endif %}
 					
 					<a href="{{contextPath}}/logout" class="btn btn-default">{{i18n('resources.OAuthResources', 'label.cancel')}}</a>
 					<button type="submit" class="btn btn-primary">{{i18n('resources.OAuthResources', 'label.authorize')}}</button>
