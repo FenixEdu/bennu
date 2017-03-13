@@ -489,7 +489,7 @@
             '</div>');
         var toolbarReqs = "size,style,lists,align,colors,links,table,image,components,undo,fullscreen,source";
         if (Bennu.utils.hasAttr(e,"toolbar")) {
-            toolbarReqs = e.attr("toobar");
+            toolbarReqs = e.attr("toolbar");
         }
 
         toolbarReqs = toolbarReqs.split(",");
