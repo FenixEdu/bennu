@@ -41,7 +41,9 @@ public class OAuthUtils {
     public final static String EXPIRES_IN = "expires_in";
     public final static String TOKEN_TYPE = "token_type";
     public final static String TOKEN_TYPE_HEADER_ACCESS_TOKEN = "Bearer";
-
+    public static final String USER_DIALOG = "userdialog";
+    public static final String USER_CONFIRMATION = "userconfirmation";
+    
     public static String generateCode() {
         return Hashing.sha512().hashString(UUID.randomUUID().toString(), StandardCharsets.UTF_8).toString();
     }

@@ -153,10 +153,10 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
         String path = trim(request.getPathInfo());
         switch (path) {
-        case "userdialog":
+        case OAuthUtils.USER_DIALOG:
             handleUserDialog(request, response);
             break;
-        case "userconfirmation":
+        case OAuthUtils.USER_CONFIRMATION:
             if (!"POST".equals(request.getMethod())) {
                 response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 return;
@@ -396,7 +396,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
                 }
                 response.addCookie(new Cookie(OAUTH_SESSION_KEY, Base64.getEncoder().encodeToString(cookieValue.getBytes(StandardCharsets.UTF_8))));
                 response.sendRedirect(request.getContextPath() + "/login?callback="
-                        + CoreConfiguration.getConfiguration().applicationUrl() + "/oauth/userdialog");
+                        + CoreConfiguration.getConfiguration().applicationUrl() + "/oauth/"+ OAuthUtils.USER_DIALOG);
                 return;
             } else {
                 redirectToRedirectUrl(request, response, user, clientId, redirectUrl, originalState);
@@ -507,7 +507,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         String clientApplicationId = values[0];
         String redirectUrl = values[1];
         String state = null;
-        if( values.length>=2 && !Strings.isNullOrEmpty(values[2])) {
+        if( values.length>2 && !Strings.isNullOrEmpty(values[2])) {
              state = new String(Base64.getDecoder().decode(values[2]));
         }
         redirectToRedirectUrl(request, response, user, clientApplicationId, redirectUrl, state);
