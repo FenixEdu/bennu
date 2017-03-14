@@ -143,21 +143,30 @@ public class PortalBean {
         return bennuPortal() + DEBUG_TOOLKIT_ANGULAR_TAG;
     }
 
+    private String getModuleVersion() {
+        return getClass().getPackage().getImplementationVersion();
+    }
+
+    private String getVersionedLink(String ctxPath, String script, String version) {
+        return String.format("<link href=\"%s%s?ver=%s\" rel=\"stylesheet\"/>", ctxPath, script, version);
+    }
+
+    private String getVersionedScript(String ctxPath, String script, String version) {
+        return String.format("<script type=\"text/javascript\" src=\"%s%s?ver=%s\"></script>", ctxPath, script, version);
+    }
+
     private String getToolkit() {
         StringBuilder builder = new StringBuilder(bennuPortal());
-        builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
-        builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
-                .append("/bennu-toolkit/js/toolkit.js\"></script>");
+        builder.append(getVersionedLink(ctxPath,"/bennu-toolkit/css/toolkit.css", getModuleVersion()));
+        builder.append(getVersionedScript(ctxPath, "/bennu-toolkit/js/toolkit.js", getModuleVersion()));
         return builder.toString();
     }
 
     private String getAngularToolkit() {
         StringBuilder builder = new StringBuilder(bennuPortal());
-        builder.append("<link href=\"").append(ctxPath).append("/bennu-toolkit/css/toolkit.css\" rel=\"stylesheet\"/>");
-        builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
-                .append("/bennu-portal/js/angular.min.js\"></script>");
-        builder.append("<script type=\"text/javascript\" src=\"").append(ctxPath)
-                .append("/bennu-toolkit/js/toolkit-angular.js\"></script>");
+        builder.append(getVersionedLink(ctxPath,"/bennu-toolkit/css/toolkit.css", getModuleVersion()));
+        builder.append(getVersionedScript(ctxPath, "/bennu-portal/js/angular.min.js", getModuleVersion()));
+        builder.append(getVersionedScript(ctxPath, "/bennu-toolkit/js/toolkit-angular.js", getModuleVersion()));
         return builder.toString();
     }
 
