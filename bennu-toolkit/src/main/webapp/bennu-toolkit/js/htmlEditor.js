@@ -743,9 +743,10 @@
 
         }
 
+            Bennu.htmlEditor.components.init($(".bennu-html-editor-editor",dom));
+
         if ($(".bennu-html-editor-components-button", dom).length){
             var editor = $(".bennu-html-editor-editor",dom);
-            Bennu.htmlEditor.components.init(editor);
             $(".bennu-html-editor-components-button", dom).on("click",function(){
                 Bennu.htmlEditor.components.firstStep(editor);
             });
