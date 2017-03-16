@@ -158,7 +158,7 @@ public final class User extends User_Base implements Principal {
 
     @Override
     public String getName() {
-        return getUsername();
+        return getDisplayName();
     }
 
     public String getDisplayName() {
