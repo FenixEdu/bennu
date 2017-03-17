@@ -76,7 +76,7 @@
     };
 
     Bennu.htmlEditor.components.attachModal = function(){
-        if(!$(".bennu-html-editor-component-modal").length){
+        if(!$("#bennu-html-editor-component-modal").length){
             var template ='<div class="modal fade" id="bennu-html-editor-component-modal">'+
                 '<div class="modal-dialog">'+
                     '<div class="modal-content">'+
