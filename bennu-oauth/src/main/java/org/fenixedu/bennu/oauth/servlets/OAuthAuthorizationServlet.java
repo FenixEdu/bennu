@@ -577,7 +577,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
 
         if (externalApplication.matchesUrl(redirectUrl)) {
-            redirectWithCode(request, response, user, externalApplication, state);
+            redirectWithCode(request, response, user, externalApplication,redirectUrl, state);
             return;
         }
 
