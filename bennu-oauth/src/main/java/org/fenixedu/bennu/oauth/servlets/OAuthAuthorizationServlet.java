@@ -537,16 +537,16 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             authorizationPage(request, response, externalApplication, state);
             return;
         } else {
-            redirectWithCode(request, response, user, externalApplication, state);
+            redirectWithCode(request, response, user, externalApplication, redirectUrl, state);
             return;
         }
 
     }
 
     private void redirectWithCode(HttpServletRequest request, HttpServletResponse response, User user,
-                                  ExternalApplication clientApplication, String state) throws IOException {
+                                  ExternalApplication clientApplication, String redirectUrl, String state) throws IOException {
         final String code = createAppUserSession(clientApplication, user, request, response);
-        String url = clientApplication.getRedirectUrl() + "?" + CODE + "=" + code;
+        String url = redirectUrl + "?" + CODE + "=" + code;
         if (state !=null) {
            url +="&" + STATE + "=" + state;
         }
