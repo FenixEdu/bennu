@@ -476,7 +476,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     }
 
     private void authorizationPage(HttpServletRequest request, HttpServletResponse response,
-            ExternalApplication clientApplication, String state)
+            ExternalApplication clientApplication, String redirectUrl, String state)
             throws IOException {
         Map<String, Object> ctx = new HashMap<>();
         PortalConfiguration config = PortalConfiguration.getInstance();
@@ -488,6 +488,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         ctx.put("locales", CoreConfiguration.supportedLocales());
         ctx.put("loggedUser", Authenticate.getUser());
         ctx.put("state", state);
+        ctx.put("redirectUrl", redirectUrl);
         try {
             response.setContentType("text/html;charset=UTF-8");
             PebbleTemplate template = engine.getTemplate("auth-page");
@@ -534,7 +535,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
         if (!externalApplication.hasApplicationUserAuthorization(user)) {
             request.setAttribute("application", externalApplication);
-            authorizationPage(request, response, externalApplication, state);
+            authorizationPage(request, response, externalApplication, redirectUrl, state);
             return;
         } else {
             redirectWithCode(request, response, user, externalApplication, redirectUrl, state);
