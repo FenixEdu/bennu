@@ -84,7 +84,7 @@
 				</ul>
 				<form action="{{contextPath}}/oauth/userconfirmation" method="POST">
 					<input type="hidden" name="client_id" value="{{app.externalId}}" />
-					<input type="hidden" name="redirect_uri" value="{{app.redirectUrl}}" />
+					<input type="hidden" name="redirect_uri" value="{{redirectUrl}}" />
 					{% if state is not empty %}
 					<input type="hidden" name="state" value="{{state}}"/>
 					{% endif %}
