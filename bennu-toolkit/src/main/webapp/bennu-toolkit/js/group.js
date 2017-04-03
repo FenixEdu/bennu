@@ -116,7 +116,7 @@
 
         if ($("[data-role='" + val + "']", dom).length) {
             $("[data-role='" + val + "']", dom).addClass(Bennu.group.selectionClass);
-        } else if (val.substring(0, 2) === "U(") {
+        } else if (val.substring(0, 2) === "U(" || val === "nobody" || val === "" ) {
             $("[data-role='custom']", dom).addClass(Bennu.group.selectionClass);
         } else {
             $("button", dom).addClass("disabled");
@@ -206,6 +206,10 @@
 
     function group(dom) {
         var list = dom.data("customCache");
+        if (list == ""  || list[0] != "U") {
+            return [];
+        }
+
         list = list.substring(2, list.length - 1).split(",");
 
         list = $.map(list, function (e) {
@@ -229,8 +233,12 @@
                 result += ", ";
             }
         }
-
-        var s = "U(" + result + ")";
+        var s;
+        if (result)
+            s="U(" + result + ")";
+        else {
+            s =  "nobody"
+        }
         dom.data("customCache", s);
         dom.data("related").val(s);
     }
@@ -253,19 +261,10 @@
     function cacheCustom(dom) {
         var e = dom.data("related");
 
-        // Aliasing for default types.
-        if (e.val() === "") {
-            e.val("U()");
-        }
-
-        if (e.val() == "nobody") {
-            e.val("U()");
-        }
-
         if (e.val().substring(0, 2) == "U(") {
             dom.data("customCache", e.val());
         } else {
-            dom.data("customCache", "U()");
+            dom.data("customCache", "nobody");
         }
 
         $.map(group(dom), prefetch);
@@ -302,7 +301,7 @@
             if (e.data("role") != "custom") {
                 dom.data("related").val(e.data("role"));
             } else {
-                dom.data("related").val(dom.data("customCache") || "U()");
+                dom.data("related").val(dom.data("customCache") || "U");
                 showModal(dom);
             }
             setSelected(dom);
