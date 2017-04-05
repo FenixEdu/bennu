@@ -37,11 +37,13 @@ import com.google.gson.JsonObject;
 public class OAuthUtils {
 
     public final static String ACCESS_TOKEN = "access_token";
+    public final static String STANDARD_ACCESS_TOKEN = "token";
     public final static String REFRESH_TOKEN = "refresh_token";
     public final static String EXPIRES_IN = "expires_in";
     public final static String TOKEN_TYPE = "token_type";
     public final static String TOKEN_TYPE_HEADER_ACCESS_TOKEN = "Bearer";
     public static final String USER_DIALOG = "userdialog";
+    public static final String STANDARD_USER_DIALOG = "authorize";
     public static final String USER_CONFIRMATION = "userconfirmation";
     
     public static String generateCode() {
