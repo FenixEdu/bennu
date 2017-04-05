@@ -154,7 +154,8 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         String path = trim(request.getPathInfo());
         switch (path) {
         case OAuthUtils.USER_DIALOG:
-            handleUserDialog(request, response);
+        case OAuthUtils.STANDARD_USER_DIALOG:
+            handleUserDialog(request, response, path);
             break;
         case OAuthUtils.USER_CONFIRMATION:
             if (!"POST".equals(request.getMethod())) {
@@ -164,6 +165,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             userConfirmation(request, response);
             break;
         case OAuthUtils.ACCESS_TOKEN:
+        case OAuthUtils.STANDARD_ACCESS_TOKEN:
             if (!"POST".equals(request.getMethod())) {
                 response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 return;
@@ -381,7 +383,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
     }
 
-    private void handleUserDialog(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleUserDialog(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
         String clientId = request.getParameter(CLIENT_ID);
         String redirectUrl = request.getParameter(REDIRECT_URI);
         String originalState = request.getParameter(STATE);
@@ -396,7 +398,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
                 }
                 response.addCookie(new Cookie(OAUTH_SESSION_KEY, Base64.getEncoder().encodeToString(cookieValue.getBytes(StandardCharsets.UTF_8))));
                 response.sendRedirect(request.getContextPath() + "/login?callback="
-                        + CoreConfiguration.getConfiguration().applicationUrl() + "/oauth/"+ OAuthUtils.USER_DIALOG);
+                        + CoreConfiguration.getConfiguration().applicationUrl() + "/oauth/" + path);
                 return;
             } else {
                 redirectToRedirectUrl(request, response, user, clientId, redirectUrl, originalState);
