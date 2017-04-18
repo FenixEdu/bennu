@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
+import org.fenixedu.bennu.core.signals.Signal;
 import org.fenixedu.commons.StringNormalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,8 @@ import com.google.common.base.Strings;
  */
 public class UserProfile extends UserProfile_Base {
     private static final Logger logger = LoggerFactory.getLogger(UserProfile.class);
-
+    public static final String USER_NAME_CHANGED = "user.name.changed";
+    
     protected UserProfile() {
         super();
         setBennu(Bennu.getInstance());
@@ -119,6 +121,7 @@ public class UserProfile extends UserProfile_Base {
         setDisplayName(cleanupName(display));
         validateNames(super.getDisplayName(), getFullName());
         NameIndex.updateNameIndex(this);
+        Signal.emit(USER_NAME_CHANGED, this);
     }
 
     /**

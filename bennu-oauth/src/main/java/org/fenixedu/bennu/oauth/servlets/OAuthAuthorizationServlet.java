@@ -153,10 +153,11 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
         String path = trim(request.getPathInfo());
         switch (path) {
-        case "userdialog":
-            handleUserDialog(request, response);
+        case OAuthUtils.USER_DIALOG:
+        case OAuthUtils.STANDARD_USER_DIALOG:
+            handleUserDialog(request, response, path);
             break;
-        case "userconfirmation":
+        case OAuthUtils.USER_CONFIRMATION:
             if (!"POST".equals(request.getMethod())) {
                 response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 return;
@@ -164,6 +165,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             userConfirmation(request, response);
             break;
         case OAuthUtils.ACCESS_TOKEN:
+        case OAuthUtils.STANDARD_ACCESS_TOKEN:
             if (!"POST".equals(request.getMethod())) {
                 response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 return;
@@ -381,7 +383,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
     }
 
-    private void handleUserDialog(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleUserDialog(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
         String clientId = request.getParameter(CLIENT_ID);
         String redirectUrl = request.getParameter(REDIRECT_URI);
         String originalState = request.getParameter(STATE);
@@ -396,7 +398,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
                 }
                 response.addCookie(new Cookie(OAUTH_SESSION_KEY, Base64.getEncoder().encodeToString(cookieValue.getBytes(StandardCharsets.UTF_8))));
                 response.sendRedirect(request.getContextPath() + "/login?callback="
-                        + CoreConfiguration.getConfiguration().applicationUrl() + "/oauth/userdialog");
+                        + CoreConfiguration.getConfiguration().applicationUrl() + "/oauth/" + path);
                 return;
             } else {
                 redirectToRedirectUrl(request, response, user, clientId, redirectUrl, originalState);
@@ -476,7 +478,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     }
 
     private void authorizationPage(HttpServletRequest request, HttpServletResponse response,
-            ExternalApplication clientApplication, String state)
+            ExternalApplication clientApplication, String redirectUrl, String state)
             throws IOException {
         Map<String, Object> ctx = new HashMap<>();
         PortalConfiguration config = PortalConfiguration.getInstance();
@@ -488,6 +490,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         ctx.put("locales", CoreConfiguration.supportedLocales());
         ctx.put("loggedUser", Authenticate.getUser());
         ctx.put("state", state);
+        ctx.put("redirectUrl", redirectUrl);
         try {
             response.setContentType("text/html;charset=UTF-8");
             PebbleTemplate template = engine.getTemplate("auth-page");
@@ -507,7 +510,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         String clientApplicationId = values[0];
         String redirectUrl = values[1];
         String state = null;
-        if( values.length>=2 && !Strings.isNullOrEmpty(values[2])) {
+        if( values.length>2 && !Strings.isNullOrEmpty(values[2])) {
              state = new String(Base64.getDecoder().decode(values[2]));
         }
         redirectToRedirectUrl(request, response, user, clientApplicationId, redirectUrl, state);
@@ -534,19 +537,19 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
         if (!externalApplication.hasApplicationUserAuthorization(user)) {
             request.setAttribute("application", externalApplication);
-            authorizationPage(request, response, externalApplication, state);
+            authorizationPage(request, response, externalApplication, redirectUrl, state);
             return;
         } else {
-            redirectWithCode(request, response, user, externalApplication, state);
+            redirectWithCode(request, response, user, externalApplication, redirectUrl, state);
             return;
         }
 
     }
 
     private void redirectWithCode(HttpServletRequest request, HttpServletResponse response, User user,
-                                  ExternalApplication clientApplication, String state) throws IOException {
+                                  ExternalApplication clientApplication, String redirectUrl, String state) throws IOException {
         final String code = createAppUserSession(clientApplication, user, request, response);
-        String url = clientApplication.getRedirectUrl() + "?" + CODE + "=" + code;
+        String url = redirectUrl + "?" + CODE + "=" + code;
         if (state !=null) {
            url +="&" + STATE + "=" + state;
         }
@@ -577,7 +580,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
 
         if (externalApplication.matchesUrl(redirectUrl)) {
-            redirectWithCode(request, response, user, externalApplication, state);
+            redirectWithCode(request, response, user, externalApplication,redirectUrl, state);
             return;
         }
 

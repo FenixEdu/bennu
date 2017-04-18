@@ -76,7 +76,7 @@
     };
 
     Bennu.htmlEditor.components.attachModal = function(){
-        if(!$(".bennu-html-editor-component-modal").length){
+        if(!$("#bennu-html-editor-component-modal").length){
             var template ='<div class="modal fade" id="bennu-html-editor-component-modal">'+
                 '<div class="modal-dialog">'+
                     '<div class="modal-content">'+
@@ -489,7 +489,7 @@
             '</div>');
         var toolbarReqs = "size,style,lists,align,colors,links,table,image,components,undo,fullscreen,source";
         if (Bennu.utils.hasAttr(e,"toolbar")) {
-            toolbarReqs = e.attr("toobar");
+            toolbarReqs = e.attr("toolbar");
         }
 
         toolbarReqs = toolbarReqs.split(",");
@@ -743,9 +743,10 @@
 
         }
 
+            Bennu.htmlEditor.components.init($(".bennu-html-editor-editor",dom));
+
         if ($(".bennu-html-editor-components-button", dom).length){
             var editor = $(".bennu-html-editor-editor",dom);
-            Bennu.htmlEditor.components.init(editor);
             $(".bennu-html-editor-components-button", dom).on("click",function(){
                 Bennu.htmlEditor.components.firstStep(editor);
             });

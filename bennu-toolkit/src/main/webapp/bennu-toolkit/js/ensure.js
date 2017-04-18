@@ -42,7 +42,7 @@
 								};
 							};
 
-							script.src = file;
+							script.src = file + "?ver=" + Bennu.version.version;
 							document.getElementsByTagName('head')[0].appendChild(script);
 		      			})(file)
 			      	}else{

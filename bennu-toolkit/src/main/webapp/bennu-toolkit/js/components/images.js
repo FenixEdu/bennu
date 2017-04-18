@@ -72,11 +72,11 @@
       });
 
       // Input file box
-      $("#file", uploader).on("click",function(){
+      $("#file").on("click",function(){
         this.value = null;
       })
 
-      $("#file", uploader).on("change",function(){
+      $("#file").on("change",function(){
         handleFiles(this.files,handler);
       })
     }
