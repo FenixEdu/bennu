@@ -380,7 +380,8 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
   }
   $scope.saveSelected = function() {
     var data = { title: $scope.selected.title, description: $scope.selected.description, visible: $scope.selected.visible,
-                 layout: $scope.selected.layout, accessExpression: $scope.selected.accessExpression, icon: $scope.selected.icon , documentationUrl: $scope.selected.documentationUrl };
+                 layout: $scope.selected.layout, accessExpression: $scope.selected.accessExpression, icon: $scope.selected.icon ,
+                 documentationUrl: $scope.selected.documentationUrl, supportConfig: $scope.selected.supportConfig.id };
     var promise;
     if($scope.selected.id) {
       promise = $http.put(contextPath + "/api/bennu-portal/menu/" + $scope.selected.id, data);
@@ -397,7 +398,9 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
       $scope.selected = data; $scope.saving = false;
       data.node = node;
       node.setTitle(i18n(data.title));
+      $scope.reload(node);
     }).error($scope.handleError);
+
   }
   $scope.loadApps = function() {
     $scope.filter = null;
@@ -425,6 +428,17 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
     var newChild = { title: mls, description: {}, visible: true, accessExpression: 'anyone', functionality: false, parent: $scope.selected.id, subRoot: root };
     add(newChild, $scope.selected.node).setActive(true);
   }
+  $scope.addSupport = function() {
+    $http.post(contextPath + '/api/bennu-portal/menu/' + $scope.selected.id + '/support/',
+                {title : $scope.newSupportTitle, email : $scope.newSupportEmail}).
+                success(function (data) {
+            var node = $scope.selected.node;
+            $scope.selected = data;
+            data.node = node;
+            node.setTitle(i18n(data.title));
+            $scope.reload(node);
+    }).error($scope.handleError);
+  }
   $scope.saveOrder = function() {
     $http.post(contextPath + "/api/bennu-portal/menu/order", $scope.changes).success(function () {
       $scope.changes = null;
@@ -442,37 +456,49 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
     return node;
   }
 
-  $http.get(contextPath + '/api/bennu-portal/menu/' + $scope.id).success(function (data) {
-    $scope.locales = Bennu.locales;
-    $("#tree").fancytree({ source: [ ], extensions: ["dnd"],
-      dnd: {
-        preventRecursiveMoves: true,
-        dragStart: function(node, data) { return true; },
-        dragEnter: function(node, data) {
-          if(node.parent !== data.otherNode.parent) return false;
-          return ["before", "after"];
-        },
-        dragDrop: function(node, data) {
-          $scope.changes = $scope.changes || {};
-          data.otherNode.moveTo(node, data.hitMode);
-          node.parent.children.forEach(function (node) {
-            $scope.changes[node.key] = node.getIndex();
+  $scope.reload = function(expandedNode) {
+      $http.get(contextPath + '/api/bennu-portal/menu/' + $scope.id).success(function (data) {
+          $scope.locales = Bennu.locales;
+          $("#tree").fancytree({ source: [ ], extensions: ["dnd"],
+            dnd: {
+              preventRecursiveMoves: true,
+              dragStart: function(node, data) { return true; },
+              dragEnter: function(node, data) {
+                if(node.parent !== data.otherNode.parent) return false;
+                return ["before", "after"];
+              },
+              dragDrop: function(node, data) {
+                $scope.changes = $scope.changes || {};
+                data.otherNode.moveTo(node, data.hitMode);
+                node.parent.children.forEach(function (node) {
+                  $scope.changes[node.key] = node.getIndex();
+                });
+                $scope.$apply();
+              }
+            }
+           });
+          var tree = $("#tree").fancytree("getTree");
+          $("#tree").bind("fancytreeactivate", function(event, data) {
+            $scope.selected = data.node.data.item; $scope.error = null;
+            if(!$scope.$$phase) {
+              $scope.$apply();
+            }
           });
-          $scope.$apply();
-        }
-      }
-     });
-    var tree = $("#tree").fancytree("getTree");
-    $("#tree").bind("fancytreeactivate", function(event, data) {
-      $scope.selected = data.node.data.item; $scope.error = null;
-      if(!$scope.$$phase) {
-        $scope.$apply();
-      }
-    });
-    add(data, tree.rootNode);
-    tree.rootNode.children[0].setActive(true);
-    $("#tree ul").focus();
-  });
+          add(data, tree.rootNode);
+          if(!expandedNode) {
+            tree.rootNode.children[0].setActive(true);
+          } else {
+            var node = tree.getNodeByKey(expandedNode.key);
+            node.setActive(true);
+          }
+
+
+          $("#tree ul").focus();
+        });
+  };
+
+  $scope.reload();
+
 }]);
 
 

@@ -10,10 +10,13 @@ import org.fenixedu.bennu.core.bootstrap.annotations.Bootstrap;
 import org.fenixedu.bennu.core.bootstrap.annotations.Bootstrapper;
 import org.fenixedu.bennu.core.bootstrap.annotations.Field;
 import org.fenixedu.bennu.core.bootstrap.annotations.Section;
+import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalBootstrapper.PortalSection;
 import org.fenixedu.bennu.portal.model.ApplicationRegistry;
 import org.fenixedu.commons.i18n.LocalizedString;
+
+import com.google.common.base.Strings;
 
 @Bootstrapper(bundle = "resources.BennuPortalResources", name = "bootstrapper.name", sections = PortalSection.class,
         after = AdminUserBootstrapper.class)
@@ -27,7 +30,13 @@ public class PortalBootstrapper {
         portalConfiguration.setApplicationTitle(makeLocalized(portalSection.getApplicationTitle()));
         portalConfiguration.setApplicationSubTitle(makeLocalized(portalSection.getApplicationTitle()));
         portalConfiguration.setDocumentationBaseUrl(portalSection.getDocumentationUrl());
-
+        portalConfiguration.setSupportEmailAddress(portalSection.getSupportEmailAddress());
+        if (!Strings.isNullOrEmpty(portalConfiguration.getSupportEmailAddress())) {
+            SupportConfiguration defaultSupport = new SupportConfiguration(
+                    BundleUtil.getLocalizedString("resources.BennuPortalResources", "bootstrapper.default.support"),
+                    portalConfiguration.getSupportEmailAddress());
+            portalConfiguration.getMenu().setSupport(defaultSupport);
+        }
         return Collections.emptyList();
     }
 
@@ -51,6 +60,9 @@ public class PortalBootstrapper {
 
         @Field(name = "bootstrapper.portalSection.documentationUrl", defaultValue = "https://fenixedu.org/dev", order = 5)
         public String getDocumentationUrl();
+
+        @Field(name = "bootstrapper.portalSection.supportEmail", defaultValue = "support@fenixedu.org", order = 6)
+        public String getSupportEmailAddress();
 
     }
 }
