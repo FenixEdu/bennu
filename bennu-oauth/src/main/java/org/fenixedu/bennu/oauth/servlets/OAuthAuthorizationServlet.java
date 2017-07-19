@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
@@ -549,11 +550,12 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private void redirectWithCode(HttpServletRequest request, HttpServletResponse response, User user,
                                   ExternalApplication clientApplication, String redirectUrl, String state) throws IOException {
         final String code = createAppUserSession(clientApplication, user, request, response);
-        String url = redirectUrl + "?" + CODE + "=" + code;
-        if (state !=null) {
-           url +="&" + STATE + "=" + state;
+        UriBuilder builder = UriBuilder.fromUri(redirectUrl);
+        builder.queryParam(CODE, code);
+        if (!Strings.isNullOrEmpty(state)) {
+            builder.queryParam(STATE, state);
         }
-        response.sendRedirect(url);
+        response.sendRedirect(builder.toString());
     }
 
     public void userConfirmation(HttpServletRequest request, HttpServletResponse response) throws IOException {
