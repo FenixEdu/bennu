@@ -10,6 +10,8 @@ import org.fenixedu.commons.StringNormalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Joiner;
+
 import pt.ist.esw.advice.pt.ist.fenixframework.AtomicInstance;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -83,8 +85,17 @@ public abstract class CronTask implements Runnable {
         }, atomic);
     }
 
+    private String sanitize(String filename) {
+        int i = filename.lastIndexOf(".");
+        if (i != -1) {
+            return Joiner.on(".").join(StringNormalizer.slugify(filename.substring(0, i)), StringNormalizer.slugify(
+                    filename.substring(i + 1, filename.length())));
+        }
+        return filename;
+    }
+
     public void output(String filename, byte[] fileContent, boolean append) {
-        String sanitized = StringNormalizer.slugify(filename);
+        final String sanitized = sanitize(filename);
         SchedulerSystem.getLogRepository().storeFile(log, sanitized, fileContent, append);
         updateLog(log.withFile(sanitized));
     }
