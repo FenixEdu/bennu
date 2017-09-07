@@ -39,11 +39,11 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixframework.FenixFramework;
-
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
+
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * The application end user.
@@ -68,14 +68,17 @@ public final class User extends User_Base implements Principal {
     }
 
     public User(UserProfile profile) {
-        this(generateUsername(profile), profile);
+        init(generateUsername(profile), profile);
     }
 
     public User(String username, UserProfile profile) {
-        super();
         if (findByUsername(username) != null) {
             throw BennuCoreDomainException.duplicateUsername(username);
         }
+        init(username, profile);
+    }
+
+    private void init(final String username, final UserProfile profile) {
         setBennu(Bennu.getInstance());
         setCreated(new DateTime());
         setUsername(username);
@@ -267,13 +270,17 @@ public final class User extends User_Base implements Principal {
     }
 
     private static User manualFind(String username) {
-        return Bennu.getInstance().getUserSet().stream().peek(User::cacheUser)
-                .filter(user -> user.getUsername().equals(username)).findAny()
-                .orElse(null);
+        for (final User user : Bennu.getInstance().getUserSet()) {
+            cacheUser(user);
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
     }
 
     private static void cacheUser(User user) {
-        map.put(user.getUsername(), user);
+        map.putIfAbsent(user.getUsername(), user);
     }
 
     public static void setUsernameGenerator(UsernameGenerator generator) {
