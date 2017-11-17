@@ -193,4 +193,16 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
     }
 
     protected abstract MenuItem moveTo(MenuContainer container);
+
+    @Override
+    public SupportConfiguration getSupport() {
+        SupportConfiguration supportConfiguration = super.getSupport();
+        if (supportConfiguration == null) {
+            if (getParent() == null) {
+                return null;
+            }
+            return getParent().getSupport();
+        }
+        return supportConfiguration;
+    }
 }

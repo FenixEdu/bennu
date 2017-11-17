@@ -1,7 +1,6 @@
 <link href="${pageContext.request.contextPath}/bennu-admin/libs/fancytree/skin-lion/ui.fancytree.css" rel="stylesheet" type="text/css">
 <script src="${pageContext.request.contextPath}/bennu-admin/libs/fancytree/jquery-ui.min.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/bennu-admin/libs/fancytree/jquery.fancytree-all.min.js" type="text/javascript"></script>
-
 <style>
 .fancytree-container {
 	outline: none;
@@ -80,6 +79,13 @@
 			<input type="checkbox" name="visible" ng-model="selected.visible" readonly="true">
 		</div>
 	</div>
+	<div class="form-group">
+        <label class="col-sm-2 control-label" for="Support">Support</label>
+        <div class="col-sm-10">
+            <select name="supportConfig" ng-model="selected.supportConfig" class="form-control" ng-options="support.title + ' (' + support.email + ')' for support in selected.supportConfigs track by support.id">
+            </select>
+        </div>
+    </div>
 	<div class="form-group" ng-if="!selected.subRoot && !selected.appRoot">
 		<label class="col-sm-2 control-label" for="accessExpression">Access Expression</label>
 		<div class="col-sm-10">
@@ -96,6 +102,7 @@
 		<button ng-click="createChild(false)" class="btn btn-primary btn-sm">Create Child</button>
 		<button ng-click="createChild(true)" ng-if="selected.appRoot" class="btn btn-primary btn-sm">Create Menu</button>
 	</span>
+	<button class="btn btn-primary btn-sm" data-target="#modal-add-support" role="button" data-toggle="modal">Add Support Option</button>
 	<span ng-if="selected.functionality" class="pull-right">
 		<span class="label label-default" title="Provider">{{selected.provider}}</span>
 		<span class="label label-primary" title="Key">{{selected.key}}</span>
@@ -164,6 +171,37 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<div id="modal-add-support" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		      <h3>New Support Option</h3>
+		    </div>
+		    <div class="modal-body">
+		      <div class="form-group">
+              	<label class="col-sm-2 control-label">Title</label>
+              	<div class="col-sm-10">
+              		<input type="text" ng-required="true" bennu-localized-string="newSupportTitle" class="form-control"/>
+              	</div>
+              </div>
+		    </div>
+		    <div class="modal-body">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" ng-required="true" ng-model="newSupportEmail" class="form-control"/>
+                </div>
+              </div>
+            </div>
+		    <div class="modal-footer">
+		      <button ng-click="addSupport()" data-dismiss="modal" class="btn btn-success" ng-disabled="!newSupportTitle || !newSupportEmail">Save</button>
+		      <a data-dismiss="modal" class="btn secondary">Cancel</a>
+		    </div>
+	    </div>
+    </div>
 </div>
 
 </div>
