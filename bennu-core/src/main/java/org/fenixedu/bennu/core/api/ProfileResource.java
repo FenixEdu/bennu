@@ -55,7 +55,7 @@ public class ProfileResource extends BennuRestResource {
         if (CoreConfiguration.getConfiguration().localLoginEnabled()) {
             User user = User.findByUsername(username);
             if (user != null && (CoreConfiguration.getConfiguration().developmentMode() || user.matchesPassword(password))) {
-                Authenticate.login(request, response, user);
+                Authenticate.login(request, response, user, "Local Username/Password");
             } else {
                 throw AuthorizationException.authenticationFailed();
             }

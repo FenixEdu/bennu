@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.fenixedu.bennu.core.domain.AuthenticationContext;
+import org.fenixedu.bennu.core.domain.AuthenticationContext.AuthenticationMethodEvent;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.i18n.I18NFilter;
@@ -35,9 +37,12 @@ import pt.ist.fenixframework.FenixFramework;
 public class Authenticate {
     private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
 
+    @Deprecated
     private static final String LOGGED_USER_ATTRIBUTE = "LOGGED_USER_ATTRIBUTE";
 
-    private static final InheritableThreadLocal<User> loggedUser = new InheritableThreadLocal<>();
+    private static final String LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE = "LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE";
+
+    private static final InheritableThreadLocal<AuthenticationContext> loggedUserContext = new InheritableThreadLocal<>();
 
     private static final Collection<UserAuthenticationListener> userAuthenticationListeners = new ConcurrentLinkedQueue<>();
 
@@ -50,26 +55,37 @@ public class Authenticate {
      *            The response associated with the request that triggered the login
      * @param user
      *            The user to log in
+     * @param authenticationMethod
+     *            The authentication method used to login the user
      * @return
      *         The logged in user
      * @throws AuthorizationException
      *             If the provided user is {@code null} or if the user has its login expired
      */
-    public static User login(HttpServletRequest request, HttpServletResponse response, User user) {
+    public static User login(final HttpServletRequest request, final HttpServletResponse response, final User user, final String authenticationMethod) {
         if (user == null || user.isLoginExpired()) {
             throw AuthorizationException.authenticationFailed();
         }
 
-        HttpSession session = request.getSession();
-        loggedUser.set(user);
-        session.setAttribute(LOGGED_USER_ATTRIBUTE, user);
-        final Locale preferredLocale = user.getProfile().getPreferredLocale();
-        if (preferredLocale != null) {
-            I18NFilter.updateLocale(preferredLocale, request, response);
+        AuthenticationContext authenticationContext = loggedUserContext.get();
+        if (authenticationContext == null) {
+            authenticationContext = new AuthenticationContext(user, authenticationMethod);
+            loggedUserContext.set(authenticationContext);
+
+            storeInSession(request, authenticationContext);
+            final Locale preferredLocale = user.getProfile().getPreferredLocale();
+            if (preferredLocale != null) {
+                I18NFilter.updateLocale(preferredLocale, request, response);
+            }
+            
+            fireLoginListeners(request, response, authenticationContext);
+            logger.debug("Logged in user: " + user.getUsername());
+        } else if (authenticationContext.getUser() != user) {
+            throw AuthorizationException.authenticationFailed();
+        } else {
+            authenticationContext.addAuthenticationMethodEvent(authenticationMethod);
         }
 
-        fireLoginListeners(request, response, user);
-        logger.debug("Logged in user: " + user.getUsername());
 
         return user;
     }
@@ -84,64 +100,98 @@ public class Authenticate {
      * @param response
      *            The response associated with the requires that triggered the logout
      */
-    public static void logout(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false);
+    public static void logout(final HttpServletRequest request, final HttpServletResponse response) {
+        final HttpSession session = request.getSession(false);
         if (session != null) {
-            User user = (User) session.getAttribute(LOGGED_USER_ATTRIBUTE);
-            if (user != null) {
-                fireLogoutListeners(request, response, user);
+            final AuthenticationContext authenticationContext = (AuthenticationContext) session.getAttribute(LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE);
+            if (authenticationContext != null) {
+                final User user = authenticationContext.getUser();
+                if (user != null && FenixFramework.isDomainObjectValid(user)) {
+                    fireLogoutListeners(request, response, authenticationContext);
+                }
             }
             session.invalidate();
         }
-        loggedUser.set(null);
+        clear();
     }
 
-    public static void mock(User user) {
-        loggedUser.set(user);
+    public static void mock(final User user, final String authenticationMethod) {
+        final AuthenticationContext authenticationContext = loggedUserContext.get();
+        if (authenticationContext == null || authenticationContext.getUser() != user) {
+            loggedUserContext.set(new AuthenticationContext(user, authenticationMethod));
+        } else {
+            authenticationContext.addAuthenticationMethodEvent(authenticationMethod);
+        }
     }
 
     public static void unmock() {
-        loggedUser.set(null);
+        clear();
     }
 
     public static User getUser() {
-        return loggedUser.get();
+        final AuthenticationContext context = loggedUserContext.get();
+        return context == null ? null : context.getUser();
     }
 
     public static boolean isLogged() {
-        return loggedUser.get() != null;
+        final AuthenticationContext context = loggedUserContext.get();
+        return context != null && context.getUser() != null;
     }
 
-    static void updateFromSession(HttpSession session) {
-        User user = (User) (session == null ? null : session.getAttribute(LOGGED_USER_ATTRIBUTE));
-        if (user != null && FenixFramework.isDomainObjectValid(user)) {
-            loggedUser.set(user);
-        } else {
-            loggedUser.set(null);
+    public static AuthenticationContext getAuthenticationContext() {
+        return loggedUserContext.get();
+    }
+
+    private static void storeInSession(final HttpServletRequest request, final AuthenticationContext authenticationContext) {
+        final HttpSession session = request.getSession();
+        session.setAttribute(LOGGED_USER_ATTRIBUTE, authenticationContext.getUser());
+        session.setAttribute(LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE, authenticationContext);
+    }
+
+    static void updateFromSession(final HttpSession session) {
+        if (session != null) {
+            final AuthenticationContext authenticationContext = (AuthenticationContext) session.getAttribute(LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE);
+            if (authenticationContext != null) {
+                final User user = authenticationContext.getUser();
+                if (user != null && FenixFramework.isDomainObjectValid(user)) {
+                    loggedUserContext.set(authenticationContext);
+                } else {
+                    clear();
+                }
+            }
         }
     }
 
     static void clear() {
-        loggedUser.set(null);
+        final AuthenticationContext context = loggedUserContext.get();
+        if (context != null) {
+            final AuthenticationMethodEvent[] events = context.getAuthenticationMethodEvents();
+            final int length = events.length;
+            if (length > 0) {
+                context.removeAuthenticationMethodEvent(events[length - 1]);
+            }
+            loggedUserContext.set(null);
+        }
     }
 
-    public static void addUserAuthenticationListener(UserAuthenticationListener listener) {
+    public static void addUserAuthenticationListener(final UserAuthenticationListener listener) {
         userAuthenticationListeners.add(listener);
     }
 
-    public static void removeUserAuthenticationListener(UserAuthenticationListener listener) {
+    public static void removeUserAuthenticationListener(final UserAuthenticationListener listener) {
         userAuthenticationListeners.remove(listener);
     }
 
-    private static void fireLoginListeners(HttpServletRequest request, HttpServletResponse response, final User user) {
-        for (UserAuthenticationListener listener : userAuthenticationListeners) {
-            listener.onLogin(request, response, user);
+    private static void fireLoginListeners(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationContext authenticationContext) {
+        for (final UserAuthenticationListener listener : userAuthenticationListeners) {
+            listener.onLogin(request, response, authenticationContext);
         }
     }
 
-    private static void fireLogoutListeners(HttpServletRequest request, HttpServletResponse response, final User user) {
-        for (UserAuthenticationListener listener : userAuthenticationListeners) {
-            listener.onLogout(request, response, user);
+    private static void fireLogoutListeners(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationContext authenticationContext) {
+        for (final UserAuthenticationListener listener : userAuthenticationListeners) {
+            listener.onLogout(request, response, authenticationContext);
         }
     }
+
 }
