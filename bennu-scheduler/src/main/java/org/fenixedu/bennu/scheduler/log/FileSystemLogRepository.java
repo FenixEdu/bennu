@@ -16,6 +16,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -252,6 +253,8 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
     }
 
     private static Optional<JsonObject> readJson(String path) {
-        return read(path).map(bytes -> parser.parse(new String(bytes, StandardCharsets.UTF_8)).getAsJsonObject());
+        final Optional<JsonElement> e = read(path).map(bytes -> parser.parse(new String(bytes, StandardCharsets.UTF_8)));
+        return e.filter(o -> !o.isJsonNull()).map(JsonElement::getAsJsonObject);
     }
+
 }
