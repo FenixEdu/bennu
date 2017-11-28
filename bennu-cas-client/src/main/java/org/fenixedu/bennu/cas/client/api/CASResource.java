@@ -1,3 +1,4 @@
+
 package org.fenixedu.bennu.cas.client.api;
 
 import java.io.UnsupportedEncodingException;
@@ -75,7 +76,7 @@ public class CASResource {
 
             String username = validator.validate(ticket, requestURL).getPrincipal().getName();
             User user = getUser(username);
-            Authenticate.login(request, response, user);
+            Authenticate.login(request, response, user, "CAS Authentication");
             logger.trace("Logged in user {}, redirecting to {}", username, actualCallback);
         } catch (TicketValidationException | AuthorizationException e) {
             logger.debug(e.getMessage(), e);

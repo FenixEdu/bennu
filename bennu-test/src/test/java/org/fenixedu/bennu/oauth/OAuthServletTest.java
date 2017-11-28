@@ -1051,7 +1051,7 @@ public class OAuthServletTest extends JerseyTest {
 
             Assert.assertEquals("this is an endpoint with TEST scope: testServiceApplicationOAuthAccessProvider", result);
 
-            Authenticate.mock(user);
+            Authenticate.mock(user, "OAuth Access Token");
 
             JsonArray authorizations =
                     target("bennu-oauth").path("authorizations").request().get(JsonElement.class).getAsJsonArray();

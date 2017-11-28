@@ -3,6 +3,7 @@ package org.fenixedu.bennu.core.security;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.fenixedu.bennu.core.domain.AuthenticationContext;
 import org.fenixedu.bennu.core.domain.User;
 
 /**
@@ -12,7 +13,21 @@ import org.fenixedu.bennu.core.domain.User;
  * @see Authenticate#removeUserAuthenticationListener(UserAuthenticationListener)
  */
 public interface UserAuthenticationListener {
-    void onLogin(HttpServletRequest request, HttpServletResponse response, User user);
 
-    void onLogout(HttpServletRequest request, HttpServletResponse response, User user);
+    default void onLogin(HttpServletRequest request, HttpServletResponse response, AuthenticationContext context) {
+        onLogin(request, response, context.getUser());
+    }
+
+    default void onLogout(HttpServletRequest request, HttpServletResponse response, AuthenticationContext context) {
+        onLogout(request, response, context.getUser());
+    }
+
+    default void onLogin(HttpServletRequest request, HttpServletResponse response, User user) {
+        
+    }
+
+    default void onLogout(HttpServletRequest request, HttpServletResponse response, User user) {
+        
+    }
+
 }

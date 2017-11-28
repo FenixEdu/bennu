@@ -13,7 +13,7 @@ import org.fenixedu.bennu.core.security.Authenticate;
  * Login Providers allow users to select the way they prefer to authenticate into the application.
  * 
  * After the user has been successfuly identified, providers may use the
- * {@link Authenticate#login(HttpServletRequest, HttpServletResponse, org.fenixedu.bennu.core.domain.User)} method to authenticate
+ * {@link Authenticate#login(HttpServletRequest, HttpServletResponse, org.fenixedu.bennu.core.domain.User, String)} method to authenticate
  * the user with the application.
  * 
  * Upon login, the provider is expected to redirect the user to the desired callback URL. If login is unsuccessful, the user
