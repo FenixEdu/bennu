@@ -59,7 +59,7 @@ public class TestCustomGroup {
         assertNotNull(Group.parse("after(x1=[])"));
     }
 
-    @GroupOperator("foo.bar")
+    @GroupOperator("foo.!bar")
     public static class GroupWithInvalidOperatorName extends GroupStrategy {
 
         @Override
@@ -91,7 +91,7 @@ public class TestCustomGroup {
     @GroupOperator("foobar")
     public static class GroupWithInvalidFieldName extends GroupStrategy {
 
-        @GroupArgument("invalid.field")
+        @GroupArgument("invalid.!field")
         private String thisFieldIsInvalid;
 
         @Override
