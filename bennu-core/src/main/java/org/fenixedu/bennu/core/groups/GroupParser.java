@@ -197,7 +197,7 @@ final class GroupParser {
      */
 
     /*
-     * IDENTIFIER: ('a'..'z'|'A'..'Z'|'_'|'0'..'9')+
+     * IDENTIFIER: ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'.')+
      *
      * Retrieves all characters in the stream, until a non-identifier character or EOF is reached.
      *
@@ -308,7 +308,7 @@ final class GroupParser {
      * Determines whether the given character is part of a valid identifier
      */
     private static boolean isIdentifierChar(char c) {
-        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_';
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '.';
     }
 
     private boolean isWhitespace(char c) {
