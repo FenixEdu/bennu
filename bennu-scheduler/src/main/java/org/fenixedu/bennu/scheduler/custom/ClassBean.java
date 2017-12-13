@@ -281,7 +281,7 @@ public class ClassBean implements Serializable {
                 @SuppressWarnings("unchecked")
                 final Class<? extends CustomTask> clazz =
                         (Class<? extends CustomTask>) Class.forName(getClassName(), true, urlClassLoader);
-                setName("CustomTaskRunner-" + clazz.getSimpleName() + "-" + uploadTime.getMillis());
+                setName("CustomTaskRunner-" + clazz.getName() + "-" + uploadTime.getMillis());
                 CustomTask task = clazz.newInstance();
                 task.init(contents, username);
                 task.run();

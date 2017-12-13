@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.core.groups.Group;
@@ -64,5 +65,19 @@ public class ExecutionLogResource extends BennuRestResource {
         accessControl(Group.managers());
         return SchedulerSystem.getLogRepository().getFile(taskName, id, fileName)
                 .orElseThrow(() -> new WebApplicationException(Status.NOT_FOUND));
+    }
+
+    @GET
+    @Path("kill/{taskName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response killTask(@PathParam("taskName") String taskName) {
+        accessControl(Group.managers());
+        for (Thread thread : Thread.getAllStackTraces().keySet()) {
+            String name = thread.getName();
+            if (name.contains(taskName)) {
+                thread.stop();
+            }
+        }
+        return ok();
     }
 }
