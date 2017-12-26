@@ -39,7 +39,7 @@ public class ExecutionLog {
         try {
             return InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException e) {
-            return null;
+            return "<unknown-host>";
         }
     }
 
