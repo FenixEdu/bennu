@@ -155,7 +155,7 @@ class BennuOAuthAuthorizationFilter implements ContainerRequestFilter {
                     return;
                 }
 
-                Authenticate.mock(foundUser);
+                Authenticate.mock(foundUser, "OAuth Access Token");
             } else {
                 sendError(requestContext, "accessTokenInvalidFormat", "Access Token not recognized.");
                 return;

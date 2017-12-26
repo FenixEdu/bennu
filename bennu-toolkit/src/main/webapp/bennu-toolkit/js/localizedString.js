@@ -55,7 +55,10 @@
 
         val = val[tag]
         if (val !== inputField.val() || locale !== widget.data("locale")){
-            inputField.val(val || "");
+            if (inputField instanceof $ && inputField.hasClass('bennu-localized-string-input'))
+                inputField.val($('<div>').html( val ).text() || "");
+            else
+                inputField.val(val || "");
             
             setLocale(locale,localeButton);
             setTagButton(locale, tagButton);

@@ -82,3 +82,26 @@ relation MenuItemGroup {
         multiplicity 1..1;
     }
 }
+
+public class SupportConfiguration {
+    public LocalizedString title (REQUIRED);
+    public String emailAddress (REQUIRED);
+}
+
+relation MenuItemSupport {
+    public MenuItem playsRole menuItem {
+        multiplicity *;
+    }
+    public SupportConfiguration playsRole support {
+        multiplicity 0..1;
+    }
+}
+
+relation BennuSupportConfiguration {
+    protected .org.fenixedu.bennu.core.domain.Bennu playsRole root {
+        multiplicity 1..1;
+    }
+    public SupportConfiguration playsRole supportConfiguration {
+        multiplicity *;
+    }
+}

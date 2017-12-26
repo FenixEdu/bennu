@@ -162,8 +162,8 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     private static void ensureDirectoryExists(String fullPath) {
         File directory = new File(fullPath);
         if (!directory.exists()) {
-            if (!directory.mkdirs()) {
-                throw new RuntimeException("Could not create directory " + directory.getName());
+            if (!directory.mkdirs() && !directory.exists()) {
+                throw new RuntimeException("Could not create directory " + directory.getAbsolutePath());
             }
         } else {
             if (!directory.isDirectory()) {
