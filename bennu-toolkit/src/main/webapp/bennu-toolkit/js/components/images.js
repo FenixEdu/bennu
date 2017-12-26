@@ -89,7 +89,7 @@
       var editor = '<div class="form-group">'+
       '<h4>Preview</h4>'+
       "<div style='text-align:center'>"+
-        "<img class='preview' src='" + element.data("source" )+ "' style='max-width:100%'/>'"+
+        "<img class='preview' src='" + element.data("source" )+ "' style='max-width:100%'/>"+
         "</div>"+
       '</div>'+
 
@@ -104,14 +104,24 @@
               '<input type="email" class="form-control" id="height" placeholder="Height" \\>'+
               '<p class="help-block"></p>'+
           '</div>'+
+      '</div>'+
+      '<div class="form-group">'+
+	      '<label for="inputEmail3" class="col-sm-2 control-label">Link</label>'+
+	      '<div class="col-sm-10">'+
+	          '<input type="email" class="form-control" id="link" placeholder="Link" \\>'+
+	          '<p class="help-block">Use the full URL, including HTTP(S)</p>'+
+	      '</div>'+
       '</div>';
 
       editor = $('<div class="form-horizontal">' + editor + '</div>');
       var h = $("#height", editor)
       var w = $("#width", editor);
+      var u = $("#link", editor);
 
       h.val(element.data("height"));
       w.val(element.data("width"));
+      if ($(element).parent().is("a"))
+          u.val($(element).parent().attr("href"));
 
       Bennu.htmlEditor.components.setBody(editor);
       Bennu.htmlEditor.components.showPrimaryButton();
@@ -121,6 +131,7 @@
 
         var height = parseInt(h.val()) || null;
         var width = parseInt(w.val()) || null;
+        var url = u.val() || null;
 
 
         element.data("height",height);
@@ -129,8 +140,31 @@
         element.data("width",width);
         element.attr("data-width", width);
 
-        handler.text(element);
-        Bennu.htmlEditor.components.hideModal();
+        if (url) {
+            if (Bennu.validation.isUrl(url)) {
+                if ($(element).parent().is("a")) 
+                    $(element).unwrap();
+                
+                if (handler.element === undefined) {
+                    handler.text($(element).find('img').addBack('img').wrap("<a bennu-component='link' href='" + url + "' target='_blank'><a/>").parent());
+                }
+                else {
+                    handler.text($(element).wrap("<a bennu-component='link' href='" + url + "' target='_blank'><a/>"));
+                }
+                    
+                Bennu.htmlEditor.components.hideModal();
+            }
+            else {
+                Bennu.validation.addError($("#link", editor).closest(".form-group"));
+            }     
+        }
+        else {
+            if (!isnew && $(element).parent().is("a"))
+                $(element).unwrap();
+
+            handler.text(element);
+            Bennu.htmlEditor.components.hideModal();
+        }
       });
     }
 

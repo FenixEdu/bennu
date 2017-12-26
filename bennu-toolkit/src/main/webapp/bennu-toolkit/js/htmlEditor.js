@@ -853,10 +853,23 @@
         })
 
         $(".link-to-add-btn", dom).on("click",function(){
-            var editor = $(".bennu-html-editor-editor", dom);
-            var handler = Bennu.htmlEditor.components.mkHandler(editor);
-            Bennu.htmlEditor.components.showModal(editor);
-            Bennu.htmlEditor.components.showEditorFor("link",null,handler);
+	    	var selection = window.getSelection();
+	    	if (!selection.isCollapsed && selection.anchorNode.textContent == "") {
+	    		var anchor = $(selection.anchorNode);
+	    		
+	    		if (anchor.is('img')) {
+	    			anchor.dblclick();
+	    		}	
+	    		else if (anchor.children(0).is('img')) {
+	    			anchor.children(0).dblclick();
+	    		}
+	    	}
+	    	else {
+	            var editor = $(".bennu-html-editor-editor", dom);
+	            var handler = Bennu.htmlEditor.components.mkHandler(editor);
+	            Bennu.htmlEditor.components.showModal(editor);
+	            Bennu.htmlEditor.components.showEditorFor("link",null,handler);
+	    	}
         });
 
         e.on("change.bennu", function (ev) {
