@@ -15,14 +15,14 @@ final class GroupParser {
      * Parses the given expression, returning its corresponding {@link Group}.
      *
      * @param expression
-     *         The expression to parse
+     *            The expression to parse
      * @return The group corresponding to the given expression
      * @throws DomainException
-     *         If the given expression is invalid
+     *             If the given expression is invalid
      * @throws NullPointerException
-     *         If the given expression is {@code null}.
+     *             If the given expression is {@code null}.
      */
-    public static Group parse(String expression) {
+    public static Group parse(final String expression) {
         return new GroupParser(expression.toCharArray()).toGroup();
     }
 
@@ -41,7 +41,7 @@ final class GroupParser {
     // The position that is currently being looked at
     private int currentPos = 0;
 
-    private GroupParser(char[] chars) {
+    private GroupParser(final char[] chars) {
         this.chars = chars;
     }
 
@@ -152,7 +152,7 @@ final class GroupParser {
     /*
      * argument: (IDENTIFIER '=')? (value | '[' (value (',' value)*)? ']')
      */
-    private void argument(Map<String, List<String>> arguments) {
+    private void argument(final Map<String, List<String>> arguments) {
         String name = "";
         if (hasArgumentName()) {
             name = identifier();
@@ -170,7 +170,7 @@ final class GroupParser {
      *
      * Assumes that the '[' character has already been consumed
      */
-    private void argumentList(String name, Map<String, List<String>> arguments) {
+    private void argumentList(final String name, final Map<String, List<String>> arguments) {
         // Argument list may be empty, so we cannot simply try and get a value
         if (!consumeIfMatches(']')) {
             arguments.computeIfAbsent(name, k -> new ArrayList<>()).add(value());
@@ -292,8 +292,8 @@ final class GroupParser {
     /*
      * Determines whether the given string constitutes a valid Identifier
      */
-    static boolean isValidIdentifier(String value) {
-        if (value.isEmpty()) {
+    static boolean isValidIdentifier(final String value) {
+        if (value == null || value.isEmpty()) {
             return false;
         }
         for (char c : value.toCharArray()) {
@@ -307,11 +307,11 @@ final class GroupParser {
     /*
      * Determines whether the given character is part of a valid identifier
      */
-    private static boolean isIdentifierChar(char c) {
-        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '.';
+    private static boolean isIdentifierChar(final char c) {
+        return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '_' || c == '.';
     }
 
-    private boolean isWhitespace(char c) {
+    private boolean isWhitespace(final char c) {
         return c == ' ' || c == '\t' || c == '\n' || c == '\r';
     }
 
@@ -320,7 +320,7 @@ final class GroupParser {
      *
      * Returns whether there was a match. Returns false if EOF was reached.
      */
-    private boolean consumeIfMatches(char token) {
+    private boolean consumeIfMatches(final char token) {
         consumeWhitespace();
         if (eof()) {
             return false;
@@ -350,7 +350,7 @@ final class GroupParser {
      * Consumes the next non-whitespace token, throwing an exception if it doesn't match the provided token, or if EOF has been
      * reached
      */
-    private void consume(char token) {
+    private void consume(final char token) {
         consumeWhitespace();
         if (eof()) {
             throw groupParsingException(String.valueOf(token), "<EOF>");
@@ -373,11 +373,11 @@ final class GroupParser {
     /*
      * Returns whether the given position represents the end of file
      */
-    private boolean eof(int pos) {
+    private boolean eof(final int pos) {
         return pos == chars.length;
     }
 
-    private DomainException groupParsingException(String expected, String given) {
+    private DomainException groupParsingException(final String expected, final String given) {
         StringBuilder message = new StringBuilder();
         message.append('\n').append(new String(chars)).append('\n');
         IntStream.range(0, currentPos).forEach(i -> message.append(' '));

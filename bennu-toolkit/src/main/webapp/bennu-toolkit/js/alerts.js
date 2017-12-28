@@ -70,7 +70,7 @@
 
 	$(function(){
 		var a = $("meta[name='alerts']");
-		if (a.size()){
+		if (a.length){
 			var x = JSON.parse(a.attr("content"));
 
 			for (var i = 0; i < x.length; i++) {
