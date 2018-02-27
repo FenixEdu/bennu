@@ -11,6 +11,8 @@ import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.io.domain.LocalFileSystemStorage;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
+import org.fenixedu.bennu.scheduler.log.ExecutionLogRepository;
+import org.fenixedu.bennu.scheduler.log.FileSystemLogRepository;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -40,6 +42,10 @@ public class SchedulerConfigResource extends BennuRestResource {
     public void innerSetLoggingStorage(String loggingStorageExternalId) {
         LocalFileSystemStorage storage = readDomainObject(loggingStorageExternalId);
         SchedulerSystem.getInstance().setLoggingStorage(storage);
+        ExecutionLogRepository repository = SchedulerSystem.getInstance().getLogRepository();
+        if (repository instanceof FileSystemLogRepository) {
+            ((FileSystemLogRepository) repository).setBasePath(SchedulerSystem.getInstance().getLogsPath());
+        }
     }
 
 }
