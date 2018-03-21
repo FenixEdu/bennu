@@ -6,6 +6,7 @@
 		<div class="pull-right btn-group">
 			<a ui-sref="scheduler.logs({type: log.taskName})" class="btn btn-default">« Back</a>
 			<button class="btn btn-default" ng-click="refreshLog()"><i class="glyphicon glyphicon-refresh"/></button>
+			<button class="btn btn-default" ng-show="!log.end" ng-click="killTask()">Kill Task</button>
 		</div>
 	</div>
 </div>
