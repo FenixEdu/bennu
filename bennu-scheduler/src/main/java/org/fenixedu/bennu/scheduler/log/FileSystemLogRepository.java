@@ -61,7 +61,7 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
 
     private static final JsonParser parser = new JsonParser();
 
-    private final String basePath;
+    private String basePath;
     private final int dispersionFactor;
 
     /**
@@ -88,6 +88,10 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      */
     public FileSystemLogRepository(int dispersionFactor) {
         this(SchedulerSystem.getLogsPath(), dispersionFactor);
+    }
+
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
     }
 
     /**
