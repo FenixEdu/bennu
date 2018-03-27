@@ -730,18 +730,24 @@ app.controller('LogDetailsController', ['$scope', '$http', '$state', '$interval'
     });
     $http.get(contextPath + '/api/bennu-scheduler/log/cat/' + $scope.type + '/' + $scope.id).success(function (data) {
       $scope.logs = data;
+      $scope.threadTask();
     });
-  }
+  };
   $scope.killTask = function () {
     if (confirm('Are you sure you want to kill this task?')) {
       $http.get(contextPath + '/api/bennu-scheduler/log/kill/' + $scope.type).success(function (data) {
         $scope.refreshLog();
       });
     }
-  }
+  };
+  $scope.threadTask = function () {
+    $http.get(contextPath + '/api/bennu-scheduler/log/thread/' + $scope.type).success(function (data) {
+        $scope.thread = data;
+    });
+  };
   $scope.load = function() {
     window.code = $scope.log.code; $state.go('scheduler.custom-new');
-  }
+  };
   var promise = $interval(function () {
     if($scope.log && !$scope.log.end) {
       $scope.refreshLog();

@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.scheduler.api;
 
+import java.util.Map;
 import java.util.Optional;
 
 import javax.ws.rs.DefaultValue;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.gson.JsonObject;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.scheduler.api.json.SimpleExecutionLogJsonAdapter;
@@ -79,5 +81,29 @@ public class ExecutionLogResource extends BennuRestResource {
             }
         }
         return ok();
+    }
+
+    @GET
+    @Path("thread/{taskName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonObject threadTask(@PathParam("taskName") String taskName) {
+        accessControl(Group.managers());
+        JsonObject json = new JsonObject();
+
+        for (Map.Entry<Thread, StackTraceElement[]> entry :  Thread.getAllStackTraces().entrySet()) {
+            if (entry.getKey().getName().contains(taskName)){
+                json.addProperty("id", entry.getKey().getId());
+                json.addProperty("name", entry.getKey().toString());
+
+                StringBuilder builder = new StringBuilder();
+                for (StackTraceElement element : entry.getValue()) {
+                    builder.append(element);
+                    builder.append("\n");
+                }
+                json.addProperty("stacktrace", builder.toString());
+                break;
+            }
+        }
+        return json;
     }
 }
