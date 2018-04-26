@@ -167,6 +167,28 @@ public class UserProfile extends UserProfile_Base {
     }
 
     /**
+     * The users's preferred locale for emails. If this value is null the system localizes content based on
+     * global defaults.
+     *
+     * @return a Locale instance or null
+     */
+    @Override
+    public Locale getEmailLocale() {
+        return super.getEmailLocale();
+    }
+
+    /**
+     * Change the user's email locale.
+     *
+     * @param emailLocale a Locale instance
+     * @see #getEmailLocale()
+     */
+    @Override
+    public void setEmailLocale(Locale emailLocale) {
+        super.setEmailLocale(emailLocale);
+    }
+
+    /**
      * Returns this user's avatar URL or a mystery man avatar URL if not present. Avatar URLs can be parameterized with
      * {@code s=size}, by default size is 100.
      */
