@@ -185,20 +185,18 @@
             e.on("change.bennu", function(ev){
                 var data = $(e).val();
 
-                if (data.trim() == "") {
-                    data = new Date();
-                } else {
+                if (data.trim() !== "") {
                     data = new Date(data);
+	                e.val(moment(data).format("YYYY-MM-DD"));
+	
+	                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date(moment(data).format("DD/MM/YYYY"))
+	                var t = moment(data).format("DD/MM/YYYY");
+	
+	                if (r !== t){
+	                    $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
+	                }
                 }
-                e.val(moment(data).format("YYYY-MM-DD"));
-
-                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(moment(data).format("DD/MM/YYYY"))
-                var t = moment(data).format("DD/MM/YYYY");
-
-                if (r !== t){
-                    $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(t);
-                }
-
+                
                 e.data("handler").trigger();
             });
 
@@ -315,19 +313,17 @@
             e.on("change.bennu", function(ev){
                 var data = $(e).val();
 
-                if (data.trim() == "") {
-                    data = new Date();
-                } else {
+                if (data.trim() !== "") {
                     data = parseTime(data);
+	                e.val(moment(data).format("HH:mm:ss.SSS"));
+	                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date(moment(data).format("HH:mm:ss"));
+	                var t = moment(data).format("HH:mm:ss");
+	
+	                if (r !== t){
+	                    $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
+	                }
                 }
-                e.val(moment(data).format("HH:mm:ss.SSS"));
-                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(moment(data).format("HH:mm:ss"));
-                var t = moment(data).format("HH:mm:ss");
-
-                if (r !== t){
-                    $(".bennu-datetime-input", widget).data("DateTimePicker").setDate(t);
-                }
-
+                
                 e.data("handler").trigger();
             });
 
@@ -417,21 +413,19 @@
             e.on("change.bennu", function(ev){
                 var data = $(e).val();
 
-                if (data.trim() == "") {
-                    data = new Date();
-                } else {
+                if (data.trim() !== "") {
                     data = new Date(data);
+	                e.val(moment(data).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
+	
+	                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date()
+	                var r = (r && r.format("DD/MM/YYYY HH:mm:ss"));
+	                var t = moment(data).format("DD/MM/YYYY HH:mm:ss");
+	
+	                if (r !== t){
+	                    $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
+	                }
                 }
-                e.val(moment(data).format("YYYY-MM-DDTHH:mm:ss.SSSZ"));
-
-                var r = $(".bennu-datetime-input", widget).data("DateTimePicker").date()
-                var r = (r && r.format("DD/MM/YYYY HH:mm:ss"));
-                var t = moment(data).format("DD/MM/YYYY HH:mm:ss");
-
-                if (r !== t){
-                    $(".bennu-datetime-input", widget).data("DateTimePicker").date(t);
-                }
-
+                
                 e.data("handler").trigger();
             });
 
