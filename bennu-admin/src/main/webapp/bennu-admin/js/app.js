@@ -381,7 +381,7 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
   $scope.saveSelected = function() {
     var data = { title: $scope.selected.title, description: $scope.selected.description, visible: $scope.selected.visible,
                  layout: $scope.selected.layout, accessExpression: $scope.selected.accessExpression, icon: $scope.selected.icon ,
-                 documentationUrl: $scope.selected.documentationUrl, supportConfig: $scope.selected.supportConfig.id };
+                 documentationUrl: $scope.selected.documentationUrl, supportConfig: $scope.selected.supportConfig != null ? $scope.selected.supportConfig.id : null };
     var promise;
     if($scope.selected.id) {
       promise = $http.put(contextPath + "/api/bennu-portal/menu/" + $scope.selected.id, data);
