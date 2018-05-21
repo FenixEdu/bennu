@@ -18,8 +18,8 @@
 (function () {
     Bennu.localizedString = Bennu.localizedString || {};
     Bennu.localizedString.attr = "bennu-localized-string";
-    Bennu.localizedString.inputValidAttr = ["readonly", "placeholder", "maxlength","disabled"]
-    Bennu.localizedString.textAreaValidAttr = ["readonly", "placeholder", "maxlength","disabled"]
+    Bennu.localizedString.inputValidAttr = ["readonly", "placeholder", "maxlength","disabled","width","height"]
+    Bennu.localizedString.textAreaValidAttr = ["readonly", "placeholder", "maxlength","disabled","rows","cols"]
     
     function getSingleTag(locale){
         return locale.tag.split("-")[0].toUpperCase();
@@ -132,7 +132,7 @@
         
         if (!$(input).data("input")) {
 
-            if (input.prop("tagName") == "INPUT") {
+            if (input.prop("tagName") === "INPUT") {
                 var widget = $('<div class="bennu-localized-string-input-group" >' +
                     '<div class="input-group"><input type="text" class="form-control bennu-localized-string-input">' +
                     '<div class="input-group-btn bennu-localized-string-group">' +
@@ -143,7 +143,7 @@
                     '</button>' +
                     '<ul class="dropdown-menu bennu-localized-string-menu pull-right" role="menu"></ul></div></div>' +
                     '<p class="help-block"></p></div>');
-            } else if (input.prop("tagName") == "TEXTAREA") {
+            } else if (input.prop("tagName") === "TEXTAREA") {
                 var widget = $('<div class="bennu-localized-string-textArea"><p><div class="btn-group bennu-localized-string-group"><button type="button" class="btn btn-default dropdown-toggle bennu-localized-string-button" data-toggle="dropdown"><span class="bennu-localized-string-language"></span><span class="caret"></span></button><ul class="dropdown-menu bennu-localized-string-menu" role="menu"></ul></div></p><p><textarea class="form-control bennu-localized-string-textarea"></textarea><p class="help-block"></p></div>');
             }
 
@@ -213,10 +213,10 @@
             Bennu.utils.replaceRequired(input);
 
 
-            if (input.prop("tagName") == "INPUT") {
+            if (input.prop("tagName") === "INPUT") {
                 var widgetInput = $('.bennu-localized-string-input',widget);
                 Bennu.utils.updateAttrs(input,widgetInput, Bennu.localizedString.inputValidAttr);
-            } else if (input.prop("tagName") == "TEXTAREA") {
+            } else if (input.prop("tagName") === "TEXTAREA") {
                 var widgetInput = $('.bennu-localized-string-textarea', widget);
                 Bennu.utils.updateAttrs(input,widgetInput, Bennu.localizedString.textAreaValidAttr);
             }
