@@ -43,6 +43,13 @@
 				<i class="glyphicon glyphicon-play" />
 			</td>
 		</tr>
+		<tr ng-if="!log.end">
+			<th>Thread</th>
+			<td>
+				<h5><a href="" ng-click="showThread = !showThread">{{thread.name}} ({{thread.id}})</a></h5>
+				<pre ng-show="showThread" style="overflow-y: scroll">{{thread.stacktrace}}</pre>
+			</td>
+		</tr>
 		<tr ng-show="log.code">
 			<th>Code</th>
 			<td>
