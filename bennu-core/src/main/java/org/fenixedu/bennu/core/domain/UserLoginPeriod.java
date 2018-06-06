@@ -3,34 +3,35 @@ package org.fenixedu.bennu.core.domain;
 import java.util.Comparator;
 import java.util.Objects;
 
-import jvstm.cps.ConsistencyPredicate;
-
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.joda.time.LocalDate;
 
+import jvstm.cps.ConsistencyPredicate;
+import pt.ist.fenixframework.Atomic;
+
 /**
  * Represents a period in time in which the associated {@link User} is allowed to log in to the application.
- * 
+ *
  * Note that a user may have several active Periods at the same time, but can only have one open period (i.e. a period without a
  * end date).
- * 
+ *
  * @author João Carvalho (joao.pedro.carvalho@ist.utl.pt)
- * 
+ *
  */
 public class UserLoginPeriod extends UserLoginPeriod_Base implements Comparable<UserLoginPeriod> {
-    UserLoginPeriod(User user) {
+    UserLoginPeriod(final User user) {
         setUser(user);
         super.setBeginDate(LocalDate.now());
     }
 
     /**
      * Creates a {@link UserLoginPeriod} for the given {@link User} with the exact dates.
-     * 
+     *
      * @param user {@link User} instance
      * @param beginDate {@link LocalDate} when the period started
      * @param endDate {@link LocalDate} when the period ended
      */
-    public UserLoginPeriod(User user, LocalDate beginDate, LocalDate endDate) {
+    public UserLoginPeriod(final User user, final LocalDate beginDate, final LocalDate endDate) {
         setUser(Objects.requireNonNull(user));
         setBeginDate(Objects.requireNonNull(beginDate, "beginDate cannot be null"));
         setEndDate(Objects.requireNonNull(endDate, "endDate cannot be null"));
@@ -57,11 +58,11 @@ public class UserLoginPeriod extends UserLoginPeriod_Base implements Comparable<
     /**
      * Edits this period. Changing the begin date is only allowed if the period is not already started, and changing the end date
      * is only allowed if such date is in the future.
-     * 
+     *
      * @param beginDate {@link LocalDate} when the period started
      * @param endDate {@link LocalDate} when the period ended
      */
-    public void edit(LocalDate beginDate, LocalDate endDate) {
+    public void edit(final LocalDate beginDate, final LocalDate endDate) {
         if (isClosed()) {
             throw BennuCoreDomainException.cannotEditClosedLogin();
         }
@@ -74,7 +75,7 @@ public class UserLoginPeriod extends UserLoginPeriod_Base implements Comparable<
 
     /**
      * Returns whether this period is already closed, i.e. its end date is in the past.
-     * 
+     *
      * @return true if period is closed (ended), false otherwise
      */
     public boolean isClosed() {
@@ -83,7 +84,7 @@ public class UserLoginPeriod extends UserLoginPeriod_Base implements Comparable<
 
     /**
      * Returns whether this period has already started, i.e. its begin date is not in the future.
-     * 
+     *
      * @return true if period has started, false otherwise
      */
     public boolean isStarted() {
@@ -92,18 +93,18 @@ public class UserLoginPeriod extends UserLoginPeriod_Base implements Comparable<
 
     /**
      * Returns whether this period matches exactly the given dates.
-     * 
+     *
      * @param beginDate start {@link LocalDate} to test against
      * @param endDate end {@link LocalDate} to test against
      * @return true if matches, false otherwise
      */
-    public boolean matches(LocalDate beginDate, LocalDate endDate) {
+    public boolean matches(final LocalDate beginDate, final LocalDate endDate) {
         return getBeginDate().equals(beginDate) && Objects.equals(getEndDate(), endDate);
     }
 
     /**
      * Deletes this period. If the period is already started, it throws an exception.
-     * 
+     *
      * @see org.fenixedu.bennu.core.domain.UserLoginPeriod#isStarted()
      */
     public void delete() {
@@ -115,10 +116,17 @@ public class UserLoginPeriod extends UserLoginPeriod_Base implements Comparable<
         }
     }
 
+    @Atomic
+    public void deleteWithoutRules() {
+        setUser(null);
+        deleteDomainObject();
+    }
+
     @Override
-    public int compareTo(UserLoginPeriod o) {
-        return Comparator.comparing(UserLoginPeriod::getEndDate,
-                Comparator.nullsLast(Comparator.<LocalDate> naturalOrder()).reversed()).compare(this, o);
+    public int compareTo(final UserLoginPeriod o) {
+        return Comparator
+                .comparing(UserLoginPeriod::getEndDate, Comparator.nullsLast(Comparator.<LocalDate> naturalOrder()).reversed())
+                .compare(this, o);
     }
 
     @ConsistencyPredicate

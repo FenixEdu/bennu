@@ -1,16 +1,16 @@
 /*
  * User.java
- * 
+ *
  * Copyright (c) 2013, Instituto Superior Técnico. All rights reserved.
- * 
+ *
  * This file is part of bennu-core.
- * 
+ *
  * bennu-core is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * bennu-core is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with bennu-core. If not, see
  * <http://www.gnu.org/licenses/>.
  */
@@ -33,6 +33,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
+import org.fenixedu.bennu.core.groups.DynamicGroup;
 import org.fenixedu.bennu.core.groups.Group;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -43,6 +44,7 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 
 /**
@@ -60,18 +62,18 @@ public final class User extends User_Base implements Principal {
 
     private static Map<String, User> map = new ConcurrentHashMap<>();
 
-    public static final Comparator<User> COMPARATOR_BY_NAME = Comparator.comparing(User::getDisplayName).thenComparing(
-            User::getUsername);
+    public static final Comparator<User> COMPARATOR_BY_NAME =
+            Comparator.comparing(User::getDisplayName).thenComparing(User::getUsername);
 
     public static interface UsernameGenerator {
         public String doGenerate(UserProfile parameter);
     }
 
-    public User(UserProfile profile) {
+    public User(final UserProfile profile) {
         init(generateUsername(profile), profile);
     }
 
-    public User(String username, UserProfile profile) {
+    public User(final String username, final UserProfile profile) {
         if (findByUsername(username) != null) {
             throw BennuCoreDomainException.duplicateUsername(username);
         }
@@ -83,6 +85,25 @@ public final class User extends User_Base implements Principal {
         setCreated(new DateTime());
         setUsername(username);
         setProfile(profile);
+    }
+
+    @Atomic
+    public void delete() {
+
+        setBennu(null);
+
+        for (UserLoginPeriod period : getLoginValiditySet()) {
+            period.deleteWithoutRules();
+        }
+
+        getCreatedDynamicGroupSet().clear();
+        getUserGroupSet().clear();
+        BennuGroupIndex.allDynamicGroups().map(DynamicGroup.class::cast).filter(dc -> dc.isMember(this))
+                .forEach(dc -> dc.mutator().changeGroup(dc.underlyingGroup().revoke(this)));
+
+        getProfile().delete();
+
+        deleteDomainObject();
     }
 
     @Override
@@ -99,7 +120,7 @@ public final class User extends User_Base implements Principal {
 
     /**
      * Ensures the existence of an open (i.e. without end date) period for this user.
-     * 
+     *
      * @return a {@link UserLoginPeriod} instance
      */
     public UserLoginPeriod openLoginPeriod() {
@@ -109,12 +130,12 @@ public final class User extends User_Base implements Principal {
 
     /**
      * Creates (if not already) a login period with the given dates for this user.
-     * 
+     *
      * @param start The first day of the login period (inclusive)
      * @param end The last day of the login period (inclusive)
      * @return a {@link UserLoginPeriod} instance
      */
-    public UserLoginPeriod createLoginPeriod(LocalDate start, LocalDate end) {
+    public UserLoginPeriod createLoginPeriod(final LocalDate start, final LocalDate end) {
         Objects.requireNonNull(start);
         Objects.requireNonNull(end);
         return getLoginValiditySet().stream().filter(p -> p.matches(start, end)).findAny()
@@ -130,10 +151,10 @@ public final class User extends User_Base implements Principal {
 
     /**
      * Closes any not closed period setting the end day to the given day.
-     * 
+     *
      * @param end the last active login day
      */
-    public void closeLoginPeriod(LocalDate end) {
+    public void closeLoginPeriod(final LocalDate end) {
         if (getLoginValiditySet().isEmpty()) {
             new UserLoginPeriod(this, getCreated().toLocalDate(), end);
         } else {
@@ -143,7 +164,7 @@ public final class User extends User_Base implements Principal {
 
     /**
      * Returns the expiration day for this user, that is, the last day he or she can login in the system.
-     * 
+     *
      * @return An optional {@link LocalDate} value that is empty when the login is open (null ended).
      */
     public Optional<LocalDate> getExpiration() {
@@ -152,7 +173,7 @@ public final class User extends User_Base implements Principal {
 
     /**
      * Tests whether this user can login or not
-     * 
+     *
      * @return true if login is possible, false otherwise
      */
     public boolean isLoginExpired() {
@@ -174,7 +195,7 @@ public final class User extends User_Base implements Principal {
 
     /**
      * Generates and returns a random password for this user.
-     * 
+     *
      * @return a {@code String} containing the generated password
      */
     public String generatePassword() {
@@ -186,7 +207,7 @@ public final class User extends User_Base implements Principal {
     /**
      * Sets the user's password. The password is salted and hashed with a large number of iterations. Fails with {@link Error} if
      * the necessary cryptographic algorithm is not present in the environment.
-     * 
+     *
      * @param password the password to be set
      */
     public void changePassword(final String password) {
@@ -206,7 +227,7 @@ public final class User extends User_Base implements Principal {
     /**
      * Verifies that the given password matches the user's password. Fails with {@link Error} if the necessary cryptographic
      * algorithm is not present in the environment.
-     * 
+     *
      * @param password the password to verify
      * @return true if matches, false otherwise
      */
@@ -246,8 +267,8 @@ public final class User extends User_Base implements Principal {
      * @param bytes the length of the hash to compute in bytes
      * @return the PBDKF2 hash of the password
      */
-    private static byte[] pbkdf2(String algorithm, char[] password, byte[] salt, int iterations, int bytes)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
+    private static byte[] pbkdf2(final String algorithm, final char[] password, final byte[] salt, final int iterations,
+            final int bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
         PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
         SecretKeyFactory skf = SecretKeyFactory.getInstance(algorithm);
         return skf.generateSecret(spec).getEncoded();
@@ -269,7 +290,7 @@ public final class User extends User_Base implements Principal {
         return match;
     }
 
-    private static User manualFind(String username) {
+    private static User manualFind(final String username) {
         for (final User user : Bennu.getInstance().getUserSet()) {
             cacheUser(user);
             if (user.getUsername().equals(username)) {
@@ -279,11 +300,11 @@ public final class User extends User_Base implements Principal {
         return null;
     }
 
-    private static void cacheUser(User user) {
+    private static void cacheUser(final User user) {
         map.putIfAbsent(user.getUsername(), user);
     }
 
-    public static void setUsernameGenerator(UsernameGenerator generator) {
+    public static void setUsernameGenerator(final UsernameGenerator generator) {
         usernameGenerator = generator;
     }
 
@@ -291,12 +312,12 @@ public final class User extends User_Base implements Principal {
         private final AtomicInteger currentId = new AtomicInteger(0);
 
         @Override
-        public String doGenerate(UserProfile profile) {
+        public String doGenerate(final UserProfile profile) {
             return "bennu" + currentId.getAndIncrement();
         }
     };
 
-    private static String generateUsername(UserProfile profile) {
+    private static String generateUsername(final UserProfile profile) {
         while (true) {
             String username = usernameGenerator.doGenerate(profile);
             if (User.findByUsername(username) == null) {

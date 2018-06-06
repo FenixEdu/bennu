@@ -15,15 +15,17 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
+import pt.ist.fenixframework.Atomic;
+
 /**
  * User account profile information. This information includes names, email, avatar and preferred locale.
- * 
+ *
  * @author Pedro Santos (pedro.miguel.santos@tecnico.ulisboa.pt)
  */
 public class UserProfile extends UserProfile_Base {
     private static final Logger logger = LoggerFactory.getLogger(UserProfile.class);
     public static final String USER_NAME_CHANGED = "user.name.changed";
-    
+
     protected UserProfile() {
         super();
         setBennu(Bennu.getInstance());
@@ -31,18 +33,32 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * New unlinked profile.
-     * 
+     *
      * @param givenNames person's given names
      * @param familyNames person's family names
      * @param displayName person's display name
      * @param email person's email address for communication
      * @param preferredLocale locale used to localize all content when the user is logged.
      */
-    public UserProfile(String givenNames, String familyNames, String displayName, String email, Locale preferredLocale) {
+    public UserProfile(final String givenNames, final String familyNames, final String displayName, final String email,
+            final Locale preferredLocale) {
         this();
         changeName(givenNames, familyNames, displayName);
         setEmail(email);
         setPreferredLocale(preferredLocale);
+    }
+
+    @Atomic
+    public void delete() {
+
+        setBennu(null);
+        if (getLocalAvatar() != null) {
+            getLocalAvatar().delete();
+        }
+        getNameIndexSet().clear();
+        setUser(null);
+
+        deleteDomainObject();
     }
 
     @Override
@@ -53,7 +69,7 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * A possibly shorter version of the full name. Used on most places to identify the person.
-     * 
+     *
      * @return a String with the display name or null.
      * @see #getFullName()
      */
@@ -64,7 +80,7 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * The given names of the person. First part of the full name.
-     * 
+     *
      * @return a String with the given names or null.
      * @see #getFamilyNames()
      * @see #getFullName()
@@ -77,7 +93,7 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * The family names (surnames) of the person. Last part of the full name.
-     * 
+     *
      * @return a String with the family names or null.
      * @see #getFamilyNames()
      * @see #getFullName()
@@ -90,7 +106,7 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * The full name of the person, composed of given and family names separated by a space.
-     * 
+     *
      * @return a String with the full name or null.
      * @see #getGivenNames()
      * @see #getFamilyNames()
@@ -110,12 +126,12 @@ public class UserProfile extends UserProfile_Base {
     /**
      * Change the name by changing it's parts validating consistency between them. Namely ensures the display name is a subset of
      * the given and family names together.
-     * 
+     *
      * @param given person's given names
      * @param family person's family names
      * @param display person's display name
      */
-    public void changeName(String given, String family, String display) {
+    public void changeName(final String given, final String family, final String display) {
         setGivenNames(cleanupName(given));
         setFamilyNames(cleanupName(family));
         setDisplayName(cleanupName(display));
@@ -126,7 +142,7 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * User's primary email.
-     * 
+     *
      * @return a String with the user's email or null
      */
     @Override
@@ -136,18 +152,18 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * Change user's primary email.
-     * 
+     *
      * @param email a String with the user's primary email
      */
     @Override
-    public void setEmail(String email) {
+    public void setEmail(final String email) {
         super.setEmail(email);
     }
 
     /**
      * The users's preferred locale for internationalized content. If this value is null the system localizes content based on
      * global defaults.
-     * 
+     *
      * @return a Locale instance or null
      */
     @Override
@@ -157,12 +173,12 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * Change the user's preferred locale.
-     * 
+     *
      * @param preferredLocale a Locale instance
      * @see #getPreferredLocale()
      */
     @Override
-    public void setPreferredLocale(Locale preferredLocale) {
+    public void setPreferredLocale(final Locale preferredLocale) {
         super.setPreferredLocale(preferredLocale);
     }
 
@@ -183,11 +199,11 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * Sets the user's base avatar URL.
-     * 
+     *
      * @see #getAvatarUrl()
      */
     @Override
-    public void setAvatarUrl(String avatarUrl) {
+    public void setAvatarUrl(final String avatarUrl) {
         if (getLocalAvatar() != null) {
             getLocalAvatar().delete();
         }
@@ -196,12 +212,12 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * Sets this user's avatar to a locally stored avatar and updates the avatar url accordingly.
-     * 
+     *
      * @param localAvatar a Avatar instance with the image
      * @see #getAvatarUrl()
      */
     @Override
-    public void setLocalAvatar(Avatar localAvatar) {
+    public void setLocalAvatar(final Avatar localAvatar) {
         if (Objects.equal(getLocalAvatar(), localAvatar)) {
             return;
         }
@@ -214,12 +230,12 @@ public class UserProfile extends UserProfile_Base {
 
     /**
      * Search all profiles matching the given.
-     * 
+     *
      * @param name the query string
      * @param maxHits limit on the result size
      * @return all {@link UserProfile}s where the name contains all the terms of the query string
      */
-    public static Stream<UserProfile> searchByName(String name, int maxHits) {
+    public static Stream<UserProfile> searchByName(final String name, final int maxHits) {
         if (logger.isTraceEnabled()) {
             long time = System.currentTimeMillis();
             Stream<UserProfile> matches = NameIndex.search(name, maxHits);
@@ -229,7 +245,7 @@ public class UserProfile extends UserProfile_Base {
         return NameIndex.search(name, maxHits);
     }
 
-    private static void validateNames(String displayname, String fullname) {
+    private static void validateNames(final String displayname, final String fullname) {
         if (displayname == null) {
             return;
         }
@@ -245,7 +261,7 @@ public class UserProfile extends UserProfile_Base {
         }
     }
 
-    private static String cleanupName(String name) {
+    private static String cleanupName(final String name) {
         if (name == null) {
             return null;
         }
