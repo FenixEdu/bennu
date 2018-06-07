@@ -22,9 +22,11 @@ import java.security.Principal;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,8 +35,10 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
+import org.fenixedu.bennu.core.domain.groups.PersistentUserGroup;
 import org.fenixedu.bennu.core.groups.DynamicGroup;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.commons.i18n.I18N;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -59,6 +63,8 @@ public final class User extends User_Base implements Principal {
     private static final int SALT_BYTE_SIZE = 24;
     private static final int HASH_BYTE_SIZE = 24;
     private static final int PBKDF2_ITERATIONS = 150_000;
+
+    private static final String USER_ANONYMOUS_NAME = "User..qub..Anonymous";
 
     private static Map<String, User> map = new ConcurrentHashMap<>();
 
@@ -96,10 +102,19 @@ public final class User extends User_Base implements Principal {
             period.deleteWithoutRules();
         }
 
-        getCreatedDynamicGroupSet().clear();
-        getUserGroupSet().clear();
         BennuGroupIndex.allDynamicGroups().map(DynamicGroup.class::cast).filter(dc -> dc.isMember(this))
                 .forEach(dc -> dc.mutator().changeGroup(dc.underlyingGroup().revoke(this)));
+
+        getCreatedDynamicGroupSet().clear();
+
+        Set<PersistentUserGroup> userGroupSet = new HashSet<>(getUserGroupSet());
+        getUserGroupSet().clear();
+
+        for (PersistentUserGroup group : userGroupSet) {
+            if (group.getMembers().count() == 0) {
+                getAnnonymousUser().addUserGroup(group);
+            }
+        }
 
         getProfile().delete();
 
@@ -325,5 +340,15 @@ public final class User extends User_Base implements Principal {
                 return username;
             }
         }
+    }
+
+    @Atomic
+    public static User getAnnonymousUser() {
+        User result = User.findByUsername(USER_ANONYMOUS_NAME);
+        if (result == null) {
+            result = new User(USER_ANONYMOUS_NAME, new UserProfile(USER_ANONYMOUS_NAME, USER_ANONYMOUS_NAME, USER_ANONYMOUS_NAME,
+                    "anonymous@bennuUser.pt", I18N.getLocale()));
+        }
+        return result;
     }
 }
