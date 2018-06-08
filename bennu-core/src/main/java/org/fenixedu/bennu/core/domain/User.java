@@ -36,7 +36,6 @@ import javax.crypto.spec.PBEKeySpec;
 
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.groups.PersistentUserGroup;
-import org.fenixedu.bennu.core.groups.DynamicGroup;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.commons.i18n.I18N;
 import org.joda.time.DateTime;
@@ -95,15 +94,14 @@ public final class User extends User_Base implements Principal {
 
     @Atomic
     public void delete() {
-
         setBennu(null);
 
         for (UserLoginPeriod period : getLoginValiditySet()) {
             period.deleteWithoutRules();
         }
 
-        BennuGroupIndex.allDynamicGroups().map(DynamicGroup.class::cast).filter(dc -> dc.isMember(this))
-                .forEach(dc -> dc.mutator().changeGroup(dc.underlyingGroup().revoke(this)));
+//        BennuGroupIndex.allDynamicGroups().map(DynamicGroup.class::cast).filter(dc -> dc.isMember(this))
+//                .forEach(dc -> dc.mutator().changeGroup(dc.underlyingGroup().revoke(this)));
 
         getCreatedDynamicGroupSet().clear();
 
