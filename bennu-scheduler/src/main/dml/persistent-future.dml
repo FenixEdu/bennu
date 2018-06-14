@@ -1,0 +1,50 @@
+package org.fenixedu.bennu.scheduler.future;
+
+public class FutureSystem {
+}
+
+public class PersistentFuture {
+    boolean done;
+    boolean cancelled;
+    Boolean success;
+}
+
+public class PersistentFutureTask {
+    Serializable task;
+}
+
+relation FutureSystemBennu {
+	public FutureSystem playsRole futureSystem {
+		multiplicity 0..1;
+	}
+	protected .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+		multiplicity 1..1;
+	}
+}
+
+relation FutureSystemPersistentFuture {
+    FutureSystem playsRole futureSystem {
+        multiplicity 1..1;
+    }
+    PersistentFuture playsRole persistentFuture {
+        multiplicity *;
+    }
+}
+
+relation FutureSystemIncompletePersistentFuture {
+    FutureSystem playsRole incompleteFutureSystem {
+        multiplicity 0..1;
+    }
+    PersistentFuture playsRole incompletePersistentFuture {
+        multiplicity *;
+    }
+}
+
+relation PersistentFuturePersistentFutureTask {
+    PersistentFutureTask playsRole persistentFutureTask {
+        multiplicity 0..1;
+    }
+    PersistentFuture playsRole persistentFuture {
+        multiplicity 1..1;
+    }
+}
