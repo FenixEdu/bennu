@@ -4,27 +4,41 @@ import pt.ist.fenixframework.Atomic;
 
 public class PersistentFuture extends PersistentFuture_Base {
 
-    public PersistentFuture(Runnable task) {
-        final PersistentFutureTask persistentTask = () -> {
-            task.run();
-        };
-        super.setTask(persistentTask);
-        // try to deserialize and convert back to PersistentFutureTask
-        final PersistentFutureTask t = (PersistentFutureTask) this.getTask();
+    public PersistentFuture(SerializableRunnable task) {
+        this.setTask(task);
 
         final FutureSystem fs = FutureSystem.getInstance();
         this.setFutureSystem(fs);
         this.setIncompleteFutureSystem(fs);
     }
 
+    public SerializableRunnable getTask() {
+        final PersistentFutureTask persistentFutureTask = super.getPersistentFutureTask();
+        if (persistentFutureTask == null) {
+            return null;
+        }
+        return (SerializableRunnable) persistentFutureTask.getTask();
+    }
+
+    public void setTask(SerializableRunnable task) {
+        super.setPersistentFutureTask(new PersistentFutureTask(() -> {
+            task.run();
+        }, this));
+    }
+
     @Atomic(mode = Atomic.TxMode.WRITE)
     public void execute() {
+        if (isDone()) {
+            return;
+        }
+
         try {
-            final PersistentFutureTask task = (PersistentFutureTask) this.getTask();
+            final Runnable task = this.getTask();
             task.run();
             this.setSuccess(true);
         } catch (final Exception e) {
             this.setSuccess(false);
+            throw e;
         } finally {
             done();
         }
@@ -53,6 +67,7 @@ public class PersistentFuture extends PersistentFuture_Base {
     }
 
     public void delete() {
+        super.getPersistentFutureTask().delete();
         super.setFutureSystem(null);
         super.setIncompleteFutureSystem(null);
         super.deleteDomainObject();

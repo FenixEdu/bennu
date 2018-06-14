@@ -4,10 +4,13 @@ public class FutureSystem {
 }
 
 public class PersistentFuture {
-    Serializable task;
     boolean done;
     boolean cancelled;
     Boolean success;
+}
+
+public class PersistentFutureTask {
+    Serializable task;
 }
 
 relation FutureSystemBennu {
@@ -20,19 +23,28 @@ relation FutureSystemBennu {
 }
 
 relation FutureSystemPersistentFuture {
-    protected FutureSystem playsRole futureSystem {
+    FutureSystem playsRole futureSystem {
         multiplicity 1..1;
     }
-    protected PersistentFuture playsRole persistentFuture {
+    PersistentFuture playsRole persistentFuture {
         multiplicity *;
     }
 }
 
 relation FutureSystemIncompletePersistentFuture {
-    protected FutureSystem playsRole incompleteFutureSystem {
-        multiplicity 1..1;
+    FutureSystem playsRole incompleteFutureSystem {
+        multiplicity 0..1;
     }
-    protected PersistentFuture playsRole incompletePersistentFuture {
+    PersistentFuture playsRole incompletePersistentFuture {
         multiplicity *;
+    }
+}
+
+relation PersistentFuturePersistentFutureTask {
+    PersistentFutureTask playsRole persistentFutureTask {
+        multiplicity 0..1;
+    }
+    PersistentFuture playsRole persistentFuture {
+        multiplicity 1..1;
     }
 }

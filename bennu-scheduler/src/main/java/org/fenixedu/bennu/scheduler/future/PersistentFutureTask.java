@@ -1,8 +1,17 @@
 package org.fenixedu.bennu.scheduler.future;
 
-import java.io.Serializable;
+public class PersistentFutureTask extends PersistentFutureTask_Base {
 
-@FunctionalInterface
-public interface PersistentFutureTask extends Runnable, Serializable {
+    public PersistentFutureTask(SerializableRunnable task, PersistentFuture persistentFuture) {
+        super();
+
+        super.setTask(task);
+        super.setPersistentFuture(persistentFuture);
+    }
+
+    public void delete() {
+        super.setPersistentFuture(null);
+        super.deleteDomainObject();
+    }
 
 }
