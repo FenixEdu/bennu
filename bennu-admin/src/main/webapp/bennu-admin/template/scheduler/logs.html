@@ -1,8 +1,13 @@
 <div class="row">
 	<div class="col-sm-6 lead">
 		Task Logs <span class="badge">{{logs.length}}</span>
+		<div class="btn-group">
+			<label>
+				<input type="checkbox" ng-model="customTaskOnly" hidden/>
+				<span class="btn btn-default" onclick="this.classList.toggle('btn-success');">Custom Tasks Only</span>
+			</label>
+		</div>
 	</div>
-
 	<div class="col-sm-3 text-right">
 		<div class="btn-group">
 			<a ui-sref="scheduler.logs({type: ''})" class="btn btn-default" ng-if="type">« Back</a>
@@ -25,7 +30,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="log in logs | orderBy:'-start' | filter: filter">
+		<tr ng-repeat="log in logs | orderBy:'-start' | filter: filter | filter: filterCustom ">
 			<td>{{log.taskName}} <span class="badge" ng-if="log.custom">Custom</span></td>
 			<td>{{(log.start | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
 			<td>{{(log.end | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
