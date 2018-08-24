@@ -23,7 +23,7 @@
         <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
         <version.org.fenixedu.fenixedu.commons>1.1.1</version.org.fenixedu.fenixedu.commons>
         <version.org.jasig.cas.client.core>3.4.1</version.org.jasig.cas.client.core>
-        <version.org.springframework.spring.webmvc>4.2.5.RELEASE</version.org.springframework.spring.webmvc>
+        <version.org.springframework.spring.webmvc>4.3.18.RELEASE</version.org.springframework.spring.webmvc>
         <version.ch.qos.logback.logback.classic>1.1.3</version.ch.qos.logback.logback.classic>
         <version.com.google.code.gson.gson>2.6.1</version.com.google.code.gson.gson>
         <version.com.google.guava.guava>19.0</version.com.google.guava.guava>
