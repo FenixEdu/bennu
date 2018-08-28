@@ -36,6 +36,7 @@ public class MenuItem {
 	public Boolean visible (REQUIRED);
 	public String layout;
 	public String icon;
+	public String faqUrl;
 }
 
 public class MenuContainer extends MenuItem {

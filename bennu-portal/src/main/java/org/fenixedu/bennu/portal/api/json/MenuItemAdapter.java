@@ -22,7 +22,7 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
 
     @Override
     public MenuItem update(JsonElement json, MenuItem item, JsonBuilder ctx) {
-        JsonObject jsonObj = json.getAsJsonObject();
+        final JsonObject jsonObj = json.getAsJsonObject();
         if (jsonObj.has("title")) {
             item.setTitle(LocalizedString.fromJson(jsonObj.get("title").getAsJsonObject()));
         }
@@ -50,17 +50,23 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
         }
 
         if (jsonObj.has("supportConfig")) {
-            SupportConfiguration supportConfiguration =
+            final SupportConfiguration supportConfiguration =
                     FenixFramework.getDomainObject(jsonObj.get("supportConfig").getAsString());
-            if (supportConfiguration != null)
+            if (supportConfiguration != null) {
                 item.setSupport(supportConfiguration);
+            }
+        }
+        if (jsonObj.has("faqUrl")) {
+            item.setFaqUrl(jsonObj.get("faqUrl").getAsString());
+        } else {
+            item.setFaqUrl(null);
         }
         return item;
     }
 
     @Override
     public JsonElement view(MenuItem obj, JsonBuilder ctx) {
-        JsonObject json = new JsonObject();
+        final JsonObject json = new JsonObject();
         json.addProperty("id", obj.getExternalId());
         json.addProperty("order", obj.getOrd());
         json.addProperty("path", obj.getPath());
@@ -74,8 +80,9 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
         json.add("title", ctx.view(obj.getTitle()));
         json.add("supportConfigs", ctx.view(Bennu.getInstance().getSupportConfigurationSet(), SupportConfigurationAdapter.class));
         json.add("supportConfig", ctx.view(obj.getSupport(), SupportConfigurationAdapter.class));
+        json.addProperty("faqUrl", obj.getFaqUrl());
         if (obj.isMenuContainer()) {
-            MenuContainer container = obj.getAsMenuContainer();
+            final MenuContainer container = obj.getAsMenuContainer();
             if (container.isRoot()) {
                 json.add("title", ctx.view(PortalConfiguration.getInstance().getApplicationTitle()));
                 json.addProperty("appRoot", true);
@@ -83,7 +90,7 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
             json.add("menu", ctx.view(container.getOrderedChild(), MenuItemAdapter.class));
             json.addProperty("subRoot", container.isSubRoot());
         } else {
-            MenuFunctionality functionality = obj.getAsMenuFunctionality();
+            final MenuFunctionality functionality = obj.getAsMenuFunctionality();
             json.addProperty("key", functionality.getItemKey());
             json.addProperty("provider", functionality.getProvider());
             json.addProperty("documentationUrl", functionality.getDocumentationUrl());
@@ -96,16 +103,19 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
 
     @Override
     public MenuContainer create(JsonElement json, JsonBuilder ctx) {
-        JsonObject jsonObj = json.getAsJsonObject();
-        MenuContainer parent = FenixFramework.getDomainObject(jsonObj.get("parent").getAsString());
-        boolean visible = jsonObj.get("visible").getAsBoolean();
-        String accessGroup = jsonObj.get("accessExpression").getAsString();
-        LocalizedString description = LocalizedString.fromJson(jsonObj.get("description"));
-        LocalizedString title = LocalizedString.fromJson(jsonObj.get("title"));
-        String path = jsonObj.get("path").getAsString();
-        MenuContainer container = new MenuContainer(parent, visible, accessGroup, description, title, path);
+        final JsonObject jsonObj = json.getAsJsonObject();
+        final MenuContainer parent = FenixFramework.getDomainObject(jsonObj.get("parent").getAsString());
+        final boolean visible = jsonObj.get("visible").getAsBoolean();
+        final String accessGroup = jsonObj.get("accessExpression").getAsString();
+        final LocalizedString description = LocalizedString.fromJson(jsonObj.get("description"));
+        final LocalizedString title = LocalizedString.fromJson(jsonObj.get("title"));
+        final String path = jsonObj.get("path").getAsString();
+        final MenuContainer container = new MenuContainer(parent, visible, accessGroup, description, title, path);
         if (jsonObj.has("layout")) {
             container.setLayout(jsonObj.get("layout").getAsString());
+        }
+        if (jsonObj.has("faqUrl")) {
+            container.setLayout(jsonObj.get("faqUrl").getAsString());
         }
         return container;
     }

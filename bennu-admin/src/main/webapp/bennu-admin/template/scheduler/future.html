@@ -1,0 +1,56 @@
+<div class="row">
+	<div class="col-sm-6 lead">
+		Future Tasks <span class="badge">{{futureTasks.length}}</span>
+	</div>
+
+	<div class="col-sm-3 text-right">
+		<div class="btn-group">
+			<button class="btn btn-default" ng-click="reload()"><i class="glyphicon glyphicon-refresh"/></button>
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<input type="text" class="form-control pull-right" ng-model="filter" placeholder="Filter..."/>
+	</div>
+</div>
+
+<table class="table table-striped" ng-show="futureTasks != null && futureTasks.length">
+	<thead>
+		<tr>
+			<th>Description</th>
+			<th>Created At</th>
+			<th>Start</th>
+			<th>End</th>
+			<th>State</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="future in futureTasks | orderBy:['-created','-id'] | filter: filter">
+			<td>{{ future.desc }}</td>
+			<td>{{(future.created | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
+			<td>{{(future.start | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
+			<td>{{(future.end | date:'dd MMM yyyy HH:mm:ss') || 'N/A'}}</td>
+			<td>
+				<i class="glyphicon glyphicon-time" ng-if="future.state == 'WAITING'" />
+				<i class="glyphicon glyphicon-cog" ng-if="future.state == 'PROCESSING'" />
+				<i class="glyphicon glyphicon-ok" ng-if="future.state == 'SUCCESS'" />
+				<i class="glyphicon glyphicon-remove" ng-if="future.state == 'FAILURE'" />
+				<i class="glyphicon glyphicon-ban-circle" ng-if="future.state == 'CANCELLED'" />
+			</td>
+			<td>
+				<a ng-if="future.state == 'WAITING'" ng-click="cancelFuture(future.id)" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-ban-circle"></span> Cancel</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<div ng-show="moreResults && futureTasks.length">
+	<em>Not all results may be shown. <a ng-click="loadMore()" role="button">Click here to load more</a>.</em>
+</div>
+
+<div class="panel panel-default" ng-show="futureTasks != null && !futureTasks.length">
+	<div class="panel-body">
+        <p><span class="glyphicon glyphicon-info-sign"></span> There are no future tasks</p>
+        <small>No future tasks have been submitted yet.</small>
+	</div>
+</div>
