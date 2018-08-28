@@ -123,6 +123,11 @@ app.config(['$stateProvider', '$urlRouterProvider',
         url: '/custom/add',
         templateUrl: contextPath + '/bennu-admin/template/scheduler/add-custom-task.html',
         controller: 'CustomTaskController'
+      }).
+      state('scheduler.future', {
+        url: '/future/',
+        templateUrl: contextPath + '/bennu-admin/template/scheduler/future.html',
+        controller: 'FutureController'
       });
   }]);
 
@@ -381,7 +386,7 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
   $scope.saveSelected = function() {
     var data = { title: $scope.selected.title, description: $scope.selected.description, visible: $scope.selected.visible,
                  layout: $scope.selected.layout, accessExpression: $scope.selected.accessExpression, icon: $scope.selected.icon ,
-                 documentationUrl: $scope.selected.documentationUrl, supportConfig: $scope.selected.supportConfig.id };
+                 documentationUrl: $scope.selected.documentationUrl, supportConfig: $scope.selected.supportConfig.id, faqUrl: $scope.selected.faqUrl };
     var promise;
     if($scope.selected.id) {
       promise = $http.put(contextPath + "/api/bennu-portal/menu/" + $scope.selected.id, data);
@@ -705,18 +710,23 @@ app.controller('SchedulesController', ['$scope', '$http', function ($scope, $htt
 }]);
 
 app.controller('LogsController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
-  $scope.type = $state.params.type; $scope.numResults = 20;
+  $scope.type = $state.params.type;
+  $scope.numResults = 20;
+  $scope.customTaskOnly = false;
   var url = $state.params.type ? contextPath + '/api/bennu-scheduler/log/' + $scope.type : contextPath + '/api/bennu-scheduler/log/';
   $scope.reload = function () {
     $http.get(url + '?count=' + $scope.numResults).success(function (data) {
       $scope.logs = data; $scope.moreResults = data.length == $scope.numResults;
     });
-  }
+  };
   $scope.loadMore = function() {
     $http.get(url + '?count=' + ($scope.numResults + 1) + '&start=' + $scope.logs[$scope.logs.length -1].id).success(function(data) {
       data.shift();
       $scope.logs = $scope.logs.concat(data); $scope.moreResults = data.length == $scope.numResults;
     });
+  };
+  $scope.filterCustom = function(log) {
+    return $scope.customTaskOnly === false || log.custom === true;
   };
   $scope.reload();
 }]);
@@ -810,3 +820,32 @@ app.controller('CustomTaskLogsController', ['$scope', '$http', '$state', functio
   $scope.reload();
 }]);
 
+app.controller('FutureController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
+  $scope.numResults = 20;
+  $scope.totalNumResults = 0;
+  var url = contextPath + '/api/bennu-scheduler/future/';
+  $scope.reload = function () {
+    $http.get(url + '?count=' + $scope.numResults).success(function (data) {
+      $scope.futureTasks = data;
+      $scope.moreResults = data.length == $scope.numResults;
+      $scope.totalNumResults = data.length;
+    });
+  }
+  $scope.loadMore = function() {
+    $http.get(url + '?count=' + ($scope.numResults) + '&skip=' + ($scope.totalNumResults)).success(function(data) {
+      $scope.futureTasks = $scope.futureTasks.concat(data);
+      $scope.moreResults = data.length == $scope.numResults;
+      $scope.totalNumResults += data.length;
+    });
+  };
+  $scope.cancelFuture = function(futureId) {
+    if (confirm('Are you sure you want to cancel this future task?')) {
+      $http.get(url + 'cancel/' + futureId).success(function(data) {
+        $http.get(url + '?count=' + ($scope.totalNumResults)).success(function(data) {
+          $scope.futureTasks = data;
+        });
+      });
+    }
+  };
+  $scope.reload();
+}]);

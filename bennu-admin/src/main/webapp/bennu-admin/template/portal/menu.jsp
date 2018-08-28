@@ -86,6 +86,13 @@
             </select>
         </div>
     </div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="faqUrl">FAQ URL</label>
+		<div class="col-sm-10">
+			<input type="text" name="faqUrl" ng-model="selected.faqUrl"
+				placeholder="FAQ URL" class="form-control">
+		</div>
+	</div>
 	<div class="form-group" ng-if="!selected.subRoot && !selected.appRoot">
 		<label class="col-sm-2 control-label" for="accessExpression">Access Expression</label>
 		<div class="col-sm-10">
