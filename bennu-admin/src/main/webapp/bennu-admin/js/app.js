@@ -123,6 +123,11 @@ app.config(['$stateProvider', '$urlRouterProvider',
         url: '/custom/add',
         templateUrl: contextPath + '/bennu-admin/template/scheduler/add-custom-task.html',
         controller: 'CustomTaskController'
+      }).
+      state('scheduler.future', {
+        url: '/future/',
+        templateUrl: contextPath + '/bennu-admin/template/scheduler/future.html',
+        controller: 'FutureController'
       });
   }]);
 
@@ -809,3 +814,32 @@ app.controller('CustomTaskLogsController', ['$scope', '$http', '$state', functio
   $scope.reload();
 }]);
 
+app.controller('FutureController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
+  $scope.numResults = 20;
+  $scope.totalNumResults = 0;
+  var url = contextPath + '/api/bennu-scheduler/future/';
+  $scope.reload = function () {
+    $http.get(url + '?count=' + $scope.numResults).success(function (data) {
+      $scope.futureTasks = data;
+      $scope.moreResults = data.length == $scope.numResults;
+      $scope.totalNumResults = data.length;
+    });
+  }
+  $scope.loadMore = function() {
+    $http.get(url + '?count=' + ($scope.numResults) + '&skip=' + ($scope.totalNumResults)).success(function(data) {
+      $scope.futureTasks = $scope.futureTasks.concat(data);
+      $scope.moreResults = data.length == $scope.numResults;
+      $scope.totalNumResults += data.length;
+    });
+  };
+  $scope.cancelFuture = function(futureId) {
+    if (confirm('Are you sure you want to cancel this future task?')) {
+      $http.get(url + 'cancel/' + futureId).success(function(data) {
+        $http.get(url + '?count=' + ($scope.totalNumResults)).success(function(data) {
+          $scope.futureTasks = data;
+        });
+      });
+    }
+  };
+  $scope.reload();
+}]);
