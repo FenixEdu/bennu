@@ -51,9 +51,9 @@
 			</td>
 		</tr>
 		<tr ng-show="log.code">
-			<th>Code</th>
+			<th><a href="" ng-click="showCode = !showCode">Code</a></th>
 			<td>
-				<div class="control-group">
+				<div class="control-group" ng-show="showCode">
 					<div class="controls">
 						<div ui-codemirror="{onLoad: codemirrorLoaded}" ui-codemirror-opts="editorOptions" ng-model="log.code"></div>
 					</div>

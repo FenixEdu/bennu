@@ -734,6 +734,7 @@ app.controller('LogsController', ['$scope', '$http', '$state', function ($scope,
 app.controller('LogDetailsController', ['$scope', '$http', '$state', '$interval', function ($scope, $http, $state, $interval) {
   $scope.type = $state.params.type; $scope.id = $state.params.id; $scope.contextPath = contextPath;
   $scope.editorOptions = { lineNumbers: true, mode: 'text/x-java', theme: 'eclipse', readOnly: true};
+  $scope.showCode = true;
   $scope.refreshLog = function() {
     $http.get(contextPath + '/api/bennu-scheduler/log/' + $scope.type + '/' + $scope.id).success(function (data) {
       $scope.log = data;
