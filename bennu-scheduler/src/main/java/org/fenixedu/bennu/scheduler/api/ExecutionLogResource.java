@@ -1,7 +1,9 @@
 package org.fenixedu.bennu.scheduler.api;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -74,12 +76,9 @@ public class ExecutionLogResource extends BennuRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response killTask(@PathParam("taskName") String taskName) {
         accessControl(Group.managers());
-        for (Thread thread : Thread.getAllStackTraces().keySet()) {
-            String name = thread.getName();
-            if (name.contains(taskName)) {
-                thread.stop();
-            }
-        }
+        Thread.getAllStackTraces().keySet().stream()
+                .filter(thread -> thread.getName().contains(taskName))
+                .forEach(Thread::stop);
         return ok();
     }
 
@@ -89,21 +88,24 @@ public class ExecutionLogResource extends BennuRestResource {
     public JsonObject threadTask(@PathParam("taskName") String taskName) {
         accessControl(Group.managers());
         JsonObject json = new JsonObject();
-
         for (Map.Entry<Thread, StackTraceElement[]> entry :  Thread.getAllStackTraces().entrySet()) {
-            if (entry.getKey().getName().contains(taskName)){
+            if (isCustomTaskThread(taskName, entry.getKey()) || isCronTaskThread(taskName, entry.getKey(), entry.getValue())) {
                 json.addProperty("id", entry.getKey().getId());
                 json.addProperty("name", entry.getKey().toString());
-
-                StringBuilder builder = new StringBuilder();
-                for (StackTraceElement element : entry.getValue()) {
-                    builder.append(element);
-                    builder.append("\n");
-                }
-                json.addProperty("stacktrace", builder.toString());
-                break;
+                json.addProperty("stacktrace",
+                        Arrays.stream(entry.getValue()).map(StackTraceElement::toString).collect(Collectors.joining("\n")));
+                return json;
             }
         }
         return json;
+    }
+
+    private boolean isCustomTaskThread(String taskName, Thread thread) {
+        return thread.getName().contains(taskName);
+    }
+
+    private boolean isCronTaskThread(String taskName, Thread thread, StackTraceElement... stackTraceElements) {
+        return thread.getName().contains(SchedulerSystem.SCHEDULER_CONSUMER) &&
+                Arrays.stream(stackTraceElements).anyMatch(stackTraceElement -> stackTraceElement.toString().contains(taskName));
     }
 }
