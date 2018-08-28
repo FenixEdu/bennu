@@ -37,6 +37,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     private static final Logger LOG = LoggerFactory.getLogger(SchedulerSystem.class);
     private static final Map<String, Task> tasks = new HashMap<>();
+    public static final String SCHEDULER_CONSUMER = "SchedulerConsumer-";
 
     private static Scheduler scheduler;
     public static LinkedBlockingQueue<TaskRunner> queue;
@@ -305,7 +306,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         for (int i = 1; i <= getQueueThreadsNumber(); i++) {
             LOG.debug("Launching queue consumer {}", i);
             Thread thread = new Thread(new ProcessQueue());
-            thread.setName("SchedulerConsumer-" + i);
+            thread.setName(SCHEDULER_CONSUMER + i);
             thread.start();
             activeConsumers.add(thread);
         }
