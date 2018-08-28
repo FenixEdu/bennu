@@ -710,18 +710,23 @@ app.controller('SchedulesController', ['$scope', '$http', function ($scope, $htt
 }]);
 
 app.controller('LogsController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
-  $scope.type = $state.params.type; $scope.numResults = 20;
+  $scope.type = $state.params.type;
+  $scope.numResults = 20;
+  $scope.customTaskOnly = false;
   var url = $state.params.type ? contextPath + '/api/bennu-scheduler/log/' + $scope.type : contextPath + '/api/bennu-scheduler/log/';
   $scope.reload = function () {
     $http.get(url + '?count=' + $scope.numResults).success(function (data) {
       $scope.logs = data; $scope.moreResults = data.length == $scope.numResults;
     });
-  }
+  };
   $scope.loadMore = function() {
     $http.get(url + '?count=' + ($scope.numResults + 1) + '&start=' + $scope.logs[$scope.logs.length -1].id).success(function(data) {
       data.shift();
       $scope.logs = $scope.logs.concat(data); $scope.moreResults = data.length == $scope.numResults;
     });
+  };
+  $scope.filterCustom = function(log) {
+    return $scope.customTaskOnly === false || log.custom === true;
   };
   $scope.reload();
 }]);
