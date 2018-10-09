@@ -5,7 +5,7 @@ function editor(element, handler){
     var output = '<div class="form-group">'+
 		'<label for="inputEmail3" class="col-sm-2 control-label">Text</label>'+
 			'<div class="col-sm-10">'+
-			'<input type="email" class="form-control" id="text" placeholder="Text" value="" \\>'+
+			'<input type="text" class="form-control" id="text" placeholder="Text" value="" \\>'+
 			'<p class="help-block"></p>'+
 		'</div>'+
     '</div>' +
@@ -13,7 +13,7 @@ function editor(element, handler){
     '<div class="form-group">'+
 		'<label for="inputEmail3" class="col-sm-2 control-label">Link</label>'+
 			'<div class="col-sm-10">'+
-			'<input type="email" class="form-control" id="url" placeholder="Link" \\>'+
+			'<input type="text" class="form-control" id="url" placeholder="Link" \\>'+
 			'<p class="help-block">Use the full URL, including HTTP(S)</p>'+
 		'</div>'+
     '</div>';
