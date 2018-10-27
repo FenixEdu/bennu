@@ -19,6 +19,10 @@ public class CASClientConfiguration {
         @ConfigurationProperty(key = "cas.serviceUrl", description = "The URL to jump to when no callback is specified")
         public String casServiceUrl();
 
+        @ConfigurationProperty(key = "cas.login.strategy",
+                defaultValue = "org.fenixedu.bennu.cas.client.strategy.DefaultTicketValidationStrategy")
+        public String getCasLoginStrategy();
+
     }
 
     public static ConfigurationProperties getConfiguration() {

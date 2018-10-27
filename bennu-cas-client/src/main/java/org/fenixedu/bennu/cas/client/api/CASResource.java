@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
@@ -20,19 +21,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.cas.client.CASClientConfiguration;
-import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.UserProfile;
+import org.fenixedu.bennu.cas.client.strategy.DefaultTicketValidationStrategy;
+import org.fenixedu.bennu.cas.client.strategy.TicketValidationStrategy;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
-import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.portal.servlet.PortalLoginServlet;
-import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.jasig.cas.client.validation.TicketValidationException;
-import org.jasig.cas.client.validation.TicketValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
 
 import com.google.common.base.Strings;
 
@@ -41,14 +36,28 @@ public class CASResource {
 
     private static final Logger logger = LoggerFactory.getLogger(CASResource.class);
 
-    private final TicketValidator validator = new Cas20ServiceTicketValidator(CASClientConfiguration.getConfiguration()
-            .casServerUrl());
+    private static final Charset CHARSET = StandardCharsets.UTF_8;
+
+    private static TicketValidationStrategy VALIDATION_STRATEGY = null;
+
+    private TicketValidationStrategy getTicketValidator() {
+        if (VALIDATION_STRATEGY == null) {
+            try {
+                VALIDATION_STRATEGY = (TicketValidationStrategy) Class
+                        .forName(CASClientConfiguration.getConfiguration().getCasLoginStrategy()).newInstance();
+            } catch (Throwable t) {
+                logger.error("Problem instantiating ticket validation strategy, falling back to default strategy", t);
+                VALIDATION_STRATEGY = new DefaultTicketValidationStrategy();
+            }
+        }
+        return VALIDATION_STRATEGY;
+    }
 
     @GET
     @Path("/{callback}")
     public Response returnFromCAS(@QueryParam("ticket") String ticket, @PathParam("callback") String callback,
-            @Context HttpServletRequest request, @Context HttpServletResponse response) throws UnsupportedEncodingException,
-            URISyntaxException {
+            @Context HttpServletRequest request, @Context HttpServletResponse response)
+            throws UnsupportedEncodingException, URISyntaxException {
 
         // Fail fast if CAS is not enabled
         if (!CASClientConfiguration.getConfiguration().casEnabled()) {
@@ -68,16 +77,12 @@ public class CASResource {
         String actualCallback = cb.get();
 
         try {
-            // Begin by logging out
-            Authenticate.logout(request, response);
 
             // Validate the ticket
-            String requestURL = URLDecoder.decode(request.getRequestURL().toString(), "UTF-8");
+            String requestURL = URLDecoder.decode(request.getRequestURL().toString(), CHARSET.name());
 
-            String username = validator.validate(ticket, requestURL).getPrincipal().getName();
-            User user = getUser(username);
-            Authenticate.login(request, response, user, "CAS Authentication");
-            logger.trace("Logged in user {}, redirecting to {}", username, actualCallback);
+            getTicketValidator().validateTicket(ticket, requestURL, request, response);
+
         } catch (TicketValidationException | AuthorizationException e) {
             logger.debug(e.getMessage(), e);
             // Append the login_failed parameter to the callback
@@ -88,29 +93,10 @@ public class CASResource {
 
     private static Optional<String> decode(String base64Callback) {
         try {
-            return Optional.of(new String(Base64.getUrlDecoder().decode(base64Callback), StandardCharsets.UTF_8));
+            return Optional.of(new String(Base64.getUrlDecoder().decode(base64Callback), CHARSET));
         } catch (IllegalArgumentException e) {
             // Invalid Base64, return an empty Optional
             return Optional.empty();
         }
     }
-
-    private User getUser(String username) {
-        User user = User.findByUsername(username);
-        if (user == null) {
-            user = attemptBootstrapUser(username);
-        }
-        return user;
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    private static User attemptBootstrapUser(String username) {
-        User user = User.findByUsername(username);
-        if (user != null) {
-            return user;
-        }
-        logger.info("Created new user for {}", username);
-        return new User(username, new UserProfile("Unknown", "User", null, null, null));
-    }
-
 }
