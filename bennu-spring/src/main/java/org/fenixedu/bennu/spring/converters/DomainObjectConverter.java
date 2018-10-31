@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Bennu Spring.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fenixedu.bennu.spring;
+package org.fenixedu.bennu.spring.converters;
 
 import java.util.Collections;
 import java.util.Set;
