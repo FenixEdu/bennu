@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.core.util.CoreConfiguration.ConfigurationProperties;
+import org.fenixedu.bennu.spring.converters.DomainObjectConverter;
+import org.fenixedu.bennu.spring.converters.JsonElementConverter;
 import org.fenixedu.bennu.spring.converters.LocalizedStringConverter;
 import org.fenixedu.bennu.spring.converters.UserFromUsernameConverter;
 import org.fenixedu.bennu.spring.portal.PortalHandlerInterceptor;
@@ -172,6 +174,7 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport impleme
         service.addConverter(new DomainObjectConverter());
         service.addConverter(new LocalizedStringConverter());
         service.addConverter(new UserFromUsernameConverter());
+        service.addConverter(new JsonElementConverter());
         return service;
     }
 
