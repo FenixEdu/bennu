@@ -249,6 +249,6 @@ public class UserProfile extends UserProfile_Base {
         if (name == null) {
             return null;
         }
-        return Strings.emptyToNull(CharMatcher.WHITESPACE.trimAndCollapseFrom(name, ' '));
+        return Strings.emptyToNull(CharMatcher.whitespace().trimAndCollapseFrom(name, ' '));
     }
 }
