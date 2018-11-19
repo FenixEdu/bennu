@@ -430,7 +430,7 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
   $scope.createChild = function(root) {
     var mls = {}; 
     mls[Bennu.locale.tag] = root ? 'New Sub-Root' : 'New Entry';
-    var newChild = { title: mls, description: {}, visible: true, accessExpression: 'anyone', functionality: false, parent: $scope.selected.id, subRoot: root };
+    var newChild = { title: mls, description: {}, visible: true, accessExpression: 'anyone', functionality: false, parent: $scope.selected.id, subRoot: root, supportConfig: $("#tree").fancytree("getTree").getFirstChild().data.item.supportConfig, supportConfigs: $("#tree").fancytree("getTree").getFirstChild().data.item.supportConfigs};
     add(newChild, $scope.selected.node).setActive(true);
   }
   $scope.addSupport = function() {
