@@ -25,13 +25,9 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -45,7 +41,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
 import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.oauth.OAuthProperties;
@@ -58,9 +53,6 @@ import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.FenixFramework;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.net.HttpHeaders;
@@ -69,10 +61,10 @@ import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.PebbleEngine.Builder;
 import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
-import com.mitchellbosecke.pebble.extension.AbstractExtension;
-import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.FenixFramework;
 
 /**
  * Servlet implementation class OAuthAuthorizationServlet
@@ -136,14 +128,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
                             "/bennu-oauth/" + pageName + ".html"), StandardCharsets.UTF_8);
                 }
             }
-        }).cacheActive(!BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()).extension(new AbstractExtension() {
-            @Override
-            public Map<String, Function> getFunctions() {
-                Map<String, Function> functions = new HashMap<>();
-                functions.put("i18n", new I18NFunction());
-                return functions;
-            }
-        }).build();
+        }).cacheActive(!BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()).build();
     }
 
     @Override
@@ -449,32 +434,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             template.evaluate(response.getWriter(), ctx, I18N.getLocale());
         } catch (PebbleException e) {
             throw new IOException(e);
-        }
-    }
-
-    private static class I18NFunction implements Function {
-        final List<String> variableArgs = Stream.of("arg0", "arg1", "arg2", "arg3", "arg4", "arg5").collect(Collectors.toList());
-
-        @Override
-        public List<String> getArgumentNames() {
-            return Stream.of("bundle", "key", "arg0", "arg1", "arg2", "arg3", "arg4", "arg5").collect(Collectors.toList());
-        }
-
-        @Override
-        public Object execute(Map<String, Object> args) {
-            String bundle = (String) args.get("bundle");
-            String key = args.get("key").toString();
-            return BundleUtil.getString(bundle, key, arguments(args));
-        }
-
-        public String[] arguments(Map<String, Object> args) {
-            List<String> values = new ArrayList<>();
-            for (String variableArg : variableArgs) {
-                if (args.containsKey(variableArg) && args.get(variableArg) instanceof String) {
-                    values.add((String) args.get(variableArg));
-                }
-            }
-            return values.toArray(new String[] {});
         }
     }
 

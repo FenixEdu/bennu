@@ -3,7 +3,6 @@ package org.fenixedu.bennu.portal.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,8 +11,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
-
-import org.fenixedu.bennu.core.i18n.BundleUtil;
 
 import com.google.common.hash.Funnels;
 import com.google.common.hash.Hasher;
@@ -62,7 +59,6 @@ class PortalExtension extends AbstractExtension {
     @Override
     public Map<String, Function> getFunctions() {
         Map<String, Function> functions = new HashMap<>();
-        functions.put("i18n", new I18NFunction());
         functions.put("asset", new AssetFunction());
         return functions;
     }
@@ -72,24 +68,6 @@ class PortalExtension extends AbstractExtension {
         Map<String, Test> tests = new HashMap<>();
         tests.put("in", new InTest());
         return tests;
-    }
-
-    private static class I18NFunction implements Function {
-        @Override
-        public List<String> getArgumentNames() {
-            List<String> names = new ArrayList<>();
-            names.add("bundle");
-            names.add("key");
-            return names;
-        }
-
-        @Override
-        public Object execute(Map<String, Object> args) {
-            String bundle = (String) args.get("bundle");
-            String key = args.get("key").toString();
-
-            return BundleUtil.getString(bundle, key);
-        }
     }
 
     private class AssetFunction implements Function {
