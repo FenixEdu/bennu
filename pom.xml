@@ -28,7 +28,7 @@
         <version.com.google.code.gson.gson>2.6.1</version.com.google.code.gson.gson>
         <version.com.google.guava.guava>27.0-jre</version.com.google.guava.guava>
         <version.com.mitchellbosecke.pebble>2.3.0</version.com.mitchellbosecke.pebble>
-        <version.org.apache.tika.tika-core>1.19.1</version.org.apache.tika.tika-core>
+        <version.org.apache.tika.tika-core>1.20</version.org.apache.tika.tika-core>
     </properties>
 
     <scm>
