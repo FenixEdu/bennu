@@ -60,9 +60,9 @@
 								<ul class="dropdown-menu">
 								  	{% for locale in locales %}
 									{% if locale == currentLocale %}
-									<li class="disabled" ><a href="#">{{ i18n('resources.DefaultThemeResources', locale) }}</a></li>
+									<li class="disabled" ><a href="#">{{ i18n('resources.DefaultThemeResources', locale.toString()) }}</a></li>
 									{% else %}
-									<li><a onclick="setLang('{{locale}}')">{{ i18n('resources.DefaultThemeResources', locale) }}</a></li>
+									<li><a onclick="setLang('{{locale}}')">{{ i18n('resources.DefaultThemeResources', locale.toString()) }}</a></li>
 									{% endif %}
 							 		{% endfor %}
 							 		<li><a href="{{contextPath}}/logout">{{ i18n('resources.DefaultThemeResources', 'label.logout') }}</a></li>
