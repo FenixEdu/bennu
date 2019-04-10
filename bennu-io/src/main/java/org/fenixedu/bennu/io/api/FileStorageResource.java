@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.io.domain.DomainStorage;
+import org.fenixedu.bennu.io.domain.DriveStorage;
 import org.fenixedu.bennu.io.domain.FileStorage;
 import org.fenixedu.bennu.io.domain.FileSupport;
 import org.fenixedu.bennu.io.domain.GenericFile;
@@ -57,6 +58,15 @@ public class FileStorageResource extends BennuRestResource {
     public JsonElement createLFSStorage(JsonElement json) {
         accessControl(Group.managers());
         return view(create(json, LocalFileSystemStorage.class));
+    }
+
+    @POST
+    @Path("/drives")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonElement createDriveStorage(JsonElement json) {
+        accessControl(Group.managers());
+        return view(create(json, DriveStorage.class));
     }
 
     @GET

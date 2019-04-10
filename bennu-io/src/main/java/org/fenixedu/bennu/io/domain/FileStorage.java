@@ -74,6 +74,11 @@ public abstract class FileStorage extends FileStorage_Base {
         return new LocalFileSystemStorage(name, path, treeDirectoriesNameLength);
     }
 
+    public static DriveStorage createNewDriveStorage(String name, String driveUrl, String appId, String appUser, String refreshToken, String storeDirectorySlug,
+            final int fileIdLength, final int folderNameMaxLength) {
+        return new DriveStorage(name, driveUrl, appId, appUser, refreshToken, storeDirectorySlug, fileIdLength, folderNameMaxLength);
+    }
+
     public Boolean delete() {
         if (isCanBeDeleted()) {
             getConfigurationSet().clear();
@@ -145,6 +150,14 @@ public abstract class FileStorage extends FileStorage_Base {
      */
     protected boolean tryLowLevelDownload(GenericFile file, HttpServletRequest request, HttpServletResponse response, long start,
             long end) throws IOException {
+        return false;
+    }
+
+    public static boolean tryRedirect(GenericFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        return file.getFileStorage().tryRedirectDownloadFile(file, request, response);
+    }
+
+    protected boolean tryRedirectDownloadFile(GenericFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
         return false;
     }
 }

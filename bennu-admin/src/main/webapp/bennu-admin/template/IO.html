@@ -60,6 +60,7 @@
 							<ul class="nav nav-tabs">
 								<li class="active"><a href="" data-target="#domainStore" data-toggle="tab">Domain Store</a></li>
 								<li><a href="" data-target="#localFSStore" data-toggle="tab">File System Store</a></li>
+								<li><a href="" data-target="#driveStore" data-toggle="tab">Drive Store</a></li>
 							</ul>
 							<br />
 							<div class="tab-content clearfix">
@@ -95,6 +96,59 @@
 											</div>
 										</div>
 									    <button type="submit" class="btn btn-primary pull-right">Create</button>
+									</form>
+								</div>
+								<div class="tab-pane" id="driveStore">
+									<form class="form-horizontal" ng-submit="newDriveStorage()">
+										<div class="form-group">
+											<label for="name" class="col-sm-4 control-label">Name</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="name" ng-model="fsName" required placeholder="Name">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="driveUrl" class="col-sm-4 control-label">Drive URL</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="driveUrl" ng-model="driveUrl" required placeholder="Drive URL">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="appId" class="col-sm-4 control-label">App Id</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="appId" ng-model="appId" required placeholder="App Id">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="appUser" class="col-sm-4 control-label">App User</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="appUser" ng-model="appUser" required placeholder="App User">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="refreshToken" class="col-sm-4 control-label">Refresh Token</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="refreshToken" ng-model="refreshToken" required placeholder="Refresh Token">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="storeDirSlug" class="col-sm-4 control-label">Store Directory Slug</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="storeDirSlug" ng-model="storeDirSlug" required placeholder="Store Directory Slug">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="fileIdLength" class="col-sm-4 control-label">File Id Length</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="fileIdLength" ng-model="fileIdLength" required placeholder="File Id Length">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="folderNameMaxLength" class="col-sm-4 control-label">Folder Name Max Length</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="folderNameMaxLength" ng-model="folderNameMaxLength" required placeholder="Folder Name Max Length">
+											</div>
+										</div>
+										<button type="submit" class="btn btn-primary pull-right">Create</button>
 									</form>
 								</div>
 							</div>

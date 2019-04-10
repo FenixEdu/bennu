@@ -56,8 +56,10 @@ public class OAuthAuthorizationProvider extends BennuRestResource {
             return new ApplicationUserAuthorization(user, app);
         });
         ApplicationUserSession applicationUserSession =
-                applicationUserAuthorization.getSessionSet().stream().filter(ApplicationUserSession::isAccessTokenValid)
-                        .findAny().orElseGet(() -> {
+                applicationUserAuthorization.getSessionSet().stream()
+                        .filter(ApplicationUserSession::isAccessTokenValid)
+                        .findAny()
+                        .orElseGet(() -> {
                             final ApplicationUserSession session = new ApplicationUserSession();
                             session.setApplicationUserAuthorization(applicationUserAuthorization);
                             session.setTokens(OAuthUtils.generateToken(session), OAuthUtils.generateToken(session));

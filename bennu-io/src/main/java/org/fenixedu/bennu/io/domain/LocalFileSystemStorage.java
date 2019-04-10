@@ -123,21 +123,20 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         return uniqueIdentification;
 
     }
-    
-    
+
     @Override
     public String store(GenericFile genericFile, InputStream stream) {
         String uniqueIdentification =
                 genericFile.getContentKey() == null ? genericFile.getExternalId() : genericFile.getContentKey();
         final String fullPath = getFullPath(uniqueIdentification);
-        
+
         ensureDirectoryExists(fullPath);
-        
+
         Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
         map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, stream));
         getPerTxBox().put(map);
         return uniqueIdentification;
-        
+
     }
     
     @Override

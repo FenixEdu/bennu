@@ -74,6 +74,12 @@ public class DownloadUtil {
      */
     public static void downloadFile(GenericFile file, HttpServletRequest request, HttpServletResponse response,
             String cacheControl) throws IOException {
+
+
+        if (FileStorage.tryRedirect(file, request, response)) {
+            return;
+        }
+
         String etag = "W/\"" + file.getExternalId() + "\"";
         response.setHeader("ETag", etag);
         if (cacheControl != null) {

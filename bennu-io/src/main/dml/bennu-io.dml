@@ -26,13 +26,23 @@ public class FileStorage {
 	protected String name;
 }
 
-	public class DomainStorage extends FileStorage{
+	public class DomainStorage extends FileStorage {
 	}
 
-	public class LocalFileSystemStorage extends FileStorage{
+	public class LocalFileSystemStorage extends FileStorage {
 		protected String path;
 		protected Integer treeDirectoriesNameLength;
-	}	
+	}
+
+	public class DriveStorage extends FileStorage {
+	    protected String driveUrl;
+        protected String appId;
+        protected String appUser;
+        protected String refreshToken;
+        protected String storeDirectorySlug;
+        protected int fileIdLength;
+        protected int folderNameMaxLength;
+	}
 
 public class FileStorageConfiguration {
 	protected String fileType (REQUIRED);
