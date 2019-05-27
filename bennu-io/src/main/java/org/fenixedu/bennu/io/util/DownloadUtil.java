@@ -80,7 +80,12 @@ public class DownloadUtil {
             response.setHeader("Cache-Control", cacheControl);
         }
         response.setHeader("Accept-Ranges", "bytes");
-        response.setContentType(file.getContentType());
+
+        String contentType = file.getContentType();
+        if(contentType.indexOf("video") != 0){
+            response.setHeader("Content-Disposition", "attachment");
+        }
+        response.setContentType(contentType);
 
         if (etag.equals(request.getHeader("If-None-Match"))) {
             response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
