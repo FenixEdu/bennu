@@ -97,6 +97,8 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private final static String REDIRECT_URI = "redirect_uri";
     private final static String CODE = "code";
     
+    private final static String CSRF_HEADER = "X-CSRF-Token";
+
     private final static String ACCESS_TOKEN = "access_token";
     private final static String REFRESH_TOKEN = "refresh_token";
     private final static String GRANT_TYPE = "grant_type";
@@ -115,6 +117,8 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private static final String CLIENT_ID_NOT_FOUND = "client_id not found";
     private static final String APPLICATION_BANNED = "the application has been banned.";
     private static final String APPLICATION_DELETED = "the application has been deleted.";
+    private static final String NO_CSRF_HEADER = "The request don't has a CSRF header.";
+    private static final String NO_CSRF_HEADER_DESCRIPTION = "To make this request the browser need to send a CSRF header.";
 
     private PebbleEngine engine;
 
@@ -569,6 +573,14 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         String clientId = request.getParameter(CLIENT_ID);
         String redirectUrl = request.getParameter(REDIRECT_URI);
         String state = request.getParameter(STATE);
+        String csrfToken = request.getHeader(CSRF_HEADER);
+
+        // Only a website in the same origin can send custom headers, unless the contrary is specified in response cors
+        // header received in an preflight request using an OPTIONS request
+        if (csrfToken == null){
+            sendOAuthErrorResponse(response, Status.BAD_REQUEST, NO_CSRF_HEADER, NO_CSRF_HEADER_DESCRIPTION);
+            return;
+        }
 
         ExternalApplication externalApplication = (ExternalApplication) OAuthUtils.getDomainObject(clientId).orElse(null);
 
