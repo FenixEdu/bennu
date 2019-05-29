@@ -82,7 +82,29 @@
 					<li><b>{{scope.name.content}}</b> - {{scope.description.content}}</li>
 				{% endfor %}
 				</ul>
-				<form action="{{contextPath}}/oauth/userconfirmation" method="POST">
+				<script>
+                    function submitForm(oFormElement) {
+                        var form = new FormData(oFormElement);
+                        var postData = "";
+                        for (var pair of form.entries()) {
+                            postData += pair[0]+ '=' + encodeURI(pair[1]) + "&";
+                        }
+
+                        fetch(oFormElement.action, {
+                            method: "POST",
+                            headers: {
+                                "X-CSRF-Token": "NOCSRF",
+                                "content-type": "application/x-www-form-urlencoded"
+                            },
+                            redirect: "manual",
+                            body: postData
+                        }).then(function(response) {
+                            location.reload();
+                        });
+                        return false;
+                    };
+				</script>
+				<form action="{{contextPath}}/oauth/userconfirmation" method="POST" onsubmit="return submitForm(this);">
 					<input type="hidden" name="client_id" value="{{app.externalId}}" />
 					<input type="hidden" name="redirect_uri" value="{{redirectUrl}}" />
 					{% if state is not empty %}
