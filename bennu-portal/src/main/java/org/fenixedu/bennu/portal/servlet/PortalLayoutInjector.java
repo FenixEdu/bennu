@@ -44,7 +44,7 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  *
  */
-@WebFilter("/*")
+@WebFilter(value = "/*", asyncSupported = true)
 public class PortalLayoutInjector implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(PortalLayoutInjector.class);
@@ -68,8 +68,10 @@ public class PortalLayoutInjector implements Filter {
                 } else {
                     // ... fallback to default if it doesn't exist
                     logger.warn("Could not find template named {}, falling back to default!", templateName);
-                    return new InputStreamReader(servletContext.getResourceAsStream("/themes/"
-                            + PortalConfiguration.getInstance().getTheme() + "/default.html"), StandardCharsets.UTF_8);
+                    return new InputStreamReader(
+                            servletContext.getResourceAsStream(
+                                    "/themes/" + PortalConfiguration.getInstance().getTheme() + "/default.html"),
+                            StandardCharsets.UTF_8);
                 }
             }
         }).cacheActive(!BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()).build();
