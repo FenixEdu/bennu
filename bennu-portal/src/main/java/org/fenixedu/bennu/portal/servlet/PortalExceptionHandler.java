@@ -120,7 +120,8 @@ public class PortalExceptionHandler implements ExceptionHandler {
         Enumeration<String> names = req.getParameterNames();
         while (names.hasMoreElements()) {
             String name = names.nextElement();
-            params.put(name, String.join(" | ", req.getParameterValues(name)));
+            params.put(name.replace("{{","%7B%7B"),
+                    String.join(" | ", req.getParameterValues(name)).replace("{{","%7B%7B"));
         }
         return params.entrySet();
     }
