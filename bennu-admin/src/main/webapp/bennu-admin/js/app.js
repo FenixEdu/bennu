@@ -273,7 +273,7 @@ app.controller('MonitoringController', [ '$scope', '$http', function ($scope, $h
   };
   $scope.hideProperty = function(key) {
     key = key.toLowerCase();
-    return key.indexOf('pass') > -1 || key.indexOf('secret') > -1 || key.indexOf('private') > -1 || key.indexOf('key') > -1;
+    return key.indexOf('pass') > -1 || key.indexOf('secret') > -1 || key.indexOf('private') > -1 || key.indexOf('key') > -1 || key.indexOf('jwt') > -1 || key.indexOf('token') > -1;
   };
   $scope.reload(true);
 }]);
