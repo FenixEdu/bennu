@@ -20,12 +20,16 @@ public class FullLayoutClientSidePortalBackend implements PortalBackend {
     @Override
     public SemanticURLHandler getSemanticURLHandler() {
         return (functionality, request, response, chain) -> {
-            final String forwardUrl = "/" + functionality.getPath() + "/";
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher(forwardUrl);
-            if (requestDispatcher != null) {
-                requestDispatcher.forward(request, response);
+            if (request.getRequestURI().contains(".")) {
+                chain.doFilter(request, response);
             } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "No forward url could be processed");
+                final String forwardUrl = "/" + functionality.getPath() + "/";
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher(forwardUrl);
+                if (requestDispatcher != null) {
+                    requestDispatcher.forward(request, response);
+                } else {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "No forward url could be processed");
+                }
             }
         };
     }
