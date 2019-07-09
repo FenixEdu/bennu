@@ -54,7 +54,12 @@ public class BennuPortalDispatcher implements Filter {
             PortalBackendRegistry.getPortalBackend(functionality.getProvider()).getSemanticURLHandler()
                     .handleRequest(functionality, request, response, chain);
         } else {
-            chain.doFilter(request, response);
+            MenuFunctionality pathFunctionality = findFunctionality(path);
+            if (pathFunctionality != null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            } else  {
+                chain.doFilter(request, response);
+            }
         }
     }
 
@@ -62,6 +67,12 @@ public class BennuPortalDispatcher implements Filter {
         String[] parts = path.split("/");
         MenuContainer root = PortalConfiguration.getInstance().getMenu();
         return root.findFunctionalityWithPath(parts);
+    }
+
+    private MenuFunctionality findFunctionality(String path) {
+        String[] parts = path.split("/");
+        MenuContainer root = PortalConfiguration.getInstance().getMenu();
+        return root.findFunctionalityWithPathWithoutAccessControl(parts);
     }
 
     /**
