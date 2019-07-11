@@ -65,7 +65,12 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
      */
     public MenuFunctionality(MenuContainer parent, boolean visible, String key, String provider, String accessGroup,
             LocalizedString description, LocalizedString title, String path) {
-        this(parent, visible, key, provider, accessGroup, description, title, path, "");
+        this(parent, visible, key, provider, accessGroup, description, title, path, "", "_self");
+    }
+
+    public MenuFunctionality(MenuContainer parent, boolean visible, String key, String provider, String accessGroup,
+                             LocalizedString description, LocalizedString title, String path, String target) {
+        this(parent, visible, key, provider, accessGroup, description, title, path, "", target);
     }
 
     /**
@@ -89,11 +94,13 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
      *            The semantic-url path for this functionality
      * @param documentationUrl
      *            The URL for the documentation of this functionality
+     * @param target
+     *            The target attribute to be rendered in the menu link
      * @throws IllegalArgumentException
      *             If {@code parent} is null.
      */
     public MenuFunctionality(MenuContainer parent, boolean visible, String key, String provider, String accessGroup,
-            LocalizedString description, LocalizedString title, String path, String documentationUrl) {
+            LocalizedString description, LocalizedString title, String path, String documentationUrl, String target) {
         super();
         if (parent == null) {
             throw new IllegalArgumentException("MenuFunctionality cannot be created without a parent!");
@@ -102,6 +109,7 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
         setDocumentationUrl(documentationUrl);
         setItemKey(key);
         setProvider(provider);
+        setTarget(target);
     }
 
     /*

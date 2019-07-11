@@ -46,6 +46,7 @@ public class MenuFunctionality extends MenuItem {
     protected String itemKey;
     protected String provider;
     public String documentationUrl;
+    public String target;
 }
 
 relation ApplicationMenu {
