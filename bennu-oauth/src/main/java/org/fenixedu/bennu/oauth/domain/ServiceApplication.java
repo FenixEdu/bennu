@@ -43,6 +43,12 @@ public class ServiceApplication extends ServiceApplication_Base {
         addServiceAuthorization(new ServiceApplicationAuthorization(accessToken));
     }
 
+    @Atomic
+    public void createUserPKCEInfo(String accessToken) {
+        addServiceAuthorization(new ServiceApplicationAuthorization(accessToken));
+    }
+    
+
     public boolean hasServiceAuthorization(final String accessToken) {
         return getServiceAuthorizationSet().stream().anyMatch(auth -> auth.matchesAccessToken(accessToken));
     }

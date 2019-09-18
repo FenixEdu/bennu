@@ -5,6 +5,7 @@ enum org.fenixedu.bennu.oauth.domain.ExternalApplicationState as ExternalApplica
 public class ExternalApplication  {
     public String name (REQUIRED);
     protected String secret (REQUIRED);
+    public String codeSecret;
     public String redirectUrl (REQUIRED);
     public String description (REQUIRED);
     public String siteUrl;
@@ -28,6 +29,10 @@ class ApplicationUserSession {
     String accessToken;
     String refreshToken;
     String deviceId;
+}
+
+class UserPKCEInfo {
+	String codeChanllenge;
 }
 
 class ApplicationUserAuthorization {
@@ -103,6 +108,34 @@ relation UserApplicationAuthorization {
         multiplicity *;
     }
     .org.fenixedu.bennu.core.domain.User playsRole user {
+        multiplicity 1;
+    }
+}
+
+relation ApplicationUserPKCEInfo {
+    UserPKCEInfo playsRole applicationUserPKCEInfo {
+        multiplicity *;
+    }
+    ExternalApplication playsRole application {
+        multiplicity 1;
+    }
+}
+
+relation UserPKCEInfoApplication {
+    UserPKCEInfo playsRole userPKCEInfoApplication {
+        multiplicity *;
+    }
+    .org.fenixedu.bennu.core.domain.User playsRole user {
+        multiplicity 1;
+    }
+}
+
+relation UserPKCEInfoAuthorizationSession {
+    UserPKCEInfo playsRole userPKCEInfoAuthorizationSession {
+        multiplicity 1;
+    }
+    
+    ApplicationUserSession playsRole session {
         multiplicity 1;
     }
 }

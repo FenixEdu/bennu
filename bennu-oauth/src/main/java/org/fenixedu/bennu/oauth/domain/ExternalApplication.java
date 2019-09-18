@@ -21,10 +21,13 @@ package org.fenixedu.bennu.oauth.domain;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.oauth.util.OAuthUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,9 +88,36 @@ public class ExternalApplication extends ExternalApplication_Base {
     public boolean matchesSecret(String secret) {
         return !Strings.isNullOrEmpty(secret) && secret.equals(getSecret());
     }
+    
+    public boolean matchesCodeVerifier(String codeVerifier, String code) {
+    	MessageDigest digester = null;
+    	try {
+    		digester = MessageDigest.getInstance("SHA-256");
+
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+        digester.update(codeVerifier.getBytes(StandardCharsets.UTF_8));
+    	String codeChallenge = Base64.getEncoder().encodeToString(digester.digest());
+    	String userId = OAuthUtils.getUserIdFromCode(code, getCodeSecret());
+    	User user = User.findByUsername(userId);
+    	Optional<ApplicationUserAuthorization> authOptional = user.getApplicationUserAuthorizationSet().stream().filter(s -> s.getApplication().getOid().equals(getOid())).findFirst();
+    	if(authOptional.isPresent()) {
+    		ApplicationUserAuthorization auth = authOptional.get();
+    		Optional<ApplicationUserSession> session = auth.getSessionSet().stream().filter(s -> s.getUserPKCEInfoAuthorizationSession() != null && s.getUserPKCEInfoAuthorizationSession().getCodeChanllenge().equals(codeChallenge)).findFirst();
+            return !Strings.isNullOrEmpty(codeVerifier) && session.isPresent();
+    	} else {
+    		return false;
+    	}
+    }
 
     public boolean matches(String redirectUrl, String secret) {
         return matchesUrl(redirectUrl) && matchesSecret(secret);
+    }
+    
+
+    public boolean matchesPKCE(String redirectUrl, String codeVerifier, String code) {
+        return matchesUrl(redirectUrl) && matchesCodeVerifier(codeVerifier, code);
     }
 
     public ApplicationUserSession getApplicationUserSession(String code) {
@@ -179,6 +209,20 @@ public class ExternalApplication extends ExternalApplication_Base {
     @Atomic
     public void setState(ExternalApplicationState state) {
         super.setState(state);
+    }
+    
+    @Atomic
+    public void generateCodeSecret() {
+        setCodeSecret(OAuthUtils.generateCodeKey());
+    }
+    
+    @Override
+    public String getCodeSecret() {
+        return super.getCodeSecret();
+    }
+    
+    public boolean hasCodeSecret() {
+    	return !Strings.isNullOrEmpty(getCodeSecret());
     }
 
     public void setActive() {

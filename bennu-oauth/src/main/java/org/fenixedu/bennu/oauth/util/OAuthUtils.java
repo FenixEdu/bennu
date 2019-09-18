@@ -19,9 +19,21 @@
 package org.fenixedu.bennu.oauth.util;
 
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.fenixedu.bennu.oauth.OAuthProperties;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
@@ -32,6 +44,7 @@ import pt.ist.fenixframework.FenixFramework;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.hash.Hashing;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class OAuthUtils {
@@ -45,13 +58,99 @@ public class OAuthUtils {
     public static final String USER_DIALOG = "userdialog";
     public static final String STANDARD_USER_DIALOG = "authorize";
     public static final String USER_CONFIRMATION = "userconfirmation";
-    
-    public static String generateCode() {
+    private static Cipher cipher;
+    private static IvParameterSpec ivspec;
+
+    static {
+        try {
+            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            ivspec = new IvParameterSpec(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static class Code {
+        private String random;
+        private String userId;
+
+        public Code(String random, String userId) {
+            this.random = random;
+            this.userId = userId;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+    }
+
+    private static String generateRandom() {
         return Hashing.sha512().hashString(UUID.randomUUID().toString(), StandardCharsets.UTF_8).toString();
     }
 
+    public static String generateCodeKey() {
+        KeyGenerator generator;
+        try {
+            generator = KeyGenerator.getInstance("AES");
+        } catch (Exception exception) {
+            throw new RuntimeException("Error generating code key");
+        }
+        generator.init(128);
+        SecretKey key = generator.generateKey();
+        return Base64.getEncoder().encodeToString(key.getEncoded());
+    }
+
+    private static SecretKey getKeyFromString(String keyString) {
+        byte[] keyBytes = Base64.getDecoder().decode(keyString);
+        return new SecretKeySpec(keyBytes, "AES");
+    }
+
+    private static String encrypt(String value, String keyString) throws InvalidKeyException, NoSuchAlgorithmException,
+            NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+        SecretKey key = getKeyFromString(keyString);
+        cipher.init(Cipher.ENCRYPT_MODE, key, ivspec);
+        byte[] valueCiphered = cipher.doFinal(value.getBytes());
+        return Base64.getEncoder().encodeToString(valueCiphered);
+    }
+
+    private static String decrypt(String encryptedValue, String keyString)
+            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException,
+            BadPaddingException, InvalidAlgorithmParameterException {
+        SecretKey key = getKeyFromString(keyString);
+        cipher.init(Cipher.DECRYPT_MODE, key, ivspec);
+        byte[] value = cipher.doFinal(Base64.getDecoder().decode(encryptedValue));
+        return new String(value);
+    }
+
+    public static String generateCode(String userId, String key) {
+        Code codeObject = new Code(generateRandom(), userId);
+        Gson gson = new Gson();
+        String json = gson.toJson(codeObject);
+        String code = null;
+        try {
+            code = encrypt(json, key);
+        } catch (Exception err) {
+            new RuntimeException("Error generating code");
+        }
+        return code;
+    }
+
+    public static String getUserIdFromCode(String codeCiphered, String key) {
+        Gson gson = new Gson();
+        String code = null;
+
+        try {
+            code = decrypt(codeCiphered, key);
+        } catch (Exception err) {
+            new RuntimeException("Error extracting user id");
+        }
+        Code codeObject = gson.fromJson(code, Code.class);
+        return codeObject.getUserId();
+    }
+
     public static String generateToken(DomainObject domainObject) {
-        return generateToken(domainObject.getExternalId(), generateCode());
+        return generateToken(domainObject.getExternalId(), generateRandom());
     }
 
     public static String generateToken(String id, String random) {
