@@ -412,7 +412,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             }
 
             if (user == null) {
-                String cookieValue = clientId + "|" + redirectUrl;
+                String cookieValue = clientId + "|" + redirectUrl + "|" + codeChallenge + "|" + codeChallengeMethod;
                 if (originalState != null) {
                     cookieValue += "|" + Base64.getEncoder().encodeToString(originalState.getBytes(StandardCharsets.UTF_8));
                 }
@@ -516,16 +516,29 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private void redirectToRedirectUrl(HttpServletRequest request, HttpServletResponse response, User user, final Cookie cookie)
             throws IOException {
         String cookieValue = new String(Base64.getDecoder().decode(cookie.getValue()));
-
         String[] values = cookieValue.split("\\|");
-
         String clientApplicationId = values[0];
         String redirectUrl = values[1];
         String state = null;
-        if (values.length > 2 && !Strings.isNullOrEmpty(values[2])) {
+        String codeChallenge = null;
+        String codeChallengeMethod = null;
+        if (values.length == 3 && !Strings.isNullOrEmpty(values[2])) {
             state = new String(Base64.getDecoder().decode(values[2]));
+            redirectToRedirectUrl(request, response, user, clientApplicationId, redirectUrl, state);
+        } else if (values.length == 4 && !Strings.isNullOrEmpty(values[2]) && !Strings.isNullOrEmpty(values[3])) {
+            codeChallenge = new String(values[2]);
+            codeChallengeMethod = new String(values[3]);
+            redirectToRedirectUrlPKCE(request, response, user, clientApplicationId, redirectUrl, state, codeChallenge, codeChallengeMethod);
+        } else if (values.length == 5 && !Strings.isNullOrEmpty(values[2]) && !Strings.isNullOrEmpty(values[3])
+                && !Strings.isNullOrEmpty(values[4])) {
+            codeChallenge = new String(values[2]);
+            codeChallengeMethod = new String(values[3]);
+            state = new String(Base64.getDecoder().decode(values[4]));
+            redirectToRedirectUrlPKCE(request, response, user, clientApplicationId, redirectUrl, state, codeChallenge, codeChallengeMethod);
+
+        } else {
+            redirectToRedirectUrl(request, response, user, clientApplicationId, redirectUrl, state);
         }
-        redirectToRedirectUrl(request, response, user, clientApplicationId, redirectUrl, state);
     }
 
     private void redirectToRedirectUrl(HttpServletRequest request, HttpServletResponse response, User user, String clientId,

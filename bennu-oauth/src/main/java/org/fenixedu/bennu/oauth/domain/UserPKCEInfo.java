@@ -7,11 +7,11 @@ import pt.ist.fenixframework.Atomic.TxMode;
 
 public class UserPKCEInfo extends UserPKCEInfo_Base {
     
-    public UserPKCEInfo(User user, ExternalApplication application, String codeChanllenge) {
+    public UserPKCEInfo(User user, ExternalApplication application, String codeChallenge) {
         super();
         setUser(user);
         setApplication(application);
-        setCodeChanllenge(codeChanllenge);
+        setCodeChallenge(codeChallenge);
     }
     
     @Atomic(mode = TxMode.WRITE)

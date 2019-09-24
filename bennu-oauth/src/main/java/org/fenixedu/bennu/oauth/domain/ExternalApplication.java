@@ -97,14 +97,14 @@ public class ExternalApplication extends ExternalApplication_Base {
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
-        digester.update(codeVerifier.getBytes(StandardCharsets.UTF_8));
+        digester.update(codeVerifier.getBytes(StandardCharsets.US_ASCII));
     	String codeChallenge = Base64.getEncoder().encodeToString(digester.digest());
     	String userId = OAuthUtils.getUserIdFromCode(code, getCodeSecret());
     	User user = User.findByUsername(userId);
     	Optional<ApplicationUserAuthorization> authOptional = user.getApplicationUserAuthorizationSet().stream().filter(s -> s.getApplication().getOid().equals(getOid())).findFirst();
     	if(authOptional.isPresent()) {
     		ApplicationUserAuthorization auth = authOptional.get();
-    		Optional<ApplicationUserSession> session = auth.getSessionSet().stream().filter(s -> s.getUserPKCEInfoAuthorizationSession() != null && s.getUserPKCEInfoAuthorizationSession().getCodeChanllenge().equals(codeChallenge)).findFirst();
+    		Optional<ApplicationUserSession> session = auth.getSessionSet().stream().filter(s -> s.getUserPKCEInfoAuthorizationSession() != null && s.getUserPKCEInfoAuthorizationSession().getCodeChallenge().equals(codeChallenge)).findFirst();
             return !Strings.isNullOrEmpty(codeVerifier) && session.isPresent();
     	} else {
     		return false;

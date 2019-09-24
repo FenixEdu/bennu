@@ -32,7 +32,7 @@ class ApplicationUserSession {
 }
 
 class UserPKCEInfo {
-	String codeChanllenge;
+	String codeChallenge;
 }
 
 class ApplicationUserAuthorization {
