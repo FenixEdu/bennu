@@ -95,7 +95,7 @@ public class ExternalApplication extends ExternalApplication_Base {
     		digester = MessageDigest.getInstance("SHA-256");
 
     	} catch (Exception e) {
-    		e.printStackTrace();
+    	    throw new RuntimeException("Not possible to get instance of SHA-256");
     	}
         digester.update(codeVerifier.getBytes(StandardCharsets.US_ASCII));
     	String codeChallenge = Base64.getEncoder().encodeToString(digester.digest());

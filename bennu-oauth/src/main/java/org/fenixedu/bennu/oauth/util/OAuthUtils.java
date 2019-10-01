@@ -67,7 +67,7 @@ public class OAuthUtils {
             byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             ivspec = new IvParameterSpec(iv);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Not possible to get instance of AES/CBC/PKCS5Padding");
         }
     }
 

@@ -100,7 +100,6 @@ public class ApplicationUserSession extends ApplicationUserSession_Base {
         if (getUserPKCEInfoAuthorizationSession() != null) {
             getUserPKCEInfoAuthorizationSession().delete();
         }
-        setUserPKCEInfoAuthorizationSession(null);
         deleteDomainObject();
     }
 
