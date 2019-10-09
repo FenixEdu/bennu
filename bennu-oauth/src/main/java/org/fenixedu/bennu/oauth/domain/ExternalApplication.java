@@ -20,6 +20,8 @@ package org.fenixedu.bennu.oauth.domain;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -121,9 +123,26 @@ public class ExternalApplication extends ExternalApplication_Base {
     }
 
     public ApplicationUserSession getApplicationUserSession(String code) {
-        for (ApplicationUserSession applicationUserSession : getApplicationUserSessionSet()) {
-            if (applicationUserSession.matchesCode(code)) {
-                return applicationUserSession;
+        String codeDecoded = code;
+        try {
+            codeDecoded = URLDecoder.decode(code, StandardCharsets.UTF_8.name());
+            String userId = OAuthUtils.getUserIdFromCode(codeDecoded, getCodeSecret());
+            User user = User.findByUsername(userId);
+
+            Optional<ApplicationUserAuthorization> authOptional = user.getApplicationUserAuthorizationSet().stream().filter(s -> s.getApplication().getOid().equals(getOid())).findFirst();
+            if (authOptional.isPresent()) {
+                final String finalCode = codeDecoded;
+                ApplicationUserAuthorization auth = authOptional.get();
+                Optional<ApplicationUserSession> session = auth.getSessionSet().stream().filter(s -> s.matchesCode(finalCode)).findFirst();
+                if (session.isPresent()) {
+                    return session.get();
+                }
+            }
+        } catch (UnsupportedEncodingException | RuntimeException e) {
+            for (ApplicationUserSession applicationUserSession : getApplicationUserSessionSet()) {
+                if (applicationUserSession.matchesCode(codeDecoded)) {
+                    return applicationUserSession;
+                }
             }
         }
         return null;
