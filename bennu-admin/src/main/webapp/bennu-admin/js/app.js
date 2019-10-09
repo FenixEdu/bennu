@@ -123,6 +123,11 @@ app.config(['$stateProvider', '$urlRouterProvider',
         url: '/custom/add',
         templateUrl: contextPath + '/bennu-admin/template/scheduler/add-custom-task.html',
         controller: 'CustomTaskController'
+      }).
+      state('scheduler.future', {
+        url: '/future/',
+        templateUrl: contextPath + '/bennu-admin/template/scheduler/future.html',
+        controller: 'FutureController'
       });
   }]);
 
@@ -268,7 +273,7 @@ app.controller('MonitoringController', [ '$scope', '$http', function ($scope, $h
   };
   $scope.hideProperty = function(key) {
     key = key.toLowerCase();
-    return key.indexOf('pass') > -1 || key.indexOf('secret') > -1 || key.indexOf('private') > -1 || key.indexOf('key') > -1;
+    return key.indexOf('pass') > -1 || key.indexOf('secret') > -1 || key.indexOf('private') > -1 || key.indexOf('key') > -1 || key.indexOf('jwt') > -1 || key.indexOf('token') > -1;
   };
   $scope.reload(true);
 }]);
@@ -381,7 +386,7 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
   $scope.saveSelected = function() {
     var data = { title: $scope.selected.title, description: $scope.selected.description, visible: $scope.selected.visible,
                  layout: $scope.selected.layout, accessExpression: $scope.selected.accessExpression, icon: $scope.selected.icon ,
-                 documentationUrl: $scope.selected.documentationUrl, supportConfig: $scope.selected.supportConfig.id };
+                 documentationUrl: $scope.selected.documentationUrl, supportConfig: $scope.selected.supportConfig.id, faqUrl: $scope.selected.faqUrl };
     var promise;
     if($scope.selected.id) {
       promise = $http.put(contextPath + "/api/bennu-portal/menu/" + $scope.selected.id, data);
@@ -425,7 +430,7 @@ app.controller('MenuController', [ '$scope', '$state', '$http', function($scope,
   $scope.createChild = function(root) {
     var mls = {}; 
     mls[Bennu.locale.tag] = root ? 'New Sub-Root' : 'New Entry';
-    var newChild = { title: mls, description: {}, visible: true, accessExpression: 'anyone', functionality: false, parent: $scope.selected.id, subRoot: root };
+    var newChild = { title: mls, description: {}, visible: true, accessExpression: 'anyone', functionality: false, parent: $scope.selected.id, subRoot: root, supportConfig: $("#tree").fancytree("getTree").getFirstChild().data.item.supportConfig, supportConfigs: $("#tree").fancytree("getTree").getFirstChild().data.item.supportConfigs};
     add(newChild, $scope.selected.node).setActive(true);
   }
   $scope.addSupport = function() {
@@ -705,18 +710,23 @@ app.controller('SchedulesController', ['$scope', '$http', function ($scope, $htt
 }]);
 
 app.controller('LogsController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
-  $scope.type = $state.params.type; $scope.numResults = 20;
+  $scope.type = $state.params.type;
+  $scope.numResults = 20;
+  $scope.customTaskOnly = false;
   var url = $state.params.type ? contextPath + '/api/bennu-scheduler/log/' + $scope.type : contextPath + '/api/bennu-scheduler/log/';
   $scope.reload = function () {
     $http.get(url + '?count=' + $scope.numResults).success(function (data) {
       $scope.logs = data; $scope.moreResults = data.length == $scope.numResults;
     });
-  }
+  };
   $scope.loadMore = function() {
     $http.get(url + '?count=' + ($scope.numResults + 1) + '&start=' + $scope.logs[$scope.logs.length -1].id).success(function(data) {
       data.shift();
       $scope.logs = $scope.logs.concat(data); $scope.moreResults = data.length == $scope.numResults;
     });
+  };
+  $scope.filterCustom = function(log) {
+    return $scope.customTaskOnly === false || log.custom === true;
   };
   $scope.reload();
 }]);
@@ -724,24 +734,31 @@ app.controller('LogsController', ['$scope', '$http', '$state', function ($scope,
 app.controller('LogDetailsController', ['$scope', '$http', '$state', '$interval', function ($scope, $http, $state, $interval) {
   $scope.type = $state.params.type; $scope.id = $state.params.id; $scope.contextPath = contextPath;
   $scope.editorOptions = { lineNumbers: true, mode: 'text/x-java', theme: 'eclipse', readOnly: true};
+  $scope.showCode = true;
   $scope.refreshLog = function() {
     $http.get(contextPath + '/api/bennu-scheduler/log/' + $scope.type + '/' + $scope.id).success(function (data) {
       $scope.log = data;
     });
     $http.get(contextPath + '/api/bennu-scheduler/log/cat/' + $scope.type + '/' + $scope.id).success(function (data) {
       $scope.logs = data;
+      $scope.threadTask();
     });
-  }
+  };
   $scope.killTask = function () {
     if (confirm('Are you sure you want to kill this task?')) {
       $http.get(contextPath + '/api/bennu-scheduler/log/kill/' + $scope.type).success(function (data) {
         $scope.refreshLog();
       });
     }
-  }
+  };
+  $scope.threadTask = function () {
+    $http.get(contextPath + '/api/bennu-scheduler/log/thread/' + $scope.type).success(function (data) {
+        $scope.thread = data;
+    });
+  };
   $scope.load = function() {
     window.code = $scope.log.code; $state.go('scheduler.custom-new');
-  }
+  };
   var promise = $interval(function () {
     if($scope.log && !$scope.log.end) {
       $scope.refreshLog();
@@ -803,3 +820,32 @@ app.controller('CustomTaskLogsController', ['$scope', '$http', '$state', functio
   $scope.reload();
 }]);
 
+app.controller('FutureController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
+  $scope.numResults = 20;
+  $scope.totalNumResults = 0;
+  var url = contextPath + '/api/bennu-scheduler/future/';
+  $scope.reload = function () {
+    $http.get(url + '?count=' + $scope.numResults).success(function (data) {
+      $scope.futureTasks = data;
+      $scope.moreResults = data.length == $scope.numResults;
+      $scope.totalNumResults = data.length;
+    });
+  }
+  $scope.loadMore = function() {
+    $http.get(url + '?count=' + ($scope.numResults) + '&skip=' + ($scope.totalNumResults)).success(function(data) {
+      $scope.futureTasks = $scope.futureTasks.concat(data);
+      $scope.moreResults = data.length == $scope.numResults;
+      $scope.totalNumResults += data.length;
+    });
+  };
+  $scope.cancelFuture = function(futureId) {
+    if (confirm('Are you sure you want to cancel this future task?')) {
+      $http.get(url + 'cancel/' + futureId).success(function(data) {
+        $http.get(url + '?count=' + ($scope.totalNumResults)).success(function(data) {
+          $scope.futureTasks = data;
+        });
+      });
+    }
+  };
+  $scope.reload();
+}]);

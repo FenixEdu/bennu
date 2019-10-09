@@ -31,6 +31,7 @@ public class ClientSiteBackendInitilizer implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         PortalBackendRegistry.registerPortalBackend(new ClientSidePortalBackend());
+        PortalBackendRegistry.registerPortalBackend(new FullLayoutClientSidePortalBackend());
         try {
             initAppsJsonFromJars(getClass().getClassLoader());
         } catch (IOException e) {
@@ -54,6 +55,7 @@ public class ClientSiteBackendInitilizer implements ServletContextListener {
     }
 
     private void parseApplicationInfo(JsonObject appJson) {
+        final boolean isFullLayout = appJson.has("fullLayout") && appJson.get("fullLayout").getAsBoolean();
         final String accessExpression = appJson.get("accessExpression").getAsString();
         final String path = appJson.get("path").getAsString();
         final LocalizedString title = LocalizedString.fromJson(appJson.get("title"));
@@ -64,21 +66,25 @@ public class ClientSiteBackendInitilizer implements ServletContextListener {
 
         if (appJson.has("functionalities")) {
             for (JsonElement functionality : appJson.get("functionalities").getAsJsonArray()) {
-                parseFunctionality(app, functionality.getAsJsonObject());
+                parseFunctionality(app, functionality.getAsJsonObject(), isFullLayout);
             }
         }
 
         ApplicationRegistry.registerApplication(app);
     }
 
-    private void parseFunctionality(Application application, JsonObject funcJson) {
+    private void parseFunctionality(Application application, JsonObject funcJson, boolean isFullLayout) {
         final String accessExpression = funcJson.get("accessExpression").getAsString();
         final String path = funcJson.get("path").getAsString();
         final LocalizedString title = LocalizedString.fromJson(funcJson.get("title"));
         final LocalizedString description = LocalizedString.fromJson(funcJson.get("description"));
 
+
         Functionality functionality =
-                new Functionality(ClientSidePortalBackend.BACKEND_KEY, path, path, accessExpression, title, description);
+                new Functionality(isFullLayout ? FullLayoutClientSidePortalBackend.BACKEND_KEY : ClientSidePortalBackend.BACKEND_KEY,
+                        path, path,
+                        accessExpression, title,
+                        description, true);
 
         application.addFunctionality(functionality);
     }

@@ -43,10 +43,17 @@
 				<i class="glyphicon glyphicon-play" />
 			</td>
 		</tr>
-		<tr ng-show="log.code">
-			<th>Code</th>
+		<tr ng-if="!log.end">
+			<th>Thread</th>
 			<td>
-				<div class="control-group">
+				<h5><a href="" ng-click="showThread = !showThread">{{thread.name}} ({{thread.id}})</a></h5>
+				<pre ng-show="showThread" style="overflow-y: scroll">{{thread.stacktrace}}</pre>
+			</td>
+		</tr>
+		<tr ng-show="log.code">
+			<th><a href="" ng-click="showCode = !showCode">Code</a></th>
+			<td>
+				<div class="control-group" ng-show="showCode">
 					<div class="controls">
 						<div ui-codemirror="{onLoad: codemirrorLoaded}" ui-codemirror-opts="editorOptions" ng-model="log.code"></div>
 					</div>

@@ -36,6 +36,7 @@ public class MenuItem {
 	public Boolean visible (REQUIRED);
 	public String layout;
 	public String icon;
+	public String faqUrl;
 }
 
 public class MenuContainer extends MenuItem {
@@ -45,6 +46,7 @@ public class MenuFunctionality extends MenuItem {
     protected String itemKey;
     protected String provider;
     public String documentationUrl;
+    public String target;
 }
 
 relation ApplicationMenu {

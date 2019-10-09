@@ -67,7 +67,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
     }
 
     private String computeFullPath() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("/");
         builder.append(this.getPath());
         MenuContainer current = getParent();
@@ -87,7 +87,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
      */
     @Override
     public int compareTo(MenuItem o) {
-        int ord = getOrd().compareTo(o.getOrd());
+        final int ord = getOrd().compareTo(o.getOrd());
         return ord == 0 ? getTitle().compareTo(o.getTitle()) : ord;
     }
 
@@ -98,6 +98,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
     public void delete() {
         setParent(null);
         setGroup(null);
+        setSupport(null);
         deleteDomainObject();
     }
 
@@ -183,7 +184,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
     }
 
     public List<MenuItem> getPathFromRoot() {
-        List<MenuItem> result = new ArrayList<MenuItem>();
+        final List<MenuItem> result = new ArrayList<MenuItem>();
         MenuItem current = this;
         while (current.getParent() != null) {
             result.add(0, current);
@@ -196,7 +197,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
 
     @Override
     public SupportConfiguration getSupport() {
-        SupportConfiguration supportConfiguration = super.getSupport();
+        final SupportConfiguration supportConfiguration = super.getSupport();
         if (supportConfiguration == null) {
             if (getParent() == null) {
                 return null;
@@ -204,5 +205,27 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
             return getParent().getSupport();
         }
         return supportConfiguration;
+    }
+
+    @Override
+    public String getFaqUrl() {
+        final String faqUrl = super.getFaqUrl();
+        if (faqUrl == null) {
+            if (getParent() == null) {
+                return null;
+            }
+            return getParent().getFaqUrl();
+        }
+        return faqUrl;
+    }
+
+    @Override
+    public void setFaqUrl(String faqUrl) {
+        final String trimmed = faqUrl == null ? "" : faqUrl.trim();
+        if (trimmed.isEmpty()) {
+            super.setFaqUrl(null);
+        } else {
+            super.setFaqUrl(trimmed);
+        }
     }
 }
