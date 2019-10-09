@@ -92,6 +92,7 @@ public class UserProfile {
     public String avatarUrl;
     public String email;
     public Locale preferredLocale;
+    public Locale emailLocale;
 }
 
 class Avatar {

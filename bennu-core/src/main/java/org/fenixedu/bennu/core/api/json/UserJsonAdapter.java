@@ -2,6 +2,7 @@ package org.fenixedu.bennu.core.api.json;
 
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
 import org.fenixedu.bennu.core.domain.Avatar;
@@ -36,9 +37,8 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         jsonObject.addProperty("active", !user.isLoginExpired());
         user.getExpiration().ifPresent(e -> jsonObject.addProperty("expiration", ISODateTimeFormat.date().print(e)));
         JsonUtils.put(jsonObject, "avatar", profile.getAvatarUrl());
-        if (profile.getPreferredLocale() != null) {
-            jsonObject.add("preferredLocale", ctx.view(profile.getPreferredLocale()));
-        }
+        Optional.ofNullable(profile.getPreferredLocale()).ifPresent(preferredLocale -> jsonObject.add("preferredLocale", ctx.view(preferredLocale)));
+        Optional.ofNullable(profile.getEmailLocale()).ifPresent(emailLocale -> jsonObject.add("emailLocale", ctx.view(emailLocale)));
 
         return jsonObject;
     }
@@ -90,14 +90,19 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         String display = JsonUtils.getString(json, "displayName");
         String email = JsonUtils.getString(json, "email");
         Locale preferredLocale = JsonUtils.get(json, "preferredLocale", ctx, Locale.class);
+        Locale emailLocale = JsonUtils.get(json, "emailLocale", ctx, Locale.class);
+
         if (current != null) {
             current.changeName(given, family, display);
             current.setEmail(email);
             current.setPreferredLocale(preferredLocale);
+            current.setEmailLocale(emailLocale);
             changeAvatar(current, json);
             return current;
         }
-        return new UserProfile(given, family, display, email, preferredLocale);
+        UserProfile userProfile = new UserProfile(given, family, display, email, preferredLocale);
+        userProfile.setEmailLocale(emailLocale);
+        return userProfile;
     }
 
     private void changePassword(User user, JsonObject json) {
