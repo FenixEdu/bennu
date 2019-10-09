@@ -97,6 +97,9 @@ public class ApplicationUserSession extends ApplicationUserSession_Base {
         setDeviceId(null);
         setApplicationUserAuthorization(null);
         setRefreshToken(null);
+        if (getUserPKCEInfoAuthorizationSession() != null) {
+            getUserPKCEInfoAuthorizationSession().delete();
+        }
         deleteDomainObject();
     }
 
