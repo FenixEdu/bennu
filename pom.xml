@@ -119,6 +119,7 @@
 
     <modules>
         <module>bennu-core</module>
+        <module>bennu-search</module>
         <module>bennu-io</module>
         <module>bennu-scheduler</module>
         <module>bennu-toolkit</module>

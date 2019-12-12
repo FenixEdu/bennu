@@ -1,0 +1,61 @@
+package org.fenixedu.bennu.search.domain;
+
+public class DomainIndexSystem {
+}
+
+public class YearIndex {
+    int year;
+}
+
+public class MonthIndex {
+    int month;
+}
+
+public class KeyIndex {
+    String keyPart;
+}
+
+relation DomainRootDomainIndexSystem {
+	protected .pt.ist.fenixframework.DomainRoot playsRole root {
+		multiplicity 1..1;
+	}
+	public DomainIndexSystem playsRole indexSystem {
+		multiplicity 0..1;
+	}
+}
+
+relation DomainIndexSystemYearIndex {
+	protected DomainIndexSystem playsRole indexSystem {
+		multiplicity 1..1;
+	}
+	protected YearIndex playsRole yearIndex {
+		multiplicity *;
+	}
+}
+
+relation YearIndexMonthIndex {
+	protected YearIndex playsRole yearIndex {
+		multiplicity 1..1;
+	}
+	protected MonthIndex playsRole monthIndex {
+		multiplicity *;
+	}
+}
+
+relation DomainIndexSystemKeyIndex {
+	protected DomainIndexSystem playsRole indexSystem {
+		multiplicity 0..1;
+	}
+	protected KeyIndex playsRole keyIndex {
+		multiplicity *;
+	}
+}
+
+relation KeyIndexKeyIndex {
+	protected KeyIndex playsRole parentIndex {
+		multiplicity 0..1;
+	}
+	protected KeyIndex playsRole keyIndex {
+		multiplicity *;
+	}
+}
