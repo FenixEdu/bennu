@@ -16,42 +16,32 @@
  */
 package org.fenixedu.bennu.core.domain;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-
-import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
-
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-import pt.ist.fenixframework.FenixFramework;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
+import pt.ist.fenixframework.FenixFramework;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Root class of the domain.
  */
 public final class Bennu extends Bennu_Base {
+
+    private static final Supplier<Bennu> SYSTEM_GETTER = () -> FenixFramework.getDomainRoot().getBennu();
+    private static final Supplier<Bennu> SYSTEM_CREATOR = () -> new Bennu();
+
     private Bennu() {
         super();
         setRoot(FenixFramework.getDomainRoot());
     }
 
     public static Bennu getInstance() {
-        if (FenixFramework.getDomainRoot().getBennu() == null) {
-            return initialize();
-        }
-        return FenixFramework.getDomainRoot().getBennu();
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    private static Bennu initialize() {
-        if (FenixFramework.getDomainRoot().getBennu() == null) {
-            return new Bennu();
-        }
-        return FenixFramework.getDomainRoot().getBennu();
+        return Singleton.getInstance(SYSTEM_GETTER, SYSTEM_CREATOR);
     }
 
     @Override

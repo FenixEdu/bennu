@@ -1,6 +1,6 @@
 package org.fenixedu.bennu.search.domain;
 
-import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.Singleton;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
@@ -15,23 +15,16 @@ import java.util.stream.Stream;
 
 public class DomainIndexSystem extends DomainIndexSystem_Base {
 
+    private static final Supplier<DomainIndexSystem> SYSTEM_GETTER = () -> FenixFramework.getDomainRoot().getIndexSystem();
+    private static final Supplier<DomainIndexSystem> SYSTEM_CREATOR = () -> new DomainIndexSystem();
+
     private DomainIndexSystem() {
         super();
         setRoot(FenixFramework.getDomainRoot());
     }
 
     public static DomainIndexSystem getInstance() {
-        return getSystem(() -> createSystem());
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    private static DomainIndexSystem createSystem() {
-        return getSystem(() -> new DomainIndexSystem());
-    }
-
-    private static DomainIndexSystem getSystem(final Supplier<DomainIndexSystem> supplier) {
-        final DomainIndexSystem system = FenixFramework.getDomainRoot().getIndexSystem();
-        return system == null ? supplier.get() : system;
+        return Singleton.getInstance(SYSTEM_GETTER, SYSTEM_CREATOR);
     }
 
     static <Index extends IntIndex> Index search(final Stream<Index> stream, final int value, final Supplier<Index> supplier) {
