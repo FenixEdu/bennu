@@ -36,7 +36,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
@@ -49,7 +48,6 @@ import org.fenixedu.bennu.oauth.domain.ApplicationUserAuthorization;
 import org.fenixedu.bennu.oauth.domain.ApplicationUserSession;
 import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
-import org.fenixedu.bennu.oauth.domain.UserPKCEInfo;
 import org.fenixedu.bennu.oauth.util.OAuthUtils;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
@@ -90,7 +88,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private final static String CLIENT_SECRET = "client_secret";
     private final static String REDIRECT_URI = "redirect_uri";
     private final static String CODE = "code";
-
+    
     private final static String ACCESS_TOKEN = "access_token";
     private final static String REFRESH_TOKEN = "refresh_token";
     private final static String GRANT_TYPE = "grant_type";
@@ -99,11 +97,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private final static String EXPIRES_IN = "expires_in";
     private final static String TOKEN_TYPE = "token_type";
     private final static String TOKEN_TYPE_VALUE = "Bearer";
-    private final static String CODE_CHALLENGE = "code_challenge";
-    private final static String CODE_CHALLENGE_METHOD = "code_challenge_method";
-    private final static String CODE_CHALLENGE_METHOD_SUPORTED = "S256";
-    private final static String CODE_VERIFIER = "code_verifier";
-    private final static String RESPONSE_TYPE = "response_type";
 
     private final static String INVALID_GRANT = "invalid_grant";
     private static final String REFRESH_TOKEN_DOESN_T_MATCH = "refresh token doesn't match";
@@ -124,15 +117,15 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         engine = new Builder().loader(new ClasspathLoader() {
             @Override
             public Reader getReader(String pageName) throws LoaderException {
-                InputStream stream = config.getServletContext().getResourceAsStream(
-                        "/themes/" + PortalConfiguration.getInstance().getTheme() + "/oauth/" + pageName + ".html");
+                InputStream stream =
+                        config.getServletContext().getResourceAsStream(
+                                "/themes/" + PortalConfiguration.getInstance().getTheme() + "/oauth/" + pageName + ".html");
                 if (stream != null) {
                     return new InputStreamReader(stream, StandardCharsets.UTF_8);
                 } else {
                     // ... and fall back if none is provided.
-                    return new InputStreamReader(
-                            config.getServletContext().getResourceAsStream("/bennu-oauth/" + pageName + ".html"),
-                            StandardCharsets.UTF_8);
+                    return new InputStreamReader(config.getServletContext().getResourceAsStream(
+                            "/bennu-oauth/" + pageName + ".html"), StandardCharsets.UTF_8);
                 }
             }
         }).cacheActive(!BennuPortalConfiguration.getConfiguration().themeDevelopmentMode()).build();
@@ -178,7 +171,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
     }
 
-    // refreshAccessToken
+    //refreshAccessToken
     private void handleRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String[] authorizationHeader = getAuthorizationHeader(request);
@@ -231,7 +224,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
         ApplicationUserSession appUserSession = FenixFramework.getDomainObject(appUserSessionExternalId);
 
-        if (!externalApplication.matchesSecret(clientSecret) && appUserSession.getUserPKCEInfoAuthorizationSession() == null) {
+        if (!externalApplication.matchesSecret(clientSecret)) {
             sendOAuthErrorResponse(response, Status.UNAUTHORIZED, INVALID_GRANT, CREDENTIALS_OR_REDIRECT_URI_DON_T_MATCH);
             return;
         }
@@ -248,14 +241,13 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
         String newAccessToken = OAuthUtils.generateToken(appUserSession);
         appUserSession.setNewAccessToken(newAccessToken);
-
+        
         JsonObject jsonResponse = new JsonObject();
         jsonResponse.addProperty(ACCESS_TOKEN, newAccessToken);
         jsonResponse.addProperty(REFRESH_TOKEN, refreshToken);
         jsonResponse.addProperty(TOKEN_TYPE, TOKEN_TYPE_VALUE);
         jsonResponse.addProperty(EXPIRES_IN, OAuthProperties.getConfiguration().getAccessTokenExpirationSeconds());
-        sendOAuthResponse(response, Status.OK, jsonResponse);
-    }
+        sendOAuthResponse(response, Status.OK, jsonResponse);    }
 
     private String[] getAuthorizationHeader(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
@@ -274,7 +266,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         return null;
     }
 
-    // getTokens
+    //getTokens
     private void handleAccessToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String[] authorizationHeader = getAuthorizationHeader(request);
@@ -293,17 +285,18 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         String redirectUrl = request.getParameter(REDIRECT_URI);
         String authCode = request.getParameter(CODE);
         String grantType = request.getParameter(GRANT_TYPE);
-        String codeVerifier = request.getParameter(CODE_VERIFIER);
 
-        if (Strings.isNullOrEmpty(clientId) || (Strings.isNullOrEmpty(clientSecret) && Strings.isNullOrEmpty(codeVerifier))
-                || Strings.isNullOrEmpty(grantType)) {
+        if (Strings.isNullOrEmpty(clientId) || Strings.isNullOrEmpty(clientSecret) || Strings.isNullOrEmpty(grantType)) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT,
                     Joiner.on(",").join(CLIENT_ID, CLIENT_SECRET, GRANT_TYPE) + " are mandatory");
             return;
         }
 
         if (!GRANT_TYPE_AUTHORIZATION_CODE.equals(grantType) && !GRANT_TYPE_CLIENT_CREDENTIALS.equals(grantType)) {
-            sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT,
+            sendOAuthErrorResponse(
+                    response,
+                    Status.BAD_REQUEST,
+                    INVALID_GRANT,
                     GRANT_TYPE + " must be on of the following values: "
                             + Joiner.on(",").join(GRANT_TYPE_CLIENT_CREDENTIALS, GRANT_TYPE_AUTHORIZATION_CODE));
             return;
@@ -311,8 +304,8 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
         if (GRANT_TYPE_AUTHORIZATION_CODE.equals(grantType)) {
             if (Strings.isNullOrEmpty(redirectUrl) || Strings.isNullOrEmpty(authCode)) {
-                sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT,
-                        Joiner.on(",").join(REDIRECT_URI, CODE) + " are mandatory");
+                sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, Joiner.on(",").join(REDIRECT_URI, CODE)
+                        + " are mandatory");
                 return;
             }
         }
@@ -333,12 +326,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             return;
         }
 
-        if (!Strings.isNullOrEmpty(clientSecret) && !externalApplication.matches(redirectUrl, clientSecret)) {
-            sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CREDENTIALS_OR_REDIRECT_URI_DON_T_MATCH);
-            return;
-        }
-
-        if (!Strings.isNullOrEmpty(codeVerifier) && !externalApplication.matchesPKCE(redirectUrl, codeVerifier, authCode)) {
+        if (!externalApplication.matches(redirectUrl, clientSecret)) {
             sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CREDENTIALS_OR_REDIRECT_URI_DON_T_MATCH);
             return;
         }
@@ -385,57 +373,16 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         String clientId = request.getParameter(CLIENT_ID);
         String redirectUrl = request.getParameter(REDIRECT_URI);
         String originalState = request.getParameter(STATE);
-        String codeChallenge = request.getParameter(CODE_CHALLENGE);
-        String codeChallengeMethod = request.getParameter(CODE_CHALLENGE_METHOD);
-        String responseType = request.getParameter(RESPONSE_TYPE);
+
         User user = Authenticate.getUser();
-        if (!Strings.isNullOrEmpty(codeChallenge) && !Strings.isNullOrEmpty(codeChallengeMethod)
-                && !Strings.isNullOrEmpty(responseType)) {
-            // With code_chanllenge, code_verifier, code_chanllenge_method and redirectUrl
 
-            // This confirmation should not be used only in the pkce flow, but for legacy
-            // will only be used in pkce
-            if (!responseType.equals(CODE)) {
-                errorPage(request, response);
-                return;
-            }
-
-            if (Strings.isNullOrEmpty(clientId) || Strings.isNullOrEmpty(redirectUrl)) {
-                errorPage(request, response);
-                return;
-            }
-
-            // Only sha256 support, "plain" not available
-            if (!codeChallengeMethod.equals(CODE_CHALLENGE_METHOD_SUPORTED)) {
-                errorPage(request, response);
-                return;
-            }
-
-            if (user == null) {
-                String cookieValue = clientId + "|" + redirectUrl + "|" + codeChallenge + "|" + codeChallengeMethod;
-                if (originalState != null) {
-                    cookieValue += "|" + Base64.getEncoder().encodeToString(originalState.getBytes(StandardCharsets.UTF_8));
-                }
-                response.addCookie(new Cookie(OAUTH_SESSION_KEY,
-                        Base64.getEncoder().encodeToString(cookieValue.getBytes(StandardCharsets.UTF_8))));
-                response.sendRedirect(request.getContextPath() + "/login?callback="
-                        + CoreConfiguration.getConfiguration().applicationUrl() + "/oauth/" + path);
-                return;
-            } else {
-                redirectToRedirectUrlPKCE(request, response, user, clientId, redirectUrl, originalState, codeChallenge,
-                        codeChallengeMethod);
-                return;
-            }
-
-        } else if (!Strings.isNullOrEmpty(clientId) && !Strings.isNullOrEmpty(redirectUrl)) {
-            // With clientId and redirectUrl
+        if (!Strings.isNullOrEmpty(clientId) && !Strings.isNullOrEmpty(redirectUrl)) {
             if (user == null) {
                 String cookieValue = clientId + "|" + redirectUrl;
                 if (originalState != null) {
                     cookieValue += "|" + Base64.getEncoder().encodeToString(originalState.getBytes(StandardCharsets.UTF_8));
                 }
-                response.addCookie(new Cookie(OAUTH_SESSION_KEY,
-                        Base64.getEncoder().encodeToString(cookieValue.getBytes(StandardCharsets.UTF_8))));
+                response.addCookie(new Cookie(OAUTH_SESSION_KEY, Base64.getEncoder().encodeToString(cookieValue.getBytes(StandardCharsets.UTF_8))));
                 response.sendRedirect(request.getContextPath() + "/login?callback="
                         + CoreConfiguration.getConfiguration().applicationUrl() + "/oauth/" + path);
                 return;
@@ -444,7 +391,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
                 return;
             }
         } else {
-            // User has oauth cookie
             if (user != null) {
                 final Cookie cookie = getOAuthSessionCookie(request);
                 if (cookie == null) {
@@ -492,7 +438,8 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     }
 
     private void authorizationPage(HttpServletRequest request, HttpServletResponse response,
-            ExternalApplication clientApplication, String redirectUrl, String state) throws IOException {
+            ExternalApplication clientApplication, String redirectUrl, String state)
+            throws IOException {
         Map<String, Object> ctx = new HashMap<>();
         PortalConfiguration config = PortalConfiguration.getInstance();
         // Add relevant variables
@@ -516,33 +463,21 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     private void redirectToRedirectUrl(HttpServletRequest request, HttpServletResponse response, User user, final Cookie cookie)
             throws IOException {
         String cookieValue = new String(Base64.getDecoder().decode(cookie.getValue()));
+
         String[] values = cookieValue.split("\\|");
+
+
         String clientApplicationId = values[0];
         String redirectUrl = values[1];
         String state = null;
-        String codeChallenge = null;
-        String codeChallengeMethod = null;
-        if (values.length == 3 && !Strings.isNullOrEmpty(values[2])) {
-            state = new String(Base64.getDecoder().decode(values[2]));
-            redirectToRedirectUrl(request, response, user, clientApplicationId, redirectUrl, state);
-        } else if (values.length == 4 && !Strings.isNullOrEmpty(values[2]) && !Strings.isNullOrEmpty(values[3])) {
-            codeChallenge = new String(values[2]);
-            codeChallengeMethod = new String(values[3]);
-            redirectToRedirectUrlPKCE(request, response, user, clientApplicationId, redirectUrl, state, codeChallenge, codeChallengeMethod);
-        } else if (values.length == 5 && !Strings.isNullOrEmpty(values[2]) && !Strings.isNullOrEmpty(values[3])
-                && !Strings.isNullOrEmpty(values[4])) {
-            codeChallenge = new String(values[2]);
-            codeChallengeMethod = new String(values[3]);
-            state = new String(Base64.getDecoder().decode(values[4]));
-            redirectToRedirectUrlPKCE(request, response, user, clientApplicationId, redirectUrl, state, codeChallenge, codeChallengeMethod);
-
-        } else {
-            redirectToRedirectUrl(request, response, user, clientApplicationId, redirectUrl, state);
+        if( values.length>2 && !Strings.isNullOrEmpty(values[2])) {
+             state = new String(Base64.getDecoder().decode(values[2]));
         }
+        redirectToRedirectUrl(request, response, user, clientApplicationId, redirectUrl, state);
     }
 
     private void redirectToRedirectUrl(HttpServletRequest request, HttpServletResponse response, User user, String clientId,
-            String redirectUrl, String state) throws IOException {
+                                       String redirectUrl, String state) throws IOException {
 
         ExternalApplication externalApplication = OAuthUtils.getDomainObject(clientId, ExternalApplication.class).orElse(null);
 
@@ -571,65 +506,8 @@ public class OAuthAuthorizationServlet extends HttpServlet {
 
     }
 
-    private void redirectToRedirectUrlPKCE(HttpServletRequest request, HttpServletResponse response, User user, String clientId,
-            String redirectUrl, String state, String codeChallenge, String codeChallengeMethod) throws IOException {
-
-        ExternalApplication externalApplication = OAuthUtils.getDomainObject(clientId, ExternalApplication.class).orElse(null);
-
-        if (externalApplication == null || externalApplication instanceof ServiceApplication) {
-            sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CLIENT_ID_NOT_FOUND);
-            return;
-        }
-
-        if (!isValidApplication(response, externalApplication)) { // this method sends error response if needed
-            return;
-        }
-
-        if (!externalApplication.matchesUrl(redirectUrl)) {
-            sendOAuthErrorResponse(response, Status.BAD_REQUEST, INVALID_GRANT, CREDENTIALS_OR_REDIRECT_URI_DON_T_MATCH);
-            return;
-        }
-
-        if (!externalApplication.hasApplicationUserAuthorization(user)) {
-            request.setAttribute("application", externalApplication);
-            HttpSession session = request.getSession();
-            session.setAttribute(CODE_CHALLENGE, codeChallenge);
-            authorizationPage(request, response, externalApplication, redirectUrl, state);
-            return;
-        } else {
-            UserPKCEInfo userPKCEInfo = saveCodeChallenge(user, externalApplication, codeChallenge);
-            redirectWithCodePKCE(request, response, user, externalApplication, redirectUrl, state, userPKCEInfo);
-            return;
-        }
-    }
-
-    @Atomic
-    private UserPKCEInfo saveCodeChallenge(User user, ExternalApplication externalApplication, String codeChallenge) {
-        return new UserPKCEInfo(user, externalApplication, codeChallenge);
-    }
-
-    private void redirectWithCodePKCE(HttpServletRequest request, HttpServletResponse response, User user,
-            ExternalApplication clientApplication, String redirectUrl, String state, UserPKCEInfo userPKCEInfo)
-            throws IOException {
-
-        if (!clientApplication.hasCodeSecret()) {
-            clientApplication.generateCodeSecret();
-        }
-        final String code = createAppUserSessionPKCE(clientApplication, user, request, response, userPKCEInfo);
-        UriBuilder builder = UriBuilder.fromUri(redirectUrl);
-        builder.queryParam(CODE, code);
-        if (!Strings.isNullOrEmpty(state)) {
-            builder.queryParam(STATE, state);
-        }
-        response.sendRedirect(builder.toString());
-    }
-
     private void redirectWithCode(HttpServletRequest request, HttpServletResponse response, User user,
-            ExternalApplication clientApplication, String redirectUrl, String state) throws IOException {
-        if (!clientApplication.hasCodeSecret()) {
-            clientApplication.generateCodeSecret();
-        }
-
+                                  ExternalApplication clientApplication, String redirectUrl, String state) throws IOException {
         final String code = createAppUserSession(clientApplication, user, request, response);
         UriBuilder builder = UriBuilder.fromUri(redirectUrl);
         builder.queryParam(CODE, code);
@@ -651,9 +529,6 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         String redirectUrl = request.getParameter(REDIRECT_URI);
         String state = request.getParameter(STATE);
 
-        HttpSession session = request.getSession();
-        String codeChallenge = (String) session.getAttribute(CODE_CHALLENGE);
-
         ExternalApplication externalApplication = (ExternalApplication) OAuthUtils.getDomainObject(clientId).orElse(null);
 
         if (externalApplication == null || externalApplication instanceof ServiceApplication) {
@@ -666,12 +541,7 @@ public class OAuthAuthorizationServlet extends HttpServlet {
         }
 
         if (externalApplication.matchesUrl(redirectUrl)) {
-            if (!Strings.isNullOrEmpty(codeChallenge)) {
-                UserPKCEInfo userPKCEInfo = saveCodeChallenge(user, externalApplication, codeChallenge);
-                redirectWithCodePKCE(request, response, user, externalApplication, redirectUrl, state, userPKCEInfo);
-            } else {
-                redirectWithCode(request, response, user, externalApplication, redirectUrl, state);
-            }
+            redirectWithCode(request, response, user, externalApplication,redirectUrl, state);
             return;
         }
 
@@ -693,25 +563,12 @@ public class OAuthAuthorizationServlet extends HttpServlet {
     }
 
     @Atomic
-    private static String createAppUserSessionPKCE(ExternalApplication application, User user, HttpServletRequest request,
-            HttpServletResponse response, UserPKCEInfo userPKCEInfo) {
-        String code = OAuthUtils.generateCode(user.getUsername(), application.getCodeSecret());
-        ApplicationUserAuthorization appUserAuthorization = application.getApplicationUserAuthorization(user)
-                .orElseGet(() -> new ApplicationUserAuthorization(user, application));
-        ApplicationUserSession appUserSession = new ApplicationUserSession();
-        appUserSession.setCode(code);
-        appUserSession.setDeviceId(getDeviceId(request));
-        appUserSession.setApplicationUserAuthorization(appUserAuthorization);
-        appUserSession.setUserPKCEInfoAuthorizationSession(userPKCEInfo);
-        return code;
-    }
-
-    @Atomic
     private static String createAppUserSession(ExternalApplication application, User user, HttpServletRequest request,
             HttpServletResponse response) {
-        String code = OAuthUtils.generateCode(user.getUsername(), application.getCodeSecret());
-        ApplicationUserAuthorization appUserAuthorization = application.getApplicationUserAuthorization(user)
-                .orElseGet(() -> new ApplicationUserAuthorization(user, application));
+        String code = OAuthUtils.generateCode();
+        ApplicationUserAuthorization appUserAuthorization =
+                application.getApplicationUserAuthorization(user).orElseGet(
+                        () -> new ApplicationUserAuthorization(user, application));
         ApplicationUserSession appUserSession = new ApplicationUserSession();
         appUserSession.setCode(code);
         appUserSession.setDeviceId(getDeviceId(request));
