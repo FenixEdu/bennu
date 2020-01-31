@@ -123,24 +123,22 @@ public class ExternalApplication extends ExternalApplication_Base {
     }
 
     public ApplicationUserSession getApplicationUserSession(String code) {
-        String codeDecoded = code;
         try {
-            codeDecoded = URLDecoder.decode(code, StandardCharsets.UTF_8.name());
-            String userId = OAuthUtils.getUserIdFromCode(codeDecoded, getCodeSecret());
+            String userId = OAuthUtils.getUserIdFromCode(code, getCodeSecret());
             User user = User.findByUsername(userId);
 
             Optional<ApplicationUserAuthorization> authOptional = user.getApplicationUserAuthorizationSet().stream().filter(s -> s.getApplication().getOid().equals(getOid())).findFirst();
             if (authOptional.isPresent()) {
-                final String finalCode = codeDecoded;
+                final String finalCode = code;
                 ApplicationUserAuthorization auth = authOptional.get();
                 Optional<ApplicationUserSession> session = auth.getSessionSet().stream().filter(s -> s.matchesCode(finalCode)).findFirst();
                 if (session.isPresent()) {
                     return session.get();
                 }
             }
-        } catch (UnsupportedEncodingException | RuntimeException e) {
+        } catch (RuntimeException e) {
             for (ApplicationUserSession applicationUserSession : getApplicationUserSessionSet()) {
-                if (applicationUserSession.matchesCode(codeDecoded)) {
+                if (applicationUserSession.matchesCode(code)) {
                     return applicationUserSession;
                 }
             }
