@@ -129,9 +129,9 @@ public class OAuthUtils {
         String json = gson.toJson(codeObject);
         String code = null;
         try {
-            code = encrypt(json, key);
+            code = Base64.getUrlEncoder().withoutPadding().encodeToString(encrypt(json, key).getBytes());
         } catch (Exception err) {
-            new RuntimeException("Error generating code");
+            throw new RuntimeException("Error generating code");
         }
         return code;
     }
@@ -141,9 +141,10 @@ public class OAuthUtils {
         String code = null;
 
         try {
-            code = decrypt(codeCiphered, key);
+            String json = new String(Base64.getUrlDecoder().decode(codeCiphered));
+            code = decrypt(json, key);
         } catch (Exception err) {
-            new RuntimeException("Error extracting user id");
+            throw new RuntimeException("Error extracting user id");
         }
         Code codeObject = gson.fromJson(code, Code.class);
         return codeObject.getUserId();
