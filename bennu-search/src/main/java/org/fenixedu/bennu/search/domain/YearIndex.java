@@ -7,6 +7,7 @@ public class YearIndex extends YearIndex_Base implements IntIndex {
     public YearIndex(final int year) {
         super();
         setYear(year);
+        setIndexSystem(DomainIndexSystem.getInstance());
     }
 
     @Override
