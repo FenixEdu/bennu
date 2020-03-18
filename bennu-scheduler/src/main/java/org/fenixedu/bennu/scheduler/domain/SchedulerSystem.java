@@ -14,7 +14,10 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.io.domain.FileStorage;
@@ -42,9 +45,11 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     public static LinkedBlockingQueue<TaskRunner> queue;
     public static Set<TaskRunner> runningTasks;
     public static Set<TaskSchedule> scheduledTasks;
-    private static final List<Thread> activeConsumers = new ArrayList<>();
     private static Set<Timer> timers;
     private static DateTime latestOwnedLease;
+
+    private static ExecutionLogRepository repository = null;
+    private static ThreadPoolExecutor taskPool;
 
     private static transient Integer leaseTime;
     private static transient Integer queueThreadsNumber;
@@ -188,7 +193,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     /***
      * This method starts the scheduler if lease is expired.
-     * */
+     */
     public static void init() {
         Timer waitingForLeaseTimer = new Timer("waitingForLeaseTimer", true);
         waitingForLeaseTimer.scheduleAtFixedRate(new TimerTask() {
@@ -302,12 +307,26 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     private static void spawnConsumers() {
-        for (int i = 1; i <= getQueueThreadsNumber(); i++) {
-            LOG.debug("Launching queue consumer {}", i);
-            Thread thread = new Thread(new ProcessQueue());
-            thread.setName("SchedulerConsumer-" + i);
-            thread.start();
-            activeConsumers.add(thread);
+        int threadsNumber = getQueueThreadsNumber();
+        ThreadFactory taskThreadFactory = new ThreadFactory() {
+
+            private final ThreadFactory factory = Executors.defaultThreadFactory();
+            private int counter = 0;
+
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread taskThread = factory.newThread(r);
+                counter++;
+                taskThread.setName("SchedulerConsumer-" + counter);
+                return taskThread;
+            }
+        };
+
+        taskPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadsNumber, taskThreadFactory);
+
+        for (int i = 0; i < threadsNumber; i++) {
+            LOG.debug("Launching queue consumer {}", i + 1);
+            taskPool.execute(new ProcessQueue());
         }
     }
 
@@ -429,10 +448,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         if (isActive()) {
             LOG.info("stopping scheduler");
             scheduler.stop();
-            for (final Thread consumer : activeConsumers) {
-                LOG.debug("interrupted consumer thread {}", consumer.getName());
-                consumer.interrupt();
-            }
+            taskPool.shutdown();
             if (resetLease) {
                 resetLease();
             }
@@ -484,8 +500,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
             }
         }
     }
-
-    private static ExecutionLogRepository repository = null;
 
     /**
      * Configures a new log repository to be used by the scheduler system.
