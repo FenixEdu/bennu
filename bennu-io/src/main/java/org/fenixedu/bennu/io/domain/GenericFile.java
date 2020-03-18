@@ -5,12 +5,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.activation.MimetypesFileTypeMap;
-
-import com.google.common.io.CountingInputStream;
 import org.apache.tika.Tika;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.commons.StringNormalizer;
@@ -18,14 +16,15 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixframework.Atomic;
-
 import com.google.common.base.Strings;
 import com.google.common.hash.Funnels;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.CountingInputStream;
+
+import pt.ist.fenixframework.Atomic;
 
 /**
  * 
@@ -76,7 +75,7 @@ public abstract class GenericFile extends GenericFile_Base {
         setFilename(filename);
         setContent(file, filename);
     }
-    
+
     /**
      * Initializes this file with the contents of the provided {@link InputStream}.
      *
@@ -97,8 +96,7 @@ public abstract class GenericFile extends GenericFile_Base {
         setFilename(filename);
         setContent(stream, filename);
     }
-    
-    
+
     public abstract boolean isAccessible(User user);
 
     public boolean isPrivate() {
@@ -211,10 +209,9 @@ public abstract class GenericFile extends GenericFile_Base {
         setContentKey(uniqueIdentification);
         setContentType(detectContentType(file, filename));
     }
-    
-    
+
     private void setContent(InputStream stream, String filename) throws IOException {
-        
+
         final FileStorage fileStorage = getFileStorage();
         setContentType(tika.detect(stream, filename));
         CountingInputStream countingStream = new CountingInputStream(stream);
@@ -224,11 +221,10 @@ public abstract class GenericFile extends GenericFile_Base {
         if (Strings.isNullOrEmpty(uniqueIdentification)) {
             throw new RuntimeException();
         }
-        
+
         setContentKey(uniqueIdentification);
-        
+
     }
-    
 
     private void setContent(byte[] content) {
         long size = (content == null) ? 0 : content.length;
@@ -293,9 +289,15 @@ public abstract class GenericFile extends GenericFile_Base {
      *         The detected file type, from the given file name
      * @deprecated content detection is done automatically, no need for this method
      */
+
     @Deprecated
     protected String guessContentType(final String filename) {
-        return new MimetypesFileTypeMap().getContentType(filename);
+        // Removed code as it depended on javax.
+        // The method is already deprecated and not in use.
+        // So we foresee that the impact is negligible
+        //
+        // 18 Mar 2020 - Diogo Sousa
+        return URLConnection.guessContentTypeFromName(filename);
     }
 
     /**
