@@ -1,204 +1,104 @@
-(function(){
+(function () {
 
-    function handleFiles(files,handler){
-      handler.files(files, function(urls){
-        var arr = [];
-        for (var i = 0; i < urls.length; i++) {
-            var o = urls[i];
-            arr.push(Bennu.htmlEditor.components.callback.image.renderer(o));
+    function editor(element, handler) {
+
+        element = $(element);
+
+        Bennu.htmlEditor.components.setTitle("Images");
+        Bennu.htmlEditor.components.setSubtitle("Add a picture");
+
+        let editor = '<div class="form-group">' +
+            '<label class="col-sm-2 control-label">Link</label>' +
+            '<div class="col-sm-10">' +
+            '<input type="url" class="form-control" title="Insert the picture link here" id="link" placeholder="https://">' +
+            '<p class="help-block">Use the full URL to the picture, including HTTP(S)</p>' +
+            '</div></div>' +
+            '<p></p>' +
+            '<div class="form-group">' +
+            '<label class="col-sm-2 control-label">Scale</label>' +
+            '<div class="col-sm-2">' +
+            '<input type="number" class="form-control" id="scale" placeholder="Scale" value="50" min="0" max="100">' +
+            '<p></p>' +
+            '</div></div>' +
+            '<div class="form-group">' +
+            '<label class="col-sm-2 control-label">Alt-text</label>' +
+            '<div class="col-sm-4">' +
+            '<input type="text" class="form-control" id="alt" placeholder="Image Description" value="">' +
+            '<p></p>' +
+            '</div></div>';
+
+        editor = $('<div class="form-horizontal">' + editor + '</div>');
+
+        function getMeta(url) {
+            let img = new Image();
+            let w = -1, h = -1;
+            img.addEventListener("load", function () {
+                w = this.naturalWidth;
+                h = this.naturalHeight;
+            });
+            img.src = url;
+            return [w, h];
         }
 
-        if (arr.length == 1){
-          Bennu.htmlEditor.components.callback.image.renderer(urls[0],function(e){
-            editor(e,handler,true);
-          });
-        }else{
-          handler.text(arr);
-          Bennu.htmlEditor.components.hideModal();
-        }
-      });
-    }
+        let s = $("#scale", editor);
+        let u = $("#link", editor);
+        let a = $("#alt", editor);
 
-    function uploader(element, handler){
-      Bennu.htmlEditor.components.setTitle("Images");
-      Bennu.htmlEditor.components.setSubtitle("Add a picture");
+        Bennu.htmlEditor.components.setBody(editor);
+        Bennu.htmlEditor.components.showPrimaryButton();
+        Bennu.htmlEditor.components.setPrimaryButton("Add");
+        Bennu.htmlEditor.components.clickPrimaryButton(function () {
 
-      var uploader = '<div><style>.dragover{'+
-        "border: 1px dashed #39f;"+
-        "color: #39f;"+
-        "transition: all 0.15s ease-in-out;"+
-      '}</style>'+
-      '<div class="drop-box">'+
-        '<p><span>Drag and Drop files</span>Upload files to this directory</p>'+
-      '</div>' +
+            handler.restore();
 
-      '<p class="help-block">Or just select a file</p>'+
+            let scale = parseInt(s.val()) || 50;
+            let url = u.val() || null;
+            let values = getMeta(url);
+            console.log(values)
+            let alt = a.val() || "";
 
-      '<div class="form-group">'+
-        '<div class="col-sm-12">'+
-        '<input type="file" class="" id="file" placeholder="file" multiple\\>'+
-      '</div>'+
-      '</div></div>';
+            if (url) {
+                if (Bennu.validation.isUrl(url)) {
+                    if ($(element).parent().is("a")) {
+                        $(element).unwrap();
+                    }
+                    handler.text(`<img style="max-width:${scale}vw" alt="${alt}" src="${url}"/>`);
 
-      uploader = $('<div class="form-horizontal">' + uploader + '</div>');
-
-      Bennu.htmlEditor.components.setBody(uploader);
-      Bennu.htmlEditor.components.showPrimaryButton();
-      Bennu.htmlEditor.components.setPrimaryButton("Make");
-      Bennu.htmlEditor.components.hidePrimaryButton();
-
-
-      // Drag and Drop box
-      $(".drop-box", uploader).on("dragenter dragover", function(evt){
-        evt.stopPropagation();
-        evt.preventDefault();
-        $(".drop-box", uploader).addClass("dragover");
-      });
-      $(".drop-box", uploader).on("dragexit dragleave", function(evt){
-        evt.stopPropagation();
-        evt.preventDefault();
-        $(".drop-box", uploader).removeClass("dragover");
-      });
-
-      $(".drop-box", uploader).on("drop", function(evt){
-        $(".drop-box", uploader).removeClass("dragover");
-
-        var dataTransfer = evt.originalEvent.dataTransfer;
-        evt.stopPropagation();
-        evt.preventDefault();
-        if (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {
-          handleFiles(dataTransfer.files,handler);
-        }
-      });
-
-      // Input file box
-      $("#file").on("click",function(){
-        this.value = null;
-      })
-
-      $("#file").on("change",function(){
-        handleFiles(this.files,handler);
-      })
-    }
-
-    function editor(element, handler,isnew){
-      element = $(element);
-      Bennu.htmlEditor.components.setTitle("Images");
-      Bennu.htmlEditor.components.setSubtitle((isnew?"Add":"Edit") + " a picture");
-
-      var editor = '<div class="form-group">'+
-      '<h4>Preview</h4>'+
-      "<div style='text-align:center'>"+
-        "<img class='preview' src='" + element.data("source" )+ "' style='max-width:100%'/>"+
-        "</div>"+
-      '</div>'+
-
-      '<div class="form-group">'+
-          '<label for="inputEmail3" class="col-sm-2 control-label">Width</label>'+
-          '<div class="col-sm-4">'+
-              '<input type="email" class="form-control" id="width" placeholder="Width" \\>'+
-              '<p class="help-block"></p>'+
-          '</div>'+
-          '<label for="inputEmail3" class="col-sm-2 control-label">Height</label>'+
-              '<div class="col-sm-4">'+
-              '<input type="email" class="form-control" id="height" placeholder="Height" \\>'+
-              '<p class="help-block"></p>'+
-          '</div>'+
-      '</div>'+
-      '<div class="form-group">'+
-	      '<label for="inputEmail3" class="col-sm-2 control-label">Link</label>'+
-	      '<div class="col-sm-10">'+
-	          '<input type="email" class="form-control" id="link" placeholder="Link" \\>'+
-	          '<p class="help-block">Use the full URL, including HTTP(S)</p>'+
-	      '</div>'+
-      '</div>';
-
-      editor = $('<div class="form-horizontal">' + editor + '</div>');
-      var h = $("#height", editor)
-      var w = $("#width", editor);
-      var u = $("#link", editor);
-
-      h.val(element.data("height"));
-      w.val(element.data("width"));
-      if ($(element).parent().is("a"))
-          u.val($(element).parent().attr("href"));
-
-      Bennu.htmlEditor.components.setBody(editor);
-      Bennu.htmlEditor.components.showPrimaryButton();
-      Bennu.htmlEditor.components.setPrimaryButton(isnew?"Add":"Edit");
-      Bennu.htmlEditor.components.clickPrimaryButton(function(){
-        handler.restore();
-
-        var height = parseInt(h.val()) || null;
-        var width = parseInt(w.val()) || null;
-        var url = u.val() || null;
-
-
-        element.data("height",height);
-        element.attr("data-height", height);
-
-        element.data("width",width);
-        element.attr("data-width", width);
-
-        if (url) {
-            if (Bennu.validation.isUrl(url)) {
-                if ($(element).parent().is("a")) 
-                    $(element).unwrap();
-                
-                if (handler.element === undefined) {
-                    handler.text($(element).find('img').addBack('img').wrap("<a bennu-component='link' href='" + url + "' target='_blank'><a/>").parent());
+                    Bennu.htmlEditor.components.hideModal();
+                } else {
+                    Bennu.validation.addError($("#link", editor).closest(".form-group"));
                 }
-                else {
-                    handler.text($(element).wrap("<a bennu-component='link' href='" + url + "' target='_blank'><a/>"));
-                }
-                    
-                Bennu.htmlEditor.components.hideModal();
             }
-            else {
-                Bennu.validation.addError($("#link", editor).closest(".form-group"));
-            }     
-        }
-        else {
-            if (!isnew && $(element).parent().is("a"))
-                $(element).unwrap();
-
-            handler.text(element);
-            Bennu.htmlEditor.components.hideModal();
-        }
-      });
+        });
     }
 
-    Bennu.htmlEditor.components.callback.image = function(element,handler){
-      if (element){
+    Bennu.htmlEditor.components.callback.image = function (element, handler) {
         editor(element, handler);
-      }else{
-        uploader(element, handler);
-      }
     };
 
-    Bennu.htmlEditor.components.callback.image.renderer = function(url,cb){
-      var img = new Image();
+    Bennu.htmlEditor.components.callback.image.renderer = function (url, cb) {
+        let img = new Image();
 
-      img.onload = function() {
-        var e = $(img);
-        e.attr("data-height", this.height);
-        e.attr("data-width", this.width);
-        cb && cb(img);
-      };
+        img.onload = function () {
+            let e = $(img);
+            e.attr("data-height", this.height);
+            e.attr("data-width", this.width);
+            cb && cb(img);
+        };
 
-      img.setAttribute("bennu-component", "image");
-      img.setAttribute("component-resizable", "");
-      img.setAttribute("data-source", url);
-      img.src = url;
+        img.setAttribute("bennu-component", "image");
+        img.setAttribute("component-resizable", "");
+        img.setAttribute("data-source", url);
+        img.src = url;
 
-      return $(img);
-    }
+        return $(img);
+    };
 
-    function preview(element){
-      element.css({
-          height:parseInt(element.data("height")),
-          width:parseInt(element.data("width"))
-      });
+    function preview(element) {
+        element.css({
+            height: parseInt(element.data("height")),
+            width: parseInt(element.data("width"))
+        });
     }
 
     Bennu.htmlEditor.components.preview.image = preview

@@ -1,16 +1,16 @@
 /*
  * htmlEditor.js
- * 
+ *
  * Copyright (c) 2014, Instituto Superior Técnico. All rights reserved.
- * 
+ *
  * This file is part of Bennu Toolkit.
- * 
+ *
  * Bennu Toolkit is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * Bennu Toolkit is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with Bennu Toolkit. If not, see
  * <http://www.gnu.org/licenses/>.
  */
@@ -19,7 +19,7 @@
     /** @const */ var ALLOW_VOICE = false;
     /** @const */ var ALLOW_FULLSCREEN = true;
 
-    
+
     Bennu.htmlEditor = Bennu.htmlEditor || {};
     Bennu.htmlEditor.attr = "bennu-html-editor";
     Bennu.htmlEditor.colors = [
@@ -42,7 +42,7 @@
             return document.selection.createRange();
         }
         return null;
-    }
+    };
 
     Bennu.htmlEditor.components = Bennu.htmlEditor.components || {};
 
@@ -52,23 +52,25 @@
                 if(Bennu.htmlEditor.components.list[i].key === k){
                     return Bennu.htmlEditor.components.list[i];
                 }
-            };
+            }
         }
-    }
+    };
 
     Bennu.htmlEditor.components.init = function(editor){
         Bennu.htmlEditor.components.list = [];
         Bennu.htmlEditor.components.provided = {};
+        var order = 0;
         $.get(Bennu.contextPath + "/api/bennu-toolkit/components",function(json){
             for (var i = 0; i < json.length; i++) {
                 var component = json[i];
 
                 if(!component.order){
-                    component.order = 0;
+                    component.order = order;
+                    order++;
                 }
 
-                Bennu.htmlEditor.components.list.push(component);
-            };
+            Bennu.htmlEditor.components.list.push(component);
+            }
             Bennu.htmlEditor.components.reflow(editor);
         });
 
@@ -94,18 +96,18 @@
                         '</div>'+
                     '</div><!-- /.modal-content -->'+
                 '</div><!-- /.modal-dialog -->'+
-            '</div><!-- /.modal -->'
+            '</div><!-- /.modal -->';
             $(document.body).append(template);
         }
-    }
+    };
 
     Bennu.htmlEditor.components.showModal = function(editor){
-        $("#bennu-html-editor-component-modal").data("editor",editor)
+        $("#bennu-html-editor-component-modal").data("editor",editor);
         $("#bennu-html-editor-component-modal").modal("show")
     };
 
     Bennu.htmlEditor.components.hideModal = function(){
-        $("#bennu-html-editor-component-modal").modal("hide")
+        $("#bennu-html-editor-component-modal").modal("hide");
         Bennu.htmlEditor.components.reflow($("#bennu-html-editor-component-modal").data("editor"));
         $("#bennu-html-editor-component-modal").data("editor",null);
     };
@@ -136,7 +138,7 @@
 
     Bennu.htmlEditor.components.clickPrimaryButton = function(fn){
         $("#bennu-html-editor-component-modal .modal-footer button.btn-primary").off("click.components").on("click.components",fn);
-    }
+    };
 
     Bennu.htmlEditor.components.callback = {};
     Bennu.htmlEditor.components.preview = {};
@@ -187,9 +189,9 @@
                         if (this.selection && $(this.selection.commonAncestorContainer).closest(".bennu-html-editor-editor")[0] == this.editor[0]){
                           this.selection.deleteContents();
                         }else{
-                          this.editor.focus()
+                          this.editor.focus();
                           this.selection = document.createRange();
-                          this.selection.setStart(this.editor[0],0)
+                          this.selection.setStart(this.editor[0],0);
                           this.selection.setEnd(this.editor[0],0)
                         }
 
@@ -209,7 +211,7 @@
                         sel.removeAllRanges();
 
                         // then select
-                        var selected = false
+                        var selected = false;
                         $.map(jq,function(e){
                           var r = document.createRange();
                           r.selectNode(e[0]);
@@ -229,28 +231,48 @@
                 Bennu.htmlEditor.restoreSelection(this.selection);
             }
         }
-    }
+    };
 
-    Bennu.htmlEditor.components.firstStep = function(editor){
+    Bennu.htmlEditor.components.firstStep = function(editor,onlyMedia){
         var handler = Bennu.htmlEditor.components.mkHandler(editor);
         Bennu.htmlEditor.components.clearModal();
-        Bennu.htmlEditor.components.setTitle("Add New Component");
-        Bennu.htmlEditor.components.setSubtitle("Choose something to add to your content");
+        Bennu.htmlEditor.components.setTitle(onlyMedia? "Add New Media" : "Add New Component");
+        Bennu.htmlEditor.components.setSubtitle(onlyMedia? "Choose a media source" : "Choose something to add to your content");
 
         var output = "";
         output += '<div class="panel panel-default">'+
         '<ul class="list-group">';
 
+
         for (var i = 0; i < Bennu.htmlEditor.components.list.length; i++) {
-            var c = Bennu.htmlEditor.components.list[i]
+            var c = Bennu.htmlEditor.components.list[i];
+
+            // This is to limit the components offered only to YouTube, which is the only
+            // video service we are currently supporting
+
+            // TODO: improve this code
+            if(onlyMedia){
+                if(c.key !== "youtube"){
+                    continue;
+                } else {
+                    output += '<li class="list-group-item">' +
+                        '<h4><a data-type="' + c.key + '" href="#">' + c.name + '</a></h4>'+
+                        '<p>' + c.description + '</p>'+
+                        '</li>';
+                    break;
+                }
+            } else {
+                if(c.key === "youtube"){
+                    continue;
+                }
+            }
             output += '<li class="list-group-item">' +
             '<h4><a data-type="' + c.key + '" href="#">' + c.name + '</a></h4>'+
             '<p>' + c.description + '</p>'+
             '</li>'
-        };
+        }
 
-        output += '</ul>'+
-        '</div>';
+        output += '</ul></div>';
 
         output = $(output);
 
@@ -288,7 +310,7 @@
                 Bennu.htmlEditor.components.callback[c.key](element,handler);
             });
         }
-    }
+    };
 
     Bennu.htmlEditor.components.reflow = function(editor){
         $("[bennu-component]",editor)
@@ -297,7 +319,7 @@
             var context = e.data("context");
             if (context) {
                 context.destroy();
-            };
+            }
         }).on("dblclick.bennu-component", function(e){
             e=$(e.target);
             e=e.closest("[bennu-component]");
@@ -305,7 +327,7 @@
             var handler = Bennu.htmlEditor.components.mkHandler(editor,e);
             Bennu.htmlEditor.components.showEditorFor(e.attr("bennu-component"),e, handler);
         }).each(function(i,element){
-            element = $(element)
+            element = $(element);
             var key = element.attr("bennu-component");
 
             var c = Bennu.htmlEditor.components.get(key);
@@ -327,7 +349,7 @@
                       // Here we use it to stop the event if the user clicks a span
                       this.getMenu().find("ul").empty();
                       e.preventDefault();
-                      var menu = Bennu.htmlEditor.components.menu[key]
+                      var menu = Bennu.htmlEditor.components.menu[key];
                       var that = this;
                       menu && menu(element, {
                         add:function(el){
@@ -340,7 +362,7 @@
                             that.closemenu(e);
                         }
                       });
-                      var edit = $("<li><a class='pointer' href='#'><i class='glyphicon glyphicon-pencil'></i> Edit</a></li>")
+                      var edit = $("<li><a class='pointer' href='#'><i class='glyphicon glyphicon-pencil'></i> Edit</a></li>");
                       edit.on("click",function(){
                         that.closemenu(e);
                         Bennu.htmlEditor.components.showModal(editor);
@@ -349,7 +371,7 @@
                       });
 
                       that.getMenu().find("ul").append(edit);
-                      var del = $("<li><a class='pointer' href='#'><i class='glyphicon glyphicon-trash'></i> Delete</a></li>")
+                      var del = $("<li><a class='pointer' href='#'><i class='glyphicon glyphicon-trash'></i> Delete</a></li>");
                       del.on("click",function(){
                         that.closemenu(e);
                         element.remove()
@@ -360,7 +382,7 @@
                 });
             });
         });
-        var components = $("[bennu-component]",editor)
+        var components = $("[bennu-component]",editor);
         if(components.length > 0){
             components.each(function(i,e){
                 e=$(e);
@@ -389,20 +411,20 @@
                 range.select();
             }
         }
-    }
+    };
 
     function generateColors(type){
         var result="";
         for (var i = 0; i < Bennu.htmlEditor.colors.length; i++) {
-            var l = Bennu.htmlEditor.colors[i]
-            var line = '<div class="note-color-row">'
+            var l = Bennu.htmlEditor.colors[i];
+            var line = '<div class="note-color-row">';
             for (var j = 0; j < l.length; j++) {
-                var color = l[j]
+                var color = l[j];
                 line += '<button type="button" class="note-color-btn" style="background-color:' + color + ';" data-event="' + type + '" data-value="' + color + '" title="" data-toggle="button" tabindex="-1" data-original-title="' + color + '"></button>'
-            };
-            line += '</div>'
+            }
+            line += '</div>';
             result += line;
-        };
+        }
         return result;
     }
 
@@ -419,7 +441,7 @@
                 $(".fullscreen").removeClass("fullscreen");
                 $(".fullscreen-button", a).removeClass("btn-primary");
                 $(".bennu-html-editor-tools", a).off("mouseover mouseout");
-                $(".switch-to-code",a).parent().show()
+                $(".switch-to-code",a).parent().show();
                 a.removeClass("visible");
             }else{
                 $(".switch-to-code",a).parent().hide()
@@ -440,14 +462,14 @@
             h("show");
         }).on("mouseout", function () {
             h("autohide");
-        })
+        });
         h("show");
         i = setTimeout(function () {
             a.removeClass('visible')
         }, 2e3);
 
         $(".bennu-html-editor-editor", a).focus();
-    }
+    };
 
     var two_line = /\n\n/g;
     var one_line = /\n/g;
@@ -487,7 +509,9 @@
                     '</ul>'+
                 '</div>'+
             '</div>');
+
         var toolbarReqs = "size,style,lists,align,colors,links,table,image,components,undo,fullscreen,source";
+
         if (Bennu.utils.hasAttr(e,"toolbar")) {
             toolbarReqs = e.attr("toolbar");
         }
@@ -552,8 +576,14 @@
                     '<button type="button" class="btn table-btn btn-default btn-sm btn-small dropdown-toggle" data-original-title="Table"><i class="fa fa-table icon-table"></i></button>'+
                     '</div>');
             } else if (c === "components"){
+                // Adding Media as a piggy back
+                $(".btn-toolbar", dom).append('<div class="btn-group">'+
+                    '<button type="button" class="btn btn-default btn-sm btn-small bennu-html-editor-media-button" title="Insert Media" tabindex="-1" data-original-title="Insert Media">'+
+                    '<i class="fa fa-film" ></i>'+
+                    '</button>'+
+                    '</div>');
                  $(".btn-toolbar", dom).append('<div class="btn-group">'+
-                    '<button type="button" class="btn btn-default btn-sm btn-small bennu-html-editor-components-button" title="" tabindex="-1" data-original-title="Components">'+
+                    '<button type="button" class="btn btn-default btn-sm btn-small bennu-html-editor-components-button" title="Add Components" tabindex="-1" data-original-title="Add Components">'+
                         '<i class="fa fa-puzzle-piece" ></i>'+
                     '</button>'+
                     '</div>');
@@ -575,8 +605,8 @@
                                 generateColors("backColor")+
                             '</div>'+
                         '</div>'+
-                        
-                        
+
+
                         '<div class="btn-group">'+
                             '<div class="note-palette-title">Foreground Color</div>'+
                             '<a href="#" class="note-color-reset" data-event="foreColor" data-value="inherit" title="Reset">Reset to default</a>'+
@@ -590,7 +620,7 @@
                     '</ul></div>');
             } else if (c === "image") {
                 $(".btn-toolbar", dom).append('<div class="btn-group">' +
-                        '<a class="pictureBtn btn btn-sm btn-default" title="" data-original-title="Insert picture (or just drag &amp; drop)"><span class="glyphicon glyphicon-picture"></span></a>' +
+                        '<a class="pictureBtn btn btn-sm btn-default" title="" data-original-title="Insert picture"><span class="glyphicon glyphicon-picture"></span></a>' +
                         '</div>');
             } else if (c === "undo") {
                 $(".btn-toolbar", dom).append('<div class="btn-group">' +
@@ -633,7 +663,7 @@
             });
 
         dom.data("related", e);
-        e.data("input", dom)
+        e.data("input", dom);
 
         function showErrorAlert(reason, detail) {
             var msg = '';
@@ -654,7 +684,7 @@
           elements: [
             'a', 'b', 'blockquote', 'br', 'caption', 'cite', 'code', 'col',
             'colgroup', 'dd', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-            'i', 'img', 'li', 'ol', 'p', 'pre', 'q', 'small', 'strike', 'strong',
+            'i', 'iframe', 'img', 'li', 'ol', 'p', 'pre', 'q', 'small', 'strike', 'strong',
             'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'u',
             'ul'],
 
@@ -663,13 +693,13 @@
             'blockquote': ['cite'],
             'col'       : ['span', 'width'],
             'colgroup'  : ['span', 'width'],
+            'iframe'    : ['height', 'width', 'frameborder'],
             'img'       : ['align', 'alt', 'height', 'src', 'title', 'width'],
             'ol'        : ['start', 'type'],
             'q'         : ['cite'],
             'table'     : ['summary', 'width'],
             'td'        : ['abbr', 'axis', 'colspan', 'rowspan', 'width'],
-            'th'        : ['abbr', 'axis', 'colspan', 'rowspan', 'scope',
-                             'width'],
+            'th'        : ['abbr', 'axis', 'colspan', 'rowspan', 'scope', 'width'],
             'ul'        : ['type'],
             '__ALL__'   : ["bennu-component", "data-height","data-x","data-y", "data-width", "data-source", "data-metadata",]
           },
@@ -712,7 +742,7 @@
             } else {
                 return $(".bennu-html-editor-editor", dom).html(arguments[0]);
             }
-        }
+        };
 
         if (Bennu.utils.hasAttr(e,"bennu-localized-string")) {
             var menu = $('<div class="btn-group bennu-localized-string-group">' +
@@ -736,20 +766,29 @@
         }else{
             var val = e.val();
             if (val){
-                $(".bennu-html-editor-editor", dom).html(e.val());    
+                $(".bennu-html-editor-editor", dom).html(e.val());
             }else{
-                $(".bennu-html-editor-editor", dom).html("");    
+                $(".bennu-html-editor-editor", dom).html("");
             }
 
         }
 
-            Bennu.htmlEditor.components.init($(".bennu-html-editor-editor",dom));
+        if(!Bennu.htmlEditor.components.list) { // If the list already exists, init has already been called
+            Bennu.htmlEditor.components.init($(".bennu-html-editor-editor", dom));
+        }
 
         if ($(".bennu-html-editor-components-button", dom).length){
             var editor = $(".bennu-html-editor-editor",dom);
             $(".bennu-html-editor-components-button", dom).on("click",function(){
-                Bennu.htmlEditor.components.firstStep(editor);
+                Bennu.htmlEditor.components.firstStep(editor,false);
             });
+        }
+
+        if ($(".bennu-html-editor-media-button", dom).length){
+                var editor = $(".bennu-html-editor-editor",dom);
+                $(".bennu-html-editor-media-button", dom).on("click",function(){
+                    Bennu.htmlEditor.components.firstStep(editor,true);
+                });
         }
 
         $(".bennu-html-editor-editor", dom).on('change', function () {
@@ -776,7 +815,7 @@
                 if (r !== t) {
                     dom.data("related").val($(".bennu-html-editor-editor", dom).html());
                     dom.data("related").trigger("change");
-                };
+                }
             }
         });
 
@@ -820,27 +859,10 @@
 
         };
 
-
-        dom.on('dragenter dragover', false)
-            .on('drop', function (evt) {
-                var editor = $(".bennu-html-editor-editor", dom);
-                editor.focus();
-                var handler = Bennu.htmlEditor.components.mkHandler(editor);
-
-                editor.data("handlerTMP",handler);
-
-                var dataTransfer = evt.originalEvent.dataTransfer;
-                evt.stopPropagation();
-                evt.preventDefault();
-                if (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {
-                    var z = e.data("fileHandler")
-                    z && z(dataTransfer.files, attachPicture);
-                }
-            });
         $('.bennu-html-editor-editor', dom).wysiwyg({ dragAndDropImages: false, fileUploadError: showErrorAlert});
 
-        
-        
+
+
         e.after(dom);
         Bennu.validation.attachToForm(dom);
         Bennu.utils.replaceRequired(e);
@@ -850,16 +872,16 @@
             var handler = Bennu.htmlEditor.components.mkHandler(editor);
             Bennu.htmlEditor.components.showModal(editor);
             Bennu.htmlEditor.components.showEditorFor("table",null,handler);
-        })
+        });
 
         $(".link-to-add-btn", dom).on("click",function(){
 	    	var selection = window.getSelection();
 	    	if (!selection.isCollapsed && selection.anchorNode.textContent == "") {
 	    		var anchor = $(selection.anchorNode);
-	    		
+
 	    		if (anchor.is('img')) {
 	    			anchor.dblclick();
-	    		}	
+	    		}
 	    		else if (anchor.children(0).is('img')) {
 	    			anchor.children(0).dblclick();
 	    		}
@@ -881,7 +903,7 @@
         		}
                 var data = JSON.parse(value);
                 var locale = $(".bennu-localized-string-language", dom).data("locale");
-                var tag = locale.tag
+                var tag = locale.tag;
 
                 if (!(tag in data)){
                     var singleTag = locale.tag.split("-")[0].toLowerCase();
@@ -897,7 +919,7 @@
                     $(".bennu-html-editor-editor", dom)[0].innerHTML = t;
                 }
             } else {
-                var t = $(e).val()
+                var t = $(e).val();
                 var r = $(".bennu-html-editor-editor", dom).html();
                 if (r !== t){
                     $(".bennu-html-editor-editor", dom)[0].innerHTML = t;
@@ -908,7 +930,7 @@
 
         if (!e.data("fileHandler")){
           e.data("fileHandler",function(files,cb){
-            var result = []
+            var result = [];
             var total = files.length;
             var proc = 0;
 
@@ -920,7 +942,7 @@
                  if (proc == total){
                    cb(result);
                  }
-              }
+              };
               fileReader.readAsDataURL(f);
             });
           });
@@ -933,7 +955,7 @@
                 return;
             }
             Bennu.codeEditor.require(function () {
-                editor = ace.edit($(".bennu-html-code-editor", dom)[0])
+                editor = ace.edit($(".bennu-html-code-editor", dom)[0]);
                 editor.setFontSize(13);
                 editor.setTheme("ace/theme/clouds");
                 editor.getSession().setMode("ace/mode/html");
@@ -963,14 +985,14 @@
                 });
                 cb(editor);
             });
-        }
+        };
 
         if ($(".bennu-html-code-editor", dom).length != 0){
             dom.data("showSrc", false);
             $(".switch-to-code", dom).on("click", function(){
                 setupEditor(dom, function(editor) {
                     if (!dom.data("showSrc")){
-                        $(".bennu-html-editor-toolbar .btn", dom).map(function (){ (!$(this).hasClass("switch-to-code")) && $(this).attr("disabled", ""); })
+                        $(".bennu-html-editor-toolbar .btn", dom).map(function (){ (!$(this).hasClass("switch-to-code")) && $(this).attr("disabled", ""); });
 
                         $(".switch-to-code", dom).addClass("active btn-primary");
 
@@ -989,7 +1011,7 @@
                                 }
                             }
 
-                            var t = data[tag]
+                            var t = data[tag];
 
                             editor.setValue(t);
                         }else{
@@ -998,7 +1020,7 @@
 
                         dom.data("showSrc",true);
                     }else{
-                        $(".bennu-html-editor-toolbar .btn", dom).map(function (){ $(this).removeAttr("disabled"); })
+                        $(".bennu-html-editor-toolbar .btn", dom).map(function (){ $(this).removeAttr("disabled"); });
 
                         $(".switch-to-code", dom).removeClass("active btn-primary");
                         $(".bennu-localized-string-button", dom).removeAttr("disabled");
@@ -1040,14 +1062,14 @@
                     document.execCommand("foreColor",false,json.foreColor);
                 }
             }
-            
-        }
+
+        };
 
         if ($(".note-color", dom).length != 0){
             $("[data-event='backColor']").map(function(){
                 $(this).on("click",function(ev){
                     var et = $(ev.target);
-                    var col = et.data("value")
+                    var col = et.data("value");
                     var json = $(".note-recent-color", dom).data("value");
                     json['backColor'] = col;
                     $(".note-recent-color i", dom).css("background-color",col);
@@ -1060,7 +1082,7 @@
                 $(this).on("click",function(ev){
                     var et = $(ev.target);
                     $(".bennu-html-editor-editor", dom).focus();
-                    var col = et.data("value")
+                    var col = et.data("value");
                     var json = $(".note-recent-color", dom).data("value");
                     json['foreColor'] = col;
                     $(".note-recent-color i", dom).css("color",col);
@@ -1076,7 +1098,7 @@
 
 
 
-        
+
     });
     return handler;
     };
