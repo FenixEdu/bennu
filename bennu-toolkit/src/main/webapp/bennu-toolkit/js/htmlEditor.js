@@ -510,7 +510,8 @@
                 '</div>'+
             '</div>');
 
-        var toolbarReqs = "size,style,lists,align,colors,links,table,image,components,undo,fullscreen,source";
+
+            var toolbarReqs = "size,style,colors,align,lists,links,table,image,media,undo,fullscreen,source";
 
         if (Bennu.utils.hasAttr(e,"toolbar")) {
             toolbarReqs = e.attr("toolbar");
@@ -575,13 +576,14 @@
                 $(".btn-toolbar", dom).append('<div class="btn-group">' +
                     '<button type="button" class="btn table-btn btn-default btn-sm btn-small dropdown-toggle" data-original-title="Table"><i class="fa fa-table icon-table"></i></button>'+
                     '</div>');
-            } else if (c === "components"){
-                // Adding Media as a piggy back
+            } else if (c === "media"){
                 $(".btn-toolbar", dom).append('<div class="btn-group">'+
                     '<button type="button" class="btn btn-default btn-sm btn-small bennu-html-editor-media-button" title="Insert Media" tabindex="-1" data-original-title="Insert Media">'+
                     '<i class="fa fa-film" ></i>'+
                     '</button>'+
                     '</div>');
+            }
+            else if (c === "components"){
                  $(".btn-toolbar", dom).append('<div class="btn-group">'+
                     '<button type="button" class="btn btn-default btn-sm btn-small bennu-html-editor-components-button" title="Add Components" tabindex="-1" data-original-title="Add Components">'+
                         '<i class="fa fa-puzzle-piece" ></i>'+
