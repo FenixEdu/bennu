@@ -5,27 +5,7 @@
         Bennu.htmlEditor.components.setTitle("YouTube");
         Bennu.htmlEditor.components.setSubtitle("Add an Embedded YouTube Video");
 
-        let output =
-            '<div class="form-group">' +
-            '<label class="col-sm-2 control-label">YouTube Video ID</label>' +
-            '<div class="col-sm-10">' +
-            '<input type="text" class="form-control" id="id" title="Please insert only the video ID" placeholder="XXXXXXXXXX">' +
-            '<p class="help-block">Please insert only the video ID</p>' +
-            '<p class="help-block">E.g: https://www.youtube.com/watch?v=<b>ABCDEFGHIJK</b></p>' +
-            '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '<label class="col-sm-2 control-label">Width</label>' +
-            '<div class="col-sm-4">' +
-            '<input type="number" class="form-control" title="Specify the width (if needed)" id="width" placeholder="Width" value="560" min="1" max="1920">' +
-            '<p></p>' +
-            '</div>' +
-            '<label class="col-sm-2 control-label">Height</label>' +
-            '<div class="col-sm-4">' +
-            '<input type="number" class="form-control" title="Specify the height (if needed)" id="height" placeholder="Height" value="315" min="1" max="1080">' +
-            '<p></p>' +
-            '</div>' +
-            '</div>';
+        let output = '<p class="help-block">Please choose <b>one</b> of these options:</p> <ul> <li><p class="help-block">the video full link</p><p class="help-block">e.g. <b>https://youtu.be/Nmi4jKLTX9w</b></p></li> <li> <p class="help-block">the video ID </p> <p class="help-block">e.g. <b>Nmi4jKLTX9w</b></p> </li> </ul><div class="form-group"><label class="col-sm-2 control-label">Link or ID</label><p></p><div class="col-sm-10"><input type="text" class="form-control" id="link" placeholder="https://youtu.be/Nmi4jKLTX9w"></div></div><p></p><div class="form-group"><label class="col-sm-2 control-label">Width</label><div class="col-sm-4"><input type="number" class="form-control" title="Specify the width (if needed)" id="width" placeholder="Width" value="560" min="1" max="1920"></div></div><p></p><div class="form-group"><label class="col-sm-2 control-label">Height</label><div class="col-sm-4"><input type="number" class="form-control" title="Specify the height (if needed)" id="height" placeholder="Height" value="315" min="1" max="1080"></div></div>';
 
         output = $('<div class="form-horizontal">' + output + '</div>');
 
@@ -37,18 +17,40 @@
 
             handler.restore();
 
-            let id = $("#id", output).val();
+            let link = $("#link", output).val();
+
+            if(link == null || link.trim().length == 0){
+                Bennu.validation.addError($("#link", output).closest(".form-group"));
+                return;
+            }
+
             let h = $("#height", output).val();
             let w = $("#width", output).val();
 
             let height = parseInt(h) || 315;
             let width = parseInt(w) || 560;
 
-            if (id.match("[a-zA-Z0-9_-]{11}")) { // Matches a current Youtube Video ID
-                handler.text(`<iframe width="${width}" height="${height}" src="https://www.youtube.com/embed/${id}"></iframe>`);
+
+            let allAllowedChars_regex = "^[0-9A-z-_]+$";
+            let youtubeID_regex = "[0-9A-z-_]{11}";
+            let url_regex = "(\\/|%3D|v=)([0-9A-z-_]{11})([%#?&]|$)";
+
+            let video_id = "";
+
+            if(link.match(allAllowedChars_regex) && link.match(youtubeID_regex) ){
+                video_id = link;
+            } else {
+                let matches = link.match(url_regex);
+                if(matches.length >= 3){
+                    video_id = matches[2];
+                }
+            }
+
+            if (video_id.match(youtubeID_regex)) { // Sanity check
+                handler.text(`<iframe width="${width}" height="${height}" src="https://www.youtube.com/embed/${video_id}"></iframe>`);
                 Bennu.htmlEditor.components.hideModal();
             } else {
-                Bennu.validation.addError($("#id", output).closest(".form-group"));
+                Bennu.validation.addError($("#link", output).closest(".form-group"));
             }
         });
     }

@@ -4,8 +4,8 @@
 
         element = $(element);
 
-        Bennu.htmlEditor.components.setTitle("Images");
-        Bennu.htmlEditor.components.setSubtitle("Add a picture");
+        Bennu.htmlEditor.components.setTitle("Image");
+        Bennu.htmlEditor.components.setSubtitle("Add an external Image");
 
         let editor = '<div class="form-group">' +
             '<label class="col-sm-2 control-label">Link</label>' +
