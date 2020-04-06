@@ -27,24 +27,32 @@ public class ToolkitResources extends BennuRestResource {
             cachedResponse = new JsonArray();
 
             for (Component component : Component.getComponents()) {
-                JsonObject obj = new JsonObject();
+                JsonObject json = new JsonObject();
 
                 ToolkitComponent annotation = component.getClass().getAnnotation(ToolkitComponent.class);
 
-                obj.addProperty("key", annotation.key());
-                obj.addProperty("name", annotation.name());
-                obj.addProperty("description", annotation.description());
-                JsonArray array2 = new JsonArray();
+                json.addProperty("key", annotation.key());
+                json.addProperty("name", annotation.name());
+                json.addProperty("description", annotation.description());
+                json.addProperty("category", annotation.category());
+
+                JsonArray fileArray = new JsonArray();
 
                 for (String file : annotation.editorFiles()) {
                     JsonPrimitive element = new JsonPrimitive(file);
-                    array2.add(element);
+                    fileArray.add(element);
                 }
 
-                obj.add("files", array2);
-                cachedResponse.add(obj);
-            }
+                JsonArray resourceArray = new JsonArray();
+                for (String resource : annotation.viewerFiles()) {
+                    JsonPrimitive element = new JsonPrimitive(resource);
+                    resourceArray.add(element);
+                }
 
+                json.add("files", fileArray);
+                json.add("resources", resourceArray);
+                cachedResponse.add(json);
+            }
         }
         return Response.ok(toJson(cachedResponse)).build();
     }
