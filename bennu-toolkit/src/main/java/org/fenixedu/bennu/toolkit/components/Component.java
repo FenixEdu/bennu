@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.toolkit.components;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -47,8 +48,9 @@ public abstract class Component {
         ToolkitComponent annotation = type.getAnnotation(ToolkitComponent.class);
 
         try {
-            COMPONENTS.put(annotation.key(), (Component) type.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
+            COMPONENTS.put(annotation.key(), (Component) type.getDeclaredConstructor().newInstance());
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
             LOGGER.error("Error while instancing a toolkit component", e);
         }
     }

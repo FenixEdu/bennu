@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
-@ToolkitComponent(key = "youtube", name = "YouTube", description = "Embebed a YouTube Video",
-        editorFiles = { "/bennu-toolkit/js/components/youtube.js" })
+@ToolkitComponent(key = "youtube", name = "YouTube", description = "Embed a YouTube Video", category = "media",
+        editorFiles = { "/bennu-toolkit/js/components/youtube.js" }, viewerFiles= { "/bennu-toolkit/img/youtube.png" })
 public class YouTubeComponent extends Component {
 
     private String getYouTubeId(String url) {

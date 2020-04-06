@@ -3,7 +3,7 @@ package org.fenixedu.bennu.toolkit.components;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
-@ToolkitComponent(key = "image", name = "Image", description = "Adds images",
+@ToolkitComponent(key = "image", name = "Image", description = "Add external image",
         editorFiles = { "/bennu-toolkit/js/components/images.js" })
 public class ImageComponent extends Component {
 
