@@ -14,7 +14,10 @@ public @interface ToolkitComponent {
 
     String description();
 
+    String category() default "";
+
     String[] editorFiles();
 
     String[] viewerFiles() default {};
+
 }
