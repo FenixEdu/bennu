@@ -39,6 +39,14 @@
             let height = parseInt(h) || 315;
             let width = parseInt(w) || 560;
 
+            if(width < 1 || width > 1920){
+                width = 560;
+            }
+
+            if(height < 1 || height > 1080){
+                height = 315;
+            }
+
             function GetVimeoIDbyUrl(url) {
                 let id = false;
                 $.ajax({
