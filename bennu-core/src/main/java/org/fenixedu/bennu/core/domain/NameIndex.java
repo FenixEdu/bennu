@@ -9,9 +9,9 @@ import java.util.stream.Stream;
 
 import org.fenixedu.commons.StringNormalizer;
 
-import com.google.common.collect.Sets;
-
 import pt.ist.fenixframework.FenixFramework;
+
+import com.google.common.collect.Sets;
 
 class NameIndex extends NameIndex_Base {
     private static final Map<String, NameIndex> map = new ConcurrentHashMap<>();
@@ -42,8 +42,8 @@ class NameIndex extends NameIndex_Base {
 
     private static NameIndex create(String keyword) {
         NameIndex match = map.computeIfAbsent(keyword, query -> manualFind(keyword).orElseGet(() -> new NameIndex(keyword)));
-
-        if (!FenixFramework.isDomainObjectValid(match)) {
+        // FIXME: the second condition is there because of bug #197 in the fenix-framework
+        if (!FenixFramework.isDomainObjectValid(match) || !match.getKeyword().equals(keyword)) {
             map.remove(keyword, match);
             return create(keyword);
         }
@@ -55,8 +55,8 @@ class NameIndex extends NameIndex_Base {
         if (match == null) {
             return Collections.emptySet();
         }
-
-        if (!FenixFramework.isDomainObjectValid(match)) {
+        // FIXME: the second condition is there because of bug #197 in the fenix-framework
+        if (!FenixFramework.isDomainObjectValid(match) || !match.getKeyword().equals(keyword)) {
             map.remove(keyword, match);
             return find(keyword);
         }
@@ -64,7 +64,7 @@ class NameIndex extends NameIndex_Base {
     }
 
     private static Optional<NameIndex> manualFind(String keyword) {
-        return Bennu.getInstance().getNameIndexSet().stream().filter(name -> name.getKeyword().contains(keyword)).findAny();
+        return Bennu.getInstance().getNameIndexSet().stream().filter(name -> name.getKeyword().equals(keyword)).findAny();
     }
 
     static void cleanupIndex() {
