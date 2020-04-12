@@ -1,22 +1,16 @@
 package org.fenixedu.bennu.core.util;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.IllformedLocaleException;
-import java.util.Locale;
-import java.util.Locale.Builder;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.servlet.MultipartConfigElement;
-
+import com.google.common.base.Strings;
 import org.fenixedu.commons.configuration.ConfigurationInvocationHandler;
 import org.fenixedu.commons.configuration.ConfigurationManager;
 import org.fenixedu.commons.configuration.ConfigurationProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Strings;
+import javax.servlet.MultipartConfigElement;
+import java.util.*;
+import java.util.Locale.Builder;
+import java.util.stream.Collectors;
 
 public class CoreConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(CoreConfiguration.class);
@@ -68,6 +62,11 @@ public class CoreConfiguration {
                 description = "The String value for the Cache-Control header for static resources",
                 defaultValue = "max-age=86400")
         public String staticCacheControl();
+
+        @ConfigurationProperty(key = "jwt.private.key.path",
+                description = "The path to the file containing your applications private key for signing and validating jwt auth bearer tokens.",
+                defaultValue = "")
+        public String jwtPrivateKeyPath();
 
         /**
          * Gets the maximum size allowed for multipart/form-data requests.

@@ -16,23 +16,25 @@
  */
 package org.fenixedu.bennu.core.security;
 
-import java.util.Collection;
-import java.util.Locale;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.google.gson.JsonObject;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.fenixedu.bennu.core.domain.AuthenticationContext;
 import org.fenixedu.bennu.core.domain.AuthenticationContext.AuthenticationMethodEvent;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.i18n.I18NFilter;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.jwt.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pt.ist.fenixframework.FenixFramework;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Authenticate {
     private static final Logger logger = LoggerFactory.getLogger(Authenticate.class);
@@ -148,15 +150,41 @@ public class Authenticate {
         session.setAttribute(LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE, authenticationContext);
     }
 
-    static void updateFromSession(final HttpSession session) {
+    static void updateFromSession(final HttpServletRequest request) {
+        final HttpSession session = ((HttpServletRequest) request).getSession(false);
+        if (!updateFromSession(session)) {
+            jwtRequest(request);
+        }
+    }
+
+    static boolean updateFromSession(final HttpSession session) {
         if (session != null) {
             final AuthenticationContext authenticationContext = (AuthenticationContext) session.getAttribute(LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE);
             if (authenticationContext != null) {
                 final User user = authenticationContext.getUser();
                 if (user != null && FenixFramework.isDomainObjectValid(user)) {
                     loggedUserContext.set(authenticationContext);
+                    return true;
                 } else {
                     clear();
+                }
+            }
+        }
+        return false;
+    }
+
+    static void jwtRequest(final HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        final String jwtPrivateKeyPath = CoreConfiguration.getConfiguration().jwtPrivateKeyPath();
+        if (authHeader != null && authHeader.length() > 7 && authHeader.startsWith("Bearer ")
+                && jwtPrivateKeyPath.length() > 0) {
+            final String jwt = authHeader.substring(7);
+            final JsonObject claim = Tools.verify(SignatureAlgorithm.RS256, jwtPrivateKeyPath, jwt);
+            if (claim != null) {
+                final User user = User.findByUsername(claim.get("username").getAsString());
+                if (user != null) {
+                    final AuthenticationContext authenticationContext = new AuthenticationContext(user, "JWT Token");
+                    loggedUserContext.set(authenticationContext);
                 }
             }
         }
