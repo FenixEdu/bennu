@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu</artifactId>
-        <version>6.1.2-FORK</version>
+        <version>6.1.3-FORK</version>
     </parent>
 
     <artifactId>bennu-cas-client</artifactId>
