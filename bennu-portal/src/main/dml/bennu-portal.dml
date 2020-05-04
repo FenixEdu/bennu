@@ -16,6 +16,7 @@ public class PortalConfiguration {
 	public bytearray favicon;
 	public String faviconType;
 	public String documentationBaseUrl;
+	public String loginPath;
 }
 
 relation BennuPortalConfiguration {

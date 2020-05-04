@@ -37,14 +37,14 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
 /**
  * Servlet responsible for exposing the various {@link LoginProvider}s to the end user, as a way for him to login into the
  * application.
- * 
+ *
  * This servlet shows to the user a login page that shows him a login form (if local login is enabled), or the option to choose an
  * alternative provider with which he can log in.
- * 
+ *
  * Additionally, this servlet supports specifying a callback URL, to which the user
  * should be redirected after authentication is successful. For security purposes,
  * this URL *MUST* start with the configured application URL.
- * 
+ *
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  *
  */
@@ -100,6 +100,7 @@ public class PortalLoginServlet extends HttpServlet {
         ctx.put("locales", CoreConfiguration.supportedLocales());
         ctx.put("providers", providers);
         ctx.put("localLogin", localLogin);
+        ctx.put("loginPath", PortalConfiguration.getInstance().getLoginPath());
 
         try {
             resp.setContentType("text/html;charset=UTF-8");
@@ -112,7 +113,7 @@ public class PortalLoginServlet extends HttpServlet {
 
     /**
      * Validates that the provided callback is valid, i.e., it is either not provided, or is a URL internal to the application.
-     * 
+     *
      * @param callback
      *            The callback to validate. May be {@code null}
      * @return
@@ -151,7 +152,7 @@ public class PortalLoginServlet extends HttpServlet {
 
     /**
      * Registers the given provider.
-     * 
+     *
      * @param provider
      *            The provider to register
      * @throws NullPointerException

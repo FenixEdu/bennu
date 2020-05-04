@@ -79,7 +79,7 @@
       var username = $(event.target).find('input[type=text]').val();
       var password = $(event.target).find('input[type=password]').val();
       $('.auth-success').show(); $('.login-form').hide(); $('.auth-failed').hide();
-      $.post('{{contextPath}}/api/bennu-core/profile/login', {username: username, password: password}).done(function (data) {
+      $.post('{{contextPath}}{{loginPath}}', {username: username, password: password}).done(function (data) {
         var url = $('input[type=hidden]').val() || '{{contextPath}}/';
         $('.auth-success').text("{{i18n('resources.BennuPortalResources', 'label.welcome')}}, " + data.name + '!'); window.location = url;
         $('.provider-list').hide();

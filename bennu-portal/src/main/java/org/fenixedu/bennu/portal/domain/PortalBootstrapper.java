@@ -30,6 +30,7 @@ public class PortalBootstrapper {
         portalConfiguration.setApplicationTitle(makeLocalized(portalSection.getApplicationTitle()));
         portalConfiguration.setApplicationSubTitle(makeLocalized(portalSection.getApplicationTitle()));
         portalConfiguration.setDocumentationBaseUrl(portalSection.getDocumentationUrl());
+        portalConfiguration.setLoginPath(portalSection.getLoginPath());
         portalConfiguration.setSupportEmailAddress(portalSection.getSupportEmailAddress());
         if (!Strings.isNullOrEmpty(portalConfiguration.getSupportEmailAddress())) {
             SupportConfiguration defaultSupport = new SupportConfiguration(
@@ -61,7 +62,10 @@ public class PortalBootstrapper {
         @Field(name = "bootstrapper.portalSection.documentationUrl", defaultValue = "https://fenixedu.org/dev", order = 5)
         public String getDocumentationUrl();
 
-        @Field(name = "bootstrapper.portalSection.supportEmail", defaultValue = "support@fenixedu.org", order = 6)
+        @Field(name = "bootstrapper.portalSection.loginUrl", defaultValue = "/api/bennu-core/profile/login", order = 6)
+        public String getLoginPath();
+
+        @Field(name = "bootstrapper.portalSection.supportEmail", defaultValue = "support@fenixedu.org", order = 7)
         public String getSupportEmailAddress();
 
     }
