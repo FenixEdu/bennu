@@ -9,18 +9,16 @@ import java.io.File;
  */
 public final class LocalFileToDelete extends LocalFileToDelete_Base {
     public LocalFileToDelete() {
-        super();
         setFileSupport(FileSupport.getInstance());
     }
 
-    public LocalFileToDelete(String path) {
+    public LocalFileToDelete(final String path) {
         this();
         setFilePath(path);
     }
 
     @Override
     public String getFilePath() {
-        //FIXME: remove when the framework enables read-only slots
         return super.getFilePath();
     }
 

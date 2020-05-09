@@ -1,23 +1,20 @@
 package org.fenixedu.bennu.io.servlet;
 
-import java.io.IOException;
-import java.net.URLEncoder;
+import com.google.common.base.Charsets;
+import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.bennu.io.domain.GenericFile;
+import org.fenixedu.bennu.io.util.DownloadUtil;
+import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.FenixFramework;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.bennu.core.util.CoreConfiguration;
-import org.fenixedu.bennu.io.domain.GenericFile;
-import org.fenixedu.bennu.io.util.DownloadUtil;
-
-import pt.ist.fenixframework.DomainObject;
-import pt.ist.fenixframework.FenixFramework;
-
-import com.google.common.base.Charsets;
+import java.io.IOException;
+import java.net.URLEncoder;
 
 @WebServlet(urlPatterns = FileDownloadServlet.SERVLET_PATH + "*")
 public class FileDownloadServlet extends HttpServlet {
@@ -46,7 +43,7 @@ public class FileDownloadServlet extends HttpServlet {
         }
     }
 
-    public static String getDownloadUrl(GenericFile file) {
+    public static String getDownloadUrl(final GenericFile file) {
         return CoreConfiguration.getConfiguration().applicationUrl() + SERVLET_PATH + file.getExternalId() + "/"
                 + file.getFilename();
     }
@@ -56,20 +53,16 @@ public class FileDownloadServlet extends HttpServlet {
                 + URLEncoder.encode(getDownloadUrl(file), Charsets.UTF_8.name());
     }
 
-    public static GenericFile getFileFromURL(String url) {
+    public static GenericFile getFileFromURL(final String url) {
         try {
             // Remove trailing path, and split the tokens
-            String[] parts = url.substring(url.indexOf(SERVLET_PATH)).replace(SERVLET_PATH, "").split("\\/");
+            final String[] parts = url.substring(url.indexOf(SERVLET_PATH)).replace(SERVLET_PATH, "").split("\\/");
             if (parts.length == 0) {
                 return null;
             }
-            DomainObject object = FenixFramework.getDomainObject(parts[0]);
-            if (object instanceof GenericFile && FenixFramework.isDomainObjectValid(object)) {
-                return (GenericFile) object;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
+            final DomainObject object = FenixFramework.getDomainObject(parts[0]);
+            return object instanceof GenericFile && FenixFramework.isDomainObjectValid(object) ? (GenericFile) object : null;
+        } catch (final Exception e) {
             return null;
         }
     }

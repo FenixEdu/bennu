@@ -17,7 +17,7 @@ import pt.ist.fenixframework.Atomic;
 public class BennuIOContextListener implements ServletContextListener {
     private static boolean initialized = false;
 
-    private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     @Atomic
     public void initialize() {
@@ -28,18 +28,18 @@ public class BennuIOContextListener implements ServletContextListener {
     }
 
     @Override
-    public void contextInitialized(ServletContextEvent event) {
+    public void contextInitialized(final ServletContextEvent event) {
         initialize();
-        FileDeleterThread thread = new FileDeleterThread();
+        final FileDeleterThread thread = new FileDeleterThread();
         thread.run();
         executor.scheduleAtFixedRate(thread, 5, 5, TimeUnit.MINUTES);
     }
 
     @Override
-    public void contextDestroyed(ServletContextEvent event) {
+    public void contextDestroyed(final ServletContextEvent event) {
         try {
             executor.awaitTermination(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             //oh well
         }
     }

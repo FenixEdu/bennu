@@ -1,15 +1,11 @@
 package org.fenixedu.bennu.io.domain;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.activation.MimetypesFileTypeMap;
-
+import com.google.common.base.Strings;
+import com.google.common.hash.Funnels;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingInputStream;
 import org.apache.tika.Tika;
 import org.fenixedu.bennu.core.domain.User;
@@ -17,15 +13,12 @@ import org.fenixedu.commons.StringNormalizer;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pt.ist.fenixframework.Atomic;
 
-import com.google.common.base.Strings;
-import com.google.common.hash.Funnels;
-import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hasher;
-import com.google.common.hash.Hashing;
-import com.google.common.io.ByteStreams;
+import javax.activation.MimetypesFileTypeMap;
+import java.io.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -34,6 +27,7 @@ import com.google.common.io.ByteStreams;
  * 
  */
 public abstract class GenericFile extends GenericFile_Base {
+
     private static final Logger logger = LoggerFactory.getLogger(GenericFile.class);
 
     /**
@@ -42,12 +36,11 @@ public abstract class GenericFile extends GenericFile_Base {
     private static final Tika tika = new Tika();
 
     protected GenericFile() {
-        super();
         setFileSupport(FileSupport.getInstance());
         setCreationDate(new DateTime());
     }
 
-    protected void init(String displayName, String filename, byte[] content) {
+    protected void init(final String displayName, final String filename, final byte[] content) {
         if (content == null) {
             throw new NullPointerException("Content byte[] is null");
         }
@@ -68,7 +61,7 @@ public abstract class GenericFile extends GenericFile_Base {
      * @throws IOException
      *             If an error occurs while reading the input file or storing it in the underlying storage
      */
-    protected void init(String displayName, String filename, File file) throws IOException {
+    protected void init(final String displayName, final String filename, final File file) throws IOException {
         if (file == null) {
             throw new NullPointerException("Content is null");
         }
@@ -89,7 +82,7 @@ public abstract class GenericFile extends GenericFile_Base {
      * @throws IOException
      *             If an error occurs while reading the input strean or storing it in the underlying storage
      */
-    protected void init(String displayName, String filename, InputStream stream) throws IOException {
+    protected void init(final String displayName, final String filename, final InputStream stream) throws IOException {
         if (stream == null) {
             throw new NullPointerException("Stream is empty");
         }
@@ -99,7 +92,7 @@ public abstract class GenericFile extends GenericFile_Base {
     }
     
     
-    public abstract boolean isAccessible(User user);
+    public abstract boolean isAccessible(final User user);
 
     public boolean isPrivate() {
         return !isAccessible(null);
@@ -107,25 +100,21 @@ public abstract class GenericFile extends GenericFile_Base {
 
     @Override
     public DateTime getCreationDate() {
-        //FIXME: remove when the framework enables read-only slots
         return super.getCreationDate();
     }
 
     @Override
     public Long getSize() {
-        //FIXME: remove when the framework enables read-only slots
         return super.getSize();
     }
 
     @Override
     public String getContentType() {
-        //FIXME: remove when the framework enables read-only slots
         return super.getContentType();
     }
 
     @Override
     public String getContentKey() {
-        //FIXME: remove when the framework enables read-only slots
         return super.getContentKey();
     }
 
@@ -140,11 +129,8 @@ public abstract class GenericFile extends GenericFile_Base {
      */
     @Override
     public String getChecksum() {
-        if (super.getChecksum() == null) {
-            return computeChecksum();
-        } else {
-            return super.getChecksum();
-        }
+        final String checksum = super.getChecksum();
+        return checksum == null ? computeChecksum() : checksum;
     }
 
     /**
@@ -155,11 +141,8 @@ public abstract class GenericFile extends GenericFile_Base {
      */
     @Override
     public String getChecksumAlgorithm() {
-        if (super.getChecksumAlgorithm() == null) {
-            return DEFAULT_CHECKSUM_ALGORITHM;
-        } else {
-            return super.getChecksumAlgorithm();
-        }
+        final String checksumAlgorithm = super.getChecksumAlgorithm();
+        return checksumAlgorithm == null ? DEFAULT_CHECKSUM_ALGORITHM : checksumAlgorithm;
     }
 
     /**
@@ -177,17 +160,17 @@ public abstract class GenericFile extends GenericFile_Base {
     private static final HashFunction DEFAULT_HASH_FUNCTION = Hashing.murmur3_128();
 
     private String computeChecksum() {
-        Hasher hasher = DEFAULT_HASH_FUNCTION.newHasher();
-        try (InputStream stream = getStream(); OutputStream out = Funnels.asOutputStream(hasher)) {
+        final Hasher hasher = DEFAULT_HASH_FUNCTION.newHasher();
+        try (final InputStream stream = getStream(); OutputStream out = Funnels.asOutputStream(hasher)) {
             ByteStreams.copy(stream, out);
             return hasher.hash().toString();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException("Cannot compute checksum for " + getExternalId(), e);
         }
     }
 
     @Override
-    public void setFilename(String filename) {
+    public void setFilename(final String filename) {
         final String nicerFilename = filename.substring(filename.lastIndexOf('/') + 1);
         final String normalizedFilename = StringNormalizer.normalizePreservingCapitalizedLetters(nicerFilename);
         super.setFilename(normalizedFilename);
@@ -197,8 +180,8 @@ public abstract class GenericFile extends GenericFile_Base {
         }
     }
 
-    private void setContent(File file, String filename) throws IOException {
-        long size = file.length();
+    private void setContent(final File file, final String filename) throws IOException {
+        final long size = file.length();
         setSize(Long.valueOf(size));
         final FileStorage fileStorage = getFileStorage();
         final String uniqueIdentification = fileStorage.store(this, file);
@@ -213,25 +196,22 @@ public abstract class GenericFile extends GenericFile_Base {
     }
     
     
-    private void setContent(InputStream stream, String filename) throws IOException {
-        
+    private void setContent(final InputStream stream, final String filename) throws IOException {
         final FileStorage fileStorage = getFileStorage();
         setContentType(tika.detect(stream, filename));
-        CountingInputStream countingStream = new CountingInputStream(stream);
+        final CountingInputStream countingStream = new CountingInputStream(stream);
         final String uniqueIdentification = fileStorage.store(this, countingStream);
         setStorage(fileStorage);
         setSize(countingStream.getCount());
         if (Strings.isNullOrEmpty(uniqueIdentification)) {
             throw new RuntimeException();
         }
-        
         setContentKey(uniqueIdentification);
-        
     }
     
 
-    private void setContent(byte[] content) {
-        long size = (content == null) ? 0 : content.length;
+    private void setContent(final byte[] content) {
+        final long size = (content == null) ? 0 : content.length;
         setSize(Long.valueOf(size));
         final FileStorage fileStorage = getFileStorage();
         final String uniqueIdentification = fileStorage.store(this, content);
@@ -258,13 +238,11 @@ public abstract class GenericFile extends GenericFile_Base {
     public static void convertFileStorages(final FileStorage fileStorageToUpdate) {
         if (fileStorageToUpdate != null) {
             try {
-                for (final GenericFile genericFile : FileSupport.getInstance().getFileSet()) {
-                    if (fileStorageToUpdate == genericFile.getFileStorage() && fileStorageToUpdate != genericFile.getStorage()) {
-                        genericFile.updateFileStorage();
-                    }
-                }
+                FileSupport.getInstance().getFileSet().stream()
+                        .filter(gf -> fileStorageToUpdate == gf.getFileStorage() && fileStorageToUpdate != gf.getStorage())
+                        .forEach(gf -> gf.updateFileStorage());
                 logger.debug("FILE Conversion: DONE SUCESSFULLY!");
-            } catch (Throwable e) {
+            } catch (final Throwable e) {
                 logger.debug("FILE Conversion: ABORTED!!!");
                 e.printStackTrace();
             }
@@ -278,10 +256,7 @@ public abstract class GenericFile extends GenericFile_Base {
 
     protected FileStorage getFileStorage() {
         final FileStorage fileStorage = FileStorageConfiguration.readFileStorageByFileType(getClass().getName());
-        if (fileStorage == null) {
-            return FileSupport.getInstance().getDefaultStorage();
-        }
-        return fileStorage;
+        return fileStorage == null ? FileSupport.getInstance().getDefaultStorage() : fileStorage;
     }
 
     /**
@@ -310,7 +285,7 @@ public abstract class GenericFile extends GenericFile_Base {
      *
      * @see Tika
      */
-    protected String detectContentType(byte[] content, String filename) {
+    protected String detectContentType(final byte[] content, final String filename) {
         return tika.detect(content, filename);
     }
 
@@ -321,8 +296,8 @@ public abstract class GenericFile extends GenericFile_Base {
      *
      * @see Tika
      */
-    private static final String detectContentType(File file, String filename) throws IOException {
-        try (InputStream stream = new FileInputStream(file)) {
+    private static final String detectContentType(final File file, final String filename) throws IOException {
+        try (final InputStream stream = new FileInputStream(file)) {
             return tika.detect(stream, filename);
         }
     }
@@ -336,12 +311,9 @@ public abstract class GenericFile extends GenericFile_Base {
 
     @SuppressWarnings("unchecked")
     public static <T extends GenericFile> List<T> getFiles(final Class<T> clazz) {
-        final List<T> files = new ArrayList<>();
-        for (final GenericFile file : FileSupport.getInstance().getFileSet()) {
-            if (file.getClass().equals(clazz)) {
-                files.add((T) file);
-            }
-        }
-        return files;
+        return FileSupport.getInstance().getFileSet().stream()
+                .filter(file -> file.getClass().equals(clazz))
+                .map(file -> (T) file)
+                .collect(Collectors.toList());
     }
 }

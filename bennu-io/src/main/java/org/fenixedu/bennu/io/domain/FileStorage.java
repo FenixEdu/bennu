@@ -1,16 +1,15 @@
 package org.fenixedu.bennu.io.domain;
 
+import com.google.common.io.Files;
+import org.apache.tika.io.IOUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.google.common.io.Files;
-import org.apache.tika.io.IOUtils;
 
 /**
  * 
@@ -19,19 +18,16 @@ import org.apache.tika.io.IOUtils;
  */
 public abstract class FileStorage extends FileStorage_Base {
     protected FileStorage() {
-        super();
         setFileSupport(FileSupport.getInstance());
     }
 
     @Override
     public String getName() {
-        //FIXME: remove when the framework enables read-only slots
         return super.getName();
     }
 
     @Override
     public Set<GenericFile> getFileSet() {
-        //FIXME: remove when the framework enables read-only slots
         return Collections.unmodifiableSet(super.getFileSet());
     }
 
@@ -52,26 +48,32 @@ public abstract class FileStorage extends FileStorage_Base {
      * @throws IOException
      *             If any error occurs while accessing the provided file or storing it in the underlying storage
      */
-    public String store(GenericFile genericFile, File file) throws IOException {
+    public String store(final GenericFile genericFile, final File file) throws IOException {
         return store(genericFile, Files.toByteArray(file));
     }
     
-    public String store(GenericFile genericFile, InputStream stream) throws IOException {
+    public String store(final GenericFile genericFile, final InputStream stream) throws IOException {
         return store(genericFile, IOUtils.toByteArray(stream));
     }
 
-    abstract public String store(GenericFile file, byte[] content);
+    abstract public String store(final GenericFile file, final byte[] content);
 
-    abstract public byte[] read(GenericFile file);
+    abstract public byte[] read(final GenericFile file);
 
-    abstract public InputStream readAsInputStream(GenericFile file);
+    abstract public InputStream readAsInputStream(final GenericFile file);
 
     public static DomainStorage createNewDomainStorage(final String name) {
         return new DomainStorage(name);
     }
 
-    public static LocalFileSystemStorage createNewFileSystemStorage(String name, String path, Integer treeDirectoriesNameLength) {
+    public static LocalFileSystemStorage createNewFileSystemStorage(final String name, final String path,
+                                                                    final Integer treeDirectoriesNameLength) {
         return new LocalFileSystemStorage(name, path, treeDirectoriesNameLength);
+    }
+
+    public static DriveAPIStorage createNewDriveAPIStorage(final String name, final String driveUrl,
+                                                           final String remoteUsername, final String remoteDirectoryId) {
+        return new DriveAPIStorage(name, driveUrl, remoteUsername, remoteDirectoryId);
     }
 
     public Boolean delete() {
@@ -116,8 +118,9 @@ public abstract class FileStorage extends FileStorage_Base {
      * @throws NullPointerException
      *             If any of the arguments is null
      */
-    public static boolean tryDownloadFile(GenericFile file, HttpServletRequest request, HttpServletResponse response, long start,
-            long end) throws IOException {
+    public static boolean tryDownloadFile(final GenericFile file, final HttpServletRequest request,
+                                          final HttpServletResponse response, final long start, final long end)
+            throws IOException {
         return file.getFileStorage().tryLowLevelDownload(file, request, response, start, end);
     }
 
@@ -143,8 +146,9 @@ public abstract class FileStorage extends FileStorage_Base {
      * @throws IOException
      *             If an exception occurs while downloading the file
      */
-    protected boolean tryLowLevelDownload(GenericFile file, HttpServletRequest request, HttpServletResponse response, long start,
-            long end) throws IOException {
+    protected boolean tryLowLevelDownload(final GenericFile file, final HttpServletRequest request,
+                                          final HttpServletResponse response, final long start, final long end)
+            throws IOException {
         return false;
     }
 }

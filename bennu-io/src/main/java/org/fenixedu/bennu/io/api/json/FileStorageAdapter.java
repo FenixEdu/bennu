@@ -12,7 +12,7 @@ import com.google.gson.JsonObject;
 public class FileStorageAdapter implements JsonViewer<FileStorage> {
 
     @Override
-    public JsonElement view(FileStorage fs, JsonBuilder arg1) {
+    public JsonElement view(final FileStorage fs, final JsonBuilder arg1) {
         final JsonObject json = new JsonObject();
         json.addProperty("id", fs.getExternalId());
         json.addProperty("name", fs.getName());

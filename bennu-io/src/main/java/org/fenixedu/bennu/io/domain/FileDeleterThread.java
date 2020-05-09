@@ -2,7 +2,6 @@ package org.fenixedu.bennu.io.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pt.ist.fenixframework.FenixFramework;
 
 public class FileDeleterThread implements Runnable {
@@ -15,11 +14,13 @@ public class FileDeleterThread implements Runnable {
         });
     }
 
-    private static void delete(LocalFileToDelete file) {
-        logger.debug("Deleting: {}", file.getFilePath());
+    private static void delete(final LocalFileToDelete file) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Deleting: {}", file.getFilePath());
+        }
         try {
             file.delete();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             logger.debug("Failed to delete file", e);
         }
     }

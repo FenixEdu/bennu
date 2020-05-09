@@ -1,49 +1,28 @@
 package org.fenixedu.bennu.io.domain;
 
-import java.util.Set;
-
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.Singleton;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
+import java.util.function.Supplier;
 
 public final class FileSupport extends FileSupport_Base {
+
+    private static final Supplier<FileSupport> SYSTEM_GETTER = () -> Bennu.getInstance().getFileSupport();
+    private static final Supplier<FileSupport> SYSTEM_CREATOR = () -> new FileSupport();
+
     private FileSupport() {
-        super();
         setBennu(Bennu.getInstance());
         setDefaultStorage(DomainStorage.createNewDomainStorage("system-default"));
     }
 
     public static FileSupport getInstance() {
-        if (Bennu.getInstance().getFileSupport() == null) {
-            return initialize();
-        }
-        return Bennu.getInstance().getFileSupport();
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    private static FileSupport initialize() {
-        if (Bennu.getInstance().getFileSupport() == null) {
-            return new FileSupport();
-        }
-        return Bennu.getInstance().getFileSupport();
+        return Singleton.getInstance(SYSTEM_GETTER, SYSTEM_CREATOR);
     }
 
     @Override
-    public void setDefaultStorage(FileStorage defaultStorage) {
+    public void setDefaultStorage(final FileStorage defaultStorage) {
         super.setDefaultStorage(defaultStorage);
         addFileStorage(defaultStorage);
     }
 
-    @Override
-    public Set<FileStorage> getFileStorageSet() {
-        //FIXME: remove when the framework enables read-only slots
-        return super.getFileStorageSet();
-    }
-
-    @Override
-    public Set<FileStorageConfiguration> getConfigurationSet() {
-        //FIXME: remove when the framework enables read-only slots
-        return super.getConfigurationSet();
-    }
 }

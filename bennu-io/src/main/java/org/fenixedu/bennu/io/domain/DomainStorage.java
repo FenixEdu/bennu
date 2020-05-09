@@ -12,35 +12,32 @@ import pt.ist.fenixframework.FenixFramework;
  * 
  */
 public final class DomainStorage extends DomainStorage_Base {
-    DomainStorage(String name) {
-        super();
+
+    DomainStorage(final String name) {
         setName(name);
     }
 
     @Override
-    public String store(GenericFile file, byte[] content) {
-        String uniqueIdentification = file.getContentKey();
+    public String store(final GenericFile file, final byte[] content) {
+        final String uniqueIdentification = file.getContentKey();
         final DomainObject existingRawData = FenixFramework.getDomainObject(uniqueIdentification);
         if (existingRawData != null && existingRawData instanceof FileRawData) {
             ((FileRawData) existingRawData).delete();
         }
-
-        if (content != null) {
-            return new FileRawData(uniqueIdentification == null ? file.getExternalId() : uniqueIdentification, content)
-                    .getExternalId();
-        }
-        return null;
+        return content == null ? null : new FileRawData(uniqueIdentification == null ?
+                file.getExternalId() : uniqueIdentification, content).getExternalId();
     }
 
     @Override
-    public byte[] read(GenericFile file) {
+    public byte[] read(final GenericFile file) {
         final FileRawData rawData = FenixFramework.getDomainObject(file.getContentKey());
         return rawData != null ? rawData.getContent() : null;
     }
 
     @Override
-    public InputStream readAsInputStream(GenericFile file) {
-        byte[] read = read(file);
+    public InputStream readAsInputStream(final GenericFile file) {
+        final byte[] read = read(file);
         return read != null ? new ByteArrayInputStream(read) : null;
     }
+
 }

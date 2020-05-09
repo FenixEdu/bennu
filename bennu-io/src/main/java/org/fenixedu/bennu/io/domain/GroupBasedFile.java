@@ -8,8 +8,8 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 
 public final class GroupBasedFile extends GroupBasedFile_Base {
-    public GroupBasedFile(String displayName, String filename, byte[] content, Group accessGroup) {
-        super();
+    public GroupBasedFile(final String displayName, final String filename, final byte[] content,
+                          final Group accessGroup) {
         init(displayName, filename, content);
         setAccessGroup(accessGroup);
     }
@@ -28,30 +28,28 @@ public final class GroupBasedFile extends GroupBasedFile_Base {
      * @throws IOException
      *             If an error occurs while reading the input file or storing it in the underlying storage
      */
-    public GroupBasedFile(String displayName, String filename, File file, Group accessGroup) throws IOException {
-        super();
+    public GroupBasedFile(final String displayName, final String filename, final File file, final Group accessGroup)
+            throws IOException {
         init(displayName, filename, file);
         setAccessGroup(accessGroup);
     }
     
-    
-    public GroupBasedFile(String displayName, String filename, InputStream stream, Group accessGroup) throws IOException {
-        super();
+    public GroupBasedFile(final String displayName, final String filename, final InputStream stream,
+                          final Group accessGroup) throws IOException {
         init(displayName, filename, stream);
         setAccessGroup(accessGroup);
     }
-    
 
     public Group getAccessGroup() {
         return getGroup().toGroup();
     }
 
-    public void setAccessGroup(Group accessGroup) {
+    public void setAccessGroup(final Group accessGroup) {
         setGroup(accessGroup.toPersistentGroup());
     }
 
     @Override
-    public boolean isAccessible(User user) {
+    public boolean isAccessible(final User user) {
         return getGroup().isMember(user);
     }
 

@@ -1,11 +1,11 @@
 package org.fenixedu.bennu.io.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import pt.ist.fenixframework.DomainModelUtil;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -13,8 +13,7 @@ import pt.ist.fenixframework.FenixFramework;
  * 
  */
 public final class FileStorageConfiguration extends FileStorageConfiguration_Base {
-    private FileStorageConfiguration(Class<? extends DomainObject> fileTypeClass) {
-        super();
+    private FileStorageConfiguration(final Class<? extends DomainObject> fileTypeClass) {
         setFileSupport(FileSupport.getInstance());
         setFileType(fileTypeClass.getName());
         setStorage(FileSupport.getInstance().getDefaultStorage());
@@ -26,17 +25,15 @@ public final class FileStorageConfiguration extends FileStorageConfiguration_Bas
     }
 
     public static FileStorage readFileStorageByFileType(final String fileType) {
-        for (final FileStorageConfiguration fileStorageConfiguration : FileSupport.getInstance().getConfigurationSet()) {
-            if (fileStorageConfiguration.getFileType().equals(fileType)) {
-                return fileStorageConfiguration.getStorage();
-            }
-        }
-        return null;
+        return FileSupport.getInstance().getConfigurationSet().stream()
+                .filter(config -> config.getFileType().equals(fileType))
+                .map(config -> config.getStorage())
+                .findAny().orElse(null);
     }
 
     public static void createMissingStorageConfigurations() {
-        Map<String, FileStorageConfiguration> configs = new HashMap<>();
-        for (FileStorageConfiguration config : FileSupport.getInstance().getConfigurationSet()) {
+        final Map<String, FileStorageConfiguration> configs = new HashMap<>();
+        for (final FileStorageConfiguration config : FileSupport.getInstance().getConfigurationSet()) {
             if (FenixFramework.getDomainModel().findClass(config.getFileType()) == null) {
                 config.delete();
             } else {
@@ -44,7 +41,7 @@ public final class FileStorageConfiguration extends FileStorageConfiguration_Bas
             }
         }
 
-        for (Class<? extends DomainObject> fileTypeClass : DomainModelUtil
+        for (final Class<? extends DomainObject> fileTypeClass : DomainModelUtil
                 .getDomainClassHierarchy(GenericFile.class, true, false)) {
             if (!configs.containsKey(fileTypeClass.getName())) {
                 new FileStorageConfiguration(fileTypeClass);

@@ -35,7 +35,7 @@ public class StorageConfigurationResource extends BennuRestResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement post(JsonElement json) {
+    public JsonElement post(final JsonElement json) {
         accessControl(Group.managers());
         create(json, FileStorageConfiguration.class);
         return all();
