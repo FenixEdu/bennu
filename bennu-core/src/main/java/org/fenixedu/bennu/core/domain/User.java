@@ -37,6 +37,8 @@ import javax.crypto.spec.PBEKeySpec;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.domain.groups.PersistentUserGroup;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.signals.DomainObjectEvent;
+import org.fenixedu.bennu.core.signals.Signal;
 import org.fenixedu.commons.i18n.I18N;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -54,6 +56,8 @@ import pt.ist.fenixframework.FenixFramework;
  * The application end user.
  */
 public final class User extends User_Base implements Principal {
+    private static final String USER_USERNAME_CHANGE = "user.username.change";
+
     private static final Logger logger = LoggerFactory.getLogger(User.class);
 
     private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA512";
@@ -123,6 +127,11 @@ public final class User extends User_Base implements Principal {
     public String getUsername() {
         //FIXME: remove when the framework enables read-only slots
         return super.getUsername();
+    }
+
+    public void changeUsername(String username) {
+        setUsername(username);
+        Signal.emit(USER_USERNAME_CHANGE, new DomainObjectEvent<User>(this));
     }
 
     @Override
