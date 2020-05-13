@@ -130,7 +130,16 @@ public final class User extends User_Base implements Principal {
     }
 
     public void changeUsername(String username) {
+        String oldUsername = getUsername();
         setUsername(username);
+        UserProfile profile = getProfile();
+        if (profile != null) {
+            String avatarUrl = profile.getAvatarUrl();
+            if (avatarUrl != null && avatarUrl.contains(oldUsername)) {
+                String newAvatarURL = avatarUrl.replace(oldUsername, username);
+                profile.setAvatarUrl(newAvatarURL);
+            }
+        }
         Signal.emit(USER_USERNAME_CHANGE, new DomainObjectEvent<User>(this));
     }
 
