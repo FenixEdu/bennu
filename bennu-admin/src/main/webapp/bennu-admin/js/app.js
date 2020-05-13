@@ -205,7 +205,7 @@ app.controller('IOController', ['$scope', '$http', '$timeout', function ($scope,
               }).error(function (data) { $scope.error = data; });
     $('#newStorageModal').modal('hide');
   }
-  $scope.newDrivetorage = function() {
+  $scope.newDriveStorage = function() {
     $http.post(contextPath + '/api/bennu-io/storage/drive',
         {'name' : $scope.driveName, 'driveUrl': $scope.driveUrl, 'remoteUsername': $scope.remoteUsername, 'remoteDirectoryId': $scope.remoteDirectoryId}).
     success(function (data) {

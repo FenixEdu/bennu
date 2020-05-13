@@ -240,7 +240,7 @@ public abstract class GenericFile extends GenericFile_Base {
             try {
                 FileSupport.getInstance().getFileSet().stream()
                         .filter(gf -> fileStorageToUpdate == gf.getFileStorage() && fileStorageToUpdate != gf.getStorage())
-                        .forEach(gf -> gf.updateFileStorage());
+                        .forEach(GenericFile::updateFileStorage);
                 logger.debug("FILE Conversion: DONE SUCESSFULLY!");
             } catch (final Throwable e) {
                 logger.debug("FILE Conversion: ABORTED!!!");

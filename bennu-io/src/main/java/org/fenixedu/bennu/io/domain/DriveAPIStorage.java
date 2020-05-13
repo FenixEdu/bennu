@@ -58,7 +58,7 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
     }
 
     private InputStream downloadFile(final String fileId) {
-        final HttpResponse<InputStream> response = Unirest.delete(getDriveUrl() + "/api/drive/file/" + fileId + "/download")
+        final HttpResponse<InputStream> response = Unirest.get(getDriveUrl() + "/api/drive/file/" + fileId + "/download")
                 .header("Authorization", "Bearer " + getAccessToken())
                 .asObject(raw -> raw.getContent());
         final HttpResponse<InputStream> realResponse = response.getStatus() == 307 ?
