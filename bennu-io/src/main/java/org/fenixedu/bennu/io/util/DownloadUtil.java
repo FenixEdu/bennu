@@ -47,8 +47,8 @@ public class DownloadUtil {
      *             If either of the arguments is {@code null}
      * @see #downloadFile(GenericFile, HttpServletRequest, HttpServletResponse, String)
      */
-    public static void downloadFile(GenericFile file, HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public static void downloadFile(final GenericFile file, final HttpServletRequest request,
+                                    final HttpServletResponse response) throws IOException {
         downloadFile(file, request, response, CoreConfiguration.getConfiguration().staticCacheControl());
     }
 
@@ -72,16 +72,16 @@ public class DownloadUtil {
      * @throws NullPointerException
      *             If either the file, request or response is {@code null}
      */
-    public static void downloadFile(GenericFile file, HttpServletRequest request, HttpServletResponse response,
-            String cacheControl) throws IOException {
-        String etag = "W/\"" + file.getExternalId() + "\"";
+    public static void downloadFile(final GenericFile file, final HttpServletRequest request,
+                                    final HttpServletResponse response, final String cacheControl) throws IOException {
+        final String etag = "W/\"" + file.getExternalId() + "\"";
         response.setHeader("ETag", etag);
         if (cacheControl != null) {
             response.setHeader("Cache-Control", cacheControl);
         }
         response.setHeader("Accept-Ranges", "bytes");
 
-        String contentType = file.getContentType();
+        final String contentType = file.getContentType();
         if(contentType.indexOf("video") != 0){
             response.setHeader("Content-Disposition", "attachment");
         }
@@ -92,21 +92,21 @@ public class DownloadUtil {
             return;
         }
 
-        long length = file.getSize();
+        final long length = file.getSize();
         long start = 0;
         long end = length - 1;
 
-        String range = request.getHeader("Range");
+        final String range = request.getHeader("Range");
         if (range != null) {
-            Matcher matcher = RANGE_PATTERN.matcher(range);
+            final Matcher matcher = RANGE_PATTERN.matcher(range);
             boolean match = matcher.matches();
             if (match) {
                 try {
-                    String startGroup = matcher.group("start");
+                    final String startGroup = matcher.group("start");
                     start = Strings.isNullOrEmpty(startGroup) ? start : Long.valueOf(startGroup);
                     start = start < 0 ? 0 : start;
 
-                    String endGroup = matcher.group("end");
+                    final String endGroup = matcher.group("end");
                     end = Strings.isNullOrEmpty(endGroup) ? end : Long.valueOf(endGroup);
                     end = end > length - 1 ? length - 1 : end;
                 } catch (NumberFormatException e) {
@@ -120,7 +120,7 @@ public class DownloadUtil {
             }
         }
 
-        long contentLength = end - start + 1;
+        final long contentLength = end - start + 1;
 
         response.setHeader("Content-Length", Long.toString(contentLength));
         if (range != null) {
@@ -133,9 +133,9 @@ public class DownloadUtil {
         if (FileStorage.tryDownloadFile(file, request, response, start, end)) {
             return;
         }
-        try (InputStream stream = file.getStream()) {
+        try (final InputStream stream = file.getStream()) {
             if (stream != null) {
-                try (OutputStream out = response.getOutputStream()) {
+                try (final OutputStream out = response.getOutputStream()) {
                     copyStream(stream, out, start, contentLength);
                     out.flush();
                 }
@@ -147,7 +147,8 @@ public class DownloadUtil {
 
     private static final int BUF_SIZE = 0x1000; // 4K
 
-    private static void copyStream(InputStream in, OutputStream out, long start, long bytesToRead) throws IOException {
+    private static void copyStream(final InputStream in, final OutputStream out, final long start,
+                                   long bytesToRead) throws IOException {
         ByteStreams.skipFully(in, start);
         byte buffer[] = new byte[BUF_SIZE];
         while (bytesToRead > 0) {

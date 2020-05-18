@@ -7,11 +7,10 @@ package org.fenixedu.bennu.io.domain;
  */
 public final class FileRawData extends FileRawData_Base {
     public FileRawData() {
-        super();
         setFileSupport(FileSupport.getInstance());
     }
 
-    public FileRawData(String uniqueIdentification, byte[] content) {
+    public FileRawData(final String uniqueIdentification, final byte[] content) {
         this();
         setContent(content);
         setContentKey(uniqueIdentification);

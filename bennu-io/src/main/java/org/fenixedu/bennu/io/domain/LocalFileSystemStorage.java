@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Function;
 import com.google.common.io.ByteStreams;
 import jvstm.PerTxBox;
 
@@ -38,21 +39,21 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         private final File file;
         private final InputStream stream;
     
-        FileWriteIntention(String path, byte[] contents) {
+        FileWriteIntention(final String path, final byte[] contents) {
             this.path = path;
             this.contents = contents;
             this.file = null;
             this.stream = null;
         }
 
-        FileWriteIntention(String path, File file) {
+        FileWriteIntention(final String path, final File file) {
             this.path = path;
             this.contents = null;
             this.file = file;
             this.stream = null;
         }
     
-        public FileWriteIntention(String path, InputStream stream) {
+        public FileWriteIntention(final String path, final InputStream stream) {
             this.path = path;
             this.contents = null;
             this.file = null;
@@ -63,35 +64,25 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
             if (contents != null) {
                 Files.write(contents, new File(path));
             } else if (stream!=null){
-                File file = new File(path);
-                OutputStream outputStream = new FileOutputStream(file);
+                final File file = new File(path);
+                final OutputStream outputStream = new FileOutputStream(file);
                 ByteStreams.copy(stream, outputStream);
                 outputStream.close();
-                
             } else {
                 java.nio.file.Files.move(file.toPath(), Paths.get(path));
             }
         }
 
         public byte[] asByteArray() throws IOException {
-            if (contents != null) {
-                return contents;
-            } else {
-                return Files.toByteArray(file);
-            }
+            return contents == null ? Files.toByteArray(file) : contents;
         }
 
         public InputStream asInputStream() throws IOException {
-            if (contents != null) {
-                return new ByteArrayInputStream(contents);
-            } else {
-                return new FileInputStream(file);
-            }
+            return contents == null ? new FileInputStream(file) : new ByteArrayInputStream(contents);
         }
     }
 
-    LocalFileSystemStorage(String name, String path, Integer treeDirectoriesNameLength) {
-        super();
+    LocalFileSystemStorage(final String name, final String path, final Integer treeDirectoriesNameLength) {
         setName(name);
         setPath(path);
         setTreeDirectoriesNameLength(treeDirectoriesNameLength);
@@ -99,50 +90,40 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 
     @Override
     public String getPath() {
-        //FIXME: remove when the framework enables read-only slots
         return super.getPath();
     }
 
     @Override
     public Integer getTreeDirectoriesNameLength() {
-        //FIXME: remove when the framework enables read-only slots
         return super.getTreeDirectoriesNameLength();
     }
 
-    @Override
-    public String store(GenericFile genericFile, File file) {
-        String uniqueIdentification =
+    private String store(final GenericFile genericFile, final Function<String, FileWriteIntention> intentionProvider) {
+        final String uniqueIdentification =
                 genericFile.getContentKey() == null ? genericFile.getExternalId() : genericFile.getContentKey();
         final String fullPath = getFullPath(uniqueIdentification);
 
         ensureDirectoryExists(fullPath);
 
-        Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
-        map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, file));
+        final Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
+        map.put(uniqueIdentification, intentionProvider.apply(fullPath + uniqueIdentification));
         getPerTxBox().put(map);
         return uniqueIdentification;
+    }
 
-    }
-    
-    
     @Override
-    public String store(GenericFile genericFile, InputStream stream) {
-        String uniqueIdentification =
-                genericFile.getContentKey() == null ? genericFile.getExternalId() : genericFile.getContentKey();
-        final String fullPath = getFullPath(uniqueIdentification);
-        
-        ensureDirectoryExists(fullPath);
-        
-        Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
-        map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, stream));
-        getPerTxBox().put(map);
-        return uniqueIdentification;
-        
+    public String store(final GenericFile genericFile, final File file) {
+        return store(genericFile, s -> new FileWriteIntention(s, file));
     }
     
     @Override
-    public String store(GenericFile file, byte[] content) {
-        String uniqueIdentification = file.getContentKey() == null ? file.getExternalId() : file.getContentKey();
+    public String store(final GenericFile genericFile, final InputStream stream) {
+        return store(genericFile, s -> new FileWriteIntention(s, stream));
+    }
+    
+    @Override
+    public String store(final GenericFile file, final byte[] content) {
+        final String uniqueIdentification = file.getContentKey() == null ? file.getExternalId() : file.getContentKey();
 
         final String fullPath = getFullPath(uniqueIdentification);
 
@@ -151,7 +132,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         } else {
             ensureDirectoryExists(fullPath);
 
-            Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
+            final Map<String, FileWriteIntention> map = new HashMap<>(getPerTxBox().get());
             map.put(uniqueIdentification, new FileWriteIntention(fullPath + uniqueIdentification, content));
             getPerTxBox().put(map);
         }
@@ -159,8 +140,8 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 
     }
 
-    private static void ensureDirectoryExists(String fullPath) {
-        File directory = new File(fullPath);
+    private static void ensureDirectoryExists(final String fullPath) {
+        final File directory = new File(fullPath);
         if (!directory.exists()) {
             if (!directory.mkdirs() && !directory.exists()) {
                 throw new RuntimeException("Could not create directory " + directory.getAbsolutePath());
@@ -183,12 +164,12 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         String path = getPath();
         if (path.contains("{") && path.contains("}")) {
             // Compile regular expression
-            Matcher matcher = BRACES_PATTERN.matcher(path);
+            final Matcher matcher = BRACES_PATTERN.matcher(path);
 
             // Replace all occurrences of pattern in input
-            StringBuffer result = new StringBuffer();
+            final StringBuffer result = new StringBuffer();
             while (matcher.find()) {
-                String replaceStr = CharMatcher.anyOf("{}").trimFrom(matcher.group());
+                final String replaceStr = CharMatcher.anyOf("{}").trimFrom(matcher.group());
                 matcher.appendReplacement(result, System.getProperty(replaceStr));
             }
             matcher.appendTail(result);
@@ -197,7 +178,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
         if (!path.endsWith(File.separator)) {
             path = path + File.separatorChar;
         }
-        File dir = new File(path);
+        final File dir = new File(path);
         if (!dir.exists()) {
             logger.debug("Filesystem storage {} directory does not exist, creating: {}", getName(), path);
             if (!dir.mkdirs()) {
@@ -212,7 +193,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
 
         final StringBuilder result = new StringBuilder();
 
-        char[] idArray = uniqueIdentification.toCharArray();
+        final char[] idArray = uniqueIdentification.toCharArray();
         for (int i = 0; i < idArray.length; i++) {
             if (i > 0 && i % directoriesNameLength == 0 && ((i + directoriesNameLength) < uniqueIdentification.length())) {
                 result.append(File.separatorChar);
@@ -226,31 +207,31 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
     }
 
     @Override
-    public byte[] read(GenericFile file) {
-        String uniqueIdentification = file.getContentKey();
+    public byte[] read(final GenericFile file) {
+        final String uniqueIdentification = file.getContentKey();
         try {
-            Map<String, FileWriteIntention> map = getPerTxBox().get();
+            final Map<String, FileWriteIntention> map = getPerTxBox().get();
             if (map.containsKey(uniqueIdentification)) {
                 return map.get(uniqueIdentification).asByteArray();
             }
 
             return Files.toByteArray(new File(getFullPath(uniqueIdentification) + uniqueIdentification));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException("error.store.file", e);
         }
     }
 
     @Override
-    public InputStream readAsInputStream(GenericFile file) {
-        String uniqueIdentification = file.getContentKey();
+    public InputStream readAsInputStream(final GenericFile file) {
+        final String uniqueIdentification = file.getContentKey();
         try {
-            Map<String, FileWriteIntention> map = getPerTxBox().get();
+            final Map<String, FileWriteIntention> map = getPerTxBox().get();
             if (map.containsKey(uniqueIdentification)) {
                 return map.get(uniqueIdentification).asInputStream();
             }
 
             return new FileInputStream(new File(getFullPath(uniqueIdentification) + uniqueIdentification));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             throw new RuntimeException("file.not.found", e);
         }
@@ -267,10 +248,10 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
      * reducing memory consumption.
      */
     @Override
-    protected boolean tryLowLevelDownload(GenericFile file, HttpServletRequest request, HttpServletResponse response, long start,
-            long end) {
+    protected boolean tryLowLevelDownload(final GenericFile file, final HttpServletRequest request,
+                                          final HttpServletResponse response, final long start, final long end) {
         if (supportsSendfile(request)) {
-            Optional<String> filePath = getSendfilePath(file.getContentKey());
+            final Optional<String> filePath = getSendfilePath(file.getContentKey());
             if (filePath.isPresent()) {
                 handleSendfile(filePath.get(), request, response, start, end);
                 return true;
@@ -288,8 +269,8 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
      * For now, we only support the Tomcat-specific 'sendfile' implementation.
      * See: http://tomcat.apache.org/tomcat-7.0-doc/aio.html#Asynchronous_writes
      */
-    private static void handleSendfile(String filename, HttpServletRequest request, HttpServletResponse response, long start,
-            long end) {
+    private static void handleSendfile(final String filename, final HttpServletRequest request,
+                                       final HttpServletResponse response, final long start, final long end) {
         response.setHeader("X-Bennu-Sendfile", "true");
         request.setAttribute("org.apache.tomcat.sendfile.filename", filename);
         request.setAttribute("org.apache.tomcat.sendfile.start", start);
@@ -302,7 +283,7 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
      * For now, we only support the Tomcat-specific 'sendfile' implementation. 
      * See: http://tomcat.apache.org/tomcat-7.0-doc/aio.html#Asynchronous_writes
      */
-    private static boolean supportsSendfile(HttpServletRequest request) {
+    private static boolean supportsSendfile(final HttpServletRequest request) {
         return Boolean.TRUE.equals(request.getAttribute("org.apache.tomcat.sendfile.support"));
     }
 
@@ -312,24 +293,20 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
      * It must first check if the file indeed exists, in order
      * for the application to throw the proper exception.
      */
-    private Optional<String> getSendfilePath(String uniqueIdentification) {
-        String path = getFullPath(uniqueIdentification) + uniqueIdentification;
-        if (new File(path).exists()) {
-            return Optional.of(path);
-        } else {
-            return Optional.empty();
-        }
+    private Optional<String> getSendfilePath(final String uniqueIdentification) {
+        final String path = getFullPath(uniqueIdentification) + uniqueIdentification;
+        return new File(path).exists() ? Optional.of(path) : Optional.empty();
     }
 
     private synchronized PerTxBox<Map<String, FileWriteIntention>> getPerTxBox() {
         if (fileIntentions == null) {
             fileIntentions = new PerTxBox<Map<String, FileWriteIntention>>(Collections.emptyMap()) {
                 @Override
-                public void commit(Map<String, FileWriteIntention> map) {
-                    for (FileWriteIntention i : map.values()) {
+                public void commit(final Map<String, FileWriteIntention> map) {
+                    for (final FileWriteIntention i : map.values()) {
                         try {
                             i.write();
-                        } catch (IOException e) {
+                        } catch (final IOException e) {
                             throw new RuntimeException("error.store.file", e);
                         }
                     }

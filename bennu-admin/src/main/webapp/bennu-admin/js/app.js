@@ -205,6 +205,15 @@ app.controller('IOController', ['$scope', '$http', '$timeout', function ($scope,
               }).error(function (data) { $scope.error = data; });
     $('#newStorageModal').modal('hide');
   }
+  $scope.newDriveStorage = function() {
+    $http.post(contextPath + '/api/bennu-io/storage/drive',
+        {'name' : $scope.driveName, 'driveUrl': $scope.driveUrl, 'remoteUsername': $scope.remoteUsername, 'remoteDirectoryId': $scope.remoteDirectoryId}).
+    success(function (data) {
+      $scope.driveName = $scope.driveUrl = $scope.remoteUsername = $scope.remoteDirectoryId = null; $scope.storages.push(data);
+      $scope.counts[data.id] = 0;
+    }).error(function (data) { $scope.error = data; });
+    $('#newStorageModal').modal('hide');
+  }
   $scope.setDefault = function(storage) {
     $http.post(contextPath + '/api/bennu-io/storage/default/' + storage.id).success(function (data) {
       $scope.storages = data.storages;

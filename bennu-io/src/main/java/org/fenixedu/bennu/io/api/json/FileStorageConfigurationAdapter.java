@@ -1,17 +1,15 @@
 package org.fenixedu.bennu.io.api.json;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.fenixedu.bennu.core.annotation.DefaultJsonAdapter;
 import org.fenixedu.bennu.core.json.JsonAdapter;
 import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.io.domain.FileStorage;
 import org.fenixedu.bennu.io.domain.FileStorageConfiguration;
-
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 @DefaultJsonAdapter(FileStorageConfiguration.class)
 public class FileStorageConfigurationAdapter implements JsonAdapter<FileStorageConfiguration> {
@@ -24,9 +22,9 @@ public class FileStorageConfigurationAdapter implements JsonAdapter<FileStorageC
      */
     @Override
     @Atomic
-    public FileStorageConfiguration create(JsonElement el, JsonBuilder ctx) {
+    public FileStorageConfiguration create(final JsonElement el, final JsonBuilder ctx) {
         final JsonArray configs = el.getAsJsonArray();
-        for (JsonElement configEl : configs) {
+        for (final JsonElement configEl : configs) {
             final JsonObject config = configEl.getAsJsonObject();
             final String fileStorageConfigurationId = config.get("fileStorageConfigurationId").getAsString();
             final String fileStorageId = config.get("fileStorageId").getAsString();
@@ -35,29 +33,27 @@ public class FileStorageConfigurationAdapter implements JsonAdapter<FileStorageC
         return null;
     }
 
-    private void associate(String fileStorageConfigurationId, String fileStorageId) {
-        FileStorageConfiguration fsc = readDomainObject(fileStorageConfigurationId);
-        FileStorage fs = readDomainObject(fileStorageId);
+    private void associate(final String fileStorageConfigurationId, final String fileStorageId) {
+        final FileStorageConfiguration fsc = readDomainObject(fileStorageConfigurationId);
+        final FileStorage fs = readDomainObject(fileStorageId);
         if (fsc != null) {
             fsc.setStorage(fs);
         }
     }
 
-    private <T> T readDomainObject(String oid) {
-        if ("null".equals(oid)) {
-            return null;
-        }
-        return FenixFramework.getDomainObject(oid);
+    private <T> T readDomainObject(final String oid) {
+        return "null".equals(oid) ? null : FenixFramework.getDomainObject(oid);
     }
 
     @Override
-    public FileStorageConfiguration update(JsonElement arg0, FileStorageConfiguration arg1, JsonBuilder ctx) {
+    public FileStorageConfiguration update(final JsonElement arg0, final FileStorageConfiguration arg1,
+                                           final JsonBuilder ctx) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public JsonElement view(FileStorageConfiguration fsc, JsonBuilder ctx) {
-        JsonObject json = new JsonObject();
+    public JsonElement view(final FileStorageConfiguration fsc, final JsonBuilder ctx) {
+        final JsonObject json = new JsonObject();
         json.addProperty("id", fsc.getExternalId());
         json.addProperty("type", fsc.getFileType());
         json.add("storage", ctx.view(fsc.getStorage()));

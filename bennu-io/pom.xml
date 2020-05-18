@@ -41,6 +41,11 @@
         	<groupId>org.apache.tika</groupId>
         	<artifactId>tika-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>3.4.01</version>
+        </dependency>
     </dependencies>
 
     <repositories>

@@ -60,15 +60,16 @@
 							<ul class="nav nav-tabs">
 								<li class="active"><a href="" data-target="#domainStore" data-toggle="tab">Domain Store</a></li>
 								<li><a href="" data-target="#localFSStore" data-toggle="tab">File System Store</a></li>
+								<li><a href="" data-target="#driveAPIStore" data-toggle="tab">Drive API Store</a></li>
 							</ul>
 							<br />
 							<div class="tab-content clearfix">
 								<div class="tab-pane active" id="domainStore">
 									<form class="form-horizontal" ng-submit="newDomainStorage()">
 										<div class="form-group">
-											<label for="name" class="col-sm-4 control-label">Name</label>
+											<label for="domainName" class="col-sm-4 control-label">Name</label>
 											<div class="col-sm-8">
-												<input type="text" class="form-control" id="name" ng-model="domainName" required placeholder="Name">
+												<input type="text" class="form-control" id="domainName" ng-model="domainName" required placeholder="Name">
 											</div>
 										</div>
 									    <button type="submit" class="btn btn-primary pull-right">Create</button>
@@ -77,9 +78,9 @@
 								<div class="tab-pane" id="localFSStore">
 									<form class="form-horizontal" ng-submit="newFSStorage()">
 										<div class="form-group">
-											<label for="name" class="col-sm-4 control-label">Name</label>
+											<label for="fsName" class="col-sm-4 control-label">Name</label>
 											<div class="col-sm-8">
-												<input type="text" class="form-control" id="name" ng-model="fsName" required placeholder="Name">
+												<input type="text" class="form-control" id="fsName" ng-model="fsName" required placeholder="Name">
 											</div>
 										</div>
 										<div class="form-group">
@@ -95,6 +96,35 @@
 											</div>
 										</div>
 									    <button type="submit" class="btn btn-primary pull-right">Create</button>
+									</form>
+								</div>
+								<div class="tab-pane" id="driveAPIStore">
+									<form class="form-horizontal" ng-submit="newDriveStorage()">
+										<div class="form-group">
+											<label for="driveName" class="col-sm-4 control-label">Name</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="driveName" ng-model="driveName" required placeholder="Name">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="driveUrl" class="col-sm-4 control-label">Drive URL</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="driveUrl" ng-model="driveUrl" required placeholder="Path">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="remoteUsername" class="col-sm-4 control-label">Remote Username</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="remoteUsername" ng-model="remoteUsername" required placeholder="Path">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="remoteDirectoryId" class="col-sm-4 control-label">Remote Directory ID</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="remoteDirectoryId" ng-model="remoteDirectoryId" required placeholder="Path">
+											</div>
+										</div>
+										<button type="submit" class="btn btn-primary pull-right">Create</button>
 									</form>
 								</div>
 							</div>

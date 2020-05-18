@@ -26,13 +26,19 @@ public class FileStorage {
 	protected String name;
 }
 
-	public class DomainStorage extends FileStorage{
+	public class DomainStorage extends FileStorage {
 	}
 
-	public class LocalFileSystemStorage extends FileStorage{
+	public class LocalFileSystemStorage extends FileStorage {
 		protected String path;
 		protected Integer treeDirectoriesNameLength;
 	}	
+
+	public class DriveAPIStorage extends FileStorage {
+		String driveUrl;
+		String remoteUsername;
+		String remoteDirectoryId;
+	}
 
 public class FileStorageConfiguration {
 	protected String fileType (REQUIRED);
@@ -98,7 +104,7 @@ relation FileStorages {
 	protected FileSupport playsRole fileSupport {
         multiplicity 1..1;
 	}
-	protected FileStorage playsRole fileStorage {
+	FileStorage playsRole fileStorage {
 		multiplicity *;
 	}
 }
@@ -116,7 +122,7 @@ relation FileStorageConfigurations {
     protected FileSupport playsRole fileSupport {
         multiplicity 1..1;
     }
-	protected FileStorageConfiguration playsRole configuration {
+	FileStorageConfiguration playsRole configuration {
 		multiplicity *;
 	}
 }

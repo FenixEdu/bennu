@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
 public class LocalFileSystemStorageAdapter implements JsonAdapter<LocalFileSystemStorage> {
 
     @Override
-    public LocalFileSystemStorage create(JsonElement el, JsonBuilder ctx) {
+    public LocalFileSystemStorage create(final JsonElement el, final JsonBuilder ctx) {
         final JsonObject obj = el.getAsJsonObject();
         final String name = obj.get("name").getAsString();
         final String path = obj.get("path").getAsString();
@@ -22,12 +22,13 @@ public class LocalFileSystemStorageAdapter implements JsonAdapter<LocalFileSyste
     }
 
     @Override
-    public LocalFileSystemStorage update(JsonElement arg0, LocalFileSystemStorage arg1, JsonBuilder arg2) {
+    public LocalFileSystemStorage update(final JsonElement arg0, final LocalFileSystemStorage arg1,
+                                         final JsonBuilder arg2) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public JsonElement view(LocalFileSystemStorage fls, JsonBuilder ctx) {
+    public JsonElement view(final LocalFileSystemStorage fls, final JsonBuilder ctx) {
         final JsonObject json = ctx.view(fls, FileStorageAdapter.class).getAsJsonObject();
         json.addProperty("path", fls.getPath());
         json.addProperty("treeDirectoriesNameLength", fls.getTreeDirectoriesNameLength());
