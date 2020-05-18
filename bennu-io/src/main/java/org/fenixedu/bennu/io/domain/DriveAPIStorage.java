@@ -104,7 +104,9 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
     @Override
     public byte[] read(final GenericFile file) {
         try {
-            return IOUtils.toByteArray(readAsInputStream(file));
+            try (final InputStream inputStream = readAsInputStream(file)) {
+                return IOUtils.toByteArray(inputStream);
+            }
         } catch (final IOException e) {
             throw new Error(e);
         }
