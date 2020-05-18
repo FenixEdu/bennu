@@ -14,6 +14,8 @@ import org.joda.time.DateTime;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 public class DriveAPIStorage extends DriveAPIStorage_Base {
@@ -58,12 +60,17 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
     }
 
     private InputStream downloadFile(final String fileId) {
-        final HttpResponse<InputStream> response = Unirest.get(getDriveUrl() + "/api/drive/file/" + fileId + "/download")
+        final CompletableFuture<HttpResponse<InputStream>> future = Unirest.get(getDriveUrl() + "/api/drive/file/" + fileId + "/download")
                 .header("Authorization", "Bearer " + getAccessToken())
-                .asObject(raw -> raw.getContent());
-        final HttpResponse<InputStream> realResponse = response.getStatus() == 307 ?
-                Unirest.get(response.getHeaders().getFirst("Location")).asObject(raw -> raw.getContent()) : response;
-        return realResponse.getBody();
+                .asObjectAsync(raw -> raw.getContent());
+        try {
+            HttpResponse<InputStream> response = future.get();
+            response = response.getStatus() == 307 ? Unirest.get(response.getHeaders().getFirst("Location"))
+                    .asObjectAsync(raw -> raw.getContent()).get() : response;
+            return response.getBody();
+        } catch (final InterruptedException | ExecutionException e) {
+            throw new Error(e);
+        }
     }
 
     private boolean deleteFile(final String fileId) {
