@@ -10,6 +10,8 @@ import org.apache.commons.io.IOUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.jwt.Tools;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +21,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 public class DriveAPIStorage extends DriveAPIStorage_Base {
+
+    private static final Logger logger = LoggerFactory.getLogger(DriveAPIStorage.class.getName());
 
     static {
         Unirest.config().reset();
@@ -78,7 +82,15 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
                 .header("Authorization", "Bearer " + getAccessToken())
                 .header("X-Requested-With", "XMLHttpRequest")
                 .asString();
-        return response.getStatus() == 204;
+        if (response.getStatus() != 204) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Failed to delete file: " + fileId + ". Got response code: " + response.getStatus());
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug("Failed message:" + response.getBody());
+            }
+        }
+        return true;
     }
 
     private static String dirnameFor(final GenericFile file) {
