@@ -1,5 +1,7 @@
 package org.fenixedu.bennu.io.domain;
 
+import com.google.common.hash.Funnels;
+import com.google.common.io.ByteStreams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -7,16 +9,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import kong.unirest.HttpResponse;
 import kong.unirest.MultipartBody;
 import kong.unirest.Unirest;
-import org.apache.commons.io.IOUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.jwt.Tools;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -69,20 +68,6 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
         return id.getAsString();
     }
 
-    private InputStream downloadFile(final String fileId) {
-        final CompletableFuture<HttpResponse<InputStream>> future = Unirest.get(getDriveUrl() + "/api/drive/file/" + fileId + "/download")
-                .header("Authorization", "Bearer " + getAccessToken())
-                .asObjectAsync(raw -> raw.getContent());
-        try {
-            HttpResponse<InputStream> response = future.get();
-            response = response.getStatus() == 307 ? Unirest.get(response.getHeaders().getFirst("Location"))
-                    .asObjectAsync(raw -> raw.getContent()).get() : response;
-            return response.getBody();
-        } catch (final InterruptedException | ExecutionException e) {
-            throw new Error(e);
-        }
-    }
-
     private boolean deleteFile(final String fileId) {
         final HttpResponse response = Unirest.delete(getDriveUrl() + "/api/drive/file/" + fileId)
                 .header("Authorization", "Bearer " + getAccessToken())
@@ -132,18 +117,30 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
 
     @Override
     public byte[] read(final GenericFile file) {
-        try {
-            try (final InputStream inputStream = readAsInputStream(file)) {
-                return IOUtils.toByteArray(inputStream);
-            }
-        } catch (final IOException e) {
-            throw new Error(e);
+        HttpResponse<byte[]> response = Unirest.get(getDriveUrl() + "/api/drive/file/" + file.getContentKey() + "/download")
+                .header("Authorization", "Bearer " + getAccessToken())
+                .asBytes();
+        if (response.getStatus() == 307) {
+            response = Unirest.get(response.getHeaders().getFirst("Location")).asBytes();
         }
+        final byte[] result = response.getBody();
+        System.out.println("Read " + result.length + " from normal read");
+        return result;
     }
 
     @Override
     public InputStream readAsInputStream(final GenericFile file) {
-        return downloadFile(file.getContentKey());
+        final CompletableFuture<HttpResponse<byte[]>> future = Unirest.get(getDriveUrl() + "/api/drive/file/" + file.getContentKey() + "/download")
+                .header("Authorization", "Bearer " + getAccessToken())
+                .asBytesAsync();
+        try {
+            HttpResponse<byte[]> response = future.get();
+            response = response.getStatus() == 307 ? Unirest.get(response.getHeaders().getFirst("Location"))
+                    .asBytesAsync().get() : response;
+            return new ByteArrayInputStream(response.getBody());
+        } catch (final InterruptedException | ExecutionException e) {
+            throw new Error(e);
+        }
     }
 
 }
