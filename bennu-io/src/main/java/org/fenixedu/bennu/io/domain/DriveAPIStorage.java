@@ -78,19 +78,23 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
     }
 
     private boolean deleteFile(final String fileId) {
-        final HttpResponse<String> response = Unirest.delete(getDriveUrl() + "/api/drive/file/" + fileId)
+        final HttpResponse response = Unirest.delete(getDriveUrl() + "/api/drive/file/" + fileId)
                 .header("Authorization", "Bearer " + getAccessToken())
                 .header("X-Requested-With", "XMLHttpRequest")
-                .asString();
-        if (response.getStatus() != 204) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("Failed to delete file: " + fileId + ". Got response code: " + response.getStatus());
+                .asEmpty();
+        try {
+            if (response.getStatus() != 204) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Failed to delete file: " + fileId + ". Got response code: " + response.getStatus());
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Failed message:" + response.getBody());
+                }
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug("Failed message:" + response.getBody());
-            }
+            return true;
+        } finally {
+            response.getBody();
         }
-        return true;
     }
 
     private static String dirnameFor(final GenericFile file) {
