@@ -28,6 +28,7 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
     static {
         Unirest.config().reset();
         Unirest.config().followRedirects(false);
+        Unirest.config().concurrency(2000, 2000);
     }
 
     DriveAPIStorage(final String name, final String driveUrl, final String remoteUsername,
