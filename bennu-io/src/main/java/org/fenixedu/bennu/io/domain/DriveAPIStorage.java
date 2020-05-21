@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.io.domain;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -60,7 +61,11 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
                 .field("path", directory);
         final HttpResponse<String> response = fileSetter.apply(request).asString();
         final JsonObject result = new JsonParser().parse(response.getBody()).getAsJsonObject();
-        return result.get("id").getAsString();
+        final JsonElement id = result.get("id");
+        if (id == null || id.isJsonNull()) {
+            throw new Error(result.toString());
+        }
+        return id.getAsString();
     }
 
     private InputStream downloadFile(final String fileId) {
