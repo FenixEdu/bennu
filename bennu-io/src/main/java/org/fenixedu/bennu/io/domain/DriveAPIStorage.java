@@ -123,9 +123,7 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
         if (response.getStatus() == 307) {
             response = Unirest.get(response.getHeaders().getFirst("Location")).asBytes();
         }
-        final byte[] result = response.getBody();
-        System.out.println("Read " + result.length + " from normal read");
-        return result;
+        return response.getBody();
     }
 
     @Override
