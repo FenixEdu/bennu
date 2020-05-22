@@ -1,7 +1,5 @@
 package org.fenixedu.bennu.io.domain;
 
-import com.google.common.hash.Funnels;
-import com.google.common.io.ByteStreams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -15,9 +13,9 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.function.Function;
 
 public class DriveAPIStorage extends DriveAPIStorage_Base {
@@ -128,17 +126,18 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
 
     @Override
     public InputStream readAsInputStream(final GenericFile file) {
-        final CompletableFuture<HttpResponse<byte[]>> future = Unirest.get(getDriveUrl() + "/api/drive/file/" + file.getContentKey() + "/download")
+        final InputStream[] result = new InputStream[1];
+        Unirest.get(getDriveUrl() + "/api/drive/file/" + file.getContentKey() + "/download")
                 .header("Authorization", "Bearer " + getAccessToken())
-                .asBytesAsync();
-        try {
-            HttpResponse<byte[]> response = future.get();
-            response = response.getStatus() == 307 ? Unirest.get(response.getHeaders().getFirst("Location"))
-                    .asBytesAsync().get() : response;
-            return new ByteArrayInputStream(response.getBody());
-        } catch (final InterruptedException | ExecutionException e) {
-            throw new Error(e);
-        }
+                .thenConsume(r1 -> {
+                    if (r1.getStatus() == 307) {
+                        Unirest.get(r1.getHeaders().getFirst("Location"))
+                                .thenConsume(r2 -> result[0] = r2.getContent());
+                    } else {
+                        result[0] = r1.getContent();
+                    }
+                });
+        return result[0];
     }
 
 }
