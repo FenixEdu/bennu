@@ -135,3 +135,12 @@ relation LocalFilesToDelete {
 		multiplicity *;
 	}
 }
+
+relation DriveAPIStorageFileToDelete {
+	protected DriveAPIStorage playsRole driveAPIStorageForFilesToDelete {
+		multiplicity 0..1;
+	}
+    protected GenericFile playsRole filesToDelete {
+        multiplicity *;
+    }
+}
