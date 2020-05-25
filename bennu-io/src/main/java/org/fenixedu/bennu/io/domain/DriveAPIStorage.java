@@ -91,10 +91,10 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
     }
 
     @Atomic
-    private void deleteRemoteFile(final GenericFile file) {
+    private void deleteRemoteFile(final DriveAPIFile file) {
         if (file.getDriveAPIStorageForFilesToDelete() == this) {
             deleteFile(file.getContentKey());
-            file.setDriveAPIStorageForFilesToDelete(null);
+            file.delete();
         }
     }
 
@@ -111,7 +111,7 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
     @Override
     public String store(final GenericFile file, final byte[] content) {
         if (content == null) {
-            file.setDriveAPIStorageForFilesToDelete(this);
+            new DriveAPIFile(this, file.getContentKey());
             return null;
         }
         return uploadFile(dirnameFor(file), b -> b.field("file", content, file.getFilename()));

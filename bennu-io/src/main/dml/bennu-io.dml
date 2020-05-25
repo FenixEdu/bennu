@@ -40,6 +40,10 @@ public class FileStorage {
 		String remoteDirectoryId;
 	}
 
+public class DriveAPIFile {
+    String contentKey;
+}
+
 public class FileStorageConfiguration {
 	protected String fileType (REQUIRED);
 }
@@ -138,9 +142,9 @@ relation LocalFilesToDelete {
 
 relation DriveAPIStorageFileToDelete {
 	protected DriveAPIStorage playsRole driveAPIStorageForFilesToDelete {
-		multiplicity 0..1;
+		multiplicity 1..1;
 	}
-    protected GenericFile playsRole filesToDelete {
+    protected DriveAPIFile playsRole filesToDelete {
         multiplicity *;
     }
 }
