@@ -1,7 +1,5 @@
 package org.fenixedu.bennu.io.domain;
 
-import com.google.common.hash.Funnels;
-import com.google.common.io.ByteStreams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -14,8 +12,12 @@ import org.fenixedu.jwt.Tools;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.ist.fenixframework.Atomic;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -88,6 +90,18 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
         }
     }
 
+    @Atomic
+    private void deleteRemoteFile(final GenericFile file) {
+        if (file.getDriveAPIStorageForFilesToDelete() == this) {
+            deleteFile(file.getContentKey());
+            file.setDriveAPIStorageForFilesToDelete(null);
+        }
+    }
+
+    public void deletePendingRemoteFiles() {
+        getFilesToDeleteSet().forEach(this::deleteRemoteFile);
+    }
+
     private static String dirnameFor(final GenericFile file) {
         final DateTime when = file.getCreationDate();
         return Integer.toString(when.getYear()) + "/" + when.getMonthOfYear() + "/" + when.getDayOfMonth() + "/"
@@ -97,9 +111,7 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
     @Override
     public String store(final GenericFile file, final byte[] content) {
         if (content == null) {
-            if (!deleteFile(file.getContentKey())) {
-                throw new Error("Unable to delete remote file " + file.getExternalId());
-            }
+            file.setDriveAPIStorageForFilesToDelete(this);
             return null;
         }
         return uploadFile(dirnameFor(file), b -> b.field("file", content, file.getFilename()));
