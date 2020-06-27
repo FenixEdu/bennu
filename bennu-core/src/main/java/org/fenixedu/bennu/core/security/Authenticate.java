@@ -174,18 +174,33 @@ public class Authenticate {
     }
 
     static void jwtRequest(final HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
         final String jwtPrivateKeyPath = CoreConfiguration.getConfiguration().jwtPrivateKeyPath();
-        if (authHeader != null && authHeader.length() > 7 && authHeader.startsWith("Bearer ")
-                && jwtPrivateKeyPath.length() > 0) {
-            final String jwt = authHeader.substring(7);
-            final JsonObject claim = Tools.verify(SignatureAlgorithm.RS256, jwtPrivateKeyPath, jwt);
-            if (claim != null) {
-                final User user = User.findByUsername(claim.get("username").getAsString());
-                if (user != null) {
-                    final AuthenticationContext authenticationContext = new AuthenticationContext(user, "JWT Token");
-                    loggedUserContext.set(authenticationContext);
+        if (jwtPrivateKeyPath.length() > 0) {
+            String authHeader = request.getHeader("Authorization");
+            if (authHeader != null && authHeader.length() > 7 && authHeader.startsWith("Bearer ")) {
+                processJwtToken(jwtPrivateKeyPath, authHeader);
+            } else {
+                authHeader = request.getParameter("Authorization");
+                if (authHeader != null && authHeader.length() > 7 && authHeader.startsWith("Bearer ")) {
+                    processJwtToken(jwtPrivateKeyPath, authHeader);
+                } else {
+                    authHeader = (String) request.getAttribute("Authorization");
+                    if (authHeader != null && authHeader.length() > 7 && authHeader.startsWith("Bearer ")) {
+                        processJwtToken(jwtPrivateKeyPath, authHeader);
+                    }
                 }
+            }
+        }
+    }
+
+    private static void processJwtToken(final String jwtPrivateKeyPath, final String authHeader) {
+        final String jwt = authHeader.substring(7);
+        final JsonObject claim = Tools.verify(SignatureAlgorithm.RS256, jwtPrivateKeyPath, jwt);
+        if (claim != null) {
+            final User user = User.findByUsername(claim.get("username").getAsString());
+            if (user != null) {
+                final AuthenticationContext authenticationContext = new AuthenticationContext(user, "JWT Token");
+                loggedUserContext.set(authenticationContext);
             }
         }
     }
