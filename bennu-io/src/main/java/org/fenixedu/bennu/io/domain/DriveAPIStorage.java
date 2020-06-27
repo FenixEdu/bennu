@@ -105,9 +105,25 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
     }
 
     private static String dirnameFor(final GenericFile file) {
-        final DateTime when = file.getCreationDate();
-        return Integer.toString(when.getYear()) + "/" + when.getMonthOfYear() + "/" + when.getDayOfMonth() + "/"
-                + file.getExternalId();
+        final String id = file.getExternalId();
+        return transformIDInPath(id) + File.separatorChar + file.getExternalId();
+    }
+
+    private static final int DIR_NAME_LENGH = 3;
+    private static String transformIDInPath(final String uniqueIdentification) {
+        final StringBuilder result = new StringBuilder();
+
+        final char[] idArray = uniqueIdentification.toCharArray();
+        for (int i = 0; i < idArray.length; i++) {
+            if (i > 0 && i % DIR_NAME_LENGH == 0 && ((i + DIR_NAME_LENGH) < uniqueIdentification.length())) {
+                result.append(File.separatorChar);
+            } else if ((i + DIR_NAME_LENGH) >= uniqueIdentification.length()) {
+                break;
+            }
+            result.append(idArray[i]);
+        }
+
+        return result.toString();
     }
 
     @Override
