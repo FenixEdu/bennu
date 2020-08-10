@@ -1,0 +1,12 @@
+local.login = false
+saml.enabled = true
+cas.enabled = false
+
+saml.keystorePath = somewhere/samlKeystore.jks
+saml.keystorePassword = xxxxxxxxxxxxxxxxxxxx
+saml.privateKeyPassword = yyyyyyyyyyyyyyyyyy
+saml.identityProviderMetadataPath = somewhere/idp-metadata.xml
+saml.serviceProviderEntityId = Fenix
+saml.callbackUrl = http://localhost:8080/fenix/api/saml-client/returnFromSAML
+saml.serviceProviderMetadataGenerationDestinationPath = /somewhere/sp-metadata.xml
+saml.serviceProviderFinalMetadataLocation = /somewhere/final-sp-metadata.xml
