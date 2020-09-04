@@ -1,10 +1,13 @@
 package org.fenixedu.bennu.saml.client;
 
+import org.opensaml.core.config.ConfigurationService;
 import org.opensaml.core.xml.schema.XSAny;
 import org.opensaml.core.xml.schema.impl.XSAnyBuilder;
 import org.opensaml.saml.common.xml.SAMLConstants;
+import org.opensaml.xmlsec.config.DecryptionParserPool;
 import org.pac4j.saml.client.SAML2Client;
 import org.pac4j.saml.config.SAML2Configuration;
+import org.apache.wss4j.common.saml.OpenSAMLUtil;
 
 import javax.xml.namespace.QName;
 import java.io.File;
@@ -98,6 +101,8 @@ public class SAMLClientSDK {
 
     static {
         CLIENT.setCallbackUrl(SAMLClientConfiguration.getConfiguration().callbackUrl());
+
+        ConfigurationService.register(DecryptionParserPool.class, new DecryptionParserPool(OpenSAMLUtil.getParserPool()));
     }
 
     public static SAML2Client getClient() {
