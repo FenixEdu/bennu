@@ -29,7 +29,7 @@ public class SAMLClientSDK {
                     "urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract"));
 
     // These are the attributes that are necessary for the IDP to work with the GOV IDP
-    private static final String[] GOV_REQUIRED_ATTRIBUTES = new String[] { "NIC" };
+    private static final String[] GOV_REQUIRED_ATTRIBUTES = new String[] { "http://interop.gov.pt/MDC/Cidadao/NIC" };
 
     private static SAML2Configuration getNewDefaultConfiguration() {
         SAML2Configuration config = new SAML2Configuration(SAMLClientConfiguration.getConfiguration().keystorePath(),
@@ -78,7 +78,7 @@ public class SAMLClientSDK {
             for (String name : attributesToRequire) {
                 XSAny requestedAttribute = new XSAnyBuilder()
                         .buildObject(new QName("http://autenticacao.cartaodecidadao.pt/atributos", "RequestedAttribute"));
-                requestedAttribute.getUnknownAttributes().put(new QName("Name"), "http://interop.gov.pt/MDC/Cidadao/" + name);
+                requestedAttribute.getUnknownAttributes().put(new QName("Name"), name);
                 requestedAttribute.getUnknownAttributes()
                         .put(new QName("NameFormat"), "urn:oasis:names:tc:SAML:2.0:attrname-format:uri");
                 requestedAttribute.getUnknownAttributes().put(new QName("isRequired"), "true");
