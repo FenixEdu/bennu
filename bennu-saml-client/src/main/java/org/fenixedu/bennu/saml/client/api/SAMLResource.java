@@ -1,16 +1,15 @@
 package org.fenixedu.bennu.saml.client.api;
 
+import com.onelogin.saml2.Auth;
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.Singleton;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
-import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.security.SkipCSRF;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.saml.client.SAMLClientConfiguration;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.saml.client.SAML2Client;
-import org.pac4j.saml.credentials.SAML2Credentials;
+import org.fenixedu.bennu.saml.client.SAMLClientSDK;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,11 +24,8 @@ import javax.ws.rs.core.Response.Status;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static org.fenixedu.bennu.saml.client.SAMLClientSDK.getClient;
+import java.util.Map;
 
 @Path("/saml-client")
 public class SAMLResource {
@@ -47,17 +43,53 @@ public class SAMLResource {
             return Response.status(Status.NOT_FOUND).build();
         }
 
+
+        Auth auth = null;
+        try {
+            auth = SAMLClientSDK.getAuth(request, response);
+            auth.processResponse();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.debug(e.getMessage(), e);
+            return Response.status(Status.BAD_REQUEST).location(new URI("")).build(); //TODO FIX
+        }
+
+        if (!auth.isAuthenticated()) {
+            System.out.println("Not authenticated");
+            logger.debug("Not authenticated");
+            return Response.status(Status.BAD_REQUEST).location(new URI("")).build(); //TODO FIX
+        }
+
+        String username = null;
+        String relayState = null;
+        List<String> errors = auth.getErrors();
+        if (!errors.isEmpty()) {
+            logger.debug(StringUtils.join(errors, ", "));
+            if (auth.isDebugActive()) {
+                String errorReason = auth.getLastErrorReason();
+                if (errorReason != null && !errorReason.isEmpty()) {
+                    logger.debug(auth.getLastErrorReason());
+                }
+            }
+        } else {
+            Map<String, List<String>> attributes = auth.getAttributes();
+//            String nameId = auth.getNameId();
+//            String nameIdFormat = auth.getNameIdFormat();
+//            String sessionIndex = auth.getSessionIndex();
+//            String nameidNameQualifier = auth.getNameIdNameQualifier();
+//            String nameidSPNameQualifier = auth.getNameIdSPNameQualifier();
+            List<String> tempIstId = attributes.get("uid");
+            if (tempIstId != null) {
+                username = tempIstId.get(0);
+            } else {
+                //todo something like redirecting to failed page
+            }
+        }
+
+
         String resultLocation = CoreConfiguration.getConfiguration().applicationUrl() + request.getContextPath();
         try {
-            SAML2Client client = getClient();
-            String username = null;
-            final JEEContext context = new JEEContext(request, response);
 
-            Optional<SAML2Credentials> credentials = client.getCredentials(context);
-            if (credentials.isPresent()) {
-                List<String> possibleResults = (ArrayList<String>) credentials.get().getUserProfile().getAttribute("uid");
-                username = possibleResults.get(0);
-            }
             final User user = getUser(username);
             Authenticate.login(request, response, user, "SAML Authentication");
 

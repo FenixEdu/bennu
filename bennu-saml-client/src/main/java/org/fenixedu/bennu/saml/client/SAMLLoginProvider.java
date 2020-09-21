@@ -1,30 +1,34 @@
 package org.fenixedu.bennu.saml.client;
 
-import com.google.common.base.Strings;
+import com.onelogin.saml2.Auth;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.portal.login.LoginProvider;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
-import org.pac4j.saml.client.SAML2Client;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class SAMLLoginProvider implements LoginProvider {
 
-    @Override
-    public void showLogin(final HttpServletRequest request, final HttpServletResponse response, final String callback) {
-        Authenticate.logout(request, response);
-        final JEEContext context = new JEEContext(request, response);
+    private static final Logger logger = LoggerFactory.getLogger(SAMLLoginProvider.class);
 
-        final SAML2Client client = SAMLClientSDK.getClient();
+    @Override
+    public void showLogin(final HttpServletRequest request, final HttpServletResponse response, String callback)
+            throws IOException {
+//        Authenticate.logout(request, response);
 
         try {
-            final HttpAction action = client.getRedirectionAction(context).get();
-            JEEHttpActionAdapter.INSTANCE.adapt(action, context);
-        } catch (final HttpAction ex) {
-            throw new Error(ex);
+            callback = Base64.getUrlEncoder().encodeToString("xxxxxxxxx".getBytes(StandardCharsets.UTF_8));
+            Auth auth = SAMLClientSDK.getAuth(request, response);
+            auth.login(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.debug(e.getMessage(), e);
+            // return Response.status(Response.Status.BAD_REQUEST).location(new URI("")).build();
         }
     }
 

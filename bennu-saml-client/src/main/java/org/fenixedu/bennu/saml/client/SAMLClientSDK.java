@@ -1,144 +1,101 @@
 package org.fenixedu.bennu.saml.client;
 
-import org.opensaml.core.xml.schema.XSAny;
-import org.opensaml.core.xml.schema.impl.XSAnyBuilder;
-import org.opensaml.saml.common.xml.SAMLConstants;
-import org.pac4j.saml.client.SAML2Client;
-import org.pac4j.saml.config.SAML2Configuration;
 
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.function.Supplier;
+import com.onelogin.saml2.Auth;
+import com.onelogin.saml2.exception.Error;
+import com.onelogin.saml2.exception.SettingsException;
+import com.onelogin.saml2.settings.Saml2Settings;
+import com.onelogin.saml2.settings.SettingsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SAMLClientSDK {
 
-    private static final SAML2Configuration CONFIG = getNewDefaultConfiguration();
+    private static Auth auth = null;
 
-    private static final List<String> AUT_CONTEXT_CLASSES_LDAP =
-            new ArrayList<>(Arrays.asList("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"));
+    private static KeyStore keyStore = null;
+    private static Key serviceProviderPrivateKey = null;
+    private static Certificate serviceProviderCert = null;
+    private static Certificate identityProviderCert = null;
 
-    private static final List<String> AUT_CONTEXT_CLASSES_GOV = new ArrayList<>(
-            Arrays.asList("urn:oasis:names:tc:SAML:2.0:ac:classes:SmartcardPKI",
-                    "urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract"));
+    private static Object lock = new Object();
 
-    // These are the attributes that are necessary for the IDP to work with the GOV IDP
-    private static final String[] GOV_REQUIRED_ATTRIBUTES = new String[] { "http://interop.gov.pt/MDC/Cidadao/NIC" };
+    private static String SPKeyAlias = "fenix.tecnico.ulisboa.pt-auth"; // TODO ADD THIS TO CONFIG
+    private static String idpCertAlias = "id.tecnico.ulisboa.pt"; // TODO ADD THIS TO CONFIG
 
-    private static SAML2Configuration getNewDefaultConfiguration() {
-        SAML2Configuration config = new SAML2Configuration(SAMLClientConfiguration.getConfiguration().keystorePath(),
-                SAMLClientConfiguration.getConfiguration().keystorePassword(),
-                SAMLClientConfiguration.getConfiguration().privateKeyPassword(),
-                SAMLClientConfiguration.getConfiguration().identityProviderMetadataPath());
-
-        config.setAuthnRequestBindingType(SAMLConstants.SAML2_REDIRECT_BINDING_URI);
-        config.setResponseBindingType(SAMLConstants.SAML2_POST_BINDING_URI);
-
-        config.setAuthnRequestSigned(true);
-        config.setWantsResponsesSigned(true);
-        config.setMaximumAuthenticationLifetime(3600 * 8);
-        // custom SP entity ID
-        config.setServiceProviderEntityId(SAMLClientConfiguration.getConfiguration().serviceProviderEntityId());
-        config.setForceServiceProviderMetadataGeneration(true);
-
-        config.setServiceProviderMetadataPath(
-                new File(SAMLClientConfiguration.getConfiguration().serviceProviderMetadataGenerationDestinationPath())
-                        .getAbsolutePath());
-        return config;
-    }
-
-    private static SAML2Configuration getNewConfiguration(String[] govAttributesToRequire) {
-        SAML2Configuration config = getNewDefaultConfiguration();
-
-        Supplier<List<XSAny>> requestExtensions = () -> {
-            List<XSAny> extensionList = new ArrayList<>();
-
-            /*
-            <samlp:Extensions>
-            <RequestedAttributes xmlns="http://autenticacao.cartaodecidadao.pt/atributos">
-              <RequestedAttribute Name="http://interop.gov.pt/MDC/Cidadao/NIC" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
-            </RequestedAttributes>
-            <FAAALevel xmlns="http://autenticacao.cartaodecidadao.pt/atributos">3</FAAALevel>
-            </samlp:Extensions>
-            */
-
-            XSAny requestedAttributes = new XSAnyBuilder()
-                    .buildObject(new QName("http://autenticacao.cartaodecidadao.pt/atributos", "RequestedAttributes"));
-            extensionList.add(requestedAttributes);
-
-            HashSet<String> attributesToRequire = new HashSet<>(Arrays.asList(GOV_REQUIRED_ATTRIBUTES));
-            attributesToRequire.addAll(Arrays.asList(govAttributesToRequire));
-
-            for (String name : attributesToRequire) {
-                XSAny requestedAttribute = new XSAnyBuilder()
-                        .buildObject(new QName("http://autenticacao.cartaodecidadao.pt/atributos", "RequestedAttribute"));
-                requestedAttribute.getUnknownAttributes().put(new QName("Name"), name);
-                requestedAttribute.getUnknownAttributes()
-                        .put(new QName("NameFormat"), "urn:oasis:names:tc:SAML:2.0:attrname-format:uri");
-                requestedAttribute.getUnknownAttributes().put(new QName("isRequired"), "true");
-                requestedAttributes.getUnknownXMLObjects().add(requestedAttribute);
+    private static KeyStore getKeyStore() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+        synchronized (lock) {
+            if (keyStore == null) {
+                String keyStoreFile = SAMLClientConfiguration.getConfiguration().keystorePath();
+                String storePass = SAMLClientConfiguration.getConfiguration().keystorePassword();
+                keyStore = KeyStore.getInstance("PKCS12");
+                keyStore.load(new FileInputStream(keyStoreFile), storePass.toCharArray());
             }
-
-            XSAny FAAALevel =
-                    new XSAnyBuilder().buildObject(new QName("http://autenticacao.cartaodecidadao.pt/atributos", "FAAALevel"));
-            FAAALevel.setTextContent("3");
-            extensionList.add(FAAALevel);
-
-            return extensionList;
-        };
-        config.setAuthnRequestExtensions(requestExtensions);
-
-        return config;
-    }
-
-    private static final SAML2Client CLIENT = new SAML2Client(CONFIG);
-
-    static {
-        CLIENT.setCallbackUrl(SAMLClientConfiguration.getConfiguration().callbackUrl());
-    }
-
-    public static SAML2Client getClient() {
-        return CLIENT;
-    }
-
-    public static SAML2Client getClientForGov(String[] govAttributesToRequire, String callbackUrl) {
-        SAML2Configuration config = getNewConfiguration(govAttributesToRequire);
-        config.setAuthnContextClassRefs(AUT_CONTEXT_CLASSES_GOV);
-        config.setComparisonType("exact"); // ignored by SP but needed for pac4f to use context classes
-        SAML2Client client = new SAML2Client(config);
-        client.setCallbackUrl(callbackUrl);
-        return client;
-    }
-
-    public static SAML2Client getClient(String callbackUrl) {
-        SAML2Client client = new SAML2Client(CONFIG);
-        client.setCallbackUrl(callbackUrl);
-        return client;
-    }
-
-    public static SAML2Client getClientWithSpecificAuthContextClasses(List<String> authContextClasses,
-            String[] govAttributesToRequire, String callbackUrl) {
-        SAML2Configuration config;
-        if (govAttributesToRequire != null) {
-            config = getNewConfiguration(govAttributesToRequire);
-        } else {
-            config = getNewDefaultConfiguration();
         }
-
-        if (authContextClasses != null) {
-            config.setAuthnContextClassRefs(authContextClasses);
-            config.setComparisonType("exact"); // ignored by SP but needed for pac4f to use context classes
-        }
-
-        SAML2Client client = new SAML2Client(config);
-        if (callbackUrl != null) {
-            client.setCallbackUrl(callbackUrl);
-        } else {
-            client.setCallbackUrl(SAMLClientConfiguration.getConfiguration().callbackUrl());
-        }
-        return client;
+        return keyStore;
     }
+
+    private static Key getServiceProviderPrivateKey() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, UnrecoverableKeyException {
+        synchronized (lock) {
+            if (serviceProviderPrivateKey == null) {
+                String keyPassword = SAMLClientConfiguration.getConfiguration().privateKeyPassword();
+                serviceProviderPrivateKey = getKeyStore().getKey(SPKeyAlias, keyPassword.toCharArray());
+            }
+        }
+        return serviceProviderPrivateKey;
+    }
+
+    private static Certificate getServiceProviderCert() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
+        synchronized (lock) {
+            if (serviceProviderCert == null) {
+                serviceProviderCert = getKeyStore().getCertificate(SPKeyAlias);
+            }
+        }
+        return serviceProviderCert;
+    }
+
+    private static Certificate getIdentityProviderCert() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
+        synchronized (lock) {
+            if (identityProviderCert == null) {
+                identityProviderCert = getKeyStore().getCertificate(idpCertAlias);
+            }
+        }
+        return identityProviderCert;
+    }
+
+    public static Auth getAuth(HttpServletRequest request, HttpServletResponse response) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, SettingsException, Error, UnrecoverableKeyException {
+        synchronized (lock) {
+            if(auth == null) {
+                Map<String, Object> samlData = new HashMap<>();
+                samlData.put("onelogin.saml2.sp.x509cert", getServiceProviderCert());
+                samlData.put("onelogin.saml2.sp.privatekey", getServiceProviderPrivateKey());
+                samlData.put("onelogin.saml2.idp.x509cert", getIdentityProviderCert());
+                SettingsBuilder builder = new SettingsBuilder();
+                Saml2Settings settings = builder.fromFile("onelogin.saml.properties").fromValues(samlData).build();
+                auth = new Auth(settings, request, response);
+            }
+        }
+        return auth;
+    }
+
+    /*
+    <samlp:Extensions>
+    <RequestedAttributes xmlns="http://autenticacao.cartaodecidadao.pt/atributos">
+      <RequestedAttribute Name="http://interop.gov.pt/MDC/Cidadao/NIC" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+      <RequestedAttribute Name="http://interop.gov.pt/MDC/Cidadao/NIF" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="false"/>
+      <RequestedAttribute Name="http://interop.gov.pt/MDC/Cidadao/NomeCompleto" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+      <RequestedAttribute Name="http://interop.gov.pt/MDC/Cidadao/NomeProprio" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+    </RequestedAttributes>
+    <FAAALevel xmlns="http://autenticacao.cartaodecidadao.pt/atributos">3</FAAALevel>
+    </samlp:Extensions>
+    */
+
 }
