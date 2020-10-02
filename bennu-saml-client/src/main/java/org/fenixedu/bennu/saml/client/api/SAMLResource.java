@@ -1,7 +1,6 @@
 package org.fenixedu.bennu.saml.client.api;
 
 import com.onelogin.saml2.Auth;
-import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.Singleton;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
@@ -43,57 +42,50 @@ public class SAMLResource {
             return Response.status(Status.NOT_FOUND).build();
         }
 
-
+        // Handles SAML auth response
         Auth auth = null;
         try {
             auth = SAMLClientSDK.getAuth(request, response);
             auth.processResponse();
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.debug(e.getMessage(), e);
-            return Response.status(Status.BAD_REQUEST).location(new URI("")).build(); //TODO FIX
+        } catch (final Exception e) {
+            throw new Error("FailedToProcessSAMLResponse", e);
         }
 
         if (!auth.isAuthenticated()) {
-            System.out.println("Not authenticated");
-            logger.debug("Not authenticated");
-            return Response.status(Status.BAD_REQUEST).location(new URI("")).build(); //TODO FIX
+            throw new Error("NotAuthenticated");
         }
 
-        String username = null;
-        String relayState = null;
-        List<String> errors = auth.getErrors();
+        final List<String> errors = auth.getErrors();
         if (!errors.isEmpty()) {
-            logger.debug(StringUtils.join(errors, ", "));
             if (auth.isDebugActive()) {
-                String errorReason = auth.getLastErrorReason();
+                final String errorReason = auth.getLastErrorReason();
                 if (errorReason != null && !errorReason.isEmpty()) {
-                    logger.debug(auth.getLastErrorReason());
+                    throw new Error(errorReason);
                 }
             }
-        } else {
-            Map<String, List<String>> attributes = auth.getAttributes();
-//            String nameId = auth.getNameId();
-//            String nameIdFormat = auth.getNameIdFormat();
-//            String sessionIndex = auth.getSessionIndex();
-//            String nameidNameQualifier = auth.getNameIdNameQualifier();
-//            String nameidSPNameQualifier = auth.getNameIdSPNameQualifier();
-            List<String> tempIstId = attributes.get("uid");
-            if (tempIstId != null) {
-                username = tempIstId.get(0);
-            } else {
-                //todo something like redirecting to failed page
-            }
         }
 
+        // Extract username from SAML response
+        String username = null;
+        Map<String, List<String>> attributes = auth.getAttributes();
+        List<String> eduPersonPrincipalName = attributes.get("eduPersonPrincipalName");
+        if (eduPersonPrincipalName != null) {
+            try {
+                username = eduPersonPrincipalName.get(0).split("@")[0];
+            } catch (Exception e) {
+                throw new Error("couldNotParseIstId", e);
+            }
+        } else {
+            throw new Error("NoEduPersonPrincipalNameReceived");
+        }
 
+        // Login user with ISTid
         String resultLocation = CoreConfiguration.getConfiguration().applicationUrl() + request.getContextPath();
         try {
-
             final User user = getUser(username);
             Authenticate.login(request, response, user, "SAML Authentication");
-
             logger.trace("Logged in user {}, redirecting to {}", username, resultLocation);
+
         } catch (Exception e) {
             logger.debug(e.getMessage(), e);
             resultLocation = resultLocation + "/login.do?login_failed=true";

@@ -12,8 +12,7 @@
     <name>Bennu SAML Client</name>
 
     <properties>
-        <pac4j.version>4.0.3</pac4j.version>
-        <jax-rs-pac4j.version>2.3.0</jax-rs-pac4j.version>
+        <com.onelogin.java-saml.version>2.5.0</com.onelogin.java-saml.version>
     </properties>
 
     <dependencies>
@@ -40,14 +39,9 @@
             <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-saml-opensamlv3</artifactId>
-            <version>${pac4j.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.onelogin</groupId>
             <artifactId>java-saml</artifactId>
-            <version>2.5.0</version>
+            <version>${com.onelogin.java-saml.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.wss4j</groupId>
