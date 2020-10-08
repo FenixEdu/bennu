@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashMap;
@@ -120,7 +122,20 @@ public class PortalLoginServlet extends HttpServlet {
      *         Whether the provided callback is valid
      */
     public static boolean validateCallback(String callback) {
-        return Strings.isNullOrEmpty(callback) || callback.startsWith(CoreConfiguration.getConfiguration().applicationUrl());
+        if (Strings.isNullOrEmpty(callback)) {
+            return true;
+        }
+
+        try {
+            final URL callbackURL = new URL(callback);
+            final URL applicationURL = new URL(CoreConfiguration.getConfiguration().applicationUrl());
+            return callbackURL.getHost().equals(applicationURL.getHost())
+                    && callbackURL.getPath().startsWith(applicationURL.getPath());
+        } catch (MalformedURLException e) {
+            //malformed urls are not accepted as callbacks
+            return false;
+        }
+
     }
 
     @Override
