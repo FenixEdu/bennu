@@ -1,30 +1,30 @@
 package org.fenixedu.bennu.saml.client;
 
-import com.google.common.base.Strings;
+import com.onelogin.saml2.Auth;
 import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.login.LoginProvider;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
-import org.pac4j.saml.client.SAML2Client;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class SAMLLoginProvider implements LoginProvider {
 
-    @Override
-    public void showLogin(final HttpServletRequest request, final HttpServletResponse response, final String callback) {
-        Authenticate.logout(request, response);
-        final JEEContext context = new JEEContext(request, response);
+    private static final Logger logger = LoggerFactory.getLogger(SAMLLoginProvider.class);
+    private static final String APP_URL = CoreConfiguration.getConfiguration().applicationUrl();
+    private static final String CALLBACK_URL = APP_URL + "/api/saml-client/returnFromSAML";
 
-        final SAML2Client client = SAMLClientSDK.getClient();
+    @Override
+    public void showLogin(final HttpServletRequest request, final HttpServletResponse response, String callback) {
+        Authenticate.logout(request, response);
 
         try {
-            final HttpAction action = client.getRedirectionAction(context).get();
-            JEEHttpActionAdapter.INSTANCE.adapt(action, context);
-        } catch (final HttpAction ex) {
-            throw new Error(ex);
+            Auth auth = SAMLClientSDK.getAuth(request, response);
+            auth.login(CALLBACK_URL);
+        } catch (Exception e) {
+            logger.debug(e.getMessage(), e);
+            // return Response.status(Response.Status.BAD_REQUEST).location(new URI("")).build();
         }
     }
 
