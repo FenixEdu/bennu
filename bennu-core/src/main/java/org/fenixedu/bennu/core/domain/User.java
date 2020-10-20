@@ -56,7 +56,6 @@ import pt.ist.fenixframework.FenixFramework;
  * The application end user.
  */
 public final class User extends User_Base implements Principal {
-    private static final String USER_USERNAME_CHANGE = "user.username.change";
 
     private static final Logger logger = LoggerFactory.getLogger(User.class);
 
@@ -70,6 +69,8 @@ public final class User extends User_Base implements Principal {
     private static final String USER_ANONYMOUS_NAME = "User..qub..Anonymous";
 
     private static Map<String, User> map = new ConcurrentHashMap<>();
+
+    public static final String USERNAME_CHANGE_SIGNAL = "user.username.change";
 
     public static final Comparator<User> COMPARATOR_BY_NAME =
             Comparator.comparing(User::getDisplayName).thenComparing(User::getUsername);
@@ -140,7 +141,7 @@ public final class User extends User_Base implements Principal {
                 profile.setAvatarUrl(newAvatarURL);
             }
         }
-        Signal.emit(USER_USERNAME_CHANGE, new DomainObjectEvent<User>(this));
+        Signal.emit(USERNAME_CHANGE_SIGNAL, new DomainObjectEvent<User>(this));
     }
 
     @Override
