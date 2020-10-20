@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>bennu-admin</artifactId>
-    <version>6.1.5-FORK</version>
+    <version>6.1.6-FORK</version>
     <name>Bennu Admin</name>
 
     <build>
