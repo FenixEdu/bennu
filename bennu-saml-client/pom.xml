@@ -12,7 +12,7 @@
     <name>Bennu SAML Client</name>
 
     <properties>
-        <com.onelogin.java-saml.version>2.5.0</com.onelogin.java-saml.version>
+        <com.onelogin.java-saml.version>2.6.0</com.onelogin.java-saml.version>
     </properties>
 
     <dependencies>
