@@ -12,7 +12,7 @@
     <name>Bennu SAML Client</name>
 
     <properties>
-        <com.onelogin.java-saml.version>2.5.0</com.onelogin.java-saml.version>
+        <com.onelogin.java-saml.version>2.6.0</com.onelogin.java-saml.version>
     </properties>
 
     <dependencies>
@@ -42,17 +42,6 @@
             <groupId>com.onelogin</groupId>
             <artifactId>java-saml</artifactId>
             <version>${com.onelogin.java-saml.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wss4j</groupId>
-            <artifactId>wss4j-ws-security-common</artifactId>
-            <version>2.3.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-javamail_1.4_spec</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
     <repositories>

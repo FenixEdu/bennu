@@ -5,8 +5,10 @@ import com.onelogin.saml2.exception.Error;
 import com.onelogin.saml2.exception.SettingsException;
 import com.onelogin.saml2.settings.Saml2Settings;
 import com.onelogin.saml2.settings.SettingsBuilder;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +17,7 @@ public class SAMLClientSDK {
     private static Object lock = new Object();
 
     public static Auth getAuth(HttpServletRequest request, HttpServletResponse response)
-            throws SettingsException, Error {
+            throws SettingsException, Error, IOException {
         synchronized (lock) {
             if(authSettings == null) {
                 Map<String, Object> samlData = new HashMap<>();
