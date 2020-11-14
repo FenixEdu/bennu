@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 
@@ -28,6 +29,11 @@ public class JsonUtils {
     public static int getInt(JsonObject json, String property) {
         JsonPrimitive primitive = getPrimitive(json, property);
         return primitive != null ? primitive.getAsInt() : null;
+    }
+
+    public static LocalDate getLocalDate(JsonObject json, String property) {
+        JsonPrimitive primitive = getPrimitive(json, property);
+        return primitive != null ?  ISODateTimeFormat.date().parseDateTime(primitive.getAsString()).toLocalDate() : null;
     }
 
     public static JsonPrimitive getPrimitive(JsonObject json, String property) {
