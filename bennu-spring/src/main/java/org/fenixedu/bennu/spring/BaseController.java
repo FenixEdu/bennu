@@ -105,7 +105,14 @@ public class BaseController {
     }
 
     public static ResponseEntity<?> respondConflict() {
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        return respondConflict(null);
+    }
+
+    public static ResponseEntity<?> respondConflict(final String message) {
+        if (Strings.isNullOrEmpty(message)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
     }
 
     public static void setCookie(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse,
