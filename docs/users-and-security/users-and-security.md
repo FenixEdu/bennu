@@ -32,8 +32,14 @@ It is common for a functionality to require a user to be logged in. If you have 
 
 To ensure that the user is logged in when accessing your functionality, you may simply redirect the user to /login within your application, passing the the URL of your functionality as the callback query parameter. As an example, if your functionality is present at https://your.host/foo, you should perform a redirect to /login?callback=https%3A%2F%2Fyour.host%2Ffoo. Note that your callback URL should be properly escaped for use in a URL, and MUST be an absolute URL, always starting with your application's base URL. A common code for implementing this redirect could be (in Spring MVC):
 
-| public String foo() {  <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   if (!Authenticate.isLogged()) {<br>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   return "redirect:/"+ CoreConfiguration.getConfiguration().applicationUrl() + "/foo";<br>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }<br>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  return "bar";<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+```java
+public String foo() {
+  if (!Authenticate.isLogged()) {
+    return "redirect:/" + CoreConfiguration.getConfiguration().applicationUrl() + "/foo";
+  }
+  return "bar";
+}
+```
 
 
 After the login process is done, the user is redirected to the URL you provided, and one of two things may happen:
