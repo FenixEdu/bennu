@@ -98,6 +98,24 @@ public class JsonUtils {
         }
     }
 
+    public static void addIf(final JsonObject result, final String key, final Number value) {
+        if (value != null) {
+            result.addProperty(key, value);
+        }
+    }
+
+    public static void addIf(final JsonObject result, final String key, final Boolean value) {
+        if (value != null) {
+            result.addProperty(key, value);
+        }
+    }
+
+    public static void addIf(final JsonObject result, final String key, final JsonElement value) {
+        if (value != null) {
+            result.add(key, value);
+        }
+    }
+
     public static DateTime toDateTime(final JsonObject jo, final String slot) {
         final JsonElement je = jo.get(slot);
         return je == null || je.isJsonNull() || je.getAsString().isEmpty() ? null : new DateTime(je.getAsString());
