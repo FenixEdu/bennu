@@ -10,7 +10,7 @@
 
     <artifactId>bennu</artifactId>
     <name>Bennu Framework</name>
-    <version>6.1.6-FORK</version>
+    <version>6.1.7-FORK</version>
     <packaging>pom</packaging>
 
     <properties>
