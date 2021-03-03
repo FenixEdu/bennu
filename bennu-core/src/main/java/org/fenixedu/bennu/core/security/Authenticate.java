@@ -16,6 +16,8 @@
  */
 package org.fenixedu.bennu.core.security;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -46,6 +48,15 @@ public class Authenticate {
 
     private static final Collection<UserAuthenticationListener> userAuthenticationListeners = new ConcurrentLinkedQueue<>();
 
+    private static final Collection<MockListener> MOCK_LISTENERS = new ArrayList<>();
+
+    public static interface MockListener extends Serializable {
+
+        public void mocking(User originalUser, User mockedUser);
+
+        public void unmocking();
+    }
+
     /**
      * Logs in the given User, associating it with the browser session for the current user.
      * 
@@ -62,7 +73,8 @@ public class Authenticate {
      * @throws AuthorizationException
      *             If the provided user is {@code null} or if the user has its login expired
      */
-    public static User login(final HttpServletRequest request, final HttpServletResponse response, final User user, final String authenticationMethod) {
+    public static User login(final HttpServletRequest request, final HttpServletResponse response, final User user,
+            final String authenticationMethod) {
         if (user == null || user.isLoginExpired()) {
             throw AuthorizationException.authenticationFailed();
         }
@@ -77,7 +89,7 @@ public class Authenticate {
             if (preferredLocale != null) {
                 I18NFilter.updateLocale(preferredLocale, request, response);
             }
-            
+
             fireLoginListeners(request, response, authenticationContext);
             logger.debug("Logged in user: " + user.getUsername());
         } else if (authenticationContext.getUser() != user) {
@@ -85,7 +97,6 @@ public class Authenticate {
         } else {
             authenticationContext.addAuthenticationMethodEvent(authenticationMethod);
         }
-
 
         return user;
     }
@@ -103,7 +114,8 @@ public class Authenticate {
     public static void logout(final HttpServletRequest request, final HttpServletResponse response) {
         final HttpSession session = request.getSession(false);
         if (session != null) {
-            final AuthenticationContext authenticationContext = (AuthenticationContext) session.getAttribute(LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE);
+            final AuthenticationContext authenticationContext =
+                    (AuthenticationContext) session.getAttribute(LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE);
             if (authenticationContext != null) {
                 final User user = authenticationContext.getUser();
                 if (user != null && FenixFramework.isDomainObjectValid(user)) {
@@ -116,15 +128,18 @@ public class Authenticate {
     }
 
     public static void mock(final User user, final String authenticationMethod) {
+        User originalUser = getUser();
         final AuthenticationContext authenticationContext = loggedUserContext.get();
         if (authenticationContext == null || authenticationContext.getUser() != user) {
             loggedUserContext.set(new AuthenticationContext(user, authenticationMethod));
         } else {
             authenticationContext.addAuthenticationMethodEvent(authenticationMethod);
         }
+        MOCK_LISTENERS.forEach(l -> l.mocking(originalUser, user));
     }
 
     public static void unmock() {
+        MOCK_LISTENERS.forEach(l -> l.unmocking());
         clear();
     }
 
@@ -150,7 +165,8 @@ public class Authenticate {
 
     static void updateFromSession(final HttpSession session) {
         if (session != null) {
-            final AuthenticationContext authenticationContext = (AuthenticationContext) session.getAttribute(LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE);
+            final AuthenticationContext authenticationContext =
+                    (AuthenticationContext) session.getAttribute(LOGGED_USER_AUTHENTICATION_CONTEXT_ATTRIBUTE);
             if (authenticationContext != null) {
                 final User user = authenticationContext.getUser();
                 if (user != null && FenixFramework.isDomainObjectValid(user)) {
@@ -182,16 +198,22 @@ public class Authenticate {
         userAuthenticationListeners.remove(listener);
     }
 
-    private static void fireLoginListeners(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationContext authenticationContext) {
+    private static void fireLoginListeners(final HttpServletRequest request, final HttpServletResponse response,
+            final AuthenticationContext authenticationContext) {
         for (final UserAuthenticationListener listener : userAuthenticationListeners) {
             listener.onLogin(request, response, authenticationContext);
         }
     }
 
-    private static void fireLogoutListeners(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationContext authenticationContext) {
+    private static void fireLogoutListeners(final HttpServletRequest request, final HttpServletResponse response,
+            final AuthenticationContext authenticationContext) {
         for (final UserAuthenticationListener listener : userAuthenticationListeners) {
             listener.onLogout(request, response, authenticationContext);
         }
+    }
+
+    public static void addMockListener(MockListener mockListener) {
+        MOCK_LISTENERS.add(mockListener);
     }
 
 }
