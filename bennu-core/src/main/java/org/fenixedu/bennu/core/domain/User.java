@@ -131,6 +131,10 @@ public final class User extends User_Base implements Principal {
     }
 
     public void changeUsername(String username) {
+        User existingUser = User.findByUsername(username);
+        if (existingUser != null && existingUser != this) {
+            throw new IllegalArgumentException("Username already in use");
+        }
         String oldUsername = getUsername();
         setUsername(username);
         UserProfile profile = getProfile();
