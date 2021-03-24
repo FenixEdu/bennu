@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu</artifactId>
-        <version>6.15.0-SNAPSHOT</version>
+        <version>6.15.0</version>
     </parent>
 
     <artifactId>bennu-scheduler</artifactId>
