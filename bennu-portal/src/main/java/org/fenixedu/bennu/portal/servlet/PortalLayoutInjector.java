@@ -132,7 +132,10 @@ public class PortalLayoutInjector implements Filter {
 				wrapper.flushBuffer();
 			}
 		} finally {
-			contextExtensions.remove();
+		    Map<String, Object> requestContext = contextExtensions.get();
+            if (requestContext != null) {
+                requestContext.clear();
+            }
 		}
 
 	}
@@ -148,8 +151,13 @@ public class PortalLayoutInjector implements Filter {
 	}
 
 	public static void addContextExtension(Map<String, Object> requestContext) {
-		contextExtensions.set(requestContext);
-	}
+        Map<String, Object> map = contextExtensions.get();
+        if (map == null) {
+            map = new HashMap<>();
+            contextExtensions.set(map);
+        }
+        map.putAll(requestContext);
+    }
 
 	@Override
 	public void destroy() {
