@@ -99,10 +99,14 @@ public class PortalLoginServlet extends HttpServlet {
         PortalConfiguration config = PortalConfiguration.getInstance();
         // Add relevant variables
         Set<Locale> supportedLocales = CoreConfiguration.supportedLocales();
-        Locale currentLocale = selectLocaleToUse(req.getLocale(), supportedLocales);
+        Locale currentLocale = I18N.getLocale();
 
-        I18N.setLocale(req.getSession(), currentLocale);
-        I18NFilter.updateLocale(currentLocale, req, resp);
+        if (Boolean.TRUE.equals(config.getDetectBrowserLocalInLoginPage())) {
+            currentLocale = selectLocaleToUse(req.getLocale(), supportedLocales);
+            I18N.setLocale(req.getSession(), currentLocale);
+            I18NFilter.updateLocale(currentLocale, req, resp);
+        }
+
         ctx.put("config", config);
         ctx.put("callback", callback);
         ctx.put("url", req.getRequestURI());
