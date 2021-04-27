@@ -9,9 +9,12 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletConfig;
@@ -22,6 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.fenixedu.bennu.core.i18n.I18NFilter;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
@@ -94,12 +98,17 @@ public class PortalLoginServlet extends HttpServlet {
         Map<String, Object> ctx = new HashMap<>();
         PortalConfiguration config = PortalConfiguration.getInstance();
         // Add relevant variables
+        Set<Locale> supportedLocales = CoreConfiguration.supportedLocales();
+        Locale currentLocale = selectLocaleToUse(req.getLocale(), supportedLocales);
+
+        I18N.setLocale(req.getSession(), currentLocale);
+        I18NFilter.updateLocale(currentLocale, req, resp);
         ctx.put("config", config);
         ctx.put("callback", callback);
         ctx.put("url", req.getRequestURI());
-        ctx.put("currentLocale", I18N.getLocale());
+        ctx.put("currentLocale", currentLocale);
         ctx.put("contextPath", req.getContextPath());
-        ctx.put("locales", CoreConfiguration.supportedLocales());
+        ctx.put("locales", supportedLocales);
         ctx.put("providers", providers);
         ctx.put("localLogin", localLogin);
         ctx.put("loginPath", PortalConfiguration.getInstance().getLoginPath());
@@ -109,10 +118,24 @@ public class PortalLoginServlet extends HttpServlet {
         try {
             resp.setContentType("text/html;charset=UTF-8");
             PebbleTemplate template = engine.getTemplate(config.getTheme());
-            template.evaluate(resp.getWriter(), ctx, I18N.getLocale());
+            template.evaluate(resp.getWriter(), ctx, currentLocale);
         } catch (PebbleException e) {
             throw new IOException(e);
         }
+    }
+
+    private Locale selectLocaleToUse(final Locale browserLocale, Set<Locale> supportedLocales) {
+        if (supportedLocales.contains(browserLocale)) {
+            return browserLocale;
+        }
+
+        Predicate<? super Locale> filterLocaleWithSameLanguageAndCountry =
+                l -> l.getLanguage().equals(browserLocale.getLanguage()) && l.getCountry().equals(browserLocale.getLanguage());
+        Predicate<? super Locale> filterLocaleWithSameLanguage = l -> l.getLanguage().equals(browserLocale.getLanguage());
+
+        return supportedLocales.stream().filter(filterLocaleWithSameLanguageAndCountry).findFirst().orElseGet(
+                () -> supportedLocales.stream().filter(filterLocaleWithSameLanguage).findFirst().orElse(Locale.getDefault()));
+
     }
 
     /**
