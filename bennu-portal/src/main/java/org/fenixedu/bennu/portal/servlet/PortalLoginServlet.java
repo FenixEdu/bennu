@@ -103,6 +103,8 @@ public class PortalLoginServlet extends HttpServlet {
         ctx.put("providers", providers);
         ctx.put("localLogin", localLogin);
         ctx.put("loginPath", PortalConfiguration.getInstance().getLoginPath());
+        ctx.put("recoveryLinkPath", PortalConfiguration.getInstance().getRecoveryLinkPath());
+        ctx.put("signUpPath", PortalConfiguration.getInstance().getSignUpPath());
 
         try {
             resp.setContentType("text/html;charset=UTF-8");

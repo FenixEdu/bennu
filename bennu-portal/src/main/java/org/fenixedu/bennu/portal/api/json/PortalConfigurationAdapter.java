@@ -36,6 +36,9 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         object.addProperty("theme", configuration.getTheme());
         object.addProperty("defaultDocumentationBaseUrl", configuration.getDocumentationBaseUrl());
         object.addProperty("loginPath", configuration.getLoginPath());
+        object.addProperty("recoveryLinkPath", configuration.getRecoveryLinkPath());
+        object.addProperty("signUpPath", configuration.getSignUpPath());
+
         if (configuration.getLogo() != null) {
             if (!Strings.isNullOrEmpty(configuration.getLogoLinkUrl())) {
                 object.addProperty("logoLinkUrl", configuration.getLogoLinkUrl());
@@ -101,6 +104,13 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         if (object.has("loginPath")) {
             configuration.setLoginPath(object.get("loginPath").getAsString());
         }
+        if (object.has("recoveryLinkPath")) {
+            configuration.setRecoveryLinkPath(object.get("recoveryLinkPath").getAsString());
+        }
+        if (object.has("signUpPath")) {
+            configuration.setSignUpPath(object.get("signUpPath").getAsString());
+        }
+
         return configuration;
     }
 }

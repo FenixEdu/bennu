@@ -17,6 +17,9 @@ public class PortalConfiguration {
 	public String faviconType;
 	public String documentationBaseUrl;
 	public String loginPath;
+	public String recoveryLinkPath;
+	public String signUpPath;
+
 }
 
 relation BennuPortalConfiguration {

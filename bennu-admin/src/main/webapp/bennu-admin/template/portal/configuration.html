@@ -72,6 +72,18 @@
                 <input type="text" id="loginPath" name="loginPath" ng-model="menu.loginPath" placeholder="Login Path" class="form-control">
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="recoveryLinkPath">Recovery Link</label>
+            <div class="col-sm-4">
+                <input type="text" id="recoveryLinkPath" name="recoveryLinkPath" ng-model="menu.recoveryLinkPath" placeholder="Recovery Link" class="form-control">
+            </div>
+        </div>
+ 		<div class="form-group">
+            <label class="col-sm-2 control-label" for="signUpPath">Signup Link</label>
+            <div class="col-sm-4">
+                <input type="text" id="signUpPath" name="signUpPath" ng-model="menu.signUpPath" placeholder="Signup Link" class="form-control">
+            </div>
+        </div>
         <div class="col-sm-offset-2">
             <button type="submit" class="btn btn-primary">Save</button>
             <a ui-sref="portal-menu({id: menu.menu.id})" class="btn btn-default">Manage Menu</a>
