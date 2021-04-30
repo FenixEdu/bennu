@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.core.json;
 
+import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -21,46 +22,46 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class JsonUtils {
-    public static String getString(JsonObject json, String property) {
-        JsonPrimitive primitive = getPrimitive(json, property);
+    public static String getString(final JsonObject json, final String property) {
+        final JsonPrimitive primitive = getPrimitive(json, property);
         return primitive != null ? primitive.getAsString() : null;
     }
 
-    public static int getInt(JsonObject json, String property) {
-        JsonPrimitive primitive = getPrimitive(json, property);
+    public static int getInt(final JsonObject json, final String property) {
+        final JsonPrimitive primitive = getPrimitive(json, property);
         return primitive != null ? primitive.getAsInt() : null;
     }
 
-    public static LocalDate getLocalDate(JsonObject json, String property) {
-        JsonPrimitive primitive = getPrimitive(json, property);
+    public static LocalDate getLocalDate(final JsonObject json, final String property) {
+        final JsonPrimitive primitive = getPrimitive(json, property);
         return primitive != null ?  ISODateTimeFormat.date().parseDateTime(primitive.getAsString()).toLocalDate() : null;
     }
 
-    public static JsonPrimitive getPrimitive(JsonObject json, String property) {
+    public static JsonPrimitive getPrimitive(final JsonObject json, final String property) {
         if (!json.has(property)) {
             return null;
         }
-        JsonElement value = json.get(property);
+        final JsonElement value = json.get(property);
         if (!value.isJsonPrimitive()) {
             throw BennuCoreDomainException.wrongJsonFormat(value, "primitive");
         }
         return value.getAsJsonPrimitive();
     }
 
-    public static <T extends Object> T get(JsonObject json, String property, JsonBuilder ctx, Class<T> type) {
+    public static <T extends Object> T get(final JsonObject json, final String property, final JsonBuilder ctx, final Class<T> type) {
         if (!json.has(property)) {
             return null;
         }
         return ctx.create(json.get(property), type);
     }
 
-    public static void put(JsonObject json, String property, String value) {
+    public static void put(final JsonObject json, final String property, final String value) {
         if (value != null) {
             json.addProperty(property, value);
         }
     }
 
-    public static void put(JsonObject json, String property, JsonElement value) {
+    public static void put(final JsonObject json, final String property, final JsonElement value) {
         if (value != null) {
             json.add(property, value);
         }
@@ -155,8 +156,18 @@ public class JsonUtils {
         return result;
     }
 
+    public static JsonElement parseJsonElement(final String string) {
+        return string != null ? new JsonParser().parse(string) : null;
+    }
+
     public static JsonObject parse(final String string) {
-        return new JsonParser().parse(string).getAsJsonObject();
+        final JsonElement element = parseJsonElement(string);
+        return element != null ? element.getAsJsonObject() : null;
+    }
+
+    public static JsonArray parseJsonArray(final String string) {
+        final JsonElement element = parseJsonElement(string);
+        return element != null ? element.getAsJsonArray() : null;
     }
 
 }
