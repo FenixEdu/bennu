@@ -44,6 +44,15 @@ public class BundleUtil {
         } catch (MissingResourceException e) {
             logger.warn("Can't find resource for bundle '{}', key '{}' ({})", bundle, key, locale);
             return '!' + key + '!';
+        } catch (Throwable t) {
+            final StringBuilder builder = new StringBuilder();
+            if (args != null) {
+                for (final String arg : args) {
+                    builder.append(" ");
+                    builder.append(arg);
+                }
+            }
+            return '!' + bundle + key + '!' + " args: " + builder.toString();
         }
     }
 
