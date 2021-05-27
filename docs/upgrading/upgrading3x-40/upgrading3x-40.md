@@ -69,7 +69,7 @@ As converters for GSON objects are now natively available as return types of JAX
 
 ### CSRF
 
-In previous versions of Bennu, nothing was done to prevent CSRF attacks. In the 4.0 version, CSRF Prevention was added to the framework. You can read more about it in [CSRF Protection](./../../csrf-protection/csrf-protection.md).
+In previous versions of Bennu, nothing was done to prevent CSRF attacks. In the 4.0 version, CSRF Prevention was added to the framework. You can read more about it in [CSRF Protection](../../../bennu-spring/docs/csrf-protection/csrf-protection.md).
 
 ### Bennu Toolkit
 
