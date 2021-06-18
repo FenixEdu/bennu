@@ -1,6 +1,5 @@
 package org.fenixedu.bennu.core.json;
 
-import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -89,6 +88,12 @@ public class JsonUtils {
 
     public static JsonObject toJson(final Consumer<JsonObject> consumer) {
         final JsonObject result = new JsonObject();
+        consumer.accept(result);
+        return result;
+    }
+
+    public static JsonArray toJsonArray(final Consumer<JsonArray> consumer) {
+        final JsonArray result = new JsonArray();
         consumer.accept(result);
         return result;
     }
