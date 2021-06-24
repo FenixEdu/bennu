@@ -38,6 +38,10 @@ public class BaseController {
         return respond(HttpStatus.OK, body);
     }
 
+    public static ResponseEntity<?> ok(final Consumer<JsonObject> data) {
+        return ok(JsonUtils.toJson(data));
+    }
+
     public static ResponseEntity<?> respond(final Stream<JsonObject> stream) {
         return ok(stream.collect(StreamUtils.toJsonArray()));
     }
