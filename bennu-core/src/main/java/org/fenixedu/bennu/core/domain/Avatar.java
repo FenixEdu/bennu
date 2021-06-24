@@ -1,20 +1,17 @@
 package org.fenixedu.bennu.core.domain;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Transparency;
+import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
-
-import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
-import org.fenixedu.bennu.core.util.CoreConfiguration;
 
 public class Avatar extends Avatar_Base {
     protected Avatar(byte[] data, String mimeType) {
@@ -40,9 +37,9 @@ public class Avatar extends Avatar_Base {
                     return new Avatar(out.toByteArray(), mimeType);
                 }
             }
-            throw BennuCoreDomainException.errorProcessingImage();
-        } catch (IOException e) {
-            throw BennuCoreDomainException.errorProcessingImage();
+            throw BennuCoreDomainException.errorProcessingImage("image.is.null");
+        } catch (final IOException e) {
+            throw BennuCoreDomainException.errorProcessingImage(e);
         }
     }
 
@@ -50,7 +47,7 @@ public class Avatar extends Avatar_Base {
         try (InputStream stream = new ByteArrayInputStream(getData())) {
             return process(stream, getMimeType(), size);
         } catch (IOException e) {
-            throw BennuCoreDomainException.errorProcessingImage();
+            throw BennuCoreDomainException.errorProcessingImage(e);
         }
     }
 
@@ -83,7 +80,7 @@ public class Avatar extends Avatar_Base {
         try {
             BufferedImage img = ImageIO.read(stream);
             if (img == null) {
-                throw BennuCoreDomainException.errorProcessingImage();
+                throw BennuCoreDomainException.errorProcessingImage("image.is.null");
             }
             BufferedImage scaled = scale(img, size);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -93,8 +90,8 @@ public class Avatar extends Avatar_Base {
                 writer.write(scaled);
                 return out.toByteArray();
             }
-        } catch (IOException e) {
-            throw BennuCoreDomainException.errorProcessingImage();
+        } catch (final IOException e) {
+            throw BennuCoreDomainException.errorProcessingImage(e);
         }
     }
 

@@ -1,13 +1,10 @@
 package org.fenixedu.bennu.core.rest;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.stream.JsonWriter;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -18,13 +15,14 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
-
-import org.fenixedu.bennu.core.util.CoreConfiguration;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 /***
  * 
@@ -61,7 +59,7 @@ public class JsonBodyReaderWriter<T extends JsonElement> implements MessageBodyR
         try (InputStreamReader reader = new InputStreamReader(entityStream, StandardCharsets.UTF_8)) {
             return gson.fromJson(reader, genericType);
         } catch (Throwable e) {
-            throw new WebApplicationException(e.getMessage(), Status.BAD_REQUEST);
+            throw new WebApplicationException(e.getMessage(), e, Status.BAD_REQUEST);
         }
     }
 
@@ -81,7 +79,7 @@ public class JsonBodyReaderWriter<T extends JsonElement> implements MessageBodyR
         try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(entityStream, StandardCharsets.UTF_8))) {
             gson.toJson(t, writer);
         } catch (Throwable e) {
-            throw new WebApplicationException(e.getMessage(), Status.BAD_REQUEST);
+            throw new WebApplicationException(e.getMessage(), e, Status.BAD_REQUEST);
         }
     }
 

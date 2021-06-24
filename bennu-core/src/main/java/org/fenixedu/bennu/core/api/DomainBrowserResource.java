@@ -195,7 +195,7 @@ public class DomainBrowserResource extends BennuRestResource {
                 DomainObject obj = (DomainObject) method.invoke(domainObject);
                 return obj == null ? null : obj.getExternalId();
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                return "!!EXCEPTION!!";
+                return "!!EXCEPTION!! " + e.getMessage();
             }
         }
         return null;
@@ -212,7 +212,7 @@ public class DomainBrowserResource extends BennuRestResource {
                 }
                 return getPrimitiveValueFor(vt, value);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                return "!!EXCEPTION!!";
+                return "!!EXCEPTION!! " + e.getMessage();
             }
         }
         return null;

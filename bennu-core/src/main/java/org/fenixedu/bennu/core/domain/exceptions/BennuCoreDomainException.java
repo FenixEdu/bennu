@@ -16,9 +16,9 @@
  */
 package org.fenixedu.bennu.core.domain.exceptions;
 
-import javax.ws.rs.core.Response.Status;
-
 import com.google.gson.JsonElement;
+
+import javax.ws.rs.core.Response.Status;
 
 /**
  * Factory class for bennu-core expected errors.
@@ -48,12 +48,20 @@ public class BennuCoreDomainException extends DomainException {
         return new BennuCoreDomainException(Status.NOT_FOUND, "error.bennu.core.resourcenotfound", id);
     }
 
+    public static BennuCoreDomainException resourceNotFound(String id, Throwable t) {
+        return new BennuCoreDomainException(t, Status.NOT_FOUND, "error.bennu.core.resourcenotfound", id);
+    }
+
     public static BennuCoreDomainException cannotCreateEntity() {
         return new BennuCoreDomainException("error.bennu.core.cannotcreateentity");
     }
 
     public static BennuCoreDomainException parseError() {
         return new BennuCoreDomainException(Status.BAD_REQUEST, "error.bennu.core.parseerror");
+    }
+
+    public static BennuCoreDomainException parseError(final Throwable t) {
+        return new BennuCoreDomainException(t, Status.BAD_REQUEST, "error.bennu.core.parseerror");
     }
 
     public static BennuCoreDomainException groupParsingError(String message) {
@@ -112,7 +120,12 @@ public class BennuCoreDomainException extends DomainException {
         return new BennuCoreDomainException("error.bennu.core.wrongJsonFormat", json.toString(), expected);
     }
 
-    public static BennuCoreDomainException errorProcessingImage() {
-        return new BennuCoreDomainException("error.bennu.core.user.errorProcessingImage");
+    public static BennuCoreDomainException errorProcessingImage(final Throwable t) {
+        return new BennuCoreDomainException(t, "error.bennu.core.user.errorProcessingImage", "");
     }
+
+    public static BennuCoreDomainException errorProcessingImage(final String arg) {
+        return new BennuCoreDomainException("error.bennu.core.user.errorProcessingImage", arg);
+    }
+
 }

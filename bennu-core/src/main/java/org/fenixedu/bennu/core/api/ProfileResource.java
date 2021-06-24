@@ -119,7 +119,7 @@ public class ProfileResource extends BennuRestResource {
                             .header(HttpHeaders.CACHE_CONTROL, CoreConfiguration.getConfiguration().staticCacheControl())
                             .tag(etag).build();
                 } catch (IOException e) {
-                    throw BennuCoreDomainException.resourceNotFound(username);
+                    throw BennuCoreDomainException.resourceNotFound(username, e);
                 }
             }
         }

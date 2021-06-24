@@ -60,7 +60,7 @@ public abstract class BennuRestResource extends JsonAwareResource {
         try {
             return accessControl(Group.parse(accessExpression));
         } catch (DomainException e) {
-            throw new WebApplicationException(Status.NOT_FOUND);
+            throw new WebApplicationException(e, Status.NOT_FOUND);
         }
     }
 
