@@ -19,7 +19,8 @@ public class CoreConfiguration {
     public interface ConfigurationProperties {
         @ConfigurationProperty(
                 key = "locale.default",
-                description = "Default System Locale. If empty falls back to java system default. Must be included in locales.supported")
+                description = "Default System Locale. If empty falls back to java system default. Must be included in locales.supported",
+                defaultValue = "pt-PT")
         public String defaultLocale();
 
         @ConfigurationProperty(
@@ -35,7 +36,8 @@ public class CoreConfiguration {
 
         @ConfigurationProperty(
                 key = "locales.supported",
-                description = "Locales that should be supported in ResourceBundles and other I18N mechanisms. If not specified falls back to a list with only the java system default.")
+                description = "Locales that should be supported in ResourceBundles and other I18N mechanisms. If not specified falls back to a list with only the java system default.",
+                defaultValue = "pt-PT,en-GB")
         public String supportedLocales();
 
         @ConfigurationProperty(key = "local.login", defaultValue = "true",
