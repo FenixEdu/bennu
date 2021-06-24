@@ -145,7 +145,7 @@ public class JsonAwareResource {
             }
             return PARSER.parse(jsonString);
         } catch (JsonParseException | IllegalStateException e) {
-            throw BennuCoreDomainException.parseError();
+            throw BennuCoreDomainException.parseError(e);
         }
     }
 

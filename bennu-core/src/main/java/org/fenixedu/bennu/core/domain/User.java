@@ -199,7 +199,7 @@ public final class User extends User_Base implements Principal {
             setPassword(PBKDF2_ALGORITHM + ":" + PBKDF2_ITERATIONS + ":" + BaseEncoding.base64().encode(salt) + ":"
                     + BaseEncoding.base64().encode(hash));
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new Error("Please provide proper cryptographic algorithm implementation");
+            throw new Error("Please provide proper cryptographic algorithm implementation", e);
         }
     }
 
@@ -227,7 +227,7 @@ public final class User extends User_Base implements Principal {
                 byte[] testHash = pbkdf2(algorithm, password.toCharArray(), salt, iterations, hash.length);
                 return MessageDigest.isEqual(hash, testHash);
             } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                throw new Error("Please provide proper cryptographic algorithm implementation");
+                throw new Error("Please provide proper cryptographic algorithm implementation", e);
             }
         }
     }

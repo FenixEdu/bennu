@@ -61,7 +61,6 @@ public class ObjectNameViewer implements JsonViewer<ObjectName> {
 
             return json;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
