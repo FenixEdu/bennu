@@ -34,7 +34,7 @@ public class BootstrapError {
         try {
             return clazz.getMethod(methodName);
         } catch (NoSuchMethodException | SecurityException e) {
-            throw new IllegalArgumentException("Could not find method " + methodName);
+            throw new IllegalArgumentException("Could not find method " + methodName, e);
         }
     }
 

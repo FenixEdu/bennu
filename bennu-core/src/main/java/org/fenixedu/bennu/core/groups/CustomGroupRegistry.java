@@ -233,7 +233,7 @@ public class CustomGroupRegistry {
             }
             parsers.put(parser.type(), parser);
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new Error("GroupArgumentParser: could not instantiate parser of type: " + parserType.getName());
+            throw new Error("GroupArgumentParser: could not instantiate parser of type: " + parserType.getName(), e);
         }
     }
 
