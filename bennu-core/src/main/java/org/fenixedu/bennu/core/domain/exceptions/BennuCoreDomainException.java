@@ -84,6 +84,10 @@ public class BennuCoreDomainException extends DomainException {
         return new BennuCoreDomainException("error.bennu.core.user.displayNameNotContainedInFullName", nickname, fullname);
     }
 
+    public static BennuCoreDomainException displayNameInHigherFrequencyThanInFullName(String name) {
+        return new BennuCoreDomainException("error.bennu.core.user.displayNameInHigherFrequencyThanInFullName", name);
+    }
+
     public static BennuCoreDomainException cannotEditClosedLogin() {
         return new BennuCoreDomainException("cannot.edit.closed.login");
     }

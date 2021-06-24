@@ -1,6 +1,7 @@
 package org.fenixedu.bennu.core.domain;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
@@ -265,6 +266,12 @@ public class UserProfile extends UserProfile_Base {
         if (!fullnameParts.containsAll(displaynameParts)) {
             throw BennuCoreDomainException.displayNameNotContainedInFullName(displayname, fullname);
         }
+        // Display names must not appear in higher frequency than in full name.
+        displaynameParts.forEach(name -> {
+            if (Collections.frequency(fullnameParts, name) < Collections.frequency(displaynameParts, name)) {
+                throw BennuCoreDomainException.displayNameInHigherFrequencyThanInFullName(name);
+            }
+        });
     }
 
     private static String cleanupName(String name) {
