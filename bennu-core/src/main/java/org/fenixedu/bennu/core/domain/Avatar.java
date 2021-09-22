@@ -12,8 +12,31 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Function;
 
 public class Avatar extends Avatar_Base {
+
+    public interface PhotoProvider {
+        String getMimeType();
+        byte[] getCustomAvatar(int width, int height, String pictureMode);
+    }
+
+    public static Function<User, PhotoProvider> photoProvider = user -> {
+        final UserProfile userProfile = user.getProfile();
+        final Avatar avatar = userProfile == null ? null : userProfile.getLocalAvatar();
+        return avatar == null ? null : new PhotoProvider() {
+            @Override
+            public String getMimeType() {
+                return avatar.getMimeType();
+            }
+
+            @Override
+            public byte[] getCustomAvatar(int width, int height, String pictureMode) {
+                return avatar.getData(width);
+            }
+        };
+    };
+
     protected Avatar(byte[] data, String mimeType) {
         super();
         setData(data);
