@@ -19,7 +19,7 @@ Install and Lint:
     - export MAVEN_REPO_PASS=$NEXUS_PASSWORD
     - export MAVEN_REPO_ID=fenixedu-releases
   script:
-    - mvn -s .m2/settings.xml clean install -Dmaven.test.skip=true
+    - mvn -s .m2/settings.xml clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 
 # Test:
 #   stage: Test
@@ -41,7 +41,7 @@ Release:
     - VERSION=$(echo '${project.version}' | mvn help:evaluate | grep -v '^[[]')
     - if [[ v$VERSION != $CI_COMMIT_TAG ]]; then echo "Version v$VERSION in pom.xml diferent from $CI_COMMIT_TAG tag" && exit 1; fi
   script:
-    - mvn -s .m2/settings.xml --batch-mode deploy  -Dmaven.test.skip=true
+    - mvn -s .m2/settings.xml --batch-mode deploy  -Dmaven.test.skip=true  -Dmaven.javadoc.skip=true
     - node release-army-knife/release.js $CI_PROJECT_ID $CI_COMMIT_TAG $REPO_API_ACCESS_TOKEN
   only:
     - tags
