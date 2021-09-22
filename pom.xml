@@ -32,11 +32,12 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git@github.com:fenixedu/bennu.git</connection>
-        <developerConnection>scm:git:git@github.com:fenixedu/bennu.git</developerConnection>
-        <url>http://fenixedu.github.io/bennu</url>
+        <connection>scm:git:git@repo.dsi.tecnico.ulisboa.pt:bennu/application/bennu.git</connection>
+        <developerConnection>scm:git:git@repo.dsi.tecnico.ulisboa.pt:bennu/application/bennu</developerConnection>
+        <url>https://repo.dsi.tecnico.ulisboa.pt/bennu/application/bennu</url>
         <tag>HEAD</tag>
     </scm>
+
 
     <dependencyManagement>
         <dependencies>
@@ -114,6 +115,10 @@
         <repository>
             <id>fenixedu-maven-repository</id>
             <url>https://repo.fenixedu.org/fenixedu-maven-repository</url>
+        </repository>
+        <repository>
+            <id>dsi-maven-artifacts</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/repository/dsi-private-repo</url>
         </repository>
     </repositories>
 
