@@ -1,14 +1,17 @@
 package org.fenixedu.bennu.io.domain;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.tika.Tika;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.commons.StringNormalizer;
@@ -212,12 +215,31 @@ public abstract class GenericFile extends GenericFile_Base {
 
     private void setContent(InputStream stream, String filename) throws IOException {
 
-        final FileStorage fileStorage = getFileStorage();
-        setContentType(tika.detect(stream, filename));
+        // The counting stream needs to be consumed right away because 
+        // the writing may be done only after the tx commit. So we need
+        // to consume the stream so we can have the size of it.
+        //
+        // Using a buffered input stream so we can mark and then rewind
+        // to the begining of it again.
+        //
+        // Streams are not closed here but will be closed by the write file
+        // in the storage
         CountingInputStream countingStream = new CountingInputStream(stream);
-        final String uniqueIdentification = fileStorage.store(this, countingStream);
+        BufferedInputStream buffer = new BufferedInputStream(countingStream);
+        final FileStorage fileStorage = getFileStorage();
+        buffer.mark(Integer.MAX_VALUE);
+        try {
+            setContentType(tika.detect(new BufferedInputStream(buffer), filename));
+            Writer nullWriter = Writer.nullWriter();
+            IOUtils.copy(buffer, nullWriter);
+            nullWriter.flush();
+            nullWriter.close();
+            setSize(countingStream.getCount());
+        } finally {
+            buffer.reset();
+        }
+        final String uniqueIdentification = fileStorage.store(this, buffer);
         setStorage(fileStorage);
-        setSize(countingStream.getCount());
         if (Strings.isNullOrEmpty(uniqueIdentification)) {
             throw new RuntimeException();
         }
