@@ -51,23 +51,26 @@ public class LocalFileSystemStorage extends LocalFileSystemStorage_Base {
             this.file = file;
             this.stream = null;
         }
-    
+
         public FileWriteIntention(String path, InputStream stream) {
             this.path = path;
             this.contents = null;
             this.file = null;
             this.stream = stream;
         }
-    
+
         public void write() throws IOException {
             if (contents != null) {
                 Files.write(contents, new File(path));
-            } else if (stream!=null){
-                File file = new File(path);
-                OutputStream outputStream = new FileOutputStream(file);
-                ByteStreams.copy(stream, outputStream);
-                outputStream.close();
-                
+            } else if (stream != null) {
+                try {
+                    File file = new File(path);
+                    OutputStream outputStream = new FileOutputStream(file);
+                    ByteStreams.copy(stream, outputStream);
+                    outputStream.close();
+                } finally {
+                    stream.close();
+                }
             } else {
                 java.nio.file.Files.move(file.toPath(), Paths.get(path));
             }
