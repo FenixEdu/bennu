@@ -1,6 +1,6 @@
 package org.fenixedu.bennu.io.servlet;
 
-import com.google.common.base.Charsets;
+import com.google.common.net.UrlEscapers;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.io.domain.GenericFile;
@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLEncoder;
 
 @WebServlet(urlPatterns = FileDownloadServlet.SERVLET_PATH + "*")
 public class FileDownloadServlet extends HttpServlet {
@@ -50,7 +49,7 @@ public class FileDownloadServlet extends HttpServlet {
 
     private String sendLoginRedirect(final GenericFile file) throws IOException {
         return CoreConfiguration.getConfiguration().applicationUrl() + "/login?callback="
-                + URLEncoder.encode(getDownloadUrl(file), Charsets.UTF_8.name());
+                + UrlEscapers.urlPathSegmentEscaper().escape(getDownloadUrl(file));
     }
 
     public static GenericFile getFileFromURL(final String url) {
