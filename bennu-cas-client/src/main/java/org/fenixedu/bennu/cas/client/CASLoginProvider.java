@@ -25,7 +25,7 @@ public class CASLoginProvider implements LoginProvider {
         if (Strings.isNullOrEmpty(callback)) {
             callback = CASClientConfiguration.getConfiguration().casServiceUrl();
         }
-        callback = Base64.getUrlEncoder().encodeToString(callback.getBytes(StandardCharsets.UTF_8));
+        callback = Base64.getUrlEncoder().encodeToString(UrlEscapers.urlFragmentEscaper().escape(callback).getBytes(StandardCharsets.UTF_8));
         response.sendRedirect(CASClientConfiguration.getConfiguration().casServerUrl() + "/login?service="
                 + escaper.escape(CoreConfiguration.getConfiguration().applicationUrl() + "/api/cas-client/login/" + callback));
     }
