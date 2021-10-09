@@ -17,6 +17,7 @@ import java.util.function.Function;
 public class Avatar extends Avatar_Base {
 
     public interface PhotoProvider {
+        String refreshID();
         String getMimeType();
         byte[] getCustomAvatar(int width, int height, String pictureMode);
     }
@@ -31,30 +32,35 @@ public class Avatar extends Avatar_Base {
             }
 
             @Override
-            public byte[] getCustomAvatar(int width, int height, String pictureMode) {
+            public byte[] getCustomAvatar(final int width, final int height, final String pictureMode) {
                 return avatar.getData(width);
             }
+
+            @Override
+            public String refreshID() {
+                return avatar.getExternalId(); }
         };
     };
 
-    protected Avatar(byte[] data, String mimeType) {
+    protected Avatar(final byte[] data, final String mimeType) {
         super();
         setData(data);
         setMimeType(mimeType);
     }
 
-    public static Avatar create(byte[] src, String mimeType) {
+    public static Avatar create(final byte[] src, final String mimeType) {
         return new Avatar(src, mimeType);
     }
 
-    public static Avatar crop(byte[] src, String mimeType, int x1, int y1, int x2, int y2) {
+    public static Avatar crop(final byte[] src, final String mimeType,
+                              final int x1, final int y1, final int x2, final int y2) {
         try {
-            BufferedImage img = ImageIO.read(new ByteArrayInputStream(src));
+            final BufferedImage img = ImageIO.read(new ByteArrayInputStream(src));
             if (img != null) {
-                BufferedImage crop = img.getSubimage(x1, y1, x2 - x1, y2 - y1);
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
-                try (ImageOutputStream outstream = ImageIO.createImageOutputStream(out)) {
+                final BufferedImage crop = img.getSubimage(x1, y1, x2 - x1, y2 - y1);
+                final ByteArrayOutputStream out = new ByteArrayOutputStream();
+                final ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
+                try (final ImageOutputStream outstream = ImageIO.createImageOutputStream(out)) {
                     writer.setOutput(outstream);
                     writer.write(crop);
                     return new Avatar(out.toByteArray(), mimeType);
@@ -66,10 +72,10 @@ public class Avatar extends Avatar_Base {
         }
     }
 
-    public byte[] getData(int size) {
-        try (InputStream stream = new ByteArrayInputStream(getData())) {
+    public byte[] getData(final int size) {
+        try (final InputStream stream = new ByteArrayInputStream(getData())) {
             return process(stream, getMimeType(), size);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw BennuCoreDomainException.errorProcessingImage(e);
         }
     }
@@ -90,25 +96,25 @@ public class Avatar extends Avatar_Base {
         deleteDomainObject();
     }
 
-    public static Avatar getForUser(User user) {
+    public static Avatar getForUser(final User user) {
         return user.getProfile().getLocalAvatar();
     }
 
-    public static String mysteryManUrl(User user) {
+    public static String mysteryManUrl(final User user) {
         return CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-core/profile/localavatar/"
                 + user.getUsername();
     }
 
-    public static byte[] process(InputStream stream, String mimeType, int size) {
+    public static byte[] process(final InputStream stream, final String mimeType, final int size) {
         try {
-            BufferedImage img = ImageIO.read(stream);
+            final BufferedImage img = ImageIO.read(stream);
             if (img == null) {
                 throw BennuCoreDomainException.errorProcessingImage("image.is.null");
             }
-            BufferedImage scaled = scale(img, size);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
-            try (ImageOutputStream outstream = ImageIO.createImageOutputStream(out)) {
+            final BufferedImage scaled = scale(img, size);
+            final ByteArrayOutputStream out = new ByteArrayOutputStream();
+            final ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
+            try (final ImageOutputStream outstream = ImageIO.createImageOutputStream(out)) {
                 writer.setOutput(outstream);
                 writer.write(scaled);
                 return out.toByteArray();
@@ -118,10 +124,10 @@ public class Avatar extends Avatar_Base {
         }
     }
 
-    private static BufferedImage scale(BufferedImage src, int size) {
-        BufferedImage result = new BufferedImage(size, size,
+    private static BufferedImage scale(final BufferedImage src, final int size) {
+        final BufferedImage result = new BufferedImage(size, size,
                 (src.getTransparency() == Transparency.OPAQUE ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB));
-        Graphics2D resultGraphics = result.createGraphics();
+        final Graphics2D resultGraphics = result.createGraphics();
         resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         resultGraphics.drawImage(src, 0, 0, size, size, null);
         resultGraphics.dispose();
