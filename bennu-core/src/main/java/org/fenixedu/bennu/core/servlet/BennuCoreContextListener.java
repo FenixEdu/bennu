@@ -75,7 +75,7 @@ public class BennuCoreContextListener implements ServletContextListener {
 
         registerMultipartConfig(event);
 
-        BootstrapperRegistry.registerBootstrapFilter(event.getServletContext());
+        // BootstrapperRegistry.registerBootstrapFilter(event.getServletContext());
 
         SystemResource.registerHealthcheck(new Healthcheck() {
             @Override
