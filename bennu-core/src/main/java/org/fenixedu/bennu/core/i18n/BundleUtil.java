@@ -16,6 +16,7 @@
  */
 package org.fenixedu.bennu.core.i18n;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -32,6 +33,13 @@ public class BundleUtil {
 
     public static String getString(final String bundle, final String key, String... args) {
         return getString(bundle, I18N.getLocale(), key, args);
+    }
+    public static String getString(final String bundle, final String key, LocalizedString... args) {
+        return getString(bundle, I18N.getLocale(), key, args);
+    }
+
+    public static String getString(final String bundle, final String key) {
+        return getString(bundle, key, new String[0]);
     }
 
     public static String getString(final String bundle, Locale locale, final String key, String... args) {
@@ -56,7 +64,28 @@ public class BundleUtil {
         }
     }
 
+    public static String getString(final String bundle, final Locale locale, final String key) {
+        return getString(bundle, locale, key, new String[0]);
+    }
+
+    public static String getString(final String bundle, final Locale locale, final String key, LocalizedString... args) {
+        return getString(bundle, locale, key, Arrays.stream(args).map(ls -> ls.getContent(locale)).toArray(String[]::new));
+    }
+
+    public static LocalizedString getLocalizedString(final String bundle, final String key) {
+        return getLocalizedString(bundle, key, new String[0]);
+    }
+
     public static LocalizedString getLocalizedString(final String bundle, final String key, String... args) {
+        LocalizedString i18NString = new LocalizedString();
+        for (Locale locale : CoreConfiguration.supportedLocales()) {
+            String message = getString(bundle, locale, key, args);
+            i18NString = i18NString.with(locale, message);
+        }
+        return i18NString;
+    }
+
+    public static LocalizedString getLocalizedString(final String bundle, final String key, LocalizedString... args) {
         LocalizedString i18NString = new LocalizedString();
         for (Locale locale : CoreConfiguration.supportedLocales()) {
             String message = getString(bundle, locale, key, args);
