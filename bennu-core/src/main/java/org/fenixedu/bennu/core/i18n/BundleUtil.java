@@ -16,17 +16,17 @@
  */
 package org.fenixedu.bennu.core.i18n;
 
-import org.fenixedu.bennu.core.util.CoreConfiguration;
-import org.fenixedu.commons.i18n.I18N;
-import org.fenixedu.commons.i18n.LocalizedString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
+
+import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.commons.i18n.I18N;
+import org.fenixedu.commons.i18n.LocalizedString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BundleUtil {
     private static final Logger logger = LoggerFactory.getLogger(BundleUtil.class);
@@ -85,7 +85,7 @@ public class BundleUtil {
         return i18NString;
     }
 
-    public static LocalizedString getLocalizedStringArgs(final String bundle, final String key, LocalizedString... args) {
+    public static LocalizedString getLocalizedString(final String bundle, final String key, LocalizedString... args) {
         LocalizedString i18NString = new LocalizedString();
         for (Locale locale : CoreConfiguration.supportedLocales()) {
             String message = getString(bundle, locale, key, args);
@@ -93,5 +93,4 @@ public class BundleUtil {
         }
         return i18NString;
     }
-
 }
