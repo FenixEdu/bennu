@@ -11,7 +11,7 @@ public interface NotificationPlug {
 
     Set<NotificationPlug> PLUGS = Collections.synchronizedSet(new HashSet<>());
 
-    boolean showNotification(final User user);
+    boolean showNotification(final User user, final HttpSession httpSession);
 
     String redirectUrl(final HttpSession httpSession);
 
