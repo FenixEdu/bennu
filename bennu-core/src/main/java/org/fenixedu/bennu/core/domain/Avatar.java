@@ -22,6 +22,22 @@ public class Avatar extends Avatar_Base {
         byte[] getCustomAvatar(int width, int height, String pictureMode);
     }
 
+    public interface Scale {
+
+        default BufferedImage scale(final BufferedImage src, final int size) {
+            final BufferedImage result = new BufferedImage(size, size,
+                    (src.getTransparency() == Transparency.OPAQUE ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB));
+            final Graphics2D resultGraphics = result.createGraphics();
+            resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            resultGraphics.drawImage(src, 0, 0, size, size, null);
+            resultGraphics.dispose();
+            return result;
+        }
+
+    }
+
+    public static Scale scaleFunctions = new Scale() { };
+
     public static Function<User, PhotoProvider> photoProvider = user -> {
         final UserProfile userProfile = user.getProfile();
         final Avatar avatar = userProfile == null ? null : userProfile.getLocalAvatar();
@@ -125,12 +141,7 @@ public class Avatar extends Avatar_Base {
     }
 
     private static BufferedImage scale(final BufferedImage src, final int size) {
-        final BufferedImage result = new BufferedImage(size, size,
-                (src.getTransparency() == Transparency.OPAQUE ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB));
-        final Graphics2D resultGraphics = result.createGraphics();
-        resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        resultGraphics.drawImage(src, 0, 0, size, size, null);
-        resultGraphics.dispose();
-        return result;
+        return scaleFunctions.scale(src, size);
     }
+
 }
