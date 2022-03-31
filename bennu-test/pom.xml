@@ -15,7 +15,7 @@
     <properties>
         <code.generator.class>pt.ist.fenixframework.backend.jvstm.JVSTMCodeGenerator</code.generator.class>
         <version.ff>2.7.0</version.ff>
-        <spring.version>4.3.18.RELEASE</spring.version>
+        <spring.version>5.3.18</spring.version>
     </properties>
 
     <build>
