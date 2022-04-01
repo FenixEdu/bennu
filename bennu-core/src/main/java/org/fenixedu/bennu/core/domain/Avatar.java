@@ -22,21 +22,30 @@ public class Avatar extends Avatar_Base {
         byte[] getCustomAvatar(int width, int height, String pictureMode);
     }
 
-    public interface Scale {
+    public interface ImageProcessor {
 
-        default BufferedImage scale(final BufferedImage src, final int size) {
-            final BufferedImage result = new BufferedImage(size, size,
-                    (src.getTransparency() == Transparency.OPAQUE ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB));
-            final Graphics2D resultGraphics = result.createGraphics();
-            resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-            resultGraphics.drawImage(src, 0, 0, size, size, null);
-            resultGraphics.dispose();
-            return result;
+        default byte[] process(final InputStream stream, final String mimeType, final int size) {
+            try {
+                final BufferedImage img = ImageIO.read(stream);
+                if (img == null) {
+                    throw BennuCoreDomainException.errorProcessingImage("image.is.null");
+                }
+                final BufferedImage scaled = scale(img, size);
+                final ByteArrayOutputStream out = new ByteArrayOutputStream();
+                final ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
+                try (final ImageOutputStream outstream = ImageIO.createImageOutputStream(out)) {
+                    writer.setOutput(outstream);
+                    writer.write(scaled);
+                    return out.toByteArray();
+                }
+            } catch (final IOException e) {
+                throw BennuCoreDomainException.errorProcessingImage(e);
+            }
         }
 
     }
 
-    public static Scale scaleFunctions = new Scale() { };
+    public static ImageProcessor imageProcessorFunction = new ImageProcessor() { };
 
     public static Function<User, PhotoProvider> photoProvider = user -> {
         final UserProfile userProfile = user.getProfile();
@@ -122,26 +131,17 @@ public class Avatar extends Avatar_Base {
     }
 
     public static byte[] process(final InputStream stream, final String mimeType, final int size) {
-        try {
-            final BufferedImage img = ImageIO.read(stream);
-            if (img == null) {
-                throw BennuCoreDomainException.errorProcessingImage("image.is.null");
-            }
-            final BufferedImage scaled = scale(img, size);
-            final ByteArrayOutputStream out = new ByteArrayOutputStream();
-            final ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
-            try (final ImageOutputStream outstream = ImageIO.createImageOutputStream(out)) {
-                writer.setOutput(outstream);
-                writer.write(scaled);
-                return out.toByteArray();
-            }
-        } catch (final IOException e) {
-            throw BennuCoreDomainException.errorProcessingImage(e);
-        }
+        return imageProcessorFunction.process(stream, mimeType, size);
     }
 
     private static BufferedImage scale(final BufferedImage src, final int size) {
-        return scaleFunctions.scale(src, size);
+        final BufferedImage result = new BufferedImage(size, size,
+                (src.getTransparency() == Transparency.OPAQUE ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB));
+        final Graphics2D resultGraphics = result.createGraphics();
+        resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        resultGraphics.drawImage(src, 0, 0, size, size, null);
+        resultGraphics.dispose();
+        return result;
     }
 
 }
