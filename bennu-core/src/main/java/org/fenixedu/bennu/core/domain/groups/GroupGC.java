@@ -123,7 +123,8 @@ class GroupGC {
                             List<String> getters = new ArrayList<>();
                             DomainClass model = FenixFramework.getDomainModel().findClass(type.getName());
                             for (Role role : fullRoles(model)) {
-                                if (relations.contains(role.getRelation().getName()) || role.getName().equals("root")) {
+                                if (relations.contains(role.getRelation().getName()) || role.getName() == null
+                                        || role.getName().equals("root")) {
                                     continue;
                                 }
                                 Method method = getter(type, role);
