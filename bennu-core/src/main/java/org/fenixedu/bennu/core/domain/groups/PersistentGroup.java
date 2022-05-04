@@ -161,6 +161,10 @@ public abstract class PersistentGroup extends PersistentGroup_Base {
         }
     }
 
+    public boolean isDeletable() {
+        return GroupGC.emptyCustomRelations(this);
+    }
+
     public static void garbageCollect() {
         GroupGC.gc();
     }

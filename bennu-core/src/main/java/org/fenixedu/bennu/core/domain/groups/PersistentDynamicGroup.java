@@ -137,10 +137,6 @@ public final class PersistentDynamicGroup extends PersistentDynamicGroup_Base {
         //Dynamic groups are never garbage collected automatically
     }
 
-    public boolean isDeletable() {
-        return GroupGC.emptyCustomRelations(this);
-    }
-
     public void delete() {
         if (getPrevious() != null) {
             getPrevious().gc();
