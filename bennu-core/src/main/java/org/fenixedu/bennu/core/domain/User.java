@@ -95,6 +95,7 @@ public final class User extends User_Base implements Principal {
         setCreated(new DateTime());
         setUsername(username);
         setProfile(profile);
+        setAuthManageable(true);
     }
 
     @Atomic
@@ -343,6 +344,10 @@ public final class User extends User_Base implements Principal {
     public static void setUsernameGenerator(final UsernameGenerator generator) {
         usernameGenerator = generator;
     }
+    
+    public void changeAuthManageable(Boolean authManageable) {
+        setAuthManageable(authManageable);
+    }
 
     private static UsernameGenerator usernameGenerator = new UsernameGenerator() {
         private final AtomicInteger currentId = new AtomicInteger(0);
@@ -372,4 +377,6 @@ public final class User extends User_Base implements Principal {
         }
         return result;
     }
+    
+    
 }
