@@ -345,6 +345,10 @@ public final class User extends User_Base implements Principal {
         usernameGenerator = generator;
     }
     
+    public Boolean isAuthManageable() {
+        return getAuthManageable();
+    }
+    
     public void changeAuthManageable(Boolean authManageable) {
         setAuthManageable(authManageable);
     }
