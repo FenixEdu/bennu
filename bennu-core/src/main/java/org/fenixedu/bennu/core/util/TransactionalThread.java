@@ -24,10 +24,14 @@
 */
 package org.fenixedu.bennu.core.util;
 
-import java.util.ArrayList;
-
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * 
@@ -36,13 +40,10 @@ import pt.ist.fenixframework.Atomic.TxMode;
  * 
  */
 public abstract class TransactionalThread extends Thread {
-    public static interface ExceptionListener {
-        public void notifyException(Throwable e);
-    }
 
     private final boolean readOnly;
 
-    private ArrayList<ExceptionListener> listeners;
+    private Collection<Predicate<Throwable>> listeners;
 
     public TransactionalThread(final boolean readOnly) {
         this.readOnly = readOnly;
@@ -52,14 +53,19 @@ public abstract class TransactionalThread extends Thread {
         this(false);
     }
 
-    public void addExceptionListener(ExceptionListener listener) {
-        if (listeners == null) {
-            listeners = new ArrayList<>();
+    public void addExceptionListener(final Predicate<Throwable> listener) {
+        if (listener == null) {
+            throw new NullPointerException("Trying to add null exception listener");
+        }
+        synchronized (this) {
+            if (listeners == null) {
+                listeners = Collections.synchronizedCollection(new ArrayList<>());
+            }
         }
         listeners.add(listener);
     }
 
-    public void removeExceptionListener(ExceptionListener listener) {
+    public void removeExceptionListener(final Consumer<Throwable> listener) {
         if (listeners != null) {
             listeners.remove(listener);
         }
@@ -74,12 +80,10 @@ public abstract class TransactionalThread extends Thread {
             } else {
                 callService();
             }
-        } catch (Throwable e) {
-            e.printStackTrace();
-            if (listeners != null) {
-                for (ExceptionListener listener : listeners) {
-                    listener.notifyException(e);
-                }
+        } catch (final Throwable t) {
+            if (listeners == null || listeners.stream().map(listener -> listener.test(t))
+                    .reduce(false, (a, b) -> a || b)) {
+                throw new Error(t);
             }
         }
     }
@@ -89,6 +93,21 @@ public abstract class TransactionalThread extends Thread {
     @Atomic
     private void callService() {
         transactionalRun();
+    }
+
+    public static void runTx(final boolean readOnly, final Runnable runnable) {
+        final Thread t = new TransactionalThread(readOnly) {
+            @Override
+            public void transactionalRun() {
+                runnable.run();
+            }
+        };
+        t.start();
+        try {
+            t.join();
+        } catch (final InterruptedException ex) {
+            throw new Error(ex);
+        }
     }
 
 }
