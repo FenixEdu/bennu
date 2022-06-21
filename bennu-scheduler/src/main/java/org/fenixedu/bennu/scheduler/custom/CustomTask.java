@@ -27,10 +27,19 @@ package org.fenixedu.bennu.scheduler.custom;
 
 import org.fenixedu.bennu.scheduler.CronTask;
 import org.fenixedu.bennu.scheduler.log.ExecutionLog;
-
 import pt.ist.fenixframework.Atomic.TxMode;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Consumer;
+
 public abstract class CustomTask extends CronTask {
+
+    private static final Collection<Consumer<CustomTask>> HANDLERS = new ArrayList<>();
+
+    public static void registerHandler(final Consumer<CustomTask> consumer) {
+        HANDLERS.add(consumer);
+    }
 
     private String code;
     private String user;
@@ -46,12 +55,24 @@ public abstract class CustomTask extends CronTask {
     @Override
     protected ExecutionLog createExecutionLog() {
         // this will blow up if either code or user are null
-        return ExecutionLog.newCustomExecution(getClassName(), code, user);
+        try {
+            return ExecutionLog.newCustomExecution(getClassName(), code, user);
+        } finally {
+            HANDLERS.forEach(h -> h.accept(this));
+        }
     }
 
     @Override
     public TxMode getTxMode() {
         return TxMode.WRITE;
+    }
+
+    public String getSourceCode() {
+        return code;
+    }
+
+    public String getTaskRunner() {
+        return user;
     }
 
 }
