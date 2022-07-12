@@ -346,7 +346,7 @@ public final class User extends User_Base implements Principal {
     }
 
     public boolean isAuthManageable() {
-        return getAuthManageable();
+        return Boolean.TRUE.equals(getAuthManageable());
     }
 
     public void changeAuthManageable(Boolean authManageable) {
