@@ -2,13 +2,9 @@ package org.fenixedu.bennu.portal.servlet;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,7 +14,7 @@ import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import com.google.common.base.Strings;
 
 /**
- * Specialized filter that logs the current user out.
+ * Specialized servlet that logs the current user out.
  * 
  * If CAS is enabled, the user is redirected to the CAS logout page, after
  * being logged out locally.
@@ -28,16 +24,12 @@ import com.google.common.base.Strings;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  *
  */
-@WebFilter({ "/logout", "/logout/" })
-public class PortalLogoutFilter implements Filter {
+@WebServlet({ "/logout", "/logout/" })
+public class PortalLogoutServlet extends HttpServlet {
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
-
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-            ServletException {
+    protected void doGet(javax.servlet.http.HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
@@ -52,7 +44,8 @@ public class PortalLogoutFilter implements Filter {
     }
 
     @Override
-    public void destroy() {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
     }
 
 }
