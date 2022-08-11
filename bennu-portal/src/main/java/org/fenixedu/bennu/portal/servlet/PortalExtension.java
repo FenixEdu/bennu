@@ -30,7 +30,7 @@ import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.extension.Test;
 import com.mitchellbosecke.pebble.tokenParser.TokenParser;
 
-class PortalExtension extends AbstractExtension {
+public class PortalExtension extends AbstractExtension {
 
     private final ServletContext context;
 
