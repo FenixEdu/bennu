@@ -94,6 +94,7 @@ public final class User extends User_Base implements Principal {
         setBennu(Bennu.getInstance());
         setCreated(new DateTime());
         setUsername(username);
+        setOriginalUsername(username);
         setProfile(profile);
         setAuthManageable(true);
     }
