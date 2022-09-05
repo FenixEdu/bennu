@@ -151,6 +151,11 @@ public final class User extends User_Base implements Principal {
     }
 
     @Override
+    protected String getOriginalUsername() {
+        return super.getOriginalUsername();
+    }
+
+    @Override
     public DateTime getCreated() {
         //FIXME: remove when the framework enables read-only slots
         return super.getCreated();
