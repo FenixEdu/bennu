@@ -151,7 +151,7 @@ public final class User extends User_Base implements Principal {
     }
 
     @Override
-    protected String getOriginalUsername() {
+    public String getOriginalUsername() {
         return super.getOriginalUsername();
     }
 
