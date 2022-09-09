@@ -155,6 +155,16 @@ public final class User extends User_Base implements Principal {
         return super.getOriginalUsername();
     }
 
+    public void changeOriginalUsername(String originalUsername) {
+        User user = User.findByOriginalUsername(originalUsername);
+        if (user != null && user != this) {
+            throw new IllegalArgumentException("Already exists a user with original username: " + originalUsername);
+        }
+        if (getOriginalUsername() == null || getOriginalUsername().isEmpty()) {
+            setOriginalUsername(originalUsername);
+        }
+    }
+
     @Override
     public DateTime getCreated() {
         //FIXME: remove when the framework enables read-only slots
@@ -331,6 +341,18 @@ public final class User extends User_Base implements Principal {
             return findByUsername(username);
         }
         return match;
+    }
+
+    private static User findByOriginalUsername(String originalUsername) {
+        if (originalUsername == null) {
+            return null;
+        }
+        for (final User user : Bennu.getInstance().getUserSet()) {
+            if (originalUsername.equals(user.getOriginalUsername())) {
+                return user;
+            }
+        }
+        return null;
     }
 
     private static User manualFind(final String username) {
