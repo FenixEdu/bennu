@@ -20,7 +20,7 @@ import pt.ist.fenixframework.Atomic;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
  */
-public final class MenuContainer extends MenuContainer_Base {
+public class MenuContainer extends MenuContainer_Base {
 
     /**
      * Used to create the {@link MenuContainer} that will represent the root of the

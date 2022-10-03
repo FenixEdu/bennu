@@ -15,7 +15,7 @@ import pt.ist.fenixframework.FenixFramework;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
  */
-public final class MenuFunctionality extends MenuFunctionality_Base {
+public class MenuFunctionality extends MenuFunctionality_Base {
 
     /**
      * Creates a new {@link MenuFunctionality} under the given container, based on the given {@link Functionality}.
