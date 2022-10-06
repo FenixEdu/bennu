@@ -117,7 +117,14 @@ public class MenuContainer extends MenuContainer_Base {
     private Integer getNextOrder() {
         return getChildSet().size() + 1;
     }
-
+    
+    public void updateFullPath() {
+        super.updateFullPath();
+        for(MenuItem item: getChildSet()) {
+            item.updateFullPath();
+        }
+    }
+    
     /**
      * Adds a given {@link MenuItem} as a child of this container, in the given position.
      * 

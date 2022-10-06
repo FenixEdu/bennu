@@ -78,6 +78,10 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         }
         return builder.toString();
     }
+    
+    public void updateFullPath() {
+        setFullPath(computeFullPath());
+    }
 
     /**
      * Compares this {@link MenuItem} with another, taking into account the order of both items.
@@ -152,7 +156,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         //FIXME: remove when the framework enables read-only slots
         return super.getParent();
     }
-
+    
     @Override
     public String getPath() {
         //FIXME: remove when the framework enables read-only slots
@@ -197,7 +201,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         return result;
     }
 
-    protected abstract MenuItem moveTo(MenuContainer container);
+    public abstract MenuItem moveTo(MenuContainer container);
 
     @Override
     public SupportConfiguration getSupport() {
