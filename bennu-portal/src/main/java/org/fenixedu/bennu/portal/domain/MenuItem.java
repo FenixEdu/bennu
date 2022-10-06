@@ -143,6 +143,10 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         return getVisible();
     }
 
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+    }
+
     @Override
     public MenuContainer getParent() {
         //FIXME: remove when the framework enables read-only slots

@@ -38,6 +38,7 @@ public class MenuItem {
 	public String path (REQUIRED);
 	public String fullPath (REQUIRED);
 	public Boolean visible (REQUIRED);
+	public boolean restricted;
 	public String layout;
 	public String icon;
 }
