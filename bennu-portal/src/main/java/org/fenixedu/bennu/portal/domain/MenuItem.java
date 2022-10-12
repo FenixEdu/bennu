@@ -91,8 +91,6 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
             getParent().updateAccessGroup();
         }
     }
-    public void updateAccessGroup() {
-    }
 
     /**
      * Compares this {@link MenuItem} with another, taking into account the order of both items.
