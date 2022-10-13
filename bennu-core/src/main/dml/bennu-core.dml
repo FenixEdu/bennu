@@ -76,6 +76,7 @@ relation DomainRootBennu {
 public class User {
 	protected String username  (REQUIRED);
 	protected String password;
+	protected String originalUsername;
 	protected String salt;
 	protected DateTime created (REQUIRED);
 	protected boolean authManageable;
