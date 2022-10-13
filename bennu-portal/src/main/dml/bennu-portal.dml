@@ -35,9 +35,10 @@ public class MenuItem {
 	public Integer ord (REQUIRED);
 	public LocalizedString title (REQUIRED);
 	public LocalizedString description (REQUIRED);
-	protected String path (REQUIRED);
-	protected String fullPath (REQUIRED);
+	public String path (REQUIRED);
+	public String fullPath (REQUIRED);
 	public Boolean visible (REQUIRED);
+	public Boolean restricted;
 	public String layout;
 	public String icon;
 }

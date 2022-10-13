@@ -14,11 +14,11 @@ import org.fenixedu.commons.i18n.LocalizedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
+
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 
 /**
  * A {@link PortalConfiguration} contains the configuration for the installed application, as well as the entry point for the
@@ -27,7 +27,7 @@ import com.google.common.io.ByteStreams;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
  */
-public final class PortalConfiguration extends PortalConfiguration_Base {
+public class PortalConfiguration extends PortalConfiguration_Base {
 
     private static final Logger logger = LoggerFactory.getLogger(PortalConfiguration.class);
 
@@ -135,4 +135,5 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
         super.setLogo(logo);
         setLogoChecksum(logo == null ? null : Hashing.sha1().hashBytes(logo).toString().substring(0, 12));
     }
+    
 }

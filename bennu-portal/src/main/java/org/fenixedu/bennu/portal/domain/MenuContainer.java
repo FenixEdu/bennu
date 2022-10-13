@@ -3,6 +3,7 @@ package org.fenixedu.bennu.portal.domain;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
@@ -20,7 +21,7 @@ import pt.ist.fenixframework.Atomic;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
  */
-public final class MenuContainer extends MenuContainer_Base {
+public class MenuContainer extends MenuContainer_Base {
 
     /**
      * Used to create the {@link MenuContainer} that will represent the root of the
@@ -116,6 +117,13 @@ public final class MenuContainer extends MenuContainer_Base {
 
     private Integer getNextOrder() {
         return getChildSet().size() + 1;
+    }
+
+    public void updateFullPath() {
+        super.updateFullPath();
+        for (MenuItem item : getChildSet()) {
+            item.updateFullPath();
+        }
     }
 
     /**
@@ -325,10 +333,24 @@ public final class MenuContainer extends MenuContainer_Base {
     }
 
     public static MenuContainer createSubRoot(String key, LocalizedString title, LocalizedString description) {
-        MenuContainer container =
-                new MenuContainer(PortalConfiguration.getInstance().getMenu(), false, Group.anyone().getExpression(),
-                        description, title, key);
+        MenuContainer container = new MenuContainer(PortalConfiguration.getInstance().getMenu(), false,
+                Group.anyone().getExpression(), description, title, key);
         PortalConfiguration.getInstance().addSubRoot(container);
         return container;
     }
+
+    @Override
+    public void setPath(String path) {
+        if (!path.equals(getPath())) {
+            super.setPath(path);
+            updateFullPath();
+        }
+    }
+
+    public void updateAccessGroup() {
+        String groupExpression =
+                getChildSet().stream().map(item -> item.getAccessGroup().getExpression()).collect(Collectors.joining(" | "));
+        setAccessGroup(Group.parse(groupExpression));
+    }
+
 }
