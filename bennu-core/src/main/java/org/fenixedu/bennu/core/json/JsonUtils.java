@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JsonUtils {
     public static String getString(final JsonObject json, final String property) {
@@ -149,20 +151,21 @@ public class JsonUtils {
         return je == null || je.isJsonNull() ? null : je.getAsString();
     }
 
+    public static <T extends DomainObject> Stream<T> toDomainObjectStream(final JsonArray array) {
+        return array.asList().stream()
+                .filter(e -> e != null && !e.isJsonNull())
+                .map(JsonElement::getAsString)
+                .filter(s -> !s.isEmpty())
+                .map(FenixFramework::getDomainObject)
+                .map(o -> (T) o);
+    }
+
     public static <T extends DomainObject> Set<T> toDomainObjects(final JsonArray array) {
-        final Set<T> result = new HashSet<>();
-        for (final JsonElement je : array) {
-            final T t = je == null || je.isJsonNull() || je.getAsString().isEmpty() ? null :
-                    FenixFramework.getDomainObject(je.getAsString());
-            if (t != null) {
-                result.add(t);
-            }
-        }
-        return result;
+        return toDomainObjectStream(array).map(o -> (T) o).collect(Collectors.toSet());
     }
 
     public static JsonElement parseJsonElement(final String string) {
-        return string != null ? new JsonParser().parse(string) : null;
+        return string != null ? JsonParser.parseString(string) : null;
     }
 
     public static JsonObject parse(final String string) {
