@@ -1,14 +1,18 @@
 package org.fenixedu.bennu.portal.domain;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.portal.model.Application;
+import org.fenixedu.bennu.portal.model.ApplicationRegistry;
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
 
@@ -353,4 +357,28 @@ public class MenuContainer extends MenuContainer_Base {
         setAccessGroup(Group.parse(groupExpression));
     }
 
+    public Set<Application> getApplications() {
+        Set<Application> result = new HashSet<Application>();
+        if (getApplicationsStr() != null) {
+            String[] appKeys = getApplicationsStr().split(",");
+            for (int i = 0; i < appKeys.length; i++) {
+                Application appByKey = ApplicationRegistry.getAppByKey(appKeys[i]);
+                if (appByKey != null && appByKey.getFunctionalities().size() > 0) {
+                    result.add(appByKey);
+                }
+            }
+        }
+        return result;
+    }
+
+    public void setApplications(List<Application> applications) {
+        if (applications != null) {
+            setApplicationsStr(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
+        }
+    }
+
+    public void addApplications(Application application) {
+        setApplicationsStr(StringUtils.isEmpty(getApplicationsStr()) ? application.getKey() : getApplicationsStr() + ","
+                + application.getKey());
+    }
 }
