@@ -60,18 +60,11 @@ valueType org.fenixedu.bennu.core.domain.NashornStrategy as NashornStrategy {
     }
 }
 
-valueType com.google.gson.JsonObject as JsonObject {
+valueType org.fenixedu.bennu.core.json.ImmutableJsonElement as ImmutableJsonElement {
     externalizeWith {
         String toString();
     }
-    internalizeWith org.fenixedu.bennu.core.json.JsonUtils.parse();
-}
-
-valueType com.google.gson.JsonArray as JsonArray {
-    externalizeWith {
-        String toString();
-    }
-    internalizeWith org.fenixedu.bennu.core.json.JsonUtils.parseJsonArray();
+    internalizeWith parse();
 }
 
 public class Bennu {
