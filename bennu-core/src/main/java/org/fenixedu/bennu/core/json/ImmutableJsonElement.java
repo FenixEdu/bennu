@@ -7,7 +7,7 @@ public class ImmutableJsonElement<J extends JsonElement> {
     private J json;
 
     public ImmutableJsonElement(final J json) {
-        this.json = json;
+        this.json = (J) json.deepCopy();
     }
 
     public J get() {
