@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.portal.domain;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -370,15 +371,12 @@ public class MenuContainer extends MenuContainer_Base {
         }
         return result;
     }
-
-    public void setApplications(List<Application> applications) {
+    
+    public void setApplications(Set<Application> applications) {
         if (applications != null) {
             setApplicationsStr(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
+        }else {
+            setApplicationsStr(null);
         }
-    }
-
-    public void addApplications(Application application) {
-        setApplicationsStr(StringUtils.isEmpty(getApplicationsStr()) ? application.getKey() : getApplicationsStr() + ","
-                + application.getKey());
     }
 }
