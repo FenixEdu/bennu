@@ -1,9 +1,7 @@
 package org.fenixedu.bennu.portal.domain;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -360,7 +358,7 @@ public class MenuContainer extends MenuContainer_Base {
 
     public Set<Application> getApplications() {
         Set<Application> result = new HashSet<Application>();
-        if (getApplicationsStr() != null) {
+        if (!StringUtils.isBlank(getApplicationsStr())) {
             String[] appKeys = getApplicationsStr().split(",");
             for (int i = 0; i < appKeys.length; i++) {
                 Application appByKey = ApplicationRegistry.getAppByKey(appKeys[i]);
@@ -371,11 +369,11 @@ public class MenuContainer extends MenuContainer_Base {
         }
         return result;
     }
-    
+
     public void setApplications(Set<Application> applications) {
-        if (applications != null) {
+        if (applications != null && !applications.isEmpty()) {
             setApplicationsStr(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
-        }else {
+        } else {
             setApplicationsStr(null);
         }
     }
