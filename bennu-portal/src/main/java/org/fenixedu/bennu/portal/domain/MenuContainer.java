@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.portal.model.Application;
+import org.fenixedu.bennu.portal.model.ApplicationRegistry;
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
 
@@ -353,4 +354,18 @@ public class MenuContainer extends MenuContainer_Base {
         setAccessGroup(Group.parse(groupExpression));
     }
 
+    public Set<Application> getApplications() {
+        String availableApplicationNames = getAvailableApplicationNames();
+        return availableApplicationNames == null ? Collections.emptySet() : Stream.of(availableApplicationNames.split(","))
+                .map(key -> ApplicationRegistry.getAppByKey(key))
+                .filter(app -> app != null && app.getFunctionalities().size() > 0).collect(Collectors.toSet());
+    }
+
+    public void setApplications(Set<Application> applications) {
+        if (applications != null && !applications.isEmpty()) {
+            setAvailableApplicationNames(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
+        } else {
+            setAvailableApplicationNames(null);
+        }
+    }
 }
