@@ -18,27 +18,27 @@
  */
 package org.fenixedu.bennu.core.signals;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
-
-import javax.transaction.Status;
-import javax.transaction.SystemException;
-
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pt.ist.fenixframework.CommitListener;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.Transaction;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * This is the main class for the signaling system. This implements a system wide event bus that allows writing code in one module
@@ -51,6 +51,7 @@ public class Signal {
 
     private static final Logger logger = LoggerFactory.getLogger(Signal.class);
 
+    private static final Map<String, Set<Consumer<Object>>> immediate = new ConcurrentHashMap<>();
     private static final Map<String, SignalEventBus> withTransaction = new ConcurrentHashMap<>();
     private static final Map<String, SignalEventBus> withoutTransaction = new ConcurrentHashMap<>();
 
@@ -141,6 +142,21 @@ public class Signal {
     }
 
     /**
+     * Registers a handler for events of that key. This handler will run immediately inside the current transaction.
+     *
+     * @param key
+     *            The key in which to register this handler.
+     * @param handler
+     *            The handler to register.
+     * @return
+     *         The {@link HandlerRegistration} associated with this handler.
+     */
+    public static <T> void registerImmediate(String key, Consumer<T> handler) {
+        final Set handlers = immediate.computeIfAbsent(key, (k) -> Collections.synchronizedSet(new HashSet<>()));
+        handlers.add(handler);
+    }
+
+    /**
      * Registers the given {@link Consumer} as a handler for events, with the same semantics as
      * {@link #registerWithoutTransaction(String, Object)}.
      * 
@@ -179,6 +195,7 @@ public class Signal {
     public static void clear(String key) {
         withTransaction.remove(key);
         withoutTransaction.remove(key);
+        immediate.remove(key);
     }
 
     /**
@@ -194,6 +211,7 @@ public class Signal {
     private static void innerClear() {
         withTransaction.clear();
         withoutTransaction.clear();
+        immediate.clear();
     }
 
     /**
@@ -207,11 +225,15 @@ public class Signal {
     public static void unregister(String key, Object handler) {
         SignalEventBus with = withTransaction.get(key);
         SignalEventBus without = withoutTransaction.get(key);
+        Set imm = immediate.get(key);
         if (with != null) {
             with.unregister(handler);
         }
         if (without != null) {
             without.unregister(handler);
+        }
+        if (imm != null) {
+            imm.remove(handler);
         }
     }
 
@@ -223,6 +245,7 @@ public class Signal {
     public static void unregister(Object handler) {
         withTransaction.forEach((key, bus) -> bus.unregister(handler));
         withoutTransaction.forEach((key, bus) -> bus.unregister(handler));
+        immediate.forEach((key, bus) -> bus.remove(handler));
     }
 
     /**
@@ -248,6 +271,11 @@ public class Signal {
                 FenixFramework.getTransaction().putInContext("signalsWithTransaction", cache);
             }
             cache.computeIfAbsent(key, (k) -> new ArrayList<Object>()).add(event);
+        }
+
+        final Set<Consumer<Object>> consumers = immediate.get(key);
+        if (consumers != null) {
+            consumers.forEach(consumer -> consumer.accept(event));
         }
     }
 
