@@ -39,15 +39,27 @@ import org.jasig.cas.client.validation.TicketValidator;
 
 public class DefaultTicketValidationStrategy implements TicketValidationStrategy {
 
+    private static final String CALLBACK_URL = "CALLBACK_URL";
     private final TicketValidator validator =
             new Cas20ServiceTicketValidator(CASClientConfiguration.getConfiguration().casServerUrl());
 
     @Override
     public void validateTicket(final String ticket, final String requestURL, final HttpServletRequest request,
             final HttpServletResponse response) throws TicketValidationException, AuthorizationException {
+
+        // CALLBACK_URL is the attribute that OMNIS.cloud platform redirector system uses to understand
+        // the users callback. Since we are destroying a session and creating a new one when validating
+        // the ticket, we need to hop the value from one session to the other.
+        //
+        // 3 February 2023 - Paulo Abrantes
+        String redirect = (String) request.getSession(false).getAttribute(CALLBACK_URL);
         Authenticate.logout(request, response);
         String username = validator.validate(ticket, requestURL).getPrincipal().getName();
         User user = User.findByUsername(username);
         Authenticate.login(request, response, user, "TODO: CHANGE ME");
+        if (redirect != null) {
+            request.getSession(false).setAttribute(CALLBACK_URL, redirect);
+        }
+
     }
 }

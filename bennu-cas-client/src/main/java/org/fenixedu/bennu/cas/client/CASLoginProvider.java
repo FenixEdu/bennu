@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.login.LoginProvider;
 
-import com.google.common.base.Strings;
 import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
 
@@ -20,14 +19,20 @@ public class CASLoginProvider implements LoginProvider {
     private final Escaper escaper = UrlEscapers.urlPathSegmentEscaper();
 
     @Override
-    public void showLogin(HttpServletRequest request, HttpServletResponse response, String callback) throws IOException,
-            ServletException {
-        if (Strings.isNullOrEmpty(callback)) {
-            callback = CASClientConfiguration.getConfiguration().casServiceUrl();
-        }
-        callback = Base64.getUrlEncoder().encodeToString(callback.getBytes(StandardCharsets.UTF_8));
-        response.sendRedirect(CASClientConfiguration.getConfiguration().casServerUrl() + "/login?service="
-                + escaper.escape(CoreConfiguration.getConfiguration().applicationUrl() + "/api/cas-client/login/" + callback));
+    public void showLogin(HttpServletRequest request, HttpServletResponse response, String callback)
+            throws IOException, ServletException {
+
+        // Although we receive the callback here in the API. The LoginRedirector that OMNIS.cloud platform
+        // uses, need that the users always go through /startPage first, which is the defined casServiceURL 
+        // that way we are ignoring the callback, so things can work the same way as the local and saml logins
+        // already work.
+        //
+        //
+        // 3 February 2023 - Paulo Abrantes
+        String actualCallbackToUse = CASClientConfiguration.getConfiguration().casServiceUrl();
+        actualCallbackToUse = Base64.getUrlEncoder().encodeToString(actualCallbackToUse.getBytes(StandardCharsets.UTF_8));
+        response.sendRedirect(CASClientConfiguration.getConfiguration().casServerUrl() + "/login?service=" + escaper
+                .escape(CoreConfiguration.getConfiguration().applicationUrl() + "/api/cas-client/login/" + actualCallbackToUse));
     }
 
     @Override
