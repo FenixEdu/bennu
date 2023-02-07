@@ -3,6 +3,7 @@ package org.fenixedu.bennu.portal.domain;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
 
@@ -130,9 +131,8 @@ public class MenuFunctionality extends MenuFunctionality_Base {
      */
     public static MenuFunctionality findFunctionality(String provider, String key) {
         String functionality = "$$bennuPortal$$provider:" + provider + "$$bennu;Portal$$key:" + key;
-        MenuFunctionality target =
-                cache.computeIfAbsent(functionality,
-                        (funct) -> findFunctionality(PortalConfiguration.getInstance().getMenu(), provider, key));
+        MenuFunctionality target = cache.computeIfAbsent(functionality,
+                (funct) -> findFunctionality(PortalConfiguration.getInstance().getMenu(), provider, key));
         if (target == null) {
             // null is only returned if it wasn't present in the map, and functionality isn't really installed.
             return null;
@@ -149,7 +149,7 @@ public class MenuFunctionality extends MenuFunctionality_Base {
     private static final ConcurrentMap<String, MenuFunctionality> cache = new ConcurrentHashMap<>();
 
     public String resolveLayout() {
-        if (getLayout() != null) {
+        if (!StringUtils.isBlank(getLayout())) {
             return getLayout();
         }
         return getParent().resolveLayout();

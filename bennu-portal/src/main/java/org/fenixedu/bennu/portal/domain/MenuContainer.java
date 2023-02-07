@@ -6,6 +6,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.portal.model.Application;
@@ -199,9 +200,9 @@ public class MenuContainer extends MenuContainer_Base {
     public String resolveLayout() {
         if (getConfiguration() != null) {
             // Portal root might have specific layout
-            return getLayout() != null ? getLayout() : "default";
+            return !StringUtils.isBlank(getLayout()) ? getLayout() : "default";
         }
-        if (getLayout() != null) {
+        if (!StringUtils.isBlank(getLayout())) {
             return getLayout();
         }
         return getParent().resolveLayout();
