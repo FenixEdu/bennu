@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.cas.client.CASClientConfiguration;
+import org.fenixedu.bennu.cas.client.filter.BennuFilterUtils;
 import org.fenixedu.bennu.cas.client.strategy.DefaultTicketValidationStrategy;
 import org.fenixedu.bennu.cas.client.strategy.TicketValidationStrategy;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
@@ -82,6 +84,14 @@ public class CASResource {
             String requestURL = URLDecoder.decode(request.getRequestURL().toString(), CHARSET.name());
 
             getTicketValidator().validateTicket(ticket, requestURL, request, response);
+
+            Cookie cookie = BennuFilterUtils.getCookie(request, "redirectToCas");
+            if (cookie == null) {
+                cookie = new Cookie("redirectToCas", "true");
+                cookie.setPath("/");
+                cookie.setMaxAge(24 * 60 * 60);
+                response.addCookie(cookie);
+            }
 
         } catch (TicketValidationException | AuthorizationException e) {
             logger.debug(e.getMessage(), e);
