@@ -22,7 +22,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.fenixedu.bennu.cas.client.CASClientConfiguration;
-import org.fenixedu.bennu.cas.client.filter.BennuFilterUtils;
 import org.fenixedu.bennu.cas.client.strategy.DefaultTicketValidationStrategy;
 import org.fenixedu.bennu.cas.client.strategy.TicketValidationStrategy;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
@@ -85,7 +84,7 @@ public class CASResource {
 
             getTicketValidator().validateTicket(ticket, requestURL, request, response);
 
-            Cookie cookie = BennuFilterUtils.getCookie(request, "redirectToCas");
+            Cookie cookie = getCookie(request, "redirectToCas");
             if (cookie == null) {
                 cookie = new Cookie("redirectToCas", "true");
                 cookie.setPath("/");
@@ -99,6 +98,20 @@ public class CASResource {
             actualCallback = actualCallback + (actualCallback.contains("?") ? "&" : "?") + "login_failed=true";
         }
         return Response.status(Status.FOUND).location(new URI(actualCallback)).build();
+    }
+
+    private static Cookie getCookie(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+        Cookie cookie = null;
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals(cookieName)) {
+                    cookie = c;
+                    break;
+                }
+            }
+        }
+        return cookie;
     }
 
     private static Optional<String> decode(String base64Callback) {
