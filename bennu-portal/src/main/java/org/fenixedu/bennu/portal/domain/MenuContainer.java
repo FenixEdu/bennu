@@ -227,7 +227,11 @@ public class MenuContainer extends MenuContainer_Base {
      *         access.
      */
     public final MenuFunctionality findFunctionalityWithPath(String[] parts) {
-        return findFunctionalityWithPath(parts, 0);
+        return findFunctionalityWithPath(parts, 0, true);
+    }
+
+    public final MenuFunctionality findFunctionalityWithPathWithoutAccessControl(String[] parts) {
+        return findFunctionalityWithPath(parts, 0, false);
     }
 
     /**
@@ -260,7 +264,8 @@ public class MenuContainer extends MenuContainer_Base {
      * If no item was found, return {@code null}.</li>
      * </ol>
      */
-    private final MenuFunctionality findFunctionalityWithPath(String[] parts, int startIndex) {
+    private final MenuFunctionality findFunctionalityWithPath(String[] parts, int startIndex,
+            Boolean checkUserAccessToFunctionality) {
         // 1)
         if (parts.length == startIndex) {
             return findInitialContent();
@@ -268,17 +273,23 @@ public class MenuContainer extends MenuContainer_Base {
 
         // 2)
         for (MenuItem child : getChildSet()) {
-            if (child.getPath().equals(parts[startIndex]) && child.isItemAvailableForCurrentUser()) {
+            if (child.getPath().equals(parts[startIndex])
+                    && checkUserAccessToFunctionality(child, checkUserAccessToFunctionality)) {
                 if (child.isMenuFunctionality()) {
                     return child.getAsMenuFunctionality();
                 } else {
-                    return child.getAsMenuContainer().findFunctionalityWithPath(parts, startIndex + 1);
+                    return child.getAsMenuContainer().findFunctionalityWithPath(parts, startIndex + 1,
+                            checkUserAccessToFunctionality);
                 }
             }
         }
 
         // 3)
         return null;
+    }
+
+    private boolean checkUserAccessToFunctionality(MenuItem menuItem, Boolean checkAccess) {
+        return checkAccess ? menuItem.isItemAvailableForCurrentUser() : true;
     }
 
     /**

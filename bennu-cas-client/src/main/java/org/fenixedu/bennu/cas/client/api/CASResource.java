@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -83,12 +84,34 @@ public class CASResource {
 
             getTicketValidator().validateTicket(ticket, requestURL, request, response);
 
+            Cookie cookie = getCookie(request, "redirectToCas");
+            if (cookie == null) {
+                cookie = new Cookie("redirectToCas", "true");
+                cookie.setPath("/");
+                cookie.setMaxAge(24 * 60 * 60);
+                response.addCookie(cookie);
+            }
+
         } catch (TicketValidationException | AuthorizationException e) {
             logger.debug(e.getMessage(), e);
             // Append the login_failed parameter to the callback
             actualCallback = actualCallback + (actualCallback.contains("?") ? "&" : "?") + "login_failed=true";
         }
         return Response.status(Status.FOUND).location(new URI(actualCallback)).build();
+    }
+
+    private static Cookie getCookie(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+        Cookie cookie = null;
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals(cookieName)) {
+                    cookie = c;
+                    break;
+                }
+            }
+        }
+        return cookie;
     }
 
     private static Optional<String> decode(String base64Callback) {
