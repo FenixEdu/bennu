@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -119,7 +122,19 @@ public class PortalLoginServlet extends HttpServlet {
      *         Whether the provided callback is valid
      */
     public static boolean validateCallback(String callback) {
-        return Strings.isNullOrEmpty(callback) || callback.startsWith(CoreConfiguration.getConfiguration().applicationUrl());
+        if (Strings.isNullOrEmpty(callback)) {
+            return true;
+        }
+        try {
+            URI parsedCallback = new URI(callback);
+            URI applicationUri = URI.create(CoreConfiguration.getConfiguration().applicationUrl());
+
+            return Objects.equals(parsedCallback.getScheme(), applicationUri.getScheme()) &&
+                    Objects.equals(parsedCallback.getHost(), applicationUri.getHost()) &&
+                    parsedCallback.getPort() == applicationUri.getPort();
+        } catch (URISyntaxException e) {
+            return false;
+        }
     }
 
     @Override
