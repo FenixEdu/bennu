@@ -1,5 +1,30 @@
 package org.fenixedu.bennu.portal.servlet;
 
+import com.mitchellbosecke.pebble.PebbleEngine;
+import com.mitchellbosecke.pebble.PebbleEngine.Builder;
+import com.mitchellbosecke.pebble.error.LoaderException;
+import com.mitchellbosecke.pebble.error.PebbleException;
+import com.mitchellbosecke.pebble.loader.ClasspathLoader;
+import com.mitchellbosecke.pebble.template.PebbleTemplate;
+import org.fenixedu.bennu.alerts.Alert;
+import org.fenixedu.bennu.alerts.AlertType;
+import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.bennu.portal.BennuPortalConfiguration;
+import org.fenixedu.bennu.portal.domain.MenuFunctionality;
+import org.fenixedu.bennu.portal.domain.MenuItem;
+import org.fenixedu.bennu.portal.domain.PersistentAlertMessage;
+import org.fenixedu.bennu.portal.domain.PortalConfiguration;
+import org.fenixedu.commons.i18n.I18N;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pt.ist.fenixframework.FenixFramework;
+
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -7,36 +32,8 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.fenixedu.bennu.alerts.Alert;
-import org.fenixedu.bennu.core.security.Authenticate;
-import org.fenixedu.bennu.core.util.CoreConfiguration;
-import org.fenixedu.bennu.portal.BennuPortalConfiguration;
-import org.fenixedu.bennu.portal.domain.MenuFunctionality;
-import org.fenixedu.bennu.portal.domain.MenuItem;
-import org.fenixedu.bennu.portal.domain.PortalConfiguration;
-import org.fenixedu.commons.i18n.I18N;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.mitchellbosecke.pebble.PebbleEngine;
-import com.mitchellbosecke.pebble.PebbleEngine.Builder;
-import com.mitchellbosecke.pebble.error.LoaderException;
-import com.mitchellbosecke.pebble.error.PebbleException;
-import com.mitchellbosecke.pebble.loader.ClasspathLoader;
-import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
 /**
  * Filter that injects layout for {@link MenuFunctionality}s that require it.
@@ -80,7 +77,25 @@ public class PortalLayoutInjector implements Filter {
 
         // Wrap the response so it may be later rewritten if necessary
         PortalResponseWrapper wrapper = new PortalResponseWrapper(response);
-
+        final User user = Authenticate.getUser();
+        if (user != null) {
+            final Locale locale = user.getProfile().getPreferredLocale();
+            user.getPersistentAlertMessageUserViewCountSet().stream()
+                    .map(count -> count.getPersistentAlertMessage())
+                    .filter(alert -> cleanup(alert) != null)
+                    .forEach(alert -> {
+                        final String message = alert.getMessage().getContent(locale);
+                        if (alert.getType() == AlertType.SUCCESS) {
+                            Alert.success(request, message);
+                        } else if (alert.getType() == AlertType.INFO) {
+                            Alert.info(request, message);
+                        } else if (alert.getType() == AlertType.WARNING) {
+                            Alert.warning(request, message);
+                        } else if (alert.getType() == AlertType.DANGER) {
+                            Alert.danger(request, message);
+                        }
+                    });
+        }
         chain.doFilter(request, wrapper);
         Alert.flush(request, response);
 
@@ -117,6 +132,18 @@ public class PortalLayoutInjector implements Filter {
         } else {
             wrapper.flushBuffer();
         }
+    }
+
+    private static PersistentAlertMessage cleanup(final PersistentAlertMessage alert) {
+        if (alert.getHideAfterDateTime() == null || alert.getHideAfterDateTime().isAfterNow()) {
+            return alert;
+        }
+        new Thread(() -> FenixFramework.atomic(() -> {
+            if (alert.getHideAfterDateTime() != null && alert.getHideAfterDateTime().isBeforeNow()) {
+                alert.delete();
+            }
+        })).start();
+        return null;
     }
 
     /**

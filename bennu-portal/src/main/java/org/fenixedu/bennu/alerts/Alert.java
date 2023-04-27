@@ -1,17 +1,13 @@
 package org.fenixedu.bennu.alerts;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 /**
  * An Alert is a message intended to be presented to the user. This class uses the {@link org.fenixedu.bennu.alerts.FlashMap} to
@@ -137,12 +133,16 @@ public class Alert {
 
         JsonArray array = new JsonArray();
 
+        final Set<String> messages = new HashSet<>();
         for (Alert alert : alerts) {
-            JsonObject o = new JsonObject();
-
-            o.addProperty("message", alert.getMessage());
-            o.addProperty("type", alert.getTag());
-            array.add(o);
+            final String message = alert.getMessage();
+            if (!messages.contains(message)) {
+                messages.add(message);
+                JsonObject o = new JsonObject();
+                o.addProperty("message", message);
+                o.addProperty("type", alert.getTag());
+                array.add(o);
+            }
         }
         flush(request, response);
         return array;

@@ -1,5 +1,7 @@
 package org.fenixedu.bennu.portal.domain;
 
+enum org.fenixedu.bennu.alerts.AlertType as AlertType;
+
 public class PortalConfiguration {
 	public LocalizedString applicationTitle (REQUIRED);
 	public LocalizedString htmlTitle (REQUIRED);
@@ -104,6 +106,44 @@ relation BennuSupportConfiguration {
         multiplicity 1..1;
     }
     public SupportConfiguration playsRole supportConfiguration {
+        multiplicity *;
+    }
+}
+
+public class PersistentAlertMessage {
+    LocalizedString message;
+    AlertType type;
+    Integer hideAfterViewCount;
+    DateTime hideAfterDateTime;
+}
+
+public class PersistentAlertMessageUserViewCount {
+    int viewCount;
+}
+
+relation BennuPersistentAlertMessage {
+    protected .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+        multiplicity 1..1;
+    }
+    public PersistentAlertMessage playsRole persistentAlertMessage {
+        multiplicity *;
+    }
+}
+
+relation PersistentAlertMessagePersistentAlertMessageUserViewCount {
+    public PersistentAlertMessage playsRole persistentAlertMessage {
+        multiplicity 1..1;
+    }
+    protected PersistentAlertMessageUserViewCount playsRole persistentAlertMessageUserViewCount {
+        multiplicity *;
+    }
+}
+
+relation UserPersistentAlertMessageUserViewCount {
+    protected .org.fenixedu.bennu.core.domain.User playsRole user {
+        multiplicity 1..1;
+    }
+    public PersistentAlertMessageUserViewCount playsRole persistentAlertMessageUserViewCount {
         multiplicity *;
     }
 }

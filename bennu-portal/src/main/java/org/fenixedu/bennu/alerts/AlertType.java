@@ -7,7 +7,7 @@ package org.fenixedu.bennu.alerts;
  * @author Artur Ventura (artur.ventura@tecnico.pt)
  * @since 3.5.0
  */
-enum AlertType {
+public enum AlertType {
     /**
      * A success message
      */
