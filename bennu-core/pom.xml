@@ -45,7 +45,10 @@
         <dependency>
             <groupId>org.fenixedu</groupId>
             <artifactId>JWTTools</artifactId>
-            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
         </dependency>
     </dependencies>
 
