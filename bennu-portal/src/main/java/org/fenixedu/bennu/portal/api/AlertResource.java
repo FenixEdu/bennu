@@ -31,7 +31,8 @@ public class AlertResource extends BennuRestResource {
             user.getPersistentAlertMessageUserViewCountSet().stream()
                     .filter(alert -> alert.getPersistentAlertMessage().getHideAfterViewCount() != null)
                     .filter(alert -> alert.getPersistentAlertMessage().getType().getTag().equals(type))
-                    .filter(alert -> alert.getPersistentAlertMessage().getMessage().anyMatch(s -> s.equals(message)))
+                    .filter(alert -> alert.getPersistentAlertMessage().getMessage().anyMatch(s ->
+                            s.replace("\\", "").equals(message.replace("\\", ""))))
                     .forEach(alert -> {
                         final int count = alert.getViewCount() + 1;
                         final PersistentAlertMessage persistentAlertMessage = alert.getPersistentAlertMessage();
@@ -42,6 +43,31 @@ public class AlertResource extends BennuRestResource {
                             }
                         } else {
                             alert.setViewCount(count);
+                        }
+                    });
+        }
+        return JsonUtils.toJson(data -> data.addProperty("status", "ok"));
+    }
+
+    @POST
+    @Path("/dismiss")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Atomic(mode = Atomic.TxMode.WRITE)
+    public JsonElement dismiss(final JsonObject json) {
+        final User user = Authenticate.getUser();
+        if (user != null && json != null) {
+            final String message = JsonUtils.get(json, "message");
+            final String type = JsonUtils.get(json, "type");
+            user.getPersistentAlertMessageUserViewCountSet().stream()
+                    .filter(alert -> alert.getPersistentAlertMessage().getType().getTag().equals(type))
+                    .filter(alert -> alert.getPersistentAlertMessage().getMessage().anyMatch(s ->
+                            s.replace("\\", "").equals(message.replace("\\", ""))))
+                    .forEach(alert -> {
+                        final PersistentAlertMessage persistentAlertMessage = alert.getPersistentAlertMessage();
+                        alert.delete();
+                        if (persistentAlertMessage.getPersistentAlertMessageUserViewCountSet().isEmpty()) {
+                            persistentAlertMessage.delete();
                         }
                     });
         }

@@ -78,6 +78,9 @@ public class PortalLayoutInjector implements Filter {
 
         // Wrap the response so it may be later rewritten if necessary
         PortalResponseWrapper wrapper = new PortalResponseWrapper(response);
+        chain.doFilter(request, wrapper);
+        Alert.flush(request, response);
+
         final User user = Authenticate.getUser();
         if (user != null) {
             final Locale locale = user.getProfile().getPreferredLocale();
@@ -97,8 +100,6 @@ public class PortalLayoutInjector implements Filter {
                         }
                     });
         }
-        chain.doFilter(request, wrapper);
-        Alert.flush(request, response);
 
         MenuFunctionality functionality = BennuPortalDispatcher.getSelectedFunctionality(request);
         if (functionality != null && wrapper.hasData() && request.getAttribute(SKIP_LAYOUT_INJECTION) == null) {
