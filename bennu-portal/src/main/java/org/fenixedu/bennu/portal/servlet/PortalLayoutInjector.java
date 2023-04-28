@@ -8,6 +8,7 @@ import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import org.fenixedu.bennu.alerts.Alert;
 import org.fenixedu.bennu.alerts.AlertType;
+import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -142,6 +143,9 @@ public class PortalLayoutInjector implements Filter {
             if (alert.getHideAfterDateTime() != null && alert.getHideAfterDateTime().isBeforeNow()) {
                 alert.delete();
             }
+            Bennu.getInstance().getPersistentAlertMessageSet().stream()
+                    .filter(pam -> pam.getPersistentAlertMessageUserViewCountSet().isEmpty() || pam.getHideAfterDateTime().isBeforeNow())
+                    .forEach(PersistentAlertMessage::delete);
         })).start();
         return null;
     }

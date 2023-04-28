@@ -6,6 +6,7 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.portal.domain.PersistentAlertMessage;
 import pt.ist.fenixframework.Atomic;
 
 import javax.ws.rs.Consumes;
@@ -33,8 +34,12 @@ public class AlertResource extends BennuRestResource {
                     .filter(alert -> alert.getPersistentAlertMessage().getMessage().anyMatch(s -> s.equals(message)))
                     .forEach(alert -> {
                         final int count = alert.getViewCount() + 1;
-                        if (count >= alert.getPersistentAlertMessage().getHideAfterViewCount().intValue()) {
+                        final PersistentAlertMessage persistentAlertMessage = alert.getPersistentAlertMessage();
+                        if (count >= persistentAlertMessage.getHideAfterViewCount().intValue()) {
                             alert.delete();
+                            if (persistentAlertMessage.getPersistentAlertMessageUserViewCountSet().isEmpty()) {
+                                persistentAlertMessage.delete();
+                            }
                         } else {
                             alert.setViewCount(count);
                         }
