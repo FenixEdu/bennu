@@ -12,10 +12,16 @@
     <name>Bennu SAML Client</name>
 
     <properties>
-        <com.onelogin.java-saml.version>2.6.0</com.onelogin.java-saml.version>
+        <com.onelogin.java-saml.version>2.9.0</com.onelogin.java-saml.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.fenixedu</groupId>
             <artifactId>bennu-core</artifactId>

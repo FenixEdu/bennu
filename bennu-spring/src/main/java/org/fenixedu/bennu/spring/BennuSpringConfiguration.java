@@ -45,6 +45,7 @@ import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -54,6 +55,9 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.format.support.FormattingConversionService;
+import org.springframework.validation.Validator;
+import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -160,14 +164,21 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport impleme
         };
     }
 
-    @Override
+/*    @Override
     public PortalHandlerMapping requestMappingHandlerMapping() {
         PortalHandlerMapping handlerMapping = new PortalHandlerMapping();
         handlerMapping.setOrder(0);
         handlerMapping.setInterceptors(getInterceptors());
         handlerMapping.setContentNegotiationManager(mvcContentNegotiationManager());
         return handlerMapping;
+    }*/
+
+    @Override
+    public PortalHandlerMapping createRequestMappingHandlerMapping(){
+        return new PortalHandlerMapping();
     }
+
+
 
     @Bean
     public ConversionService conversionService(GenericConversionService service) {
@@ -188,14 +199,14 @@ public class BennuSpringConfiguration extends WebMvcConfigurationSupport impleme
         // This is required to add the resolver as first on the list
         List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
         resolvers.add(new AuthenticatedUserArgumentResolver());
-        resolvers.addAll(requestMappingHandlerAdapter().getArgumentResolvers());
-        requestMappingHandlerAdapter().setArgumentResolvers(resolvers);
+        resolvers.addAll(requestMappingHandlerAdapter(mvcContentNegotiationManager(), mvcConversionService(), mvcValidator()).getArgumentResolvers());
+        requestMappingHandlerAdapter(mvcContentNegotiationManager(), mvcConversionService(), mvcValidator()).setArgumentResolvers(resolvers);
     }
 
     @Override
     protected void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
         exceptionResolvers.add(new BennuSpringExceptionResolver());
-        addDefaultHandlerExceptionResolvers(exceptionResolvers);
+        addDefaultHandlerExceptionResolvers(exceptionResolvers, mvcContentNegotiationManager());
     }
 
 }

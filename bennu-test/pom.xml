@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>fenixedu-project</artifactId>
-        <version>2.5.0</version>
+        <version>3.0.0-beta1</version>
         <relativePath />
     </parent>
 
@@ -14,7 +14,7 @@
 
     <properties>
         <code.generator.class>pt.ist.fenixframework.backend.jvstm.JVSTMCodeGenerator</code.generator.class>
-        <version.ff>2.7.0</version.ff>
+        <version.ff>3.0.0-beta1</version.ff>
         <spring.version>4.3.18.RELEASE</spring.version>
     </properties>
 
@@ -39,7 +39,12 @@
                 <dependencies>
                     <dependency>
                         <groupId>pt.ist</groupId>
-                        <artifactId>fenix-framework-backend-jvstm-common-code-generator</artifactId>
+                        <artifactId>fenix-framework-dml-compiler</artifactId>
+                        <version>${version.ff}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>pt.ist</groupId>
+                        <artifactId>fenix-framework-core</artifactId>
                         <version>${version.ff}</version>
                     </dependency>
                 </dependencies>
@@ -58,8 +63,18 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>15.4</version>
+        </dependency>
+        <dependency>
             <groupId>pt.ist</groupId>
-            <artifactId>fenix-framework-backend-jvstm-common-runtime</artifactId>
+            <artifactId>fenix-framework-core</artifactId>
             <version>${version.ff}</version>
         </dependency>
         <dependency>
