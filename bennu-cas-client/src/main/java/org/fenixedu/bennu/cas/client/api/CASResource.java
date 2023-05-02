@@ -1,24 +1,7 @@
 
 package org.fenixedu.bennu.cas.client.api;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
+import com.google.common.base.Strings;
 import org.fenixedu.bennu.cas.client.CASClientConfiguration;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
@@ -30,11 +13,22 @@ import org.jasig.cas.client.validation.TicketValidationException;
 import org.jasig.cas.client.validation.TicketValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
-import com.google.common.base.Strings;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Optional;
 
 @Path("/cas-client/login")
 public class CASResource {
@@ -44,11 +38,26 @@ public class CASResource {
     private final TicketValidator validator = new Cas20ServiceTicketValidator(CASClientConfiguration.getConfiguration()
             .casServerUrl());
 
+    @POST
+    @Path("/{callback}")
+    public Response returnFromCASPost(@FormParam("ticket") String ticket, @PathParam("callback") String callback,
+                                      @Context HttpServletRequest request, @Context HttpServletResponse response) throws UnsupportedEncodingException,
+            URISyntaxException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("POST CAS Login; ticket = " + ticket + " ; callback = " + callback);
+        }
+        return returnFromCAS(ticket, callback, request, response);
+    }
+
     @GET
     @Path("/{callback}")
     public Response returnFromCAS(@QueryParam("ticket") String ticket, @PathParam("callback") String callback,
-            @Context HttpServletRequest request, @Context HttpServletResponse response) throws UnsupportedEncodingException,
+                                  @Context HttpServletRequest request, @Context HttpServletResponse response) throws UnsupportedEncodingException,
             URISyntaxException {
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("CAS Login; ticket = " + ticket + " ; callback = " + callback);
+        }
 
         // Fail fast if CAS is not enabled
         if (!CASClientConfiguration.getConfiguration().casEnabled()) {
