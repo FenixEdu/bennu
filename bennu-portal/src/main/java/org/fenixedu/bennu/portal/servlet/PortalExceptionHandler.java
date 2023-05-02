@@ -23,10 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Custom {@link ExceptionHandler} that allows Portal themes to provide their own custom error pages.
@@ -66,6 +63,7 @@ public class PortalExceptionHandler implements ExceptionHandler {
     @Override
     public boolean handle(ServletRequest request, ServletResponse response, Throwable exception) throws ServletException,
             IOException {
+        final String refId = getRefId();
         try {
             if (response.isCommitted()) {
                 return false;
@@ -74,7 +72,12 @@ public class PortalExceptionHandler implements ExceptionHandler {
             ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
             HttpServletRequest req = (HttpServletRequest) request;
-            logger.error("Request at " + req.getRequestURI() + " threw an exception: ", exception);
+            final String uri = req.getRequestURI();
+            logger.error(refId + " - Request at " + req.getRequestURI() + " threw an exception: ", exception);
+            final boolean isLoginAttempt = uri.indexOf("/api/cas-client/login") >= 0;
+            if (isLoginAttempt && logger.isDebugEnabled()) {
+                exception.printStackTrace();
+            }
 
             Map<String, Object> ctx = new HashMap<>();
             PortalConfiguration config = PortalConfiguration.getInstance();
@@ -86,27 +89,57 @@ public class PortalExceptionHandler implements ExceptionHandler {
             ctx.put("locale", I18N.getLocale());
             ctx.put("userAgent", req.getHeader("User-Agent"));
             ctx.put("referer", req.getHeader("Referer"));
+            if (isLoginAttempt && logger.isDebugEnabled()) {
+                logger.debug(refId + " - calling get parameters.");
+            }
             ctx.put("parameters", getParameters(req));
+            if (isLoginAttempt && logger.isDebugEnabled()) {
+                logger.debug(refId + " - calling get attributes.");
+            }
             ctx.put("attributes", getAttributes(req));
             ctx.put("functionality", BennuPortalDispatcher.getSelectedFunctionality(req));
             setExtraParameters(ctx, req, exception);
+            if (isLoginAttempt && logger.isDebugEnabled()) {
+                logger.debug(refId + " - completed context map.");
+            }
 
             StringWriter writer = new StringWriter(1024);
             exception.printStackTrace(new PrintWriter(writer));
             ctx.put("stackTrace", writer.toString());
+            if (isLoginAttempt && logger.isDebugEnabled()) {
+                logger.debug(refId + " - completed export of stacktrace.");
+            }
 
             try {
                 response.setContentType("text/html;charset=UTF-8");
                 PebbleTemplate template = engine.getTemplate(config.getTheme());
+                if (isLoginAttempt && logger.isDebugEnabled()) {
+                    logger.debug(refId + " - using pebble theme " + config.getTheme());
+                }
                 template.evaluate(response.getWriter(), ctx, I18N.getLocale());
+                if (isLoginAttempt && logger.isDebugEnabled()) {
+                    logger.debug(refId + " - completed pebble template evaluation");
+                }
                 return true;
-            } catch (PebbleException e) {
+            } catch (final PebbleException e) {
+                if (isLoginAttempt && logger.isDebugEnabled()) {
+                    logger.debug(refId + " - error processing pebble tempalte.");
+                    e.printStackTrace();
+                }
                 throw new IOException(e);
             }
         } catch (final Throwable t) {
-            t.printStackTrace();
+            if (logger.isDebugEnabled()) {
+                logger.debug(refId + " - error processing pebble tempalte.");
+                t.printStackTrace();
+            }
             throw new ServletException(t);
         }
+    }
+
+    private String getRefId() {
+        final String uuid = UUID.randomUUID().toString();
+        return uuid.substring(uuid.length() - 5);
     }
 
     protected void setExtraParameters(Map<String, Object> ctx, HttpServletRequest req, Throwable exception) {
