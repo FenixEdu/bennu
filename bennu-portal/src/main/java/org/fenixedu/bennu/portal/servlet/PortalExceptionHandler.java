@@ -1,24 +1,12 @@
 package org.fenixedu.bennu.portal.servlet;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.mitchellbosecke.pebble.PebbleEngine;
+import com.mitchellbosecke.pebble.PebbleEngine.Builder;
+import com.mitchellbosecke.pebble.error.LoaderException;
+import com.mitchellbosecke.pebble.error.PebbleException;
+import com.mitchellbosecke.pebble.loader.ClasspathLoader;
+import com.mitchellbosecke.pebble.loader.Loader;
+import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.servlet.ExceptionHandlerFilter.ExceptionHandler;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
@@ -27,13 +15,18 @@ import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mitchellbosecke.pebble.PebbleEngine;
-import com.mitchellbosecke.pebble.PebbleEngine.Builder;
-import com.mitchellbosecke.pebble.error.LoaderException;
-import com.mitchellbosecke.pebble.error.PebbleException;
-import com.mitchellbosecke.pebble.loader.ClasspathLoader;
-import com.mitchellbosecke.pebble.loader.Loader;
-import com.mitchellbosecke.pebble.template.PebbleTemplate;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Custom {@link ExceptionHandler} that allows Portal themes to provide their own custom error pages.
@@ -73,41 +66,46 @@ public class PortalExceptionHandler implements ExceptionHandler {
     @Override
     public boolean handle(ServletRequest request, ServletResponse response, Throwable exception) throws ServletException,
             IOException {
-        if (response.isCommitted()) {
-            return false;
-        }
-        response.reset();
-        ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-        HttpServletRequest req = (HttpServletRequest) request;
-        logger.error("Request at " + req.getRequestURI() + " threw an exception: ", exception);
-
-        Map<String, Object> ctx = new HashMap<>();
-        PortalConfiguration config = PortalConfiguration.getInstance();
-        ctx.put("loggedUser", Authenticate.getUser());
-        ctx.put("config", config);
-        ctx.put("contextPath", req.getContextPath());
-        ctx.put("request", req);
-        ctx.put("exception", exception);
-        ctx.put("locale", I18N.getLocale());
-        ctx.put("userAgent", req.getHeader("User-Agent"));
-        ctx.put("referer", req.getHeader("Referer"));
-        ctx.put("parameters", getParameters(req));
-        ctx.put("attributes", getAttributes(req));
-        ctx.put("functionality", BennuPortalDispatcher.getSelectedFunctionality(req));
-        setExtraParameters(ctx, req, exception);
-
-        StringWriter writer = new StringWriter(1024);
-        exception.printStackTrace(new PrintWriter(writer));
-        ctx.put("stackTrace", writer.toString());
-
         try {
-            response.setContentType("text/html;charset=UTF-8");
-            PebbleTemplate template = engine.getTemplate(config.getTheme());
-            template.evaluate(response.getWriter(), ctx, I18N.getLocale());
-            return true;
-        } catch (PebbleException e) {
-            throw new IOException(e);
+            if (response.isCommitted()) {
+                return false;
+            }
+            response.reset();
+            ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+            HttpServletRequest req = (HttpServletRequest) request;
+            logger.error("Request at " + req.getRequestURI() + " threw an exception: ", exception);
+
+            Map<String, Object> ctx = new HashMap<>();
+            PortalConfiguration config = PortalConfiguration.getInstance();
+            ctx.put("loggedUser", Authenticate.getUser());
+            ctx.put("config", config);
+            ctx.put("contextPath", req.getContextPath());
+            ctx.put("request", req);
+            ctx.put("exception", exception);
+            ctx.put("locale", I18N.getLocale());
+            ctx.put("userAgent", req.getHeader("User-Agent"));
+            ctx.put("referer", req.getHeader("Referer"));
+            ctx.put("parameters", getParameters(req));
+            ctx.put("attributes", getAttributes(req));
+            ctx.put("functionality", BennuPortalDispatcher.getSelectedFunctionality(req));
+            setExtraParameters(ctx, req, exception);
+
+            StringWriter writer = new StringWriter(1024);
+            exception.printStackTrace(new PrintWriter(writer));
+            ctx.put("stackTrace", writer.toString());
+
+            try {
+                response.setContentType("text/html;charset=UTF-8");
+                PebbleTemplate template = engine.getTemplate(config.getTheme());
+                template.evaluate(response.getWriter(), ctx, I18N.getLocale());
+                return true;
+            } catch (PebbleException e) {
+                throw new IOException(e);
+            }
+        } catch (final Throwable t) {
+            t.printStackTrace();
+            throw new ServletException(t);
         }
     }
 
