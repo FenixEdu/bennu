@@ -145,7 +145,8 @@ public class PortalLayoutInjector implements Filter {
                 alert.delete();
             }
             Bennu.getInstance().getPersistentAlertMessageSet().stream()
-                    .filter(pam -> pam.getPersistentAlertMessageUserViewCountSet().isEmpty() || pam.getHideAfterDateTime().isBeforeNow())
+                    .filter(pam -> pam.getPersistentAlertMessageUserViewCountSet().isEmpty()
+                            || (pam.getHideAfterDateTime() != null && pam.getHideAfterDateTime().isBeforeNow()))
                     .forEach(PersistentAlertMessage::delete);
         })).start();
         return null;
