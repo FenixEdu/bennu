@@ -18,6 +18,7 @@ import org.fenixedu.bennu.portal.domain.MenuItem;
 import org.fenixedu.bennu.portal.domain.PersistentAlertMessage;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.FenixFramework;
@@ -88,7 +89,8 @@ public class PortalLayoutInjector implements Filter {
                     .map(count -> count.getPersistentAlertMessage())
                     .filter(alert -> cleanup(alert) != null)
                     .forEach(alert -> {
-                        final String message = alert.getMessage().getContent(locale);
+                        final LocalizedString ls = alert.getMessage();
+                        final String message = locale == null ? ls.getContent() : ls.getContent(locale);
                         if (alert.getType() == AlertType.SUCCESS) {
                             Alert.success(request, message);
                         } else if (alert.getType() == AlertType.INFO) {
