@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.net.UrlEscapers;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
@@ -126,7 +127,7 @@ public class PortalLoginServlet extends HttpServlet {
             return true;
         }
         try {
-            URI parsedCallback = new URI(callback);
+            URI parsedCallback = new URI(UrlEscapers.urlFragmentEscaper().escape(callback));
             URI applicationUri = URI.create(CoreConfiguration.getConfiguration().applicationUrl());
 
             return Objects.equals(parsedCallback.getScheme(), applicationUri.getScheme()) &&
