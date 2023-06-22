@@ -39,6 +39,7 @@ public class UserResource extends BennuRestResource {
     public JsonElement findUser(@QueryParam("query") String query,
             @QueryParam("includeInactive") @DefaultValue("false") Boolean includeInactive,
             @QueryParam("maxHits") @DefaultValue("20") Integer maxHits) {
+//        accessControl(Group.managers());
         if (query == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
@@ -57,6 +58,7 @@ public class UserResource extends BennuRestResource {
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
     public JsonElement getUser(@PathParam("oid") String externalId) {
+        accessControl(Group.managers());
         return view(readDomainObject(externalId));
     }
 
