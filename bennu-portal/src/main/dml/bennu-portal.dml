@@ -41,6 +41,7 @@ public class MenuItem {
 	public Boolean restricted;
 	public String layout;
 	public String icon;
+	public String uiLayerBackend;
 }
 
 public class MenuContainer extends MenuItem {
