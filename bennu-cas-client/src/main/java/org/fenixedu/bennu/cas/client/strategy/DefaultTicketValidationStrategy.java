@@ -39,7 +39,7 @@ import org.jasig.cas.client.validation.TicketValidator;
 
 public class DefaultTicketValidationStrategy implements TicketValidationStrategy {
 
-    private static final String CALLBACK_URL = "CALLBACK_URL";
+    public static final String CALLBACK_URL = "CALLBACK_URL";
     private final TicketValidator validator =
             new Cas20ServiceTicketValidator(CASClientConfiguration.getConfiguration().casServerUrl());
 
