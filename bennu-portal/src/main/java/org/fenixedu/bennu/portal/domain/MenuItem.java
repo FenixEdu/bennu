@@ -79,15 +79,15 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         }
         return builder.toString();
     }
-    
+
     public void updateFullPath() {
         setFullPath(computeFullPath());
     }
-    
+
     @Override
     protected void setGroup(PersistentGroup group) {
         super.setGroup(group);
-        if(getParent() != null) {
+        if (getParent() != null) {
             getParent().updateAccessGroup();
         }
     }
@@ -165,7 +165,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         //FIXME: remove when the framework enables read-only slots
         return super.getParent();
     }
-    
+
     @Override
     public String getPath() {
         //FIXME: remove when the framework enables read-only slots
@@ -223,11 +223,19 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         }
         return supportConfiguration;
     }
-    
+
     public boolean isItemRestricted() {
         if (getParent() == null) {
             return true;
         }
         return getRestricted() != null ? getRestricted() : getParent().isItemRestricted();
+    }
+
+    public String getRecursiveProviderImplementation() {
+        if (getParent() == null) {
+            return null;
+        }
+        return getProviderImplementation() == null ? getParent()
+                .getRecursiveProviderImplementation() : getProviderImplementation();
     }
 }
