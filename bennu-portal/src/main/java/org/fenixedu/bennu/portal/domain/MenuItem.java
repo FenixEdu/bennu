@@ -3,6 +3,7 @@ package org.fenixedu.bennu.portal.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.groups.Group;
@@ -232,10 +233,9 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
     }
 
     public String getRecursiveProviderImplementation() {
-        if (getParent() == null) {
-            return null;
+        if (!StringUtils.isEmpty(getProviderImplementation())) {
+            return getProviderImplementation();
         }
-        return getProviderImplementation() == null ? getParent()
-                .getRecursiveProviderImplementation() : getProviderImplementation();
+        return getParent() != null ? getParent().getRecursiveProviderImplementation() : null;
     }
 }
