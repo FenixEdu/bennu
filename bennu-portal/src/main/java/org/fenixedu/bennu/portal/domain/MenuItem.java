@@ -3,6 +3,7 @@ package org.fenixedu.bennu.portal.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.groups.Group;
@@ -79,15 +80,15 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         }
         return builder.toString();
     }
-    
+
     public void updateFullPath() {
         setFullPath(computeFullPath());
     }
-    
+
     @Override
     protected void setGroup(PersistentGroup group) {
         super.setGroup(group);
-        if(getParent() != null) {
+        if (getParent() != null) {
             getParent().updateAccessGroup();
         }
     }
@@ -165,7 +166,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         //FIXME: remove when the framework enables read-only slots
         return super.getParent();
     }
-    
+
     @Override
     public String getPath() {
         //FIXME: remove when the framework enables read-only slots
@@ -223,11 +224,18 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         }
         return supportConfiguration;
     }
-    
+
     public boolean isItemRestricted() {
         if (getParent() == null) {
             return true;
         }
         return getRestricted() != null ? getRestricted() : getParent().isItemRestricted();
+    }
+
+    public String getRecursiveProviderImplementation() {
+        if (!StringUtils.isEmpty(getProviderImplementation())) {
+            return getProviderImplementation();
+        }
+        return getParent() != null ? getParent().getRecursiveProviderImplementation() : null;
     }
 }
