@@ -90,27 +90,36 @@ public class ExternalApplication extends ExternalApplication_Base {
     public boolean matchesSecret(String secret) {
         return !Strings.isNullOrEmpty(secret) && secret.equals(getSecret());
     }
-    
-    public boolean matchesCodeVerifier(String codeVerifier, String code) {
-    	MessageDigest digester = null;
-    	try {
-    		digester = MessageDigest.getInstance("SHA-256");
 
-    	} catch (Exception e) {
-    	    throw new RuntimeException("Not possible to get instance of SHA-256");
-    	}
+    public boolean matchesCodeVerifier(String codeVerifier, String code) {
+        MessageDigest digester;
+        try {
+            digester = MessageDigest.getInstance("SHA-256");
+        } catch (Exception e) {
+            throw new RuntimeException("Not possible to get instance of SHA-256");
+        }
         digester.update(codeVerifier.getBytes(StandardCharsets.US_ASCII));
-    	String codeChallenge = Base64.getEncoder().encodeToString(digester.digest());
-    	String userId = OAuthUtils.getUserIdFromCode(code, getCodeSecret());
-    	User user = User.findByUsername(userId);
-    	Optional<ApplicationUserAuthorization> authOptional = user.getApplicationUserAuthorizationSet().stream().filter(s -> s.getApplication().getOid().equals(getOid())).findFirst();
-    	if(authOptional.isPresent()) {
-    		ApplicationUserAuthorization auth = authOptional.get();
-    		Optional<ApplicationUserSession> session = auth.getSessionSet().stream().filter(s -> s.getUserPKCEInfoAuthorizationSession() != null && s.getUserPKCEInfoAuthorizationSession().getCodeChallenge().equals(codeChallenge)).findFirst();
+        String codeChallenge = Base64.getUrlEncoder().withoutPadding().encodeToString(digester.digest());
+        // Ensure backwards compatibility
+        // Old implementations of bennu-oauth did not correctly adhere to the PKCE specification
+        String codeChallengeOld = Base64.getEncoder().encodeToString(digester.digest());
+
+        String userId = OAuthUtils.getUserIdFromCode(code, getCodeSecret());
+        User user = User.findByUsername(userId);
+        Optional<ApplicationUserAuthorization> authOptional = user.getApplicationUserAuthorizationSet().stream()
+                .filter(s -> s.getApplication().getOid().equals(getOid()))
+                .findFirst();
+        if (authOptional.isPresent()) {
+            ApplicationUserAuthorization auth = authOptional.get();
+            Optional<ApplicationUserSession> session = auth.getSessionSet().stream()
+                    .filter(s -> s.getUserPKCEInfoAuthorizationSession() != null &&
+                            (s.getUserPKCEInfoAuthorizationSession().getCodeChallenge().equals(codeChallenge) ||
+                                    s.getUserPKCEInfoAuthorizationSession().getCodeChallenge().equals(codeChallengeOld)))
+                    .findFirst();
             return !Strings.isNullOrEmpty(codeVerifier) && session.isPresent();
-    	} else {
-    		return false;
-    	}
+        } else {
+            return false;
+        }
     }
 
     public boolean matches(String redirectUrl, String secret) {
