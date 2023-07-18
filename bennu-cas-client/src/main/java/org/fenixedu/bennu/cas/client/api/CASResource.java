@@ -41,6 +41,8 @@ public class CASResource {
 
     private static TicketValidationStrategy VALIDATION_STRATEGY = null;
 
+    public static final String CALLBACK_URL = "CALLBACK_URL";
+
     private TicketValidationStrategy getTicketValidator() {
         if (VALIDATION_STRATEGY == null) {
             try {
@@ -82,7 +84,16 @@ public class CASResource {
             // Validate the ticket
             String requestURL = URLDecoder.decode(request.getRequestURL().toString(), CHARSET.name());
 
+            // CALLBACK_URL is the attribute that OMNIS.cloud platform redirector system uses to understand
+            // the users callback. Since we are destroying a session and creating a new one when validating
+            // the ticket, we need to hop the value from one session to the other.
+            //
+            // 3 February 2023 - Paulo Abrantes
+            String redirect = (String) request.getSession(false).getAttribute(CALLBACK_URL);
             getTicketValidator().validateTicket(ticket, requestURL, request, response);
+            if (redirect != null) {
+                request.getSession(false).setAttribute(CALLBACK_URL, redirect);
+            }
 
             Cookie cookie = getCookie(request, "redirectToCas");
             if (cookie == null) {

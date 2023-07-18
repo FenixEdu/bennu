@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.fenixedu.bennu.cas.client.strategy.DefaultTicketValidationStrategy;
+import org.fenixedu.bennu.cas.client.api.CASResource;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.login.LoginProvider;
 
@@ -36,7 +36,7 @@ public class CASLoginProvider implements LoginProvider {
         //
         // 11 July 2023 - Paulo Abrantes
         if (!StringUtils.isEmpty(callback)) {
-            request.getSession(false).setAttribute(DefaultTicketValidationStrategy.CALLBACK_URL, callback);
+            request.getSession(false).setAttribute(CASResource.CALLBACK_URL, callback);
         }
         String actualCallbackToUse = CASClientConfiguration.getConfiguration().casServiceUrl();
         actualCallbackToUse = Base64.getUrlEncoder().encodeToString(actualCallbackToUse.getBytes(StandardCharsets.UTF_8));
