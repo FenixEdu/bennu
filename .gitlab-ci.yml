@@ -8,6 +8,7 @@ cache:
 stages:
   - Install and Lint
   # - Test
+  - Security
   - Release
   - Notify
 
