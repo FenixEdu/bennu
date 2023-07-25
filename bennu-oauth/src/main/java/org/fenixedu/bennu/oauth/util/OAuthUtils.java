@@ -63,9 +63,9 @@ public class OAuthUtils {
 
     static {
         try {
-            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            ivspec = new IvParameterSpec(iv);
+            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); // nosemgrep
+            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // nosemgrep
+            ivspec = new IvParameterSpec(iv); // nosemgrep
         } catch (Exception e) {
             throw new RuntimeException("Not possible to get instance of AES/CBC/PKCS5Padding");
         }

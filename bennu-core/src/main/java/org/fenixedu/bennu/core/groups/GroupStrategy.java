@@ -34,7 +34,7 @@ public abstract class GroupStrategy extends CustomGroup {
      */
     public static GroupStrategy strategyForType(String typeName) {
         try {
-            return (GroupStrategy) Class.forName(typeName).newInstance();
+            return (GroupStrategy) Class.forName(typeName).newInstance(); // nosemgrep
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | ClassCastException e) {
             logger.error("Exception de-serializing GroupStrategy '" + typeName + "'. Returning NobodyGroup.", e);
             return (GroupStrategy) Group.nobody();

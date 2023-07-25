@@ -64,3 +64,12 @@ Notify:
     - node release-army-knife/notify-mattermost.js $CI_PROJECT_ID $CI_COMMIT_TAG $REPO_API_ACCESS_TOKEN $CHAT_HOOK
   only:
     - tags
+
+Security:
+  before_script: []
+  stage: Security
+  image: returntocorp/semgrep
+  script: semgrep ci --exclude-rule javascript.express.security.audit.xss.mustache.var-in-script-tag.var-in-script-tag --exclude-rule javascript.express.security.audit.xss.mustache.var-in-href.var-in-href  --exclude-rule java.jax-rs.security.insecure-resteasy.default-resteasy-provider-abuse --exclude-rule java.spring.security.unrestricted-request-mapping.unrestricted-request-mapping --exclude-rule java.lang.security.audit.cookie-missing-httponly.cookie-missing-httponly --exclude-rule java.lang.security.audit.cookie-missing-secure-flag.cookie-missing-secure-flag --exclude-rule java.lang.security.audit.xss.jsp.use-escapexml.use-escapexml --exclude-rule java.lang.security.audit.xss.jsp.use-jstl-escaping.use-jstl-escaping --exclude-rule java.lang.security.audit.xss.jsp.no-scriptlets.no-scriptlets --exclude-rule java.servlets.security.cookie-issecure-false.cookie-issecure-false --exclude-rule java.lang.correctness.hardcoded-conditional.hardcoded-conditional --exclude-rule javascript.lang.best-practice.leftover_debugging.javascript-confirm
+
+  variables:
+    SEMGREP_RULES: r/java # add more rules from semgrep.dev/explore

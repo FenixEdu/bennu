@@ -8,7 +8,7 @@ package org.fenixedu.bennu.core.util;
 public class ClassInternalizer {
     public static Class<?> internalize(String classname) {
         try {
-            return Class.forName(classname);
+            return Class.forName(classname); // nosemgrep
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

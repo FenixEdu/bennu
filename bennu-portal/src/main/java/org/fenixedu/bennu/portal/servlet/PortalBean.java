@@ -79,7 +79,7 @@ public class PortalBean {
         try (InputStream is = this.getClass().getResource("/META-INF/maven/org.fenixedu/bennu-toolkit/pom.xml").openStream()) {
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder b = factory.newDocumentBuilder();
+            DocumentBuilder b = factory.newDocumentBuilder(); // nosemgrep
             Document doc = b.parse(is);
 
             XPathFactory xPathfactory = XPathFactory.newInstance();

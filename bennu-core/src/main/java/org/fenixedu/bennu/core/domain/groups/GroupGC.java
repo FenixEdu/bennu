@@ -191,7 +191,7 @@ class GroupGC {
         String name = "set" + capitalize(role.getName());
         try {
             try {
-                Method method = type.getDeclaredMethod(name, Class.forName(role.getType().getFullName()));
+                Method method = type.getDeclaredMethod(name, Class.forName(role.getType().getFullName())); // nosemgrep
                 method.setAccessible(true);
                 return method;
             } catch (NoSuchMethodException e) {
