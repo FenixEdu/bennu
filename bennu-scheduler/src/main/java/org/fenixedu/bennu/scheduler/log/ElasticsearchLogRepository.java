@@ -150,8 +150,7 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
         try {
             SearchResponse<ObjectNode> response = this.client.search(g -> g
                             .index(List.of(index.split(",")))
-                            .query(q -> q.term(t -> t.field("_id").value(id))
-                            ),
+                            .query(q -> q.term(t -> t.field("_id").value(id))),
                     ObjectNode.class
             );
             if(response.hits().hits().size() > 0) {
@@ -270,12 +269,12 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
         return executionsFor(taskName, startId, max, false);
     }
 
-
     public Stream<ExecutionLog> executionsFor(String taskName, Optional<String> startId, int max, boolean stopRecovery) {
         try {
             Set<ExecutionLog> result = new HashSet<>();
             SearchResponse<ObjectNode> response = this.client.search(g -> g
                             .index(List.of(getIndexesForTask().split(",")))
+                            .query(q -> q.term(t -> t.field("taskName.keyword").value(taskName)))
                             .sort(f -> f.field(t -> t.field("start").order(SortOrder.Desc))),
                     ObjectNode.class
             );
