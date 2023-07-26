@@ -16,11 +16,16 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.http.HttpHost;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.io.domain.FileStorage;
 import org.fenixedu.bennu.scheduler.SchedulerConfiguration;
 import org.fenixedu.bennu.scheduler.TaskRunner;
 import org.fenixedu.bennu.scheduler.annotation.Task;
+import org.fenixedu.bennu.scheduler.log.ElasticsearchLogRepository;
 import org.fenixedu.bennu.scheduler.log.ExecutionLogRepository;
 import org.fenixedu.bennu.scheduler.log.FileSystemLogRepository;
 import org.joda.time.DateTime;
@@ -510,7 +515,17 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      */
     public static ExecutionLogRepository getLogRepository() {
         if (repository == null) {
-            repository = new FileSystemLogRepository(3);
+            if(SchedulerConfiguration.getConfiguration().elasticsearchEnabled()) {
+                repository = new ElasticsearchLogRepository(SchedulerConfiguration.getConfiguration().elasticsearchHost(),
+                        SchedulerConfiguration.getConfiguration().elasticsearchPort(),
+                        SchedulerConfiguration.getConfiguration().elasticsearchPrefixIndexes(),
+                        SchedulerConfiguration.getConfiguration().elasticsearchUsername(),
+                        SchedulerConfiguration.getConfiguration().elasticsearchPassword(),
+                        SchedulerConfiguration.getConfiguration().elasticsearchScheme(),
+                        SchedulerConfiguration.getConfiguration().elasticsearchSearchMonths());
+            } else {
+                repository = new FileSystemLogRepository(3);
+            }
         }
         return repository;
     }
