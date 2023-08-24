@@ -59,6 +59,8 @@ public class PortalLoginServlet extends HttpServlet {
 
     private static final long serialVersionUID = -4298321185506045304L;
 
+    private static ThreadLocal<Map<String, Object>> contextExtensions = new ThreadLocal<Map<String, Object>>();
+
     private PebbleEngine engine;
 
     @Override
@@ -81,51 +83,72 @@ public class PortalLoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String callback = req.getParameter("callback");
-        if (!validateCallback(callback)) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid callback URL");
-            return;
-        }
-        boolean localLogin = CoreConfiguration.getConfiguration().localLoginEnabled();
-        Collection<LoginProvider> providers = providers();
-
-        // If there is only one login option, show it right away
-        if (!localLogin && providers.size() == 1) {
-            providers.iterator().next().showLogin(req, resp, callback);
-            return;
-        }
-
-        Map<String, Object> ctx = new HashMap<>();
-        PortalConfiguration config = PortalConfiguration.getInstance();
-        // Add relevant variables
-        Set<Locale> supportedLocales = CoreConfiguration.supportedLocales();
-        Locale currentLocale = I18N.getLocale();
-
-        if (Boolean.TRUE.equals(config.getDetectBrowserLocalInLoginPage())) {
-            currentLocale = selectLocaleToUse(req.getLocale(), supportedLocales);
-            I18N.setLocale(req.getSession(), currentLocale);
-            I18NFilter.updateLocale(currentLocale, req, resp);
-        }
-
-        ctx.put("config", config);
-        ctx.put("callback", callback);
-        ctx.put("url", req.getRequestURI());
-        ctx.put("currentLocale", currentLocale);
-        ctx.put("contextPath", req.getContextPath());
-        ctx.put("locales", supportedLocales);
-        ctx.put("providers", providers);
-        ctx.put("localLogin", localLogin);
-        ctx.put("loginPath", PortalConfiguration.getInstance().getLoginPath());
-        ctx.put("recoveryLinkPath", PortalConfiguration.getInstance().getRecoveryLinkPath());
-        ctx.put("signUpPath", PortalConfiguration.getInstance().getSignUpPath());
-
         try {
-            resp.setContentType("text/html;charset=UTF-8");
-            PebbleTemplate template = engine.getTemplate(config.getTheme());
-            template.evaluate(resp.getWriter(), ctx, currentLocale);
-        } catch (PebbleException e) {
-            throw new IOException(e);
+            String callback = req.getParameter("callback");
+            if (!validateCallback(callback)) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid callback URL");
+                return;
+            }
+            boolean localLogin = CoreConfiguration.getConfiguration().localLoginEnabled();
+            Collection<LoginProvider> providers = providers();
+
+            // If there is only one login option, show it right away
+            if (!localLogin && providers.size() == 1) {
+                providers.iterator().next().showLogin(req, resp, callback);
+                return;
+            }
+
+            Map<String, Object> ctx = new HashMap<>();
+            PortalConfiguration config = PortalConfiguration.getInstance();
+            // Add relevant variables
+            Set<Locale> supportedLocales = CoreConfiguration.supportedLocales();
+            Locale currentLocale = I18N.getLocale();
+
+            if (Boolean.TRUE.equals(config.getDetectBrowserLocalInLoginPage())) {
+                currentLocale = selectLocaleToUse(req.getLocale(), supportedLocales);
+                I18N.setLocale(req.getSession(), currentLocale);
+                I18NFilter.updateLocale(currentLocale, req, resp);
+            }
+
+            ctx.put("config", config);
+            ctx.put("callback", callback);
+            ctx.put("url", req.getRequestURI());
+            ctx.put("currentLocale", currentLocale);
+            ctx.put("contextPath", req.getContextPath());
+            ctx.put("locales", supportedLocales);
+            ctx.put("providers", providers);
+            ctx.put("localLogin", localLogin);
+            ctx.put("loginPath", PortalConfiguration.getInstance().getLoginPath());
+            ctx.put("recoveryLinkPath", PortalConfiguration.getInstance().getRecoveryLinkPath());
+            ctx.put("signUpPath", PortalConfiguration.getInstance().getSignUpPath());
+
+            Map<String, Object> requestContext = contextExtensions.get();
+            if (requestContext != null) {
+                ctx.putAll(requestContext);
+            }
+
+            try {
+                resp.setContentType("text/html;charset=UTF-8");
+                PebbleTemplate template = engine.getTemplate(config.getTheme());
+                template.evaluate(resp.getWriter(), ctx, currentLocale);
+            } catch (PebbleException e) {
+                throw new IOException(e);
+            }
+        } finally {
+            Map<String, Object> requestContext = contextExtensions.get();
+            if (requestContext != null) {
+                requestContext.clear();
+            }
         }
+    }
+
+    public static void addContextExtension(Map<String, Object> requestContext) {
+        Map<String, Object> map = contextExtensions.get();
+        if (map == null) {
+            map = new HashMap<>();
+            contextExtensions.set(map);
+        }
+        map.putAll(requestContext);
     }
 
     private Locale selectLocaleToUse(final Locale browserLocale, Set<Locale> supportedLocales) {
