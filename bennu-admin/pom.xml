@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>bennu-admin</artifactId>
-    <version>v7.1.2</version>
+    <version>DEV-SNAPSHOT</version>
     <name>Bennu Admin</name>
 
     <build>
