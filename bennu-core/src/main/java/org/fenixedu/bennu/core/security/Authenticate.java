@@ -119,12 +119,12 @@ public class Authenticate {
 
     public static User getUser() {
         final AuthenticationContext context = loggedUserContext.get();
-        return context == null ? null : context.getUser();
+        return context == null || !FenixFramework.isDomainObjectValid(context.getUser()) ? null : context.getUser();
     }
 
     public static boolean isLogged() {
         final AuthenticationContext context = loggedUserContext.get();
-        return context != null && context.getUser() != null;
+        return context != null && context.getUser() != null && FenixFramework.isDomainObjectValid(context.getUser());
     }
 
     public static AuthenticationContext getAuthenticationContext() {
