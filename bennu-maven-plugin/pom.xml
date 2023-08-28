@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>bennu-maven-plugin</artifactId>
-    <version>DEV-SNAPSHOT</version>
+    <version>v7.1.2</version>
     <packaging>maven-plugin</packaging>
 
     <name>Bennu Maven Plugin</name>
