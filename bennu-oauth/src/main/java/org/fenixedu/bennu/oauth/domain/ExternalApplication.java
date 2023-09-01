@@ -99,10 +99,11 @@ public class ExternalApplication extends ExternalApplication_Base {
             throw new RuntimeException("Not possible to get instance of SHA-256");
         }
         digester.update(codeVerifier.getBytes(StandardCharsets.US_ASCII));
-        String codeChallenge = Base64.getUrlEncoder().withoutPadding().encodeToString(digester.digest());
+        final byte[] digest = digester.digest();
+        String codeChallenge = Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
         // Ensure backwards compatibility
         // Old implementations of bennu-oauth did not correctly adhere to the PKCE specification
-        String codeChallengeOld = Base64.getEncoder().encodeToString(digester.digest());
+        String codeChallengeOld = Base64.getEncoder().encodeToString(digest);
 
         String userId = OAuthUtils.getUserIdFromCode(code, getCodeSecret());
         User user = User.findByUsername(userId);
