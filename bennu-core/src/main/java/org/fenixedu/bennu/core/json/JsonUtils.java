@@ -35,7 +35,7 @@ public class JsonUtils {
 
     public static LocalDate getLocalDate(final JsonObject json, final String property) {
         final JsonPrimitive primitive = getPrimitive(json, property);
-        return primitive != null ?  ISODateTimeFormat.date().parseLocalDate(primitive.getAsString()).toLocalDate() : null;
+        return primitive != null ?  ISODateTimeFormat.date().parseLocalDate(primitive.getAsString()) : null;
     }
 
     public static JsonPrimitive getPrimitive(final JsonObject json, final String property) {
