@@ -17,11 +17,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Strings;
 import com.google.common.io.Files;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
+import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.client.RestClient;
 
 import com.google.gson.JsonObject;
@@ -219,6 +221,13 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
                                     .params("output", JsonData.of("\n"+ text)))));
             this.client.update(request, JsonData.class);
             // We don't refresh the index, because a task may have to many call to appendTaskLog, better to wait for 1s (normal time for elastic to index)
+        } catch (ResponseException re) {
+          if (re.getResponse().getStatusLine().getStatusCode() == HttpStatus.SC_CONFLICT) {
+              //concurrent writting - try again
+              appendTaskLog(log, text);
+          } else {
+              throw new RuntimeException("Error appending output to scheduler in log" + log.getId(), re);
+          }
         } catch (Exception ex) {
             throw new RuntimeException("Error appending output to scheduler in log" + log.getId(), ex);
         }
