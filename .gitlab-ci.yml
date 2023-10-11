@@ -9,7 +9,7 @@ variables:
   npm_config_cache: "$CI_PROJECT_DIR/.npm"
   MAVEN_REPO_USER: $NEXUS_USERNAME
   MAVEN_REPO_PASS: $NEXUS_PASSWORD
-  MAVEN_REPO_ID: dsi-maven-artifacts
+  MAVEN_REPO_ID: fenixedu-releases
 
 stages:
   - Install and Lint
