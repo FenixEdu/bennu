@@ -17,9 +17,9 @@ stages:
 
 Install and Lint:
   stage: Install and Lint
-  cache:
-    paths:
-      - .npm
+  # cache:
+  #   paths:
+  #     - .npm
   script:
     - mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 
