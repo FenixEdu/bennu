@@ -49,6 +49,13 @@ public class ExternalApplication extends ExternalApplication_Base {
     public ExternalApplication() {
         super();
         init();
+        this.setClientId(this.getExternalId());
+    }
+
+    public ExternalApplication(String clientId) {
+        super();
+        init();
+        this.setClientId(clientId);
     }
 
     protected void init() {
