@@ -133,7 +133,7 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
     @Override
     public JsonElement view(ExternalApplication obj, JsonBuilder ctx) {
         JsonObject json = new JsonObject();
-        json.addProperty("id", obj.getExternalId());
+        json.addProperty("id", obj.getClientId());
         json.addProperty("name", obj.getName());
         json.addProperty("description", obj.getDescription());
         json.addProperty("siteUrl", obj.getSiteUrl());
@@ -147,7 +147,7 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         json.add("scopes", ctx.view(obj.getScopesSet()));
 
         String logoUrl =
-                CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-oauth/applications/" + obj.getExternalId()
+                CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-oauth/applications/" + obj.getClientId()
                         + "/logo";
 
         json.addProperty("logoUrl", logoUrl);

@@ -41,7 +41,7 @@ public class ServiceApplicationResource extends ExternalApplicationResource {
     }
 
     @Override
-    protected User verifyAndGetRequestAuthor(ExternalApplication application) {
+    protected User verifyAndGetRequestAuthor(String applicationId) {
         return verifyAndGetRequestAuthor();
     }
 
@@ -61,8 +61,8 @@ public class ServiceApplicationResource extends ExternalApplicationResource {
     }
 
     @Override
-    protected JsonElement update(ExternalApplication application, JsonElement json, User currentUser) {
-        return view(update(json, application));
+    protected JsonElement update(String applicationId, JsonElement json, User currentUser) {
+        return view(update(json, getApplicationForClientId(applicationId)));
     }
 
 }

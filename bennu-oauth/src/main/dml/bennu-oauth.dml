@@ -6,6 +6,7 @@ public class ExternalApplication  {
     public String name (REQUIRED);
     protected String secret (REQUIRED);
     public String codeSecret;
+    public String clientId;
     public String redirectUrl (REQUIRED);
     public String description (REQUIRED);
     public String siteUrl;
