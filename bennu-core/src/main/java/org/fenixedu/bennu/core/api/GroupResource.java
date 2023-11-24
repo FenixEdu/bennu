@@ -127,6 +127,7 @@ public class GroupResource extends BennuRestResource {
             if (customPresentationName != null) {
                 json.add("customPresentationName", customPresentationName.json());
             }
+            json.addProperty("expression", obj.getExpression());
             JsonArray users = obj.getMembers().map(user -> {
                 JsonObject userJson = new JsonObject();
                 userJson.addProperty("username", user.getUsername());
@@ -138,7 +139,21 @@ public class GroupResource extends BennuRestResource {
             json.add("members", users);
             return json;
         }
+    }
+    public static class DynamicGroupWithoutMembersJsonAdapter implements JsonViewer<DynamicGroup> {
 
+        @Override
+        public JsonElement view(DynamicGroup obj, JsonBuilder ctx) {
+            JsonObject json = new JsonObject();
+            json.addProperty("name", obj.getName());
+            LocalizedString customPresentationName = obj.toPersistentGroup().getCustomPresentationName();
+            json.addProperty("displayName", customPresentationName == null ? obj.getName() : customPresentationName.getContent());
+            if (customPresentationName != null) {
+                json.add("customPresentationName", customPresentationName.json());
+            }
+            json.addProperty("expression", obj.getExpression());
+            return json;
+        }
     }
 
     public static class GroupMemberJsonAdapter implements JsonViewer<Group> {
