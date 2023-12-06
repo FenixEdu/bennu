@@ -80,7 +80,7 @@
       >
         <div class="card-row__text">
           <p>
-            <span class="h4 h4--ssp">{{ getDomainObjectName(slot) }}</span> <span
+            <span class="h4 h4--ssp">{{ slot.name }}</span> <span
               v-if="slot.value"
               class="label label--outline label--light"
             >{{ slot.value }}</span>
@@ -101,6 +101,29 @@
         </div>
       </div>
     </div>
+    <div
+      v-if="domainObject.relationSets && domainObject.relationSets.length > 0"
+      class="card"
+    >
+      <div class="card-row">
+        <div class="card-row__text">
+          <h2 class="card-row__title h3">
+            {{ $t('domain-object.relation-sets') }}
+          </h2>
+        </div>
+      </div>
+      <div
+        v-for="relationSet in domainObject.relationSets"
+        :key="relationSet.name"
+        class="card-row card-row--sm"
+      >
+        <div class="card-row__text">
+          <p>
+            <span class="h5 h5--ssp">{{ relationSet.name }}</span> - {{ relationSet.type }}
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -111,7 +134,7 @@ export default {
   beforeRouteUpdate: guardWithErrorHandling(async function (to, from, next) {
     this.$progress.set(10)
     await to.meta.beforeLoad(to, from)
-    this.searchInput = to.query.q
+    this.searchInput = to.meta.domainObject.oid
     this.$progress.complete()
     next()
   }),
@@ -129,6 +152,7 @@ export default {
   i18n: {
     messages: {
       pt: {
+        back: 'Domain Browser',
         header: 'Navegador de domínios',
         description: 'Navegue pelos domínios do Fenix',
         search: {
@@ -137,11 +161,13 @@ export default {
           empty: 'Nenhum domínio encontrado',
           'domain-object': {
             slots: 'Slots',
-            'relation-slots': 'Slots de relação'
+            'relation-slots': 'Slots de relação',
+            'relation-sets': 'Conjuntos de relação'
           }
         }
       },
       en: {
+        back: 'Domain Browser',
         header: 'Domain browser',
         description: 'Browse Fenix domains',
         search: {
@@ -151,7 +177,8 @@ export default {
         },
         'domain-object': {
           slots: 'Slots',
-          'relation-slots': 'Relation slots'
+          'relation-slots': 'Relation slots',
+          'relation-sets': 'Relation sets'
         }
       }
     }
