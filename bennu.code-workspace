@@ -1,0 +1,27 @@
+{
+  "folders": [
+    {
+      "name": "Bennu Admin",
+      "path": "bennu-admin/src/main/frontend"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "bennu-admin": true,
+      "bennu-cas-client": true,
+      "bennu-core": true,
+      "bennu-io": true,
+      "bennu-maven-plugin": true,
+      "bennu-oauth": true,
+      "bennu-portal": true,
+      "bennu-saml-client": true,
+      "bennu-scheduler": true,
+      "bennu-search": true,
+      "bennu-spring": true,
+      "bennu-test": true,
+      "bennu-toolkit": true,
+      "default-theme": true,
+      "doc": true
+    }
+  }
+}
