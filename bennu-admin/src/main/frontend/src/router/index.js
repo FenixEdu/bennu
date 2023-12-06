@@ -4,7 +4,7 @@ import store from '@/store'
 import RefreshRoute from '@/utils/refresh-route'
 
 // Navigation guards
-import { buildLoginCallback } from './guards'
+import { buildLoginCallback, guardWithErrorHandling } from './guards'
 // import { guardWithErrorHandling, buildLoginCallback } from './guards'
 
 // Standard pages
@@ -15,9 +15,11 @@ import ErrorPage from '@/pages/ErrorPage'
 // Utils
 // import { getPageAndSectionFromHash, scrollOffset as DynamicFormScrollOffset, scrollBehavior as DynamicFormScrollBehavior } from '@/components/dynamic-form/utils/navigation'
 // import { getMeta } from '@/router/utils'
+import * as BennuCoreAPI from '@/api/bennu-core'
 
 // Pages
 const DomainBrowserPage = () => import('@/pages/DomainBrowserPage.vue')
+const DomainObjectPage = () => import('@/pages/DomainObjectPage.vue')
 
 Vue.use(Router)
 
@@ -61,7 +63,29 @@ const router = new Router({
       component: DomainBrowserPage,
       meta: {
         layout: 'PageWithNavBarAndFooterLayout'
-      }
+      },
+      props: (route) => ({
+        query: route.query.q
+      })
+    },
+    {
+      path: '/domain-browser/:domainObjectId',
+      name: 'DomainObjectPage',
+      component: DomainObjectPage,
+      meta: {
+        layout: 'PageWithNavBarAndFooterLayout',
+        async beforeLoad (to, from) {
+          const domainObject = await BennuCoreAPI.getDomainObject({ objectId: to.params.domainObjectId })
+          to.meta.domainObject = domainObject
+        }
+      },
+      props: (route) => ({
+        domainObject: route.meta.domainObject
+      }),
+      beforeEnter: guardWithErrorHandling(async (to, from, next) => {
+        await to.meta.beforeLoad(to, from)
+        next()
+      })
     },
     {
       path: '/login',
@@ -82,7 +106,7 @@ const router = new Router({
         layout: 'PageWithNavBarAndFooterLayout',
         public: true
       },
-      props: route => ({ error: route.params.error }),
+      props: (route) => ({ error: route.params.error }),
       beforeEnter: (to, from, next) => {
         if (!!to.params.error && to.params.error instanceof Error) {
           next()
@@ -99,7 +123,7 @@ const router = new Router({
         layout: 'PageWithNavBarAndFooterLayout',
         public: true
       },
-      props: route => ({
+      props: (route) => ({
         errorKey: route.params.key,
         errorMessage: route.params.message
       })
@@ -159,7 +183,7 @@ router.afterEach(async (to, from) => {
   }
 })
 
-router.onError(error => {
+router.onError((error) => {
   Vue.config.errorHandler(error, router.app, null)
 })
 
