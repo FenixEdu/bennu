@@ -22,7 +22,8 @@
       "links": {
         "login": "Login",
         "language": "Language",
-        "logout": "Logout"
+        "logout": "Logout",
+        "domain-browser": "Domain Browser"
       },
       "actions": {
         "back": "@:actions.back"

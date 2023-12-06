@@ -24,7 +24,8 @@
       "links": {
         "login": "Iniciar Sessão",
         "language": "Idioma",
-        "logout": "Sair"
+        "logout": "Sair",
+        "domain-browser": "Domain Browser"
       },
       "actions": {
         "back": "@:actions.back"

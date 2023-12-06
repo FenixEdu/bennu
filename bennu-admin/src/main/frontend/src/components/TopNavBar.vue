@@ -115,7 +115,7 @@
                 active-class="active"
                 class="link-text"
               >
-                {{ $t('nav-bar.menu.links.backoffice') }}
+                {{ $t('nav-bar.menu.links.domain-browser') }}
               </router-link>
             </li>
           </ul>
