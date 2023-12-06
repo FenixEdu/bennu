@@ -18,8 +18,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <java.compilation.source.version>1.7</java.compilation.source.version>
-        <java.compilation.target.version>1.7</java.compilation.target.version>
+        <java.compilation.source.version>11</java.compilation.source.version>
+        <java.compilation.target.version>11</java.compilation.target.version>
     </properties>
 
     <build>
@@ -27,7 +27,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.8.0</version>
                 <configuration>
                     <source>${java.compilation.source.version}</source>
                     <target>${java.compilation.target.version}</target>
@@ -38,7 +38,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.2</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <id>default-descriptor</id>
