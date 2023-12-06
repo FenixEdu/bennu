@@ -1,0 +1,136 @@
+.f-field--select {
+  .f-field__input {
+    appearance: none;
+    background-color: transparent;
+    // source: https://codepen.io/vkjgr/pen/VYMeXp
+    // FIXME: change if a better solution is found
+    background-image:
+      linear-gradient(45deg, transparent 50%, $slate 50%),
+      linear-gradient(135deg, $slate 50%, transparent 50%);
+    background-position:
+      calc(100% - 20px) 1.3125rem,
+      calc(100% - 15px) 1.3125rem;
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2.375rem;
+  }
+}
+
+.f-field--is-filled {
+  .f-field__label::before {
+    opacity: 0;
+  }
+}
+
+// select with search
+.f-field--searchable-select {
+
+  .f-field__label {
+    margin-bottom: 1rem;
+
+    & + .f-field__description {
+      margin-top: -1rem;
+    }
+  }
+
+  .f-field__input {
+    padding-right: 2.5rem;
+  }
+
+  .f-field__options {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    z-index: 999;
+    width: 100%;
+    border-radius: 0.25rem;
+    background: white;
+    box-shadow: 0 0.1875rem 0.4375rem 0 rgba(black, 0.1);
+    max-height: 20rem;
+    overflow-y: auto;
+  }
+
+  &.f-field--hint-bar {
+    .f-field__container {
+      border: 0.0625rem solid rgba($slate, 0.4);
+      border-radius: 0.125rem;
+    }
+    .f-field__container:focus-within {
+      border-color: rgba($slate, 1);
+    }
+    .f-field__input {
+      border: none;
+    }
+
+    .f-field__options {
+      margin-top: 1px;
+    }
+  }
+
+  &.f-field--underline {
+    .f-field__label {
+      margin-bottom: 0;
+      & + .f-field__description {
+        margin-top: 0;
+      }
+    }
+    .f-field__options {
+      margin-top: 2px;
+    }
+  }
+
+  .f-field__hint-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 0.75rem;
+    background-color: $light-gray-300;
+    padding: 0.5rem 1rem;
+    color: $gray;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 2px;
+
+    > span {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .f-field__option {
+    cursor: default;
+    color: $slate;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    transition-property: background-color;
+    @include mdTransition;
+
+    &:hover,
+    &:focus {
+      background-color: $light-blue;
+      color: $slate;
+    }
+  }
+  .f-field__option[aria-selected="true"] {
+    background-color: $light-blue-600;
+    color: $dark;
+  }
+
+  .f-field__container {
+    position: relative;
+  }
+  .f-field__search {
+    @include icon-search($color: encodecolor($gray-400));
+
+    background-repeat: no-repeat;
+    background-position: center right;
+    height: 1rem;
+    width: 1rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+}

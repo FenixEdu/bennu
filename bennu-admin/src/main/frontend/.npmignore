@@ -1,0 +1,26 @@
+package-lock.json
+.DS_Store
+node_modules/
+src/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+test/unit/coverage
+test/e2e/reports
+selenium-debug.log
+.gitlab-ci.yml
+.postcssrc.js
+.babelrc
+.editorconfig
+.eslintignore
+README.md
+.eslintrc.js
+webpack.config.js
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln

@@ -1,0 +1,130 @@
+{
+  "actions": {
+    "skip-to-content": "Saltar para o conteúdo",
+    "aria": {
+      "back-to": "Voltar a: "
+    },
+    "back": "Voltar",
+    "next": "Seguinte",
+    "previous": "Anterior",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "search-request": "Procurar pedido",
+    "create-queue": "Criar fila"
+  },
+  "nav-bar": {
+    "aria-label": {
+      "homepage": "Página Inicial: Bennu Admin",
+      "menu": "Menu",
+      "language": "Idioma",
+      "account": "A minha conta"
+    },
+    "menu": {
+      "links": {
+        "login": "Iniciar Sessão",
+        "language": "Idioma",
+        "logout": "Sair"
+      },
+      "actions": {
+        "back": "@:actions.back"
+      }
+    }
+  },
+  "dynamic-form": {
+    "global-errors": {
+      "header": "Erros no formulário",
+      "description": "Não foi possível submeter o formulário porque contém erros. Por favor, corrija os erros abaixo e tente submeter o formulário novamente."
+    },
+    "navigation": {
+      "aria-label": "Formulário com múltiplos passos"
+    },
+    "progress": "Passo {current} de {total}",
+    "actions": {
+      "review": "Rever"
+    },
+    "fields": {
+      "empty-state": {
+        "text": "—",
+        "aria-label": "Campo não preenchido"
+      },
+      "errors": {
+        "required": "Este campo é de preenchimento obrigatório"
+      },
+      "array": {
+        "errors": {
+          "min-length": "Este campo deve ter pelo menos {min} elemento | Este campo deve ter pelo menos {min} elementos",
+          "max-length": "Atingiu o limite máximo de {max} elemento para este campo | Atingiu o limite máximo de {max} elementos para este campo"
+        }
+      },
+      "async-select": {
+        "errors": {
+          "required": "@:dynamic-form.fields.errors.required"
+        }
+      },
+      "boolean": {
+        "errors": {
+          "required": "@:dynamic-form.fields.select.errors.required"
+        }
+      },
+      "datetime": {
+        "errors": {
+          "date": "Este campo deve conter uma data válida",
+          "required": "@:dynamic-form.fields.errors.required",
+          "time": "Este campo deve conter uma hora válida"
+        }
+      },
+      "file": {
+        "template": "Descarregar template",
+        "errors": {
+          "file-size": "O tamanho do ficheiro não pode exceder {maxSizeMB} MB",
+          "required": "@:dynamic-form.fields.errors.required"
+        }
+      },
+      "numeric": {
+        "errors": {
+          "numeric": "Este campo deve conter apenas dígitos",
+          "required": "@:dynamic-form.fields.errors.required"
+        }
+      },
+      "quantity": {
+        "errors": {
+          "integer": "Este campo deve ser um número inteiro",
+          "max-decimal-places": "O valor não pode exceder {max} casa decimal | O valor não pode exceder as {max} casas decimais",
+          "max-value": "O valor máximo para este campo é {max}",
+          "min-value": "O valor mínimo para este campo é {min}",
+          "required": "@:dynamic-form.fields.errors.required"
+        }
+      },
+      "select": {
+        "allow-other": {
+          "label": "Outra opção",
+          "aria-description": "Opção de texto livre para o campo “{name}”.",
+          "submit-value": "Outra opção: {input}",
+          "actions": {
+            "insert": {
+              "description": "Se nenhuma das opções se aplicar, pode {action}.",
+              "action": "inserir outra opção"
+            },
+            "remove": {
+              "description": "Para voltar a escolher de entre as opções disponíveis, deve {action}.",
+              "action": "remover esta opção"
+            }
+          }
+        },
+        "errors": {
+          "multi-required": "Deve escolher uma ou mais opções",
+          "required": "Deve escolher uma das opções"
+        }
+      },
+      "text": {
+        "errors": {
+          "required": "@:dynamic-form.fields.errors.required",
+          "email": "Este campo deve conter um email válido",
+          "url": "Este campo deve conter um URL válido",
+          "max-length": "Este campo deve conter no máximo {max} caráter | Este campo deve conter no máximo {max} caracteres"
+        }
+      }
+    }
+  }
+}

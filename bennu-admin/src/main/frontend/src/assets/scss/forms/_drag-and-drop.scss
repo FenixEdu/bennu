@@ -1,0 +1,43 @@
+.f-drag-and-drop {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: 2px dashed $light-blue-700;
+  border-radius: 0.25rem;
+  padding: 6rem 2rem;
+  margin-bottom: 1.5rem;
+}
+.f-drag-and-drop--disabled {
+  opacity: 0.5;
+  background-color: $light-gray;
+  pointer-events: none;
+}
+.f-drag-and-drop--xs {
+  height: 4rem;
+  padding: 1rem;
+  flex-flow: row nowrap;
+}
+.f-drag-and-drop--sm {
+  height: 12rem;
+  padding: 2rem;
+  .f-drag-and-drop__label,
+  .f-drag-and-drop__illustration {
+    display: none;
+  }
+}
+.f-drag-and-drop--file-hover {
+  background-color: $light-blue;
+  border: 2px dashed $blue;
+  > * {
+    pointer-events: none;
+  }
+}
+// This was commented to the stylelint block-no-empty rule
+// .f-drag-and-drop__illustration{
+
+// }
+// .f-drag-and-drop__label{
+
+// }

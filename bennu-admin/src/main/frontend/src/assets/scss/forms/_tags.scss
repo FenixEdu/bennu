@@ -1,0 +1,20 @@
+@mixin tag-wrapper-basics {
+  @extend .f-field__input;
+
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  position: relative;
+  margin: 1.5rem 0 1rem;
+}
+@mixin tag-basics {
+  line-height: 1em;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid $light-blue-600;
+  margin: 0.25rem;
+  font-size: 0.75rem;
+  border-radius: 0.1875rem;
+  display: block;
+}
+@import '_tag-input';
+@import '_toggleable-tag-input';

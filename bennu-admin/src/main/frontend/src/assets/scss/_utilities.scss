@@ -1,0 +1,182 @@
+// Utility classes
+@import "@/assets/scss/variables";
+
+.u-uppercase {
+  text-transform: uppercase;
+}
+
+.u-separator {
+  height: 0.0625rem;
+}
+
+.u-separator--top {
+  @extend .u-separator;
+
+  border-top: 0.0625rem solid $light-blue-700;
+}
+
+.u-separator--bottom {
+  @extend .u-separator;
+
+  border-bottom: 0.0625rem solid $light-blue-700;
+}
+
+// Testing utility color classes
+.u-text-green,
+.u-text-validated,
+.u-text-positive,
+.u-text-success {
+  color: $green !important;
+}
+
+.u-text-disabled,
+.u-text-gray-400 {
+  color: $gray-400 !important;
+}
+
+.u-text-gray {
+  color: $gray !important;
+}
+
+.u-text-slate {
+  color: $slate;
+}
+
+// for non-focusable elements which are given tabindex=-1 for accessibility purposes
+.u-a11y-focusable {
+  &:focus {
+    outline: none;
+  }
+}
+
+// .u-text-blue,
+// .u-active-link {
+//   color: $blue-600;
+
+//   &:hover,
+//   &:focus {
+//       color: $blue-700;
+//   }
+
+//   &:active {
+//       color: darken($blue-700, 5%);
+//   }
+// }
+
+.u-text-blue {
+  color: $blue !important;
+}
+
+.u-text-blue-600 {
+  color: $blue-600 !important;
+}
+
+.u-text-danger,
+.u-text-magenta {
+  color: $magenta !important;
+}
+
+.u-text-warning,
+.u-text-orange {
+  color: $orange !important;
+}
+
+.u-text-violet {
+  color: $violet !important;
+}
+
+.u-text-pink {
+  color: $pink !important;
+}
+
+.u-text-secondary {
+  color: $gray;
+}
+
+.u-active-link {
+  color: $blue;
+  font-weight: 600;
+}
+
+.u-text-underlined {
+  text-decoration: underline;
+}
+
+.u-text-literal {
+  background-color: rgba(88, 86, 214, 0.1);
+  color: #5856d6;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.u-text-strong {
+  font-weight: 600 !important;
+  color: $dark;
+}
+
+.u-text-normal {
+  font-weight: normal;
+}
+
+.u-text-multiline {
+  white-space: pre-line;
+}
+
+// Layout utilities
+.l-flex-column--start {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.l-flex {
+  display: flex;
+
+  &.l-flex--row {
+    flex-direction: row;
+
+    &.l-flex--center-v {
+      align-items: center;
+    }
+
+    &.l-flex--center-h {
+      justify-content: center;
+    }
+  }
+
+  &.l-flex--col {
+    flex-direction: column;
+
+    &.l-flex--center-v {
+      justify-content: center;
+    }
+
+    &.l-flex--center-h {
+      align-items: center;
+    }
+  }
+
+  &.l-flex--center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.l-space-between {
+    justify-content: space-between;
+  }
+}
+.u-todo {
+  background-color: rgba(red, 0.3);
+  outline: 1px solid red;
+}
+
+//does not work with colors containing alpha
+@function encodecolor($string) {
+  @if type-of($string) == 'color' {
+    $hex: str-slice(ie-hex-str($string), 4);
+    $string:unquote("#{$hex}");
+  }
+  $string: '%23' + $string;
+  @return $string;
+}

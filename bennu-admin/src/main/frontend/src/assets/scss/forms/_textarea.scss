@@ -1,0 +1,5 @@
+.f-field__textarea {
+  @extend .f-field__input;
+
+  resize: vertical;
+}

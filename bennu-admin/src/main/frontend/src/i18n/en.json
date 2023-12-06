@@ -1,0 +1,128 @@
+{
+  "actions": {
+    "skip-to-content": "Skip to main content",
+    "aria": {
+      "back-to": "Back to: "
+    },
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel"
+  },
+  "nav-bar": {
+    "aria-label": {
+      "homepage": "Home page: Bennu Admin",
+      "menu": "Menu",
+      "language": "Language",
+      "account": "My Account"
+    },
+    "menu": {
+      "links": {
+        "login": "Login",
+        "language": "Language",
+        "logout": "Logout"
+      },
+      "actions": {
+        "back": "@:actions.back"
+      }
+    }
+  },
+  "dynamic-form": {
+    "global-errors": {
+      "header": "Form errors",
+      "description": "The form could not be submitted because it contains errors. You should fix the following errors before trying to submit the form again."
+    },
+    "navigation": {
+      "aria-label": "Multi-step form"
+    },
+    "progress": "Step {current} of {total}",
+    "actions": {
+      "review": "Review"
+    },
+    "fields": {
+      "empty-state": {
+        "text": "—",
+        "aria-label": "This field was not filled out"
+      },
+      "errors": {
+        "required": "This field is required"
+      },
+      "array": {
+        "errors": {
+          "min-length": "This field must contain at least {min} element | This field must contain at least {min} elements",
+          "max-length": "You have reached the maximum limit of {max} element for this field | You have reached the maximum limit of {max} elements for this field"
+        }
+      },
+      "async-select": {
+        "errors": {
+          "required": "@:dynamic-form.fields.errors.required"
+        }
+      },
+      "boolean": {
+        "errors": {
+          "required": "@:dynamic-form.fields.select.errors.required"
+        }
+      },
+      "datetime": {
+        "errors": {
+          "date": "This field should represent a valid date",
+          "required": "@:dynamic-form.fields.errors.required",
+          "time": "This field should represent a valid time"
+        }
+      },
+      "file": {
+        "template": "Download template",
+        "errors": {
+          "file-size": "The file cannot exceed {maxSizeMB} MB",
+          "required": "@:dynamic-form.fields.errors.required"
+        }
+      },
+      "numeric": {
+        "errors": {
+          "numeric": "This field must only contain digits",
+          "required": "@:dynamic-form.fields.errors.required"
+        }
+      },
+      "quantity": {
+        "errors": {
+          "integer": "This field must be an integer",
+          "max-decimal-places": "The value must not exceed {max} decimal place | The value must not exceed {max} decimal places",
+          "max-value": "The maximum value for this field is {max}",
+          "min-value": "The minimum value for this field is {min}",
+          "required": "@:dynamic-form.fields.errors.required"
+        }
+      },
+      "select": {
+        "allow-other": {
+          "label": "Other option",
+          "aria-description": "Free text option for the field “{name}”.",
+          "submit-value": "Other option: {input}",
+          "actions": {
+            "insert": {
+              "description": "If none of the options apply, you may {action}.",
+              "action": "insert another option"
+            },
+            "remove": {
+              "description": "To choose from the available options again, you must {action}.",
+              "action": "remove this option"
+            }
+          }
+        },
+        "errors": {
+          "multi-required": "You must select at least one of the options",
+          "required": "You must select one of the options"
+        }
+      },
+      "text": {
+        "errors": {
+          "required": "@:dynamic-form.fields.errors.required",
+          "email": "This field must contain a valid email",
+          "url": "This field must contain a valid URL",
+          "max-length": "The maximum length for this field is {max} character | The maximum length for this field is {max} characters"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+// The selector below was commented to apply the block-no-empty stylelint rule
+// .f-field--toggle{
+//
+// }
+.f-field__input--toggle {
+  width: 3.125rem;
+  height: 2rem;
+  opacity: 0;
+  padding: 0;
+  appearance: none;
+  border: none;
+  display: block;
+  cursor: pointer;
+}
+.f-field__toggle {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    width: 3.125rem;
+    height: 2rem;
+    border-radius: 1.875rem;
+    background-color: $gray-300;
+    transition: background-color 0.3s ease;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0.25rem;
+    top: 0.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    pointer-events: none;
+    background-color: white;
+    box-shadow: 0 0.0625rem 0.125rem 0 rgba($dark, 0.2);
+    border-radius: 1.875rem;
+    background-size: 0.625rem 0.75rem;
+    transition: left 0.3s ease;
+  }
+}
+.f-field__input--toggle:checked + .f-field__toggle {
+  &::before {
+    background-color: $blue;
+  }
+  &::after {
+    left: 1.375rem;
+  }
+}
+.f-field__input--toggle:checked + .f-field__toggle--checked-danger {
+  &::before {
+    background-color: $magenta;
+  }
+}

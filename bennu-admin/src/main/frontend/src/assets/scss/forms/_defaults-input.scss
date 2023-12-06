@@ -1,0 +1,277 @@
+/* stylelint-disable no-duplicate-selectors */
+.f-field {
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  margin: 1.5rem 0 1rem;
+  width: 100%;
+}
+
+.f-field--disabled {
+  .f-field__input {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.f-field--required {
+  .f-field__label::after {
+    content: '*';
+    color: $magenta;
+    display: inline;
+  }
+}
+
+.f-field__input {
+  font-size: inherit;
+  font-weight: 600;
+  color: $slate;
+  width: 100%;
+  border: 0.0625rem solid rgba($slate, 0.4);
+  border-radius: 0.125rem;
+  &::placeholder {
+    color: transparent;
+  }
+  .f-field--hidden-label &::placeholder,
+  &.f-field__input--allways-open::placeholder {
+    color: $gray-300;
+  }
+}
+.f-field__input:focus {
+  border-color: rgba($slate, 1);
+}
+
+.f-field--danger {
+  .f-field__input:not(:focus) {
+    border-color: $magenta;
+  }
+  .f-field__validation {
+    color: $magenta;
+  }
+}
+.f-field--warning {
+  .f-field__input:not(:focus) {
+    border-color: $orange;
+  }
+  .f-field__validation {
+    color: $orange;
+  }
+}
+.f-field--success {
+  .f-field__input:not(:focus) {
+    border-color: $green;
+  }
+  .f-field__validation {
+    color: $green;
+  }
+}
+
+.f-field__label {
+  order: -2;
+  font-weight: 600;
+  color: $slate;
+  font-size: 0.85em;
+  margin-bottom: 0.25rem;
+  display: block;
+  pointer-events: none;
+  width: 100%;
+}
+.f-field__label--inside-input {
+  position: absolute;
+  transform-origin: left;
+  transition: transform 600ms cubic-bezier(0.23, 1, 0.32, 1);
+  .no-js & {
+    color: $gray-400;
+    transform: translateY(0) scale(0.75);
+  }
+}
+.f-field--borderless {
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  .f-field__input {
+    border: none;
+  }
+}
+.f-field--marginless {
+  margin: 0;
+  padding: 0;
+  .f-field__input {
+    padding-top: 0;
+  }
+}
+
+.f-field__validation {
+  opacity: 1;
+  padding-top: 0.5rem;
+  transform: translateY(0);
+  // copied from component
+  font-size: 0.855rem;
+  display: flex;
+  flex-direction: column;
+}
+.f-field__validation + .f-field__validation {
+  padding-bottom: 1rem;
+}
+
+.validation-fade-enter-active {
+  transition: opacity 0.3s 0.25s, transform 0.3s;
+}
+.validation-fade-leave-active {
+  transition: none;
+}
+.validation-fade-enter {
+  opacity: 0;
+  transform: translateY(-0.5rem);
+}
+.validation-fade-leave-to {
+  opacity: 0;
+  transform: translateY(1.75rem);
+}
+
+// gives a hint that the validation doesn't apply anymore when you are focused in the input
+.f-field__input:focus ~ .f-field__validation {
+  opacity: 0.5;
+}
+
+// f-field sizes
+
+.f-field {
+  .f-field__label + .f-field__description {
+    order: -1;
+    margin-top: -0.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .f-field__input {
+    padding: 0.5em 1em;
+    line-height: 1.75rem;
+  }
+  // .f-field__label {
+  //   transform: translate(1em, .25em) scale(1);
+  //   padding: 0;
+  // }
+  .f-field__input:focus ~ .f-field__label,
+  .f-field__input--is-filled ~ .f-field__label {
+    color: $gray-400;
+  }
+  .f-field__input:focus ~ .f-field__label--inside-input,
+  .f-field__input--is-filled ~ .f-field__label--inside-input {
+    transform: translate(0, -1.75em) scale(0.75);
+  }
+
+  fieldset legend.f-field__label, // FIXME: use equivalent design system classes
+  .f-field__input + .f-field__label {
+    margin-bottom: 1rem;
+
+    & + .f-field__description {
+      margin-top: -1rem;
+    }
+  }
+}
+.f-field.f-field--sm {
+  font-size: 1rem;
+}
+
+.f-field,
+.f-field.f-field--md {
+  font-size: 1.125rem;
+}
+
+.f-field--underline {
+  .f-field__input + .f-field__label {
+    margin-bottom: 0.25rem;
+  }
+  .f-field__label + .f-field__description {
+    margin-top: 0 !important;
+    margin-bottom: 0.25rem;
+  }
+  // .f-field__label{
+  //     @extend .f-field__label--inside-input;
+  // }
+  // transition: padding-bottom .3s;
+  &.f-field--danger {
+    .f-field__input:not(:focus) {
+      box-shadow: 0 0.0825rem 0 red;
+    }
+    .f-field__label {
+      color: red;
+    }
+  }
+  &.f-field--warning {
+    .f-field__input:not(:focus) {
+      box-shadow: 0 0.125rem 0 yellow;
+    }
+  }
+  &.f-field--success {
+    .f-field__input:not(:focus) {
+      box-shadow: 0 0.125rem 0 green;
+    }
+  }
+}
+
+.f-field--underline {
+  .f-field__input {
+    padding-left: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: 0 0.0625rem 0 $gray-300;
+    transition: box-shadow 0.2s ease-in-out;
+  }
+  // .f-field__label{
+  //     font-size: inherit;
+  //     transform: translate(0, .25em) scale(1);
+  //     padding: .45em 0;
+  // }
+  .f-field__input:focus ~ .f-field__label,
+  .f-field__input--is-filled ~ .f-field__label {
+    color: $gray-400;
+    // transform: translate(0, -1.25em) scale(0.75);
+  }
+  .f-field__input:focus {
+    box-shadow: 0 0.125rem 0 $blue-600;
+  }
+}
+
+.f-field--hidden-label {
+  .f-field__label {
+    @include sr-only;
+  }
+}
+
+.f-field--hidden-description {
+  .f-field__description {
+    @include sr-only;
+  }
+}
+
+// fields will remain allways open for now
+// allways open is a modifier that prevents the label from beeing on top of the input, like the behaviour of field--undeline
+.f-field {
+  // @extend .f-field--allways-open;
+  .f-field__input::placeholder {
+    color: $gray-300;
+  }
+}
+
+.f-field__tooltip {
+  position: absolute;
+  right: 0;
+  top: -0.25em;
+}
+
+.f-field__length {
+  color: $gray;
+  font-size: 0.855rem;
+  padding-top: 0.5rem;
+  margin-left: auto;
+}
+
+.f-field__length ~ .f-field__validation {
+  margin-top: calc(-1em - 0.5rem - 2px); // FIXME: 2px is a magic number
+  margin-right: 5em;
+}
+
+input[type=number] {
+  text-align:right;
+}

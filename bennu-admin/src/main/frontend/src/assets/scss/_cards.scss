@@ -1,0 +1,361 @@
+.card {
+  border-radius: 0.25rem;
+  background: white;
+  box-shadow: 0 0.1875rem 0.4375rem 0 rgba(black, 0.1);
+  // box-shadow: 0 5px 14px -7px rgba(50,50,93,0.25), 0 0px 5px -1px rgba(0,0,0,0.3);
+}
+
+.card-wrapper + .card, // .card-wrapper is a class for a div that wraps many cards
+.card + .card-wrapper, // bc of vue 2's one-root-node limitation
+.card + .card,
+.card + .btn-group {
+  margin-top: 1.5rem;
+}
+.btn-group + .card {
+  margin-top: 3rem;
+}
+
+.card-section {
+  padding: 1.5rem;
+  position: relative;
+
+  &.card-section--paddingless {
+    padding: 0;
+  }
+}
+
+.card-section + .card-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% - 48px);
+  border-top: 0.0625rem solid #d3dae0;
+  margin: 0 24px;
+}
+
+.card-section--header + .card-section::before {
+  width: 100%;
+  margin: 0;
+}
+
+.card-section--header .card-row__title {
+  margin-bottom: 0;
+}
+
+.card-section--header {
+  .icon-wrapper {
+    display: flex;
+    padding-left: 0;
+    margin-left: 0;
+
+    .icon-container {
+      padding: 1rem;
+      width: 6.25rem;
+      height: 6.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.card-section.card-section--full-width {
+  padding: 0;
+}
+
+.card-section.card-section--full-width::before {
+  width: 100%;
+  margin: 0;
+}
+
+.card-section__title {
+  margin-bottom: 1rem;
+}
+
+.card-section__title ~ .card-section__title {
+  margin-top: 2rem;
+}
+
+// .card .separator {
+//     margin: 0 1.5rem;
+// }
+
+.card-row {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  // flex-direction: column;
+  // align-items: flex-start;
+  padding: 1.5rem;
+}
+
+.card-row + .card-row-wrapper,
+.card-row-wrapper + .card-row,
+.card-row-wrapper + .card-row-wrapper,
+.card-row + .card-row {
+  border-top: 0.0625rem solid $light-blue-700;
+}
+
+// columns code is a bit meh and might not work for all use cases
+.card-row--with-columns {
+  flex-direction: column;
+
+  @media screen and (min-width: 60rem) {
+    flex-direction: row;
+    padding: 0 !important;
+  }
+  .card-row__column {
+    padding: 1.5rem;
+
+    @media screen and (max-width: 60rem) {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+
+      &:first-child {
+        padding-top: 0 !important;
+      }
+      &:last-child {
+        padding-bottom: 0 !important;
+      }
+    }
+  }
+}
+
+.card-row--sm {
+  padding: 1rem 1.5rem;
+
+  &.card-row--with-columns .card-row__column {
+    padding: 1rem 1.5rem;
+  }
+}
+
+.card-row--xs {
+  padding: 1rem 0.75rem;
+
+  &.card-row--with-columns .card-row__column {
+    padding: 1rem 0.75rem;
+  }
+}
+
+.card-row__column {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-self: stretch;
+
+  .card-row__text {
+    align-self: flex-start;
+  }
+
+  + .card-row__column {
+    border-top: 1px solid $light-blue-700;
+  }
+
+  @media screen and (min-width: 60rem) {
+    display: flex;
+    align-items: flex-start;
+
+    + .card-row__column {
+      border-top: none;
+      margin-top: 0;
+      border-left: 0.0625rem solid $light-blue-700;
+    }
+
+    .card-row__column:first-child {
+      padding-left: 1rem;
+      border-right: 1px solid $light-gray;
+    }
+  }
+}
+
+.card-row__title {
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.card-row__title-meta {
+  font-size: 12px;
+  font-weight: 400;
+  margin-left: 4px;
+  color: $slate;
+}
+
+.card-row__title-meta--bolder {
+  font-weight: 600;
+}
+
+.card-row__text {
+  flex: 0 1 100%;
+  min-width: 0;
+  align-self: center;
+}
+
+.card-row__text * + .card-row__title {
+  margin-top: 0.5rem;
+}
+
+.card-row__link {
+  display: block;
+  color: currentColor;
+
+  &::before {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:focus {
+    &:not(:focus-visible) {
+      outline: none;
+    }
+
+    &::before {
+      box-shadow: inset 0 0 2px 4px rgba($blue-600, 0.6);
+      border-radius: 0.125rem;
+    }
+  }
+}
+
+.card-row__title + div {
+  margin-top: 4px;
+}
+
+.card-row__title + .small {
+  color: $slate;
+}
+
+.card-list .card-row {
+  padding: 1rem 1.5rem;
+}
+
+.card-row__figure {
+  margin-right: 1rem;
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .figure {
+    width: inherit;
+    height: inherit;
+  }
+
+  .figure-number {
+    font-size: 2rem;
+    color: $gray-400;
+  }
+}
+
+.card-row__meta {
+  margin-left: 0.75rem;
+}
+
+.card-row--wrap-meta {
+  flex-direction: column;
+
+  .card-row__text {
+    align-self: flex-start;
+  }
+  .card-row__meta {
+    margin-top: 1rem;
+    align-self: flex-start;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 60rem) {
+    flex-direction: row;
+    .card-row__text {
+      align-self: center;
+    }
+    .card-row__meta {
+      margin-top: 0;
+      margin-left: 0.75rem;
+      align-self: center;
+      width: unset;
+
+      .btn-group--wrap {
+        flex-direction: row;
+        flex-wrap: nowrap;
+      }
+    }
+  }
+}
+
+.card--expansible {
+  > .card-row--header {
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    z-index: 1;
+
+    .card-row__text {
+      max-width: fit-content;
+    }
+  }
+
+  button.card__expand-toggle {
+    width: 20px;
+    height: 20px;
+    position: static;
+    margin-left: 1rem;
+
+    // the arrow icon
+    &::after {
+      content: "";
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 15'%3E%3Cg fill='none' fill-rule='evenodd' transform='rotate(-180 7 7.25)'%3E%3Cpath fill='black' d='M11.1977701,3.33813009 C11.6467052,2.88919497 12.3899231,2.8846695 12.8455348,3.34028117 C13.3043229,3.79906929 13.3021096,4.53362225 12.8476859,4.98804591 L12.8476859,4.98804591 L8.12589777,9.71092622 C8.09944054,9.75539296 8.06975987,9.7985307 8.03685058,9.84001295 L7.94559178,9.942343 C7.71142976,10.176505 7.40129782,10.2891239 7.09419198,10.2823347 C6.78776696,10.2891239 6.47763502,10.176505 6.24347299,9.942343 L6.24347299,9.942343 L6.1522142,9.84001295 C6.11978887,9.79914073 6.09049789,9.75666136 6.06433633,9.71288713 L1.34137887,4.98804591 C0.886955212,4.53362225 0.884741844,3.79906929 1.34352996,3.34028117 C1.79914163,2.8846695 2.54235958,2.88919497 2.9912947,3.33813009 L7.094,7.441 Z' transform='rotate(-180 7.095 6.641)'/%3E%3Crect width='14' height='14'/%3E%3C/g%3E%3C/svg%3E");
+      mask-repeat: no-repeat;
+      mask-size: 14px 15px;
+      mask-position: center center;
+      background-color: $dark;
+      top: 0;
+      width: 20px;
+      height: 100%;
+      position: absolute;
+    }
+
+    &[aria-expanded="true"]::after {
+      transform: rotate(180deg);
+    }
+
+    // expands the clickable area to occupy the full row
+    &::before {
+      cursor: pointer;
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+  }
+}
+
+.card-row__form-loading-bar {
+  position: absolute;
+  width: 100%;
+  top: -1.75rem;
+  left: 0;
+  right: 0;
+}
+.card-row > .f-fieldset:nth-child(1),
+.card-row > .f-group:nth-child(1) > .f-field:nth-child(1),
+.card-row > .f-inline-group:nth-child(1) > .f-field:nth-child(1),
+.card-row > .f-field:nth-child(1) {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.card--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

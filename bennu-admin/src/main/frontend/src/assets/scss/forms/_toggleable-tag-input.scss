@@ -1,0 +1,35 @@
+
+.f-toggleable-tag-field {
+  @include tag-wrapper-basics;
+
+  padding: 0.5em 1em;
+}
+.f-toggleable-tag-field__tag {
+  // in this toggleable-tag-field the margin is applied here
+  margin: 0.25rem;
+  display: block;
+  position: relative;
+}
+.f-toggleable-tag-field__label {
+  // the label has the tag-basic styles so that it uses the native label check/uncheck
+  // in this case the margin has to be reseted and applied in the __tag element above
+  @include tag-basics;
+
+  margin: 0;
+  // disable select text to be able to check/uncheck correctly
+  user-select: none;
+  display: block;
+  // reset label
+  appearance: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.f-toggleable-tag-field__checkbox {
+  // visually hidden checkbox with .sr-only helper class
+  // needs class anyway because the rule below
+}
+.f-toggleable-tag-field__checkbox:checked ~ .f-toggleable-tag-field__label {
+  background-color: $blue;
+  color: white;
+  border-color: $blue;
+}

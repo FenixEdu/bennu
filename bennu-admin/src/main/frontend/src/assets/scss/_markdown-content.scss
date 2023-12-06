@@ -1,0 +1,26 @@
+.markdown-content {
+  ol,
+  ul {
+    margin-left: 0.875rem;
+  }
+  ul {
+    li {
+      margin: 1rem 0;
+      position: relative;
+      &::before {
+        content: '';
+        display: block;
+        width: 0.375rem;
+        height: 0.375rem;
+        position: absolute;
+        left: -0.875rem;
+        top: 0.5rem;
+        border-radius: 0.1875rem;
+        background-color: $blue;
+      }
+    }
+  }
+  ol {
+    list-style-type: decimal;
+  }
+}

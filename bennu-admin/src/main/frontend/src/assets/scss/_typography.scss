@@ -1,0 +1,286 @@
+// Typography
+
+// in REMS with base 16px;
+
+// ============================== Font Loading and Smoothing
+
+body,
+form,
+fieldset,
+button,
+label,
+li,
+p {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* stylelint-disable-next-line property-no-unknown */
+  font-smoothing: antialiased;
+  font-display: auto;
+}
+
+// ============================== Common Title Styles
+
+h1,
+.h1,
+.title-1,
+h2,
+.h2,
+.title-2,
+h3,
+.h3,
+.title-3,
+h4,
+.h4,
+.title-4,
+h5,
+.h5,
+.title-5,
+h6,
+.h6,
+.title-6,
+.title-hero {
+  color: $dark;
+  font-family: $title-font;
+  font-weight: 500;
+  line-height: 120%;
+  margin: 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+// ============================== Source Sans Pro Titles
+
+// Meant to add to h1, h2, h3, etc... tags
+.h1--ssp,
+.title-1--ssp,
+.h2--ssp,
+.title-2--ssp,
+.h3--ssp,
+.title-3--ssp,
+.h4--ssp,
+.title-4--ssp,
+.h5--ssp,
+.title-5--ssp,
+.h6--ssp,
+.title-6--ssp,
+.title-hero--ssp {
+
+  @extend .h1;
+
+  font-family: $primary-font;
+  font-weight: 600;
+}
+
+h1,
+.h1,
+.title-1,
+.h1--ssp,
+.title-1--ssp {
+  font-size: 2rem;
+  margin: 3.5rem 0 1.4375rem;
+}
+
+h2,
+.h2,
+.title-2,
+.h2--ssp,
+.title-2--ssp {
+  font-size: 1.6875rem;
+  margin: 3.1875rem 0 1rem;
+}
+
+h3,
+.h3,
+.title-3,
+.h3--ssp,
+.title-3--ssp {
+  font-size: 1.4375rem;
+  margin: 2.9375rem 0 1rem;
+}
+
+h4,
+.h4,
+.title-4,
+.h4--ssp,
+.title-4--ssp {
+  font-size: 1.1875rem;
+  margin: 2.6875rem 0 1rem;
+}
+
+h5,
+.h5,
+.title-5,
+.h5--ssp,
+.title-5--ssp {
+  font-size: 1rem;
+  // margin: 40px 0;
+  margin: 0 0 1rem;
+}
+
+h6,
+.h6,
+.title-6,
+.h6--ssp,
+.title-6--ssp {
+  font-size: 0.8125rem;
+  margin: 2.3125rem 0;
+  text-transform: uppercase;
+}
+
+h1 + h2,
+h2 + h3,
+h3 + h4,
+h4 + h5 {
+  margin-top: 0;
+}
+
+// ============================== Hero Titles
+
+.title-hero,
+.title-hero--ssp {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.lead {
+  font-size: 1.375rem;
+  font-style: italic;
+  color: $slate;
+  line-height: 140%;
+}
+
+p,
+.p--default,
+.p--augmented,
+.small {
+  margin: 0;
+  // line-height: 160%;
+}
+
+p,
+.p--default {
+  color: $slate;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.p--augmented {
+  font-size: 1.125rem;
+}
+
+p + p {
+  margin-top: 4px;
+}
+
+p + .card,
+p + ul {
+  margin-top: 2rem;
+}
+
+p + .l-list--inline {
+  margin-top: 0.25rem;
+}
+
+.small {
+  font-size: 0.8125rem;
+  // validate letter-spacing
+  letter-spacing: 0.0125rem;
+  line-height: 140%;
+  font-weight: 400;
+}
+
+// .link {
+//     text-decoration: none;
+//     color: $blue-600;
+//     cursor: pointer;
+//     transition: color .2s ease-in-out;
+
+//     &:hover,
+//     &:focus {
+//         color: $blue-700;
+//     }
+
+//     &:active {
+//         color: darken($blue-700, 5%);
+//     }
+// }
+
+.link {
+  text-decoration: underline;
+  word-break: break-all;
+  // transition: all .2s ease-in-out;
+}
+
+.link--primary {
+  color: $blue;
+}
+
+.small-caps,
+.normal-caps {
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.small-caps {
+  font-size: 0.6875rem;
+}
+
+.normal-caps {
+  font-size: 0.8125rem;
+}
+
+strong {
+  font-weight: 600;
+}
+
+// ============================== Blockquotes
+
+blockquote {
+  margin: 3.5rem 0;
+  border-left: 0.1875rem solid $light-blue-600;
+  padding-left: 1.5rem;
+
+  @media (min-width: 1200px) {
+    margin: 5rem -6.25rem;
+    text-align: center;
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+blockquote p {
+  font-family: $title-font;
+  font-style: italic;
+}
+
+blockquote p:nth-of-type(1) {
+  font-size: 2rem;
+  color: $slate;
+  line-height: 140%;
+}
+
+blockquote p:nth-of-type(2) {
+  color: $gray-400;
+  font-size: 1rem;
+  font-weight: normal;
+
+  &::before {
+    content: “\2014”;
+    padding-right: 0.625rem;
+  }
+}
+
+blockquote a::after {
+  content: initial !important;
+}
+
+.code-label {
+  line-height: 1.2;
+  font-weight: 600;
+  color: $blue-600;
+  border-radius: 0.125rem;
+  padding: 0 0.625rem;
+  background-color: rgba($blue-600, 0.1);
+}

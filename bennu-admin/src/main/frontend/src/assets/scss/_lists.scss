@@ -1,0 +1,226 @@
+// Lists
+
+// Default Lists
+
+ul.block-list li {
+  margin-top: 0;
+  @media screen and (min-width: 60rem) {
+    + li {
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+ul.block-list li a {
+  display: inline-block;
+  padding: 1rem 0;
+  @media screen and (min-width: 60rem) {
+    padding: 0;
+  }
+}
+
+// Definition Lists
+
+// Layout helpers
+.l-list {
+  //
+}
+
+.l-list--inline {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.l-list--inline .l-list__item {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  &:last-child {
+    margin-right: 0;
+  }
+  .label {
+    display: inline-block;
+  }
+}
+
+.l-list--bulleted {
+  margin-left: 0.875rem;
+  margin-top: 1rem;
+  // margin-bottom: 2rem;
+  .l-list__item {
+    position: relative;
+    margin: 1rem 0;
+    margin-top: -0.5rem;
+    color: $slate;
+    &::before {
+      content: '';
+      display: block;
+      width: 0.375rem;
+      height: 0.375rem;
+      position: absolute;
+      left: -0.875rem;
+      top: 0.5rem;
+      border-radius: 0.1875rem;
+      background-color: $blue;
+    }
+  }
+  .l-list__item:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.l-list + .btn {
+  margin-top: 1.5rem;
+}
+
+// list as table
+
+.l-table {
+  .l-table__row {
+    padding: 1rem 1.5rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .l-table__header .l-table__row {
+    align-items: center;
+  }
+
+  .l-table__columnheader--mobile,
+  .l-table__header .l-table__columnheader {
+    color: $dark;
+    font-weight: 600;
+  }
+
+  .l-table__columnheader--mobile {
+    display: none;
+  }
+
+  .l-table__body .l-table__cell {
+    color: $slate;
+    line-height: 25px;
+  }
+
+  .l-table__columnheader.actions {
+    // can't be sr-only because we need it to have width
+    color: transparent;
+    max-height: 1rem;
+    overflow: hidden;
+  }
+
+  .l-table__cell.actions {
+    display: flex;
+    justify-content: flex-end;
+
+    .circle-arrow {
+      @include circle-arrow-right($color: encodecolor($slate));
+
+      background-size: 2rem;
+      background-repeat: no-repeat;
+      width: 2rem;
+      height: 2rem;
+      overflow: hidden;
+      background-position: center;
+      position: absolute;
+      top: calc(50% - 1rem);
+    }
+  }
+
+  .l-table__columnheader.actions--circle-arrow,
+  .l-table__cell.actions--circle-arrow {
+    width: 2rem;
+  }
+
+  @media screen and (max-width: 60rem) {
+    .l-table__row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .l-table__body .l-table__row--actions {
+      padding-right: 3.5rem !important;
+    }
+
+    .l-table__header {
+      @include sr-only;
+    }
+
+    .l-table__columnheader--mobile {
+      display: block;
+    }
+
+    .l-table__cell + .l-table__cell:not(.actions--icon) {
+      margin-top: 0.75rem;
+    }
+
+    .l-table__cell.actions--circle-arrow {
+      position: absolute;
+      right: 1rem;
+      bottom: 50%;
+      .circle-arrow {
+        margin-bottom: -1rem;
+      }
+    }
+
+    .actions--nowrap {
+      position: absolute;
+      right: 1rem;
+      top: 0;
+    }
+  }
+}
+
+.l-table--align-center {
+  @media screen and (min-width: 60rem) {
+    .l-table__body .l-table__row {
+      align-items: center;
+    }
+  }
+}
+
+.l-table--alternating-rows {
+  .l-table__body {
+    .l-table__row + .l-table__row {
+      border-top: 1px solid $light-blue-700;
+    }
+
+    .l-table__row:nth-child(even) {
+      background-color: $light-blue;
+    }
+  }
+}
+
+.l-table--card-rows {
+  .l-table__header .l-table__row {
+    padding: 1.5rem;
+  }
+  &:not(:first-child) .l-table__header,
+  .l-table__body,
+  .l-table__body .l-table__row + .l-table__row {
+    border-top: 1px solid $light-blue-700;
+  }
+
+  + .card-row {
+    border-top: 1px solid $light-blue-700;
+  }
+}
+
+.l-table--gray-rows {
+  .l-table__row {
+    padding: 1rem;
+  }
+  .l-table__header .l-table__row {
+    padding-top: 0.5rem;
+  }
+  .l-table__body .l-table__row {
+    background-color: $light-blue;
+    border-radius: 2px;
+
+    & + .l-table__row {
+      border-top: none;
+      margin-top: 0.5rem;
+    }
+  }
+}

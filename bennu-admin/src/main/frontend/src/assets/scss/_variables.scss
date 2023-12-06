@@ -1,0 +1,118 @@
+//  Variables
+
+// ==================== Primary Palette
+
+$dark:		 				#2e3242;
+$slate: 					#45555f;
+$blue: 						#009de0;
+$light-blue:		 	#eef2f5;
+
+// ==================== Secondary Palette
+
+$violet: 			    	#5856d6;
+
+$teal:				    	#01bfc2;
+
+$lime: 				    	#62d321;
+
+$green: 			    	#199d5b;
+
+$purple: 			    	#574a68;
+
+$magenta: 		    	#e9374f;
+
+$red: 				    	#ff412d;
+
+$orange: 			    	#f9690e;
+
+$pink:				    	#ff4981;
+
+$yellow:			    	#f6c501;
+
+$pale-gold: 	    	#d4ccbe;
+
+// ==================== Extended Palette
+
+// Darks
+
+$dark-600:				  	#242b3d;
+// $dark: 				  	#2E3242;	// main dark
+$dark-400:				  	#383d4c;
+
+// Slate
+
+$slate-700: 			  	#2e3a42;
+$slate-600: 			  	#3a4952;
+// $slate: 				  	#45555F;	// main slate gray (Tecnico gray)
+
+// Blues
+
+$blue-700: 				  	#005ec6;
+$blue-600:				  	#0076dc;
+// $blue: 				  	#009DE0;	// main blue (Tecnico blue)
+
+// Light Blues
+
+$light-blue-700:		 	#d3dae0;
+$light-blue-600:		 	#dde4e9;
+// $light-blue:		 		#EEF2F5;		// main light-blue
+
+// Grays
+
+$gray:					    	#717782;		// main silver
+$gray-400: 				  	#8f95a1;
+$gray-300: 				  	#bfc4cc;
+
+// Light Grays
+
+$light-gray: 			  	#ddd;			// main light-gray
+$light-gray-400: 			#f1f1f1;
+$light-gray-300: 			#f8f8f8;
+
+// $magenta: 				  #E9374F;		// main magenta
+$magenta-600: 				#d6364d;
+$magenta-700: 				#c3364c;
+
+//$green: 			    	#199D5B;        // main green
+$green-600: 			    scale-color($green, $lightness: -25%);
+$green-700: 			    scale-color($green, $lightness: -40%);
+
+// $orange: 			    	#F9690E;		// main orange
+$orange-600: 			    scale-color($orange, $lightness: -25%);
+$orange-700: 			    scale-color($orange, $lightness: -40%);
+
+// ==================== Social Network Colors
+
+$facebook:				  	#3b5998;
+$twitter:				    	#55acee;
+$linkedin:				  	#0077b5;
+$youtube:				    	#cd201f;
+$instagram:				  	#3f729b;
+
+// ==================== Fonts
+
+$primary-font: 'Source Sans Pro', "Helvetica Neue", helvetica, arial, sans-serif;
+$title-font: "Klavika", 'Source Sans Pro', "Helvetica Neue", helvetica, arial, sans-serif;
+
+// fixed sizes
+$header-height: 3.5rem;
+$footer-height: 6.25rem;
+$main-height: calc(100vh - #{$footer-height});
+$menu-mobile--width: 16.5rem;
+
+// ==================== Transitions
+
+@mixin mdTransition {
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+}
+@mixin fastTransition {
+  transition-duration: 600ms;
+  transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+// ==================== Sparrow colors patch
+
+$silver: #dee1e9;
+$silver-dark: #ced2db;
+$silver-darker: #c0c4cf;

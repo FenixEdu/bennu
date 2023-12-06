@@ -1,0 +1,30 @@
+// Grid
+
+.container {
+  width: 100%;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1140px;
+
+  @media screen and (min-width: 1200px) {
+    max-width: 1170px;
+    padding: 0;
+  }
+}
+
+.page {
+  // a nice hack so we can scroll .page into view and have it avoid the header
+  padding-top: calc(3.5rem + #{$header-height});
+  margin-top: -#{$header-height};
+  margin-bottom: 3.5rem;
+}
+
+.page .page__header {
+  margin-bottom: 3rem;
+}
+
+.page .page__header.section-header {
+  margin-bottom: 2.625rem;
+}

@@ -1,0 +1,298 @@
+// Tables
+// Reset
+table {
+  width: 100%;
+  padding: 0;
+  // margin-bottom: 4rem;
+  border-collapse: collapse;
+}
+
+table + table {
+  margin-top: 4rem;
+
+  @media (min-width: 1200px) {
+    margin-top: 8rem;
+  }
+}
+
+// Default table styles
+.table thead,
+.table-default thead {
+  // all th's (table headings) on mobile are hidden
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+
+  @media (min-width: 1200px) {
+    position: relative !important;
+    clip: initial;
+    border-bottom: 1px solid $light-gray;
+  }
+}
+
+// Commented to apply stylelint rule block-no-empty
+// .table tbody,
+// .table-default tbody {
+// }
+
+.table th,
+.table-default th {
+  color: $dark;
+  font-weight: 600;
+  text-align: left;
+}
+
+.table tr,
+.table-default tr {
+  border-top: 1px solid $light-gray;
+  display: block;
+  margin-bottom: 40px;
+  padding: 20px;
+
+  @media (min-width: 1200px) {
+    display: table-row;
+    margin: 0;
+    padding: 0;
+    border-left: 0;
+    border-right: 0;
+
+    &:first-of-type {
+      border-top: 0;
+    }
+
+    &:hover td[data-label="URL"] a {
+      color: $blue;
+    }
+  }
+}
+
+.table td,
+.table-default td {
+  display: block;
+  font-weight: 600;
+  transition: color 0.2s ease-in-out;
+
+  &::before {
+    font-weight: 400;
+    content: attr(data-label);
+    display: block;
+  }
+
+  &:not(:first-of-type) {
+    margin-top: 20px;
+  }
+
+  @media (min-width: 1200px) {
+    margin: 0;
+    font-weight: 400;
+
+    &::before {
+      display: none;
+    }
+
+    &:last-of-type:not(:only-of-type) {
+      // text-align: right;
+    }
+
+    // URL icon on desktop
+    &[data-label="URL"] a {
+      position: relative;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      color: $slate;
+      border: 0;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        background: transparent;
+      }
+      &::before {
+        top: 4px;
+        right: 0;
+        width: 30px;
+        height: 30px;
+        border: 1px solid;
+        border-radius: 50%;
+      }
+      &::after {
+        top: 14px;
+        right: 12px;
+        border: 2px solid;
+        border-left: 0;
+        border-bottom: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 1px;
+        transform: rotate(45deg);
+      }
+    }
+  }
+}
+
+.table--closed,
+.table--closed th,
+.table--closed tr td {
+  @media (min-width: 1200px) {
+    // border: 0.1rem solid $light-gray;
+    border: 0.1rem solid $gray-300;
+  }
+}
+
+// Hide URL icon on mobile
+.table td[data-label="URL"],
+.table-default td[data-label="URL"] {
+  display: none;
+
+  @media (min-width: 1200px) {
+    display: table-cell;
+    text-align: right;
+  }
+}
+
+// Calendar Tables Here
+.table.table-calendar,
+.table-default.calendar {
+  td[data-label="Evento"],
+  td[data-label="Event"] {
+    text-align: left;
+  }
+}
+
+// Tables with clickable rows
+tbody tr.clickable-row {
+  cursor: pointer;
+}
+.clickable-row tbody tr:hover {
+  cursor: pointer;
+
+  td {
+    color: $blue;
+  }
+}
+
+// Tables Media Queries
+
+@media (min-width: 1200px) {
+  .table th,
+  .table td,
+  .table-default th,
+  .table-default td {
+    display: table-cell;
+    padding: 12px 0;
+
+    &:first-of-type {
+      padding-left: 20px;
+    }
+    &:last-of-type {
+      padding-right: 20px;
+    }
+  }
+
+  .table th {
+    padding-right: 26px;
+    line-height: 1.2;
+  }
+
+  .table--closed th,
+  .table--closed tr td {
+    padding: 1.2rem 1.6rem;
+  }
+
+  .table-striped tr:nth-child(even) {
+    background-color: $light-blue;
+  }
+
+  .light-gray .table-striped tr:nth-child(even) {
+    background-color: darken($light-blue, 4%);
+  }
+}
+
+@media (min-width: 1200px) {
+  // selects everything in a list divisible by 3 (three)
+  .table td:nth-last-child(3n):first-child,
+  .table td:nth-last-child(3n):first-child ~ td {
+    width: 33%;
+  }
+
+  .table.table-courses td:nth-child(1) {
+    // width: 50%;
+    width: 45%;
+  }
+  .table.table-courses td:nth-child(1) ~ td {
+    width: 15%;
+  }
+
+  .table.table-courses-col5 td:nth-child(1) {
+    width: 42%;
+  }
+  .table.table-courses-col5 td:nth-child(1) ~ td {
+    width: 10%;
+  }
+
+  // calendar tables
+  .table.calendar td:nth-child(1) {
+    // width: 33%;
+    width: 40%;
+    padding-right: 10%;
+  }
+  .table.calendar td:nth-child(1) ~ td:nth-child(2) {
+    // width: 63%;
+    width: 45%;
+    // padding-left: 5%;
+  }
+
+  //
+  .table td[data-label="URL"] {
+    width: 5% !important;
+  }
+
+  //
+  .table .h-center {
+    text-align: center;
+  }
+}
+
+.table.condense {
+  tbody {
+    box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #fff;
+    width: 100%;
+  }
+  tbody tr {
+    font-weight: 400;
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .joined-row {
+    box-shadow: none;
+    z-index: 1;
+    border-top: 0;
+  }
+  .joined-col::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: $gray-300;
+    margin-bottom: 0.8rem;
+  }
+  // tbody tr td {
+  // 	padding: 1.4rem 3.2rem;
+  // }
+
+  tbody tr strong {
+    font-weight: 600;
+  }
+}

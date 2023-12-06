@@ -1,0 +1,37 @@
+.empty-state {
+  border: 1px solid #c9cdd4;
+  border-radius: 0.25rem;
+  background: transparent;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  @media screen and (min-width: 60rem) {
+    padding: 4rem 2rem 7rem;
+  }
+}
+// Commented to apply the stylelint rules of non-empty selectors
+// .empty-state__illustration{
+
+// }
+.empty-state__title {
+  text-align: center;
+}
+.empty-state__illustration + .empty-state__title {
+  margin-top: 1rem;
+}
+.empty-state__description {
+  text-align: center;
+  @media screen and (min-width: 60rem) {
+    max-width: 50%;
+  }
+}
+
+.empty-state--embedded {
+  border: none;
+  padding: 0;
+  @media screen and (min-width: 60rem) {
+    padding: 1rem 2rem 3rem;
+  }
+}

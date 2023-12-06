@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    // "target": "ESNext",
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "#/*": ["test/*"]
+    },
+    "checkJs": false
+  },
+  "vueCompilerOptions": {
+    "target": 2.7
+  },
+  "exclude": ["node_modules", "dist", "coverage"],
+  "typeAcquisition": {
+    "include": ["jest"]
+  }
+}

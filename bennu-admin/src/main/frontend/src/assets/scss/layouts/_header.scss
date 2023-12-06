@@ -1,0 +1,508 @@
+// Header Layout Component
+
+.main-header,
+.container--header {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.main-header {
+  background: rgba(#fff, 0.97);
+  width: 100%;
+  height: $header-height;
+  box-shadow: 0 0.0625rem 0 0 rgba($dark, 0.1);
+  position: fixed;
+  z-index: 2;
+}
+
+.main-header__logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 12.5rem;
+  height: 1.8rem;
+  max-height: 100%;
+}
+
+.logo img,
+.logo svg {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.mobile-nav {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-nav li ~ li {
+  margin-left: 1.5rem;
+}
+
+// IF CSS is disabled, visibility of .mobile-only elements is turned off with attribute "hidden" to simplify document outline... but if CSS is enabled they are needed
+.mobile-only[hidden] {
+  display: flex;
+
+  @media screen and (min-width: 1200px) {
+    display: none;
+  }
+}
+
+// ================== Main Nav on mobile
+
+// ================== Global Menu Styles (main-nav and dropdowns)
+.menu .moves-out {
+  transform: translateX(-100%);
+}
+
+.menu > ul ul {
+  position: absolute;
+  top: 0;
+  left: 100%;
+}
+
+.menu .has-children > a::after,
+.menu .go-back > a::after,
+.menu .has-children > button::after,
+.menu .go-back > button::after {
+  position: absolute;
+  content: "";
+  top: 50%;
+  height: 0.625rem;
+  width: 0.625rem;
+  border: 0.125rem solid $slate;
+  border-left: 0;
+  border-bottom: 0;
+  transform: rotate(45deg) translateY(-50%);
+}
+
+.menu .has-children > a::after,
+.menu .has-children > button::after {
+  right: 1rem;
+}
+
+.menu .go-back > a,
+.menu .go-back > button {
+  padding-left: 2.5rem;
+}
+
+.menu .go-back > a::after,
+.menu .go-back > button::after {
+  left: 1rem;
+  transform: rotate(-135deg) translateY(50%);
+}
+
+.menu .is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+// ================== end Global Menu Styles (main-nav and dropdowns)
+
+.main-nav {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: -#{$menu-mobile--width};
+  width: $menu-mobile--width;
+  height: 100vh;
+  background-color: $dark-600;
+  overflow-x: hidden;
+  overflow-y: auto;
+  // transition: all 600ms cubic-bezier(0.77, 0, 0.175, 1); // INFO, removed due to animation on window resize
+}
+
+.main-nav ul {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  transition: all 600ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.main-nav .login {
+  padding: 16px;
+}
+
+.main-nav a,
+.main-nav button {
+  position: relative;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  width: 100%;
+  height: $header-height;
+  line-height: $header-height;
+  border-bottom: 0.0625rem solid $dark;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// review with dropdown styles
+.main-nav .link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.main-nav .link-text {
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.main-nav .link-icon + .link-text {
+  max-width: 11rem;
+  margin-left: 0.5rem;
+}
+
+.main-nav .link-icon > div.lyb-icon {
+  margin: -0.75rem 0;
+}
+// ================== end of Main Nav on mobile
+
+// ================== Main Nav on desktop
+@media screen and (min-width: 1200px) {
+  // ================== Global Menu Styles (main-nav and dropdowns)
+  .menu > ul ul {
+    position: static;
+  }
+
+  .menu a,
+  .menu button {
+    color: $dark;
+    display: block;
+    font-size: 1rem;
+    transition: color 0.2s ease-in-out;
+
+    &:hover,
+    &:focus {
+      color: $blue-600;
+    }
+
+    &:active {
+      color: $blue-700;
+    }
+  }
+  // ================== end Global Menu Styles (main-nav and dropdowns)
+
+  .main-nav {
+    position: static;
+    width: calc(100% - 23rem);
+    height: auto;
+    background-color: #fff;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    margin-left: auto;
+    transition: none;
+    overflow: visible;
+  }
+
+  // .main-nav ul,
+  .main-nav > ul {
+    flex-direction: row;
+    width: auto;
+  }
+
+  .main-nav .login {
+    padding: 0;
+  }
+
+  .main-nav > ul > li {
+    display: flex;
+  }
+
+  .main-nav > ul > li > a,
+  .main-nav > ul > li > button {
+    display: flex;
+    align-items: center;
+  }
+
+  .main-nav a,
+  .main-nav button {
+    height: auto;
+    line-height: normal;
+    white-space: nowrap;
+    white-space: normal;
+    padding: 0;
+    border-bottom: none;
+  }
+
+  .main-nav .has-children > a::after,
+  .main-nav .go-back > a::after,
+  .main-nav .has-children > button::after,
+  .main-nav .go-back > button::after {
+    content: initial;
+  }
+
+  .main-nav .has-children.has-focus > a,
+  .main-nav .has-children:focus-within > a,
+  .main-nav .has-children.has-focus > button,
+  .main-nav .has-children:focus-within > button {
+    color: $blue-600;
+  }
+
+  .main-nav .secondary-nav {
+    background-color: $light-blue;
+    padding: 2.5rem calc((100vw - 1110px) / 2);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: $header-height;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    transition:
+      opacity 0.2s ease-in-out 0.18s,
+      visibility 0.2s ease-in-out 0.18s;
+  }
+
+  .primary-nav > li ~ li {
+    margin-left: 2rem;
+  }
+
+  .primary-nav > li.has-children:focus-within .is-hidden {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
+
+  // focus-within not widely supported yet
+  .primary-nav > li.has-children:focus-within > a {
+    color: $blue-600;
+    box-shadow: inset 0 -0.125rem 0 $blue-600;
+  }
+
+  // alternative to focus-within -> add class .has-focus via js
+  .primary-nav > li.has-children:hover .is-hidden,
+  .primary-nav > li.has-children.has-focus .is-hidden {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
+
+  .primary-nav > li.has-children > a,
+  .primary-nav > li.has-children > button {
+    position: relative;
+    box-shadow: inset 0 -0.125rem 0 transparent;
+    transition: color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+    &:hover,
+    &:focus {
+      box-shadow: inset 0 -0.125rem 0 $blue-600;
+    }
+
+    &:active {
+      box-shadow: inset 0 -0.125rem 0 $blue-700;
+    }
+  }
+
+  .primary-nav > li.has-children.has-focus > a,
+  .primary-nav > li.has-children.has-focus > button {
+    color: $blue-600;
+    box-shadow: inset 0 -0.125rem 0 $blue-600;
+
+    &:active {
+      color: $blue-700;
+      box-shadow: inset 0 -0.125rem 0 $blue-700;
+    }
+  }
+
+  p.has-image {
+    font-weight: 400;
+    margin-top: 1rem;
+  }
+
+  p.has-image img {
+    margin: 0.5rem 16px 0 0;
+  }
+
+  .secondary-nav ul {
+    flex-direction: column;
+  }
+
+  .secondary-nav .intro-message {
+    display: block;
+    opacity: 0.65;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    margin-top: 1rem;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .secondary-nav > li {
+    flex-basis: 23%;
+    margin-right: 2%;
+    overflow: hidden;
+  }
+
+  .secondary-nav > li > a,
+  .secondary-nav > li > button {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .secondary-nav > li ul li {
+    margin-top: 0.625rem;
+  }
+
+  .secondary-nav .intro a:hover p,
+  .secondary-nav .intro a:focus p,
+  .secondary-nav .intro a:hover span,
+  .secondary-nav .intro a:focus span,
+  .secondary-nav .intro button:hover p,
+  .secondary-nav .intro button:focus p,
+  .secondary-nav .intro button:hover span,
+  .secondary-nav .intro button:focus span {
+    opacity: 1;
+  }
+
+  .utility-nav {
+    align-items: center;
+    margin-left: auto;
+  }
+
+  .utility-nav > li ~ li {
+    margin-left: 1rem;
+  }
+
+  .utility-nav > li > a,
+  .utility-nav > li > button {
+    font-size: 0.875rem;
+  }
+}
+
+// ================== Main Header icons
+.main-header .utility-nav .icon {
+  display: none;
+
+  @media screen and (min-width: 1200px) {
+    display: flex;
+
+    & + .icon-label {
+      // @include sr-only;
+      color: red;
+    }
+  }
+}
+
+.notifications {
+  position: relative;
+}
+
+.notifications__count {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: $blue-600;
+
+  // to animate (?)
+  opacity: 0;
+  transform: scale(0.1);
+  transition: transform 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.notifications__count.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.search-trigger,
+.notifications-trigger {
+  &:hover,
+  &:focus {
+    .icon--stroke {
+      stroke: $blue-600;
+    }
+  }
+
+  &:active {
+    .icon--stroke {
+      stroke: $blue-700;
+    }
+  }
+}
+
+.apps-trigger,
+.lang-trigger,
+.mobile-nav-trigger {
+  &:hover,
+  &:focus {
+    .icon--fill {
+      fill: $blue-600;
+    }
+  }
+
+  &:active {
+    .icon--fill {
+      fill: $blue-700;
+    }
+  }
+}
+
+.icon-burguer {
+  .icon-burguer__top-bar,
+  .icon-burguer__center-bar,
+  .icon-burguer__bottom-bar {
+    transition:
+      transform 0.2s ease-in-out,
+      transform-origin 0.2s ease-in-out,
+      opacity 0.2s ease-in-out;
+  }
+
+  .nav-is-visible & {
+    .icon-burguer__top-bar {
+      transform-origin: top left;
+      transform: rotate(45deg) translate(3px, -4px);
+    }
+    .icon-burguer__center-bar {
+      opacity: 0;
+    }
+    .icon-burguer__bottom-bar {
+      transform-origin: bottom left;
+      transform: rotate(-45deg) translate(8px, 7px);
+    }
+  }
+}
+
+.icon--fill {
+  transition: fill 0.2s ease-in-out;
+}
+
+.icon-search,
+.icon-notifications {
+  .icon--stroke {
+    transition: stroke 0.2s ease-in-out;
+  }
+}
+
+.main-header .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

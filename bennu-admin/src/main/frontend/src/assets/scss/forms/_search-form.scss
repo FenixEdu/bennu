@@ -1,0 +1,64 @@
+.f-search {
+  position: relative;
+  margin: 1.5rem 0 1rem;
+}
+.f-search--sm {
+  margin: 0;
+  .f-search__input {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+  }
+  .f-search__submit {
+    top: 0.5rem;
+    left: 0.5rem;
+  }
+}
+
+.f-search + .card {
+  margin-top: 2rem;
+}
+
+.f-search__input {
+  appearance: none;
+  border: none;
+  width: 100%;
+  background-color: white;
+  font-size: 1.125rem;
+  line-height: 1;
+  border-radius: 0.125rem;
+  padding: 1rem 1rem 1rem 3.5rem;
+  // box-shadow: 0 3px 7px 0 rgba(0,0,0,0.10);
+}
+
+.f-search__input--card {
+  border-radius: 0.25rem;
+  box-shadow: 0 0.1875rem 0.4375rem 0 rgba(0, 0, 0, 0.1);
+}
+
+.f-search__submit {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  @include icon-search($color: encodecolor($gray-400));
+
+  background-size: 1.125rem;
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.5rem;
+  overflow: hidden;
+  background-position: center;
+  text-indent: 100%;
+
+  &:hover::after,
+  &:focus::after {
+    opacity: 1;
+  }
+}
+
+.f-search--disabled {
+  .f-search__input {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}

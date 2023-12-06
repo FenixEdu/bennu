@@ -1,0 +1,60 @@
+.f-field--label-inside .f-field__input--phone,
+.f-field__input--phone {
+  padding-left: 6.5rem;
+}
+.f-field--underline .f-field__input--phone {
+  padding-left: 5.5rem;
+}
+.f-field__phone-code {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: $slate;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.1s ease-in-out;
+}
+.f-field--underline {
+  .f-field__phone-code {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: none;
+  }
+}
+.f-field--label-inside {
+  .f-field__phone-code {
+    bottom: 0.5rem;
+    transform: none;
+  }
+}
+
+.f-field__phone-code-flag {
+  height: 1rem;
+  padding-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.f-field__phone-code-number {
+  padding-right: 0.25rem;
+}
+
+.f-field__phone-code .down-arrow {
+  display: flex;
+  align-items: center;
+}
+
+.f-field__input:focus ~ .f-field__phone-code,
+.f-field__input--is-filled ~ .f-field__phone-code,
+.f-field__input--allways-open ~ .f-field__label {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}

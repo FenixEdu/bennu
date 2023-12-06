@@ -1,0 +1,242 @@
+// Labels
+
+// Label sizes
+.label {
+  font-weight: 700;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  border: 1px solid $slate;
+  background-color: $slate;
+  color: #fff;
+  font-family: $primary-font;
+  line-height: 1.5;
+  font-size: 11px;
+  padding: 4px 8px;
+  display: inline-flex;
+  vertical-align: text-bottom;
+
+  &.label--outline {
+    background-color: transparent;
+    border-color: currentColor;
+    color: currentColor;
+  }
+}
+
+.label--sm,
+.label--small {
+  padding: 1px 6px;
+  line-height: 15px;
+}
+
+.label--lg,
+.label--large {
+  padding: 8px 12px;
+}
+
+// Label links
+a.label,
+button.label {
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+@mixin muted-label($color) {
+  color: $color;
+  background-color: change-color($color: $color, $alpha: 0.1);
+  border-color: transparent;
+}
+
+.label--primary {
+  background: $blue-600;
+  border-color: $blue-600;
+  color: #fff;
+
+  &.label--outline {
+    background-color: transparent;
+    border-color: $blue-700;
+    color: $blue-700;
+  }
+
+  &.label--muted {
+    @include muted-label($blue-600);
+  }
+}
+
+a.label--primary,
+button.label--primary {
+  &:hover,
+  &:focus {
+    border-color: $blue-700;
+    background-color: $blue-700;
+    color: white;
+  }
+  &:active {
+    border-color: darken($blue-700, 5%);
+    background-color: darken($blue-700, 5%);
+  }
+
+  &.label--outline {
+    &:hover,
+    &:focus {
+      border-color: $blue-700;
+      background-color: $blue-700;
+      color: white;
+    }
+    &:active {
+      border-color: darken($blue-700, 5%);
+      background-color: darken($blue-700, 5%);
+    }
+  }
+}
+
+.label--gray {
+  background: $gray-400;
+  border-color: $gray-400;
+  color: #fff;
+
+  &.label--outline {
+    background-color: transparent;
+    border-color: $gray-400;
+    color: $gray-400;
+  }
+}
+
+.label--light {
+  background-color: $light-blue;
+  border-color: $light-blue;
+  color: $slate;
+
+  &.label--outline {
+    background-color: transparent;
+    border-color: $light-blue-700;
+    color: $slate;
+  }
+}
+
+a.label--light,
+button.label--light {
+  &:hover,
+  &:focus {
+    border-color: $light-blue-600;
+    background-color: $light-blue-600;
+    color: $slate;
+  }
+  &:active {
+    border-color: $light-blue-700;
+    background-color: $light-blue-700;
+  }
+
+  &.label--ouline {
+    &:hover,
+    &:focus {
+      border-color: $light-blue-600;
+      background-color: $light-blue-600;
+      color: $slate;
+    }
+    &:active {
+      border-color: $light-blue-700;
+      background-color: $light-blue-700;
+    }
+  }
+}
+.label--success,
+.label--green {
+  background: $green;
+  border-color: $green;
+  color: white;
+
+  &.label--outline {
+    background-color: transparent;
+    border-color: $green;
+    color: $green;
+  }
+
+  &.label--muted {
+    @include muted-label($green);
+  }
+}
+
+.label--danger,
+.label--red {
+  background: $magenta;
+  border-color: $magenta;
+  color: #fff;
+
+  &.label--outline {
+    background-color: transparent;
+    border-color: $magenta;
+    color: $magenta;
+  }
+
+  &.label--muted {
+    @include muted-label($magenta);
+  }
+}
+
+.label--warning,
+.label--orange {
+  background: $orange;
+  border-color: $orange;
+  color: #fff;
+
+  &.label--outline {
+    background-color: transparent;
+    border-color: $orange;
+    color: $orange;
+  }
+
+  &.label--muted {
+    @include muted-label($orange);
+  }
+}
+
+.label--violet {
+  background: $violet;
+  border-color: $violet;
+  color: #fff;
+
+  &.label--outline {
+    background-color: transparent;
+    border-color: $violet;
+    color: $violet;
+  }
+
+  &.label--muted {
+    @include muted-label($violet);
+  }
+}
+
+a.label--violet,
+button.label--violet {
+  &:hover,
+  &:focus {
+    border-color: darken($violet, 5%);
+    background-color: darken($violet, 5%);
+    color: white;
+  }
+  &:active {
+    border-color: darken($violet, 9%);
+    background-color: darken($violet, 9%);
+  }
+
+  &.label--outline {
+    &:hover,
+    &:focus {
+      border-color: $violet;
+      background-color: $violet;
+      color: white;
+    }
+    &:active {
+      border-color: darken($violet, 5%);
+      background-color: darken($violet, 5%);
+    }
+  }
+}
+
+.label--scope {
+  background-color: rgba(88, 86, 214, 0.1);
+  color: #5856d6;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: none;
+}

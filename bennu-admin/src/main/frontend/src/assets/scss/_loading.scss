@@ -1,0 +1,106 @@
+$gradient-width: 20rem;
+
+.loading-text,
+.loading-link {
+  opacity: 0.3;
+  display: inline-block;
+  background-color: #d3dae0;
+  overflow: hidden;
+  position: relative;
+  color: transparent !important;
+  border-radius: 0.25rem;
+
+  & * {
+    color: transparent !important;
+  }
+  &::after {
+    content: '';
+    background: linear-gradient(to right, rgba(221, 228, 233, 0) 1%, rgba(221, 228, 233, 1) 35%, rgba(221, 228, 233, 1) 65%, rgba(221, 228, 233, 0) 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: $gradient-width;
+    height: 100%;
+    animation: loadingtext 2s linear infinite;
+  }
+}
+
+.loading-link {
+  background-color: rgba($blue, 0.2);
+
+  &::after {
+    background: linear-gradient(to right, rgba($light-blue, 0) 1%, rgba($light-blue, 0.5) 35%, rgba($light-blue, 0.5) 65%, rgba($light-blue, 0) 100%);
+  }
+}
+.loading-button {
+  pointer-events: none;
+  color: transparent !important;
+}
+
+@keyframes loadingtext {
+  0% {
+    left: -$gradient-width;
+  }
+  100% {
+    left: 87.5rem;
+  }
+}
+.loading-bar {
+  width: 144px;
+  height: 2px;
+  margin: 2rem auto;
+  border-radius: 2px;
+  background-color: #d3dae0;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transform: rotateY(0);
+  transition: transform 0.3s ease-in;
+  .blue-bar {
+    height: 100%;
+    width: 68px;
+    position: absolute;
+    transform: translate(-34px, 0);
+    background-color: #0076dc;
+    border-radius: 2px;
+    animation: initial-loading 1.5s infinite ease;
+  }
+}
+@keyframes initial-loading {
+  0%,
+  100% {
+    transform: translate(-34px, 0);
+  }
+  50% {
+    transform: translate(96px, 0);
+  }
+}
+.card-loading-bar {
+  width: 100%;
+  height: 2px;
+  margin: 0 auto;
+  border-radius: 2px;
+  background-color: #d3dae0;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transform: rotateY(0);
+  transition: transform 0.3s ease-in;
+  .blue-bar {
+    height: 100%;
+    width: 70%;
+    position: absolute;
+    transform: translate(-24%, 0);
+    background-color: #0076dc;
+    border-radius: 2px;
+    animation: form-loading 1.5s infinite linear;
+  }
+}
+@keyframes form-loading {
+  0% {
+    transform: translate(-100%, 0);
+  }
+  100% {
+    transform: translate(200%, 0);
+  }
+}

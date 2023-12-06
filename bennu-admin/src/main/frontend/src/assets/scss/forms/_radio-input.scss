@@ -1,0 +1,217 @@
+.f-field--radiogroup {
+  margin: 0.25rem 0 1rem;
+
+  &.f-field--hidden-legend {
+    fieldset > .f-field__label {
+      @include sr-only;
+    }
+  }
+
+  fieldset[role="radiogroup"],
+  & {
+    > .f-field__label {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    > .f-field__label + .f-field__description {
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+    }
+
+    > .f-field__options {
+      display: flex;
+      align-items: flex-start;
+      flex-flow: column;
+    }
+  }
+
+  &.f-field--inline {
+    & > fieldset[role="radiogroup"],
+    & {
+      > .f-field__options {
+        flex-flow: row wrap;
+      }
+      .f-field--radio {
+        margin-bottom: 0.5rem;
+      }
+      .f-field--radio + .f-field--radio {
+        .f-field__label {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  .f-field__options--wrap {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    > .f-field--radio {
+      flex: 1 1 100%;
+      &:nth-child(n+2) {
+        margin-top: 0.5rem;
+      }
+
+      @media screen and (min-width: 32.5rem) {
+        flex: 1 1 50%;
+        max-width: 50%;
+        &:nth-child(-n+2) {
+          margin-top: 0;
+        }
+      }
+      @media screen and (min-width: 60rem) {
+        flex: 1 1 33.33%;
+        max-width: 33.33%;
+        &:nth-child(-n+3) {
+          margin-top: 0;
+        }
+      }
+      @media screen and (min-width: 75rem) {
+        flex: 1 1 25%;
+        max-width: 25%;
+
+        &:nth-child(-n+4) {
+          margin-top: 0;
+        }
+      }
+
+      .f-field__label {
+        margin-top: 0;
+        font-weight: 600;
+        max-width: 85%;
+      }
+    }
+  }
+}
+
+.f-field--radiogroup.f-field--required {
+  fieldset[role="radiogroup"],
+  & {
+    > .f-field__options {
+      .f-field__label::after {
+        content: '';
+      }
+    }
+  }
+}
+
+@mixin radio-unchecked {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 1.375rem;
+  height: 1.375rem;
+  background: transparent;
+  border-radius: 100%;
+  box-shadow: inset 0 0 0 1px #a9a9a9;
+  transition: all 100ms cubic-bezier(0.47, 0, 0.745, 0.715);
+}
+
+@mixin radio-checked {
+  box-shadow: inset 0 0 0 4px #009de0;
+}
+
+.f-field--radio {
+  .f-field__input {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    padding: 0;
+    appearance: none;
+    border: none;
+    display: block;
+  }
+
+  .f-field__input + .f-field__label {
+    display: flex;
+    align-items: center;
+    pointer-events: all;
+    position: relative;
+    user-select: none;
+    transform: none;
+    margin-bottom: 0;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1.5em;
+    padding-left: 2em;
+    padding-right: 1.5em;
+    color: $slate;
+    font-weight: normal;
+
+    &::before {
+      @include radio-unchecked();
+
+      top: 2px;
+      left: 0;
+    }
+  }
+
+  .f-field__input + .f-field__label.f-field__label--card-header {
+    padding-left: 0;
+    padding-right: 2rem;
+
+    &::before {
+      content: none;
+    }
+
+    &::after {
+      @include radio-unchecked();
+
+      right: 0;
+    }
+  }
+
+  .f-field__input:checked ~ .f-field__label {
+    &::before {
+      @include radio-checked();
+    }
+  }
+
+  .f-field__input:checked ~ .f-field__label--card-header {
+    &::after {
+      @include radio-checked();
+    }
+  }
+
+  .f-field__input:focus ~ .f-field__label {
+    outline: 2px solid $blue-700;
+    outline: 2px solid Highlight; // firefox
+    outline: 2px solid -webkit-focus-ring-color; // webkit
+    color: unset;
+  }
+  .f-field__input:focus:not(:focus-visible) ~ .f-field__label {
+    // on browsers that support focus visible
+    color: unset;
+    outline: none;
+  }
+}
+
+.f-field--radio + .f-field--radio {
+  .f-field__label {
+    margin-top: 0.5rem;
+  }
+}
+.f-field--radio .f-field__input:disabled {
+  &,
+  & + .f-field__label {
+    opacity: 0.4;
+    cursor: none;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+.f-field--radio.f-field--sm {
+  .f-field__input + .f-field__label {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: 0 1.5rem;
+    &::before {
+      width: 1rem;
+      height: 1rem;
+      top: 0.25rem;
+    }
+  }
+}

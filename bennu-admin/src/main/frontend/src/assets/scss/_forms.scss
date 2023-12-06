@@ -1,0 +1,97 @@
+@import '@/assets/scss/forms/_search-form.scss';
+
+.form {
+  margin: 1.5rem 0;
+}
+
+.f-inline-group {
+  .f-field {
+    margin-top: 3rem;
+  }
+  .f-field--hidden-label {
+    margin-top: 0;
+  }
+}
+@media screen and (min-width: 32.5rem) {
+  .f-inline-group {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: stretch;
+    .f-field {
+      margin: 0 0.5rem;
+      // padding: 1.5rem 0 1rem;
+      flex-grow: 1;
+      &:first-child {
+        margin-left: 0;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+//this class will only be use to separate visually more than one f-group
+.f-group + .f-group {
+  padding: 0.5rem 0 1rem;
+  > .f-field,
+  > .f-field--underline {
+    margin-top: 2rem;
+  }
+  > .f-field:first-child {
+    margin-top: 0;
+  }
+  > .f-field--allways-open,
+  > .f-tag-field {
+    margin-top: 3rem;
+  }
+
+  > .f-inline-group {
+    margin-top: 2.5rem;
+  }
+}
+.f-group--lg {
+  > .f-field,
+  > .f-field--underline {
+    margin-top: 3rem;
+  }
+  > .f-field:first-child {
+    margin-top: 0;
+  }
+  > .f-field--allways-open,
+  > .f-tag-field {
+    margin-top: 4rem;
+  }
+
+  > .f-inline-group {
+    margin-top: 3.5rem;
+  }
+}
+
+@import 'forms/_defaults-input';
+@import 'forms/_textarea';
+@import 'forms/_phone-input';
+@import 'forms/_checkbox-input';
+@import 'forms/_radio-input';
+@import 'forms/_toggle-input';
+@import 'forms/_select';
+@import 'forms/_drag-and-drop';
+@import 'forms/_tags';
+
+.step-navigation {
+  width: 16.5rem;
+  justify-content: center;
+  .btn {
+    min-width: 7.5rem;
+  }
+  .btn:last-child {
+    margin-left: auto;
+  }
+}
+.f-fieldset {
+  margin-top: 2rem;
+}
+.f-fieldset__title + .f-group,
+.f-fieldset__title + .f-inline-group {
+  margin-top: 0;
+}

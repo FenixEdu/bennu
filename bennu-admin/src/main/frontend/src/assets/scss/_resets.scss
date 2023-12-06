@@ -1,0 +1,109 @@
+// Resets
+@import "@/assets/scss/variables";
+
+html {
+  box-sizing: border-box;
+  font-size: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+  font-family: "Source Sans Pro";
+  font-size: 1rem;
+}
+
+input[type="search"],
+input[type="text"],
+input[type="email"] input[type="url"],
+textarea {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+// ul li,
+// ol li {
+//   margin-bottom: 0.25rem;
+// }
+
+dl {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: $slate;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    // review this
+    color: $blue-600;
+    border-color: $blue-600;
+  }
+
+  &:active {
+    // review this
+    color: $blue-700;
+    border-color: $blue-700;
+  }
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  appearance: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  text-align: initial;
+}
+
+input,
+textarea,
+select {
+  outline: none;
+  font-family: $primary-font;
+  line-height: 1.5;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+figure {
+  padding: 0;
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+abbr[title] {
+  border-bottom: none;
+  text-decoration: none;
+}
+
+hr {
+  border: none;
+  border-top: 0.0625rem solid $light-blue-700;
+  margin: 1.5rem 0;
+}

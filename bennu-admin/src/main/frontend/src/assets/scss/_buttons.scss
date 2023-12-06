@@ -1,0 +1,818 @@
+// Buttons (Design System Buttons)
+
+// Default Button
+.btn {
+  position: relative;
+  // display: inline-block;
+  font-weight: 600;
+  // font-size: 14px;
+  font-size: 14px;
+  line-height: 22px;
+  border-radius: 2px;
+  border: 1px solid;
+  text-align: center;
+  padding: 8px 16px;
+  white-space: nowrap;
+  transition: border 0.2s ease-in-out, background 0.2s ease-in-out, color 0.2s ease-in-out;
+  cursor: pointer;
+
+  // Testing this -- moved from end of file
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn--icon {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.btn--blue {
+  @extend .btn;
+
+  background-color: $blue;
+  border-color: $blue;
+  color: #fff;
+
+  &:hover,
+  &:focus,
+  &.btn--hover {
+    background-color: $blue-600;
+    border-color: $blue-600;
+    color: #fff;
+  }
+
+  &.btn--hover {
+    &:hover,
+    &:focus {
+      background-color: $blue-700;
+      border-color: $blue-700;
+    }
+
+    &:active {
+      background-color: darken($blue-700, 5%);
+      border-color: darken($blue-700, 5%);
+    }
+  }
+
+  &:active {
+    background-color: $blue-700;
+    border-color: $blue-700;
+  }
+
+  &.btn--outline {
+    background-color: transparent;
+    color: $blue;
+
+    &:hover,
+    &:focus {
+      background-color: $blue-600;
+      border-color: $blue-600;
+      color: #fff;
+    }
+
+    &:active {
+      background-color: $blue-700;
+      border-color: $blue-700;
+    }
+  }
+
+  &.btn--icon {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: $blue;
+
+    &:hover,
+    &:focus {
+      color: $blue-600;
+    }
+
+    &:active {
+      color: $blue-700;
+    }
+  }
+}
+
+//btn--danger
+.btn--magenta {
+  @extend .btn;
+
+  background-color: $magenta;
+  border-color: $magenta;
+  color: #fff;
+
+  &:hover,
+  &:focus,
+  &.btn--hover {
+    background-color: $magenta-600;
+    border-color: $magenta-600;
+    color: #fff;
+
+    .icon--fill {
+      fill: #fff;
+    }
+  }
+
+  &.btn--hover {
+    &:hover,
+    &:focus {
+      background-color: $magenta-700;
+      border-color: $magenta-700;
+    }
+
+    &:active {
+      background-color: darken($magenta-700, 5%);
+      border-color: darken($magenta-700, 5%);
+    }
+  }
+
+  &:active {
+    background-color: $magenta-700;
+    border-color: $magenta-700;
+  }
+
+  &.btn--outline {
+    background-color: transparent;
+    color: $magenta;
+
+    &:hover,
+    &:focus {
+      background-color: $magenta-600;
+      border-color: $magenta-600;
+      color: #fff;
+    }
+
+    &:active {
+      background-color: $magenta-700;
+      border-color: $magenta-700;
+    }
+  }
+  &.btn--icon {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: $magenta;
+
+    &:hover,
+    &:focus {
+      color: $magenta-600;
+    }
+
+    &:active {
+      color: $magenta-700;
+    }
+  }
+}
+//btn--danger
+.btn--green {
+  @extend .btn;
+
+  background-color: $green;
+  border-color: $green;
+  color: #fff;
+
+  &:hover,
+  &:focus,
+  &.btn--hover {
+    background-color: $green-600;
+    border-color: $green-600;
+    color: #fff;
+
+    .icon--fill {
+      fill: #fff;
+    }
+  }
+
+  &.btn--hover {
+    &:hover,
+    &:focus {
+      background-color: $green-700;
+      border-color: $green-700;
+    }
+
+    &:active {
+      background-color: darken($green-700, 5%);
+      border-color: darken($green-700, 5%);
+    }
+  }
+
+  &:active {
+    background-color: $green-700;
+    border-color: $green-700;
+  }
+
+  &.btn--outline {
+    background-color: transparent;
+    color: $green;
+
+    &:hover,
+    &:focus {
+      background-color: $green-600;
+      border-color: $green-600;
+      color: #fff;
+    }
+
+    &:active {
+      background-color: $green-700;
+      border-color: $green-700;
+    }
+  }
+
+  &.btn--icon {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: $green;
+
+    &:hover,
+    &:focus {
+      color: $green-600;
+    }
+
+    &:active {
+      color: $green-700;
+    }
+  }
+}
+
+.btn--orange {
+  @extend .btn;
+
+  background-color: $orange;
+  border-color: $orange;
+  color: #fff;
+
+  &:hover,
+  &:focus,
+  &.btn--hover {
+    background-color: $orange-600;
+    border-color: $orange-600;
+    color: #fff;
+
+    .icon--fill {
+      fill: #fff;
+    }
+  }
+
+  &.btn--hover {
+    &:hover,
+    &:focus {
+      background-color: $orange-700;
+      border-color: $orange-700;
+    }
+
+    &:active {
+      background-color: darken($orange-700, 5%);
+      border-color: darken($orange-700, 5%);
+    }
+  }
+
+  &:active {
+    background-color: $orange-700;
+    border-color: $orange-700;
+  }
+
+  &.btn--outline {
+    background-color: transparent;
+    color: $orange;
+
+    &:hover,
+    &:focus {
+      background-color: $orange-600;
+      border-color: $orange-600;
+      color: #fff;
+    }
+
+    &:active {
+      background-color: $orange-700;
+      border-color: $orange-700;
+    }
+  }
+
+  &.btn--icon {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: $orange;
+
+    &:hover,
+    &:focus {
+      color: $orange-600;
+    }
+
+    &:active {
+      color: $orange-700;
+    }
+  }
+}
+
+// Secondary Button
+.btn--slate {
+  @extend .btn;
+
+  background-color: $slate;
+  color: #fff;
+  border-color: $slate;
+
+  &.btn--outline {
+    background-color: transparent;
+    color: $slate;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: $slate-600;
+    border-color: $slate-600;
+    color: #fff;
+  }
+
+  &:active {
+    background-color: $slate-700;
+    border-color: $slate-700;
+  }
+
+  &.btn--icon {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: $slate;
+
+    &:hover,
+    &:focus {
+      color: $slate-600;
+    }
+
+    &:active {
+      color: $slate-700;
+    }
+  }
+}
+
+// Dark Button
+.btn--dark {
+  @extend .btn;
+
+  background-color: $dark-400;
+  color: #fff;
+  border-color: $dark-400;
+
+  &.btn--outline {
+    background-color: transparent;
+    color: $dark-400;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: $dark;
+    border-color: $dark;
+    color: $light-gray-300;
+  }
+
+  &:active {
+    background-color: $dark-600;
+    border-color: $dark-600;
+    color: $light-gray;
+  }
+
+  &.btn--icon {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: $dark-400;
+
+    &:hover,
+    &:focus {
+      color: $dark;
+    }
+
+    &:active {
+      color: $dark-600;
+    }
+  }
+}
+
+// Light Button
+.btn--light {
+  @extend .btn;
+
+  background-color: $silver;
+  color: $slate;
+  border-color: $silver;
+  
+  &[disabled] {
+    border-color: $silver; // FIXME: hotfix bc border went back to black when button ws
+  }
+
+  &:hover,
+  &:focus {
+    background-color: $silver-dark;
+    border-color: $silver-dark;
+    color: $slate-600;
+  }
+
+  &:active {
+    background-color: $silver-darker;
+    border-color: $silver-darker;
+  }
+}
+
+// White Button
+.btn--white {
+  @extend .btn;
+
+  background-color: #fff;
+  color: $blue;
+  border-color: #fff;
+
+  &.btn--outline {
+    background-color: transparent;
+    color: #fff;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: #fff;
+    border-color: #fff;
+    color: $blue-600;
+  }
+
+  &:active {
+    background-color: $light-blue;
+    border-color: $light-blue;
+    color: $blue-700;
+  }
+}
+
+// Primary Button extending .btn-blue
+
+.btn--primary {
+  @extend .btn--blue;
+}
+
+// Danger Button extending .btn-magenta
+
+.btn--danger {
+  @extend .btn--magenta;
+}
+
+.btn--warn {
+  @extend .btn--orange;
+}
+
+// Danger Button extending .btn-magenta
+
+.btn--success {
+  @extend .btn--green;
+}
+
+// Login Button
+.btn--login,
+.menu .btn--login {
+  @extend .btn--primary;
+
+  width: 100%;
+  height: auto;
+  padding: 0.75rem 1.375rem;
+  line-height: normal;
+  background-color: $blue-600;
+  border-color: $blue-600;
+  color: white;
+
+  &:hover,
+  &:focus {
+    background-color: $blue-700;
+    border-color: $blue-700;
+    color: white;
+  }
+
+  &:active {
+    background-color: darken($blue-700, 5%);
+    border-color: darken($blue-700, 5%);
+  }
+
+  @media (min-width: 1200px) {
+    padding: 0.25rem 0.75rem;
+  }
+}
+
+// Secondary Button extending .btn-slate
+
+.btn--secondary {
+  @extend .btn--slate;
+}
+
+// ========== Button Size Helper Classes
+
+.btn--sm,
+.btn--small {
+  // font-size: 12px;
+  font-size: 0.875rem;
+  padding: 4px 12px;
+}
+
+.btn--lg,
+.btn--large {
+  font-size: 16px;
+  padding: 12px 22px;
+}
+
+.btn--full {
+  width: 100%;
+}
+
+// review
+p + .btn {
+  margin-top: 24px;
+}
+
+// ========== Button groups
+
+.btn-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .btn,
+  .btn--collapsible {
+    margin-right: 1rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+.btn-group--vertical {
+  display: flex;
+  flex-flow: column nowrap;
+  .btn,
+  .btn--collapsible {
+    margin-right: 0;
+    margin-bottom: 1rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.btn-group--wrap {
+  flex-wrap: wrap;
+  margin-bottom: -1rem;
+
+  .btn,
+  .btn--collapsible {
+    margin-bottom: 1rem;
+  }
+}
+
+.btn-group--stackable {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1rem;
+  width: 100%;
+  
+  .btn--isolated {
+    margin-top: 1rem;
+  }
+
+  @media screen and (min-width: 60rem) {
+    flex-flow: row wrap;
+
+    .btn--isolated {
+      margin-left: auto;
+      margin-top: 0;
+    }
+  }
+}
+
+.btn--,
+.btn[disabled] {
+  @extend .btn;
+
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+
+  &:hover,
+  &:focus,
+  &:active {
+    outline: none;
+    pointer-events: none;
+  }
+}
+
+// Login and Logout buttons
+// .btn-submit {
+// 	@extend .btn-primary;
+// 	@extend .btn-lg;
+
+// 	margin: 0;
+// }
+
+// .card .btn-submit {
+// 	width: 100%;
+// 	display: block;
+// 	margin: 4rem 0 1.6rem;
+// }
+
+// .btn-logout {
+// 	@media (min-width: 1200px) {
+// 	    float: right;
+// 	    margin-bottom: 1.8rem;
+// 	    font-size: 1.2rem;
+// 	    width: 8rem;
+// 	    text-transform: uppercase;
+// 	    text-align: center;
+// 	}
+// }
+
+// .user-menu-mobile .btn-logout {
+// 	font-size: 1.6rem;
+//     font-weight: 400;
+//     text-align: left;
+//     background-color: transparent;
+//     border: 0;
+//     border-bottom: 1px solid $dark-400;
+// }
+
+// links with circle & arrow icon on the left side
+.btn--arrow {
+  display: block;
+  position: relative;
+  padding-right: 12px;
+  border: 0;
+  font-weight: 600;
+  color: $blue-600;
+
+  &::after {
+    position: absolute;
+    content: "\000BB";
+    margin-left: 4px;
+  }
+
+  &:hover {
+    // color: $blue-700;
+    color: $blue-600;
+    border: 0;
+    &::before {
+      background-color: $blue-700;
+      border-color: $blue-700;
+    }
+    &::after {
+      border-color: #fff;
+    }
+  }
+
+  &:active {
+    color: darken($blue-700, 5%);
+  }
+
+  @media (min-width: 375px) {
+    position: relative;
+    padding-right: 0;
+    margin-left: 40px;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      transition: all 0.2s ease-in-out;
+    }
+    &::before {
+      top: 50%;
+      transform: translateY(-50%);
+      left: -40px;
+      width: 30px;
+      height: 30px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+    }
+    &::after {
+      margin-left: 0;
+      top: 6px;
+      top: 50%;
+      transform: rotate(45deg) translate(-25%, -40%);
+      left: -33px;
+      border: 0.2rem solid currentColor;
+      border-left: 0;
+      border-bottom: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 1px;
+    }
+  }
+}
+
+// links with double arrow icon on the right side
+.btn--arrow-right {
+  color: $blue-600;
+  font-weight: 600;
+
+  &::after {
+    content: " \00BB";
+  }
+
+  &:hover,
+  &:focus {
+    color: $blue-700;
+  }
+
+  &:active {
+    color: darken($blue-700, 5%);
+  }
+}
+
+.btn--link {
+  @extend .btn;
+
+  font-size: 1rem;
+  background-color: transparent;
+  color: $blue;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+
+  &:hover,
+  &:focus {
+    background-color: transparent;
+    color: $blue-600;
+  }
+
+  &:active {
+    color: $blue-700;
+  }
+
+  &.btn--danger {
+    color: $magenta;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      color: $magenta-600;
+    }
+
+    &:active {
+      color: $magenta-700;
+    }
+  }
+}
+
+.btn--fake-link {
+  color: $slate;
+  transition: color 0.2s ease-in-out;
+
+  &:hover,
+  &:focus {
+    color: $blue-600;
+  }
+
+  &:active {
+    color: $blue-700;
+  }
+}
+
+.btn--arrow-down {
+  padding-right: 20px;
+
+  &::after {
+    position: absolute;
+    content: "";
+    top: 50%;
+    right: 4px;
+    width: 7px;
+    height: 7px;
+    border: 2px solid $blue-600;
+    border-left: 0;
+    border-bottom: 0;
+    transition: border-color 0.2s ease-in-out;
+    transform: translateY(-50%) rotate(135deg);
+  }
+
+  &:hover,
+  &:focus {
+    color: $blue-700;
+  }
+
+  &:active {
+    color: darken($blue-700, 5%);
+  }
+}
+
+// testing this
+
+// The commented code below was moved to the first selector usage of .btn
+// This was made to apply the stylelint rules of removing duplicate selectors
+// .btn {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+.btn__icon {
+  // margin-right: 4px;
+  margin-right: 8px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
