@@ -69,10 +69,6 @@ module.exports = {
         progress: true
       },
       proxy: {
-        [`${process.env.VUE_APP_CTX ? process.env.VUE_APP_CTX : ''}/bennu-admin`]: {
-          secure: false,
-          target: 'http://localhost:8080'
-        },
         [`${process.env.VUE_APP_CTX ? process.env.VUE_APP_CTX : ''}/connect`]: {
           secure: false,
           target: 'http://localhost:8080'
