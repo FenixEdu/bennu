@@ -9,13 +9,13 @@
           </router-link>
         </p>
         <h1 class="section-header__title">
-          {{ getDomainObjectName(domainObject) }} <span
+          {{ getDomainObjectName(domainObject) }} - {{ domainObject.oid }} <span
             v-for="modifier in domainObject.modifiers"
             :key="modifier"
             class="label"
           >{{ modifier }}</span>
         </h1>
-        <p><span class="label label--sm label--light label--outline object-id-label">{{ domainObject.oid }}</span> {{ domainObject.type }}</p>
+        <p>{{ domainObject.type }}</p>
       </div>
       <div class="section-header__meta">
         <form
@@ -59,6 +59,7 @@
           <p>
             <span class="h5 h5--ssp">{{ slot.name }}</span> - {{ slot.type }}
           </p>
+          <p>{{ slot.value || 'null' }}</p>
         </div>
       </div>
     </div>
@@ -121,6 +122,15 @@
           <p>
             <span class="h5 h5--ssp">{{ relationSet.name }}</span> - {{ relationSet.type }}
           </p>
+        </div>
+        <div class="card-row__meta">
+          <router-link
+            aria-hidden="true"
+            tabindex="-1"
+            :to="{ name: 'RelationSetPage', params: { domainObjectId: domainObject.oid, relationSetName: relationSet.name }}"
+          >
+            <span class="i-arrow-right" />
+          </router-link>
         </div>
       </div>
     </div>

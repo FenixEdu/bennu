@@ -48,8 +48,8 @@
                     <skip>${exec.skip}</skip>
                 </configuration>
                 <executions>
-                    <!-- The following will ensure `npm run clean:packages` is called
-                         before anything else during the pre-clean phase -->
+                     The following will ensure `npm run clean:packages` is called
+                         before anything else during the pre-clean phase
                     <execution>
                         <id>npm install (clean)</id>
                         <goals>
@@ -65,8 +65,8 @@
                             </arguments>
                         </configuration>
                     </execution>
-                    <!-- The following will ensure `npm install` is called
-                         before anything else during the initialize phase -->
+                    The following will ensure `npm install` is called
+                         before anything else during the initialize phase
                     <execution>
                         <id>npm install (initialize)</id>
                         <goals>
@@ -81,7 +81,7 @@
                             </arguments>
                         </configuration>
                     </execution>
-                    <!-- Required: The following builds the frontend and packages it -->
+                    Required: The following builds the frontend and packages it
                     <execution>
                         <id>npm run build (compile)</id>
                         <goals>
