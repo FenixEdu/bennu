@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.fenixedu</groupId>
-		<artifactId>fenixedu-project</artifactId>
-		<version>2.4.0</version>
+		<groupId>com.qubit.solution.fenixedu.build</groupId>
+		<artifactId>qub-fenixedu-project</artifactId>
+		<version>1.2.1</version>
 		<relativePath />
 	</parent>
 
@@ -16,7 +16,6 @@
 
 	<properties>
 		<code.generator.class>pt.ist.fenixframework.backend.jvstm.JVSTMCodeGenerator</code.generator.class>
-		<version.ff>2.7.0</version.ff>
 		<spring.version>4.2.5.RELEASE</spring.version>
 	</properties>
 
@@ -25,7 +24,6 @@
 			<plugin>
 				<groupId>pt.ist</groupId>
 				<artifactId>ff-maven-plugin</artifactId>
-				<version>${version.ff}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -42,7 +40,7 @@
 					<dependency>
 						<groupId>pt.ist</groupId>
 						<artifactId>fenix-framework-backend-jvstm-common-code-generator</artifactId>
-						<version>${version.ff}</version>
+						<version>${version.pt.ist.fenix.framework}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -62,7 +60,7 @@
 		<dependency>
 			<groupId>pt.ist</groupId>
 			<artifactId>fenix-framework-backend-jvstm-common-runtime</artifactId>
-			<version>${version.ff}</version>
+			<version>${version.pt.ist.fenix.framework}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
