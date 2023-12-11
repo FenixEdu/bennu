@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.qubit.solution.fenixedu.build</groupId>
-		<artifactId>qub-fenixedu-project</artifactId>
-		<version>1.2.1</version>
+		<groupId>org.fenixedu</groupId>
+		<artifactId>fenixedu-project</artifactId>
+		<version>2.4.0</version>
 		<relativePath />
 	</parent>
 
@@ -16,6 +16,7 @@
 
 	<properties>
 		<code.generator.class>pt.ist.fenixframework.backend.jvstm.JVSTMCodeGenerator</code.generator.class>
+		<version.ff>2.7.0</version.ff>
 		<spring.version>4.2.5.RELEASE</spring.version>
 	</properties>
 
@@ -24,6 +25,7 @@
 			<plugin>
 				<groupId>pt.ist</groupId>
 				<artifactId>ff-maven-plugin</artifactId>
+				<version>${version.ff}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -40,7 +42,7 @@
 					<dependency>
 						<groupId>pt.ist</groupId>
 						<artifactId>fenix-framework-backend-jvstm-common-code-generator</artifactId>
-						<version>${version.pt.ist.fenix.framework}</version>
+						<version>${version.ff}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -60,7 +62,7 @@
 		<dependency>
 			<groupId>pt.ist</groupId>
 			<artifactId>fenix-framework-backend-jvstm-common-runtime</artifactId>
-			<version>${version.pt.ist.fenix.framework}</version>
+			<version>${version.ff}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -135,16 +137,16 @@
 		</dependency>
 	</dependencies>
 
-	   <distributionManagement>
-                <repository>
-                        <id>qubIT-oss</id>
-                        <url>https://repository-oss.omnis.cloud/nexus/repository/releases/</url>
-                </repository>
-                <snapshotRepository>
-                        <id>qubIT-oss</id>
-                        <url>https://repository-oss.omnis.cloud/nexus/repository/snapshots/</url>
-                </snapshotRepository>
-     </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>qubIT-oss</id>
+			<url>https://repository-oss.omnis.cloud/nexus/repository/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>qubIT-oss</id>
+			<url>https://repository-oss.omnis.cloud/nexus/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<repositories>
 		<repository>
