@@ -11,10 +11,6 @@
     <artifactId>bennu-portal</artifactId>
     <name>Bennu Portal</name>
 
-    <properties>
-        <version.org.fenixedu.bennu.renderers>5.0.0</version.org.fenixedu.bennu.renderers>
-	</properties>
-
     <dependencies>
         <dependency>
             <groupId>org.fenixedu</groupId>
@@ -29,7 +25,6 @@
         <dependency>
             <groupId>org.fenixedu</groupId>
             <artifactId>bennu-renderers</artifactId>
-            <version>${version.org.fenixedu.bennu.renderers}</version>
         </dependency>
         <dependency>
             <groupId>org.fenixedu</groupId>
