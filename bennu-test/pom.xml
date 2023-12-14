@@ -16,7 +16,7 @@
 
 	<properties>
 		<code.generator.class>pt.ist.fenixframework.backend.jvstm.JVSTMCodeGenerator</code.generator.class>
-		<version.ff>2.7.0</version.ff>
+		<version.ff>3.0.0</version.ff>
 	</properties>
 
 	<build>
@@ -40,7 +40,7 @@
 				<dependencies>
 					<dependency>
 						<groupId>pt.ist</groupId>
-						<artifactId>fenix-framework-backend-jvstm-common-code-generator</artifactId>
+						<artifactId>fenix-framework-core</artifactId>
 						<version>${version.ff}</version>
 					</dependency>
 				</dependencies>
@@ -60,7 +60,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>pt.ist</groupId>
-			<artifactId>fenix-framework-backend-jvstm-common-runtime</artifactId>
+			<artifactId>fenix-framework-core</artifactId>
 			<version>${version.ff}</version>
 		</dependency>
 		<dependency>
