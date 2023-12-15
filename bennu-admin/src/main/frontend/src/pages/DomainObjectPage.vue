@@ -15,7 +15,7 @@
             class="label"
           >{{ modifier }}</span>
         </h1>
-        <p><span class="label label--sm label--light label--outline object-id-label">{{ domainObject.oid }}</span> {{ domainObject.type }}</p>
+        <p><span class="label label--sm label--light label--outline object-label">{{ domainObject.oid }}</span> {{ domainObject.type }}</p>
       </div>
       <div class="section-header__meta">
         <form
@@ -56,9 +56,24 @@
         class="card-row card-row--sm"
       >
         <div class="card-row__text">
-          <p>
-            <span class="h5 h5--ssp">{{ slot.name }}</span> - {{ slot.type }}
-          </p>
+          <text-area
+            v-if="slot.value"
+            class="slot-field"
+            variant="outlined"
+            :name="`${slot.name}-value`"
+            :label="slot.name"
+            :description="slot.type"
+            :value="slot.value"
+          />
+          <template v-else>
+            <p>
+              <span class="h5 h5--ssp">{{ slot.name }}</span> - {{ slot.type }} <span
+                v-for="modifier in slot.modifiers"
+                :key="modifier"
+                class="label label--sm object-label label--outline label--light"
+              >{{ modifier }}</span>
+            </p>
+          </template>
         </div>
       </div>
     </div>
@@ -129,8 +144,13 @@
 
 <script>
 import { guardWithErrorHandling } from '@/router/guards'
+import TextArea from '@/components/utils/fields/TextArea.vue'
+
 export default {
   name: 'DomainObjectPage',
+  components: {
+    TextArea
+  },
   beforeRouteUpdate: guardWithErrorHandling(async function (to, from, next) {
     this.$progress.set(10)
     await to.meta.beforeLoad(to, from)
@@ -192,13 +212,21 @@ export default {
         const location = { name: 'DomainObjectPage', params: { domainObjectId: this.searchInput } }
         this.$router.push(location)
       }
+    },
+    prettyJson (json) {
+      return JSON.stringify(JSON.parse(json), null, 2)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.object-id-label {
+.object-label {
   margin-right: 0.5rem;
+}
+
+.slot-field {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 </style>
