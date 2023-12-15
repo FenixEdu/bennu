@@ -20,6 +20,7 @@ import * as BennuCoreAPI from '@/api/bennu-core'
 // Pages
 const DomainBrowserPage = () => import('@/pages/DomainBrowserPage.vue')
 const DomainObjectPage = () => import('@/pages/DomainObjectPage.vue')
+const RelationSetPage = () => import('@/pages/RelationSetPage.vue')
 
 Vue.use(Router)
 
@@ -84,6 +85,29 @@ const router = new Router({
       }),
       beforeEnter: guardWithErrorHandling(async (to, from, next) => {
         await to.meta.beforeLoad(to, from)
+        next()
+      })
+    },
+    {
+      path: '/domain-browser/:domainObjectId/relation-set/:relationSetName',
+      name: 'RelationSetPage',
+      component: RelationSetPage,
+      meta: {
+        layout: 'PageWithNavBarAndFooterLayout'
+      },
+      props: route => ({
+        domainObject: route.meta.domainObject,
+        relationSet: route.meta.relationSet
+      }),
+      beforeEnter: guardWithErrorHandling(async (to, from, next) => {
+        const [domainObject, relationSet] = await Promise.all([
+          BennuCoreAPI.getDomainObject({ objectId: to.params.domainObjectId }),
+          BennuCoreAPI.getRelation({ objectId: to.params.domainObjectId, relationName: to.params.relationSetName })
+        ])
+
+        to.meta.domainObject = domainObject
+        to.meta.relationSet = relationSet
+
         next()
       })
     },
