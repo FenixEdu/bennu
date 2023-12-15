@@ -1,0 +1,138 @@
+package org.fenixedu.bennuAdmin.ui;
+
+import com.google.gson.JsonObject;
+import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennuAdmin.util.BennuAdminError;
+import org.fenixedu.bennuAdmin.util.DomainObjectUtils;
+import org.fenixedu.commons.StringNormalizer;
+import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.connect.ui.AccountController;
+import org.fenixedu.connect.ui.BaseController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.dml.DomainClass;
+import pt.ist.fenixframework.dml.Slot;
+
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.fenixedu.bennu.spring.BaseController.respond;
+import static org.fenixedu.bennu.spring.BaseController.respondPagination;
+
+@RestController
+@RequestMapping("/bennu-admin")
+public class BennuAdminController {
+    private static final String ACCESS_TOKEN_COOKIE = AccountController.ACCESS_TOKEN_COOKIE;
+
+    @ExceptionHandler({BennuAdminError.class})
+    public ResponseEntity<?> handleConnectError(final BennuAdminError error) {
+        return ResponseEntity.status(error.status).body(error.getMessage());
+    }
+
+    public static <T> ResponseEntity<?> ok(final BiConsumer<JsonObject, T> consumer, final T object) {
+        return BaseController.ok(data -> consumer.accept(data, object));
+    }
+
+    public static <T> ResponseEntity<?> ok(final BiConsumer<JsonObject, T> consumer, final Stream<T> stream) {
+        return ok(consumer, stream.collect(Collectors.toSet()));
+    }
+
+    public static <T> ResponseEntity<?> ok(final BiConsumer<JsonObject, T> consumer, final Set<T> set) {
+        return BaseController.ok(Schema.toJson(consumer, set));
+    }
+
+    private void requireGroup(Group group) {
+        if (!group.isMember(Authenticate.getUser())) {
+            throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
+        }
+    }
+
+    @RequestMapping(value = "/domain-objects/{objectId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getDomainObject(final @PathVariable String objectId) {
+        requireGroup(Group.managers());
+        DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+        if (!FenixFramework.isDomainObjectValid(domainObject)) {
+            throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
+        }
+        return ok(Schema.DOMAIN_OBJECT, domainObject);
+    }
+
+    @RequestMapping(value = "/domain-objects/{objectId}/slots", method = RequestMethod.GET)
+    public ResponseEntity<?> domainObjectSlots(final @PathVariable String objectId,
+                                                   final @RequestParam(required = false) String query,
+                                                   final @RequestParam(required = false) Long skip,
+                                                   final @RequestParam(required = false) Long limit) {
+        requireGroup(Group.managers());
+
+        DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+        if (!FenixFramework.isDomainObjectValid(domainObject)) {
+            throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
+        }
+
+        DomainClass domClass = FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+
+        Set<Slot> slots = new HashSet<>();
+        for (DomainClass dc = domClass; dc != null; dc = (DomainClass) dc.getSuperclass()) {
+            slots.addAll(dc.getSlotsList());
+        }
+
+        return search(query, skip, limit, slots.stream(),
+                (slot) -> new LocalizedString(Locale.forLanguageTag("pt-PT"), slotString(slot, domainObject)),
+                Comparator.comparing(Slot::getName),
+                Schema.DOMAIN_OBJECT_SLOT
+        );
+    }
+
+    private String slotString(final Slot slot, final DomainObject domainObject) {
+        return String.format("%s %s %s", slot.getName(), slot.getSlotType().getFullname(), DomainObjectUtils.getSlotValue(domainObject, slot));
+    }
+
+    private <T> boolean match(final Function<T, LocalizedString> toString, final T t, final String[] tokens) {
+        return tokens == null || tokens.length == 0 || match(toString.apply(t), tokens);
+    }
+
+    private String normalize(final String string) {
+        return string == null ? null : StringNormalizer.normalizeAndRemoveAccents(string).toLowerCase();
+    }
+
+    private boolean match(final LocalizedString localizedString, final String[] tokens) {
+        final String string = localizedString == null ? null : normalize(localizedString.getContent());
+        return string != null && Arrays.stream(tokens).allMatch(string::contains);
+    }
+
+    public <T> ResponseEntity<?> paginate(final Long skip,
+                                          final Long limit,
+                                          final Stream<T> stream,
+                                          final Comparator<T> comparator,
+                                          final BiConsumer<JsonObject, T> consumer) {
+        final List<T> list = stream.sorted(comparator).collect(Collectors.toList());
+        return skip == null || limit == null
+                ? respond(list.stream().map(t -> Schema.toJson(consumer, t)))
+                : respondPagination(skip, limit, list, t -> Schema.toJson(consumer, t));
+    }
+
+    public <T> ResponseEntity<?> search(final String query,
+                                        final Long skip,
+                                        final Long limit,
+                                        final Stream<T> stream,
+                                        final Function<T, LocalizedString> toString,
+                                        final Comparator<T> comparator,
+                                        final BiConsumer<JsonObject, T> consumer) {
+        final String normalizedQuery = normalize(query);
+        final String[] tokens = normalizedQuery == null ? null : normalizedQuery.split(" ");
+        final List<T> list = stream
+                .filter(t -> match(toString, t, tokens))
+                .sorted(comparator)
+                .collect(Collectors.toList());
+        return skip == null || limit == null
+                ? respond(list.stream().map(t -> Schema.toJson(consumer, t)))
+                : respondPagination(skip, limit, list, t -> Schema.toJson(consumer, t));
+    }
+}

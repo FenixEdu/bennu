@@ -1,0 +1,45 @@
+# Class files #
+*.class
+
+# Package files #
+*.jar
+*.war
+*.ear
+
+# Maven #
+target/
+bin/
+**/src/main/webapp/fenixedu-smart-flow
+**/src/main/webapp/fenixedu-smart-forms
+**/src/main/webapp/fenixedu-ist-paper-pusher
+.DS_Store
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+test/unit/coverage
+test/e2e/reports
+selenium-debug.log
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.settings
+.classpath
+.factorypath
+.project
+.settings/
+.idea/
+*.iml
+
+# Analysis #
+**/src/main/frontend/build/analysis.json
+/.metadata/
+**/src/main/frontend/webpack-bundle-report.html
+
+

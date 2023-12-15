@@ -15,11 +15,7 @@
             class="label"
           >{{ modifier }}</span>
         </h1>
-        <<<<<<< HEAD
-        <p><span class="label label--sm label--light label--outline object-label">{{ domainObject.oid }}</span> {{ domainObject.type }}</p>
-        =======
         <p>{{ domainObject.type }}</p>
-        >>>>>>> 0a291ba86436c4d3326e6c6b76b8f432c5d8b858
       </div>
       <div class="section-header__meta">
         <form

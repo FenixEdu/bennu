@@ -4,43 +4,73 @@
 
     <parent>
         <groupId>org.fenixedu</groupId>
-        <artifactId>web-library-project</artifactId>
-        <version>3.0.0-beta1</version>
-        <relativePath />
+        <artifactId>bennu</artifactId>
+        <version>DEV-SNAPSHOT</version>
     </parent>
 
     <artifactId>bennu-admin</artifactId>
-    <version>DEV-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>Bennu Admin</name>
+
+    <properties>
+        <version.org.apache.poi>3.17</version.org.apache.poi>
+        <version.org.fenixedu.bennu>7.3.0</version.org.fenixedu.bennu>
+        <version.org.fenixedu.bennu.vue.pluggable>1.0.0</version.org.fenixedu.bennu.vue.pluggable>
+        <version.org.fenixedu.fenixedu-connect>2.3.4</version.org.fenixedu.fenixedu-connect>
+        <version.org.fenixedu.fenixedu-queueing>3.2.0</version.org.fenixedu.fenixedu-queueing>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${version.org.apache.poi}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${version.org.apache.poi}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>bennu-core</artifactId>
+            <version>${version.org.fenixedu.bennu}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>bennu-portal</artifactId>
+            <version>${version.org.fenixedu.bennu}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>bennu-search</artifactId>
+            <version>${version.org.fenixedu.bennu}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>bennu-spring</artifactId>
+            <version>${version.org.fenixedu.bennu}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>bennu-vue-pluggable</artifactId>
+            <version>${version.org.fenixedu.bennu.vue.pluggable}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>fenixedu-connect</artifactId>
+            <version>${version.org.fenixedu.fenixedu-connect}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fenixedu</groupId>
+            <artifactId>fenixedu-queueing</artifactId>
+            <version>${version.org.fenixedu.fenixedu-queueing}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.samaxes.maven</groupId>
-                <artifactId>minify-maven-plugin</artifactId>
-                <version>1.7.4</version>
-                <executions>
-                    <execution>
-                        <id>toolkit</id>
-                        <phase>compile</phase>
-                        <configuration>
-                            <jsSourceDir>bennu-admin/js</jsSourceDir>
-                            <jsSourceFiles>
-                                <jsSourceFile>app.js</jsSourceFile>
-                            </jsSourceFiles>
-                            <webappTargetDir>${project.build.outputDirectory}/META-INF/resources/</webappTargetDir>
-                            <jsFinalFile>app.js</jsFinalFile>
-                            <jsEngine>CLOSURE</jsEngine>
-                            <nosuffix>true</nosuffix>
-                        </configuration>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- TODO: fix new frontend build process: currently erases old frontend -->
-            <!-- <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.3.2</version>
@@ -48,8 +78,8 @@
                     <skip>${exec.skip}</skip>
                 </configuration>
                 <executions>
-                     The following will ensure `npm run clean:packages` is called
-                         before anything else during the pre-clean phase
+                    <!-- The following will ensure `npm run clean:packages` is called
+                         before anything else during the pre-clean phase -->
                     <execution>
                         <id>npm install (clean)</id>
                         <goals>
@@ -65,8 +95,8 @@
                             </arguments>
                         </configuration>
                     </execution>
-                    The following will ensure `npm install` is called
-                         before anything else during the initialize phase
+                    <!-- The following will ensure `npm install` is called
+                         before anything else during the initialize phase -->
                     <execution>
                         <id>npm install (initialize)</id>
                         <goals>
@@ -81,7 +111,7 @@
                             </arguments>
                         </configuration>
                     </execution>
-                    Required: The following builds the frontend and packages it
+                    <!-- Required: The following builds the frontend and packages it -->
                     <execution>
                         <id>npm run build (compile)</id>
                         <goals>
@@ -98,7 +128,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin> -->
+            </plugin>
         </plugins>
     </build>
 
@@ -108,4 +138,11 @@
             <url>https://repo.fenixedu.org/fenixedu-maven-repository</url>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>dsi-maven-artifacts</id>
+            <url>https://fenix-ashes.ist.utl.pt/nexus/repository/dsi-private-repo</url>
+        </repository>
+    </distributionManagement>
 </project>

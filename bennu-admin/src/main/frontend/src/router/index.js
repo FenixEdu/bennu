@@ -16,6 +16,7 @@ import ErrorPage from '@/pages/ErrorPage'
 // import { getPageAndSectionFromHash, scrollOffset as DynamicFormScrollOffset, scrollBehavior as DynamicFormScrollBehavior } from '@/components/dynamic-form/utils/navigation'
 // import { getMeta } from '@/router/utils'
 import * as BennuCoreAPI from '@/api/bennu-core'
+import * as BennuAdminAPI from '@/api/bennu-admin'
 
 // Pages
 const DomainBrowserPage = () => import('@/pages/DomainBrowserPage.vue')
@@ -77,6 +78,10 @@ const router = new Router({
         layout: 'PageWithNavBarAndFooterLayout',
         async beforeLoad (to, from) {
           const domainObject = await BennuCoreAPI.getDomainObject({ objectId: to.params.domainObjectId })
+
+          const domainNew = await BennuAdminAPI.getDomainObject({ objectId: to.params.domainObjectId })
+          console.log({ domainNew })
+
           to.meta.domainObject = domainObject
         }
       },
