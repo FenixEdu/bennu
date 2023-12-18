@@ -58,7 +58,7 @@ public class BennuAdminController {
 
   @RequestMapping(value = "/health-check", method = RequestMethod.GET)
   public ResponseEntity<?> healthCheck() {
-    return ok((data, o) -> {}, "OK");
+    return ResponseEntity.ok("OK");
   }
 
   @RequestMapping(value = "/domain-objects/{objectId}", method = RequestMethod.GET)

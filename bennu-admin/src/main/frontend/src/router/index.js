@@ -52,7 +52,7 @@ const ScrollBehavior = {
 
 const router = new Router({
   mode: 'history',
-  base: `${process.env.CTX && !process.env.DEV ? '/' + process.env.CTX : ''}/bennu-admin`,
+  base: `${process.env.CTX && !process.env.DEV ? '/' + process.env.CTX : ''}/fenixedu-bennu-admin`,
   routes: [
     {
       path: '/',
