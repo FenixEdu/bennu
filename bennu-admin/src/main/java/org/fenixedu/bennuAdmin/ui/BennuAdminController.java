@@ -29,110 +29,135 @@ import static org.fenixedu.bennu.spring.BaseController.respondPagination;
 @RestController
 @RequestMapping("/bennu-admin")
 public class BennuAdminController {
-    private static final String ACCESS_TOKEN_COOKIE = AccountController.ACCESS_TOKEN_COOKIE;
+  private static final String ACCESS_TOKEN_COOKIE = AccountController.ACCESS_TOKEN_COOKIE;
 
-    @ExceptionHandler({BennuAdminError.class})
-    public ResponseEntity<?> handleConnectError(final BennuAdminError error) {
-        return ResponseEntity.status(error.status).body(error.getMessage());
+  @ExceptionHandler({BennuAdminError.class})
+  public ResponseEntity<?> handleConnectError(final BennuAdminError error) {
+    return ResponseEntity.status(error.status).body(error.getMessage());
+  }
+
+  public static <T> ResponseEntity<?> ok(final BiConsumer<JsonObject, T> consumer, final T object) {
+    return BaseController.ok(data -> consumer.accept(data, object));
+  }
+
+  public static <T> ResponseEntity<?> ok(
+      final BiConsumer<JsonObject, T> consumer, final Stream<T> stream) {
+    return ok(consumer, stream.collect(Collectors.toSet()));
+  }
+
+  public static <T> ResponseEntity<?> ok(
+      final BiConsumer<JsonObject, T> consumer, final Set<T> set) {
+    return BaseController.ok(Schema.toJson(consumer, set));
+  }
+
+  private void requireGroup(Group group) {
+    if (!group.isMember(Authenticate.getUser())) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
+    }
+  }
+
+  @RequestMapping(value = "/health-check", method = RequestMethod.GET)
+  public ResponseEntity<?> healthCheck() {
+    return ok((data, o) -> {}, "OK");
+  }
+
+  @RequestMapping(value = "/domain-objects/{objectId}", method = RequestMethod.GET)
+  public ResponseEntity<?> getDomainObject(final @PathVariable String objectId) {
+    requireGroup(Group.managers());
+    DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+    if (!FenixFramework.isDomainObjectValid(domainObject)) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
+    }
+    return ok(Schema.DOMAIN_OBJECT, domainObject);
+  }
+
+  @RequestMapping(value = "/domain-objects/{objectId}/slots", method = RequestMethod.GET)
+  public ResponseEntity<?> domainObjectSlots(
+      final @PathVariable String objectId,
+      final @RequestParam(required = false) String query,
+      final @RequestParam(required = false) Long skip,
+      final @RequestParam(required = false) Long limit) {
+    requireGroup(Group.managers());
+
+    DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+    if (!FenixFramework.isDomainObjectValid(domainObject)) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
     }
 
-    public static <T> ResponseEntity<?> ok(final BiConsumer<JsonObject, T> consumer, final T object) {
-        return BaseController.ok(data -> consumer.accept(data, object));
+    DomainClass domClass =
+        FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+
+    Set<Slot> slots = new HashSet<>();
+    for (DomainClass dc = domClass; dc != null; dc = (DomainClass) dc.getSuperclass()) {
+      slots.addAll(dc.getSlotsList());
     }
 
-    public static <T> ResponseEntity<?> ok(final BiConsumer<JsonObject, T> consumer, final Stream<T> stream) {
-        return ok(consumer, stream.collect(Collectors.toSet()));
-    }
+    return search(
+        query,
+        skip,
+        limit,
+        slots.stream(),
+        (slot) -> getLocalizedString(slotString(slot, domainObject)),
+        Comparator.comparing(Slot::getName),
+        Schema.DOMAIN_OBJECT_SLOT);
+  }
 
-    public static <T> ResponseEntity<?> ok(final BiConsumer<JsonObject, T> consumer, final Set<T> set) {
-        return BaseController.ok(Schema.toJson(consumer, set));
-    }
+  private String slotString(final Slot slot, final DomainObject domainObject) {
+    return String.format(
+        "%s %s %s",
+        slot.getName(),
+        slot.getSlotType().getFullname(),
+        DomainObjectUtils.getSlotValue(domainObject, slot));
+  }
 
-    private void requireGroup(Group group) {
-        if (!group.isMember(Authenticate.getUser())) {
-            throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
-        }
-    }
+  private <T> boolean match(
+      final Function<T, LocalizedString> toString, final T t, final String[] tokens) {
+    return tokens == null || tokens.length == 0 || match(toString.apply(t), tokens);
+  }
 
-    @RequestMapping(value = "/domain-objects/{objectId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getDomainObject(final @PathVariable String objectId) {
-        requireGroup(Group.managers());
-        DomainObject domainObject = FenixFramework.getDomainObject(objectId);
-        if (!FenixFramework.isDomainObjectValid(domainObject)) {
-            throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
-        }
-        return ok(Schema.DOMAIN_OBJECT, domainObject);
-    }
+  private String normalize(final String string) {
+    return string == null ? null : StringNormalizer.normalizeAndRemoveAccents(string).toLowerCase();
+  }
 
-    @RequestMapping(value = "/domain-objects/{objectId}/slots", method = RequestMethod.GET)
-    public ResponseEntity<?> domainObjectSlots(final @PathVariable String objectId,
-                                                   final @RequestParam(required = false) String query,
-                                                   final @RequestParam(required = false) Long skip,
-                                                   final @RequestParam(required = false) Long limit) {
-        requireGroup(Group.managers());
+  private boolean match(final LocalizedString localizedString, final String[] tokens) {
+    final String string = localizedString == null ? null : normalize(localizedString.getContent());
+    return string != null && Arrays.stream(tokens).allMatch(string::contains);
+  }
 
-        DomainObject domainObject = FenixFramework.getDomainObject(objectId);
-        if (!FenixFramework.isDomainObjectValid(domainObject)) {
-            throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
-        }
+  public <T> ResponseEntity<?> paginate(
+      final Long skip,
+      final Long limit,
+      final Stream<T> stream,
+      final Comparator<T> comparator,
+      final BiConsumer<JsonObject, T> consumer) {
+    final List<T> list = stream.sorted(comparator).collect(Collectors.toList());
+    return skip == null || limit == null
+        ? respond(list.stream().map(t -> Schema.toJson(consumer, t)))
+        : respondPagination(skip, limit, list, t -> Schema.toJson(consumer, t));
+  }
 
-        DomainClass domClass = FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+  public <T> ResponseEntity<?> search(
+      final String query,
+      final Long skip,
+      final Long limit,
+      final Stream<T> stream,
+      final Function<T, LocalizedString> toString,
+      final Comparator<T> comparator,
+      final BiConsumer<JsonObject, T> consumer) {
+    final String normalizedQuery = normalize(query);
+    final String[] tokens = normalizedQuery == null ? null : normalizedQuery.split(" ");
+    final List<T> list =
+        stream
+            .filter(t -> match(toString, t, tokens))
+            .sorted(comparator)
+            .collect(Collectors.toList());
+    return skip == null || limit == null
+        ? respond(list.stream().map(t -> Schema.toJson(consumer, t)))
+        : respondPagination(skip, limit, list, t -> Schema.toJson(consumer, t));
+  }
 
-        Set<Slot> slots = new HashSet<>();
-        for (DomainClass dc = domClass; dc != null; dc = (DomainClass) dc.getSuperclass()) {
-            slots.addAll(dc.getSlotsList());
-        }
-
-        return search(query, skip, limit, slots.stream(),
-                (slot) -> new LocalizedString(Locale.forLanguageTag("pt-PT"), slotString(slot, domainObject)),
-                Comparator.comparing(Slot::getName),
-                Schema.DOMAIN_OBJECT_SLOT
-        );
-    }
-
-    private String slotString(final Slot slot, final DomainObject domainObject) {
-        return String.format("%s %s %s", slot.getName(), slot.getSlotType().getFullname(), DomainObjectUtils.getSlotValue(domainObject, slot));
-    }
-
-    private <T> boolean match(final Function<T, LocalizedString> toString, final T t, final String[] tokens) {
-        return tokens == null || tokens.length == 0 || match(toString.apply(t), tokens);
-    }
-
-    private String normalize(final String string) {
-        return string == null ? null : StringNormalizer.normalizeAndRemoveAccents(string).toLowerCase();
-    }
-
-    private boolean match(final LocalizedString localizedString, final String[] tokens) {
-        final String string = localizedString == null ? null : normalize(localizedString.getContent());
-        return string != null && Arrays.stream(tokens).allMatch(string::contains);
-    }
-
-    public <T> ResponseEntity<?> paginate(final Long skip,
-                                          final Long limit,
-                                          final Stream<T> stream,
-                                          final Comparator<T> comparator,
-                                          final BiConsumer<JsonObject, T> consumer) {
-        final List<T> list = stream.sorted(comparator).collect(Collectors.toList());
-        return skip == null || limit == null
-                ? respond(list.stream().map(t -> Schema.toJson(consumer, t)))
-                : respondPagination(skip, limit, list, t -> Schema.toJson(consumer, t));
-    }
-
-    public <T> ResponseEntity<?> search(final String query,
-                                        final Long skip,
-                                        final Long limit,
-                                        final Stream<T> stream,
-                                        final Function<T, LocalizedString> toString,
-                                        final Comparator<T> comparator,
-                                        final BiConsumer<JsonObject, T> consumer) {
-        final String normalizedQuery = normalize(query);
-        final String[] tokens = normalizedQuery == null ? null : normalizedQuery.split(" ");
-        final List<T> list = stream
-                .filter(t -> match(toString, t, tokens))
-                .sorted(comparator)
-                .collect(Collectors.toList());
-        return skip == null || limit == null
-                ? respond(list.stream().map(t -> Schema.toJson(consumer, t)))
-                : respondPagination(skip, limit, list, t -> Schema.toJson(consumer, t));
-    }
+  private LocalizedString getLocalizedString(final String content) {
+    return new LocalizedString(Locale.forLanguageTag("pt-PT"), content)
+        .with(Locale.forLanguageTag("en-US"), content);
+  }
 }

@@ -2,10 +2,10 @@ package org.fenixedu.bennu.core.api;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response.Status;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 
+import org.fenixedu.commons.StringNormalizer;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.ValueTypeSerializer;
@@ -275,4 +276,27 @@ public class DomainBrowserResource extends BennuRestResource {
         return result;
     }
 
+    private boolean match(String value, String query) {
+        final String[] queryStrings = query.split(" ");
+        return value != null && Stream.of(queryStrings).allMatch(value::contains);
+    }
+
+    private <T> boolean matchQuery(final Function<T, String> toString, final T t, final String query) {
+        return query == null || query.isEmpty() || match(toString.apply(t), query);
+    }
+
+    private <T> Stream<T> search(String query, Long skip, Long limit, Stream<T> stream, final Function<T, String> toString, final Comparator<T> comparator, final BiConsumer<JsonObject, T> consumer) {
+        final String normalizedQuery = query == null ? null : StringNormalizer.normalizeAndRemoveAccents(query);
+
+        final List<T> list = stream
+                .filter(t -> matchQuery(toString, t, normalizedQuery))
+                .sorted(comparator)
+                .toList();
+
+        if (skip == null || limit == null) {
+            return list.stream();
+        }
+
+        return list.stream().skip(skip).limit(limit);
+    }
 }
