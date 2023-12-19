@@ -2,12 +2,43 @@ import client from './client'
 
 const BASE_URL = '/bennu-admin'
 
-export async function healthCheck () {
-  const response = await client.get(`${BASE_URL}/health-check`)
+export async function getDomainObject ({ objectId }) {
+  const response = await client.get(`${BASE_URL}/domain-objects/${objectId}`)
   return response.data
 }
 
-export async function getDomainObject ({ objectId }) {
-  const response = await client.get(`${BASE_URL}/domain-objects/${objectId}`)
+export async function listDomainObjectSlots ({ objectId, query, page, perPage } = {}) {
+  const params = {
+    ...(query && { query }),
+    ...(perPage !== undefined && page !== undefined && { skip: (page - 1) * perPage, limit: perPage })
+  }
+  const response = await client.get(`${BASE_URL}/domain-objects/${objectId}/slots`, { params })
+  return response.data
+}
+
+export async function listDomainObjectRoles ({ objectId, query, page, perPage } = {}) {
+  const params = {
+    ...(query && { query }),
+    ...(perPage !== undefined && page !== undefined && { skip: (page - 1) * perPage, limit: perPage })
+  }
+  const response = await client.get(`${BASE_URL}/domain-objects/${objectId}/roles`, { params })
+  return response.data
+}
+
+export async function listDomainObjectRoleSets ({ objectId, query, page, perPage } = {}) {
+  const params = {
+    ...(query && { query }),
+    ...(perPage !== undefined && page !== undefined && { skip: (page - 1) * perPage, limit: perPage })
+  }
+  const response = await client.get(`${BASE_URL}/domain-objects/${objectId}/role-sets`, { params })
+  return response.data
+}
+
+export async function getDomainObjectRoleSet ({ objectId, roleSetName, query, page, perPage } = {}) {
+  const params = {
+    ...(query && { query }),
+    ...(perPage !== undefined && page !== undefined && { skip: (page - 1) * perPage, limit: perPage })
+  }
+  const response = await client.get(`${BASE_URL}/domain-objects/${objectId}/role-sets/${roleSetName}`, { params })
   return response.data
 }

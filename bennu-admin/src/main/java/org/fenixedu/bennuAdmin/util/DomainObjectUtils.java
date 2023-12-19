@@ -109,4 +109,16 @@ public class DomainObjectUtils {
     }
     return null;
   }
+
+  public static Set<DomainObject> getRelationSet(final DomainObject domainObject, final Role role) {
+    final Method method = getMethod(domainObject, role.getName() + "Set");
+    if (method != null) {
+      try {
+        return (Set<DomainObject>) method.invoke(domainObject);
+      } catch (final Exception e) {
+        return null;
+      }
+    }
+    return null;
+  }
 }

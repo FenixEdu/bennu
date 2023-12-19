@@ -15,17 +15,18 @@ import ErrorPage from '@/pages/ErrorPage'
 // Utils
 // import { getPageAndSectionFromHash, scrollOffset as DynamicFormScrollOffset, scrollBehavior as DynamicFormScrollBehavior } from '@/components/dynamic-form/utils/navigation'
 // import { getMeta } from '@/router/utils'
-import * as BennuCoreAPI from '@/api/bennu-core'
-// import * as BennuAdminAPI from '@/api/bennu-admin'
+import * as BennuAdminAPI from '@/api/bennu-admin'
 
 // Pages
 const DomainBrowserPage = () => import('@/pages/DomainBrowserPage.vue')
 const DomainObjectPage = () => import('@/pages/DomainObjectPage.vue')
-const RelationSetPage = () => import('@/pages/RelationSetPage.vue')
+const DomainObjectRoleSetPage = () => import('@/pages/DomainObjectRoleSetPage.vue')
+const DomainObjectSlotsTab = () => import('@/pages/DomainObjectSlotsTab.vue')
+const DomainObjectRolesTab = () => import('@/pages/DomainObjectRolesTab.vue')
+const DomainObjectRoleSetsTab = () => import('@/pages/DomainObjectRoleSetsTab.vue')
 
 Vue.use(Router)
 
-// eslint-disable-next-line no-unused-vars
 const ScrollBehavior = {
   savePosition ({ sameRoute = true, differentRoute = false }) {
     return function (to, from, savedPosition) {
@@ -74,11 +75,11 @@ const router = new Router({
       path: '/domain-browser/:domainObjectId',
       name: 'DomainObjectPage',
       component: DomainObjectPage,
+      redirect: { name: 'DomainObjectSlotsTab' },
       meta: {
         layout: 'PageWithNavBarAndFooterLayout',
         async beforeLoad (to, from) {
-          const domainObject = await BennuCoreAPI.getDomainObject({ objectId: to.params.domainObjectId })
-
+          const domainObject = await BennuAdminAPI.getDomainObject({ objectId: to.params.domainObjectId })
           to.meta.domainObject = domainObject
         }
       },
@@ -88,23 +89,135 @@ const router = new Router({
       beforeEnter: guardWithErrorHandling(async (to, from, next) => {
         await to.meta.beforeLoad(to, from)
         next()
-      })
+      }),
+      children: [
+        {
+          path: 'slots',
+          name: 'DomainObjectSlotsTab',
+          component: DomainObjectSlotsTab,
+          meta: {
+            scrollBehavior: ScrollBehavior.tabs(),
+            async beforeLoad (to, from) {
+              to.meta.page = Number(to.query.page) || 1
+              to.meta.perPage = 10
+
+              const domainObjectSlots = await BennuAdminAPI.listDomainObjectSlots({
+                objectId: to.params.domainObjectId,
+                query: to.query.q,
+                page: to.meta.page,
+                perPage: to.meta.perPage
+              })
+
+              to.meta.domainObjectSlots = domainObjectSlots
+            }
+          },
+          props: (route) => ({
+            query: route.query.q,
+            page: route.query.page,
+            perPage: route.query.perPage,
+            domainObject: route.meta.domainObject,
+            domainObjectSlots: route.meta.domainObjectSlots
+          }),
+          beforeEnter: guardWithErrorHandling(async (to, from, next) => {
+            await to.meta.beforeLoad(to, from)
+            next()
+          })
+        },
+        {
+          path: 'roles',
+          name: 'DomainObjectRolesTab',
+          component: DomainObjectRolesTab,
+          meta: {
+            scrollBehavior: ScrollBehavior.tabs(),
+            async beforeLoad (to, from) {
+              to.meta.page = Number(to.query.page) || 1
+              to.meta.perPage = 10
+
+              const domainObjectRoles = await BennuAdminAPI.listDomainObjectRoles({
+                objectId: to.params.domainObjectId,
+                query: to.query.q,
+                page: to.meta.page,
+                perPage: to.meta.perPage
+              })
+
+              to.meta.domainObjectRoles = domainObjectRoles
+            }
+          },
+          props: (route) => ({
+            query: route.query.q,
+            page: route.query.page,
+            perPage: route.query.perPage,
+            domainObject: route.meta.domainObject,
+            domainObjectRoles: route.meta.domainObjectRoles
+          }),
+          beforeEnter: guardWithErrorHandling(async (to, from, next) => {
+            await to.meta.beforeLoad(to, from)
+            next()
+          })
+        },
+        {
+          path: 'role-sets',
+          name: 'DomainObjectRoleSetsTab',
+          component: DomainObjectRoleSetsTab,
+          meta: {
+            scrollBehavior: ScrollBehavior.tabs(),
+            async beforeLoad (to, from) {
+              to.meta.page = Number(to.query.page) || 1
+              to.meta.perPage = 10
+
+              const domainObjectRoleSets = await BennuAdminAPI.listDomainObjectRoleSets({
+                objectId: to.params.domainObjectId,
+                query: to.query.q,
+                page: to.meta.page,
+                perPage: to.meta.perPage
+              })
+
+              to.meta.domainObjectRoleSets = domainObjectRoleSets
+            }
+          },
+          props: (route) => ({
+            query: route.query.q,
+            page: route.query.page,
+            perPage: route.query.perPage,
+            domainObject: route.meta.domainObject,
+            domainObjectRoleSets: route.meta.domainObjectRoleSets
+          }),
+          beforeEnter: guardWithErrorHandling(async (to, from, next) => {
+            await to.meta.beforeLoad(to, from)
+            next()
+          })
+        }
+      ]
     },
     {
-      path: '/domain-browser/:domainObjectId/relation-set/:relationSetName',
-      name: 'RelationSetPage',
-      component: RelationSetPage,
+      path: '/domain-browser/:domainObjectId/role-set/:roleSetName',
+      name: 'DomainObjectRoleSetPage',
+      component: DomainObjectRoleSetPage,
       meta: {
         layout: 'PageWithNavBarAndFooterLayout'
       },
       props: route => ({
+        query: route.query.q,
+        page: route.query.page,
+        perPage: route.query.perPage,
         domainObject: route.meta.domainObject,
         relationSet: route.meta.relationSet
       }),
       beforeEnter: guardWithErrorHandling(async (to, from, next) => {
+        const page = Number(to.query.page) || 1
+        const perPage = 10
+
         const [domainObject, relationSet] = await Promise.all([
-          BennuCoreAPI.getDomainObject({ objectId: to.params.domainObjectId }),
-          BennuCoreAPI.getRelation({ objectId: to.params.domainObjectId, relationName: to.params.relationSetName })
+          BennuAdminAPI.getDomainObject({
+            objectId: to.params.domainObjectId
+          }),
+          BennuAdminAPI.getDomainObjectRoleSet({
+            objectId: to.params.domainObjectId,
+            roleSetName: to.params.relationSetName,
+            query: to.query.q,
+            page,
+            perPage
+          })
         ])
 
         to.meta.domainObject = domainObject
