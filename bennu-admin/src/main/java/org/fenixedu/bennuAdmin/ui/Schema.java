@@ -47,6 +47,7 @@ public class Schema {
 
   public static BiConsumer<JsonObject, Role> DOMAIN_OBJECT_ROLE(DomainObject domainObject) {
     return (data, role) -> {
+      // Todo: finish
       data.addProperty("name", role.getName());
     };
   }
