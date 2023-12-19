@@ -1,6 +1,8 @@
 package org.fenixedu.bennuAdmin.ui;
 
 import com.google.gson.JsonObject;
+import com.twilio.rest.api.v2010.account.sip.Domain;
+import jvstm.util.Pair;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennuAdmin.util.BennuAdminError;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.dml.DomainClass;
+import pt.ist.fenixframework.dml.Role;
 import pt.ist.fenixframework.dml.Slot;
 
 import java.util.*;
@@ -56,11 +59,6 @@ public class BennuAdminController {
     }
   }
 
-  @RequestMapping(value = "/health-check", method = RequestMethod.GET)
-  public ResponseEntity<?> healthCheck() {
-    return ResponseEntity.ok("OK");
-  }
-
   @RequestMapping(value = "/domain-objects/{objectId}", method = RequestMethod.GET)
   public ResponseEntity<?> getDomainObject(final @PathVariable String objectId) {
     requireGroup(Group.managers());
@@ -84,30 +82,60 @@ public class BennuAdminController {
       throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
     }
 
-    DomainClass domClass =
-        FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
-
-    Set<Slot> slots = new HashSet<>();
-    for (DomainClass dc = domClass; dc != null; dc = (DomainClass) dc.getSuperclass()) {
-      slots.addAll(dc.getSlotsList());
-    }
+    Set<Slot> slots = DomainObjectUtils.getDomainObjectSlots(domainObject);
 
     return search(
         query,
         skip,
         limit,
         slots.stream(),
-        (slot) -> getLocalizedString(slotString(slot, domainObject)),
+        (slot) -> getLocalizedString(slotQueryString(slot, domainObject)),
         Comparator.comparing(Slot::getName),
-        Schema.DOMAIN_OBJECT_SLOT);
+        Schema.DOMAIN_OBJECT_SLOT(domainObject));
   }
 
-  private String slotString(final Slot slot, final DomainObject domainObject) {
+  @RequestMapping(value = "/domain-objects/{objectId}/roles", method = RequestMethod.GET)
+  public ResponseEntity<?> domainObjectRoles(
+      final @PathVariable String objectId,
+      final @RequestParam(required = false) String query,
+      final @RequestParam(required = false) Long skip,
+      final @RequestParam(required = false) Long limit) {
+    requireGroup(Group.managers());
+
+    DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+    if (!FenixFramework.isDomainObjectValid(domainObject)) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
+    }
+
+    DomainClass domClass =
+        FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+
+    Set<Role> roles = DomainObjectUtils.getRoles(domClass, true);
+
+    return search(
+        query,
+        skip,
+        limit,
+        roles.stream(),
+        (role) -> getLocalizedString(roleQueryString(role, domainObject)),
+        Comparator.comparing(Role::getName),
+        Schema.DOMAIN_OBJECT_ROLE(domainObject));
+  }
+
+  private String slotQueryString(final Slot slot, final DomainObject domainObject) {
     return String.format(
         "%s %s %s",
         slot.getName(),
         slot.getSlotType().getFullname(),
         DomainObjectUtils.getSlotValue(domainObject, slot));
+  }
+
+  private String roleQueryString(final Role role, final DomainObject domainObject) {
+    return String.format(
+        "%s %s %s",
+        role.getName(),
+        role.getType().getFullName(),
+        DomainObjectUtils.getRelationSlot(domainObject, role));
   }
 
   private <T> boolean match(
