@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu</artifactId>
-        <version>DEV-SNAPSHOT</version>
+        <version>7.5.1</version>
     </parent>
 
     <artifactId>bennu-spring</artifactId>
