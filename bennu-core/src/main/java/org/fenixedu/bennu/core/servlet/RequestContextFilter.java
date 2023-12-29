@@ -19,12 +19,15 @@ public class RequestContextFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
+        System.out.println("### RequestContextFilter");
         try {
             if (request instanceof HttpServletRequest httpServletRequest) {
+                System.out.println("### RequestContextFilter set");
                 REQUEST.set(httpServletRequest);
             }
             chain.doFilter(request, response);
         } finally {
+            System.out.println("### RequestContextFilter release");
             REQUEST.remove();
         }
     }
