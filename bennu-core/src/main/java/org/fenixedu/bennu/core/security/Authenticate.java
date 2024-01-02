@@ -31,9 +31,12 @@ import org.fenixedu.bennu.core.domain.AuthenticationContext.AuthenticationMethod
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.i18n.I18NFilter;
+import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 
 public class Authenticate {
@@ -85,10 +88,27 @@ public class Authenticate {
             loggedUserContext.set(authenticationContext);
 
             storeInSession(request, authenticationContext);
-            final Locale preferredLocale = user.getProfile().getPreferredLocale();
-            if (preferredLocale != null) {
-                I18NFilter.updateLocale(preferredLocale, request, response);
+            // Locale from user preference
+            Locale preferredLocale = user.getProfile().getPreferredLocale();
+            // Locale from cookie
+            Locale localeInRequest = I18N.getLocale();
+            //
+            // Whenever there's a locale change the locale cookie is changed. That means that
+            // the cookie is change when:
+            // 
+            // 1. The user is logged in and changes the prefered locale
+            // 2. The user is in the login page and changes the locale
+            //
+            // If there's a mismatch between the prefered locale and the locale in the cookie
+            // it basically means that the user changed the locale in the login page, hence,
+            // we'll force it into the preferred locale.
+            //
+            // 2 January 2024 - Paulo Abrantes
+            if (localeInRequest != null && preferredLocale != localeInRequest) {
+                preferredLocale = localeInRequest;
+                setUserLocale(user, localeInRequest);
             }
+            I18NFilter.updateLocale(preferredLocale, request, response);
 
             fireLoginListeners(request, response, authenticationContext);
             logger.debug("Logged in user: " + user.getUsername());
@@ -99,6 +119,11 @@ public class Authenticate {
         }
 
         return user;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    private static void setUserLocale(User user, Locale locale) {
+        user.getProfile().setPreferredLocale(locale);
     }
 
     /**
