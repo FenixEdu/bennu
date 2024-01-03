@@ -9,7 +9,7 @@
           </router-link>
         </p>
         <h1 class="section-header__title">
-          {{ getDomainObjectName(domainObject) }} - {{ domainObject.oid }} <span
+          {{ getDomainObjectName(domainObject) }} - {{ domainObject.objectId }} <span
             v-for="modifier in domainObject.modifiers"
             :key="modifier"
             class="label"
@@ -17,156 +17,62 @@
         </h1>
         <p>{{ domainObject.type }}</p>
       </div>
-      <div class="section-header__meta">
-        <form
-          role="search"
-          class="f-search f-search--sm"
-        >
-          <input
-            ref="searchInput"
-            v-model="searchInput"
-            :placeholder="$t('search.placeholder')"
-            class="f-search__input f-search__input--card"
-            type="text"
-            @keydown.enter.prevent="performSearch()"
-          >
-          <button
-            class="f-search__submit"
-            @click.prevent="performSearch()"
-          >
-            {{ $t('search.aria-label') }}
-          </button>
-        </form>
-      </div>
     </header>
-    <div
-      v-if="domainObject.slots.length > 0"
-      class="card"
+    <tab-navigation
+      v-model="currentTab"
+      style="margin-top: 3.5rem;"
+      :total-tabs="tabs.length"
+      :label="$t('tabs.label')"
     >
-      <div class="card-row">
-        <div class="card-row__text">
-          <h2 class="card-row__title h3">
-            {{ $t('domain-object.slots') }}
-          </h2>
-        </div>
-      </div>
-      <div
-        v-for="slot in domainObject.slots"
-        :key="slot.name"
-        class="card-row card-row--sm"
-      >
-        <div class="card-row__text">
-          <text-area
-            v-if="slot.value"
-            class="slot-field"
-            variant="outlined"
-            :name="`${slot.name}-value`"
-            :label="slot.name"
-            :description="slot.type"
-            :value="slot.value"
-          />
-          <template v-else>
-            <p>
-              <span class="h5 h5--ssp">{{ slot.name }}</span> - {{ slot.type }} <span
-                v-for="modifier in slot.modifiers"
-                :key="modifier"
-                class="label label--sm object-label label--outline label--light"
-              >{{ modifier }}</span>
-            </p>
-          </template>
-        </div>
-      </div>
-    </div>
-    <div
-      v-if="domainObject.relationSlots.length > 0"
-      class="card"
-    >
-      <div class="card-row">
-        <div class="card-row__text">
-          <h2 class="card-row__title h3">
-            {{ $t('domain-object.relation-slots') }}
-          </h2>
-        </div>
-      </div>
-      <div
-        v-for="slot in domainObject.relationSlots"
-        :key="slot.value"
-        class="card-row card-row--sm"
-      >
-        <div class="card-row__text">
-          <p>
-            <span class="h4 h4--ssp">{{ slot.name }}</span> <span
-              v-if="slot.value"
-              class="label label--outline label--light"
-            >{{ slot.value }}</span>
-          </p>
-          <p>{{ slot.type }}</p>
-        </div>
-        <div
-          v-if="slot.value"
-          class="card-row__meta"
+      <template #tab-0="{ attrs, events }">
+        <router-link
+          :id="`tab-${tabs[0]}`"
+          :to="{ name: tabs[0] }"
+          replace
+          v-bind="attrs"
+          @click.native="events.click"
+          @keydown.native="events.keydown"
         >
-          <router-link
-            aria-hidden="true"
-            tabindex="-1"
-            :to="{ name: 'DomainObjectPage', params: { domainObjectId: slot.value }}"
-          >
-            <span class="i-arrow-right" />
-          </router-link>
-        </div>
-      </div>
-    </div>
-    <div
-      v-if="domainObject.relationSets && domainObject.relationSets.length > 0"
-      class="card"
-    >
-      <div class="card-row">
-        <div class="card-row__text">
-          <h2 class="card-row__title h3">
-            {{ $t('domain-object.relation-sets') }}
-          </h2>
-        </div>
-      </div>
-      <div
-        v-for="relationSet in domainObject.relationSets"
-        :key="relationSet.name"
-        class="card-row card-row--sm"
-      >
-        <div class="card-row__text">
-          <p>
-            <span class="h5 h5--ssp">{{ relationSet.name }}</span> - {{ relationSet.type }}
-          </p>
-        </div>
-        <div class="card-row__meta">
-          <router-link
-            aria-hidden="true"
-            tabindex="-1"
-            :to="{ name: 'RelationSetPage', params: { domainObjectId: domainObject.oid, relationSetName: relationSet.name }}"
-          >
-            <span class="i-arrow-right" />
-          </router-link>
-        </div>
-      </div>
-    </div>
+          {{ $t('tabs.slots') }}
+        </router-link>
+      </template>
+      <template #tab-1="{ attrs, events }">
+        <router-link
+          :id="`tab-${tabs[1]}`"
+          :to="{ name: tabs[1] }"
+          replace
+          v-bind="attrs"
+          @click.native="events.click"
+          @keydown.native="events.keydown"
+        >
+          {{ $t('tabs.roles') }}
+        </router-link>
+      </template>
+      <template #tab-2="{ attrs, events }">
+        <router-link
+          :id="`tab-${tabs[2]}`"
+          :to="{ name: tabs[2] }"
+          replace
+          v-bind="attrs"
+          @click.native="events.click"
+          @keydown.native="events.keydown"
+        >
+          {{ $t('tabs.role-sets') }}
+        </router-link>
+      </template>
+    </tab-navigation>
+    <router-view />
   </div>
 </template>
 
 <script>
-import { guardWithErrorHandling } from '@/router/guards'
-import TextArea from '@/components/utils/fields/TextArea.vue'
+import TabNavigation from '@/components/utils/TabNavigation.vue'
 
 export default {
   name: 'DomainObjectPage',
   components: {
-    TextArea
+    TabNavigation
   },
-  beforeRouteUpdate: guardWithErrorHandling(async function (to, from, next) {
-    this.$progress.set(10)
-    await to.meta.beforeLoad(to, from)
-    this.searchInput = to.meta.domainObject.oid
-    this.$progress.complete()
-    next()
-  }),
   props: {
     domainObject: {
       type: Object,
@@ -174,8 +80,11 @@ export default {
     }
   },
   data () {
+    const tabs = ['DomainObjectSlotsTab', 'DomainObjectRolesTab', 'DomainObjectRoleSetsTab']
     return {
-      searchInput: this.domainObject.oid
+      tabs,
+      currentTab: tabs.findIndex(route => route === this.$route.name)
+
     }
   },
   i18n: {
@@ -184,43 +93,29 @@ export default {
         back: 'Domain Browser',
         header: 'Navegador de domínios',
         description: 'Navegue pelos domínios do Fenix',
-        search: {
-          'aria-label': 'Pesquisar...',
-          placeholder: 'Pesquisar domínios',
-          empty: 'Nenhum domínio encontrado',
-          'domain-object': {
-            slots: 'Slots',
-            'relation-slots': 'Slots de relação',
-            'relation-sets': 'Conjuntos de relação'
-          }
+        tabs: {
+          label: 'Detalhes do objeto de domínio',
+          slots: 'Slots',
+          roles: 'Roles',
+          'role-sets': 'Role Sets'
         }
       },
       en: {
         back: 'Domain Browser',
         header: 'Domain browser',
         description: 'Browse Fenix domains',
-        search: {
-          'aria-label': 'Search...',
-          placeholder: 'Search domains',
-          empty: 'No domains found'
-        },
-        'domain-object': {
+        tabs: {
+          label: 'Domain Object Details',
           slots: 'Slots',
-          'relation-slots': 'Relation slots',
-          'relation-sets': 'Relation sets'
+          roles: 'Roles',
+          'role-sets': 'Role Sets'
         }
       }
     }
   },
   methods: {
     getDomainObjectName (domainObject) {
-      return domainObject.type.split('.').pop()
-    },
-    async performSearch () {
-      if (this.searchInput !== this.$route.query.q) {
-        const location = { name: 'DomainObjectPage', params: { domainObjectId: this.searchInput } }
-        this.$router.push(location)
-      }
+      return domainObject.class.split('.').pop()
     },
     prettyJson (json) {
       return JSON.stringify(JSON.parse(json), null, 2)

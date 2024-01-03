@@ -13,10 +13,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Base64;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class DomainObjectUtils {
-  public static Object getSlotValue(final DomainObject domainObject, final Slot slot) {
+  private static Object getSlotValue(final DomainObject domainObject, final Slot slot) {
     final Method method = getMethod(domainObject, slot.getName());
     if (method != null) {
       try {
@@ -36,9 +37,9 @@ public class DomainObjectUtils {
   public static String getSlotValueString(final DomainObject domainObject, final Slot slot) {
     Object value = getSlotValue(domainObject, slot);
     if (value instanceof byte[]) {
-      return Base64.getEncoder().encodeToString((byte[]) value);
+      value = Base64.getEncoder().encodeToString((byte[]) value);
     }
-    return null;
+    return Objects.toString(value, null);
   }
 
   public static Object getPrimitiveValueFor(ValueType vt, Object value) {

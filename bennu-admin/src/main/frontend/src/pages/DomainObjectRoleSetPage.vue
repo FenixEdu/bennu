@@ -3,13 +3,13 @@
     <header class="section-header page__header">
       <div class="section-header__text">
         <p class="h6 section-header__parent-page">
-          <router-link :to="{ name: 'DomainObjectPage', params: { domainObjectId: domainObject.oid } }">
+          <router-link :to="{ name: 'DomainObjectPage', params: { domainObjectId: domainObject.objectId } }">
             <span class="i-back-arrow" />
-            <span>{{ getDomainObjectName(domainObject) }} - {{ domainObject.oid }}</span>
+            <span>{{ getDomainObjectName(domainObject) }} - {{ domainObject.objectId }}</span>
           </router-link>
         </p>
         <h1 class="section-header__title">
-          {{ $t('title', { relationSet: relationName,domainObject: getDomainObjectName(domainObject), oid: domainObject.oid }) }}
+          {{ $t('title', { relationSet: relationName,domainObject: getDomainObjectName(domainObject), oid: domainObject.objectId }) }}
         </h1>
         <p>{{ domainObject.type }}</p>
       </div>
@@ -25,36 +25,63 @@
       >
         <div class="card-row__text">
           <p>
-            <span class="h5 h5--ssp">{{ relation.type }}</span> - {{ relation.oid }}
+            <span class="h5 h5--ssp">{{ relation.type }}</span> - {{ relation.objectId }}
           </p>
         </div>
         <div class="card-row__meta">
           <router-link
             aria-hidden="true"
             tabindex="-1"
-            :to="{ name: 'DomainObjectPage', params: { domainObjectId: relation.oid }}"
+            :to="{ name: 'DomainObjectPage', params: { domainObjectId: relation.objectId }}"
           >
             <span class="i-arrow-right" />
           </router-link>
         </div>
       </li>
     </ul>
+
     <empty-state v-else>
       <p slot="title">
         {{ $t('empty-state', { relationName: relationName }) }}
       </p>
     </empty-state>
+
+    <pagination
+      :total-items="totalItems"
+      :items-per-page="perPage"
+      :current-page="page"
+    />
   </div>
 </template>
 
 <script>
 import EmptyState from '@/components/EmptyState.vue'
+import Pagination from '@/components/utils/Pagination.vue'
 
 export default {
   components: {
-    EmptyState
+    EmptyState,
+    Pagination
+  },
+  async beforeRouteUpdate (to, from, next) {
+    this.$progress.set(10)
+    await to.meta.beforeLoad(to, from)
+    this.$progress.complete()
+    next()
   },
   props: {
+    page: {
+      type: Number,
+      required: true
+    },
+    perPage: {
+      type: Number,
+      required: true
+    },
+    totalItems: {
+      type: Number,
+      required: true
+    },
     domainObject: {
       type: Object,
       required: true
@@ -66,7 +93,7 @@ export default {
   },
   computed: {
     relationName () {
-      return this.$route.params.relationSetName
+      return this.$route.params.roleSetName
     }
   },
   methods: {

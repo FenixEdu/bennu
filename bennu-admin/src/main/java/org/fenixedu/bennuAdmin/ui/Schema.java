@@ -12,6 +12,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.dml.*;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 public class Schema {
@@ -30,6 +31,7 @@ public class Schema {
             FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
         data.addProperty("objectId", domainObject.getExternalId());
         data.addProperty("class", domainObject.getClass().getSimpleName());
+        data.addProperty("type", domainObject.getClass().getTypeName());
         data.add("modifiers", modifiers(domClass));
       };
 
@@ -50,6 +52,13 @@ public class Schema {
       data.add("modifiers", modifiers(role));
     };
   }
+
+  public static final BiConsumer<JsonObject, Role> DOMAIN_OBJECT_ROLE_SET =
+      (data, role) -> {
+        data.addProperty("name", role.getName());
+        data.addProperty("type", role.getType().getFullName());
+        data.add("modifiers", modifiers(role));
+      };
 
   private static JsonElement modifiers(ModifiableEntity entity) {
     JsonArray array = new JsonArray();

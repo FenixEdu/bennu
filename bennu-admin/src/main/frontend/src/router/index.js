@@ -77,17 +77,14 @@ const router = new Router({
       component: DomainObjectPage,
       redirect: { name: 'DomainObjectSlotsTab' },
       meta: {
-        layout: 'PageWithNavBarAndFooterLayout',
-        async beforeLoad (to, from) {
-          const domainObject = await BennuAdminAPI.getDomainObject({ objectId: to.params.domainObjectId })
-          to.meta.domainObject = domainObject
-        }
+        layout: 'PageWithNavBarAndFooterLayout'
       },
       props: (route) => ({
         domainObject: route.meta.domainObject
       }),
       beforeEnter: guardWithErrorHandling(async (to, from, next) => {
-        await to.meta.beforeLoad(to, from)
+        const domainObject = await BennuAdminAPI.getDomainObject({ objectId: to.params.domainObjectId })
+        to.meta.domainObject = domainObject
         next()
       }),
       children: [
@@ -101,20 +98,26 @@ const router = new Router({
               to.meta.page = Number(to.query.page) || 1
               to.meta.perPage = 10
 
-              const domainObjectSlots = await BennuAdminAPI.listDomainObjectSlots({
-                objectId: to.params.domainObjectId,
-                query: to.query.q,
-                page: to.meta.page,
-                perPage: to.meta.perPage
-              })
+              const [domainObject, domainObjectSlots] = await Promise.all([
+                BennuAdminAPI.getDomainObject({ objectId: to.params.domainObjectId }),
+                BennuAdminAPI.listDomainObjectSlots({
+                  objectId: to.params.domainObjectId,
+                  query: to.query.q,
+                  page: to.meta.page,
+                  perPage: to.meta.perPage
+                })
+              ])
 
-              to.meta.domainObjectSlots = domainObjectSlots
+              to.meta.totalItems = domainObjectSlots.totalItems
+              to.meta.domainObject = domainObject
+              to.meta.domainObjectSlots = domainObjectSlots.items
             }
           },
           props: (route) => ({
             query: route.query.q,
-            page: route.query.page,
-            perPage: route.query.perPage,
+            page: route.meta.page,
+            perPage: route.meta.perPage,
+            totalItems: route.meta.totalItems,
             domainObject: route.meta.domainObject,
             domainObjectSlots: route.meta.domainObjectSlots
           }),
@@ -133,20 +136,26 @@ const router = new Router({
               to.meta.page = Number(to.query.page) || 1
               to.meta.perPage = 10
 
-              const domainObjectRoles = await BennuAdminAPI.listDomainObjectRoles({
-                objectId: to.params.domainObjectId,
-                query: to.query.q,
-                page: to.meta.page,
-                perPage: to.meta.perPage
-              })
+              const [domainObject, domainObjectRoles] = await Promise.all([
+                BennuAdminAPI.getDomainObject({ objectId: to.params.domainObjectId }),
+                BennuAdminAPI.listDomainObjectRoles({
+                  objectId: to.params.domainObjectId,
+                  query: to.query.q,
+                  page: to.meta.page,
+                  perPage: to.meta.perPage
+                })
+              ])
 
-              to.meta.domainObjectRoles = domainObjectRoles
+              to.meta.totalItems = domainObjectRoles.totalItems
+              to.meta.domainObject = domainObject
+              to.meta.domainObjectRoles = domainObjectRoles.items
             }
           },
           props: (route) => ({
             query: route.query.q,
-            page: route.query.page,
-            perPage: route.query.perPage,
+            page: route.meta.page,
+            perPage: route.meta.perPage,
+            totalItems: route.meta.totalItems,
             domainObject: route.meta.domainObject,
             domainObjectRoles: route.meta.domainObjectRoles
           }),
@@ -165,20 +174,26 @@ const router = new Router({
               to.meta.page = Number(to.query.page) || 1
               to.meta.perPage = 10
 
-              const domainObjectRoleSets = await BennuAdminAPI.listDomainObjectRoleSets({
-                objectId: to.params.domainObjectId,
-                query: to.query.q,
-                page: to.meta.page,
-                perPage: to.meta.perPage
-              })
+              const [domainObject, domainObjectRoleSets] = await Promise.all([
+                BennuAdminAPI.getDomainObject({ objectId: to.params.domainObjectId }),
+                BennuAdminAPI.listDomainObjectRoleSets({
+                  objectId: to.params.domainObjectId,
+                  query: to.query.q,
+                  page: to.meta.page,
+                  perPage: to.meta.perPage
+                })
+              ])
 
-              to.meta.domainObjectRoleSets = domainObjectRoleSets
+              to.meta.domainObject = domainObject
+              to.meta.totalItems = domainObjectRoleSets.totalItems
+              to.meta.domainObjectRoleSets = domainObjectRoleSets.items
             }
           },
           props: (route) => ({
             query: route.query.q,
-            page: route.query.page,
-            perPage: route.query.perPage,
+            page: route.meta.page,
+            perPage: route.meta.perPage,
+            totalItems: route.meta.totalItems,
             domainObject: route.meta.domainObject,
             domainObjectRoleSets: route.meta.domainObjectRoleSets
           }),
@@ -194,35 +209,39 @@ const router = new Router({
       name: 'DomainObjectRoleSetPage',
       component: DomainObjectRoleSetPage,
       meta: {
-        layout: 'PageWithNavBarAndFooterLayout'
+        layout: 'PageWithNavBarAndFooterLayout',
+        async beforeLoad (to, from) {
+          to.meta.page = Number(to.query.page) || 1
+          to.meta.perPage = 10
+
+          const [domainObject, relationSet] = await Promise.all([
+            BennuAdminAPI.getDomainObject({
+              objectId: to.params.domainObjectId
+            }),
+            BennuAdminAPI.getDomainObjectRoleSet({
+              objectId: to.params.domainObjectId,
+              roleSetName: to.params.roleSetName,
+              query: to.query.q,
+              page: to.meta.page,
+              perPage: to.meta.perPage
+            })
+          ])
+
+          to.meta.domainObject = domainObject
+          to.meta.totalItems = relationSet.totalItems
+          to.meta.relationSet = relationSet.items
+        }
       },
       props: route => ({
         query: route.query.q,
-        page: route.query.page,
-        perPage: route.query.perPage,
+        page: route.meta.page,
+        perPage: route.meta.perPage,
+        totalItems: route.meta.totalItems,
         domainObject: route.meta.domainObject,
         relationSet: route.meta.relationSet
       }),
       beforeEnter: guardWithErrorHandling(async (to, from, next) => {
-        const page = Number(to.query.page) || 1
-        const perPage = 10
-
-        const [domainObject, relationSet] = await Promise.all([
-          BennuAdminAPI.getDomainObject({
-            objectId: to.params.domainObjectId
-          }),
-          BennuAdminAPI.getDomainObjectRoleSet({
-            objectId: to.params.domainObjectId,
-            roleSetName: to.params.relationSetName,
-            query: to.query.q,
-            page,
-            perPage
-          })
-        ])
-
-        to.meta.domainObject = domainObject
-        to.meta.relationSet = relationSet
-
+        await to.meta.beforeLoad(to, from)
         next()
       })
     },

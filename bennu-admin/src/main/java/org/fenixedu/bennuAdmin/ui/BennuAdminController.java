@@ -139,16 +139,16 @@ public class BennuAdminController {
     DomainClass domClass =
         FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
 
-    Set<Role> roles = DomainObjectUtils.getRoles(domClass, true);
+    Set<Role> roles = DomainObjectUtils.getRoles(domClass, false);
 
     return search(
         query,
         skip,
         limit,
         roles.stream(),
-        (role) -> getLocalizedString(roleQueryString(role, domainObject)),
+        (role) -> getLocalizedString(roleSetQueryString(role)),
         Comparator.comparing(Role::getName),
-        Schema.DOMAIN_OBJECT_ROLE(domainObject));
+        Schema.DOMAIN_OBJECT_ROLE_SET);
   }
 
   @RequestMapping(
@@ -192,7 +192,7 @@ public class BennuAdminController {
         "%s %s %s",
         slot.getName(),
         slot.getSlotType().getFullname(),
-        DomainObjectUtils.getSlotValue(domainObject, slot));
+        DomainObjectUtils.getSlotValueString(domainObject, slot));
   }
 
   private String roleQueryString(final Role role, final DomainObject domainObject) {
@@ -201,6 +201,10 @@ public class BennuAdminController {
         role.getName(),
         role.getType().getFullName(),
         DomainObjectUtils.getRelationSlot(domainObject, role));
+  }
+
+  private String roleSetQueryString(final Role role) {
+    return String.format("%s %s", role.getName(), role.getType().getFullName());
   }
 
   private <T> boolean match(
