@@ -73,6 +73,10 @@ export default {
   components: {
     TabNavigation
   },
+  beforeRouteUpdate (to, from, next) {
+    this.currentTab = this.tabs.findIndex(route => route === to.name)
+    next()
+  },
   props: {
     domainObject: {
       type: Object,
@@ -84,7 +88,6 @@ export default {
     return {
       tabs,
       currentTab: tabs.findIndex(route => route === this.$route.name)
-
     }
   },
   i18n: {
