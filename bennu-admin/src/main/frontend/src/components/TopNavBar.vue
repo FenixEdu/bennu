@@ -123,7 +123,7 @@
             <li class="search">
               <button
                 class="search-trigger"
-                :aria-label="$t('menu.search.aria-label')"
+                :aria-label="$t('nav-bar.menu.search.aria-label')"
                 tag="a"
                 @click.prevent="isSearchModalOpen = true"
               >
