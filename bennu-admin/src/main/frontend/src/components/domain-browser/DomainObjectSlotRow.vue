@@ -4,8 +4,10 @@
     class="card-row card-row--sm"
   >
     <div class="card-row__text">
-      <p>{{ domainObjectSlot.type }}</p>
-      <p>
+      <p v-if="showType">
+        {{ domainObjectSlot.type }}
+      </p>
+      <p class="slot-value">
         <span class="h5--ssp">{{ domainObjectSlot.name }}:</span> {{ domainObjectSlot.value ?? 'null' }}
       </p>
     </div>
@@ -21,6 +23,11 @@ export default {
       type: Object,
       required: true
     },
+    showType: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     component: {
       type: String,
       required: false,
@@ -31,8 +38,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.slot-field {
-  margin-top: 0;
-  margin-bottom: 0;
+.truncated {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
 }
 </style>

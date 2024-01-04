@@ -3,7 +3,7 @@
     <header class="section-header page__header">
       <div class="section-header__text">
         <p class="h6 section-header__parent-page">
-          <router-link :to="{ name: 'DomainObjectPage', params: { domainObjectId: domainObject.objectId } }">
+          <router-link :to="{ name: 'DomainObjectRoleSetsTab', params: { domainObjectId: domainObject.objectId } }">
             <span class="i-back-arrow" />
             <span>{{ getDomainObjectName(domainObject) }} - {{ domainObject.objectId }}</span>
           </router-link>
@@ -14,31 +14,48 @@
         <p>{{ domainObject.type }}</p>
       </div>
     </header>
-    <ul
-      v-if="relationSet.length > 0"
-      class="card"
-    >
+
+    <ol v-if="relationSet.length > 0">
       <li
-        v-for="relation in relationSet"
-        :key="relation.value"
-        class="card-row card-row--sm"
+        v-for="role in relationSet"
+        :key="role.name"
+        class="card"
       >
-        <div class="card-row__text">
-          <p>
-            <span class="h5 h5--ssp">{{ relation.type }}</span> - {{ relation.objectId }}
-          </p>
-        </div>
-        <div class="card-row__meta">
-          <router-link
-            aria-hidden="true"
-            tabindex="-1"
-            :to="{ name: 'DomainObjectPage', params: { domainObjectId: relation.objectId }}"
+        <div class="card-row card-row--sm">
+          <div class="card-row__text">
+            <p>
+              <span class="h4 h4--ssp">{{ role.objectId }}</span>
+            </p>
+            <p>{{ role.type }}</p>
+          </div>
+          <div
+            v-if="role.objectId"
+            class="card-row__meta"
           >
-            <span class="i-arrow-right" />
-          </router-link>
+            <router-link
+              aria-hidden="true"
+              tabindex="-1"
+              :to="{ name: 'DomainObjectPage', params: { domainObjectId: role.objectId }, query: { q: undefined } }"
+            >
+              <span class="i-arrow-right" />
+            </router-link>
+          </div>
+        </div>
+        <div
+          v-if="role.slots && role.slots.length > 0"
+          class="card-row role-slots"
+        >
+          <ol class="card-row__text">
+            <domain-object-slot-row
+              v-for="slot in role.slots"
+              :key="slot.name"
+              :domain-object-slot="slot"
+              :show-type="false"
+            />
+          </ol>
         </div>
       </li>
-    </ul>
+    </ol>
 
     <empty-state v-else>
       <p slot="title">
@@ -57,11 +74,13 @@
 <script>
 import EmptyState from '@/components/EmptyState.vue'
 import Pagination from '@/components/utils/Pagination.vue'
+import DomainObjectSlotRow from '@/components/domain-browser/DomainObjectSlotRow.vue'
 
 export default {
   components: {
     EmptyState,
-    Pagination
+    Pagination,
+    DomainObjectSlotRow
   },
   async beforeRouteUpdate (to, from, next) {
     this.$progress.set(10)
@@ -115,3 +134,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.role-slots {
+  padding: 0;
+}
+</style>

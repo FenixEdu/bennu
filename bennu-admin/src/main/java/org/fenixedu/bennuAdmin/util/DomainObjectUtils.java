@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class DomainObjectUtils {
   private static Object getSlotValue(final DomainObject domainObject, final Slot slot) {
-    final Method method = getMethod(domainObject, slot.getName());
+    final Method method = getMethod("get", domainObject, slot.getName());
     if (method != null) {
       try {
         Object value = method.invoke(domainObject);
@@ -32,6 +32,13 @@ public class DomainObjectUtils {
       }
     }
     return null;
+  }
+
+  public static void deleteObject(final DomainObject domainObject) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    Class<?> clazz = domainObject.getClass();
+    Method deleteMethod = clazz.getDeclaredMethod("delete");
+    deleteMethod.setAccessible(true);
+    deleteMethod.invoke(domainObject);
   }
 
   public static String getSlotValueString(final DomainObject domainObject, final Slot slot) {
@@ -53,9 +60,9 @@ public class DomainObjectUtils {
     }
   }
 
-  public static Method getMethod(final DomainObject domainObject, final String slotName) {
+  public static Method getMethod(final String prefix, final DomainObject domainObject, final String slotName) {
     final String methodName =
-        "get" + Character.toUpperCase(slotName.charAt(0)) + slotName.substring(1);
+        prefix + Character.toUpperCase(slotName.charAt(0)) + slotName.substring(1);
     if (domainObject != null && methodName != null && !methodName.isEmpty()) {
       Class<?> clazz = domainObject.getClass();
       while (clazz != AbstractDomainObject.class) {
@@ -99,7 +106,7 @@ public class DomainObjectUtils {
   }
 
   public static String getRelationSlot(final DomainObject domainObject, final Role role) {
-    final Method method = getMethod(domainObject, role.getName());
+    final Method method = getMethod("get", domainObject, role.getName());
     if (method != null) {
       try {
         DomainObject obj = (DomainObject) method.invoke(domainObject);
@@ -112,7 +119,7 @@ public class DomainObjectUtils {
   }
 
   public static Set<DomainObject> getRelationSet(final DomainObject domainObject, final Role role) {
-    final Method method = getMethod(domainObject, role.getName() + "Set");
+    final Method method = getMethod("get", domainObject, role.getName() + "Set");
     if (method != null) {
       try {
         return (Set<DomainObject>) method.invoke(domainObject);

@@ -56,6 +56,19 @@
               </router-link>
             </div>
           </div>
+          <div
+            v-if="role.slots && role.slots.length > 0"
+            class="card-row role-slots"
+          >
+            <ol class="card-row__text">
+              <domain-object-slot-row
+                v-for="slot in role.slots"
+                :key="slot.name"
+                :domain-object-slot="slot"
+                :show-type="false"
+              />
+            </ol>
+          </div>
         </li>
       </ol>
 
@@ -71,11 +84,13 @@
 <script>
 import Pagination from '@/components/utils/Pagination.vue'
 import EmptyState from '@/components/EmptyState.vue'
+import DomainObjectSlotRow from '@/components/domain-browser/DomainObjectSlotRow.vue'
 
 export default {
   components: {
     Pagination,
-    EmptyState
+    EmptyState,
+    DomainObjectSlotRow
   },
   async beforeRouteUpdate (to, from, next) {
     this.$progress.set(10)
@@ -146,5 +161,9 @@ export default {
 <style lang="scss" scoped>
 .f-search {
   margin-bottom: 1.5rem;
+}
+
+.role-slots {
+  padding: 0;
 }
 </style>

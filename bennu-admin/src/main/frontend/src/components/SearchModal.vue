@@ -62,7 +62,12 @@ export default {
   },
   methods: {
     performSearch () {
-      if (this.searchInput && this.searchInput !== this.$route?.params?.domainObjectId) {
+      if (this.searchInput === this.$route.params.domainObjectId) {
+        this.isModalOpen = false
+        return
+      }
+
+      if (this.searchInput) {
         this.$router.push({
           name: 'DomainObjectPage',
           params: {

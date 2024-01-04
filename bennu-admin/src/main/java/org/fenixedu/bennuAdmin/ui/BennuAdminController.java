@@ -21,6 +21,7 @@ import pt.ist.fenixframework.dml.Role;
 import pt.ist.fenixframework.dml.Slot;
 
 import javax.ws.rs.BadRequestException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -68,6 +69,33 @@ public class BennuAdminController {
       throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
     }
     return ok(Schema.DOMAIN_OBJECT, domainObject);
+  }
+
+  @RequestMapping(value = "/domain-objects/{objectId}/meta", method = RequestMethod.GET)
+  public ResponseEntity<?> getDomainObjectMeta(final @PathVariable String objectId) {
+    requireGroup(Group.managers());
+    DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+    if (!FenixFramework.isDomainObjectValid(domainObject)) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
+    }
+    return ok(Schema.DOMAIN_OBJECT_META, domainObject);
+  }
+
+  @RequestMapping(value = "/domain-objects/{objectId}", method = RequestMethod.DELETE)
+  public ResponseEntity<?> deleteDomainObject(final @PathVariable String objectId) {
+    requireGroup(Group.managers());
+
+    DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+    if (!FenixFramework.isDomainObjectValid(domainObject)) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
+    }
+
+    try {
+      DomainObjectUtils.deleteObject(domainObject);
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException error) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
   }
 
   @RequestMapping(value = "/domain-objects/{objectId}/slots", method = RequestMethod.GET)

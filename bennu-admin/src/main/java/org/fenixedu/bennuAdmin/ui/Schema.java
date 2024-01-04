@@ -35,6 +35,16 @@ public class Schema {
         data.add("modifiers", modifiers(domClass));
       };
 
+  public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT_META =
+          (data, domainObject) -> {
+              try {
+                  domainObject.getClass().getDeclaredMethod("delete");
+                  data.addProperty("deletable", true);
+              } catch (NoSuchMethodException err) {
+                  data.addProperty("deletable", false);
+              }
+          };
+
   public static BiConsumer<JsonObject, Slot> DOMAIN_OBJECT_SLOT(DomainObject domainObject) {
     return (data, slot) -> {
       data.addProperty("name", slot.getName());

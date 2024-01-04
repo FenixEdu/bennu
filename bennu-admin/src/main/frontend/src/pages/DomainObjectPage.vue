@@ -17,6 +17,15 @@
         </h1>
         <p>{{ domainObject.type }}</p>
       </div>
+      <div class="section-header__meta">
+        <button
+          v-if="domainObject.metadata.deletable"
+          class="btn btn--danger"
+          @click.prevent="deleteObject()"
+        >
+          {{ $t('actions.delete') }}
+        </button>
+      </div>
     </header>
     <tab-navigation
       v-model="currentTab"
@@ -73,8 +82,11 @@ export default {
   components: {
     TabNavigation
   },
-  beforeRouteUpdate (to, from, next) {
+  async beforeRouteUpdate (to, from, next) {
+    this.$progress.set(10)
     this.currentTab = this.tabs.findIndex(route => route === to.name)
+    await this.$route.meta.beforeRouteLoad(to, from)
+    this.$progress.complete()
     next()
   },
   props: {
@@ -122,6 +134,9 @@ export default {
     },
     prettyJson (json) {
       return JSON.stringify(JSON.parse(json), null, 2)
+    },
+    deleteObject () {
+      console.log('Deleting object')
     }
   }
 }
