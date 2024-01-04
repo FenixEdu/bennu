@@ -28,9 +28,7 @@
                 <tspan
                   x="41"
                   y="21"
-                >
-                  Bennu Admin
-                </tspan>
+                >Bennu Admin</tspan>
               </text>
             </g>
           </svg>
@@ -122,6 +120,42 @@
 
           <ul class="utility-nav">
             <!-- DESKTOP TOP NAV BAR BUTTONS -->
+            <li class="search">
+              <button
+                class="search-trigger"
+                :aria-label="$t('menu.search.aria-label')"
+                tag="a"
+                @click.prevent="isSearchModalOpen = true"
+              >
+                <span class="icon icon-search">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="19"
+                    height="19"
+                  >
+                    <g
+                      fill="none"
+                      fill-rule="evenodd"
+                      class="icon--stroke"
+                      stroke="var(--gray400)"
+                      stroke-width="2"
+                    >
+                      <ellipse
+                        cx="8.261"
+                        cy="8.741"
+                        rx="6.938"
+                        ry="6.972"
+                        transform="matrix(-1 0 0 1 16.522 0)"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        d="M14.016 13.58l3.9 3.56"
+                      />
+                    </g>
+                  </svg>
+                </span>
+              </button>
+            </li>
             <li class="languages">
               <dropdown
                 size="md"
@@ -155,24 +189,20 @@
                   <ul class="dropdown-menu">
                     <li class="dropdown-menu__item">
                       <button
-                        :class="{'dropdown-menu__link--selected': $i18n.locale === 'pt'}"
+                        :class="{ 'dropdown-menu__link--selected': $i18n.locale === 'pt' }"
                         class="dropdown-menu__link"
                         @click.prevent="setLocale('pt', $auth)"
                       >
-                        <span class="link-text">
-                          Português
-                        </span>
+                        <span class="link-text"> Português </span>
                       </button>
                     </li>
                     <li class="dropdown-menu__item">
                       <button
-                        :class="{'dropdown-menu__link--selected': $i18n.locale === 'en'}"
+                        :class="{ 'dropdown-menu__link--selected': $i18n.locale === 'en' }"
                         class="dropdown-menu__link"
                         @click.prevent="setLocale('en', $auth)"
                       >
-                        <span class="link-text">
-                          English
-                        </span>
+                        <span class="link-text"> English </span>
                       </button>
                     </li>
                   </ul>
@@ -201,6 +231,7 @@
         </template>
       </nav>
     </div>
+    <search-modal v-model="isSearchModalOpen" />
   </header>
 </template>
 
@@ -210,19 +241,22 @@ import ClickOutside from 'vue-click-outside'
 import Dropdown from '@/components/utils/Dropdown.vue'
 import UserDropdownMenu from '@/components/nav-menus/UserDropdownMenu.vue'
 import MobileSideMenu from '@/components/nav-menus/MobileSideMenu.vue'
+import SearchModal from '@/components/SearchModal.vue'
 
 export default {
   name: 'TopNavBar',
   components: {
     Dropdown,
     UserDropdownMenu,
-    MobileSideMenu
+    MobileSideMenu,
+    SearchModal
   },
   directives: {
     ClickOutside
   },
   data () {
     return {
+      isSearchModalOpen: false,
       mobileMenuBreakpoint: 1200,
       showMobileMenu: false,
       windowWidth: 0,
@@ -231,7 +265,7 @@ export default {
   },
   computed: {
     ...mapState({
-      profile: state => state.profile
+      profile: (state) => state.profile
     })
   },
   watch: {
@@ -252,9 +286,12 @@ export default {
       window.addEventListener('resize', this.getWindowWidth)
       this.getWindowWidth()
     })
+
+    window.addEventListener('keydown', this.onCtlrK)
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.getWindowWidth)
+    window.removeEventListener('keydown', this.onCtlrK)
   },
   methods: {
     getWindowWidth () {
@@ -269,6 +306,11 @@ export default {
       this.showMobileMenu = true
       document.body.classList.add('scrollLock')
       this.$emit('toggle-mobile-menu', this.showMobileMenu)
+    },
+    onCtlrK (e) {
+      if (e.key === 'k' && e.ctrlKey) {
+        this.isSearchModalOpen = true
+      }
     },
     toggleMobileMenu () {
       if (this.showMobileMenu) {

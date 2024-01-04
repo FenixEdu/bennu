@@ -29,6 +29,9 @@
       },
       "actions": {
         "back": "@:actions.back"
+      },
+      "search": {
+        "aria-label": "Pesquisar Objetos de Domínio"
       }
     }
   },
