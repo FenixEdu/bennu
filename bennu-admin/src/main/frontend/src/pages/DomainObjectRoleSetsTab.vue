@@ -20,7 +20,18 @@
       </button>
     </form>
 
-    <ol>
+    <empty-state v-if="totalItems == 0">
+      <template #title>
+        <template v-if="hasSearch">
+          {{ $t('empty-state.no-roles-search', { search: searchInput }) }}
+        </template>
+        <template v-else>
+          {{ $t('empty-state.no-roles') }}
+        </template>
+      </template>
+    </empty-state>
+
+    <ol v-else>
       <li
         v-for="roleSet in domainObjectRoleSets"
         :key="roleSet.name"
@@ -57,18 +68,23 @@
 
 <script>
 import Pagination from '@/components/utils/Pagination.vue'
+import EmptyState from '@/components/EmptyState.vue'
+import { guardWithErrorHandling } from '@/router/guards'
 
 export default {
   components: {
-    Pagination
+    Pagination,
+    EmptyState
   },
-  async beforeRouteUpdate (to, from, next) {
-    this.$progress.set(10)
-    await to.meta.beforeLoad(to, from)
-    this.searchInput = to.query.q
-    this.$progress.complete()
-    next()
-  },
+  beforeRouteUpdate: guardWithErrorHandling(
+    async function (to, from, next) {
+      this.$progress.set(10)
+      await to.meta.beforeRouteLoad(to, from)
+      this.searchInput = to.query.q || ''
+      this.$progress.complete()
+      next()
+    }
+  ),
   props: {
     query: {
       type: String,
@@ -91,6 +107,10 @@ export default {
       type: Object,
       required: true
     },
+    metadata: {
+      type: Object,
+      required: true
+    },
     domainObjectRoleSets: {
       type: Array,
       required: true
@@ -99,6 +119,11 @@ export default {
   data () {
     return {
       searchInput: this.query
+    }
+  },
+  computed: {
+    hasSearch () {
+      return this.searchInput !== ''
     }
   },
   methods: {
@@ -119,12 +144,20 @@ export default {
         search: {
           placeholder: 'Pesquisar...',
           'aria-label': 'Pesquisar'
+        },
+        'empty-state': {
+          'no-roles': 'Este objeto de domínio não possui nenhum conjunto de papéis.',
+          'no-roles-search': 'Nenhum conjunto de papéis encontrado para a pesquisa "{search}".'
         }
       },
       en: {
         search: {
           placeholder: 'Search...',
           'aria-label': 'Search'
+        },
+        'empty-state': {
+          'no-roles': 'This domain object has no role sets.',
+          'no-roles-search': 'No role sets found for the search "{search}".'
         }
       }
     }
