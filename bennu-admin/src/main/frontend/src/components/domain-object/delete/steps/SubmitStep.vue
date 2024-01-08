@@ -7,7 +7,7 @@
             {{ $t('loading.header') }}
           </h1>
           <p>
-            {{ $t('loading.description') }}
+            {{ $t('loading.description', { objectId: domainObject.objectId, type: domainObject.type }) }}
           </p>
         </template>
         <template #success-message>
@@ -56,7 +56,7 @@ export default {
   methods: {
     async submit () {
       this.state = EndFlowStates.LOADING
-      await deleteDomainObject(this.domainObject.objectId)
+      await deleteDomainObject({ objectId: this.domainObject.objectId })
       this.state = EndFlowStates.SUCCESS
     }
   },
