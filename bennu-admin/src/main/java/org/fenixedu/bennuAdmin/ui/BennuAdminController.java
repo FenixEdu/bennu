@@ -94,7 +94,7 @@ public class BennuAdminController {
 
     try {
       DomainObjectUtils.deleteObject(domainObject);
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      return ResponseEntity.status(HttpStatus.OK).build();
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException error) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
@@ -206,7 +206,7 @@ public class BennuAdminController {
         query,
         skip,
         limit,
-        objects.stream(),
+        objects != null ? objects.stream() : Stream.<DomainObject>builder().build(),
         (object) -> getLocalizedString(objectQueryString(object)),
         Comparator.comparing(DomainObject::getExternalId),
         Schema.DOMAIN_OBJECT);

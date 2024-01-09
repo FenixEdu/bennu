@@ -1,5 +1,6 @@
 package org.fenixedu.bennuAdmin.util;
 
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.ValueTypeSerializer;
@@ -34,11 +35,14 @@ public class DomainObjectUtils {
     return null;
   }
 
+  // Fixme: not working, some trouble with atomic behaviour
+  @Atomic
   public static void deleteObject(final DomainObject domainObject) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    Class<?> clazz = domainObject.getClass();
-    Method deleteMethod = clazz.getDeclaredMethod("deleteDomainObject");
-    deleteMethod.setAccessible(true);
-    deleteMethod.invoke(domainObject);
+    Method deleteMethod = recursiveGetDeclaredMethod(domainObject, "delete");
+    if (deleteMethod != null) {
+      deleteMethod.setAccessible(true);
+      deleteMethod.invoke(domainObject);
+    }
   }
 
   public static String getSlotValueString(final DomainObject domainObject, final Slot slot) {
@@ -60,21 +64,28 @@ public class DomainObjectUtils {
     }
   }
 
+  public static Method recursiveGetDeclaredMethod(final DomainObject domainObject, final String methodName) {
+    Class<?> targetClass = domainObject.getClass();
+    while(targetClass != null) {
+      try {
+        return targetClass.getDeclaredMethod(methodName);
+      } catch (NoSuchMethodException err) {
+        targetClass = targetClass.getSuperclass();
+      }
+    }
+
+    return null;
+  }
+
   public static Method getMethod(final String prefix, final DomainObject domainObject, final String slotName) {
     final String methodName =
         prefix + Character.toUpperCase(slotName.charAt(0)) + slotName.substring(1);
-    if (domainObject != null && methodName != null && !methodName.isEmpty()) {
-      Class<?> clazz = domainObject.getClass();
-      while (clazz != AbstractDomainObject.class) {
-        try {
-          Method method = clazz.getDeclaredMethod(methodName);
-          method.setAccessible(true);
-          return method;
-        } catch (NoSuchMethodException | SecurityException e) {
-          // do nothing
-        }
-        clazz = clazz.getSuperclass();
+    if (domainObject != null && !methodName.isEmpty()) {
+      Method method = recursiveGetDeclaredMethod(domainObject, methodName);
+      if (method != null) {
+        method.setAccessible(true);
       }
+      return method;
     }
     return null;
   }

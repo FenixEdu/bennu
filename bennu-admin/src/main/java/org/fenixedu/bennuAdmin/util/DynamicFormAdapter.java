@@ -1,2 +1,4 @@
-package org.fenixedu.bennuAdmin.util;public class DynamicFormAdapter {
+package org.fenixedu.bennuAdmin.util;
+
+public class DynamicFormAdapter {
 }
