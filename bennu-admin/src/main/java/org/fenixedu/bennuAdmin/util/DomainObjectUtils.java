@@ -36,7 +36,7 @@ public class DomainObjectUtils {
 
   public static void deleteObject(final DomainObject domainObject) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     Class<?> clazz = domainObject.getClass();
-    Method deleteMethod = clazz.getDeclaredMethod("delete");
+    Method deleteMethod = clazz.getDeclaredMethod("deleteDomainObject");
     deleteMethod.setAccessible(true);
     deleteMethod.invoke(domainObject);
   }

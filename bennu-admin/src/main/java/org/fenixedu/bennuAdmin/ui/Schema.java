@@ -38,7 +38,7 @@ public class Schema {
   public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT_META =
           (data, domainObject) -> {
               try {
-                  domainObject.getClass().getDeclaredMethod("delete");
+                  domainObject.getClass().getDeclaredMethod("deleteDomainObject");
                   data.addProperty("deletable", true);
               } catch (NoSuchMethodException err) {
                   data.addProperty("deletable", false);
