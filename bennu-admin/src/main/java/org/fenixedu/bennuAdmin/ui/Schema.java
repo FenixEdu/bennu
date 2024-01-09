@@ -11,6 +11,8 @@ import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.dml.*;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -28,22 +30,24 @@ public class Schema {
   public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT =
       (data, domainObject) -> {
         DomainClass domClass =
-            FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+          FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
         data.addProperty("objectId", domainObject.getExternalId());
         data.addProperty("class", domainObject.getClass().getSimpleName());
         data.addProperty("type", domainObject.getClass().getTypeName());
         data.add("modifiers", modifiers(domClass));
+        data.add("count", JsonUtils.toJson(count -> {
+          count.addProperty("slots", DomainObjectUtils.getDomainObjectSlots(domainObject).size());
+          count.addProperty("roles", DomainObjectUtils.getRoles(FenixFramework.getDomainModel().findClass(domainObject.getClass().getName()), true).size());
+          count.addProperty("roleSets", DomainObjectUtils.getRoles(FenixFramework.getDomainModel().findClass(domainObject.getClass().getName()), false).size());
+        }));
       };
 
   public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT_META =
-          (data, domainObject) -> {
-              try {
-                  domainObject.getClass().getDeclaredMethod("deleteDomainObject");
-                  data.addProperty("deletable", true);
-              } catch (NoSuchMethodException err) {
-                  data.addProperty("deletable", false);
-              }
-          };
+    (data, domainObject) -> {
+      Class<?> targetClass = domainObject.getClass();
+      boolean deletable = DomainObjectUtils.recursiveGetDeclaredMethod(domainObject, "delete") != null;
+        data.addProperty("deletable", deletable);
+    };
 
   public static BiConsumer<JsonObject, Slot> DOMAIN_OBJECT_SLOT(DomainObject domainObject) {
     return (data, slot) -> {

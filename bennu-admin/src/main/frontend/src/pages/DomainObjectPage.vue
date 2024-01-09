@@ -42,7 +42,7 @@
           @click.native="events.click"
           @keydown.native="events.keydown"
         >
-          {{ $t('tabs.slots') }}
+          {{ $t('tabs.slots', { count: domainObject.count.slots }) }}
         </router-link>
       </template>
       <template #tab-1="{ attrs, events }">
@@ -54,7 +54,7 @@
           @click.native="events.click"
           @keydown.native="events.keydown"
         >
-          {{ $t('tabs.roles') }}
+          {{ $t('tabs.roles', { count: domainObject.count.roles }) }}
         </router-link>
       </template>
       <template #tab-2="{ attrs, events }">
@@ -66,7 +66,7 @@
           @click.native="events.click"
           @keydown.native="events.keydown"
         >
-          {{ $t('tabs.role-sets') }}
+          {{ $t('tabs.role-sets', { count: domainObject.count.roleSets }) }}
         </router-link>
       </template>
     </tab-navigation>
@@ -129,9 +129,9 @@ export default {
         description: 'Browse Fenix domains',
         tabs: {
           label: 'Domain Object Details',
-          slots: 'Slots',
-          roles: 'Roles',
-          'role-sets': 'Role Sets'
+          slots: 'Slots ({count})',
+          roles: 'Roles ({count})',
+          'role-sets': 'Role Sets ({count})'
         }
       }
     }
