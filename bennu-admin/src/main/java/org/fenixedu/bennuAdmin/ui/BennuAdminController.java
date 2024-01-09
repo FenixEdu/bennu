@@ -5,6 +5,7 @@ import com.twilio.rest.api.v2010.account.sip.Domain;
 import jvstm.util.Pair;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.core.security.SkipCSRF;
 import org.fenixedu.bennuAdmin.util.BennuAdminError;
 import org.fenixedu.bennuAdmin.util.DomainObjectUtils;
 import org.fenixedu.commons.StringNormalizer;
@@ -81,6 +82,7 @@ public class BennuAdminController {
     return ok(Schema.DOMAIN_OBJECT_META, domainObject);
   }
 
+  @SkipCSRF
   @RequestMapping(value = "/domain-objects/{objectId}", method = RequestMethod.DELETE)
   public ResponseEntity<?> deleteDomainObject(final @PathVariable String objectId) {
     requireGroup(Group.managers());

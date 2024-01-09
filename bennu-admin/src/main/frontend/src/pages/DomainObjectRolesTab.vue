@@ -22,7 +22,12 @@
 
     <empty-state v-if="totalItems == 0">
       <template #title>
-        {{ $t('empty-state.no-roles') }}
+        <template v-if="hasSearch">
+          {{ $t('empty-state.no-roles-search', { search: searchInput }) }}
+        </template>
+        <template v-else>
+          {{ $t('empty-state.no-roles') }}
+        </template>
       </template>
     </empty-state>
 
@@ -84,7 +89,8 @@
 <script>
 import Pagination from '@/components/utils/Pagination.vue'
 import EmptyState from '@/components/EmptyState.vue'
-import DomainObjectSlotRow from '@/components/domain-browser/DomainObjectSlotRow.vue'
+import DomainObjectSlotRow from '@/components/domain-object/DomainObjectSlotRow.vue'
+import { guardWithErrorHandling } from '@/router/guards'
 
 export default {
   components: {
@@ -92,13 +98,15 @@ export default {
     EmptyState,
     DomainObjectSlotRow
   },
-  async beforeRouteUpdate (to, from, next) {
-    this.$progress.set(10)
-    await to.meta.beforeLoad(to, from)
-    this.searchInput = to.query.q
-    this.$progress.complete()
-    next()
-  },
+  beforeRouteUpdate: guardWithErrorHandling(
+    async function (to, from, next) {
+      this.$progress.set(10)
+      await to.meta.beforeRouteLoad(to, from)
+      this.searchInput = to.query.q || ''
+      this.$progress.complete()
+      next()
+    }
+  ),
   props: {
     query: {
       type: String,
@@ -120,11 +128,24 @@ export default {
     domainObjectRoles: {
       type: Array,
       required: true
+    },
+    domainObject: {
+      type: Object,
+      required: true
+    },
+    metadata: {
+      type: Object,
+      required: true
     }
   },
   data () {
     return {
       searchInput: this.query
+    }
+  },
+  computed: {
+    hasSearch () {
+      return this.searchInput !== ''
     }
   },
   methods: {
@@ -145,12 +166,20 @@ export default {
         search: {
           placeholder: 'Pesquisar...',
           'aria-label': 'Pesquisar'
+        },
+        'empty-state': {
+          'no-roles': 'Este objeto não possui papéis.',
+          'no-roles-search': 'Nenhum papel encontrado para "{search}".'
         }
       },
       en: {
         search: {
           placeholder: 'Search...',
           'aria-label': 'Search'
+        },
+        'empty-state': {
+          'no-roles': 'This object has no roles.',
+          'no-roles-search': 'No roles found for "{search}".'
         }
       }
     }

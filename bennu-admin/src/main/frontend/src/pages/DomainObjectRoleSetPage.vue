@@ -74,7 +74,8 @@
 <script>
 import EmptyState from '@/components/EmptyState.vue'
 import Pagination from '@/components/utils/Pagination.vue'
-import DomainObjectSlotRow from '@/components/domain-browser/DomainObjectSlotRow.vue'
+import DomainObjectSlotRow from '@/components/domain-object/DomainObjectSlotRow.vue'
+import { guardWithErrorHandling } from '@/router/guards'
 
 export default {
   components: {
@@ -82,12 +83,14 @@ export default {
     Pagination,
     DomainObjectSlotRow
   },
-  async beforeRouteUpdate (to, from, next) {
-    this.$progress.set(10)
-    await to.meta.beforeLoad(to, from)
-    this.$progress.complete()
-    next()
-  },
+  beforeRouteUpdate: guardWithErrorHandling(
+    async function (to, from, next) {
+      this.$progress.set(10)
+      await to.meta.beforeRouteLoad(to, from)
+      this.$progress.complete()
+      next()
+    }
+  ),
   props: {
     page: {
       type: Number,

@@ -47,3 +47,8 @@ export async function getDomainObjectRoleSet ({ objectId, roleSetName, query, pa
   const response = await client.get(`${BASE_URL}/domain-objects/${objectId}/role-sets/${roleSetName}`, { params })
   return response.data
 }
+
+export async function deleteDomainObject ({ objectId }) {
+  const response = await client.delete(`${BASE_URL}/domain-objects/${objectId}`)
+  return response.data
+}

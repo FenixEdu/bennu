@@ -19,9 +19,9 @@
       </div>
       <div class="section-header__meta">
         <button
-          v-if="domainObject.metadata.deletable"
+          v-if="metadata.deletable"
           class="btn btn--danger"
-          @click.prevent="deleteObject()"
+          @click.prevent="isConfirmDeleteDomainObjectModalOpen = true"
         >
           {{ $t('actions.delete') }}
         </button>
@@ -71,26 +71,33 @@
       </template>
     </tab-navigation>
     <router-view />
+    <confirm-delete-domain-object-modal
+      :domain-object="domainObject"
+      :value="isConfirmDeleteDomainObjectModalOpen"
+    />
   </div>
 </template>
 
 <script>
 import TabNavigation from '@/components/utils/TabNavigation.vue'
+import ConfirmDeleteDomainObjectModal from '@/components/domain-object/delete/ConfirmDeleteDomainObjectModal.vue'
 
 export default {
   name: 'DomainObjectPage',
   components: {
-    TabNavigation
+    TabNavigation,
+    ConfirmDeleteDomainObjectModal
   },
-  async beforeRouteUpdate (to, from, next) {
-    this.$progress.set(10)
+  beforeRouteUpdate: function (to, from, next) {
     this.currentTab = this.tabs.findIndex(route => route === to.name)
-    await this.$route.meta.beforeRouteLoad(to, from)
-    this.$progress.complete()
     next()
   },
   props: {
     domainObject: {
+      type: Object,
+      required: true
+    },
+    metadata: {
       type: Object,
       required: true
     }
@@ -99,7 +106,8 @@ export default {
     const tabs = ['DomainObjectSlotsTab', 'DomainObjectRolesTab', 'DomainObjectRoleSetsTab']
     return {
       tabs,
-      currentTab: tabs.findIndex(route => route === this.$route.name)
+      currentTab: tabs.findIndex(route => route === this.$route.name),
+      isConfirmDeleteDomainObjectModalOpen: false
     }
   },
   i18n: {
@@ -134,9 +142,6 @@ export default {
     },
     prettyJson (json) {
       return JSON.stringify(JSON.parse(json), null, 2)
-    },
-    deleteObject () {
-      console.log('Deleting object')
     }
   }
 }
