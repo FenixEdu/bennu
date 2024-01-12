@@ -40,7 +40,7 @@
         <div class="card-row card-row--sm">
           <div class="card-row__text">
             <p>
-              <span class="h4 h4--ssp">{{ roleSet.name }}</span>
+              <span class="h4 h4--ssp">{{ roleSet.name }} ({{ roleSet.count }})</span>
             </p>
             <p>{{ roleSet.type }}</p>
           </div>

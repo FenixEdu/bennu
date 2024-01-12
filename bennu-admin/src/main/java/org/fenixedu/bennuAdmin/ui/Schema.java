@@ -11,10 +11,7 @@ import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.dml.*;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
 import java.util.function.BiConsumer;
 
 public class Schema {
@@ -30,24 +27,37 @@ public class Schema {
   public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT =
       (data, domainObject) -> {
         DomainClass domClass =
-          FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+            FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+
         data.addProperty("objectId", domainObject.getExternalId());
         data.addProperty("class", domainObject.getClass().getSimpleName());
         data.addProperty("type", domainObject.getClass().getTypeName());
         data.add("modifiers", modifiers(domClass));
-        data.add("count", JsonUtils.toJson(count -> {
-          count.addProperty("slots", DomainObjectUtils.getDomainObjectSlots(domainObject).size());
-          count.addProperty("roles", DomainObjectUtils.getRoles(FenixFramework.getDomainModel().findClass(domainObject.getClass().getName()), true).size());
-          count.addProperty("roleSets", DomainObjectUtils.getRoles(FenixFramework.getDomainModel().findClass(domainObject.getClass().getName()), false).size());
-        }));
+
+        DomainClass domainClass =
+            FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+
+        int slotCount = DomainObjectUtils.getDomainObjectSlots(domainObject).size();
+        int roleCount = DomainObjectUtils.getRoles(domainClass, true).size();
+        int roleSetCount = DomainObjectUtils.getRoles(domainClass, false).size();
+
+        data.add(
+            "count",
+            JsonUtils.toJson(
+                count -> {
+                  count.addProperty("slots", slotCount);
+                  count.addProperty("roles", roleCount);
+                  count.addProperty("roleSets", roleSetCount);
+                }));
       };
 
   public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT_META =
-    (data, domainObject) -> {
-      Class<?> targetClass = domainObject.getClass();
-      boolean deletable = DomainObjectUtils.recursiveGetDeclaredMethod(domainObject, "delete") != null;
+      (data, domainObject) -> {
+        Class<?> targetClass = domainObject.getClass();
+        boolean deletable =
+            DomainObjectUtils.recursiveGetDeclaredMethod(domainObject, "delete") != null;
         data.addProperty("deletable", deletable);
-    };
+      };
 
   public static BiConsumer<JsonObject, Slot> DOMAIN_OBJECT_SLOT(DomainObject domainObject) {
     return (data, slot) -> {
@@ -67,12 +77,14 @@ public class Schema {
     };
   }
 
-  public static final BiConsumer<JsonObject, Role> DOMAIN_OBJECT_ROLE_SET =
-      (data, role) -> {
-        data.addProperty("name", role.getName());
-        data.addProperty("type", role.getType().getFullName());
-        data.add("modifiers", modifiers(role));
-      };
+  public static BiConsumer<JsonObject, Role> DOMAIN_OBJECT_ROLE_SET(DomainObject domainObject) {
+    return (data, role) -> {
+      data.addProperty("name", role.getName());
+      data.addProperty("type", role.getType().getFullName());
+      data.addProperty("count", DomainObjectUtils.getRelationSet(domainObject, role).size());
+      data.add("modifiers", modifiers(role));
+    };
+  }
 
   private static JsonElement modifiers(ModifiableEntity entity) {
     JsonArray array = new JsonArray();
