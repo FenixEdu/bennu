@@ -96,6 +96,7 @@ public class BennuAdminController {
       DomainObjectUtils.deleteObject(domainObject);
       return ResponseEntity.status(HttpStatus.OK).build();
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException error) {
+      // When error is IllegalAccessException, the real error is in the target property, not in the error itself
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
   }
@@ -178,7 +179,7 @@ public class BennuAdminController {
         roles.stream(),
         (role) -> getLocalizedString(roleSetQueryString(role)),
         Comparator.comparing(Role::getName),
-        Schema.DOMAIN_OBJECT_ROLE_SET);
+        Schema.DOMAIN_OBJECT_ROLE_SET(domainObject));
   }
 
   @RequestMapping(

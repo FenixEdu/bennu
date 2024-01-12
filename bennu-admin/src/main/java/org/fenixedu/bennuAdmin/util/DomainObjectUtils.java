@@ -12,10 +12,7 @@ import pt.ist.fenixframework.dml.ValueType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class DomainObjectUtils {
   private static Object getSlotValue(final DomainObject domainObject, final Slot slot) {
@@ -35,8 +32,6 @@ public class DomainObjectUtils {
     return null;
   }
 
-  // Fixme: not working, some trouble with atomic behaviour
-  @Atomic
   public static void deleteObject(final DomainObject domainObject) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     Method deleteMethod = recursiveGetDeclaredMethod(domainObject, "delete");
     if (deleteMethod != null) {
@@ -135,9 +130,9 @@ public class DomainObjectUtils {
       try {
         return (Set<DomainObject>) method.invoke(domainObject);
       } catch (final Exception e) {
-        return null;
+        return Collections.emptySet();
       }
     }
-    return null;
+    return Collections.emptySet();
   }
 }
