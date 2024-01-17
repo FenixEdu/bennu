@@ -12,6 +12,11 @@ export async function getDomainObjectMeta ({ objectId }) {
   return response.data
 }
 
+export async function getDomainObjectForm ({ objectId }) {
+  const response = await client.get(`${BASE_URL}/domain-objects/${objectId}/form`)
+  return response.data
+}
+
 export async function listDomainObjectSlots ({ objectId, query, page, perPage } = {}) {
   const params = {
     ...(query && { query }),

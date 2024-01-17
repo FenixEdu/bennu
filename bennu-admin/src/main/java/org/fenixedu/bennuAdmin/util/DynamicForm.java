@@ -77,6 +77,10 @@ public class DynamicForm {
     }
   }
 
+  public JsonObject getForm() {
+    return form;
+  }
+
   public DynamicForm withData(final JsonObject data) {
     this.data = data;
 

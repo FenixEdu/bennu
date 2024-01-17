@@ -24,6 +24,7 @@ const DomainObjectRoleSetPage = () => import('@/pages/DomainObjectRoleSetPage.vu
 const DomainObjectSlotsTab = () => import('@/pages/DomainObjectSlotsTab.vue')
 const DomainObjectRolesTab = () => import('@/pages/DomainObjectRolesTab.vue')
 const DomainObjectRoleSetsTab = () => import('@/pages/DomainObjectRoleSetsTab.vue')
+const DomainObjectEditPage = () => import('@/pages/DomainObjectEditPage.vue')
 
 Vue.use(Router)
 
@@ -289,6 +290,27 @@ const router = new Router({
       },
       beforeEnter: guardWithErrorHandling(async (to, from, next) => {
         await to.meta.beforeRouteLoad(to, from)
+        next()
+      })
+    },
+    {
+      path: '/domain-object/:domainObjectId/edit',
+      name: 'DomainObjectEditPage',
+      component: DomainObjectEditPage,
+      meta: {
+        layout: 'PageWithNavBarAndFooterLayout'
+      },
+      props: (route) => ({
+        domainObject: route.meta.domainObject,
+        domainObjectForm: route.meta.domainObjectForm
+      }),
+      beforeEnter: guardWithErrorHandling(async (to, from, next) => {
+        const [domainObject, domainObjectForm] = await Promise.all([
+          BennuAdminAPI.getDomainObject({ objectId: to.params.domainObjectId }),
+          BennuAdminAPI.getDomainObjectForm({ objectId: to.params.domainObjectId })
+        ])
+        to.meta.domainObject = domainObject
+        to.meta.domainObjectForm = domainObjectForm
         next()
       })
     },

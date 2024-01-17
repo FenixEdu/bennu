@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennuAdmin.util.DomainObjectUtils;
+import org.fenixedu.bennuAdmin.util.DynamicForm;
 import org.fenixedu.commons.stream.StreamUtils;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
@@ -85,6 +86,12 @@ public class Schema {
       data.add("modifiers", modifiers(role));
     };
   }
+
+  public static final BiConsumer<JsonObject, DynamicForm> DOMAIN_OBJECT_FORM =
+      (data, dynamicForm) -> {
+        data.add("data", dynamicForm.toDataJson());
+        data.add("form", dynamicForm.getForm());
+      };
 
   private static JsonElement modifiers(ModifiableEntity entity) {
     JsonArray array = new JsonArray();

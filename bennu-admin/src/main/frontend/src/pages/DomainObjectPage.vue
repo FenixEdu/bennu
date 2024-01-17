@@ -17,7 +17,13 @@
         </h1>
         <p>{{ domainObject.type }}</p>
       </div>
-      <div class="section-header__meta">
+      <div class="section-header__meta btn-group">
+        <router-link
+          :to="{ name: 'DomainObjectEditPage', params: { objectId: domainObject.objectId } }"
+          class="btn btn--primary btn--outline"
+        >
+          {{ $t('actions.edit') }}
+        </router-link>
         <button
           v-if="metadata.deletable"
           class="btn btn--danger"

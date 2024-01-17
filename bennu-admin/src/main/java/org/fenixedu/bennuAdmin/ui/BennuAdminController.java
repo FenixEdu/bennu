@@ -6,8 +6,7 @@ import jvstm.util.Pair;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.security.SkipCSRF;
-import org.fenixedu.bennuAdmin.util.BennuAdminError;
-import org.fenixedu.bennuAdmin.util.DomainObjectUtils;
+import org.fenixedu.bennuAdmin.util.*;
 import org.fenixedu.commons.StringNormalizer;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.connect.ui.AccountController;
@@ -96,9 +95,24 @@ public class BennuAdminController {
       DomainObjectUtils.deleteObject(domainObject);
       return ResponseEntity.status(HttpStatus.OK).build();
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException error) {
-      // When error is IllegalAccessException, the real error is in the target property, not in the error itself
+      // When error is IllegalAccessException, the real error is in the target property, not in the
+      // error itself
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+  }
+
+  @RequestMapping(value = "/domain-objects/{objectId}/form", method = RequestMethod.GET)
+  public ResponseEntity<?> domainObjectForm(final @PathVariable String objectId) {
+    requireGroup(Group.managers());
+
+    DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+    if (!FenixFramework.isDomainObjectValid(domainObject)) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
+    }
+
+    DynamicForm dynamicForm = new DynamicFormAdapter(domainObject).toDynamicForm();
+
+    return ok(Schema.DOMAIN_OBJECT_FORM, dynamicForm);
   }
 
   @RequestMapping(value = "/domain-objects/{objectId}/slots", method = RequestMethod.GET)
