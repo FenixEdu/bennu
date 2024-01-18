@@ -85,7 +85,6 @@ const router = new Router({
         metadata: route.meta.metadata
       }),
       beforeEnter: guardWithErrorHandling(async (to, from, next) => {
-        console.log('beforeEnter Parent')
         const [domainObject, metadata] = await Promise.all([
           BennuAdminAPI.getDomainObject({ objectId: to.params.domainObjectId }),
           BennuAdminAPI.getDomainObjectMeta({ objectId: to.params.domainObjectId })

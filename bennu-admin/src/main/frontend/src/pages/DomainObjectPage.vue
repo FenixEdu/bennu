@@ -124,9 +124,9 @@ export default {
         description: 'Navegue pelos domínios do Fenix',
         tabs: {
           label: 'Detalhes do objeto de domínio',
-          slots: 'Slots',
-          roles: 'Roles',
-          'role-sets': 'Role Sets'
+          slots: 'Slots ({count})',
+          roles: 'Roles ({count})',
+          'role-sets': 'Role Sets ({count})'
         }
       },
       en: {

@@ -110,9 +110,9 @@ public class BennuAdminController {
       throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
     }
 
-    DynamicForm dynamicForm = new DynamicFormAdapter(domainObject).toDynamicForm();
+    DynamicFormAdapter adapter = new DynamicFormAdapter(domainObject);
 
-    return ok(Schema.DOMAIN_OBJECT_FORM, dynamicForm);
+    return ok(Schema.DOMAIN_OBJECT_FORM, adapter.toDynamicForm().withData(adapter.getData()));
   }
 
   @RequestMapping(value = "/domain-objects/{objectId}/slots", method = RequestMethod.GET)

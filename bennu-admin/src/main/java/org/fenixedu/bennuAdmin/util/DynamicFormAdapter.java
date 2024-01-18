@@ -41,8 +41,6 @@ public class DynamicFormAdapter {
     String type = slot.getTypeName().substring(slot.getTypeName().lastIndexOf(".") + 1);
     return switch (type) {
       case "LocalizedString" -> "LocalizedText";
-      case "ImmutableJsonElement<com.google.gson.JsonObject>" -> "Text";
-      case "String" -> "Text";
       case "Boolean", "boolean" -> "Boolean";
       case "DateTime" -> "DateTime";
       case "Integer" -> "Numeric";
@@ -79,8 +77,8 @@ public class DynamicFormAdapter {
                                                                     "type", slotFieldType(slot));
                                                                 prop.addProperty(
                                                                     "readonly",
-                                                                    !slot.hasModifier(
-                                                                        Modifier.PUBLIC));
+                                                                    slot.hasModifier(
+                                                                        Modifier.PROTECTED));
                                                                 prop.addProperty(
                                                                     "field", slot.getName());
                                                                 prop.addProperty(
@@ -108,5 +106,22 @@ public class DynamicFormAdapter {
                         pagesArr.add(p);
                       }));
             }));
+  }
+
+  public JsonObject getData() {
+    JsonObject jsonData =
+        JsonUtils.toJson(
+            data -> {
+              DomainObjectUtils.getDomainObjectSlots(domainObject)
+                  .forEach(
+                      slot -> {
+                        data.add(
+                            slot.getName(),
+                            JsonUtils.parseJsonElement(
+                                DomainObjectUtils.getSlotValueString(domainObject, slot)));
+                      });
+            });
+
+    return JsonUtils.toJson(p -> p.add("0", JsonUtils.toJson(s -> s.add("0", jsonData))));
   }
 }
