@@ -194,7 +194,7 @@ export default {
       min-width: 35%;
       border-bottom: 1px solid $light-gray;
 
-      + & {
+      & + & {
         margin-top: 0;
       }
     }
