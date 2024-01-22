@@ -13,7 +13,7 @@ import UnauthorizedPage from '@/pages/UnauthorizedPage'
 import ErrorPage from '@/pages/ErrorPage'
 
 // Utils
-// import { getPageAndSectionFromHash, scrollOffset as DynamicFormScrollOffset, scrollBehavior as DynamicFormScrollBehavior } from '@/components/dynamic-form/utils/navigation'
+import { scrollOffset as DynamicFormScrollOffset, scrollBehavior as DynamicFormScrollBehavior } from '@/components/dynamic-form/utils/navigation'
 // import { getMeta } from '@/router/utils'
 import * as BennuAdminAPI from '@/api/bennu-admin'
 
@@ -297,7 +297,9 @@ const router = new Router({
       name: 'DomainObjectEditPage',
       component: DomainObjectEditPage,
       meta: {
-        layout: 'PageWithNavBarAndFooterLayout'
+        layout: 'PageWithNavBarAndFooterLayout',
+        scrollBehavior: DynamicFormScrollBehavior,
+        scrollOffset: DynamicFormScrollOffset
       },
       props: (route) => ({
         domainObject: route.meta.domainObject,

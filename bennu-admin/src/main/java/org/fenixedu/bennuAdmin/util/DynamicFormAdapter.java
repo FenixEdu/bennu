@@ -145,6 +145,17 @@ public class DynamicFormAdapter {
                                                                   prop.addProperty("date", true);
                                                                   prop.addProperty("time", true);
                                                                 }
+
+                                                                if (slotFieldType(slot)
+                                                                    .equals("Boolean")) {
+                                                                  prop.add(
+                                                                      "labelYes",
+                                                                      ls("Verdadeiro", "true")
+                                                                          .json());
+                                                                  prop.add(
+                                                                      "labelNo",
+                                                                      ls("Falso", "false").json());
+                                                                }
                                                               }));
                                                     });
                                           }));
