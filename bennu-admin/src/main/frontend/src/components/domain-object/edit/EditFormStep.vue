@@ -20,7 +20,7 @@
     <dynamic-form
       :dynamic-form="form"
       @previous="$emit('previous', $event)"
-      @next="$emit('next', $event)"
+      @next="next"
       @touch="onFormTouch"
     />
   </div>
@@ -54,6 +54,16 @@ export default {
   methods: {
     onFormTouch (touched) {
       this.$emit('touch', touched)
+    },
+    async next ($event) {
+      const [data, blobs] = await Promise.all([
+        this.form.getSubmitData(),
+        this.form.getSubmitBlobs()
+      ])
+
+      console.log({ data, blobs })
+
+      this.$emit('next', $event)
     }
   },
   i18n: {

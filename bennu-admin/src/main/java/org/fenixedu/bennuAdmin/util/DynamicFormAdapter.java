@@ -116,7 +116,7 @@ public class DynamicFormAdapter {
                                                                     "field", slot.getName());
                                                                 prop.addProperty(
                                                                     "required",
-                                                                    true); // todo: check this
+                                                                    false); // todo: check this
                                                                 prop.add(
                                                                     "label",
                                                                     ls(slot.getName()).json());
@@ -187,11 +187,21 @@ public class DynamicFormAdapter {
                         String slotFieldType = slotFieldType(slot);
                         String slotValueString =
                             DomainObjectUtils.getSlotValueString(domainObject, slot);
-                        if (slotFieldType.equals("LocalizedText")) {
-                          data.add(slot.getName(), JsonUtils.parse(slotValueString));
-                        } else {
-                          // If we add as a json element, the form will not be able to edit it
-                          data.addProperty(slot.getName(), slotValueString);
+
+                        switch (slotFieldType) {
+                          case "LocalizedText", "Boolean" -> {
+                            data.add(slot.getName(), JsonUtils.parseJsonElement(slotValueString));
+                          }
+                          case "Select" -> {
+                            data.add(
+                                slot.getName(),
+                                JsonUtils.toJson(
+                                    j -> {
+                                      j.add("label", ls(slotValueString).json());
+                                      j.addProperty("value", slotValueString);
+                                    }));
+                          }
+                          default -> data.addProperty(slot.getName(), slotValueString);
                         }
                       });
             });
