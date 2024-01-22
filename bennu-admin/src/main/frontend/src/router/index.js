@@ -94,7 +94,7 @@ const router = new Router({
         next()
       }),
       // Something strange is happening here, the beforeEnter is not being called when changing tabs.
-      // For now, we are calling the methods mannualy in each child route.
+      // For now, we are calling the methods manually in each child route.
       children: [
         {
           path: 'slots',
@@ -310,6 +310,7 @@ const router = new Router({
         ])
         to.meta.domainObject = domainObject
         to.meta.domainObjectForm = domainObjectForm
+        console.log({ domainObjectForm })
         next()
       })
     },

@@ -1,6 +1,7 @@
 package org.fenixedu.bennuAdmin.util;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -9,6 +10,7 @@ import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.dml.Modifier;
 import pt.ist.fenixframework.dml.Slot;
 
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.function.Supplier;
 
@@ -68,6 +70,8 @@ public class DynamicFormAdapter {
                                       JsonUtils.toJsonArray(
                                           propsArr -> {
                                             DomainObjectUtils.getDomainObjectSlots(domainObject)
+                                                .stream()
+                                                .sorted(Comparator.comparing(Slot::getName))
                                                 .forEach(
                                                     slot -> {
                                                       propsArr.add(
@@ -87,6 +91,24 @@ public class DynamicFormAdapter {
                                                                 prop.add(
                                                                     "label",
                                                                     ls(slot.getName()).json());
+                                                                prop.add(
+                                                                    "description",
+                                                                    ls(slot.getTypeName()).json());
+                                                                if (slotFieldType(slot)
+                                                                    .equals("LocalizedText")) {
+                                                                  // todo: improve this
+                                                                  prop.add(
+                                                                      "locales",
+                                                                      JsonUtils.parseJsonArray(
+                                                                          "[\"pt-PT\",\"en-GB\"]"));
+                                                                }
+
+                                                                // todo: how should I handle this?
+                                                                if (slotFieldType(slot)
+                                                                    .equals("DateTime")) {
+                                                                  prop.addProperty("date", true);
+                                                                  prop.addProperty("time", true);
+                                                                }
                                                               }));
                                                     });
                                           }));
@@ -115,10 +137,15 @@ public class DynamicFormAdapter {
               DomainObjectUtils.getDomainObjectSlots(domainObject)
                   .forEach(
                       slot -> {
-                        data.add(
-                            slot.getName(),
-                            JsonUtils.parseJsonElement(
-                                DomainObjectUtils.getSlotValueString(domainObject, slot)));
+                        String slotFieldType = slotFieldType(slot);
+                        String slotValueString =
+                            DomainObjectUtils.getSlotValueString(domainObject, slot);
+                        if (slotFieldType.equals("LocalizedText")) {
+                          data.add(slot.getName(), JsonUtils.parse(slotValueString));
+                        } else {
+                          // If we add as a json element, the form will not be able to edit it
+                          data.addProperty(slot.getName(), slotValueString);
+                        }
                       });
             });
 
