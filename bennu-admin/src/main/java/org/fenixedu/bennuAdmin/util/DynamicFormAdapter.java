@@ -41,6 +41,15 @@ public class DynamicFormAdapter {
 
   private String slotFieldType(Slot slot) {
     String type = slot.getTypeName().substring(slot.getTypeName().lastIndexOf(".") + 1);
+
+    try {
+      if (Class.forName(slot.getTypeName()).isEnum()) {
+        return "Select";
+      }
+    } catch (ClassNotFoundException e) {
+      // ignore
+    }
+
     return switch (type) {
       case "LocalizedString" -> "LocalizedText";
       case "Boolean", "boolean" -> "Boolean";
@@ -48,6 +57,26 @@ public class DynamicFormAdapter {
       case "Integer" -> "Numeric";
       default -> "Text";
     };
+  }
+
+  private JsonArray getEnumSlotOptions(Slot slot) {
+    return JsonUtils.toJsonArray(
+        arr -> {
+          try {
+            Class<?> enumClass = Class.forName(slot.getTypeName());
+            Object[] enumConstants = enumClass.getEnumConstants();
+            for (Object enumConstant : enumConstants) {
+              arr.add(
+                  JsonUtils.toJson(
+                      obj -> {
+                        obj.add("label", ls(enumConstant.toString()).json());
+                        obj.addProperty("value", enumConstant.toString());
+                      }));
+            }
+          } catch (ClassNotFoundException e) {
+            // ignore
+          }
+        });
   }
 
   public DynamicForm toDynamicForm() {
@@ -101,6 +130,13 @@ public class DynamicFormAdapter {
                                                                       "locales",
                                                                       JsonUtils.parseJsonArray(
                                                                           "[\"pt-PT\",\"en-GB\"]"));
+                                                                }
+
+                                                                if (slotFieldType(slot)
+                                                                    .equals("Select")) {
+                                                                  prop.add(
+                                                                      "options",
+                                                                      getEnumSlotOptions(slot));
                                                                 }
 
                                                                 // todo: how should I handle this?
