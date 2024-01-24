@@ -7,6 +7,7 @@ import org.fenixedu.bennu.core.json.ImmutableJsonElement;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.commons.stream.StreamUtils;
 import org.joda.time.DateTime;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainObject;
@@ -87,6 +88,23 @@ public class DynamicFormAdapter {
         });
   }
 
+  private JsonArray getLocalizedTextSlotLocales(Slot slot) {
+    String slotValueString = DomainObjectUtils.getSlotValueString(domainObject, slot);
+
+    if (slotValueString == null) {
+      return CoreConfiguration.supportedLocales().stream()
+          .map(Locale::getLanguage)
+          .map(JsonUtils::parseJsonElement)
+          .collect(StreamUtils.toJsonArray());
+    }
+
+    JsonObject slotValue = JsonUtils.parseJsonElement(slotValueString).getAsJsonObject();
+
+    return slotValue.keySet().stream()
+        .map(JsonUtils::parseJsonElement)
+        .collect(StreamUtils.toJsonArray());
+  }
+
   public DynamicForm toDynamicForm() {
     JsonObject p =
         JsonUtils.toJson(
@@ -136,8 +154,8 @@ public class DynamicFormAdapter {
                                                                   // todo: improve this
                                                                   prop.add(
                                                                       "locales",
-                                                                      JsonUtils.parseJsonArray(
-                                                                          "[\"pt-PT\",\"en-GB\"]"));
+                                                                      getLocalizedTextSlotLocales(
+                                                                          slot));
                                                                 }
 
                                                                 if (slotFieldType(slot)
@@ -340,10 +358,16 @@ public class DynamicFormAdapter {
 
     method.setAccessible(true);
 
-    if (slotType.equals("ImmutableJsonElement<com.google.gson.JsonObject>")) {
-      method.invoke(domainObject, ImmutableJsonElement.of(data.getAsJsonObject()));
-    } else {
-      method.invoke(domainObject, data.getAsString());
+    switch (slotType) {
+      case "org.fenixedu.bennu.core.json.ImmutableJsonElement<com.google.gson.JsonObject>" -> {
+        method.invoke(domainObject, ImmutableJsonElement.of(data.getAsJsonObject()));
+      }
+      case "com.google.gson.JsonElement" -> {
+        method.invoke(domainObject, data);
+      }
+      default -> {
+        method.invoke(domainObject, data.getAsString());
+      }
     }
   }
 }
