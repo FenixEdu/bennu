@@ -32,7 +32,8 @@ public class DomainObjectUtils {
     return null;
   }
 
-  public static void deleteObject(final DomainObject domainObject) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+  public static void deleteObject(final DomainObject domainObject)
+      throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     Method deleteMethod = recursiveGetDeclaredMethod(domainObject, "delete");
     if (deleteMethod != null) {
       deleteMethod.setAccessible(true);
@@ -59,9 +60,10 @@ public class DomainObjectUtils {
     }
   }
 
-  public static Method recursiveGetDeclaredMethod(final DomainObject domainObject, final String methodName) {
+  public static Method recursiveGetDeclaredMethod(
+      final DomainObject domainObject, final String methodName) {
     Class<?> targetClass = domainObject.getClass();
-    while(targetClass != null) {
+    while (targetClass != null) {
       try {
         return targetClass.getDeclaredMethod(methodName);
       } catch (NoSuchMethodException err) {
@@ -72,11 +74,43 @@ public class DomainObjectUtils {
     return null;
   }
 
-  public static Method getMethod(final String prefix, final DomainObject domainObject, final String slotName) {
+  public static Method recursiveGetDeclaredMethod(
+      final DomainObject domainObject, final String methodName, final Class<?>... parameterTypes) {
+    Class<?> targetClass = domainObject.getClass();
+    while (targetClass != null) {
+      try {
+        return targetClass.getDeclaredMethod(methodName, parameterTypes);
+      } catch (NoSuchMethodException err) {
+        targetClass = targetClass.getSuperclass();
+      }
+    }
+
+    return null;
+  }
+
+  public static Method getMethod(
+      final String prefix, final DomainObject domainObject, final String slotName) {
     final String methodName =
         prefix + Character.toUpperCase(slotName.charAt(0)) + slotName.substring(1);
     if (domainObject != null && !methodName.isEmpty()) {
       Method method = recursiveGetDeclaredMethod(domainObject, methodName);
+      if (method != null) {
+        method.setAccessible(true);
+      }
+      return method;
+    }
+    return null;
+  }
+
+  public static Method getMethod(
+      final String prefix,
+      final DomainObject domainObject,
+      final String slotName,
+      final Class<?>... parameterTypes) {
+    final String methodName =
+        prefix + Character.toUpperCase(slotName.charAt(0)) + slotName.substring(1);
+    if (domainObject != null && !methodName.isEmpty()) {
+      Method method = recursiveGetDeclaredMethod(domainObject, methodName, parameterTypes);
       if (method != null) {
         method.setAccessible(true);
       }

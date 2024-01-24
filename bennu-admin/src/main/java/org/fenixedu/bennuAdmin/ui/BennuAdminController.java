@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.twilio.rest.api.v2010.account.sip.Domain;
 import jvstm.util.Pair;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.security.SkipCSRF;
 import org.fenixedu.bennuAdmin.util.*;
@@ -113,6 +114,27 @@ public class BennuAdminController {
     DynamicFormAdapter adapter = new DynamicFormAdapter(domainObject);
 
     return ok(Schema.DOMAIN_OBJECT_FORM, adapter.toDynamicForm().withData(adapter.getData()));
+  }
+
+  @SkipCSRF
+  @RequestMapping(value = "/domain-objects/{objectId}/edit", method = RequestMethod.POST)
+  public ResponseEntity<?> editDomainObject(
+      final @PathVariable String objectId, final @RequestBody String data) {
+    requireGroup(Group.managers());
+
+    DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+    if (!FenixFramework.isDomainObjectValid(domainObject)) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
+    }
+
+    DynamicFormAdapter adapter = new DynamicFormAdapter(domainObject);
+
+    try {
+      adapter.setData(JsonUtils.parse(data));
+      return ResponseEntity.status(HttpStatus.OK).build();
+    } catch (Exception e) {
+      throw new BennuAdminError(HttpStatus.BAD_REQUEST, "error.invalidData");
+    }
   }
 
   @RequestMapping(value = "/domain-objects/{objectId}/slots", method = RequestMethod.GET)

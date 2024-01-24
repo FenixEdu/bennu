@@ -6,12 +6,17 @@ import com.google.gson.JsonObject;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.LocalizedString;
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.dml.Modifier;
 import pt.ist.fenixframework.dml.Slot;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class DynamicFormAdapter {
@@ -47,7 +52,7 @@ public class DynamicFormAdapter {
         return "Select";
       }
     } catch (ClassNotFoundException e) {
-      // ignore
+      // ignore: not an enum
     }
 
     return switch (type) {
@@ -207,5 +212,94 @@ public class DynamicFormAdapter {
             });
 
     return JsonUtils.toJson(p -> p.add("0", JsonUtils.toJson(s -> s.add("0", jsonData))));
+  }
+
+  @Atomic
+  public void setData(JsonObject data) throws RuntimeException {
+    JsonObject slotData = data.getAsJsonObject("0").getAsJsonObject("0");
+    Set<Slot> slots = DomainObjectUtils.getDomainObjectSlots(domainObject);
+
+    slotData
+        .asMap()
+        .forEach(
+            (slotName, slotValue) -> {
+              Slot slot =
+                  slots.stream().filter(s -> s.getName().equals(slotName)).findFirst().orElse(null);
+
+              if (slot == null) {
+                throw new RuntimeException("Slot " + slotName + " not found");
+              }
+
+              String slotFieldType = slotFieldType(slot);
+
+              try {
+                switch (slotFieldType) {
+                  case "LocalizedText" -> {
+                    setLocalizedTextSlot(slot, slotValue);
+                  }
+                  case "Select" -> {
+                    setSelectSlot(slot, slotValue);
+                  }
+                  case "Boolean" -> {
+                    setBooleanSlot(slot, slotValue);
+                  }
+                }
+              } catch (IllegalAccessException
+                  | ClassNotFoundException
+                  | InvocationTargetException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+              }
+            });
+  }
+
+  private void setLocalizedTextSlot(Slot slot, JsonElement data)
+      throws IllegalAccessException, InvocationTargetException {
+    Method setMethod =
+        DomainObjectUtils.getMethod("set", domainObject, slot.getName(), LocalizedString.class);
+
+    if (setMethod == null) {
+      throw new RuntimeException("Slot " + slot.getName() + " has no setter");
+    }
+
+    setMethod.setAccessible(true);
+
+    setMethod.invoke(domainObject, LocalizedString.fromJson(data));
+  }
+
+  private void setSelectSlot(Slot slot, JsonElement data)
+      throws IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+
+    Class<?> enumClass = Class.forName(slot.getTypeName());
+    if (!enumClass.isEnum()) {
+      throw new RuntimeException(
+          "Slot " + slot.getName() + " is not an enum, but it's being treated as one");
+    }
+
+    Method setMethod = DomainObjectUtils.getMethod("set", domainObject, slot.getName(), enumClass);
+
+    if (setMethod == null) {
+      throw new RuntimeException("Slot " + slot.getName() + " has no setter");
+    }
+
+    setMethod.setAccessible(true);
+
+    Enum<?> enumValue = Enum.valueOf((Class<Enum>) enumClass, data.getAsString());
+
+    setMethod.invoke(domainObject, enumValue);
+  }
+
+  private void setBooleanSlot(Slot slot, JsonElement data)
+      throws IllegalAccessException, InvocationTargetException {
+    Method setMethod =
+        DomainObjectUtils.getMethod("set", domainObject, slot.getName(), boolean.class);
+
+    if (setMethod == null) {
+      throw new RuntimeException("Slot " + slot.getName() + " has no setter");
+    }
+
+    setMethod.setAccessible(true);
+
+    setMethod.invoke(domainObject, data.getAsBoolean());
   }
 }

@@ -7,6 +7,16 @@ export async function getDomainObject ({ objectId }) {
   return response.data
 }
 
+export async function deleteDomainObject ({ objectId }) {
+  const response = await client.delete(`${BASE_URL}/domain-objects/${objectId}`)
+  return response.data
+}
+
+export async function editDomainObject ({ objectId, data }) {
+  const response = await client.post(`${BASE_URL}/domain-objects/${objectId}/edit`, data)
+  return response.data
+}
+
 export async function getDomainObjectMeta ({ objectId }) {
   const response = await client.get(`${BASE_URL}/domain-objects/${objectId}/meta`)
   return response.data
@@ -50,10 +60,5 @@ export async function getDomainObjectRoleSet ({ objectId, roleSetName, query, pa
     ...(perPage !== undefined && page !== undefined && { skip: (page - 1) * perPage, limit: perPage })
   }
   const response = await client.get(`${BASE_URL}/domain-objects/${objectId}/role-sets/${roleSetName}`, { params })
-  return response.data
-}
-
-export async function deleteDomainObject ({ objectId }) {
-  const response = await client.delete(`${BASE_URL}/domain-objects/${objectId}`)
   return response.data
 }
