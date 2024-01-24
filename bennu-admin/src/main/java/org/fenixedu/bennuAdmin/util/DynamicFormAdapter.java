@@ -214,7 +214,7 @@ public class DynamicFormAdapter {
     return JsonUtils.toJson(p -> p.add("0", JsonUtils.toJson(s -> s.add("0", jsonData))));
   }
 
-  @Atomic
+  @Atomic(mode = Atomic.TxMode.WRITE)
   public void setData(JsonObject data) throws RuntimeException {
     JsonObject slotData = data.getAsJsonObject("0").getAsJsonObject("0");
     Set<Slot> slots = DomainObjectUtils.getDomainObjectSlots(domainObject);
