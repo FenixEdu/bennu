@@ -87,11 +87,15 @@ export default {
     domainObjectForm: {
       type: Object,
       required: true
+    },
+    formData: {
+      type: Object,
+      required: true
     }
   },
   data () {
     return {
-      form: new DynamicForm(this.domainObjectForm.form, this.domainObjectForm.data),
+      form: new DynamicForm(this.domainObjectForm.form, this.formData),
       submitState: SubmitState.IDLE,
       SubmitState
     }

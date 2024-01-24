@@ -56,13 +56,8 @@ export default {
       this.$emit('touch', touched)
     },
     async next ($event) {
-      const [data, blobs] = await Promise.all([
-        this.form.getSubmitData(),
-        this.form.getSubmitBlobs()
-      ])
-
-      console.log({ data, blobs })
-
+      const data = await this.form.getSubmitData()
+      this.$emit('update:formData', data)
       this.$emit('next', $event)
     }
   },
