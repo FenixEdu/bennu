@@ -3,6 +3,7 @@ package org.fenixedu.bennuAdmin.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.fenixedu.bennu.core.json.ImmutableJsonElement;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.LocalizedString;
@@ -248,6 +249,9 @@ public class DynamicFormAdapter {
                   case "DateTime" -> {
                     setDateTimeSlot(slot, slotValue);
                   }
+                  default -> {
+                    setTextSlot(slot, slotValue);
+                  }
                 }
               } catch (IllegalAccessException
                   | ClassNotFoundException
@@ -321,5 +325,25 @@ public class DynamicFormAdapter {
     setMethod.setAccessible(true);
 
     setMethod.invoke(domainObject, DateTime.parse(data.getAsString()));
+  }
+
+  private void setTextSlot(Slot slot, JsonElement data)
+      throws IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+    String slotType = slot.getTypeName();
+
+    Method method =
+        DomainObjectUtils.getMethod("set", domainObject, slot.getName(), Class.forName(slotType));
+
+    if (method == null) {
+      throw new RuntimeException("Slot " + slot.getName() + " has no setter");
+    }
+
+    method.setAccessible(true);
+
+    if (slotType.equals("ImmutableJsonElement<com.google.gson.JsonObject>")) {
+      method.invoke(domainObject, ImmutableJsonElement.of(data.getAsJsonObject()));
+    } else {
+      method.invoke(domainObject, data.getAsString());
+    }
   }
 }
