@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.joda.time.DateTime;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
@@ -15,6 +16,7 @@ import pt.ist.fenixframework.dml.Slot;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -214,7 +216,7 @@ public class DynamicFormAdapter {
     return JsonUtils.toJson(p -> p.add("0", JsonUtils.toJson(s -> s.add("0", jsonData))));
   }
 
-  @Atomic(mode = Atomic.TxMode.WRITE)
+  @Atomic(mode = Atomic.TxMode.WRITE) // We must pass the type to avoid transaction error
   public void setData(JsonObject data) throws RuntimeException {
     JsonObject slotData = data.getAsJsonObject("0").getAsJsonObject("0");
     Set<Slot> slots = DomainObjectUtils.getDomainObjectSlots(domainObject);
@@ -242,6 +244,9 @@ public class DynamicFormAdapter {
                   }
                   case "Boolean" -> {
                     setBooleanSlot(slot, slotValue);
+                  }
+                  case "DateTime" -> {
+                    setDateTimeSlot(slot, slotValue);
                   }
                 }
               } catch (IllegalAccessException
@@ -284,7 +289,8 @@ public class DynamicFormAdapter {
 
     setMethod.setAccessible(true);
 
-    Enum<?> enumValue = Enum.valueOf((Class<Enum>) enumClass, data.getAsString());
+    Enum<?> enumValue =
+        Enum.valueOf((Class<Enum>) enumClass, data.getAsJsonObject().get("value").getAsString());
 
     setMethod.invoke(domainObject, enumValue);
   }
@@ -301,5 +307,19 @@ public class DynamicFormAdapter {
     setMethod.setAccessible(true);
 
     setMethod.invoke(domainObject, data.getAsBoolean());
+  }
+
+  private void setDateTimeSlot(Slot slot, JsonElement data)
+      throws IllegalAccessException, InvocationTargetException {
+    Method setMethod =
+        DomainObjectUtils.getMethod("set", domainObject, slot.getName(), DateTime.class);
+
+    if (setMethod == null) {
+      throw new RuntimeException("Slot " + slot.getName() + " has no setter");
+    }
+
+    setMethod.setAccessible(true);
+
+    setMethod.invoke(domainObject, DateTime.parse(data.getAsString()));
   }
 }
