@@ -1,6 +1,8 @@
 package org.fenixedu.bennu.portal.domain;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -23,7 +25,7 @@ import pt.ist.fenixframework.Atomic;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
  */
-public class MenuContainer extends MenuContainer_Base {
+public class MenuContainer extends MenuContainer_Base implements com.qubit.terra.portal.domain.menus.MenuContainer {
 
     /**
      * Used to create the {@link MenuContainer} that will represent the root of the
@@ -112,7 +114,6 @@ public class MenuContainer extends MenuContainer_Base {
      * @throws BennuPortalDomainException
      *             If another child with the same path already exists
      */
-    @Override
     public void addChild(MenuItem child) throws BennuPortalDomainException {
         addChild(child, getNextOrder());
     }
@@ -360,12 +361,6 @@ public class MenuContainer extends MenuContainer_Base {
         }
     }
 
-    public void updateAccessGroup() {
-        String groupExpression =
-                getChildSet().stream().map(item -> item.getAccessGroup().getExpression()).collect(Collectors.joining(" | "));
-        setAccessGroup(Group.parse(groupExpression));
-    }
-
     public Set<Application> getApplications() {
         String availableApplicationNames = getAvailableApplicationNames();
         return availableApplicationNames == null ? Collections.emptySet() : Stream.of(availableApplicationNames.split(","))
@@ -373,11 +368,42 @@ public class MenuContainer extends MenuContainer_Base {
                 .filter(app -> app != null && app.getFunctionalities().size() > 0).collect(Collectors.toSet());
     }
 
-    public void setApplications(Set<Application> applications) {
+    @Override
+    public Collection<com.qubit.terra.portal.domain.menus.MenuItem> getOrderedChilds() {
+        return getOrderedChild().stream().map(t -> (MenuItem) t).collect(Collectors.toList());
+    }
+
+    @Override
+    public void addChildMenuItem(com.qubit.terra.portal.domain.menus.MenuItem menuItem) {
+        addChild((MenuItem) menuItem);
+    }
+
+    @Override
+    public boolean isRootApplicationMenu() {
+        return isRoot();
+    }
+
+    @Override
+    public void updateAccessGroup() {
+        String groupExpression =
+                getChildSet().stream().map(item -> item.getAccessGroup().getExpression()).collect(Collectors.joining(" | "));
+        setAccessGroup(Group.parse(groupExpression));
+    }
+
+    @Override
+    public void setContainerApplications(List<String> applications) {
         if (applications != null && !applications.isEmpty()) {
-            setAvailableApplicationNames(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
+            setAvailableApplicationNames(applications.stream().collect(Collectors.joining(",")));
         } else {
             setAvailableApplicationNames(null);
         }
     }
+
+//  public void setApplications(Set<Application> applications) {
+//  if (applications != null && !applications.isEmpty()) {
+//      setAvailableApplicationNames(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
+//  } else {
+//      setAvailableApplicationNames(null);
+//  }
+//}
 }

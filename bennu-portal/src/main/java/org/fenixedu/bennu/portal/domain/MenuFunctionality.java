@@ -16,7 +16,7 @@ import pt.ist.fenixframework.FenixFramework;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
  */
-public class MenuFunctionality extends MenuFunctionality_Base {
+public class MenuFunctionality extends MenuFunctionality_Base implements com.qubit.terra.portal.domain.menus.MenuFunctionality {
 
     /**
      * Creates a new {@link MenuFunctionality} under the given container, based on the given {@link Functionality}.
@@ -212,4 +212,53 @@ public class MenuFunctionality extends MenuFunctionality_Base {
         return null;
     }
 
+    @Override
+    public String getMenuKey() {
+        return getItemKey();
+    }
+
+    @Override
+    public String getLayoutProvider() {
+        return null;
+    }
+
+    @Override
+    public boolean isFacade() {
+        return false;
+    }
+
+    @Override
+    public boolean skipLayout() {
+        return false;
+    }
+
+    @Override
+    public String getFunctionalityProvider() {
+        return getProvider();
+    }
+
+    @Override
+    public String getFunctionalityDocumentationUrl() {
+        return getDocumentationUrl();
+    }
+
+    @Override
+    public void setFunctionalityDocumentationUrl(String documentationUrl) {
+        setDocumentationUrl(documentationUrl);
+    }
+
+    @Override
+    public String getFunctionalityFullPath() {
+        return getFullPath();
+    }
+
+    @Override
+    public void setMenuKey(String key) {
+        setItemKey(key);
+    }
+
+    @Override
+    public void setFunctionalityProvider(String provider) {
+        setProvider(provider);
+    }
 }

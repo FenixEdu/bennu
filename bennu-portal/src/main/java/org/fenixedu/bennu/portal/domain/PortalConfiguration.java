@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.servlet.PortalInitializer;
 import org.fenixedu.commons.i18n.I18N;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
+import com.qubit.terra.portal.domain.menus.Portal;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -27,7 +29,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
  */
-public class PortalConfiguration extends PortalConfiguration_Base {
+public class PortalConfiguration extends PortalConfiguration_Base implements Portal {
 
     private static final Logger logger = LoggerFactory.getLogger(PortalConfiguration.class);
 
@@ -65,9 +67,104 @@ public class PortalConfiguration extends PortalConfiguration_Base {
     }
 
     @Override
+    public com.qubit.terra.framework.tools.primitives.LocalizedString getAppName() {
+        return BundleUtil.convertToPlatformLocalizedString(super.getApplicationTitle());
+    }
+
+    @Override
+    public com.qubit.terra.framework.tools.primitives.LocalizedString getHtmlName() {
+        return BundleUtil.convertToPlatformLocalizedString(super.getHtmlTitle());
+    }
+
+    @Override
+    public com.qubit.terra.framework.tools.primitives.LocalizedString getAppSecondaryName() {
+        return BundleUtil.convertToPlatformLocalizedString(super.getApplicationSubTitle());
+    }
+
+    @Override
+    public com.qubit.terra.framework.tools.primitives.LocalizedString getCopyright() {
+        return BundleUtil.convertToPlatformLocalizedString(super.getApplicationCopyright());
+    }
+
+    @Override
+    public String getPortalTheme() {
+        return getTheme();
+    }
+
+    @Override
     public String getTheme() {
         String theme = super.getTheme();
         return PortalInitializer.isThemeAvailable(theme) ? theme : "default";
+    }
+
+    @Override
+    public String getAppSystemEmailAddress() {
+        return super.getSystemEmailAddress();
+    }
+
+    @Override
+    public byte[] getPortalLogo() {
+        return getLogo();
+    }
+
+    @Override
+    public String getPortalLogoChecksum() {
+        return getLogoChecksum();
+    }
+
+    @Override
+    public String getPortalLogoType() {
+        return getLogoType();
+    }
+
+    @Override
+    public String getPortalLogoLinkUrl() {
+        return getLogoLinkUrl();
+    }
+
+    @Override
+    public String getPortalLogoTooltip() {
+        return getLogoTooltip();
+    }
+
+    @Override
+    public byte[] getPortalFavicon() {
+        return getFavicon();
+    }
+
+    @Override
+    public String getPortalFaviconType() {
+        return getFaviconType();
+    }
+
+    @Override
+    public String getPortalDocumentationBaseUrl() {
+        return getDocumentationBaseUrl();
+    }
+
+    @Override
+    public String getAppLoginPath() {
+        return getLoginPath();
+    }
+
+    @Override
+    public String getAppRecoveryLinkPath() {
+        return getRecoveryLinkPath();
+    }
+
+    @Override
+    public String getAppSignUpPath() {
+        return getSignUpPath();
+    }
+
+    @Override
+    public Boolean detectBrowserLocalInLoginPage() {
+        return getDetectBrowserLocalInLoginPage();
+    }
+
+    @Override
+    public byte[] getLogo() {
+        return super.getLogo();
     }
 
     @Atomic(mode = TxMode.WRITE)
@@ -135,5 +232,15 @@ public class PortalConfiguration extends PortalConfiguration_Base {
         super.setLogo(logo);
         setLogoChecksum(logo == null ? null : Hashing.sha1().hashBytes(logo).toString().substring(0, 12));
     }
-    
+
+    @Override
+    public String getAppSupportEmailAddress() {
+        return getSupportEmailAddress();
+    }
+
+    @Override
+    public com.qubit.terra.portal.domain.menus.MenuContainer getRootMenu() {
+        return getMenu();
+    }
+
 }

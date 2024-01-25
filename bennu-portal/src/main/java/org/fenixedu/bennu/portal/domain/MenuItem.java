@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.commons.i18n.LocalizedString;
 
@@ -27,7 +28,8 @@ import pt.ist.fenixframework.Atomic;
  * @see MenuFunctionality
  * 
  */
-public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuItem> {
+public abstract class MenuItem extends MenuItem_Base
+        implements Comparable<MenuItem>, com.qubit.terra.portal.domain.menus.MenuItem {
 
     protected MenuItem() {
         super();
@@ -68,23 +70,6 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         setGroup(group.toPersistentGroup());
     }
 
-    private String computeFullPath() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("/");
-        builder.append(this.getPath());
-        MenuContainer current = getParent();
-        while (current != null && current.getConfiguration() == null) {
-            builder.insert(0, current.getPath());
-            builder.insert(0, "/");
-            current = current.getParent();
-        }
-        return builder.toString();
-    }
-
-    public void updateFullPath() {
-        setFullPath(computeFullPath());
-    }
-
     @Override
     protected void setGroup(PersistentGroup group) {
         super.setGroup(group);
@@ -109,12 +94,17 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
      * Deletes this item, removing it from the menu.
      */
     @Atomic
+    @Override
     public void delete() {
         setParent(null);
         setGroup(null);
         setSupport(null);
         deleteDomainObject();
     }
+
+    //getexpression no interface
+    // bennu get access group get expression
+    // plataforma access control expression
 
     /**
      * Determines whether this {@link MenuItem} and all its parents are available for the given {@link User}.
@@ -126,17 +116,6 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
      */
     public boolean isAvailable(User user) {
         return getGroup().isMember(user) && getParent().isAvailable(user);
-    }
-
-    /**
-     * Determines whether this {@link MenuItem} and all its parents are available for the currently logged user.
-     * This method is a shorthand for <code>isAvailable(Authenticate.getUser())</code>.
-     * 
-     * @return
-     *         Whether the currently logged user can access this item
-     */
-    public boolean isAvailableForCurrentUser() {
-        return isAvailable(Authenticate.getUser());
     }
 
     /*
@@ -153,11 +132,13 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
      * @return
      *         {@code true} if this item is visible
      */
+    @Override
     public boolean isVisible() {
         return getVisible();
     }
 
-    public void setVisible(boolean visible) {
+    @Override
+    public void setItemVisible(boolean visible) {
         super.setVisible(visible);
     }
 
@@ -177,14 +158,6 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
     public String getFullPath() {
         //FIXME: remove when the framework enables read-only slots
         return super.getFullPath();
-    }
-
-    public boolean isMenuContainer() {
-        return this instanceof MenuContainer;
-    }
-
-    public boolean isMenuFunctionality() {
-        return this instanceof MenuFunctionality;
     }
 
     public MenuContainer getAsMenuContainer() {
@@ -238,4 +211,123 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
         }
         return getParent() != null ? getParent().getRecursiveProviderImplementation() : null;
     }
+
+    @Override
+    public Integer getPosition() {
+        return super.getOrd();
+    }
+
+    @Override
+    public void setItemName(com.qubit.terra.framework.tools.primitives.LocalizedString name) {
+        setTitle(BundleUtil.convertToBennuLocalizedString(name));
+    }
+
+    @Override
+    public void setPosition(Integer position) {
+        super.setOrd(position);
+    }
+
+    @Override
+    public com.qubit.terra.framework.tools.primitives.LocalizedString getItemName() {
+        return BundleUtil.convertToPlatformLocalizedString(super.getTitle());
+    }
+
+    @Override
+    public String getItemPath() {
+        return getPath();
+    }
+
+    @Override
+    public void setItemPath(String path) {
+        setPath(path);
+    }
+
+    @Override
+    public String getItemIcon() {
+        return super.getIcon();
+    }
+
+    @Override
+    public void setItemIcon(String icon) {
+        setIcon(icon);
+    }
+
+    @Override
+    public String getMenuLayout() {
+        return super.getLayout();
+    }
+
+    @Override
+    public void setMenuLayout(String layout) {
+        setLayout(layout);
+    }
+
+    @Override
+    public void setMenuItemFullPath(String path) {
+        setFullPath(path);
+    }
+
+    @Override
+    public com.qubit.terra.framework.tools.primitives.LocalizedString getItemDescription() {
+        return BundleUtil.convertToPlatformLocalizedString(super.getDescription());
+    }
+
+    /**
+     * Determines whether this {@link MenuItem} and all its parents are available for the currently logged user.
+     * This method is a shorthand for <code>isAvailable(Authenticate.getUser())</code>.
+     * 
+     * @return
+     *         Whether the currently logged user can access this item
+     */
+    @Override
+    public boolean isAvailableForCurrentUser() {
+        return isAvailable(Authenticate.getUser());
+    }
+
+    @Override
+    public com.qubit.terra.portal.domain.menus.MenuContainer getContainer() {
+        return super.getParent();
+    }
+
+    @Override
+    public String getItemProviderImplementation() {
+        return super.getProviderImplementation();
+    }
+
+    @Override
+    public void setItemProviderImplementation(String providerImplementation) {
+        this.setProviderImplementation(providerImplementation);
+    }
+
+    @Override
+    public MenuContainer asMenuContainer() {
+        return getAsMenuContainer();
+    }
+
+    @Override
+    public MenuFunctionality asMenuFunctionality() {
+        return getAsMenuFunctionality();
+    }
+
+    @Override
+    public String getAccessControlExpression() {
+        return this.getAccessGroup() == null ? null : this.getAccessGroup().getExpression();
+    }
+
+    @Override
+    public void setAccessControlExpression(String expression) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setItemDescription(com.qubit.terra.framework.tools.primitives.LocalizedString description) {
+        this.setDescription(BundleUtil.convertToBennuLocalizedString(description));
+    }
+
+    @Override
+    public void setItemRestricted(Boolean restricted) {
+        setRestricted(restricted);
+    }
+
 }
