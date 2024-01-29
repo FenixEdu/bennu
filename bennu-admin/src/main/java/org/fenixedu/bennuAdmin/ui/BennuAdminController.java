@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.twilio.rest.api.v2010.account.sip.Domain;
 import jvstm.util.Pair;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.json.ImmutableJsonElement;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.security.SkipCSRF;
@@ -149,6 +150,9 @@ public class BennuAdminController {
     if (!FenixFramework.isDomainObjectValid(domainObject)) {
       throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
     }
+
+    ImmutableJsonElement<com.google.gson.JsonObject> testObject =
+        new ImmutableJsonElement<>(JsonUtils.parse("{ \"hello\": \"world\" }"));
 
     Set<Slot> slots = DomainObjectUtils.getDomainObjectSlots(domainObject);
 

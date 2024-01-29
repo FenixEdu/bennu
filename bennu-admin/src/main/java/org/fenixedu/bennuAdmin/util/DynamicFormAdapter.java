@@ -235,7 +235,7 @@ public class DynamicFormAdapter {
     return JsonUtils.toJson(p -> p.add("0", JsonUtils.toJson(s -> s.add("0", jsonData))));
   }
 
-  @Atomic(mode = Atomic.TxMode.WRITE) // We must pass the type to avoid transaction error
+  @Atomic(mode = Atomic.TxMode.WRITE) // We must pass the mode to avoid transaction error
   public void setData(JsonObject data) throws RuntimeException {
     JsonObject slotData = data.getAsJsonObject("0").getAsJsonObject("0");
     Set<Slot> slots = DomainObjectUtils.getDomainObjectSlots(domainObject);
@@ -349,6 +349,12 @@ public class DynamicFormAdapter {
       throws IllegalAccessException, InvocationTargetException, ClassNotFoundException {
     String slotType = slot.getTypeName();
 
+    // ImmutableJsonElement<com.google.gson.JsonObject> causes ClassNotFoundException
+    if (slotType.contains("<")) {
+      // removes type annotation
+      slotType = slotType.split("<")[0];
+    }
+
     Method method =
         DomainObjectUtils.getMethod("set", domainObject, slot.getName(), Class.forName(slotType));
 
@@ -359,8 +365,8 @@ public class DynamicFormAdapter {
     method.setAccessible(true);
 
     switch (slotType) {
-      case "org.fenixedu.bennu.core.json.ImmutableJsonElement<com.google.gson.JsonObject>" -> {
-        method.invoke(domainObject, ImmutableJsonElement.of(data.getAsJsonObject()));
+      case "org.fenixedu.bennu.core.json.ImmutableJsonElement" -> {
+        method.invoke(domainObject, ImmutableJsonElement.of(data));
       }
       case "com.google.gson.JsonElement" -> {
         method.invoke(domainObject, data);
