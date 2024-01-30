@@ -3,6 +3,7 @@ package org.fenixedu.bennuAdmin.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.fenixedu.bennu.BennuAdminConfiguration;
 import org.fenixedu.bennu.core.json.ImmutableJsonElement;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -12,7 +13,9 @@ import org.joda.time.DateTime;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.dml.DomainClass;
 import pt.ist.fenixframework.dml.Modifier;
+import pt.ist.fenixframework.dml.Role;
 import pt.ist.fenixframework.dml.Slot;
 
 import java.lang.reflect.InvocationTargetException;
@@ -105,89 +108,100 @@ public class DynamicFormAdapter {
         .collect(StreamUtils.toJsonArray());
   }
 
+  private JsonObject slotToProperty(Slot slot) {
+    return JsonUtils.toJson(
+        prop -> {
+          prop.addProperty("type", slotFieldType(slot));
+          prop.addProperty("readonly", slot.hasModifier(Modifier.PROTECTED));
+          prop.addProperty("field", slot.getName());
+          prop.addProperty("required", false); // todo: check this
+          prop.add("label", ls(slot.getName()).json());
+          prop.add("description", ls(slot.getTypeName()).json());
+
+          if (slotFieldType(slot).equals("LocalizedText")) {
+            // todo: improve this
+            prop.add("locales", getLocalizedTextSlotLocales(slot));
+          }
+
+          if (slotFieldType(slot).equals("Select")) {
+            prop.add("options", getEnumSlotOptions(slot));
+          }
+
+          // todo: how should I handle this?
+          if (slotFieldType(slot).equals("DateTime")) {
+            prop.addProperty("date", true);
+            prop.addProperty("time", true);
+          }
+
+          if (slotFieldType(slot).equals("Boolean")) {
+            prop.add("labelYes", ls("Verdadeiro", "true").json());
+            prop.add("labelNo", ls("Falso", "false").json());
+          }
+        });
+  }
+
+  private String domainProviderUrl(Role role) {
+    return CoreConfiguration.getConfiguration().applicationUrl()
+        + "/bennu-admin/domain-objects/"
+        + domainObject.getExternalId()
+        + "/roles/"
+        + role.getName();
+  }
+
+  private JsonObject roleToProperty(Role role) {
+    return JsonUtils.toJson(
+        prop -> {
+          prop.addProperty("type", "AsyncSelect");
+          prop.addProperty("readonly", role.hasModifier(Modifier.PROTECTED));
+          prop.addProperty("optionsProvider", domainProviderUrl(role));
+          prop.addProperty("field", role.getName());
+          prop.addProperty("required", false); // todo: check this
+          prop.add("label", ls(role.getName()).json());
+          prop.add("description", ls(role.getType().getName()).json());
+        });
+  }
+
   public DynamicForm toDynamicForm() {
+    JsonObject slotsSection =
+        JsonUtils.toJson(
+            sec -> {
+              sec.add("title", ls("Slots").json());
+              sec.add(
+                  "properties",
+                  JsonUtils.toJsonArray(
+                      propsArr -> {
+                        DomainObjectUtils.getDomainObjectSlots(domainObject).stream()
+                            .sorted(Comparator.comparing(Slot::getName))
+                            .forEach(slot -> propsArr.add(slotToProperty(slot)));
+                      }));
+            });
+
+    JsonObject rolesSection =
+        JsonUtils.toJson(
+            sec -> {
+              sec.add("title", ls("Roles").json());
+              sec.add(
+                  "properties",
+                  JsonUtils.toJsonArray(
+                      propsArr -> {
+                        DomainClass domainClass =
+                            FenixFramework.getDomainModel()
+                                .findClass(domainObject.getClass().getName());
+                        DomainObjectUtils.getRoles(domainClass, true).stream()
+                            .sorted(Comparator.comparing(Role::getName))
+                            .forEach(role -> propsArr.add(roleToProperty(role)));
+                      }));
+            });
+
     JsonObject p =
         JsonUtils.toJson(
             page -> {
-              page.add("title", ls("Cabeçalho", "Header").json());
-              page.add("description", ls("Descrição", "Description").json());
               page.add(
                   "sections",
                   JsonUtils.toJsonArray(
                       sectionsArr -> {
-                        JsonObject slotsSection =
-                            JsonUtils.toJson(
-                                sec -> {
-                                  sec.add("title", ls("Slots", "Slots").json());
-                                  sec.add("description", ls("Slots", "Slots").json());
-                                  sec.add(
-                                      "properties",
-                                      JsonUtils.toJsonArray(
-                                          propsArr -> {
-                                            DomainObjectUtils.getDomainObjectSlots(domainObject)
-                                                .stream()
-                                                .sorted(Comparator.comparing(Slot::getName))
-                                                .forEach(
-                                                    slot -> {
-                                                      propsArr.add(
-                                                          JsonUtils.toJson(
-                                                              prop -> {
-                                                                prop.addProperty(
-                                                                    "type", slotFieldType(slot));
-                                                                prop.addProperty(
-                                                                    "readonly",
-                                                                    slot.hasModifier(
-                                                                        Modifier.PROTECTED));
-                                                                prop.addProperty(
-                                                                    "field", slot.getName());
-                                                                prop.addProperty(
-                                                                    "required",
-                                                                    false); // todo: check this
-                                                                prop.add(
-                                                                    "label",
-                                                                    ls(slot.getName()).json());
-                                                                prop.add(
-                                                                    "description",
-                                                                    ls(slot.getTypeName()).json());
-                                                                if (slotFieldType(slot)
-                                                                    .equals("LocalizedText")) {
-                                                                  // todo: improve this
-                                                                  prop.add(
-                                                                      "locales",
-                                                                      getLocalizedTextSlotLocales(
-                                                                          slot));
-                                                                }
-
-                                                                if (slotFieldType(slot)
-                                                                    .equals("Select")) {
-                                                                  prop.add(
-                                                                      "options",
-                                                                      getEnumSlotOptions(slot));
-                                                                }
-
-                                                                // todo: how should I handle this?
-                                                                if (slotFieldType(slot)
-                                                                    .equals("DateTime")) {
-                                                                  prop.addProperty("date", true);
-                                                                  prop.addProperty("time", true);
-                                                                }
-
-                                                                if (slotFieldType(slot)
-                                                                    .equals("Boolean")) {
-                                                                  prop.add(
-                                                                      "labelYes",
-                                                                      ls("Verdadeiro", "true")
-                                                                          .json());
-                                                                  prop.add(
-                                                                      "labelNo",
-                                                                      ls("Falso", "false").json());
-                                                                }
-                                                              }));
-                                                    });
-                                          }));
-                                });
-
                         sectionsArr.add(slotsSection);
+                        sectionsArr.add(rolesSection);
                       }));
             });
 
@@ -203,33 +217,56 @@ public class DynamicFormAdapter {
             }));
   }
 
+  private void getSlotData(JsonObject data) {
+    DomainObjectUtils.getDomainObjectSlots(domainObject)
+        .forEach(
+            slot -> {
+              String slotFieldType = slotFieldType(slot);
+              String slotValueString = DomainObjectUtils.getSlotValueString(domainObject, slot);
+
+              switch (slotFieldType) {
+                case "LocalizedText", "Boolean" -> {
+                  data.add(slot.getName(), JsonUtils.parseJsonElement(slotValueString));
+                }
+                case "Select" -> {
+                  data.add(
+                      slot.getName(),
+                      JsonUtils.toJson(
+                          j -> {
+                            j.add("label", ls(slotValueString).json());
+                            j.addProperty("value", slotValueString);
+                          }));
+                }
+                default -> data.addProperty(slot.getName(), slotValueString);
+              }
+            });
+  }
+
+  private void getRolesData(JsonObject data) {
+    DomainClass domainClass =
+        FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+
+    DomainObjectUtils.getRoles(domainClass, true)
+        .forEach(
+            role -> {
+              String roleValueString = DomainObjectUtils.getRelationSlot(domainObject, role);
+
+              data.add(
+                  role.getName(),
+                  JsonUtils.toJson(
+                      j -> {
+                        j.add("label", ls(roleValueString).json());
+                        j.addProperty("value", roleValueString);
+                      }));
+            });
+  }
+
   public JsonObject getData() {
     JsonObject jsonData =
         JsonUtils.toJson(
-            data -> {
-              DomainObjectUtils.getDomainObjectSlots(domainObject)
-                  .forEach(
-                      slot -> {
-                        String slotFieldType = slotFieldType(slot);
-                        String slotValueString =
-                            DomainObjectUtils.getSlotValueString(domainObject, slot);
-
-                        switch (slotFieldType) {
-                          case "LocalizedText", "Boolean" -> {
-                            data.add(slot.getName(), JsonUtils.parseJsonElement(slotValueString));
-                          }
-                          case "Select" -> {
-                            data.add(
-                                slot.getName(),
-                                JsonUtils.toJson(
-                                    j -> {
-                                      j.add("label", ls(slotValueString).json());
-                                      j.addProperty("value", slotValueString);
-                                    }));
-                          }
-                          default -> data.addProperty(slot.getName(), slotValueString);
-                        }
-                      });
+            j -> {
+              getSlotData(j);
+              getRolesData(j);
             });
 
     return JsonUtils.toJson(p -> p.add("0", JsonUtils.toJson(s -> s.add("0", jsonData))));

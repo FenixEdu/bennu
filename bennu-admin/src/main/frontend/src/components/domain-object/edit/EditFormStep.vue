@@ -63,8 +63,14 @@ export default {
   },
   i18n: {
     messages: {
-      pt: {},
-      en: {}
+      pt: {
+        header: 'Editar objeto de domínio "{object}"',
+        description: 'Edite o objeto de domínio'
+      },
+      en: {
+        header: 'Edit domain object "{object}"',
+        description: 'Edit the domain object'
+      }
     }
   }
 }

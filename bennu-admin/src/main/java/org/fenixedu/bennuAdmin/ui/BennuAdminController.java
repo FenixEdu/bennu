@@ -253,6 +253,44 @@ public class BennuAdminController {
         Schema.DOMAIN_OBJECT);
   }
 
+  @RequestMapping("/domain-objects/{objectId}/roles/{roleName}")
+  public ResponseEntity<?> domainObjectProvider(
+      final @PathVariable String objectId,
+      final @PathVariable String roleName,
+      final @RequestParam(required = false) String query) {
+    requireGroup(Group.managers());
+
+    DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+    if (!FenixFramework.isDomainObjectValid(domainObject)) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.not-found");
+    }
+
+    DomainClass domClass =
+        FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+
+    Role role = domClass.findRoleSlot(roleName);
+
+    if (role == null) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.not-found");
+    }
+
+    if (role.getMultiplicityUpper() != 1) {
+      throw new BennuAdminError(HttpStatus.BAD_REQUEST, "error.invalid-role");
+    }
+
+    // todo: find all objects of type role.getType()
+    Set<DomainObject> domainObjects = Collections.EMPTY_SET;
+
+    return search(
+        query,
+        null,
+        null,
+        domainObjects.stream(),
+        (object) -> getLocalizedString(object.getExternalId()),
+        Comparator.comparing(DomainObject::getExternalId),
+        Schema.DOMAIN_OBJECT);
+  }
+
   private String objectQueryString(final DomainObject domainObject) {
     // Todo: get some information about the object (Include slot values?)
     return String.format("%s %s", domainObject.getExternalId(), domainObject.getClass().getName());

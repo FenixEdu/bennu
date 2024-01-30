@@ -7,15 +7,26 @@ import com.google.gson.JsonPrimitive;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennuAdmin.util.DomainObjectUtils;
 import org.fenixedu.bennuAdmin.util.DynamicForm;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.stream.StreamUtils;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.dml.*;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.function.BiConsumer;
 
 public class Schema {
+  private static LocalizedString ls(final String pt, final String en) {
+    return new LocalizedString(Locale.forLanguageTag("pt-PT"), pt)
+        .with(Locale.forLanguageTag("en-GB"), en);
+  }
+
+  private static LocalizedString ls(final String str) {
+    return ls(str, str);
+  }
+
   public static <T> JsonObject toJson(final BiConsumer<JsonObject, T> consumer, final T object) {
     return JsonUtils.toJson(data -> consumer.accept(data, object));
   }
@@ -50,6 +61,12 @@ public class Schema {
                   count.addProperty("roles", roleCount);
                   count.addProperty("roleSets", roleSetCount);
                 }));
+      };
+
+  public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT_LABEL =
+      (data, domainObject) -> {
+        data.add("label", ls(domainObject.getExternalId()).json());
+        data.addProperty("value", domainObject.getExternalId());
       };
 
   public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT_META =

@@ -106,20 +106,18 @@ export default {
     },
     async submit () {
       this.submitState = SubmitState.SUBMITTING
-      try {
-        const data = await this.form.getSubmitData()
 
-        await Promise.all([
-          sleep(2000), // lets loading animation run for at least two seconds
-          editDomainObject({ objectId: this.domainObject.objectId, data })
-        ])
+      const data = await this.form.getSubmitData()
 
-        this.submitState = SubmitState.SUCCESS
-        await this.$router.replace({ name: 'DomainObjectPage', params: { objectId: this.domainObject.objectId } })
-      } catch (error) {
-        // todo: handle errors
-        this.submitState = SubmitState.ERROR
-      }
+      await Promise.all([
+        sleep(2000), // lets loading animation run for at least two seconds
+        editDomainObject({ objectId: this.domainObject.objectId, data })
+      ])
+
+      this.submitState = SubmitState.SUCCESS
+      await this.$router.replace({ name: 'DomainObjectPage', params: { objectId: this.domainObject.objectId } })
+
+      // todo: maybe handle errors
     }
   },
   i18n: {
