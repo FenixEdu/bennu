@@ -253,6 +253,7 @@ public class BennuAdminController {
         Schema.DOMAIN_OBJECT);
   }
 
+  // Todo: see if this endpoint will be used
   @RequestMapping("/domain-objects/{objectId}/roles/{roleName}")
   public ResponseEntity<?> domainObjectProvider(
       final @PathVariable String objectId,

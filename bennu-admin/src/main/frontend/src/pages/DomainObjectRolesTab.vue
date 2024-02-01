@@ -23,7 +23,7 @@
     <empty-state v-if="totalItems == 0">
       <template #title>
         <template v-if="hasSearch">
-          {{ $t('empty-state.no-roles-search', { search: searchInput }) }}
+          {{ $t('empty-state.no-roles-search', { search: query }) }}
         </template>
         <template v-else>
           {{ $t('empty-state.no-roles') }}

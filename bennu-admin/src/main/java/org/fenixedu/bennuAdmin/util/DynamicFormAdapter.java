@@ -66,7 +66,7 @@ public class DynamicFormAdapter {
       case "LocalizedString" -> "LocalizedText";
       case "Boolean", "boolean" -> "Boolean";
       case "DateTime" -> "DateTime";
-      case "Integer" -> "Numeric";
+      case "Integer", "BigDecimal" -> "Numeric";
       default -> "Text";
     };
   }
@@ -151,9 +151,10 @@ public class DynamicFormAdapter {
   private JsonObject roleToProperty(Role role) {
     return JsonUtils.toJson(
         prop -> {
-          prop.addProperty("type", "AsyncSelect");
+          prop.addProperty("type", "Numeric");
+          prop.addProperty("min", 0);
           prop.addProperty("readonly", role.hasModifier(Modifier.PROTECTED));
-          prop.addProperty("optionsProvider", domainProviderUrl(role));
+          // prop.addProperty("optionsProvider", domainProviderUrl(role));
           prop.addProperty("field", role.getName());
           prop.addProperty("required", false); // todo: check this
           prop.add("label", ls(role.getName()).json());
@@ -217,65 +218,72 @@ public class DynamicFormAdapter {
             }));
   }
 
-  private void getSlotData(JsonObject data) {
-    DomainObjectUtils.getDomainObjectSlots(domainObject)
-        .forEach(
-            slot -> {
-              String slotFieldType = slotFieldType(slot);
-              String slotValueString = DomainObjectUtils.getSlotValueString(domainObject, slot);
+  private JsonElement getSlotData() {
+    return JsonUtils.toJson(
+        data -> {
+          DomainObjectUtils.getDomainObjectSlots(domainObject)
+              .forEach(
+                  slot -> {
+                    String slotFieldType = slotFieldType(slot);
+                    String slotValueString =
+                        DomainObjectUtils.getSlotValueString(domainObject, slot);
 
-              switch (slotFieldType) {
-                case "LocalizedText", "Boolean" -> {
-                  data.add(slot.getName(), JsonUtils.parseJsonElement(slotValueString));
-                }
-                case "Select" -> {
-                  data.add(
-                      slot.getName(),
-                      JsonUtils.toJson(
-                          j -> {
-                            j.add("label", ls(slotValueString).json());
-                            j.addProperty("value", slotValueString);
-                          }));
-                }
-                default -> data.addProperty(slot.getName(), slotValueString);
-              }
-            });
+                    switch (slotFieldType) {
+                      case "LocalizedText", "Boolean" -> {
+                        data.add(slot.getName(), JsonUtils.parseJsonElement(slotValueString));
+                      }
+                      case "Select" -> {
+                        data.add(
+                            slot.getName(),
+                            JsonUtils.toJson(
+                                j -> {
+                                  j.add("label", ls(slotValueString).json());
+                                  j.addProperty("value", slotValueString);
+                                }));
+                      }
+                      default -> data.addProperty(slot.getName(), slotValueString);
+                    }
+                  });
+        });
   }
 
-  private void getRolesData(JsonObject data) {
+  private JsonElement getRolesData() {
     DomainClass domainClass =
         FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
 
-    DomainObjectUtils.getRoles(domainClass, true)
-        .forEach(
-            role -> {
-              String roleValueString = DomainObjectUtils.getRelationSlot(domainObject, role);
+    return JsonUtils.toJson(
+        data -> {
+          DomainObjectUtils.getRoles(domainClass, true)
+              .forEach(
+                  role -> {
+                    String roleValueString = DomainObjectUtils.getRelationSlot(domainObject, role);
 
-              data.add(
-                  role.getName(),
-                  JsonUtils.toJson(
-                      j -> {
-                        j.add("label", ls(roleValueString).json());
-                        j.addProperty("value", roleValueString);
-                      }));
-            });
+                    data.addProperty(
+                        role.getName(), roleValueString == null ? "" : roleValueString);
+                  });
+        });
   }
 
   public JsonObject getData() {
-    JsonObject jsonData =
-        JsonUtils.toJson(
-            j -> {
-              getSlotData(j);
-              getRolesData(j);
-            });
-
-    return JsonUtils.toJson(p -> p.add("0", JsonUtils.toJson(s -> s.add("0", jsonData))));
+    return JsonUtils.toJson(
+        p ->
+            p.add(
+                "0",
+                JsonUtils.toJson(
+                    s -> {
+                      s.add("0", getSlotData());
+                      s.add("1", getRolesData());
+                    })));
   }
 
   @Atomic(mode = Atomic.TxMode.WRITE) // We must pass the mode to avoid transaction error
   public void setData(JsonObject data) throws RuntimeException {
     JsonObject slotData = data.getAsJsonObject("0").getAsJsonObject("0");
+    JsonObject roleData = data.getAsJsonObject("0").getAsJsonObject("1");
     Set<Slot> slots = DomainObjectUtils.getDomainObjectSlots(domainObject);
+    Set<Role> roles =
+        DomainObjectUtils.getRoles(
+            FenixFramework.getDomainModel().findClass(domainObject.getClass().getName()), true);
 
     slotData
         .asMap()
@@ -304,6 +312,9 @@ public class DynamicFormAdapter {
                   case "DateTime" -> {
                     setDateTimeSlot(slot, slotValue);
                   }
+                  case "Numeric" -> {
+                    setNumericSlot(slot, slotValue);
+                  }
                   default -> {
                     setTextSlot(slot, slotValue);
                   }
@@ -315,6 +326,73 @@ public class DynamicFormAdapter {
                 throw new RuntimeException(e);
               }
             });
+
+    roleData
+        .asMap()
+        .forEach(
+            (roleName, roleValue) -> {
+              Role role =
+                  roles.stream().filter(r -> r.getName().equals(roleName)).findFirst().orElse(null);
+
+              if (role == null) {
+                throw new RuntimeException("Role " + roleName + " not found");
+              }
+
+              try {
+                setRoleSlot(role, roleValue);
+              } catch (IllegalAccessException
+                  | InvocationTargetException
+                  | ClassNotFoundException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+              }
+            });
+  }
+
+  private void setRoleSlot(Role role, JsonElement value)
+      throws ClassNotFoundException, InvocationTargetException, IllegalAccessException {
+    if (value.getAsString().isEmpty() || value.getAsString().equals("null")) {
+      return;
+    }
+
+    String type = role.getType().getFullName();
+
+    String currentValue = DomainObjectUtils.getRelationSlot(domainObject, role);
+
+    if (currentValue != null && currentValue.equals(value.getAsString())) {
+      return;
+    }
+
+    Method setMethod =
+        DomainObjectUtils.getMethod("set", domainObject, role.getName(), Class.forName(type));
+
+    if (setMethod == null) {
+      throw new RuntimeException("Slot " + role.getName() + " has no setter");
+    }
+
+    setMethod.setAccessible(true);
+
+    DomainObject object = FenixFramework.getDomainObject(value.getAsString());
+    if (!FenixFramework.isDomainObjectValid(object)) {
+      throw new RuntimeException("Invalid domain object");
+    }
+
+    setMethod.invoke(domainObject, object);
+  }
+
+  private void setNumericSlot(Slot slot, JsonElement data)
+      throws ClassNotFoundException, InvocationTargetException, IllegalAccessException {
+    Method setMethod =
+        DomainObjectUtils.getMethod(
+            "set", domainObject, slot.getName(), Class.forName(slot.getTypeName()));
+
+    if (setMethod == null) {
+      throw new RuntimeException("Slot " + slot.getName() + " has no setter");
+    }
+
+    setMethod.setAccessible(true);
+
+    setMethod.invoke(domainObject, data.getAsInt());
   }
 
   private void setLocalizedTextSlot(Slot slot, JsonElement data)
@@ -355,9 +433,14 @@ public class DynamicFormAdapter {
   }
 
   private void setBooleanSlot(Slot slot, JsonElement data)
-      throws IllegalAccessException, InvocationTargetException {
+      throws IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+
     Method setMethod =
-        DomainObjectUtils.getMethod("set", domainObject, slot.getName(), boolean.class);
+        DomainObjectUtils.getMethod(
+            "set",
+            domainObject,
+            slot.getName(),
+            slot.getTypeName().equals("boolean") ? boolean.class : Boolean.class);
 
     if (setMethod == null) {
       throw new RuntimeException("Slot " + slot.getName() + " has no setter");
