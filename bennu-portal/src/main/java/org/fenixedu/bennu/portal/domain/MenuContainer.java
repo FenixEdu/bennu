@@ -1,6 +1,5 @@
 package org.fenixedu.bennu.portal.domain;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -168,7 +167,7 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
      *         The User's Menu as a Stream
      */
     public Stream<MenuItem> getUserMenuStream() {
-        return getChildSet().stream().filter((item) -> item.isVisible() && item.isItemAvailableForCurrentUser()).sorted();
+        return getChildSet().stream().filter((item) -> item.isItemVisible() && item.isItemAvailableForCurrentUser()).sorted();
     }
 
     /**
@@ -342,8 +341,8 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
     }
 
     @Override
-    public boolean isVisible() {
-        return !isSubRoot() && super.isVisible();
+    public boolean isItemVisible() {
+        return !isSubRoot() && super.isItemVisible();
     }
 
     public static MenuContainer createSubRoot(String key, LocalizedString title, LocalizedString description) {
@@ -369,7 +368,7 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
     }
 
     @Override
-    public Collection<com.qubit.terra.portal.domain.menus.MenuItem> getOrderedChilds() {
+    public List<com.qubit.terra.portal.domain.menus.MenuItem> getChilds() {
         return getOrderedChild().stream().map(t -> (MenuItem) t).collect(Collectors.toList());
     }
 
@@ -397,6 +396,21 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
         } else {
             setAvailableApplicationNames(null);
         }
+    }
+
+    @Override
+    public List<String> availableApplicationKeys() {
+        if (isRootApplicationMenu()) {
+            return ApplicationRegistry.availableApplications().stream()
+                    .filter(app -> !StringUtils.isBlank(app.getKey()) && app.getFunctionalities().size() > 0)
+                    .map(a -> a.getTitle().getContent()).collect(Collectors.toList());
+        }
+        return (((org.fenixedu.bennu.portal.domain.MenuContainer) getParentContainer()).getApplications() == null
+                || ((org.fenixedu.bennu.portal.domain.MenuContainer) getParentContainer()).getApplications()
+                        .isEmpty()) ? getParentContainer()
+                                .availableApplicationKeys() : ((org.fenixedu.bennu.portal.domain.MenuContainer) this
+                                        .getParentContainer()).getApplications().stream().map(a -> a.getTitle().getContent())
+                                                .collect(Collectors.toList());
     }
 
 //  public void setApplications(Set<Application> applications) {

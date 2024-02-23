@@ -133,7 +133,7 @@ public abstract class MenuItem extends MenuItem_Base
      *         {@code true} if this item is visible
      */
     @Override
-    public boolean isVisible() {
+    public boolean isItemVisible() {
         return getVisible();
     }
 
@@ -285,7 +285,7 @@ public abstract class MenuItem extends MenuItem_Base
     }
 
     @Override
-    public com.qubit.terra.portal.domain.menus.MenuContainer getContainer() {
+    public com.qubit.terra.portal.domain.menus.MenuContainer getParentContainer() {
         return super.getParent();
     }
 

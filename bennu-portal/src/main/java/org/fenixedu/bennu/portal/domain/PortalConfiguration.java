@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
-import com.qubit.terra.portal.domain.menus.Portal;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -29,7 +28,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
  */
-public class PortalConfiguration extends PortalConfiguration_Base implements Portal {
+public class PortalConfiguration extends PortalConfiguration_Base {
 
     private static final Logger logger = LoggerFactory.getLogger(PortalConfiguration.class);
 
@@ -66,103 +65,83 @@ public class PortalConfiguration extends PortalConfiguration_Base implements Por
         new MenuContainer(this);
     }
 
-    @Override
     public com.qubit.terra.framework.tools.primitives.LocalizedString getAppName() {
         return BundleUtil.convertToPlatformLocalizedString(super.getApplicationTitle());
     }
 
-    @Override
     public com.qubit.terra.framework.tools.primitives.LocalizedString getHtmlName() {
         return BundleUtil.convertToPlatformLocalizedString(super.getHtmlTitle());
     }
 
-    @Override
     public com.qubit.terra.framework.tools.primitives.LocalizedString getAppSecondaryName() {
         return BundleUtil.convertToPlatformLocalizedString(super.getApplicationSubTitle());
     }
 
-    @Override
     public com.qubit.terra.framework.tools.primitives.LocalizedString getCopyright() {
         return BundleUtil.convertToPlatformLocalizedString(super.getApplicationCopyright());
     }
 
-    @Override
     public String getPortalTheme() {
         return getTheme();
     }
 
-    @Override
     public String getTheme() {
         String theme = super.getTheme();
         return PortalInitializer.isThemeAvailable(theme) ? theme : "default";
     }
 
-    @Override
     public String getAppSystemEmailAddress() {
         return super.getSystemEmailAddress();
     }
 
-    @Override
     public byte[] getPortalLogo() {
         return getLogo();
     }
 
-    @Override
     public String getPortalLogoChecksum() {
         return getLogoChecksum();
     }
 
-    @Override
     public String getPortalLogoType() {
         return getLogoType();
     }
 
-    @Override
     public String getPortalLogoLinkUrl() {
         return getLogoLinkUrl();
     }
 
-    @Override
     public String getPortalLogoTooltip() {
         return getLogoTooltip();
     }
 
-    @Override
     public byte[] getPortalFavicon() {
         return getFavicon();
     }
 
-    @Override
     public String getPortalFaviconType() {
         return getFaviconType();
     }
 
-    @Override
     public String getPortalDocumentationBaseUrl() {
         return getDocumentationBaseUrl();
     }
 
-    @Override
     public String getAppLoginPath() {
         return getLoginPath();
     }
 
-    @Override
     public String getAppRecoveryLinkPath() {
         return getRecoveryLinkPath();
     }
 
-    @Override
     public String getAppSignUpPath() {
         return getSignUpPath();
     }
 
-    @Override
     public Boolean detectBrowserLocalInLoginPage() {
         return getDetectBrowserLocalInLoginPage();
     }
 
-    @Override
     public byte[] getLogo() {
         return super.getLogo();
     }
@@ -188,7 +167,6 @@ public class PortalConfiguration extends PortalConfiguration_Base implements Por
         return Bennu.getInstance().getConfiguration();
     }
 
-    @Override
     public String getSupportEmailAddress() {
         return super.getSupportEmailAddress() != null ? super.getSupportEmailAddress() : CoreConfiguration.getConfiguration()
                 .defaultSupportEmailAddress();
@@ -197,13 +175,12 @@ public class PortalConfiguration extends PortalConfiguration_Base implements Por
     /**
      * Returns the root {@link MenuContainer} of this application.
      */
-    @Override
+
     public MenuContainer getMenu() {
         //FIXME: remove when the framework enables read-only slots
         return super.getMenu();
     }
 
-    @Override
     public Set<MenuContainer> getSubRootSet() {
         return Collections.unmodifiableSet(super.getSubRootSet());
     }
@@ -221,24 +198,21 @@ public class PortalConfiguration extends PortalConfiguration_Base implements Por
      * @return
      *         The checksum of the application's logo. May be null
      */
-    @Override
+
     public String getLogoChecksum() {
         //FIXME: remove when the framework enables read-only slots
         return super.getLogoChecksum();
     }
 
-    @Override
     public void setLogo(byte[] logo) {
         super.setLogo(logo);
         setLogoChecksum(logo == null ? null : Hashing.sha1().hashBytes(logo).toString().substring(0, 12));
     }
 
-    @Override
     public String getAppSupportEmailAddress() {
         return getSupportEmailAddress();
     }
 
-    @Override
     public com.qubit.terra.portal.domain.menus.MenuContainer getRootMenu() {
         return getMenu();
     }

@@ -213,7 +213,7 @@ public class MenuFunctionality extends MenuFunctionality_Base implements com.qub
     }
 
     @Override
-    public String getMenuKey() {
+    public String getMenuKId() {
         return getItemKey();
     }
 
@@ -223,28 +223,8 @@ public class MenuFunctionality extends MenuFunctionality_Base implements com.qub
     }
 
     @Override
-    public boolean isFacade() {
-        return false;
-    }
-
-    @Override
-    public boolean skipLayout() {
-        return false;
-    }
-
-    @Override
     public String getFunctionalityProvider() {
         return getProvider();
-    }
-
-    @Override
-    public String getFunctionalityDocumentationUrl() {
-        return getDocumentationUrl();
-    }
-
-    @Override
-    public void setFunctionalityDocumentationUrl(String documentationUrl) {
-        setDocumentationUrl(documentationUrl);
     }
 
     @Override
@@ -253,12 +233,30 @@ public class MenuFunctionality extends MenuFunctionality_Base implements com.qub
     }
 
     @Override
-    public void setMenuKey(String key) {
-        setItemKey(key);
+    public void setMenuId(String id) {
+        setItemKey(id);
     }
 
     @Override
     public void setFunctionalityProvider(String provider) {
         setProvider(provider);
+    }
+
+    @Override
+    public void setLayoutProvider(String layoutProvider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String getFunctionalityDocumentationUrl() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setFunctionalityDocumentationUrl(String documentationUrl) {
+        // TODO Auto-generated method stub
+
     }
 }
