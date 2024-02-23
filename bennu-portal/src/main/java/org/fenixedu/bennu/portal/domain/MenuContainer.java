@@ -413,11 +413,12 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
                                                 .collect(Collectors.toList());
     }
 
-//  public void setApplications(Set<Application> applications) {
-//  if (applications != null && !applications.isEmpty()) {
-//      setAvailableApplicationNames(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
-//  } else {
-//      setAvailableApplicationNames(null);
-//  }
-//}
+    public void setApplications(Set<Application> applications) {
+        if (applications != null && !applications.isEmpty()) {
+            setAvailableApplicationNames(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
+        } else {
+            setAvailableApplicationNames(null);
+        }
+    }
+
 }

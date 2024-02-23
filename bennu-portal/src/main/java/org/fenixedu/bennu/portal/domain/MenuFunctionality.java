@@ -248,15 +248,4 @@ public class MenuFunctionality extends MenuFunctionality_Base implements com.qub
 
     }
 
-    @Override
-    public String getFunctionalityDocumentationUrl() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void setFunctionalityDocumentationUrl(String documentationUrl) {
-        // TODO Auto-generated method stub
-
-    }
 }
