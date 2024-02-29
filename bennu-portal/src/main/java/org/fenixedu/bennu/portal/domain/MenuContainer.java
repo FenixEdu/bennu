@@ -60,8 +60,8 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
         }
         init(parent, true, application.getAccessGroup(), application.getTitle(), application.getDescription(),
                 application.getPath());
-        for (Functionality functionality : application.getFunctionalities()) {
-            new MenuFunctionality(this, functionality);
+        for (com.qubit.terra.portal.domain.functionalities.Functionality functionality : application.getFunctionalities()) {
+            new MenuFunctionality(this, (Functionality) functionality);
         }
     }
 
@@ -360,7 +360,8 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
         }
     }
 
-    public Set<Application> getApplications() {
+    @Override
+    public Set<com.qubit.terra.portal.domain.functionalities.Application> getApplications() {
         String availableApplicationNames = getAvailableApplicationNames();
         return availableApplicationNames == null ? Collections.emptySet() : Stream.of(availableApplicationNames.split(","))
                 .map(key -> ApplicationRegistry.getAppByKey(key))
@@ -409,8 +410,8 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
                 || ((org.fenixedu.bennu.portal.domain.MenuContainer) getParentContainer()).getApplications()
                         .isEmpty()) ? getParentContainer()
                                 .availableApplicationKeys() : ((org.fenixedu.bennu.portal.domain.MenuContainer) this
-                                        .getParentContainer()).getApplications().stream().map(a -> a.getTitle().getContent())
-                                                .collect(Collectors.toList());
+                                        .getParentContainer()).getApplications().stream()
+                                                .map(a -> a.getApplicationTitle().getValue()).collect(Collectors.toList());
     }
 
     public void setApplications(Set<Application> applications) {

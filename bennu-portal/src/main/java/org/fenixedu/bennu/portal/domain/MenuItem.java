@@ -28,8 +28,7 @@ import pt.ist.fenixframework.Atomic;
  * @see MenuFunctionality
  * 
  */
-public abstract class MenuItem extends MenuItem_Base
-        implements Comparable<MenuItem>, com.qubit.terra.portal.domain.menus.MenuItem {
+public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.portal.domain.menus.MenuItem {
 
     protected MenuItem() {
         super();
@@ -76,18 +75,6 @@ public abstract class MenuItem extends MenuItem_Base
         if (getParent() != null) {
             getParent().updateAccessGroup();
         }
-    }
-
-    /**
-     * Compares this {@link MenuItem} with another, taking into account the order of both items.
-     * 
-     * Note that it only makes sense to invoke this method for items at the same level, as there are no ordering guarantees across
-     * multiple levels.
-     */
-    @Override
-    public int compareTo(MenuItem o) {
-        int ord = getOrd().compareTo(o.getOrd());
-        return ord == 0 ? getTitle().compareTo(o.getTitle()) : ord;
     }
 
     /**
