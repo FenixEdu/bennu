@@ -89,10 +89,6 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
         deleteDomainObject();
     }
 
-    //getexpression no interface
-    // bennu get access group get expression
-    // plataforma access control expression
-
     /**
      * Determines whether this {@link MenuItem} and all its parents are available for the given {@link User}.
      * 
@@ -303,8 +299,7 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
 
     @Override
     public void setAccessControlExpression(String expression) {
-        // TODO Auto-generated method stub
-
+        setAccessGroup(Group.parse(expression));
     }
 
     @Override
