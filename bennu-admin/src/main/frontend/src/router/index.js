@@ -167,21 +167,6 @@ const router = new Router({
                 })
               ])
 
-              // Load slots
-              await Promise.all(
-                domainObjectRoles.items.map(async (role) => {
-                  if (role.objectId) {
-                    const slots = await BennuAdminAPI.listDomainObjectSlots({
-                      objectId: role.objectId,
-                      query: to.query.q,
-                      page: 1,
-                      perPage: 5
-                    })
-                    role.slots = slots.items
-                  }
-                })
-              )
-
               to.meta.domainObject = domainObject
               to.meta.metadata = metadata
               to.meta.totalItems = domainObjectRoles.totalItems

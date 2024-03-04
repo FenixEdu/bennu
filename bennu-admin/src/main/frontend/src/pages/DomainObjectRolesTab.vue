@@ -31,51 +31,40 @@
       </template>
     </empty-state>
 
-    <div v-else>
-      <ol>
-        <li
+    <div
+      v-else
+      class="card"
+    >
+      <table class="table">
+        <thead class="table__header">
+          <th class="table__heading">
+            {{ $t('table.name') }}
+          </th>
+          <th class="table__heading">
+            {{ $t('table.type') }}
+          </th>
+          <th class="table__heading">
+            {{ $t('table.object-id') }}
+          </th>
+        </thead>
+        <tr
           v-for="role in domainObjectRoles"
           :key="role.name"
-          class="card"
+          class="table__row"
         >
-          <div class="card-row card-row--sm">
-            <div class="card-row__text">
-              <p>
-                <span class="h4 h4--ssp">{{ role.name }}</span> <span
-                  v-if="role.objectId"
-                  class="label label--outline label--light"
-                >{{ role.objectId }}</span>
-              </p>
-              <p>{{ role.type }}</p>
-            </div>
-            <div
-              v-if="role.objectId"
-              class="card-row__meta"
-            >
-              <router-link
-                aria-hidden="true"
-                tabindex="-1"
-                :to="{ name: 'DomainObjectPage', params: { domainObjectId: role.objectId }, query: { q: undefined } }"
-              >
-                <span class="i-arrow-right" />
-              </router-link>
-            </div>
-          </div>
-          <div
-            v-if="role.slots && role.slots.length > 0"
-            class="card-row role-slots"
-          >
-            <ol class="card-row__text">
-              <domain-object-slot-row
-                v-for="slot in role.slots"
-                :key="slot.name"
-                :domain-object-slot="slot"
-                :show-type="false"
-              />
-            </ol>
-          </div>
-        </li>
-      </ol>
+          <td class="table__cell">
+            <p class="u-text-strong">
+              {{ role.name }}
+            </p>
+          </td>
+          <td class="table__cell">
+            <p>{{ role.type }}</p>
+          </td>
+          <td class="table__cell">
+            <p>{{ role.objectId }}</p>
+          </td>
+        </tr>
+      </table>
 
       <pagination
         :total-items="totalItems"
@@ -89,24 +78,20 @@
 <script>
 import Pagination from '@/components/utils/Pagination.vue'
 import EmptyState from '@/components/EmptyState.vue'
-import DomainObjectSlotRow from '@/components/domain-object/DomainObjectSlotRow.vue'
 import { guardWithErrorHandling } from '@/router/guards'
 
 export default {
   components: {
     Pagination,
-    EmptyState,
-    DomainObjectSlotRow
+    EmptyState
   },
-  beforeRouteUpdate: guardWithErrorHandling(
-    async function (to, from, next) {
-      this.$progress.set(10)
-      await to.meta.beforeRouteLoad(to, from)
-      this.searchInput = to.query.q || ''
-      this.$progress.complete()
-      next()
-    }
-  ),
+  beforeRouteUpdate: guardWithErrorHandling(async function (to, from, next) {
+    this.$progress.set(10)
+    await to.meta.beforeRouteLoad(to, from)
+    this.searchInput = to.query.q || ''
+    this.$progress.complete()
+    next()
+  }),
   props: {
     query: {
       type: String,
