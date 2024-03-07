@@ -43,35 +43,45 @@
           <th class="table__heading">
             {{ $t('table.type') }}
           </th>
-          <th class="table__heading">
+          <th class="table__heading table__cell--right">
             {{ $t('table.object-id') }}
           </th>
         </thead>
-        <tr
-          v-for="role in domainObjectRoles"
-          :key="role.name"
-          class="table__row"
-        >
-          <td class="table__cell">
-            <p class="u-text-strong">
-              {{ role.name }}
-            </p>
-          </td>
-          <td class="table__cell">
-            <p>{{ role.type }}</p>
-          </td>
-          <td class="table__cell">
-            <p>{{ role.objectId }}</p>
-          </td>
-        </tr>
+        <tbody>
+          <tr
+            v-for="role in domainObjectRoles"
+            :key="role.name"
+            class="table__row"
+          >
+            <td class="table__cell">
+              <p class="u-text-strong">
+                {{ role.name }}
+              </p>
+            </td>
+            <td class="table__cell">
+              <p>{{ role.type }}</p>
+            </td>
+            <td class="table__cell table__cell--right">
+              <router-link
+                v-if="role.objectId"
+                :to="{ name:'DomainObjectPage', params: { domainObjectId: role.objectId } }"
+              >
+                {{ role.objectId }}
+              </router-link>
+              <p v-else>
+                -
+              </p>
+            </td>
+          </tr>
+        </tbody>
       </table>
-
-      <pagination
-        :total-items="totalItems"
-        :items-per-page="perPage"
-        :current-page="page"
-      />
     </div>
+
+    <pagination
+      :total-items="totalItems"
+      :items-per-page="perPage"
+      :current-page="page"
+    />
   </div>
 </template>
 
@@ -130,7 +140,7 @@ export default {
   },
   computed: {
     hasSearch () {
-      return this.searchInput !== ''
+      return this.query !== ''
     }
   },
   methods: {
@@ -148,6 +158,11 @@ export default {
   i18n: {
     messages: {
       pt: {
+        table: {
+          name: 'Nome',
+          type: 'Tipo',
+          'object-id': 'ID do Objeto'
+        },
         search: {
           placeholder: 'Pesquisar...',
           'aria-label': 'Pesquisar'
@@ -158,6 +173,11 @@ export default {
         }
       },
       en: {
+        table: {
+          name: 'Name',
+          type: 'Type',
+          'object-id': 'Object ID'
+        },
         search: {
           placeholder: 'Search...',
           'aria-label': 'Search'
@@ -173,11 +193,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/scss/variables";
+
 .f-search {
   margin-bottom: 1.5rem;
 }
 
 .role-slots {
   padding: 0;
+}
+
+.table__cell--right {
+  text-align: right;
 }
 </style>

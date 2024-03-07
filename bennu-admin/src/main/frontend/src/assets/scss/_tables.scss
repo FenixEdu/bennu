@@ -170,7 +170,8 @@ table + table {
 tbody tr.clickable-row {
   cursor: pointer;
 }
-.clickable-row tbody tr:hover {
+
+tbody .clickable-row tr:hover {
   cursor: pointer;
 
   td {
