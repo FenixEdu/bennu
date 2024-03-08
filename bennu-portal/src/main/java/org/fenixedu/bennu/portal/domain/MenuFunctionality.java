@@ -213,7 +213,7 @@ public class MenuFunctionality extends MenuFunctionality_Base implements com.qub
     }
 
     @Override
-    public String getMenuKId() {
+    public String getMenuId() {
         return getItemKey();
     }
 

@@ -384,20 +384,6 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
     }
 
     @Override
-    public Set<com.qubit.terra.portal.domain.functionalities.Application> availableApplicationKeys() {
-        if (isRootApplicationMenu()) {
-            return ApplicationRegistry.availableApplications().stream()
-                    .filter(app -> !StringUtils.isBlank(app.getKey()) && app.getFunctionalities().size() > 0)
-                    .collect(Collectors.toSet());
-        }
-        return (((org.fenixedu.bennu.portal.domain.MenuContainer) getParentContainer()).getApplications() == null
-                || ((org.fenixedu.bennu.portal.domain.MenuContainer) getParentContainer()).getApplications()
-                        .isEmpty()) ? getParentContainer()
-                                .availableApplicationKeys() : ((org.fenixedu.bennu.portal.domain.MenuContainer) this
-                                        .getParentContainer()).getApplications().stream().collect(Collectors.toSet());
-    }
-
-    @Override
     public void setApplications(Set<com.qubit.terra.portal.domain.functionalities.Application> applications) {
         if (applications != null && !applications.isEmpty()) {
             setAvailableApplicationNames(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));

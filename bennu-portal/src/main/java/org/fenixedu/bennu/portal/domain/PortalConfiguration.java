@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.fenixedu.bennu.core.domain.Bennu;
-import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.servlet.PortalInitializer;
 import org.fenixedu.commons.i18n.I18N;
@@ -65,85 +64,10 @@ public class PortalConfiguration extends PortalConfiguration_Base {
         new MenuContainer(this);
     }
 
-    public com.qubit.terra.framework.tools.primitives.LocalizedString getAppName() {
-        return BundleUtil.convertToPlatformLocalizedString(super.getApplicationTitle());
-    }
-
-    public com.qubit.terra.framework.tools.primitives.LocalizedString getHtmlName() {
-        return BundleUtil.convertToPlatformLocalizedString(super.getHtmlTitle());
-    }
-
-    public com.qubit.terra.framework.tools.primitives.LocalizedString getAppSecondaryName() {
-        return BundleUtil.convertToPlatformLocalizedString(super.getApplicationSubTitle());
-    }
-
-    public com.qubit.terra.framework.tools.primitives.LocalizedString getCopyright() {
-        return BundleUtil.convertToPlatformLocalizedString(super.getApplicationCopyright());
-    }
-
-    public String getPortalTheme() {
-        return getTheme();
-    }
-
+    @Override
     public String getTheme() {
         String theme = super.getTheme();
         return PortalInitializer.isThemeAvailable(theme) ? theme : "default";
-    }
-
-    public String getAppSystemEmailAddress() {
-        return super.getSystemEmailAddress();
-    }
-
-    public byte[] getPortalLogo() {
-        return getLogo();
-    }
-
-    public String getPortalLogoChecksum() {
-        return getLogoChecksum();
-    }
-
-    public String getPortalLogoType() {
-        return getLogoType();
-    }
-
-    public String getPortalLogoLinkUrl() {
-        return getLogoLinkUrl();
-    }
-
-    public String getPortalLogoTooltip() {
-        return getLogoTooltip();
-    }
-
-    public byte[] getPortalFavicon() {
-        return getFavicon();
-    }
-
-    public String getPortalFaviconType() {
-        return getFaviconType();
-    }
-
-    public String getPortalDocumentationBaseUrl() {
-        return getDocumentationBaseUrl();
-    }
-
-    public String getAppLoginPath() {
-        return getLoginPath();
-    }
-
-    public String getAppRecoveryLinkPath() {
-        return getRecoveryLinkPath();
-    }
-
-    public String getAppSignUpPath() {
-        return getSignUpPath();
-    }
-
-    public Boolean detectBrowserLocalInLoginPage() {
-        return getDetectBrowserLocalInLoginPage();
-    }
-
-    public byte[] getLogo() {
-        return super.getLogo();
     }
 
     @Atomic(mode = TxMode.WRITE)
@@ -167,6 +91,7 @@ public class PortalConfiguration extends PortalConfiguration_Base {
         return Bennu.getInstance().getConfiguration();
     }
 
+    @Override
     public String getSupportEmailAddress() {
         return super.getSupportEmailAddress() != null ? super.getSupportEmailAddress() : CoreConfiguration.getConfiguration()
                 .defaultSupportEmailAddress();
@@ -175,12 +100,13 @@ public class PortalConfiguration extends PortalConfiguration_Base {
     /**
      * Returns the root {@link MenuContainer} of this application.
      */
-
+    @Override
     public MenuContainer getMenu() {
         //FIXME: remove when the framework enables read-only slots
         return super.getMenu();
     }
 
+    @Override
     public Set<MenuContainer> getSubRootSet() {
         return Collections.unmodifiableSet(super.getSubRootSet());
     }
@@ -198,23 +124,16 @@ public class PortalConfiguration extends PortalConfiguration_Base {
      * @return
      *         The checksum of the application's logo. May be null
      */
-
+    @Override
     public String getLogoChecksum() {
         //FIXME: remove when the framework enables read-only slots
         return super.getLogoChecksum();
     }
 
+    @Override
     public void setLogo(byte[] logo) {
         super.setLogo(logo);
         setLogoChecksum(logo == null ? null : Hashing.sha1().hashBytes(logo).toString().substring(0, 12));
-    }
-
-    public String getAppSupportEmailAddress() {
-        return getSupportEmailAddress();
-    }
-
-    public com.qubit.terra.portal.domain.menus.MenuContainer getRootMenu() {
-        return getMenu();
     }
 
 }
