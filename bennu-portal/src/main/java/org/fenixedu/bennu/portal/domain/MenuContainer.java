@@ -391,30 +391,21 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
     }
 
     @Override
-    public void setContainerApplications(List<String> applications) {
-        if (applications != null && !applications.isEmpty()) {
-            setAvailableApplicationNames(applications.stream().collect(Collectors.joining(",")));
-        } else {
-            setAvailableApplicationNames(null);
-        }
-    }
-
-    @Override
-    public List<String> availableApplicationKeys() {
+    public Set<com.qubit.terra.portal.domain.functionalities.Application> availableApplicationKeys() {
         if (isRootApplicationMenu()) {
             return ApplicationRegistry.availableApplications().stream()
                     .filter(app -> !StringUtils.isBlank(app.getKey()) && app.getFunctionalities().size() > 0)
-                    .map(a -> a.getTitle().getContent()).collect(Collectors.toList());
+                    .collect(Collectors.toSet());
         }
         return (((org.fenixedu.bennu.portal.domain.MenuContainer) getParentContainer()).getApplications() == null
                 || ((org.fenixedu.bennu.portal.domain.MenuContainer) getParentContainer()).getApplications()
                         .isEmpty()) ? getParentContainer()
                                 .availableApplicationKeys() : ((org.fenixedu.bennu.portal.domain.MenuContainer) this
-                                        .getParentContainer()).getApplications().stream()
-                                                .map(a -> a.getApplicationTitle().getValue()).collect(Collectors.toList());
+                                        .getParentContainer()).getApplications().stream().collect(Collectors.toSet());
     }
 
-    public void setApplications(Set<Application> applications) {
+    @Override
+    public void setApplications(Set<com.qubit.terra.portal.domain.functionalities.Application> applications) {
         if (applications != null && !applications.isEmpty()) {
             setAvailableApplicationNames(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
         } else {

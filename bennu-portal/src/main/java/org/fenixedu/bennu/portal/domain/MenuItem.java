@@ -181,6 +181,7 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
         return supportConfiguration;
     }
 
+    @Override
     public boolean isItemRestricted() {
         if (getParent() == null) {
             return true;
@@ -274,7 +275,7 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
 
     @Override
     public String getItemProviderImplementation() {
-        return super.getProviderImplementation();
+        return getProviderImplementation();
     }
 
     @Override
