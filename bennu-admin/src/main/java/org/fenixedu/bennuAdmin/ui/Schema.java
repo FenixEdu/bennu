@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.twilio.rest.api.v2010.account.sip.Domain;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennuAdmin.util.DomainObjectUtils;
 import org.fenixedu.bennuAdmin.util.DynamicForm;
@@ -15,6 +16,7 @@ import pt.ist.fenixframework.dml.*;
 
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 public class Schema {
@@ -95,14 +97,17 @@ public class Schema {
     };
   }
 
-  public static BiConsumer<JsonObject, Role> DOMAIN_OBJECT_ROLE_SET(DomainObject domainObject) {
-    return (data, role) -> {
-      data.addProperty("name", role.getName());
-      data.addProperty("type", role.getType().getFullName());
-      data.addProperty("count", DomainObjectUtils.getRelationSet(domainObject, role).size());
-      data.add("modifiers", modifiers(role));
-    };
-  }
+  public static BiConsumer<JsonObject, Role> DOMAIN_OBJECT_ROLE_SET =
+      (data, role) -> {
+        data.addProperty("name", role.getName());
+        data.addProperty("type", role.getType().getFullName());
+        data.add("modifiers", modifiers(role));
+      };
+
+  public static BiConsumer<JsonObject, Set<DomainObject>> DOMAIN_OBJECT_ROLE_SET_COUNT =
+      (data, set) -> {
+        data.addProperty("count", set.size());
+      };
 
   public static final BiConsumer<JsonObject, DynamicForm> DOMAIN_OBJECT_FORM =
       (data, dynamicForm) -> {

@@ -62,3 +62,8 @@ export async function getDomainObjectRoleSet ({ objectId, roleSetName, query, pa
   const response = await client.get(`${BASE_URL}/domain-objects/${objectId}/role-sets/${roleSetName}`, { params })
   return response.data
 }
+
+export async function getDomainObjectRoleSetCount ({ objectId, roleSetName } = {}) {
+  const response = await client.get(`${BASE_URL}/domain-objects/${objectId}/role-sets/${roleSetName}/count`)
+  return response.data
+}

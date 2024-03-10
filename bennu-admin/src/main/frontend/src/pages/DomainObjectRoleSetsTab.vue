@@ -31,32 +31,61 @@
       </template>
     </empty-state>
 
-    <ol v-else>
-      <li
-        v-for="roleSet in domainObjectRoleSets"
-        :key="roleSet.name"
-        class="card"
-      >
-        <div class="card-row card-row--sm">
-          <div class="card-row__text">
-            <p>
-              <span class="h4 h4--ssp">{{ roleSet.name }} ({{ roleSet.count }})</span>
-            </p>
-            <p>{{ roleSet.type }}</p>
-          </div>
-          <div class="card-row__meta">
-            <router-link
-              aria-hidden="true"
-              tabindex="-1"
-              replace
-              :to="{ name: 'DomainObjectRoleSetPage', params: { domainObjectId: domainObject.objectId, roleSetName: roleSet.name } }"
-            >
-              <span class="i-arrow-right" />
-            </router-link>
-          </div>
-        </div>
-      </li>
-    </ol>
+    <div
+      v-else
+      class="card"
+    >
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ $t('table.set-name') }}</th>
+            <th>{{ $t('table.set-type') }}</th>
+            <th class="table__cell--right">
+              {{ $t('table.count') }}
+            </th>
+            <th />
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            v-for="roleSet in domainObjectRoleSets"
+            :key="roleSet.name"
+            class="table__row"
+          >
+            <td class="table__cell">
+              <span class="u-text-strong">{{ roleSet.name }}</span>
+            </td>
+            <td class="table__cell">
+              <p>{{ roleSet.type }}</p>
+            </td>
+            <td class="table__cell table__cell--right">
+              <button
+                v-if="counts[roleSet.name] === undefined || counts[roleSet.name].status === 'loading'"
+                :disabled="counts[roleSet.name] !== undefined && counts[roleSet.name].status === 'loading'"
+                class="btn btn--link btn--load"
+                @click="loadCount(roleSet.name)"
+              >
+                {{ $t('load-count') }}
+              </button>
+              <p v-else>
+                {{ counts[roleSet.name].count }}
+              </p>
+            </td>
+            <td class="table__cell table__cell--right">
+              <router-link
+                aria-hidden="true"
+                tabindex="-1"
+                replace
+                :to="{ name: 'DomainObjectRoleSetPage', params: { domainObjectId: domainObject.objectId, roleSetName: roleSet.name } }"
+              >
+                <span class="i-arrow-right i--small" />
+              </router-link>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <pagination
       :total-items="totalItems"
@@ -70,21 +99,20 @@
 import Pagination from '@/components/utils/Pagination.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import { guardWithErrorHandling } from '@/router/guards'
+import { getDomainObjectRoleSetCount } from '@/api/bennu-admin'
 
 export default {
   components: {
     Pagination,
     EmptyState
   },
-  beforeRouteUpdate: guardWithErrorHandling(
-    async function (to, from, next) {
-      this.$progress.set(10)
-      await to.meta.beforeRouteLoad(to, from)
-      this.searchInput = to.query.q || ''
-      this.$progress.complete()
-      next()
-    }
-  ),
+  beforeRouteUpdate: guardWithErrorHandling(async function (to, from, next) {
+    this.$progress.set(10)
+    await to.meta.beforeRouteLoad(to, from)
+    this.searchInput = to.query.q || ''
+    this.$progress.complete()
+    next()
+  }),
   props: {
     query: {
       type: String,
@@ -118,7 +146,8 @@ export default {
   },
   data () {
     return {
-      searchInput: this.query
+      searchInput: this.query,
+      counts: {}
     }
   },
   computed: {
@@ -127,6 +156,11 @@ export default {
     }
   },
   methods: {
+    updateCount (roleSetName, val) {
+      const newCounts = { ...this.counts }
+      newCounts[roleSetName] = val
+      this.counts = newCounts
+    },
     performSearch () {
       if (this.searchInput !== this.$route.query.q) {
         const location = { query: { q: this.searchInput === '' ? undefined : this.searchInput } }
@@ -136,11 +170,28 @@ export default {
           this.$router.push(location)
         }
       }
+    },
+    async loadCount (roleSetName) {
+      if (this.counts[roleSetName] === undefined) {
+        this.updateCount(roleSetName, { status: 'loading' })
+        const { count } = await getDomainObjectRoleSetCount({
+          objectId: this.domainObject.objectId,
+          roleSetName
+        })
+        this.updateCount(roleSetName, { count, status: 'finished' })
+        this.counts[roleSetName].status = 'finished'
+      }
     }
   },
   i18n: {
     messages: {
       pt: {
+        'load-count': 'Carregar',
+        table: {
+          'set-name': 'Nome do conjunto',
+          'set-type': 'Tipo do conjunto',
+          count: 'Contagem'
+        },
         search: {
           placeholder: 'Pesquisar...',
           'aria-label': 'Pesquisar'
@@ -151,6 +202,12 @@ export default {
         }
       },
       en: {
+        'load-count': 'Load',
+        table: {
+          'set-name': 'Set Name',
+          'set-type': 'Set Type',
+          count: 'Count'
+        },
         search: {
           placeholder: 'Search...',
           'aria-label': 'Search'
@@ -168,5 +225,14 @@ export default {
 <style lang="scss" scoped>
 .f-search {
   margin-bottom: 1.5rem;
+}
+
+.table__cell--right {
+  text-align: right;
+  padding-right: 0;
+}
+
+.btn--load {
+  margin-left: auto;
 }
 </style>

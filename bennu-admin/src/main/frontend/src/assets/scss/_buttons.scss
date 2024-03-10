@@ -742,6 +742,13 @@ p + .btn {
     color: $blue-700;
   }
 
+  &:disabled {
+    font-size: 1rem;
+    border: 0;
+    padding: 0;
+    border-radius: 0;
+  }
+
   &.btn--danger {
     color: $magenta;
 

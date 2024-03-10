@@ -219,7 +219,28 @@ public class BennuAdminController {
         roles.stream(),
         (role) -> getLocalizedString(roleSetQueryString(role)),
         Comparator.comparing(Role::getName),
-        Schema.DOMAIN_OBJECT_ROLE_SET(domainObject));
+        Schema.DOMAIN_OBJECT_ROLE_SET);
+  }
+
+  @RequestMapping(
+      value = "/domain-objects/{objectId}/role-sets/{roleName}/count",
+      method = RequestMethod.GET)
+  public ResponseEntity<?> domainObjectRoleSetCount(
+      final @PathVariable String objectId, final @PathVariable String roleName) {
+    requireGroup(Group.managers());
+
+    DomainObject domainObject = FenixFramework.getDomainObject(objectId);
+    if (!FenixFramework.isDomainObjectValid(domainObject)) {
+      throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.not-found");
+    }
+
+    DomainClass domClass =
+        FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
+
+    Role roleSlot = domClass.findRoleSlot(roleName);
+    Set<DomainObject> objects = DomainObjectUtils.getRelationSet(domainObject, roleSlot);
+
+    return ok(Schema.DOMAIN_OBJECT_ROLE_SET_COUNT, objects);
   }
 
   @RequestMapping(
