@@ -24,7 +24,9 @@
         class="f-search__submit"
         @click.prevent="performSearch()"
       >
-        {{ $t('search.aria-label') }}
+        <span class="sr-only">
+          {{ $t('search.aria-label') }}
+        </span>
       </button>
     </form>
   </div>
