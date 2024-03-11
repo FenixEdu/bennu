@@ -252,21 +252,6 @@ const router = new Router({
             })
           ])
 
-          // Load slots
-          await Promise.all(
-            relationSet.items.map(async (relation) => {
-              if (relation.objectId) {
-                const slots = await BennuAdminAPI.listDomainObjectSlots({
-                  objectId: relation.objectId,
-                  query: to.query.q,
-                  page: 1,
-                  perPage: 5
-                })
-                relation.slots = slots.items
-              }
-            })
-          )
-
           to.meta.domainObject = domainObject
           to.meta.totalItems = relationSet.totalItems
           to.meta.relationSet = relationSet.items
