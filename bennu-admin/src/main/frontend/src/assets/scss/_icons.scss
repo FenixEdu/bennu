@@ -63,6 +63,16 @@
   }
 }
 
+.i-arrow-up {
+  @extend .i-arrow-right;
+  transform: rotate(-90deg);
+}
+
+.i-arrow-down {
+  @extend .i-arrow-right;
+  transform: rotate(90deg);
+}
+
 @mixin circle-arrow-right ($color) {
   background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='32px' height='32px' viewBox='0 0 32 32' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg stroke='#{$color}' transform='translate(1.000000, 1.000000)'%3E%3Ccircle cx='15' cy='15' r='15'%3E%3C/circle%3E%3Cpolyline points='12 8.98950195 18.010498 15 12 21.010498'%3E%3C/polyline%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }

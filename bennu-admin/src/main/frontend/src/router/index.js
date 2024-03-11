@@ -167,6 +167,25 @@ const router = new Router({
                 })
               ])
 
+              // Load slots
+              await Promise.all(
+                domainObjectRoles.items.map(async (relation) => {
+                  if (relation.objectId) {
+                    const slots = await BennuAdminAPI.listDomainObjectSlots({
+                      objectId: relation.objectId,
+                      query: to.query.q,
+                      page: 1,
+                      perPage: 5
+                    })
+                    relation.count = {
+                      ...relation.count,
+                      slots: slots.totalItems
+                    }
+                    relation.slots = slots.items
+                  }
+                })
+              )
+
               to.meta.domainObject = domainObject
               to.meta.metadata = metadata
               to.meta.totalItems = domainObjectRoles.totalItems
@@ -251,6 +270,21 @@ const router = new Router({
               perPage: to.meta.perPage
             })
           ])
+
+          // Load slots
+          await Promise.all(
+            relationSet.items.map(async (relation) => {
+              if (relation.objectId) {
+                const slots = await BennuAdminAPI.listDomainObjectSlots({
+                  objectId: relation.objectId,
+                  query: to.query.q,
+                  page: 1,
+                  perPage: 5
+                })
+                relation.slots = slots.items
+              }
+            })
+          )
 
           to.meta.domainObject = domainObject
           to.meta.totalItems = relationSet.totalItems

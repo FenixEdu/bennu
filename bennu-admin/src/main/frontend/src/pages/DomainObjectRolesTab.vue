@@ -39,6 +39,7 @@
     >
       <table class="table">
         <thead class="table__header">
+          <th />
           <th class="table__heading">
             {{ $t('table.name') }}
           </th>
@@ -50,31 +51,68 @@
           </th>
         </thead>
         <tbody>
-          <tr
-            v-for="role in domainObjectRoles"
-            :key="role.name"
-            class="table__row"
-          >
-            <td class="table__cell">
-              <p class="u-text-strong">
-                {{ role.name }}
-              </p>
-            </td>
-            <td class="table__cell">
-              <p>{{ role.type }}</p>
-            </td>
-            <td class="table__cell table__cell--right">
-              <router-link
-                v-if="role.objectId"
-                :to="{ name:'DomainObjectPage', params: { domainObjectId: role.objectId } }"
-              >
-                {{ role.objectId }}
-              </router-link>
-              <p v-else>
-                -
-              </p>
-            </td>
-          </tr>
+          <template v-for="role in domainObjectRoles">
+            <tr
+              :key="role.name"
+              class="table__row"
+            >
+              <td class="table__cell">
+                <button
+                  v-if="role.slots?.length > 0"
+                  class="toggle-details-button"
+                  @click.prevent="toggleRoleDetails(role. name)"
+                >
+                  <span class="sr-only">{{ $t("toggle-details") }}</span>
+                  <span
+                    class="i--small"
+                    :class="{ 'i-arrow-down': !roleDetailsOpen[role.name], 'i-arrow-up': roleDetailsOpen[role.name] }"
+                  />
+                </button>
+              </td>
+              <td class="table__cell">
+                <p class="u-text-strong">
+                  {{ role.name }}
+                </p>
+              </td>
+              <td class="table__cell">
+                <p>{{ role.type }}</p>
+              </td>
+              <td class="table__cell table__cell--right">
+                <router-link
+                  v-if="role.objectId"
+                  :to="{ name:'DomainObjectPage', params: { domainObjectId: role.objectId } }"
+                >
+                  {{ role.objectId }}
+                </router-link>
+                <p v-else>
+                  -
+                </p>
+              </td>
+            </tr>
+            <collapsible-table-row
+              v-if="role.slots"
+              :key="`${role.name}-${role.objectId}-details`"
+              :open="roleDetailsOpen[role.name]"
+              class="collapsible-table-row"
+            >
+              <td colspan="4">
+                <domain-object-slot-row
+                  v-for="slot in role.slots"
+                  :key="slot.name"
+                  :domain-object-slot="slot"
+                  :show-type="false"
+                />
+                <div
+                  v-if="role.slots.length < role.count.slots"
+                  class="card-row card-row--sm"
+                >
+                  <p class="u-text-muted">
+                    {{ $t('table.slots-missing', { count: role.count.slots - role.slots.length }) }}
+                  </p>
+                </div>
+              </td>
+            </collapsible-table-row>
+          </template>
         </tbody>
       </table>
     </div>
@@ -90,12 +128,17 @@
 <script>
 import Pagination from '@/components/utils/Pagination.vue'
 import EmptyState from '@/components/EmptyState.vue'
+import CollapsibleTableRow from '@/components/utils/CollapsibleTableRow.vue'
+import DomainObjectSlotRow from '@/components/domain-object/DomainObjectSlotRow.vue'
+
 import { guardWithErrorHandling } from '@/router/guards'
 
 export default {
   components: {
     Pagination,
-    EmptyState
+    EmptyState,
+    DomainObjectSlotRow,
+    CollapsibleTableRow
   },
   beforeRouteUpdate: guardWithErrorHandling(async function (to, from, next) {
     this.$progress.set(10)
@@ -137,7 +180,8 @@ export default {
   },
   data () {
     return {
-      searchInput: this.query
+      searchInput: this.query,
+      roleDetailsOpen: {}
     }
   },
   computed: {
@@ -155,15 +199,20 @@ export default {
           this.$router.push(location)
         }
       }
+    },
+    toggleRoleDetails (roleName) {
+      this.roleDetailsOpen = { ...this.roleDetailsOpen, [roleName]: !this.roleDetailsOpen[roleName] }
     }
   },
   i18n: {
     messages: {
       pt: {
+        'toggle-details': 'Mostrar detalhes',
         table: {
           name: 'Nome',
           type: 'Tipo',
-          'object-id': 'ID do Objeto'
+          'object-id': 'ID do Objeto',
+          'slots-missing': '(+{count}) Este objeto possui {count} campos não exibidos'
         },
         search: {
           placeholder: 'Pesquisar...',
@@ -175,10 +224,12 @@ export default {
         }
       },
       en: {
+        'toggle-details': 'Show details',
         table: {
           name: 'Name',
           type: 'Type',
-          'object-id': 'Object ID'
+          'object-id': 'Object ID',
+          'slots-missing': '(+{count}) This object has {count} slots not displayed'
         },
         search: {
           placeholder: 'Search...',
@@ -207,5 +258,27 @@ export default {
 
 .table__cell--right {
   text-align: right;
+  padding-right: 0;
+}
+
+.table__row {
+  border-bottom-color: $blue;
+}
+
+.toggle-details-button:hover span {
+  background-color: $blue;
+  @include fastTransition;
+}
+
+.table__row-active {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.collapsible-table-row {
+  background: #f9fbfe;
+  td {
+    padding: 0;
+  }
 }
 </style>
