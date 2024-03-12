@@ -73,10 +73,7 @@ public class Schema {
 
   public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT_META =
       (data, domainObject) -> {
-        Class<?> targetClass = domainObject.getClass();
-        boolean deletable =
-            DomainObjectUtils.recursiveGetDeclaredMethod(domainObject, "delete") != null;
-        data.addProperty("deletable", deletable);
+        data.addProperty("deletable", DomainObjectUtils.isDeletable(domainObject));
       };
 
   public static BiConsumer<JsonObject, Slot> DOMAIN_OBJECT_SLOT(DomainObject domainObject) {

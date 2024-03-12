@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+// This code is copied from fenixedu-admissions.
 public class DynamicForm {
 
   private static String indent(final String str) {

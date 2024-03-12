@@ -60,7 +60,7 @@ public class DomainObjectUtils {
     }
   }
 
-  public static Method recursiveGetDeclaredMethod(
+  private static Method recursiveGetDeclaredMethod(
       final DomainObject domainObject, final String methodName) {
     Class<?> targetClass = domainObject.getClass();
     while (targetClass != null) {
@@ -156,6 +156,15 @@ public class DomainObjectUtils {
       }
     }
     return null;
+  }
+
+  public static boolean isDeletable(final DomainObject domainObject) {
+    try {
+      Method deleteMethod = recursiveGetDeclaredMethod(domainObject, "delete");
+      return deleteMethod != null;
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   public static Set<DomainObject> getRelationSet(final DomainObject domainObject, final Role role) {

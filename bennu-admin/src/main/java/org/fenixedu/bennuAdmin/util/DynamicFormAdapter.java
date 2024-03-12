@@ -3,7 +3,6 @@ package org.fenixedu.bennuAdmin.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.fenixedu.bennu.BennuAdminConfiguration;
 import org.fenixedu.bennu.core.json.ImmutableJsonElement;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -21,20 +20,10 @@ import pt.ist.fenixframework.dml.Slot;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class DynamicFormAdapter {
-  private static final Supplier<LocalizedString.Builder> LS_BUILDER =
-      () -> {
-        LocalizedString.Builder builder = new LocalizedString.Builder();
-        for (final Locale locale : CoreConfiguration.supportedLocales()) {
-          builder.with(locale, "\u200B"); // U+200B is a zero-width space
-        }
-        return builder;
-      };
 
   private final DomainObject domainObject;
 
