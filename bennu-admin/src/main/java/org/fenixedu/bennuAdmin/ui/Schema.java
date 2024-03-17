@@ -4,10 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.twilio.rest.api.v2010.account.sip.Domain;
 import org.fenixedu.bennu.core.json.JsonUtils;
+import org.fenixedu.bennuAdmin.util.DomainObjectForm;
 import org.fenixedu.bennuAdmin.util.DomainObjectUtils;
-import org.fenixedu.bennuAdmin.util.DynamicForm;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.stream.StreamUtils;
 import pt.ist.fenixframework.DomainObject;
@@ -52,8 +51,10 @@ public class Schema {
             FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
 
         int slotCount = DomainObjectUtils.getDomainObjectSlots(domainObject).size();
-        int roleCount = DomainObjectUtils.getRoles(domainClass, true).size();
-        int roleSetCount = DomainObjectUtils.getRoles(domainClass, false).size();
+        int roleCount =
+            DomainObjectUtils.getRoles(domainClass, DomainObjectUtils.Multiplicity.ONE).size();
+        int roleSetCount =
+            DomainObjectUtils.getRoles(domainClass, DomainObjectUtils.Multiplicity.MANY).size();
 
         data.add(
             "count",
@@ -106,7 +107,7 @@ public class Schema {
         data.addProperty("count", set.size());
       };
 
-  public static final BiConsumer<JsonObject, DynamicForm> DOMAIN_OBJECT_FORM =
+  public static final BiConsumer<JsonObject, DomainObjectForm> DOMAIN_OBJECT_FORM =
       (data, dynamicForm) -> {
         data.add("data", dynamicForm.toDataJson());
         data.add("form", dynamicForm.getForm());

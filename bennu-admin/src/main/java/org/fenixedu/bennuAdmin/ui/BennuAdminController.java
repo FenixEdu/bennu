@@ -1,8 +1,6 @@
 package org.fenixedu.bennuAdmin.ui;
 
 import com.google.gson.JsonObject;
-import com.twilio.rest.api.v2010.account.sip.Domain;
-import jvstm.util.Pair;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.json.ImmutableJsonElement;
 import org.fenixedu.bennu.core.json.JsonUtils;
@@ -22,7 +20,6 @@ import pt.ist.fenixframework.dml.DomainClass;
 import pt.ist.fenixframework.dml.Role;
 import pt.ist.fenixframework.dml.Slot;
 
-import javax.ws.rs.BadRequestException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -112,9 +109,7 @@ public class BennuAdminController {
       throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
     }
 
-    DynamicFormAdapter adapter = new DynamicFormAdapter(domainObject);
-
-    return ok(Schema.DOMAIN_OBJECT_FORM, adapter.toDynamicForm().withData(adapter.getData()));
+    return ok(Schema.DOMAIN_OBJECT_FORM, new DomainObjectForm(domainObject));
   }
 
   @SkipCSRF
@@ -128,14 +123,12 @@ public class BennuAdminController {
       throw new BennuAdminError(HttpStatus.NOT_FOUND, "error.notFound");
     }
 
-    DynamicFormAdapter adapter = new DynamicFormAdapter(domainObject);
+    DomainObjectForm dynamicForm =
+        new DomainObjectForm(domainObject).withData(JsonUtils.parse(data));
 
-    try {
-      adapter.setData(JsonUtils.parse(data));
-      return ResponseEntity.status(HttpStatus.OK).build();
-    } catch (Exception e) {
-      throw new BennuAdminError(HttpStatus.BAD_REQUEST, "error.invalidData");
-    }
+    dynamicForm.save();
+
+    return ResponseEntity.status(HttpStatus.OK).build();
   }
 
   @RequestMapping(value = "/domain-objects/{objectId}/slots", method = RequestMethod.GET)
@@ -182,7 +175,7 @@ public class BennuAdminController {
     DomainClass domClass =
         FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
 
-    Set<Role> roles = DomainObjectUtils.getRoles(domClass, true);
+    Set<Role> roles = DomainObjectUtils.getRoles(domClass, DomainObjectUtils.Multiplicity.ONE);
 
     return search(
         query,
@@ -210,7 +203,7 @@ public class BennuAdminController {
     DomainClass domClass =
         FenixFramework.getDomainModel().findClass(domainObject.getClass().getName());
 
-    Set<Role> roles = DomainObjectUtils.getRoles(domClass, false);
+    Set<Role> roles = DomainObjectUtils.getRoles(domClass, DomainObjectUtils.Multiplicity.MANY);
 
     return search(
         query,

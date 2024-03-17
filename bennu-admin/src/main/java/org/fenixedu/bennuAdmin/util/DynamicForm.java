@@ -44,11 +44,15 @@ public class DynamicForm {
 
   private static final Supplier<LocalizedString> EMPTY_LS = () -> LS_BUILDER.get().build();
 
-  private final JsonObject form;
-  private JsonObject data;
-  private final Set<Field> fields = new LinkedHashSet<>();
+  protected final JsonObject form;
+  protected JsonObject data;
+  protected final Set<Field> fields = new LinkedHashSet<>();
 
   private boolean overwriteReadonly;
+
+  protected DynamicForm() {
+    this.form = new JsonObject();
+  }
 
   public DynamicForm(final JsonObject form) {
     this.form = form;
@@ -274,6 +278,10 @@ public class DynamicForm {
       this.form = form;
     }
 
+    public JsonObject getConfig() {
+      return this.config;
+    }
+
     public JsonElement getData() {
       return this.data;
     }
@@ -363,7 +371,7 @@ public class DynamicForm {
 
     protected LocalizedString empty() {
       return BundleUtil.getLocalizedString(
-          "resources.AdmissionsResources", "DynamicForm.empty.value");
+          "resources.BennuAdminResources", "DynamicForm.empty.value");
     }
 
     public boolean sensitive() {

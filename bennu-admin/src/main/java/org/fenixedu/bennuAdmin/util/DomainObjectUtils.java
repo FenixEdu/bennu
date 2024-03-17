@@ -15,6 +15,11 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class DomainObjectUtils {
+  public static enum Multiplicity {
+    ONE,
+    MANY
+  }
+
   private static Object getSlotValue(final DomainObject domainObject, final Slot slot) {
     final Method method = getMethod("get", domainObject, slot.getName());
     if (method != null) {
@@ -129,7 +134,7 @@ public class DomainObjectUtils {
     return slots;
   }
 
-  public static Set<Role> getRoles(final DomainClass domainClass, boolean one) {
+  public static Set<Role> getRoles(final DomainClass domainClass, Multiplicity multiplicity) {
     final Set<Role> result = new HashSet<Role>();
     for (DomainClass dc = domainClass; dc != null; dc = (DomainClass) dc.getSuperclass()) {
       for (final Role role : dc.getRoleSlotsList()) {
@@ -137,7 +142,7 @@ public class DomainObjectUtils {
         if (role.getName() == null) {
           continue;
         }
-        if (one ? (role.getMultiplicityUpper() == 1) : (role.getMultiplicityUpper() != 1)) {
+        if ((multiplicity == Multiplicity.ONE) == (role.getMultiplicityUpper() == 1)) {
           result.add(role);
         }
       }
