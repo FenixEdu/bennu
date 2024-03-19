@@ -7,6 +7,14 @@
         </h1>
         <p>{{ $t('description') }}</p>
       </div>
+      <div class="section-header__meta btn-group">
+        <router-link
+          class="btn btn--primary"
+          :to="{ name: 'CreateDomainObjectPage' }"
+        >
+          {{ $t('create-domain-object') }}
+        </router-link>
+      </div>
     </header>
     <form
       role="search"
@@ -62,7 +70,8 @@ export default {
           'aria-label': 'Pesquisar...',
           placeholder: 'Pesquisar domínios',
           empty: 'Nenhum domínio encontrado'
-        }
+        },
+        'create-domain-object': 'Criar objeto de domínio'
       },
       en: {
         header: 'Domain browser',
@@ -71,7 +80,8 @@ export default {
           'aria-label': 'Search...',
           placeholder: 'Search domains',
           empty: 'No domains found'
-        }
+        },
+        'create-domain-object': 'Create domain object'
       }
     }
   },

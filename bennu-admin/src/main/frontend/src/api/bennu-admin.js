@@ -2,6 +2,15 @@ import client from './client'
 
 const BASE_URL = '/bennu-admin'
 
+export async function listDomainClasses ({ query, page, perPage } = {}) {
+  const params = {
+    ...(query && { query }),
+    ...(perPage !== undefined && page !== undefined && { skip: (page - 1) * perPage, limit: perPage })
+  }
+  const response = await client.get(`${BASE_URL}/domain-objects/classes`, { params })
+  return response.data
+}
+
 export async function getDomainObject ({ objectId }) {
   const response = await client.get(`${BASE_URL}/domain-objects/${objectId}`)
   return response.data

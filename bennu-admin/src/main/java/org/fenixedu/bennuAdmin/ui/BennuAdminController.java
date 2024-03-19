@@ -60,6 +60,22 @@ public class BennuAdminController {
     }
   }
 
+  @RequestMapping(value = "/domain-objects/classes", method = RequestMethod.GET)
+  public ResponseEntity<?> listDomainClasses(
+      final @RequestParam(required = false) String query,
+      final @RequestParam(required = false) Long skip,
+      final @RequestParam(required = false) Long limit) {
+    Stream<DomainClass> classes = FenixFramework.getDomainModel().getDomainClasses().stream();
+    return search(
+        query,
+        skip,
+        limit,
+        classes,
+        (domainClass) -> getLocalizedString(domainClass.getFullName()),
+        Comparator.comparing(DomainClass::getFullName),
+        Schema.DOMAIN_CLASS);
+  }
+
   @RequestMapping(value = "/domain-objects/{objectId}", method = RequestMethod.GET)
   public ResponseEntity<?> getDomainObject(final @PathVariable String objectId) {
     requireGroup(Group.managers());

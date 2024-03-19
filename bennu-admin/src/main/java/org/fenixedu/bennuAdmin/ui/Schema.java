@@ -37,6 +37,13 @@ public class Schema {
     return StreamUtils.toJsonArray(consumer, collection.stream());
   }
 
+  public static final BiConsumer<JsonObject, DomainClass> DOMAIN_CLASS =
+      (data, domainClass) -> {
+        data.addProperty("fullClassName", domainClass.getFullName());
+        data.addProperty("className", domainClass.getName());
+        data.addProperty("superClassName", domainClass.getSuperclassName());
+      };
+
   public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT =
       (data, domainObject) -> {
         DomainClass domClass =
