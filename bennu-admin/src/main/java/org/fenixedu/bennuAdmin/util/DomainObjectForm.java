@@ -149,7 +149,7 @@ public class DomainObjectForm extends DynamicForm {
       return true;
     }
 
-    static JsonObject getDefaultConfig(Slot slot) {
+    static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
       return JsonUtils.toJson(
           prop -> {
             prop.addProperty("readonly", slot.hasModifier(Modifier.PROTECTED));
@@ -200,7 +200,7 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     public Boolean(DomainObjectForm domainObjectForm, Slot slot) {
-      super(0, 0, getDefaultConfig(slot), null, domainObjectForm);
+      super(0, 0, getDefaultConfig(slot, domainObjectForm.domainObject), null, domainObjectForm);
       this.slot = slot;
     }
 
@@ -235,8 +235,8 @@ public class DomainObjectForm extends DynamicForm {
       return JsonUtils.parseJsonElement(slotValueString);
     }
 
-    private static JsonObject getDefaultConfig(Slot slot) {
-      JsonObject config = PersistentField.getDefaultConfig(slot);
+    private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
+      JsonObject config = PersistentField.getDefaultConfig(slot, domainObject);
       config.add("labelYes", DomainObjectForm.ls("Verdadeiro", "true").json());
       config.add("labelNo", DomainObjectForm.ls("Falso", "false").json());
       return config;
@@ -252,12 +252,12 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     public Text(DomainObjectForm domainObjectForm, Slot slot) {
-      super(0, 0, getDefaultConfig(slot), null, domainObjectForm);
+      super(0, 0, getDefaultConfig(slot, domainObjectForm.domainObject), null, domainObjectForm);
       this.slot = slot;
     }
 
     public Text(DomainObjectForm domainObjectForm, Role role) {
-      super(0, 0, getDefaultConfig(role), null, domainObjectForm);
+      super(0, 1, getDefaultConfig(role, domainObjectForm.domainObject), null, domainObjectForm);
       this.role = role;
     }
 
@@ -341,33 +341,26 @@ public class DomainObjectForm extends DynamicForm {
     public JsonElement getPersistedData() {
       DomainObjectForm form = (DomainObjectForm) this.form;
       if (this.isSlotField()) {
-        return JsonUtils.toJson(
-            data -> {
-              String slotValueString =
-                  DomainObjectUtils.getSlotValueString(form.domainObject, slot);
-              data.addProperty(slot.getName(), slotValueString);
-            });
+        String slotValueString = DomainObjectUtils.getSlotValueString(form.domainObject, slot);
+        return JsonUtils.parseJsonElement(slotValueString);
       } else {
-        return JsonUtils.toJson(
-            data -> {
-              String roleValueString = DomainObjectUtils.getRelationSlot(form.domainObject, role);
-              data.addProperty(role.getName(), roleValueString == null ? "" : roleValueString);
-            });
+        String roleValueString = DomainObjectUtils.getRelationSlot(form.domainObject, role);
+        return JsonUtils.parseJsonElement(roleValueString);
       }
     }
 
-    private static JsonObject getDefaultConfig(Slot slot) {
-      JsonObject config = PersistentField.getDefaultConfig(slot);
+    private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
+      JsonObject config = PersistentField.getDefaultConfig(slot, domainObject);
       config.addProperty("type", "Text");
       return config;
     }
 
-    private static JsonObject getDefaultConfig(Role role) {
+    private static JsonObject getDefaultConfig(Role role, DomainObject domainObject) {
       return JsonUtils.toJson(
           prop -> {
             prop.addProperty("type", "Text");
             prop.addProperty("min", 0);
-            prop.addProperty("readonly", role.hasModifier(Modifier.PROTECTED));
+            prop.addProperty("readonly", DomainObjectUtils.isEditable(domainObject, role));
             prop.addProperty("field", role.getName());
             prop.addProperty("required", false); // todo: check this
             prop.add("label", DomainObjectForm.ls(role.getName()).json());
@@ -434,7 +427,7 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
-      JsonObject config = PersistentField.getDefaultConfig(slot);
+      JsonObject config = PersistentField.getDefaultConfig(slot, domainObject);
       config.addProperty("type", "LocalizedText");
       config.add("locales", getLocalizedTextSlotLocales(domainObject, slot));
       return config;
@@ -449,7 +442,7 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     public Numeric(DomainObjectForm domainObjectForm, Slot slot) {
-      super(0, 0, getDefaultConfig(slot), null, domainObjectForm);
+      super(0, 0, getDefaultConfig(slot, domainObjectForm.domainObject), null, domainObjectForm);
       this.slot = slot;
     }
 
@@ -486,8 +479,8 @@ public class DomainObjectForm extends DynamicForm {
       return JsonUtils.parseJsonElement(slotValueString);
     }
 
-    private static JsonObject getDefaultConfig(Slot slot) {
-      JsonObject config = PersistentField.getDefaultConfig(slot);
+    private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
+      JsonObject config = PersistentField.getDefaultConfig(slot, domainObject);
       config.addProperty("type", "Numeric");
       return config;
     }
@@ -501,7 +494,7 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     public Select(DomainObjectForm domainObjectForm, Slot slot) {
-      super(0, 0, getDefaultConfig(slot), null, domainObjectForm);
+      super(0, 0, getDefaultConfig(slot, domainObjectForm.domainObject), null, domainObjectForm);
       this.slot = slot;
     }
 
@@ -571,8 +564,8 @@ public class DomainObjectForm extends DynamicForm {
           });
     }
 
-    private static JsonObject getDefaultConfig(Slot slot) {
-      JsonObject config = PersistentField.getDefaultConfig(slot);
+    private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
+      JsonObject config = PersistentField.getDefaultConfig(slot, domainObject);
       config.addProperty("type", "Select");
       config.add("options", getSlotOptions(slot));
       return config;
@@ -587,7 +580,7 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     public DateTime(DomainObjectForm domainObjectForm, Slot slot) {
-      super(0, 0, getDefaultConfig(slot), null, domainObjectForm);
+      super(0, 0, getDefaultConfig(slot, domainObjectForm.domainObject), null, domainObjectForm);
       this.slot = slot;
     }
 
@@ -619,8 +612,8 @@ public class DomainObjectForm extends DynamicForm {
       return JsonUtils.parseJsonElement(slotValueString);
     }
 
-    private static JsonObject getDefaultConfig(Slot slot) {
-      JsonObject config = PersistentField.getDefaultConfig(slot);
+    private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
+      JsonObject config = PersistentField.getDefaultConfig(slot, domainObject);
       config.addProperty("type", "DateTime");
       config.addProperty("date", true);
       config.addProperty("time", true);

@@ -1,5 +1,6 @@
 package org.fenixedu.bennuAdmin.util;
 
+import com.twilio.rest.api.v2010.account.sip.Domain;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
@@ -18,6 +19,21 @@ public class DomainObjectUtils {
   public static enum Multiplicity {
     ONE,
     MANY
+  }
+
+  public static boolean isEditable(final DomainObject domainObject, final Slot slot) {
+    final Method setMethod = getMethod("set", domainObject, slot.getName());
+    return setMethod != null;
+  }
+
+  public static boolean isEditable(final DomainObject domainObject, final Role role) {
+    String type = role.getType().getFullName();
+    try {
+      Method setMethod = getMethod("set", domainObject, role.getName(), Class.forName(type));
+      return setMethod != null;
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException("Role " + role.getName() + " type: '" + type + "' was not found");
+    }
   }
 
   private static Object getSlotValue(final DomainObject domainObject, final Slot slot) {
