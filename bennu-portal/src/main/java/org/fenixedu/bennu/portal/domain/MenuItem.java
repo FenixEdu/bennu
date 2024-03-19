@@ -77,6 +77,16 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
         }
     }
 
+    @Override
+    public boolean isMenuContainer() {
+        return this instanceof MenuContainer;
+    }
+
+    @Override
+    public boolean isMenuFunctionality() {
+        return this instanceof MenuFunctionality;
+    }
+
     /**
      * Deletes this item, removing it from the menu.
      */
