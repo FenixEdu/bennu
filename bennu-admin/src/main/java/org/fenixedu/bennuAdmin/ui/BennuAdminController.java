@@ -1,6 +1,7 @@
 package org.fenixedu.bennuAdmin.ui;
 
 import com.google.gson.JsonObject;
+import org.apache.http.protocol.HTTP;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.json.ImmutableJsonElement;
 import org.fenixedu.bennu.core.json.JsonUtils;
@@ -65,6 +66,7 @@ public class BennuAdminController {
       final @RequestParam(required = false) String query,
       final @RequestParam(required = false) Long skip,
       final @RequestParam(required = false) Long limit) {
+    requireGroup(Group.managers());
     Stream<DomainClass> classes = FenixFramework.getDomainModel().getDomainClasses().stream();
     return search(
         query,

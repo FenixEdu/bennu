@@ -41,7 +41,6 @@ public class Schema {
       (data, domainClass) -> {
         data.addProperty("fullClassName", domainClass.getFullName());
         data.addProperty("className", domainClass.getName());
-        data.addProperty("superClassName", domainClass.getSuperclassName());
       };
 
   public static final BiConsumer<JsonObject, DomainObject> DOMAIN_OBJECT =

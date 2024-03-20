@@ -18,7 +18,6 @@ import { scrollOffset as DynamicFormScrollOffset, scrollBehavior as DynamicFormS
 import * as BennuAdminAPI from '@/api/bennu-admin'
 
 // Pages
-const CreateDomainObjectPage = () => import('@/pages/CreateDomainObjectPage.vue')
 const DomainBrowserPage = () => import('@/pages/DomainBrowserPage.vue')
 const DomainObjectPage = () => import('@/pages/DomainObjectPage.vue')
 const DomainObjectRoleSetPage = () => import('@/pages/DomainObjectRoleSetPage.vue')
@@ -61,38 +60,6 @@ const router = new Router({
       path: '/',
       name: 'LandingPage',
       redirect: { name: 'DomainBrowserPage' }
-    },
-    {
-      path: '/domain-browser/create',
-      name: 'CreateDomainObjectPage',
-      component: CreateDomainObjectPage,
-      meta: {
-        layout: 'PageWithNavBarAndFooterLayout',
-        beforeRouteLoad: async (to, from) => {
-          to.meta.page = Number(to.query.page) || 1
-          to.meta.perPage = 10
-
-          const { items, totalItems } = await BennuAdminAPI.listDomainClasses({
-            query: to.query.q,
-            page: to.meta.page,
-            perPage: to.meta.perPage
-          })
-
-          to.meta.domainClasses = items
-          to.meta.totalItems = totalItems
-        }
-      },
-      props: (route) => ({
-        domainClasses: route.meta.domainClasses,
-        query: route.query.q,
-        page: route.meta.page,
-        perPage: route.meta.perPage,
-        totalItems: route.meta.totalItems
-      }),
-      beforeEnter: guardWithErrorHandling(async (to, from, next) => {
-        await to.meta.beforeRouteLoad(to, from)
-        next()
-      })
     },
     {
       path: '/domain-browser',
