@@ -152,9 +152,9 @@ public class DomainObjectForm extends DynamicForm {
     static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
       return JsonUtils.toJson(
           prop -> {
-            prop.addProperty("readonly", slot.hasModifier(Modifier.PROTECTED));
+            prop.addProperty("readonly", !DomainObjectUtils.isEditable(domainObject, slot));
             prop.addProperty("field", slot.getName());
-            prop.addProperty("required", false); // todo: check this
+            prop.addProperty("required", true);
             prop.add("label", ls(slot.getName()).json());
             prop.add("description", ls(slot.getTypeName()).json());
           });
@@ -360,7 +360,7 @@ public class DomainObjectForm extends DynamicForm {
           prop -> {
             prop.addProperty("type", "Text");
             prop.addProperty("min", 0);
-            prop.addProperty("readonly", DomainObjectUtils.isEditable(domainObject, role));
+            prop.addProperty("readonly", !DomainObjectUtils.isEditable(domainObject, role));
             prop.addProperty("field", role.getName());
             prop.addProperty("required", false); // todo: check this
             prop.add("label", DomainObjectForm.ls(role.getName()).json());
@@ -537,11 +537,7 @@ public class DomainObjectForm extends DynamicForm {
     public JsonElement getPersistedData() {
       DomainObjectForm form = (DomainObjectForm) this.form;
       String slotValueString = DomainObjectUtils.getSlotValueString(form.domainObject, slot);
-      return JsonUtils.toJson(
-          j -> {
-            j.add("label", ls(slotValueString).json());
-            j.addProperty("value", slotValueString);
-          });
+      return JsonUtils.parseJsonElement(slotValueString);
     }
 
     private static JsonArray getSlotOptions(Slot slot) {

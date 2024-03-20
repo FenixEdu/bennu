@@ -23,8 +23,13 @@ public class DomainObjectUtils {
   }
 
   public static boolean isEditable(final DomainObject domainObject, final Slot slot) {
-    final Method setMethod = getMethod("set", domainObject, slot.getName());
-    return setMethod != null;
+    String type = slot.getTypeName();
+    try {
+      final Method setMethod = getMethod("set", domainObject, slot.getName(), Class.forName(type));
+      return setMethod != null;
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public static boolean isEditable(final DomainObject domainObject, final Role role) {
@@ -127,10 +132,10 @@ public class DomainObjectUtils {
   public static Method getMethod(
       final String prefix,
       final DomainObject domainObject,
-      final String slotName,
+      final String propertyName,
       final Class<?>... parameterTypes) {
     final String methodName =
-        prefix + Character.toUpperCase(slotName.charAt(0)) + slotName.substring(1);
+        prefix + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
     if (domainObject != null && !methodName.isEmpty()) {
       Method method = recursiveGetDeclaredMethod(domainObject, methodName, parameterTypes);
       if (method != null) {
