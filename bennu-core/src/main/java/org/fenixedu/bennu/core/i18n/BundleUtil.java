@@ -16,16 +16,19 @@
  */
 package org.fenixedu.bennu.core.i18n;
 
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.commons.i18n.LocalizedString.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.regex.Matcher;
 
 public class BundleUtil {
     private static final Logger logger = LoggerFactory.getLogger(BundleUtil.class);
@@ -55,4 +58,32 @@ public class BundleUtil {
         }
         return i18NString;
     }
+
+    // Copied from
+    // https://bitbucket.org/qub-it/fenixedu-ulisboa-quality-assurance/src/4fe2a8e9382269acce3a713982c32d26d69adb79/src/main/java/com/qubit/solution/fenixedu/module/ulisboa/qualityassurance/dto/LocalizedStringUtils.java?at=master#LocalizedStringUtils.java-15
+    public static com.qubit.terra.framework.tools.primitives.LocalizedString convertToPlatformLocalizedString(
+            final org.fenixedu.commons.i18n.LocalizedString localizedString) {
+        com.qubit.terra.framework.tools.primitives.LocalizedString result =
+                new com.qubit.terra.framework.tools.primitives.LocalizedString();
+        for (Locale locale : localizedString.getLocales()) {
+            result.setValue(locale, removeTags(localizedString.getOrDefault(locale, "")));
+        }
+        return result;
+    }
+
+    public static org.fenixedu.commons.i18n.LocalizedString convertToBennuLocalizedString(
+            final com.qubit.terra.framework.tools.primitives.LocalizedString localizedString) {
+        Map<Locale, String> values = localizedString.getValues();
+        Builder builder = new org.fenixedu.commons.i18n.LocalizedString.Builder();
+        for (Entry<Locale, String> entry : values.entrySet()) {
+            builder.with(entry.getKey(), entry.getValue());
+        }
+        return builder.build();
+    }
+
+    public static String removeTags(String text) {
+        text = text.replaceAll("\\<.*?\\>", "");
+        return text;
+    }
+
 }

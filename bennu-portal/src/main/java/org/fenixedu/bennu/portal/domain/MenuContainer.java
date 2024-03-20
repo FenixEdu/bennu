@@ -1,6 +1,7 @@
 package org.fenixedu.bennu.portal.domain;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ import pt.ist.fenixframework.Atomic;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
  */
-public class MenuContainer extends MenuContainer_Base {
+public class MenuContainer extends MenuContainer_Base implements com.qubit.terra.portal.domain.menus.MenuContainer {
 
     /**
      * Used to create the {@link MenuContainer} that will represent the root of the
@@ -59,8 +60,8 @@ public class MenuContainer extends MenuContainer_Base {
         }
         init(parent, true, application.getAccessGroup(), application.getTitle(), application.getDescription(),
                 application.getPath());
-        for (Functionality functionality : application.getFunctionalities()) {
-            new MenuFunctionality(this, functionality);
+        for (com.qubit.terra.portal.domain.functionalities.Functionality functionality : application.getFunctionalities()) {
+            new MenuFunctionality(this, (Functionality) functionality);
         }
     }
 
@@ -112,20 +113,12 @@ public class MenuContainer extends MenuContainer_Base {
      * @throws BennuPortalDomainException
      *             If another child with the same path already exists
      */
-    @Override
     public void addChild(MenuItem child) throws BennuPortalDomainException {
         addChild(child, getNextOrder());
     }
 
     private Integer getNextOrder() {
         return getChildSet().size() + 1;
-    }
-
-    public void updateFullPath() {
-        super.updateFullPath();
-        for (MenuItem item : getChildSet()) {
-            item.updateFullPath();
-        }
     }
 
     /**
@@ -167,7 +160,7 @@ public class MenuContainer extends MenuContainer_Base {
      *         The User's Menu as a Stream
      */
     public Stream<MenuItem> getUserMenuStream() {
-        return getChildSet().stream().filter((item) -> item.isVisible() && item.isItemAvailableForCurrentUser()).sorted();
+        return getChildSet().stream().filter((item) -> item.isItemVisible() && item.isItemAvailableForCurrentUser()).sorted();
     }
 
     /**
@@ -341,8 +334,8 @@ public class MenuContainer extends MenuContainer_Base {
     }
 
     @Override
-    public boolean isVisible() {
-        return !isSubRoot() && super.isVisible();
+    public boolean isItemVisible() {
+        return !isSubRoot() && super.isItemVisible();
     }
 
     public static MenuContainer createSubRoot(String key, LocalizedString title, LocalizedString description) {
@@ -360,24 +353,43 @@ public class MenuContainer extends MenuContainer_Base {
         }
     }
 
-    public void updateAccessGroup() {
-        String groupExpression =
-                getChildSet().stream().map(item -> item.getAccessGroup().getExpression()).collect(Collectors.joining(" | "));
-        setAccessGroup(Group.parse(groupExpression));
-    }
-
-    public Set<Application> getApplications() {
+    @Override
+    public Set<com.qubit.terra.portal.domain.functionalities.Application> getApplications() {
         String availableApplicationNames = getAvailableApplicationNames();
         return availableApplicationNames == null ? Collections.emptySet() : Stream.of(availableApplicationNames.split(","))
                 .map(key -> ApplicationRegistry.getAppByKey(key))
                 .filter(app -> app != null && app.getFunctionalities().size() > 0).collect(Collectors.toSet());
     }
 
-    public void setApplications(Set<Application> applications) {
+    @Override
+    public List<com.qubit.terra.portal.domain.menus.MenuItem> getChilds() {
+        return getOrderedChild().stream().map(t -> (MenuItem) t).collect(Collectors.toList());
+    }
+
+    @Override
+    public void addChildMenuItem(com.qubit.terra.portal.domain.menus.MenuItem menuItem) {
+        addChild((MenuItem) menuItem);
+    }
+
+    @Override
+    public boolean isRootApplicationMenu() {
+        return isRoot();
+    }
+
+    @Override
+    public void updateAccessGroup() {
+        String groupExpression =
+                getChildSet().stream().map(item -> item.getAccessGroup().getExpression()).collect(Collectors.joining(" | "));
+        setAccessGroup(Group.parse(groupExpression));
+    }
+
+    @Override
+    public void setApplications(Set<com.qubit.terra.portal.domain.functionalities.Application> applications) {
         if (applications != null && !applications.isEmpty()) {
             setAvailableApplicationNames(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
         } else {
             setAvailableApplicationNames(null);
         }
     }
+
 }

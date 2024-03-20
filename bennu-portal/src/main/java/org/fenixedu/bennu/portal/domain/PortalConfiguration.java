@@ -135,5 +135,5 @@ public class PortalConfiguration extends PortalConfiguration_Base {
         super.setLogo(logo);
         setLogoChecksum(logo == null ? null : Hashing.sha1().hashBytes(logo).toString().substring(0, 12));
     }
-    
+
 }

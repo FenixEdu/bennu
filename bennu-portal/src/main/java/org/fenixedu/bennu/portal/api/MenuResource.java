@@ -144,11 +144,9 @@ public class MenuResource extends BennuRestResource {
         if (app == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
         }
-        Optional<MenuFunctionality> functionality =
-                app.getFunctionalities()
-                        .stream()
-                        .filter(f -> f.getProvider().equals(obj.get("provider").getAsString())
-                                && f.getKey().equals(obj.get("key").getAsString())).findAny().map(f -> doInstall(container, f));
+        Optional<MenuFunctionality> functionality = app.getFunctionalities().stream().filter(
+                f -> f.getProvider().equals(obj.get("provider").getAsString()) && f.getKey().equals(obj.get("key").getAsString()))
+                .findAny().map(f -> doInstall(container, (Functionality) f));
 
         if (functionality.isPresent()) {
             return viewMenu(functionality.get());

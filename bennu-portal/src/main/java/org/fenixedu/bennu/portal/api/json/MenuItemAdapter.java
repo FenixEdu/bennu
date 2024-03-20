@@ -67,7 +67,7 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
         json.addProperty("fullPath", obj.getFullPath());
         json.addProperty("accessExpression", obj.getAccessGroup().getExpression());
         json.addProperty("functionality", obj.isMenuFunctionality());
-        json.addProperty("visible", obj.isVisible());
+        json.addProperty("visible", obj.isItemVisible());
         json.addProperty("layout", obj.getLayout());
         json.addProperty("icon", obj.getIcon());
         json.add("description", ctx.view(obj.getDescription()));

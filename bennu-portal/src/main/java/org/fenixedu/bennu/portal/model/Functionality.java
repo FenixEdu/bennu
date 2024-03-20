@@ -1,5 +1,6 @@
 package org.fenixedu.bennu.portal.model;
 
+import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.portal.domain.MenuFunctionality;
 import org.fenixedu.bennu.portal.servlet.PortalBackend;
 import org.fenixedu.bennu.portal.servlet.PortalBackendRegistry;
@@ -23,7 +24,8 @@ import com.google.gson.JsonObject;
  * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
  * 
  */
-public final class Functionality implements Comparable<Functionality> {
+public final class Functionality
+        implements Comparable<Functionality>, com.qubit.terra.portal.domain.functionalities.Functionality {
 
     private final String provider;
 
@@ -62,6 +64,7 @@ public final class Functionality implements Comparable<Functionality> {
      * @return
      *         The key of the backend associated with this functionality
      */
+    @Override
     public String getProvider() {
         return provider;
     }
@@ -71,14 +74,17 @@ public final class Functionality implements Comparable<Functionality> {
      * 
      * @return This functionality's key
      */
+    @Override
     public String getKey() {
         return key;
     }
 
+    @Override
     public String getPath() {
         return path;
     }
 
+    @Override
     public String getAccessGroup() {
         return accessGroup;
     }
@@ -91,6 +97,7 @@ public final class Functionality implements Comparable<Functionality> {
         return description;
     }
 
+    @Override
     public boolean isVisible() {
         return visible;
     }
@@ -124,6 +131,11 @@ public final class Functionality implements Comparable<Functionality> {
             return compareTo;
         }
         return this.path.compareTo(other.path);
+    }
+
+    @Override
+    public com.qubit.terra.framework.tools.primitives.LocalizedString getFunctionalityTitle() {
+        return BundleUtil.convertToPlatformLocalizedString(getTitle());
     }
 
 }
