@@ -7,14 +7,6 @@
         </h1>
         <p>{{ $t('description') }}</p>
       </div>
-      <div class="section-header__meta btn-group">
-        <router-link
-          class="btn btn--primary"
-          :to="{ name: 'CreateDomainObjectPage' }"
-        >
-          {{ $t('create-domain-object') }}
-        </router-link>
-      </div>
     </header>
     <form
       role="search"
