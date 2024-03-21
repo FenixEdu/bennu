@@ -127,12 +127,22 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
      */
     @Override
     public boolean isItemVisible() {
+        return isVisible();
+    }
+
+    @Deprecated
+    public boolean isVisible() {
         return getVisible();
+    }
+
+    @Deprecated
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
     }
 
     @Override
     public void setItemVisible(boolean visible) {
-        super.setVisible(visible);
+        setVisible(visible);
     }
 
     @Override
