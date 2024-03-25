@@ -24,6 +24,13 @@ public class DomainObjectUtils {
 
   public static boolean isEditable(final DomainObject domainObject, final Slot slot) {
     String type = slot.getTypeName();
+
+    // ImmutableJsonElement<com.google.gson.JsonObject> causes ClassNotFoundException
+    if (type.contains("<")) {
+      // removes type annotation
+      type = type.split("<")[0];
+    }
+
     try {
       final Method setMethod = getMethod("set", domainObject, slot.getName(), Class.forName(type));
       return setMethod != null;

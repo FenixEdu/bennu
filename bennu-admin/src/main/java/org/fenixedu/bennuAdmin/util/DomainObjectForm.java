@@ -11,7 +11,6 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainObject;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.dml.DomainClass;
-import pt.ist.fenixframework.dml.Modifier;
 import pt.ist.fenixframework.dml.Role;
 import pt.ist.fenixframework.dml.Slot;
 
@@ -30,7 +29,7 @@ public class DomainObjectForm extends DynamicForm {
               this.fields.forEach(
                   f -> {
                     if (f instanceof PersistentField && ((PersistentField) f).isSlotField()) {
-                      data.add(f.getName(), ((PersistentField) f).getPersistedData());
+                      ((PersistentField) f).addPersistedData(data);
                     }
                   });
             });
@@ -41,7 +40,7 @@ public class DomainObjectForm extends DynamicForm {
               this.fields.forEach(
                   f -> {
                     if (f instanceof PersistentField && !((PersistentField) f).isSlotField()) {
-                      data.add(f.getName(), ((PersistentField) f).getPersistedData());
+                      ((PersistentField) f).addPersistedData(data);
                     }
                   });
             });
@@ -143,7 +142,7 @@ public class DomainObjectForm extends DynamicForm {
   private interface PersistentField {
     void save();
 
-    JsonElement getPersistedData();
+    void addPersistedData(final JsonObject data);
 
     default boolean isSlotField() {
       return true;
@@ -154,7 +153,7 @@ public class DomainObjectForm extends DynamicForm {
           prop -> {
             prop.addProperty("readonly", !DomainObjectUtils.isEditable(domainObject, slot));
             prop.addProperty("field", slot.getName());
-            prop.addProperty("required", true);
+            prop.addProperty("required", false); // todo: check if slot is required
             prop.add("label", ls(slot.getName()).json());
             prop.add("description", ls(slot.getTypeName()).json());
           });
@@ -229,10 +228,10 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     @Override
-    public JsonElement getPersistedData() {
+    public void addPersistedData(JsonObject data) {
       DomainObjectForm form = (DomainObjectForm) this.form;
       String slotValueString = DomainObjectUtils.getSlotValueString(form.domainObject, slot);
-      return JsonUtils.parseJsonElement(slotValueString);
+      data.add(this.getName(), JsonUtils.parseJsonElement(slotValueString));
     }
 
     private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
@@ -338,15 +337,15 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     @Override
-    public JsonElement getPersistedData() {
+    public void addPersistedData(JsonObject data) {
       DomainObjectForm form = (DomainObjectForm) this.form;
+      String value;
       if (this.isSlotField()) {
-        String slotValueString = DomainObjectUtils.getSlotValueString(form.domainObject, slot);
-        return JsonUtils.parseJsonElement(slotValueString);
+        value = DomainObjectUtils.getSlotValueString(form.domainObject, slot);
       } else {
-        String roleValueString = DomainObjectUtils.getRelationSlot(form.domainObject, role);
-        return JsonUtils.parseJsonElement(roleValueString);
+        value = DomainObjectUtils.getRelationSlot(form.domainObject, role);
       }
+      data.addProperty(this.getName(), value);
     }
 
     private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
@@ -403,10 +402,10 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     @Override
-    public JsonElement getPersistedData() {
+    public void addPersistedData(JsonObject data) {
       DomainObjectForm form = (DomainObjectForm) this.form;
       String slotValueString = DomainObjectUtils.getSlotValueString(form.domainObject, slot);
-      return JsonUtils.parseJsonElement(slotValueString);
+      data.add(this.getName(), JsonUtils.parseJsonElement(slotValueString));
     }
 
     private static JsonArray getLocalizedTextSlotLocales(DomainObject domainObject, Slot slot) {
@@ -473,10 +472,10 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     @Override
-    public JsonElement getPersistedData() {
+    public void addPersistedData(JsonObject data) {
       DomainObjectForm form = (DomainObjectForm) this.form;
       String slotValueString = DomainObjectUtils.getSlotValueString(form.domainObject, slot);
-      return JsonUtils.parseJsonElement(slotValueString);
+      data.add(this.getName(), JsonUtils.parseJsonElement(slotValueString));
     }
 
     private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
@@ -534,10 +533,17 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     @Override
-    public JsonElement getPersistedData() {
+    public void addPersistedData(JsonObject data) {
       DomainObjectForm form = (DomainObjectForm) this.form;
       String slotValueString = DomainObjectUtils.getSlotValueString(form.domainObject, slot);
-      return JsonUtils.parseJsonElement(slotValueString);
+      JsonObject slotValue =
+          JsonUtils.toJson(
+              j -> {
+                j.add("label", ls(slotValueString).json());
+                j.addProperty("value", slotValueString);
+              });
+
+      data.add(this.getName(), slotValue);
     }
 
     private static JsonArray getSlotOptions(Slot slot) {
@@ -602,10 +608,10 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     @Override
-    public JsonElement getPersistedData() {
+    public void addPersistedData(JsonObject data) {
       DomainObjectForm form = (DomainObjectForm) this.form;
       String slotValueString = DomainObjectUtils.getSlotValueString(form.domainObject, slot);
-      return JsonUtils.parseJsonElement(slotValueString);
+      data.addProperty(this.getName(), slotValueString);
     }
 
     private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
