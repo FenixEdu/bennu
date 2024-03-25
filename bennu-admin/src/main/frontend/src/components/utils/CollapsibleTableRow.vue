@@ -1,8 +1,5 @@
 <template>
-  <transition
-    name="fade-and-shrink"
-    fade
-  >
+  <transition fade>
     <component
       :is="as"
       v-if="open"

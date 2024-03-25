@@ -274,6 +274,10 @@ export default {
   border-bottom-color: $blue;
 }
 
+.toggle-details-button {
+  display: flex;
+}
+
 .toggle-details-button:hover span {
   background-color: $blue;
   @include fastTransition;
@@ -285,6 +289,7 @@ export default {
 }
 
 .collapsible-table-row {
+  word-wrap: anywhere;
   background: #f9fbfe;
   td {
     padding: 0;
