@@ -12,9 +12,9 @@
           </router-link>
         </p>
         <h1 class="h1 section-header__title">
-          {{ $t('header', { object: domainObject.objectId }) }}
+          {{ domainObject.class }} - {{ domainObject.objectId }}
         </h1>
-        <p>{{ $t('description') }}</p>
+        <p>{{ $t('description', { type: domainObject.type }) }}</p>
       </div>
     </header>
     <dynamic-form
@@ -64,12 +64,10 @@ export default {
   i18n: {
     messages: {
       pt: {
-        header: 'Editar objeto de domínio "{object}"',
-        description: 'Edite o objeto de domínio'
+        description: 'Edite o objeto de domínio do tipo "{type}"'
       },
       en: {
-        header: 'Edit domain object "{object}"',
-        description: 'Edit the domain object'
+        description: 'Edit the domain object of type "{type}"'
       }
     }
   }

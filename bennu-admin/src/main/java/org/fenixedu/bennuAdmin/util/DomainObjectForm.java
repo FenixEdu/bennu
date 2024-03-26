@@ -107,6 +107,7 @@ public class DomainObjectForm extends DynamicForm {
     JsonObject p =
         JsonUtils.toJson(
             page -> {
+              page.add("title", ls(domainObject.getClass().getSimpleName()).json());
               page.add(
                   "sections",
                   JsonUtils.toJsonArray(
