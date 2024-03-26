@@ -2,6 +2,7 @@ package org.fenixedu.bennuAdmin.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.fenixedu.bennu.core.json.ImmutableJsonElement;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.LocalizedString;
@@ -303,22 +304,40 @@ public class DomainObjectForm extends DynamicForm {
     }
 
     private void saveSlot() {
-      DomainObjectForm form = (DomainObjectForm) this.form;
+      DomainObject domainObject = ((DomainObjectForm) this.form).domainObject;
 
-      Method setMethod =
-          DomainObjectUtils.getMethod(
-              "set", form.domainObject, slot.getName(), LocalizedString.class);
+      String slotType = slot.getTypeName();
 
-      if (setMethod == null) {
-        throw new RuntimeException("Slot " + slot.getName() + " has no setter");
+      // ImmutableJsonElement<com.google.gson.JsonObject> causes ClassNotFoundException
+      if (slotType.contains("<")) {
+        // removes type annotation
+        slotType = slotType.split("<")[0];
       }
 
-      setMethod.setAccessible(true);
-
       try {
-        setMethod.invoke(form.domainObject, LocalizedString.fromJson(data));
-      } catch (IllegalAccessException | InvocationTargetException e) {
-        throw new Error(e);
+        Method method =
+            DomainObjectUtils.getMethod(
+                "set", domainObject, slot.getName(), Class.forName(slotType));
+
+        if (method == null) {
+          throw new RuntimeException("Slot " + slot.getName() + " has no setter");
+        }
+
+        method.setAccessible(true);
+
+        switch (slotType) {
+          case "org.fenixedu.bennu.core.json.ImmutableJsonElement" -> {
+            method.invoke(domainObject, ImmutableJsonElement.of(data));
+          }
+          case "com.google.gson.JsonElement" -> {
+            method.invoke(domainObject, data);
+          }
+          default -> {
+            method.invoke(domainObject, data.getAsString());
+          }
+        }
+      } catch (ClassNotFoundException | InvocationTargetException | IllegalAccessException e) {
+        throw new RuntimeException(e);
       }
     }
 
