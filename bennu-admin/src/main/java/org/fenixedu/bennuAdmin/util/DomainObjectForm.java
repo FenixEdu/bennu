@@ -1,7 +1,6 @@
 package org.fenixedu.bennuAdmin.util;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -236,6 +235,7 @@ public class DomainObjectForm extends DynamicForm {
 
     private static JsonObject getDefaultConfig(Slot slot, DomainObject domainObject) {
       JsonObject config = PersistentField.getDefaultConfig(slot, domainObject);
+      config.addProperty("type", "Boolean");
       config.add("labelYes", DomainObjectForm.ls("Verdadeiro", "true").json());
       config.add("labelNo", DomainObjectForm.ls("Falso", "false").json());
       return config;

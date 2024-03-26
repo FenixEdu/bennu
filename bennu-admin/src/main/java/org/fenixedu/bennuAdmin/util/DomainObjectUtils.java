@@ -22,8 +22,23 @@ public class DomainObjectUtils {
     MANY
   }
 
+  private static final Map<String, Class<?>> PRIMITIVE_MAPPING;
+
+  static {
+    PRIMITIVE_MAPPING = new HashMap<>();
+    PRIMITIVE_MAPPING.put("int", int.class);
+    PRIMITIVE_MAPPING.put("long", long.class);
+    PRIMITIVE_MAPPING.put("float", float.class);
+    PRIMITIVE_MAPPING.put("double", double.class);
+    PRIMITIVE_MAPPING.put("boolean", boolean.class);
+    PRIMITIVE_MAPPING.put("char", char.class);
+    PRIMITIVE_MAPPING.put("byte", byte.class);
+    PRIMITIVE_MAPPING.put("short", short.class);
+  }
+
   public static boolean isEditable(final DomainObject domainObject, final Slot slot) {
     String type = slot.getTypeName();
+    Class<?> argumentClass;
 
     // ImmutableJsonElement<com.google.gson.JsonObject> causes ClassNotFoundException
     if (type.contains("<")) {
@@ -31,12 +46,18 @@ public class DomainObjectUtils {
       type = type.split("<")[0];
     }
 
-    try {
-      final Method setMethod = getMethod("set", domainObject, slot.getName(), Class.forName(type));
-      return setMethod != null;
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
+    if (PRIMITIVE_MAPPING.containsKey(type)) {
+      argumentClass = PRIMITIVE_MAPPING.get(type);
+    } else {
+      try {
+        argumentClass = Class.forName(type);
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      }
     }
+
+    final Method setMethod = getMethod("set", domainObject, slot.getName(), argumentClass);
+    return setMethod != null;
   }
 
   public static boolean isEditable(final DomainObject domainObject, final Role role) {

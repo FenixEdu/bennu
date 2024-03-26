@@ -1,7 +1,7 @@
 <template>
   <component
     :is="component"
-    class="card-row card-row--sm"
+    class="card-row card-row--sm domain-object-slot-row"
   >
     <div class="card-row__text">
       <p v-if="showType">
@@ -38,10 +38,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.truncated {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  width: 100%;
-  white-space: nowrap;
+.domain-object-slot-row {
+  word-wrap: anywhere;
 }
 </style>
