@@ -316,7 +316,6 @@ const router = new Router({
         ])
         to.meta.domainObject = domainObject
         to.meta.domainObjectForm = domainObjectForm
-        console.log({ domainObjectForm })
         next()
       })
     },
