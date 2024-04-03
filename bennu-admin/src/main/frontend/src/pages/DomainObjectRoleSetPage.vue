@@ -247,7 +247,8 @@ export default {
         },
         table: {
           'object-id': 'Object ID',
-          type: 'Type'
+          type: 'Type',
+          'slots-missing': '(+{count}) This object has {count} hidden slots'
         },
         title: 'Relation Set "{relationSet}" of "{domainObject}" - {oid}',
         'empty-state': 'There are no relations for the set "{relationName}" in this object',

@@ -2,6 +2,92 @@
   "apps": [
     {
       "title": {
+        "en-GB": "System Management",
+        "pt-PT": "Gestão do Sistema"
+      },
+      "description": {
+        "en-GB": "Manage and Monitor your Bennu Application",
+        "pt-PT": "Gestão e Monitorização da sua aplicação Bennu"
+      },
+      "accessExpression": "#managers",
+      "path": "bennu-admin",
+      "functionalities": [
+        {
+          "title": {
+            "en-GB": "Bennu IO Configuration",
+            "pt-PT": "Configuração Bennu IO"
+          },
+          "description": {
+            "en-GB": "Bennu IO Configuration",
+            "pt-PT": "Configuração Bennu IO"
+          },
+          "path": "#/io",
+          "accessExpression": "#managers"
+        },
+        {
+          "title": {
+            "en-GB": "Bennu Scheduler",
+            "pt-PT": "Configuração Bennu Scheduler"
+          },
+          "description": {
+            "en-GB": "Bennu Scheduler",
+            "pt-PT": "Configuração Bennu Scheduler"
+          },
+          "path": "#/scheduler",
+          "accessExpression": "#managers"
+        },
+        {
+          "title": {
+            "en-GB": "System Monitoring",
+            "pt-PT": "Monitorização de Sistema"
+          },
+          "description": {
+            "en-GB": "System Monitoring",
+            "pt-PT": "Monitorização de Sistema"
+          },
+          "path": "#/monitoring",
+          "accessExpression": "#managers"
+        },
+        {
+          "title": {
+            "en-GB": "Domain Browser",
+            "pt-PT": "Domain Browser"
+          },
+          "description": {
+            "en-GB": "Domain Browser",
+            "pt-PT": "Domain Browser"
+          },
+          "path": "#/domain-browser",
+          "accessExpression": "#managers"
+        },
+        {
+          "title": {
+            "en-GB": "User Management",
+            "pt-PT": "Gestão de Utilizadores"
+          },
+          "description": {
+            "en-GB": "User Management",
+            "pt-PT": "Gestão de Utilizadores"
+          },
+          "path": "#/user-management",
+          "accessExpression": "#managers"
+        },
+        {
+          "title": {
+            "en-GB": "Portal Configuration",
+            "pt-PT": "Gestão do Portal"
+          },
+          "description": {
+            "en-GB": "Portal Configuration",
+            "pt-PT": "Gestão do Portal"
+          },
+          "path": "#/portal-configuration",
+          "accessExpression": "#managers"
+        }
+      ]
+    },
+    {
+      "title": {
         "en-GB": "FenixEdu Bennu Admin Frontend",
         "pt-PT": "FenixEdu Bennu Admin Frontend"
       },

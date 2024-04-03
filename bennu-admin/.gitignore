@@ -9,9 +9,7 @@
 # Maven #
 target/
 bin/
-**/src/main/webapp/fenixedu-smart-flow
-**/src/main/webapp/fenixedu-smart-forms
-**/src/main/webapp/fenixedu-ist-paper-pusher
+**/src/main/webapp/fenixedu-bennu-admin
 .DS_Store
 node_modules/
 dist/

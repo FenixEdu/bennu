@@ -8,7 +8,7 @@ module.exports = {
   ],
   outputDir: 'dist',
   publicPath: process.env.NODE_ENV === 'production'
-    ? `${process.env.VUE_APP_CTX ? process.env.VUE_APP_CTX : ''}/bennu-admin/`
+    ? './fenixedu-bennu-admin/'
     : '/',
   indexPath: 'index.html', // generated index file
   filenameHashing: true,
@@ -97,9 +97,7 @@ module.exports = {
   },
   css: {
     // globally import _variables.scss as a resource file
-    loaderOptions: {
-
-    }
+    loaderOptions: {}
   },
   chainWebpack: (config) => {
     config
