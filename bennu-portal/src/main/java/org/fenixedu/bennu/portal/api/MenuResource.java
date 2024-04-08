@@ -19,11 +19,9 @@ import javax.ws.rs.core.Response.Status;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.portal.api.json.MenuItemAdapter;
-import org.fenixedu.bennu.portal.api.json.SupportConfigurationAdapter;
 import org.fenixedu.bennu.portal.domain.MenuContainer;
 import org.fenixedu.bennu.portal.domain.MenuFunctionality;
 import org.fenixedu.bennu.portal.domain.MenuItem;
-import org.fenixedu.bennu.portal.domain.SupportConfiguration;
 import org.fenixedu.bennu.portal.model.Application;
 import org.fenixedu.bennu.portal.model.ApplicationRegistry;
 import org.fenixedu.bennu.portal.model.Functionality;
@@ -153,24 +151,6 @@ public class MenuResource extends BennuRestResource {
         }
 
         throw new WebApplicationException(Status.NOT_FOUND);
-    }
-
-    @POST
-    @Path("{oid}/support/")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement addSupport(JsonElement jsonData, @PathParam("oid") final String oid) {
-        accessControl(Group.managers());
-        final MenuItem menuItem = getMenuItem(oid);
-        createSupport(menuItem, jsonData);
-        return viewMenu(menuItem);
-    }
-
-    @Atomic
-    private void createSupport(MenuItem menuItem, JsonElement jsonData) {
-        SupportConfiguration supportConfiguration =
-                create(jsonData, SupportConfiguration.class, SupportConfigurationAdapter.class);
-        menuItem.setSupport(supportConfiguration);
     }
 
     @Atomic(mode = TxMode.WRITE)

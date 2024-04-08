@@ -1,6 +1,5 @@
 package org.fenixedu.bennu.portal.api.json;
 
-import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.json.JsonBuilder;
 import org.fenixedu.bennu.core.json.JsonCreator;
@@ -10,7 +9,6 @@ import org.fenixedu.bennu.portal.domain.MenuContainer;
 import org.fenixedu.bennu.portal.domain.MenuFunctionality;
 import org.fenixedu.bennu.portal.domain.MenuItem;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
-import org.fenixedu.bennu.portal.domain.SupportConfiguration;
 import org.fenixedu.commons.i18n.LocalizedString;
 
 import com.google.gson.JsonElement;
@@ -49,12 +47,6 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
             item.getAsMenuFunctionality().setDocumentationUrl(jsonObj.get("documentationUrl").getAsString());
         }
 
-        if (jsonObj.has("supportConfig")) {
-            SupportConfiguration supportConfiguration =
-                    FenixFramework.getDomainObject(jsonObj.get("supportConfig").getAsString());
-            if (supportConfiguration != null)
-                item.setSupport(supportConfiguration);
-        }
         return item;
     }
 
@@ -72,8 +64,6 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
         json.addProperty("icon", obj.getIcon());
         json.add("description", ctx.view(obj.getDescription()));
         json.add("title", ctx.view(obj.getTitle()));
-        json.add("supportConfigs", ctx.view(Bennu.getInstance().getSupportConfigurationSet(), SupportConfigurationAdapter.class));
-        json.add("supportConfig", ctx.view(obj.getSupport(), SupportConfigurationAdapter.class));
         if (obj.isMenuContainer()) {
             MenuContainer container = obj.getAsMenuContainer();
             if (container.isRoot()) {

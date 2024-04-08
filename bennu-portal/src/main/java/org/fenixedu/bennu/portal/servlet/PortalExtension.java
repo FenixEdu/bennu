@@ -12,12 +12,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
-
 import javax.servlet.http.HttpSession;
 
 import org.fenixedu.bennu.core.i18n.BundleUtil;
-
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 
 import com.google.common.hash.Funnels;
 import com.google.common.hash.Hasher;
@@ -29,6 +26,8 @@ import com.mitchellbosecke.pebble.extension.Filter;
 import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.extension.Test;
 import com.mitchellbosecke.pebble.tokenParser.TokenParser;
+
+import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 
 public class PortalExtension extends AbstractExtension {
 
@@ -69,6 +68,7 @@ public class PortalExtension extends AbstractExtension {
         functions.put("i18n", new I18NFunction());
         functions.put("asset", new AssetFunction());
         functions.put("injectCheckSumInUrl", new InjectCheckSumInUrlFunction());
+        functions.put("test", new ThrowException());
         return functions;
     }
 
@@ -116,6 +116,20 @@ public class PortalExtension extends AbstractExtension {
 
             return GenericChecksumRewriter.injectChecksumInUrl(contextPath, url, session);
         }
+    }
+
+    private static class ThrowException implements Function {
+
+        @Override
+        public List<String> getArgumentNames() {
+            return List.of();
+        }
+
+        @Override
+        public Object execute(Map<String, Object> args) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
     }
 
     private class AssetFunction implements Function {
