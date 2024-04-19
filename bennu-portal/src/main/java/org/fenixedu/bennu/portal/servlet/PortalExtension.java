@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
 
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 
@@ -26,8 +25,6 @@ import com.mitchellbosecke.pebble.extension.Filter;
 import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.extension.Test;
 import com.mitchellbosecke.pebble.tokenParser.TokenParser;
-
-import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 
 public class PortalExtension extends AbstractExtension {
 
@@ -67,7 +64,6 @@ public class PortalExtension extends AbstractExtension {
         Map<String, Function> functions = new HashMap<>();
         functions.put("i18n", new I18NFunction());
         functions.put("asset", new AssetFunction());
-        functions.put("injectCheckSumInUrl", new InjectCheckSumInUrlFunction());
         functions.put("test", new ThrowException());
         return functions;
     }
@@ -94,27 +90,6 @@ public class PortalExtension extends AbstractExtension {
             String key = args.get("key").toString();
 
             return BundleUtil.getString(bundle, key);
-        }
-    }
-
-    private static class InjectCheckSumInUrlFunction implements Function {
-
-        @Override
-        public List<String> getArgumentNames() {
-            List<String> names = new ArrayList<>();
-            names.add("contextPath");
-            names.add("url");
-            names.add("session");
-            return names;
-        }
-
-        @Override
-        public Object execute(Map<String, Object> args) {
-            String contextPath = (String) args.get("contextPath");
-            String url = (String) args.get("url");
-            HttpSession session = (HttpSession) args.get("session");
-
-            return GenericChecksumRewriter.injectChecksumInUrl(contextPath, url, session);
         }
     }
 
