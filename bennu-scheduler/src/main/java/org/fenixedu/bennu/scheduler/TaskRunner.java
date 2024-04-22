@@ -4,22 +4,21 @@ import com.google.common.base.Objects;
 
 public class TaskRunner implements Runnable {
 
-    CronTask task;
+    final CronTask task;
     String taskId;
 
     @SuppressWarnings("unchecked")
-    public TaskRunner(String cronTaskClassName) throws Exception {
-        Class<? extends CronTask> taskClass;
+    public TaskRunner(final String cronTaskClassName) throws Exception {
         try {
-            taskClass = (Class<? extends CronTask>) Class.forName(cronTaskClassName);
+            final Class<? extends CronTask> taskClass = (Class<? extends CronTask>) Class.forName(cronTaskClassName);
             this.task = taskClass.newInstance();
             setTaskId(null);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             throw e;
         }
     }
 
-    public TaskRunner(CronTask task) {
+    public TaskRunner(final CronTask task) {
         this.task = task;
         setTaskId(null);
     }
@@ -30,11 +29,8 @@ public class TaskRunner implements Runnable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof TaskRunner) {
-            return ((TaskRunner) obj).getTaskName().equals(getTaskName());
-        }
-        return false;
+    public boolean equals(final Object obj) {
+        return obj instanceof TaskRunner taskRunner && taskRunner.getTaskName().equals(getTaskName());
     }
 
     public String getTaskName() {

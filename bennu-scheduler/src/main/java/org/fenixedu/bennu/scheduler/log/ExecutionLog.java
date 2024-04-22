@@ -1,5 +1,13 @@
 package org.fenixedu.bennu.scheduler.log;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import org.fenixedu.bennu.core.json.JsonUtils;
+import org.fenixedu.bennu.scheduler.custom.CustomTask;
+import org.fenixedu.commons.stream.StreamUtils;
+import org.joda.time.DateTime;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetAddress;
@@ -10,14 +18,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import org.fenixedu.bennu.scheduler.custom.CustomTask;
-import org.fenixedu.commons.stream.StreamUtils;
-import org.joda.time.DateTime;
-
-import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 /**
  * An execution log is a record containing all the relevant information about a specific execution of a task.
@@ -38,7 +38,7 @@ public class ExecutionLog {
     private static String computeHostName() {
         try {
             return InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
+        } catch (final UnknownHostException e) {
             return "<unknown-host>";
         }
     }
@@ -51,7 +51,7 @@ public class ExecutionLog {
      * 
      * @author João Carvalho (joao.pedro.carvalho@tecnico.ulisboa.pt)
      */
-    public static enum TaskState {
+    public enum TaskState {
         RUNNING, SUCCESS, FAILURE;
     }
 
@@ -75,30 +75,32 @@ public class ExecutionLog {
      * @param json
      *            The JSON object containing the description of an execution log
      */
-    protected ExecutionLog(JsonObject json) {
+    protected ExecutionLog(final JsonObject json) {
         this.id = string(json, "id").get();
         this.start = string(json, "start").map(DateTime::new).get();
         this.end = string(json, "end").map(DateTime::new);
         this.state = string(json, "state").map(TaskState::valueOf).get();
         this.taskName = string(json, "taskName").get();
         this.stackTrace = string(json, "stackTrace");
-        this.files =
-                StreamUtils.of(json.getAsJsonArray("files")).map(file -> file.getAsJsonPrimitive().getAsString())
-                        .collect(Collectors.toSet());
+        this.files = StreamUtils.of(json.getAsJsonArray("files"))
+                .map(file -> file.getAsJsonPrimitive().getAsString())
+                .collect(Collectors.toSet());
         this.hostname = string(json, "hostname").get();
         this.code = string(json, "code");
         this.user = string(json, "user");
     }
 
-    private static final Optional<String> string(JsonObject json, String property) {
+    private static final Optional<String> string(final JsonObject json, final String property) {
         return Optional.ofNullable(json.getAsJsonPrimitive(property)).map(JsonPrimitive::getAsString);
     }
 
     /*
      * Standard constructor with all the required fields
      */
-    private ExecutionLog(String id, DateTime start, Optional<DateTime> end, TaskState state, String taskName,
-            Optional<String> stackTrace, Set<String> files, String hostname, Optional<String> code, Optional<String> user) {
+    private ExecutionLog(final String id, final DateTime start, final Optional<DateTime> end, final TaskState state,
+                         final String taskName, final Optional<String> stackTrace,
+                         final Set<String> files, final String hostname, final Optional<String> code,
+                         final Optional<String> user) {
         super();
         this.id = id;
         this.start = start;
@@ -124,10 +126,10 @@ public class ExecutionLog {
      * @throws NullPointerException
      *             If the task name is {@code null}
      */
-    public static ExecutionLog newExecutionFor(String taskName) {
-        return new ExecutionLog(UUID.randomUUID().toString().replace("-", ""), DateTime.now(), Optional.empty(),
-                TaskState.RUNNING, Objects.requireNonNull(taskName), Optional.empty(), Collections.emptySet(), computeHostName(),
-                Optional.empty(), Optional.empty());
+    public static ExecutionLog newExecutionFor(final String taskName) {
+        return new ExecutionLog(UUID.randomUUID().toString().replace("-", ""), DateTime.now(),
+                Optional.empty(), TaskState.RUNNING, Objects.requireNonNull(taskName), Optional.empty(),
+                Collections.emptySet(), computeHostName(),Optional.empty(), Optional.empty());
     }
 
     /**
@@ -148,9 +150,9 @@ public class ExecutionLog {
      *             If either the task name, code or user is {@code null}
      */
     public static ExecutionLog newCustomExecution(String taskName, String code, String user) {
-        return new ExecutionLog(UUID.randomUUID().toString().replace("-", ""), DateTime.now(), Optional.empty(),
-                TaskState.RUNNING, Objects.requireNonNull(taskName), Optional.empty(), Collections.emptySet(), computeHostName(),
-                Optional.of(code), Optional.of(user));
+        return new ExecutionLog(UUID.randomUUID().toString().replace("-", ""), DateTime.now(),
+                Optional.empty(), TaskState.RUNNING, Objects.requireNonNull(taskName), Optional.empty(),
+                Collections.emptySet(), computeHostName(), Optional.of(code), Optional.of(user));
     }
 
     /**
@@ -268,8 +270,8 @@ public class ExecutionLog {
      *         A copy of this log marked as successful
      */
     public ExecutionLog withSuccess() {
-        return new ExecutionLog(id, start, Optional.of(DateTime.now()), TaskState.SUCCESS, taskName, Optional.empty(), files,
-                hostname, code, user);
+        return new ExecutionLog(id, start, Optional.of(DateTime.now()), TaskState.SUCCESS, taskName,
+                Optional.empty(), files, hostname, code, user);
     }
 
     /**
@@ -284,8 +286,8 @@ public class ExecutionLog {
      *         A copy of this log marked as failure
      */
     public ExecutionLog withError(Throwable t) {
-        StringWriter stacktrace = new StringWriter();
-        try (PrintWriter writer = new PrintWriter(stacktrace)) {
+        final StringWriter stacktrace = new StringWriter();
+        try (final PrintWriter writer = new PrintWriter(stacktrace)) {
             t.printStackTrace(writer);
         }
         return new ExecutionLog(id, start, Optional.of(DateTime.now()), TaskState.FAILURE, taskName, Optional.of(stacktrace
@@ -303,8 +305,8 @@ public class ExecutionLog {
      * @throws NullPointerException
      *             If the given filename was null
      */
-    public ExecutionLog withFile(String filename) {
-        ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+    public ExecutionLog withFile(final String filename) {
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         builder.addAll(files);
         builder.add(filename);
         return new ExecutionLog(id, start, end, state, taskName, stackTrace, builder.build(), hostname, code, user);
@@ -325,18 +327,18 @@ public class ExecutionLog {
      *         A JSON representation of this log
      */
     public JsonObject json() {
-        JsonObject json = new JsonObject();
-        json.addProperty("id", id);
-        json.addProperty("start", start.toString());
-        end.ifPresent(val -> json.addProperty("end", val.toString()));
-        json.addProperty("state", state.name());
-        json.addProperty("taskName", taskName);
-        stackTrace.ifPresent(val -> json.addProperty("stackTrace", val));
-        json.add("files", files.stream().map(JsonPrimitive::new).collect(StreamUtils.toJsonArray()));
-        json.addProperty("hostname", hostname);
-        code.ifPresent(val -> json.addProperty("code", val));
-        user.ifPresent(val -> json.addProperty("user", val));
-        return json;
+        return JsonUtils.toJson(json -> {
+            json.addProperty("id", id);
+            json.addProperty("start", start.toString());
+            end.ifPresent(val -> json.addProperty("end", val.toString()));
+            json.addProperty("state", state.name());
+            json.addProperty("taskName", taskName);
+            stackTrace.ifPresent(val -> json.addProperty("stackTrace", val));
+            json.add("files", files.stream().map(JsonPrimitive::new).collect(StreamUtils.toJsonArray()));
+            json.addProperty("hostname", hostname);
+            code.ifPresent(val -> json.addProperty("code", val));
+            user.ifPresent(val -> json.addProperty("user", val));
+        });
     }
 
     /**
@@ -352,13 +354,10 @@ public class ExecutionLog {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ExecutionLog) {
-            ExecutionLog other = (ExecutionLog) obj;
-            return Objects.equals(id, other.id) && Objects.equals(start, other.start) && Objects.equals(end, other.end)
-                    && Objects.equals(state, other.state) && Objects.equals(taskName, other.taskName)
-                    && Objects.equals(stackTrace, other.stackTrace) && Objects.equals(hostname, other.hostname)
-                    && Objects.equals(files, other.files) && Objects.equals(code, other.code) && Objects.equals(user, other.user);
-        }
-        return false;
+        return obj instanceof ExecutionLog other && Objects.equals(id, other.id) && Objects.equals(start, other.start)
+                && Objects.equals(end, other.end) && Objects.equals(state, other.state)
+                && Objects.equals(taskName, other.taskName) && Objects.equals(stackTrace, other.stackTrace)
+                && Objects.equals(hostname, other.hostname) && Objects.equals(files, other.files)
+                && Objects.equals(code, other.code) && Objects.equals(user, other.user);
     }
 }

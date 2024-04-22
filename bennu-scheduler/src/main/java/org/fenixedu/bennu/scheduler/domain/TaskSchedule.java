@@ -51,7 +51,7 @@ public class TaskSchedule extends TaskSchedule_Base {
         if (taskRunner == null) {
             try {
                 taskRunner = new TaskRunner(getTaskClassName());
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new Error(e);
             }
         }

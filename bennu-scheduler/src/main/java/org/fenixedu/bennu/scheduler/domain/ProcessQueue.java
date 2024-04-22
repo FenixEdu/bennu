@@ -24,8 +24,7 @@ class ProcessQueue implements Runnable {
                     LOG.debug("Remove from running tasks : {}", task.getTaskName());
                     SchedulerSystem.runningTasks.remove(task);
                 }
-
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 return;
             }
         } while (true);

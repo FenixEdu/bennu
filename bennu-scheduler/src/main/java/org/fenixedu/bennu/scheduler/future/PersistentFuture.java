@@ -6,7 +6,7 @@ import pt.ist.fenixframework.Atomic;
 
 public class PersistentFuture extends PersistentFuture_Base {
 
-    public PersistentFuture(SerializableRunnable task, String shortDescription) {
+    public PersistentFuture(final SerializableRunnable task, final String shortDescription) {
         this.setTask(task);
         this.setShortDescription(shortDescription);
 
@@ -20,16 +20,11 @@ public class PersistentFuture extends PersistentFuture_Base {
 
     private SerializableRunnable getTask() {
         final PersistentFutureTask persistentFutureTask = super.getPersistentFutureTask();
-        if (persistentFutureTask == null) {
-            return null;
-        }
-        return (SerializableRunnable) persistentFutureTask.getTask();
+        return persistentFutureTask == null ? null : (SerializableRunnable) persistentFutureTask.getTask();
     }
 
     private void setTask(SerializableRunnable task) {
-        super.setPersistentFutureTask(new PersistentFutureTask(() -> {
-            task.run();
-        }, this));
+        super.setPersistentFutureTask(new PersistentFutureTask(() -> task.run(), this));
     }
 
     @Atomic(mode = Atomic.TxMode.WRITE)
@@ -55,7 +50,7 @@ public class PersistentFuture extends PersistentFuture_Base {
         return this.getState().isDone();
     }
 
-    private void finish(boolean success) {
+    private void finish(final boolean success) {
         this.setState(success ? PersistentFutureState.SUCCESS : PersistentFutureState.FAILURE);
         this.setIncompleteFutureSystem(null);
         this.setFinishedExecution(DateTime.now());

@@ -1,7 +1,6 @@
 package org.fenixedu.bennu.scheduler;
 
-import java.util.concurrent.Callable;
-
+import com.google.common.base.Joiner;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.scheduler.annotation.Task;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
@@ -9,13 +8,12 @@ import org.fenixedu.bennu.scheduler.log.ExecutionLog;
 import org.fenixedu.commons.StringNormalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Joiner;
-
 import pt.ist.esw.advice.pt.ist.fenixframework.AtomicInstance;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
+
+import java.util.concurrent.Callable;
 
 public abstract class CronTask implements Runnable {
     private Logger logger;
@@ -27,7 +25,7 @@ public abstract class CronTask implements Runnable {
     }
 
     protected TxMode getTxMode() {
-        Task annotation = this.getClass().getAnnotation(Task.class);
+        final Task annotation = this.getClass().getAnnotation(Task.class);
         return annotation == null || annotation.readOnly() ? TxMode.READ : TxMode.WRITE;
     }
 
@@ -40,10 +38,7 @@ public abstract class CronTask implements Runnable {
     }
 
     public Logger getLogger() {
-        if (logger == null) {
-            logger = LoggerFactory.getLogger(getClassName());
-        }
-        return logger;
+        return logger == null ? logger = LoggerFactory.getLogger(getClassName()) : logger;
     }
 
     public abstract void runTask() throws Exception;
@@ -55,7 +50,7 @@ public abstract class CronTask implements Runnable {
         try {
             innerAtomicRun();
             updateLog(log.withSuccess());
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             t.printStackTrace();
             updateLog(log.withError(t));
         } finally {
@@ -75,48 +70,40 @@ public abstract class CronTask implements Runnable {
 
     private void innerAtomicRun() throws Exception {
         FenixFramework.getTransactionManager().withTransaction(new Callable<Void>() {
-
             @Override
             public Void call() throws Exception {
                 runTask();
                 return null;
             }
-
         }, atomic);
     }
 
-    private String sanitize(String filename) {
-        int i = filename.lastIndexOf(".");
-        if (i != -1) {
-            return Joiner.on(".").join(StringNormalizer.slugify(filename.substring(0, i)), StringNormalizer.slugify(
-                    filename.substring(i + 1, filename.length())));
-        }
-        return filename;
+    private String sanitize(final String filename) {
+        final int i = filename.lastIndexOf(".");
+        return i == -1 ? filename : Joiner.on(".").join(StringNormalizer.slugify(filename.substring(0, i)),
+                    StringNormalizer.slugify(filename.substring(i + 1, filename.length())));
     }
 
-    public void output(String filename, byte[] fileContent, boolean append) {
+    public void output(final String filename, final byte[] fileContent, final boolean append) {
         final String sanitized = sanitize(filename);
         SchedulerSystem.getLogRepository().storeFile(log, sanitized, fileContent, append);
         updateLog(log.withFile(sanitized));
     }
 
-    public void output(String filename, byte[] fileContent) {
+    public void output(final String filename, final byte[] fileContent) {
         output(filename, fileContent, false);
     }
 
-    protected final void taskLog(String format, Object... args) {
-        if (args == null || args.length < 1) {
-            SchedulerSystem.getLogRepository().appendTaskLog(log, format + "\n");
-        } else {
-            SchedulerSystem.getLogRepository().appendTaskLog(log, String.format(format, args));
-        }
+    protected final void taskLog(final String format, final Object... args) {
+        final String logFormat = args == null || args.length < 1 ? format + "\n" : String.format(format, args);
+        SchedulerSystem.getLogRepository().appendTaskLog(log, logFormat);
     }
 
     protected final void taskLog() {
         taskLog("");
     }
 
-    private void updateLog(ExecutionLog log) {
+    private void updateLog(final ExecutionLog log) {
         this.log = log;
         SchedulerSystem.getLogRepository().update(log);
     }

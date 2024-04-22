@@ -20,7 +20,7 @@ public class ExecuteFutureTask extends CronTask {
 
         } catch (final Exception e) {
             final StringWriter stacktrace = new StringWriter();
-            try (PrintWriter writer = new PrintWriter(stacktrace)) {
+            try (final PrintWriter writer = new PrintWriter(stacktrace)) {
                 e.printStackTrace(writer);
             }
 

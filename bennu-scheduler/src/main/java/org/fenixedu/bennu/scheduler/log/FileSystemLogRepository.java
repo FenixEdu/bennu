@@ -75,7 +75,7 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      * @param dispersionFactor
      *            The dispersion factor to be used
      */
-    public FileSystemLogRepository(String basePath, int dispersionFactor) {
+    public FileSystemLogRepository(final String basePath, final int dispersionFactor) {
         this.basePath = basePath;
         this.dispersionFactor = dispersionFactor;
     }
@@ -86,11 +86,11 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      * @param dispersionFactor
      *            The dispersion factor to be used
      */
-    public FileSystemLogRepository(int dispersionFactor) {
+    public FileSystemLogRepository(final int dispersionFactor) {
         this(SchedulerSystem.getLogsPath(), dispersionFactor);
     }
 
-    public void setBasePath(String basePath) {
+    public void setBasePath(final String basePath) {
         this.basePath = basePath;
     }
 
@@ -98,13 +98,13 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      * {@inheritDoc}
      */
     @Override
-    public void update(ExecutionLog log) {
-        store(log,
-                readJson(logFileFor(log.getTaskName(), log.getId())).map(obj -> obj.getAsJsonPrimitive("previous")).map(
-                        JsonPrimitive::getAsString));
+    public void update(final ExecutionLog log) {
+        store(log, readJson(logFileFor(log.getTaskName(), log.getId()))
+                .map(obj -> obj.getAsJsonPrimitive("previous"))
+                .map(JsonPrimitive::getAsString));
     }
 
-    private void store(ExecutionLog log, Optional<String> previous) {
+    private void store(final ExecutionLog log, Optional<String> previous) {
         JsonObject json = log.json();
         previous.ifPresent(prev -> json.addProperty("previous", prev));
         write(logFileFor(log.getTaskName(), log.getId()), json.toString().getBytes(StandardCharsets.UTF_8), false);
@@ -114,11 +114,11 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      * {@inheritDoc}
      */
     @Override
-    public void newExecution(ExecutionLog log) {
+    public void newExecution(final ExecutionLog log) {
         synchronized (this) {
-            JsonObject json = readIndexJson();
-            Optional<String> previous =
-                    Optional.ofNullable(json.getAsJsonPrimitive(log.getTaskName())).map(JsonPrimitive::getAsString);
+            final JsonObject json = readIndexJson();
+            final Optional<String> previous = Optional.ofNullable(json.getAsJsonPrimitive(log.getTaskName()))
+                    .map(JsonPrimitive::getAsString);
             json.addProperty(log.getTaskName(), log.getId());
             store(log, previous);
             write(indexFilePath(), json.toString().getBytes(StandardCharsets.UTF_8), false);
@@ -129,7 +129,7 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      * {@inheritDoc}
      */
     @Override
-    public void appendTaskLog(ExecutionLog log, String text) {
+    public void appendTaskLog(final ExecutionLog log, final String text) {
         write(outputFileFor(log.getTaskName(), log.getId()), text.getBytes(StandardCharsets.UTF_8), true);
     }
 
@@ -137,7 +137,7 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      * {@inheritDoc}
      */
     @Override
-    public void storeFile(ExecutionLog log, String fileName, byte[] contents, boolean append) {
+    public void storeFile(final ExecutionLog log, final String fileName, final byte[] contents, final boolean append) {
         write(fullPathFor(log.getTaskName(), log.getId(), fileName), contents, append);
     }
 
@@ -147,25 +147,26 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
     @Override
     public Stream<ExecutionLog> latest() {
         return readIndexJson().entrySet().stream()
-                .map(entry -> getLog(entry.getKey(), entry.getValue().getAsString()).orElse(null)).filter(Objects::nonNull);
+                .map(entry -> getLog(entry.getKey(), entry.getValue().getAsString()).orElse(null))
+                .filter(Objects::nonNull);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Stream<ExecutionLog> executionsFor(String taskName, Optional<String> start, int max) {
+    public Stream<ExecutionLog> executionsFor(final String taskName, final Optional<String> start, int max) {
         String id;
         if (start.isPresent()) {
             id = start.get();
         } else {
-            JsonObject index = readIndexJson();
+            final JsonObject index = readIndexJson();
             if (!index.has(taskName)) {
                 return Stream.empty();
             }
             id = index.get(taskName).getAsString();
         }
-        List<ExecutionLog> logs = new ArrayList<>(Math.min(max, 100));
+        final List<ExecutionLog> logs = new ArrayList<>(Math.min(max, 100));
         while (id != null && max > 0) {
             Optional<JsonObject> optional = readJson(logFileFor(taskName, id));
             if (optional.isPresent()) {
@@ -184,7 +185,7 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      * {@inheritDoc}
      */
     @Override
-    public Optional<String> getTaskLog(String taskName, String id) {
+    public Optional<String> getTaskLog(final String taskName, final String id) {
         return read(outputFileFor(taskName, id)).map(bytes -> new String(bytes, StandardCharsets.UTF_8));
     }
 
@@ -192,7 +193,7 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      * {@inheritDoc}
      */
     @Override
-    public Optional<byte[]> getFile(String taskName, String id, String fileName) {
+    public Optional<byte[]> getFile(final String taskName, final String id, final String fileName) {
         return read(fullPathFor(taskName, id, fileName));
     }
 
@@ -200,7 +201,7 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
      * {@inheritDoc}
      */
     @Override
-    public Optional<ExecutionLog> getLog(String taskName, String id) {
+    public Optional<ExecutionLog> getLog(final String taskName, final String id) {
         return readJson(logFileFor(taskName, id)).map(ExecutionLog::new);
     }
 
@@ -214,49 +215,49 @@ public class FileSystemLogRepository implements ExecutionLogRepository {
         return basePath + "/index.json";
     }
 
-    private String fullPathFor(String taskName, String id, String fileName) {
+    private String fullPathFor(final String taskName, final String id, final String fileName) {
         return basePathFor(taskName, id) + "/files/" + Hashing.sha1().hashString(fileName, StandardCharsets.UTF_8).toString();
     }
 
-    private String logFileFor(String taskName, String id) {
+    private String logFileFor(final String taskName, final String id) {
         return basePathFor(taskName, id) + "/execution.json";
     }
 
-    private String outputFileFor(String taskName, String id) {
+    private String outputFileFor(final String taskName, final String id) {
         return basePathFor(taskName, id) + "/output";
     }
 
-    private String basePathFor(String taskName, String id) {
+    private String basePathFor(final String taskName, final String id) {
         return basePath + "/" + taskName.replace('.', '_') + "/"
                 + Joiner.on('/').join(Splitter.fixedLength(dispersionFactor).split(id));
     }
 
     // Readers
 
-    private static void write(String path, byte[] bytes, boolean append) {
-        File file = new File(path);
+    private static void write(final String path, final byte[] bytes, final boolean append) {
+        final File file = new File(path);
         file.getParentFile().mkdirs();
-        try (FileOutputStream stream = new FileOutputStream(file, append)) {
+        try (final FileOutputStream stream = new FileOutputStream(file, append)) {
             stream.write(bytes);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static Optional<byte[]> read(String path) {
-        File file = new File(path);
+    private static Optional<byte[]> read(final String path) {
+        final File file = new File(path);
         if (!file.exists()) {
             return Optional.empty();
         }
         try {
             return Optional.of(Files.toByteArray(file));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             return Optional.empty();
         }
     }
 
-    private static Optional<JsonObject> readJson(String path) {
+    private static Optional<JsonObject> readJson(final String path) {
         final Optional<JsonElement> e = read(path).map(bytes -> parser.parse(new String(bytes, StandardCharsets.UTF_8)));
         return e.filter(o -> !o.isJsonNull()).map(JsonElement::getAsJsonObject);
     }

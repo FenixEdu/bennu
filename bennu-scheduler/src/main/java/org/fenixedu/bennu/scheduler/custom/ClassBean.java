@@ -134,44 +134,44 @@ public class ClassBean implements Serializable {
         }
 
         @Override
-        protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        protected synchronized Class<?> loadClass(final String name, final boolean resolve) throws ClassNotFoundException {
             try {
                 return super.loadClass(name, resolve);
-            } catch (ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 return parent.loadClass(name);
             }
         }
 
         @Override
-        public Class<?> loadClass(String name) throws ClassNotFoundException {
+        public Class<?> loadClass(final String name) throws ClassNotFoundException {
             try {
                 return super.loadClass(name);
-            } catch (ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 return parent.loadClass(name);
             }
         }
 
         @Override
-        public synchronized void setClassAssertionStatus(String className, boolean enabled) {
+        public synchronized void setClassAssertionStatus(final String className, final boolean enabled) {
             parent.setClassAssertionStatus(className, enabled);
             super.setClassAssertionStatus(className, enabled);
         }
 
         @Override
-        public synchronized void setDefaultAssertionStatus(boolean enabled) {
+        public synchronized void setDefaultAssertionStatus(final boolean enabled) {
             parent.setDefaultAssertionStatus(enabled);
             super.setDefaultAssertionStatus(enabled);
         }
 
         @Override
-        public synchronized void setPackageAssertionStatus(String packageName, boolean enabled) {
+        public synchronized void setPackageAssertionStatus(final String packageName, final boolean enabled) {
             parent.setPackageAssertionStatus(packageName, enabled);
             super.setPackageAssertionStatus(packageName, enabled);
         }
 
     }
 
-    public ClassBean(String className, String contents) {
+    public ClassBean(final String className, final String contents) {
         super();
         this.className = className;
         this.contents = contents.trim();
@@ -181,7 +181,7 @@ public class ClassBean implements Serializable {
         return className;
     }
 
-    public void setClassName(String className) {
+    public void setClassName(final String className) {
         this.className = className;
     }
 
@@ -189,7 +189,7 @@ public class ClassBean implements Serializable {
         return contents;
     }
 
-    public void setContents(String contents) {
+    public void setContents(final String contents) {
         this.contents = contents;
     }
 
@@ -250,7 +250,7 @@ public class ClassBean implements Serializable {
 
             final JavaSourceFromString javaSourceFromString = new JavaSourceFromString(getClassName(), getContents());
             final JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
-            try (StandardJavaFileManager standardJavaFileManager = javaCompiler.getStandardFileManager(null, null, null)) {
+            try (final StandardJavaFileManager standardJavaFileManager = javaCompiler.getStandardFileManager(null, null, null)) {
 
                 standardJavaFileManager.setLocation(StandardLocation.CLASS_OUTPUT,
                         Collections.singleton(new File(getBaseClassPathDirName())));
@@ -274,7 +274,7 @@ public class ClassBean implements Serializable {
                 IllegalArgumentException, IOException {
             final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             final URL[] urls = new URL[] { new File(getBaseClassPathDirName()).toURI().toURL() };
-            try (MyClassLoader urlClassLoader = new MyClassLoader(urls, classLoader)) {
+            try (final MyClassLoader urlClassLoader = new MyClassLoader(urls, classLoader)) {
 
                 urlClassLoader.loadClass(getClassName());
 
@@ -282,7 +282,7 @@ public class ClassBean implements Serializable {
                 final Class<? extends CustomTask> clazz =
                         (Class<? extends CustomTask>) Class.forName(getClassName(), true, urlClassLoader);
                 setName("CustomTaskRunner-" + clazz.getName() + "-" + uploadTime.getMillis());
-                CustomTask task = clazz.newInstance();
+                final CustomTask task = clazz.newInstance();
                 task.init(contents, username);
                 task.run();
             }
@@ -300,11 +300,10 @@ public class ClassBean implements Serializable {
                         createDirs();
                         compileFile();
                         runTask();
-                    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                    } catch (final InstantiationException | IllegalAccessException | IllegalArgumentException
                             | InvocationTargetException | SecurityException | NoSuchMethodException | IOException
                             | URISyntaxException | ClassNotFoundException e) {
                         throw new Error(e);
-                    } finally {
                     }
                 } finally {
                     cleanup();
@@ -320,7 +319,7 @@ public class ClassBean implements Serializable {
             try {
                 createDirs();
                 compiledSuccessfully = compileFile();
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException
+            } catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException
                     | NoSuchMethodException | IOException | URISyntaxException e) {
                 try (PrintWriter pout = new PrintWriter(out)) {
                     e.printStackTrace(pout);

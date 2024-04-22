@@ -2,7 +2,7 @@ package org.fenixedu.bennu.scheduler.future;
 
 public class PersistentFutureTask extends PersistentFutureTask_Base {
 
-    public PersistentFutureTask(SerializableRunnable task, PersistentFuture persistentFuture) {
+    public PersistentFutureTask(final SerializableRunnable task, final PersistentFuture persistentFuture) {
         super();
 
         super.setTask(task);

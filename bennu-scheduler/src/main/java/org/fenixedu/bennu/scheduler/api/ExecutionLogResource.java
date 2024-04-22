@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.google.gson.JsonObject;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.bennu.scheduler.api.json.SimpleExecutionLogJsonAdapter;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
@@ -37,7 +38,7 @@ public class ExecutionLogResource extends BennuRestResource {
     @GET
     @Path("{taskName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement executionsFor(@PathParam("taskName") String taskName, @QueryParam("count") @DefaultValue("20") int max,
+    public JsonElement executionsFor(final @PathParam("taskName") String taskName, final @QueryParam("count") @DefaultValue("20") int max,
             @QueryParam("start") String start) {
         accessControl(Group.managers());
         return view(SchedulerSystem.getLogRepository().executionsFor(taskName, Optional.ofNullable(start), max),
@@ -47,16 +48,17 @@ public class ExecutionLogResource extends BennuRestResource {
     @GET
     @Path("{taskName}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement executionLog(@PathParam("taskName") String taskName, @PathParam("id") String id) {
+    public JsonElement executionLog(final @PathParam("taskName") String taskName, final @PathParam("id") String id) {
         accessControl(Group.managers());
-        return SchedulerSystem.getLogRepository().getLog(taskName, id).map(this::view)
+        return SchedulerSystem.getLogRepository().getLog(taskName, id)
+                .map(this::view)
                 .orElseThrow(() -> new WebApplicationException(Status.NOT_FOUND));
     }
 
     @GET
     @Path("cat/{taskName}/{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String taskLog(@PathParam("taskName") String taskName, @PathParam("id") String id) {
+    public String taskLog(final @PathParam("taskName") String taskName, final @PathParam("id") String id) {
         accessControl(Group.managers());
         return SchedulerSystem.getLogRepository().getTaskLog(taskName, id).orElse("");
     }
@@ -64,8 +66,8 @@ public class ExecutionLogResource extends BennuRestResource {
     @GET
     @Path("{taskName}/{id}/{fileName}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public byte[] downloadFile(@PathParam("taskName") String taskName, @PathParam("id") String id,
-            @PathParam("fileName") String fileName) {
+    public byte[] downloadFile(final @PathParam("taskName") String taskName, final @PathParam("id") String id,
+                               final @PathParam("fileName") String fileName) {
         accessControl(Group.managers());
         return SchedulerSystem.getLogRepository().getFile(taskName, id, fileName)
                 .orElseThrow(() -> new WebApplicationException(Status.NOT_FOUND));
@@ -74,7 +76,7 @@ public class ExecutionLogResource extends BennuRestResource {
     @GET
     @Path("kill/{taskName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response killTask(@PathParam("taskName") String taskName) {
+    public Response killTask(final @PathParam("taskName") String taskName) {
         accessControl(Group.managers());
         Thread.getAllStackTraces().keySet().stream()
                 .filter(thread -> thread.getName().contains(taskName))
@@ -85,26 +87,24 @@ public class ExecutionLogResource extends BennuRestResource {
     @GET
     @Path("thread/{taskName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject threadTask(@PathParam("taskName") String taskName) {
+    public JsonObject threadTask(final @PathParam("taskName") String taskName) {
         accessControl(Group.managers());
-        JsonObject json = new JsonObject();
-        for (Map.Entry<Thread, StackTraceElement[]> entry :  Thread.getAllStackTraces().entrySet()) {
-            if (isCustomTaskThread(taskName, entry.getKey()) || isCronTaskThread(taskName, entry.getKey(), entry.getValue())) {
-                json.addProperty("id", entry.getKey().getId());
-                json.addProperty("name", entry.getKey().toString());
-                json.addProperty("stacktrace",
-                        Arrays.stream(entry.getValue()).map(StackTraceElement::toString).collect(Collectors.joining("\n")));
-                return json;
-            }
-        }
-        return json;
+        return Thread.getAllStackTraces().entrySet().stream()
+                .filter(entry -> isCustomTaskThread(taskName, entry.getKey()) || isCronTaskThread(taskName, entry.getKey(), entry.getValue()))
+                .map(entry -> JsonUtils.toJson(json -> {
+                    json.addProperty("id", entry.getKey().getId());
+                    json.addProperty("name", entry.getKey().toString());
+                    json.addProperty("stacktrace",
+                            Arrays.stream(entry.getValue()).map(StackTraceElement::toString).collect(Collectors.joining("\n")));
+                }))
+                .findAny().orElseGet(() -> new JsonObject());
     }
 
-    private boolean isCustomTaskThread(String taskName, Thread thread) {
+    private boolean isCustomTaskThread(final String taskName, final Thread thread) {
         return thread.getName().contains(taskName);
     }
 
-    private boolean isCronTaskThread(String taskName, Thread thread, StackTraceElement... stackTraceElements) {
+    private boolean isCronTaskThread(final String taskName, final Thread thread, final StackTraceElement... stackTraceElements) {
         return thread.getName().contains(SchedulerSystem.SCHEDULER_CONSUMER) &&
                 Arrays.stream(stackTraceElements).anyMatch(stackTraceElement -> stackTraceElement.toString().contains(taskName));
     }

@@ -10,8 +10,8 @@ public class DeletePendingRemoteDriveAPIFiles extends CronTask {
     @Override
     public void runTask() throws Exception {
         FileSupport.getInstance().getFileStorageSet().stream()
-                .filter(storage -> storage instanceof DriveAPIStorage)
-                .map(storage -> (DriveAPIStorage) storage)
+                .filter(DriveAPIStorage.class::isInstance)
+                .map(DriveAPIStorage.class::cast)
                 .forEach(DriveAPIStorage::deletePendingRemoteFiles);
     }
 }

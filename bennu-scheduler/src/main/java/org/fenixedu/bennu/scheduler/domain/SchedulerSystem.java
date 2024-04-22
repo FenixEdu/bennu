@@ -21,6 +21,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.Singleton;
 import org.fenixedu.bennu.io.domain.FileStorage;
 import org.fenixedu.bennu.scheduler.SchedulerConfiguration;
 import org.fenixedu.bennu.scheduler.TaskRunner;
@@ -67,7 +68,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     /**
      * The scheduler will wait this value till next attempt to run scheduler.
      * This value must be greater than 1.
-     * 
+     *
      * @return reattempt scheduler initialization time (in minutes)
      */
     private static Integer getLeaseTimeMinutes() {
@@ -83,7 +84,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     /**
      * Number of threads that are processing the queue of threads
-     * 
+     *
      * @return number of threads
      */
     private static Integer getQueueThreadsNumber() {
@@ -106,18 +107,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     public static SchedulerSystem getInstance() {
-        if (Bennu.getInstance().getSchedulerSystem() == null) {
-            return initialize();
-        }
-        return Bennu.getInstance().getSchedulerSystem();
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    private static SchedulerSystem initialize() {
-        if (Bennu.getInstance().getSchedulerSystem() == null) {
-            return new SchedulerSystem();
-        }
-        return Bennu.getInstance().getSchedulerSystem();
+        return Singleton.getInstance(() -> Bennu.getInstance().getSchedulerSystem(), () -> new SchedulerSystem());
     }
 
     @Override
@@ -127,7 +117,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     /**
-     * 
      * @return true if scheduler is running in this server instance.
      */
     public static Boolean isRunning() {
@@ -135,7 +124,6 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     /**
-     * 
      * @return true if this server instance is responsible for running the scheduler.
      */
     public static Boolean isActive() {
@@ -144,22 +132,18 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     @Atomic(mode = TxMode.WRITE)
     private Boolean shouldRun() {
-        if (isLeaseExpired()) {
-            lease();
-            return true;
-        }
-        return false;
+        return isLeaseExpired() && lease() != null;
     }
 
     /**
      * Set's lease time, and stores that time in memory.
-     *
+     * <p>
      * Note: the timestamp is considered without milliseconds due to lack of precision from the default DB data type for DateTime.
      *
      * @return the timestamp of the created lease.
      */
     private DateTime lease() {
-        DateTime lease = new DateTime().withMillisOfSecond(0);
+        final DateTime lease = new DateTime().withMillisOfSecond(0);
         setLease(lease);
         latestOwnedLease = lease;
         return lease;
@@ -181,22 +165,19 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     /**
      * True if lease is expired
-     * 
+     *
      * @return
      */
     private boolean isLeaseExpired() {
         final DateTime lease = getLease();
-        if (lease == null) {
-            return true;
-        }
-        return lease.plusMinutes(getLeaseTimeMinutes()).isBeforeNow();
+        return lease == null || lease.plusMinutes(getLeaseTimeMinutes()).isBeforeNow();
     }
 
     /***
      * This method starts the scheduler if lease is expired.
      * */
     public static void init() {
-        Timer waitingForLeaseTimer = new Timer("waitingForLeaseTimer", true);
+        final Timer waitingForLeaseTimer = new Timer("waitingForLeaseTimer", true);
         waitingForLeaseTimer.scheduleAtFixedRate(new TimerTask() {
 
             Boolean shouldRun = false;
@@ -213,14 +194,13 @@ public class SchedulerSystem extends SchedulerSystem_Base {
                 setShouldRun(false);
             }
 
-            public void setShouldRun(Boolean shouldRun) {
+            public void setShouldRun(final Boolean shouldRun) {
                 this.shouldRun = shouldRun;
             }
 
         }, 0, getLeaseTimeMinutes() * 60 * 1000);
 
         timers.add(waitingForLeaseTimer);
-
     }
 
     /**
@@ -246,8 +226,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * If the scheduler is initialized schedules the task that updates the lease time every getLeaseTimeMinutes() / 2 minutes
      */
     private static void spawnLeaseTimerTask() {
-        int period = getLeaseTimeMinutes() * 60 * 1000 / 2;
-        Timer leaseTimer = new Timer("leaseTimer", true);
+        final int period = getLeaseTimeMinutes() * 60 * 1000 / 2;
+        final Timer leaseTimer = new Timer("leaseTimer", true);
         leaseTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -278,22 +258,22 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * Runs every minute.
      */
     private static void spawnRefreshSchedulesTask() {
-        Timer refreshSchedulesTimer = new Timer("refreshSchedulesTimer", true);
+        final Timer refreshSchedulesTimer = new Timer("refreshSchedulesTimer", true);
         refreshSchedulesTimer.scheduleAtFixedRate(new TimerTask() {
 
             @Override
             @Atomic(mode = TxMode.READ)
             public void run() {
                 LOG.debug("Running refresh schedules");
-                Set<TaskSchedule> domainSchedules = new HashSet<>(getInstance().getTaskScheduleSet());
-                for (TaskSchedule schedule : domainSchedules) {
+                final Set<TaskSchedule> domainSchedules = new HashSet<>(getInstance().getTaskScheduleSet());
+                for (final TaskSchedule schedule : domainSchedules) {
                     if (!schedule.isScheduled()) {
                         LOG.debug("New schedule not scheduled before {} {}", schedule.getExternalId(),
                                 schedule.getTaskClassName());
                         schedule(schedule);
                     }
                 }
-                for (TaskSchedule schedule : scheduledTasks) {
+                for (final TaskSchedule schedule : scheduledTasks) {
                     if (!domainSchedules.contains(schedule)) {
                         LOG.debug("schedule disappeared not unscheduled before {} {}", schedule.getExternalId());
                         unschedule(schedule);
@@ -310,7 +290,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     private static void spawnConsumers() {
         for (int i = 1; i <= getQueueThreadsNumber(); i++) {
             LOG.debug("Launching queue consumer {}", i);
-            Thread thread = new Thread(new ProcessQueue());
+            final Thread thread = new Thread(new ProcessQueue());
             thread.setName(SCHEDULER_CONSUMER + i);
             thread.start();
             activeConsumers.add(thread);
@@ -322,8 +302,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      */
     @Atomic(mode = TxMode.WRITE)
     private static void cleanNonExistingSchedules() {
-        Set<TaskSchedule> scheduleSet = new HashSet<>(SchedulerSystem.getInstance().getTaskScheduleSet());
-        for (TaskSchedule schedule : scheduleSet) {
+        final Set<TaskSchedule> scheduleSet = new HashSet<>(SchedulerSystem.getInstance().getTaskScheduleSet());
+        for (final TaskSchedule schedule : scheduleSet) {
             if (!tasks.containsKey(schedule.getTaskClassName())) {
                 LOG.warn("Class {} is no longer available. schedule {} - {} - {} deleted. ", schedule.getTaskClassName(),
                         schedule.getExternalId(), schedule.getTaskClassName(), schedule.getSchedule());
@@ -337,7 +317,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      */
     @Atomic(mode = TxMode.READ)
     private static void initSchedules() {
-        for (TaskSchedule schedule : SchedulerSystem.getInstance().getTaskScheduleSet()) {
+        for (final TaskSchedule schedule : SchedulerSystem.getInstance().getTaskScheduleSet()) {
             schedule(schedule);
         }
     }
@@ -346,9 +326,8 @@ public class SchedulerSystem extends SchedulerSystem_Base {
      * Schedules a task.
      * If the task is not already queued and is not running add it to the processing queue.
      * ProcessQueue threads will run pending tasks.
-     * 
-     * @param schedule
-     *            The task to be added to the queue
+     *
+     * @param schedule The task to be added to the queue
      */
     @Atomic(mode = TxMode.READ)
     public static void schedule(final TaskSchedule schedule) {
@@ -377,11 +356,10 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     /**
      * Remove schedule from the scheduler. This will not delete the TaskSchedule, only removes the scheduling.
-     * 
-     * @param schedule
-     *            The task to be removed from the queue
+     *
+     * @param schedule The task to be removed from the queue
      */
-    public static void unschedule(TaskSchedule schedule) {
+    public static void unschedule(final TaskSchedule schedule) {
         if (isActive()) {
             if (schedule.isRunOnce()) {
                 LOG.debug("unschedule run once {}. delete it.", schedule.getTaskClassName());
@@ -397,13 +375,13 @@ public class SchedulerSystem extends SchedulerSystem_Base {
     }
 
     @Atomic(mode = TxMode.WRITE)
-    private static void runNow(TaskSchedule schedule) {
+    private static void runNow(final TaskSchedule schedule) {
         LOG.debug("run once schedule {}", schedule.getTaskClassName());
         queue(schedule.getTaskRunner());
         unschedule(schedule);
     }
 
-    public static final void addTask(String className, Task taskAnnotation) {
+    public static final void addTask(final String className, final Task taskAnnotation) {
         LOG.debug("Register Task : {} with name {}", className, taskAnnotation.englishTitle());
         tasks.put(className, taskAnnotation);
     }
@@ -423,7 +401,7 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         destroy(true);
     }
 
-    private static void destroy(boolean resetLease) {
+    private static void destroy(final boolean resetLease) {
 
         for (final Timer timer : timers) {
             LOG.debug("interrupted timer thread {}", timer.toString());
@@ -449,17 +427,14 @@ public class SchedulerSystem extends SchedulerSystem_Base {
         return tasks;
     }
 
-    public static String getTaskName(String className) {
+    public static String getTaskName(final String className) {
         final Task taskAnnotation = tasks.get(className);
-        if (taskAnnotation != null) {
-            return taskAnnotation.englishTitle();
-        }
-        return null;
+        return taskAnnotation != null ? taskAnnotation.englishTitle() : null;
     }
 
     /**
      * Used by CronTask to store tasks' output files and custom logging.
-     * 
+     *
      * @return the physical absolute path of the logging storage.
      */
     @Atomic(mode = TxMode.READ)
@@ -495,11 +470,9 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     /**
      * Configures a new log repository to be used by the scheduler system.
-     * 
-     * @param repo
-     *            The new log repository
-     * @throws NullPointerException
-     *             If the provided repository is {@code null}
+     *
+     * @param repo The new log repository
+     * @throws NullPointerException If the provided repository is {@code null}
      */
     public static void setLogRepository(ExecutionLogRepository repo) {
         repository = Objects.requireNonNull(repo);
@@ -507,15 +480,14 @@ public class SchedulerSystem extends SchedulerSystem_Base {
 
     /**
      * Returns the currently configured {@link ExecutionLogRepository}.
-     * 
+     * <p>
      * By default, a {@link FileSystemLogRepository} is used, with a dispersion factor of {@code 3}.
-     * 
-     * @return
-     *         The current log repository
+     *
+     * @return The current log repository
      */
     public static ExecutionLogRepository getLogRepository() {
         if (repository == null) {
-            if(SchedulerConfiguration.getConfiguration().elasticsearchEnabled()) {
+            if (SchedulerConfiguration.getConfiguration().elasticsearchEnabled()) {
                 repository = new ElasticsearchLogRepository(SchedulerConfiguration.getConfiguration().elasticsearchHost(),
                         SchedulerConfiguration.getConfiguration().elasticsearchPort(),
                         SchedulerConfiguration.getConfiguration().elasticsearchPrefixIndexes(),

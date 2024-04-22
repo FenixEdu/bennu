@@ -17,20 +17,20 @@ public class CustomTaskResource extends BennuRestResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addCustomTask(JsonObject jsonCode) {
+    public Response addCustomTask(final JsonObject jsonCode) {
         accessControl(Group.managers());
         getClassBean(jsonCode).run();
         return ok();
     }
 
-    private ClassBean getClassBean(JsonObject jsonCode) {
+    private ClassBean getClassBean(final JsonObject jsonCode) {
         return new ClassBean(jsonCode.get("name").getAsString(), jsonCode.get("code").getAsString());
     }
 
     @PUT
     @Path("compile")
     @Consumes(MediaType.APPLICATION_JSON)
-    public JsonObject compileCustomTask(JsonObject jsonCode) {
+    public JsonObject compileCustomTask(final JsonObject jsonCode) {
         accessControl(Group.managers());
         return getClassBean(jsonCode).compile();
     }

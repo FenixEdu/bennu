@@ -23,7 +23,7 @@ public class FutureResource extends BennuRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement latest(@QueryParam("count") @DefaultValue("20") int max, @QueryParam("skip") @DefaultValue("0") int skip) {
+    public JsonElement latest(final @QueryParam("count") @DefaultValue("20") int max, final @QueryParam("skip") @DefaultValue("0") int skip) {
         accessControl(Group.managers());
         return view(FutureSystem.getInstance().getPersistentFutureSet().stream().skip(skip).limit(max));
     }
@@ -31,7 +31,7 @@ public class FutureResource extends BennuRestResource {
     @GET
     @Path("cancel/{futureId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response cancelFuture(@PathParam("futureId") String futureId) {
+    public Response cancelFuture(final @PathParam("futureId") String futureId) {
         accessControl(Group.managers());
         final PersistentFuture pf = FutureSystem.getPersistentFuture(futureId);
         cancelFuture(pf);

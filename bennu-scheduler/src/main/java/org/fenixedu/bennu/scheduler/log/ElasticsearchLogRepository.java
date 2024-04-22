@@ -1,13 +1,11 @@
 package org.fenixedu.bennu.scheduler.log;
 
-import java.io.*;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.SortOrder;
-import co.elastic.clients.elasticsearch.core.*;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.IndexResponse;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.JsonData;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
@@ -16,22 +14,33 @@ import co.elastic.clients.transport.rest_client.RestClientTransport;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Strings;
 import com.google.common.io.Files;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.client.RestClient;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 import org.elasticsearch.client.RestClientBuilder;
 import org.fenixedu.bennu.scheduler.domain.SchedulerSystem;
 import org.joda.time.DateTime;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class ElasticsearchLogRepository implements ExecutionLogRepository {
 
@@ -54,57 +63,49 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
         this.basePathFiles = SchedulerSystem.getLogsPath();
         this.indexPrefix = indexPrefix;
         this.keepIndexesNumberOfMonths = searchMonths;
-        RestClient restClient;
-        if(!Strings.isNullOrEmpty(username)){
-            final CredentialsProvider credentialsProvider =
-                    new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(AuthScope.ANY,
-                    new UsernamePasswordCredentials(username, password));
+        final RestClient restClient;
+        if (!Strings.isNullOrEmpty(username)) {
+            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
 
-            RestClientBuilder builder = RestClient.builder(
-                            new HttpHost(connectUrl, port, scheme))
-                    .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
-                        @Override
-                        public HttpAsyncClientBuilder customizeHttpClient(
-                                HttpAsyncClientBuilder httpClientBuilder) {
-                            return httpClientBuilder
-                                    .setDefaultCredentialsProvider(credentialsProvider);
-                        }
-                    });
+            final RestClientBuilder builder = RestClient.builder(new HttpHost(connectUrl, port, scheme))
+                    .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder
+                            .setDefaultCredentialsProvider(credentialsProvider));
             restClient = builder.build();
         } else {
-            restClient = RestClient.builder(
-                    new HttpHost(connectUrl, port)).build();
+            restClient = RestClient.builder(new HttpHost(connectUrl, port)).build();
         }
 
-        ElasticsearchTransport transport = new RestClientTransport(restClient , new JacksonJsonpMapper());
+        final ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
         this.client = new ElasticsearchClient(transport);
     }
-    private String getIndexForIndexer(){
-        return this.indexPrefix+"-"+INDEX_INDEXER;
+
+    private String getIndexForIndexer() {
+        return this.indexPrefix + "-" + INDEX_INDEXER;
     }
 
-    private String dateString(DateTime date){
-        return date.getYear()+"."+date.getMonthOfYear();
+    private String dateString(final DateTime date) {
+        return date.getYear() + "." + date.getMonthOfYear();
     }
 
-    private String getIndexForTask(DateTime date) {
-        return this.indexPrefix+"-"+LOG+"-"+dateString(date);
+    private String getIndexForTask(final DateTime date) {
+        return this.indexPrefix + "-" + LOG + "-" + dateString(date);
     }
 
-    private String getIndexForTaskOutput(DateTime date) {
-        return this.indexPrefix+"-"+LOG_OUTPUT+"-"+dateString(date);
+    private String getIndexForTaskOutput(final DateTime date) {
+        return this.indexPrefix + "-" + LOG_OUTPUT + "-" + dateString(date);
     }
 
-    private String getIndexesFor(Function<DateTime, String> getIndexByDaTe){
+    private String getIndexesFor(final Function<DateTime, String> getIndexByDaTe) {
         DateTime date = now();
         String indexes = getIndexByDaTe.apply(date);
-        for (int n = 1; n < keepIndexesNumberOfMonths;n++) {
+        for (int n = 1; n < keepIndexesNumberOfMonths; n++) {
             date = date.minusMonths(1);
             indexes += "," + getIndexByDaTe.apply(date);
         }
         return indexes;
     }
+
     private String getIndexesForTask() {
         return getIndexesFor(this::getIndexForTask);
     }
@@ -113,53 +114,53 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
         return getIndexesFor(this::getIndexForTaskOutput);
     }
 
-    private void store(ExecutionLog log, Optional<String> previous) {
+    private void store(final ExecutionLog log, final Optional<String> previous) {
         try {
-            JsonObject json = log.json();
+            final JsonObject json = log.json();
             previous.ifPresent(prev -> json.addProperty("previous", prev));
-            write(json,getIndexForTask(now()), "task", log.getId());
+            write(json, getIndexForTask(now()), "task", log.getId());
         } catch (Exception ex) {
             throw new RuntimeException("Error storing scheduler log of " + log.getId(), ex);
         }
 
     }
 
-    private void write(JsonObject json, String index, String type, String id) throws IOException {
-        Reader input = new StringReader(json.toString());
-        IndexRequest<JsonData> request = IndexRequest.of(i -> i
+    private void write(final JsonObject json, final String index, final String type, final String id) throws IOException {
+        final Reader input = new StringReader(json.toString());
+        final IndexRequest<JsonData> request = IndexRequest.of(i -> i
                 .index(index)
                 .type(type)
                 .id(id)
                 .withJson(input)
         );
-        IndexResponse response = this.client.index(request);
+        this.client.index(request);
         this.client.indices().refresh();
     }
 
     private JsonObject readIndexJson() {
         try {
             return readJson(getIndexForIndexer(), INDEX_INDEXER).orElseGet(JsonObject::new);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new RuntimeException("Error reading scheduler indexer", ex);
         }
     }
 
-    private Optional<String> read(String index, String id) {
+    private Optional<String> read(final String index, final String id) {
         return read(index, id, false);
     }
 
-    private Optional<String> read(String index, String id, boolean stopRecovery) {
+    private Optional<String> read(final String index, final String id, final boolean stopRecovery) {
         try {
-            SearchResponse<ObjectNode> response = this.client.search(g -> g
+            final SearchResponse<ObjectNode> response = this.client.search(g -> g
                             .index(List.of(index.split(",")))
                             .query(q -> q.term(t -> t.field("_id").value(id))),
                     ObjectNode.class
             );
-            if(response.hits().hits().size() > 0) {
+            if (response.hits().hits().size() > 0) {
                 return Optional.of(response.hits().hits().get(0).source().toString());
             }
-        } catch (Exception ex) {
-            if(ex.getMessage().contains("index_not_found_exception") && !stopRecovery){
+        } catch (final Exception ex) {
+            if (ex.getMessage().contains("index_not_found_exception") && !stopRecovery) {
                 createIndexesIfNecessary(index);
                 return read(index, id, true);
             }
@@ -168,16 +169,16 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
         return Optional.empty();
     }
 
-    private Optional<JsonObject> readJson(String index, String id) throws IOException {
+    private Optional<JsonObject> readJson(final String index, final String id) throws IOException {
         Optional<String> content = read(index, id);
-        if(content.isPresent()) {
+        if (content.isPresent()) {
             return Optional.of(parser.parse(content.get()).getAsJsonObject());
         }
         return Optional.empty();
     }
 
-    private Optional<String> previousIdOf(ExecutionLog log) {
-        try{
+    private Optional<String> previousIdOf(final ExecutionLog log) {
+        try {
             return readJson(getIndexesForTask(), log.getId()).map(obj -> obj.getAsJsonPrimitive("previous")).map(JsonPrimitive::getAsString);
         } catch (Exception ex) {
             throw new RuntimeException("Error calculating scheduler previus log of " + log.getId(), ex);
@@ -185,30 +186,30 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
     }
 
     @Override
-    public void update(ExecutionLog log) {
-            store(log, previousIdOf(log));
+    public void update(final ExecutionLog log) {
+        store(log, previousIdOf(log));
     }
 
     @Override
-    public void newExecution(ExecutionLog log) {
+    public void newExecution(final ExecutionLog log) {
         synchronized (this) {
-            JsonObject json = readIndexJson();
-            Optional<String> previous =
+            final JsonObject json = readIndexJson();
+            final Optional<String> previous =
                     Optional.ofNullable(json.getAsJsonPrimitive(log.getTaskName())).map(JsonPrimitive::getAsString);
             json.addProperty(log.getTaskName(), log.getId());
             store(log, previous);
             try {
                 write(json, getIndexForIndexer(), INDEX_INDEXER, INDEX_INDEXER);
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 throw new RuntimeException("Error writing to scheduler index", ex);
             }
         }
     }
 
     @Override
-    public void appendTaskLog(ExecutionLog log, String text) {
-        try{
-            UpdateRequest request = UpdateRequest.of(i -> i
+    public void appendTaskLog(final ExecutionLog log, final String text) {
+        try {
+            final UpdateRequest request = UpdateRequest.of(i -> i
                     .index(getIndexForTaskOutput(now()))
                     .type(LOG_OUTPUT)
                     .id(log.getId())
@@ -218,51 +219,51 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
                             .inline(s -> s
                                     .lang("painless")
                                     .source("ctx._source.output +=params.output;")
-                                    .params("output", JsonData.of("\n"+ text)))));
+                                    .params("output", JsonData.of("\n" + text)))));
             this.client.update(request, JsonData.class);
             // We don't refresh the index, because a task may have to many call to appendTaskLog, better to wait for 1s (normal time for elastic to index)
-        } catch (ResponseException re) {
-          if (re.getResponse().getStatusLine().getStatusCode() == HttpStatus.SC_CONFLICT) {
-              //concurrent writting - try again
-              appendTaskLog(log, text);
-          } else {
-              throw new RuntimeException("Error appending output to scheduler in log" + log.getId(), re);
-          }
-        } catch (Exception ex) {
+        } catch (final ResponseException re) {
+            if (re.getResponse().getStatusLine().getStatusCode() == HttpStatus.SC_CONFLICT) {
+                //concurrent writting - try again
+                appendTaskLog(log, text);
+            } else {
+                throw new RuntimeException("Error appending output to scheduler in log" + log.getId(), re);
+            }
+        } catch (final Exception ex) {
             throw new RuntimeException("Error appending output to scheduler in log" + log.getId(), ex);
         }
     }
 
-    private void writeFile(String path, byte[] bytes, boolean append) {
-        File file = new File(path);
+    private void writeFile(final String path, final byte[] bytes, final boolean append) {
+        final File file = new File(path);
         file.getParentFile().mkdirs();
-        try (FileOutputStream stream = new FileOutputStream(file, append)) {
+        try (final FileOutputStream stream = new FileOutputStream(file, append)) {
             stream.write(bytes);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
 
-    private Optional<byte[]> readFile(String path) {
-        File file = new File(path);
+    private Optional<byte[]> readFile(final String path) {
+        final File file = new File(path);
         if (!file.exists()) {
             return Optional.empty();
         }
         try {
             return Optional.of(Files.toByteArray(file));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             return Optional.empty();
         }
     }
 
-    private String getFilePathForLog(ExecutionLog log, String filename) {
-        DateTime dateOfStart = log.getStart();
-        return this.basePathFiles + "/" + dateOfStart.getYear() + "/" + dateOfStart.getMonthOfYear() + "/" + dateOfStart.getDayOfMonth() + "/" + log.getId()+"_"+filename;
+    private String getFilePathForLog(final ExecutionLog log, final String filename) {
+        final DateTime dateOfStart = log.getStart();
+        return this.basePathFiles + "/" + dateOfStart.getYear() + "/" + dateOfStart.getMonthOfYear() + "/" + dateOfStart.getDayOfMonth() + "/" + log.getId() + "_" + filename;
     }
 
     @Override
-    public void storeFile(ExecutionLog log, String fileName, byte[] contents, boolean append) {
+    public void storeFile(final ExecutionLog log, final String fileName, final byte[] contents, final boolean append) {
         // Store file in fileSystem with year/month/day/allFiles structure
         writeFile(getFilePathForLog(log, fileName), contents, append);
     }
@@ -270,34 +271,35 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
     @Override
     public Stream<ExecutionLog> latest() {
         return readIndexJson().entrySet().stream()
-                .map(entry -> getLog(entry.getKey(), entry.getValue().getAsString()).orElse(null)).filter(Objects::nonNull);
+                .map(entry -> getLog(entry.getKey(), entry.getValue().getAsString()).orElse(null))
+                .filter(Objects::nonNull);
     }
 
     @Override
-    public Stream<ExecutionLog> executionsFor(String taskName, Optional<String> startId, int max) {
+    public Stream<ExecutionLog> executionsFor(final String taskName, final Optional<String> startId, final int max) {
         return executionsFor(taskName, startId, max, false);
     }
 
-    public Stream<ExecutionLog> executionsFor(String taskName, Optional<String> startId, int max, boolean stopRecovery) {
+    public Stream<ExecutionLog> executionsFor(final String taskName, final Optional<String> startId, final int max, final boolean stopRecovery) {
         try {
-            Set<ExecutionLog> result = new HashSet<>();
-            SearchResponse<ObjectNode> response = this.client.search(g -> g
+            final Set<ExecutionLog> result = new HashSet<>();
+            final SearchResponse<ObjectNode> response = this.client.search(g -> g
                             .index(List.of(getIndexesForTask().split(",")))
                             .query(q -> q.term(t -> t.field("taskName.keyword").value(taskName)))
                             .sort(f -> f.field(t -> t.field("start").order(SortOrder.Desc))),
                     ObjectNode.class
             );
-            List<Hit<ObjectNode>> hits = response.hits().hits();
-            for (Hit<ObjectNode> hit: hits) {
-                ExecutionLog log = new ExecutionLog(parser.parse(hit.source().toString()).getAsJsonObject());
+            final List<Hit<ObjectNode>> hits = response.hits().hits();
+            for (final Hit<ObjectNode> hit : hits) {
+                final ExecutionLog log = new ExecutionLog(parser.parse(hit.source().toString()).getAsJsonObject());
                 result.add(log);
-                if(result.size() >= max) {
+                if (result.size() >= max) {
                     break;
                 }
             }
             return result.stream();
-        } catch (Exception ex) {
-            if(ex.getMessage().contains("index_not_found_exception") && !stopRecovery){
+        } catch (final Exception ex) {
+            if (ex.getMessage().contains("index_not_found_exception") && !stopRecovery) {
                 createIndexesIfNecessary(getIndexesForTask());
                 return executionsFor(taskName, startId, max, true);
             }
@@ -306,7 +308,7 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
     }
 
     @Override
-    public Optional<String> getTaskLog(String taskName, String id) {
+    public Optional<String> getTaskLog(final String taskName, final String id) {
         try {
             return readJson(getIndexesForTaskOutput(), id).map(jsonObject -> jsonObject.get("output").getAsString());
         } catch (Exception ex) {
@@ -315,13 +317,13 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
     }
 
     @Override
-    public Optional<byte[]> getFile(String taskName, String id, String fileName) {
-        ExecutionLog log = getLog(taskName,id).get();
+    public Optional<byte[]> getFile(final String taskName, final String id, final String fileName) {
+        final ExecutionLog log = getLog(taskName, id).get();
         return readFile(getFilePathForLog(log, fileName));
     }
 
     @Override
-    public Optional<ExecutionLog> getLog(String taskName, String id) {
+    public Optional<ExecutionLog> getLog(final String taskName, final String id) {
         try {
             return readJson(getIndexesForTask(), id).map(ExecutionLog::new);
         } catch (Exception ex) {
@@ -330,14 +332,14 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
     }
 
     // Hack: Workaround to ensure elasticsearch doesn't throw exception "index doesn't exist" during search
-    private void createIndexesIfNecessary(String index) {
+    private void createIndexesIfNecessary(final String index) {
         try {
-            for(String indexName :index.split(",")){
-                if(!this.client.indices().exists(e -> e.index(indexName)).value()) {
+            for (final String indexName : index.split(",")) {
+                if (!this.client.indices().exists(e -> e.index(indexName)).value()) {
                     this.client.indices().create(c -> c.index(indexName));
                 }
             }
-        }catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new RuntimeException("Error checking indexes validaty", ex);
         }
     }

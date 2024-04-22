@@ -32,19 +32,19 @@ public class SchedulerConfigResource extends BennuRestResource {
     @PUT
     @Path("/{oid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement changeLoggingStorage(@PathParam("oid") String loggingStorageExternalId) {
+    public JsonElement changeLoggingStorage(final @PathParam("oid") String loggingStorageExternalId) {
         accessControl(Group.managers());
         innerSetLoggingStorage(loggingStorageExternalId);
         return getLoggingStorage();
     }
 
     @Atomic(mode = TxMode.WRITE)
-    public void innerSetLoggingStorage(String loggingStorageExternalId) {
-        LocalFileSystemStorage storage = readDomainObject(loggingStorageExternalId);
+    public void innerSetLoggingStorage(final String loggingStorageExternalId) {
+        final LocalFileSystemStorage storage = readDomainObject(loggingStorageExternalId);
         SchedulerSystem.getInstance().setLoggingStorage(storage);
-        ExecutionLogRepository repository = SchedulerSystem.getInstance().getLogRepository();
-        if (repository instanceof FileSystemLogRepository) {
-            ((FileSystemLogRepository) repository).setBasePath(SchedulerSystem.getInstance().getLogsPath());
+        final ExecutionLogRepository repository = SchedulerSystem.getInstance().getLogRepository();
+        if (repository instanceof FileSystemLogRepository fileSystemLogRepository) {
+            fileSystemLogRepository.setBasePath(SchedulerSystem.getInstance().getLogsPath());
         }
     }
 
