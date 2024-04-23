@@ -20,6 +20,7 @@ public class PortalConfiguration {
 	public String recoveryLinkPath;
 	public String signUpPath;
 	public Boolean detectBrowserLocalInLoginPage;
+	public String supportUrl;
 }
 
 relation BennuPortalConfiguration {

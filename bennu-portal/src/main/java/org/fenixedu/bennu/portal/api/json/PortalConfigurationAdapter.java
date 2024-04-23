@@ -39,6 +39,7 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         object.addProperty("recoveryLinkPath", configuration.getRecoveryLinkPath());
         object.addProperty("signUpPath", configuration.getSignUpPath());
         object.addProperty("detectBrowserLocalInLoginPage", configuration.getDetectBrowserLocalInLoginPage());
+        object.addProperty("supportUrl", configuration.getSupportUrl());
 
         if (configuration.getLogo() != null) {
             if (!Strings.isNullOrEmpty(configuration.getLogoLinkUrl())) {
@@ -114,7 +115,9 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         if (object.has("detectBrowserLocalInLoginPage")) {
             configuration.setDetectBrowserLocalInLoginPage(object.get("detectBrowserLocalInLoginPage").getAsBoolean());
         }
-        
+        if (object.has("supportUrl")) {
+            configuration.setSupportUrl(object.get("supportUrl").getAsString());
+        }
 
         return configuration;
     }
