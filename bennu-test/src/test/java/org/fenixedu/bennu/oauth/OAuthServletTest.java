@@ -18,12 +18,16 @@
  */
 package org.fenixedu.bennu.oauth;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.HttpHeaders;
@@ -58,19 +62,16 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-
-import pt.ist.fenixframework.DomainObject;
-import pt.ist.fenixframework.FenixFramework;
-import pt.ist.fenixframework.test.core.FenixFrameworkRunner;
 
 import com.google.common.base.Joiner;
-import com.google.common.io.BaseEncoding;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import pt.ist.fenixframework.DomainObject;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.test.core.FenixFrameworkRunner;
 
 @RunWith(FenixFrameworkRunner.class)
 public class OAuthServletTest extends JerseyTest {
@@ -160,10 +161,10 @@ public class OAuthServletTest extends JerseyTest {
         if (serviceApplicationOAuthAccessProvider == null) {
             serviceApplicationOAuthAccessProvider = new ExternalApplicationScope();
             serviceApplicationOAuthAccessProvider.setScopeKey("OAUTH_AUTHORIZATION_PROVIDER");
-            serviceApplicationOAuthAccessProvider.setName(new LocalizedString.Builder().with(enGB,
-                    "OAuth Authorization Provider Scope").build());
-            serviceApplicationOAuthAccessProvider.setDescription(new LocalizedString.Builder().with(enGB,
-                    "OAuth Authorization Provider Scope").build());
+            serviceApplicationOAuthAccessProvider
+                    .setName(new LocalizedString.Builder().with(enGB, "OAuth Authorization Provider Scope").build());
+            serviceApplicationOAuthAccessProvider
+                    .setDescription(new LocalizedString.Builder().with(enGB, "OAuth Authorization Provider Scope").build());
         }
 
         if (loggedScope == null) {
@@ -196,8 +197,8 @@ public class OAuthServletTest extends JerseyTest {
     @Test
     public void testTokenTypeWrongAccessTokenInHeader() {
 
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
         ExternalApplication externalApp = new ExternalApplication();
@@ -215,13 +216,7 @@ public class OAuthServletTest extends JerseyTest {
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
         String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(REDIRECT_URI, externalApp.getRedirectUrl());
-        req.addParameter(CODE, applicationUserSession.getCode());
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE);
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithAuthorizationHeader(req, clientSecret, externalApp.getRedirectUrl(), applicationUserSession.getCode());
 
         try {
             oauthServlet.service(req, res);
@@ -230,18 +225,17 @@ public class OAuthServletTest extends JerseyTest {
             String tokenJson = res.getContentAsString();
             final JsonObject token = new JsonParser().parse(tokenJson).getAsJsonObject();
 
-            Assert.assertTrue("response must be a valid json and have" + ACCESS_TOKEN + " field", token.has(ACCESS_TOKEN)
-                    && token.get(ACCESS_TOKEN).getAsString().length() > 0);
+            Assert.assertTrue("response must be a valid json and have" + ACCESS_TOKEN + " field",
+                    token.has(ACCESS_TOKEN) && token.get(ACCESS_TOKEN).getAsString().length() > 0);
 
-            Assert.assertTrue("response must be a valid json and have " + TOKEN_TYPE + " field", token.has(TOKEN_TYPE)
-                    && token.get(TOKEN_TYPE).getAsString().length() > 0);
+            Assert.assertTrue("response must be a valid json and have " + TOKEN_TYPE + " field",
+                    token.has(TOKEN_TYPE) && token.get(TOKEN_TYPE).getAsString().length() > 0);
 
             String accessToken = token.get(ACCESS_TOKEN).getAsString() + "fenixedu";
             String tokenType = token.get(TOKEN_TYPE).getAsString();
 
-            Response result =
-                    target("bennu-oauth").path("test").path("test-scope").request()
-                            .header(HttpHeaders.AUTHORIZATION, tokenType + " " + accessToken).get(Response.class);
+            Response result = target("bennu-oauth").path("test").path("test-scope").request()
+                    .header(HttpHeaders.AUTHORIZATION, tokenType + " " + accessToken).get(Response.class);
 
             Assert.assertEquals("request must fail", 401, result.getStatus());
 
@@ -253,8 +247,8 @@ public class OAuthServletTest extends JerseyTest {
     @Test
     public void testWrongTokenTypeInHeader() {
 
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
         ExternalApplication externalApp = new ExternalApplication();
@@ -272,13 +266,7 @@ public class OAuthServletTest extends JerseyTest {
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
         String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(REDIRECT_URI, externalApp.getRedirectUrl());
-        req.addParameter(CODE, applicationUserSession.getCode());
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE);
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithAuthorizationHeader(req, clientSecret, externalApp.getRedirectUrl(), applicationUserSession.getCode());
 
         try {
             oauthServlet.service(req, res);
@@ -287,18 +275,17 @@ public class OAuthServletTest extends JerseyTest {
             String tokenJson = res.getContentAsString();
             final JsonObject token = new JsonParser().parse(tokenJson).getAsJsonObject();
 
-            Assert.assertTrue("response must be a valid json and have" + ACCESS_TOKEN + " field", token.has(ACCESS_TOKEN)
-                    && token.get(ACCESS_TOKEN).getAsString().length() > 0);
+            Assert.assertTrue("response must be a valid json and have" + ACCESS_TOKEN + " field",
+                    token.has(ACCESS_TOKEN) && token.get(ACCESS_TOKEN).getAsString().length() > 0);
 
-            Assert.assertTrue("response must be a valid json and have " + TOKEN_TYPE + " field", token.has(TOKEN_TYPE)
-                    && token.get(TOKEN_TYPE).getAsString().length() > 0);
+            Assert.assertTrue("response must be a valid json and have " + TOKEN_TYPE + " field",
+                    token.has(TOKEN_TYPE) && token.get(TOKEN_TYPE).getAsString().length() > 0);
 
             String accessToken = token.get(ACCESS_TOKEN).getAsString();
             String tokenType = token.get(TOKEN_TYPE).getAsString() + "fenixedu";
 
-            Response result =
-                    target("bennu-oauth").path("test").path("test-scope").request()
-                            .header(HttpHeaders.AUTHORIZATION, tokenType + " " + accessToken).get(Response.class);
+            Response result = target("bennu-oauth").path("test").path("test-scope").request()
+                    .header(HttpHeaders.AUTHORIZATION, tokenType + " " + accessToken).get(Response.class);
 
             Assert.assertEquals("request must fail", 401, result.getStatus());
 
@@ -310,8 +297,8 @@ public class OAuthServletTest extends JerseyTest {
     @Test
     public void testTokenTypeRefreshAccessTokenInHeader() {
 
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
         ExternalApplication externalApp = new ExternalApplication();
@@ -329,13 +316,8 @@ public class OAuthServletTest extends JerseyTest {
 
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
-        String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(REFRESH_TOKEN, applicationUserSession.getRefreshToken());
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_REFRESH_TOKEN);
-        req.setMethod("POST");
-        req.setPathInfo("/refresh_token");
+        mockPostRequestWithTokenRefresh(req, externalApp.getExternalId() + ":" + externalApp.getSecret(),
+                applicationUserSession.getRefreshToken());
 
         try {
             oauthServlet.service(req, res);
@@ -346,15 +328,14 @@ public class OAuthServletTest extends JerseyTest {
             Assert.assertTrue("response must be a valid json and have access_token field",
                     token.has(ACCESS_TOKEN) && token.get(ACCESS_TOKEN).getAsString().length() > 0);
 
-            Assert.assertTrue("response must be a valid json and have " + TOKEN_TYPE + " field", token.has(TOKEN_TYPE)
-                    && token.get(TOKEN_TYPE).getAsString().length() > 0);
+            Assert.assertTrue("response must be a valid json and have " + TOKEN_TYPE + " field",
+                    token.has(TOKEN_TYPE) && token.get(TOKEN_TYPE).getAsString().length() > 0);
 
             String accessToken = token.get(ACCESS_TOKEN).getAsString();
             String tokenType = token.get(TOKEN_TYPE).getAsString();
 
-            String result =
-                    target("bennu-oauth").path("test").path("test-scope").request()
-                            .header(HttpHeaders.AUTHORIZATION, tokenType + " " + accessToken).get(String.class);
+            String result = target("bennu-oauth").path("test").path("test-scope").request()
+                    .header(HttpHeaders.AUTHORIZATION, tokenType + " " + accessToken).get(String.class);
 
             Assert.assertEquals("this is an endpoint with TEST scope user1", result);
         } catch (ServletException | IOException e) {
@@ -365,8 +346,8 @@ public class OAuthServletTest extends JerseyTest {
     @Test
     public void testTokenTypeInHeader() {
 
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
         ExternalApplication externalApp = new ExternalApplication();
@@ -384,13 +365,7 @@ public class OAuthServletTest extends JerseyTest {
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
         String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(REDIRECT_URI, externalApp.getRedirectUrl());
-        req.addParameter(CODE, applicationUserSession.getCode());
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE);
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithAuthorizationHeader(req, clientSecret, externalApp.getRedirectUrl(), applicationUserSession.getCode());
 
         try {
             oauthServlet.service(req, res);
@@ -399,18 +374,17 @@ public class OAuthServletTest extends JerseyTest {
             String tokenJson = res.getContentAsString();
             final JsonObject token = new JsonParser().parse(tokenJson).getAsJsonObject();
 
-            Assert.assertTrue("response must be a valid json and have" + ACCESS_TOKEN + " field", token.has(ACCESS_TOKEN)
-                    && token.get(ACCESS_TOKEN).getAsString().length() > 0);
+            Assert.assertTrue("response must be a valid json and have" + ACCESS_TOKEN + " field",
+                    token.has(ACCESS_TOKEN) && token.get(ACCESS_TOKEN).getAsString().length() > 0);
 
-            Assert.assertTrue("response must be a valid json and have " + TOKEN_TYPE + " field", token.has(TOKEN_TYPE)
-                    && token.get(TOKEN_TYPE).getAsString().length() > 0);
+            Assert.assertTrue("response must be a valid json and have " + TOKEN_TYPE + " field",
+                    token.has(TOKEN_TYPE) && token.get(TOKEN_TYPE).getAsString().length() > 0);
 
             String accessToken = token.get(ACCESS_TOKEN).getAsString();
             String tokenType = token.get(TOKEN_TYPE).getAsString();
 
-            String result =
-                    target("bennu-oauth").path("test").path("test-scope").request()
-                            .header(HttpHeaders.AUTHORIZATION, tokenType + " " + accessToken).get(String.class);
+            String result = target("bennu-oauth").path("test").path("test-scope").request()
+                    .header(HttpHeaders.AUTHORIZATION, tokenType + " " + accessToken).get(String.class);
 
             Assert.assertEquals("this is an endpoint with TEST scope user1", result);
 
@@ -421,8 +395,8 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void getAccessTokenHeaderTest() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
         ExternalApplication externalApp = new ExternalApplication();
@@ -439,13 +413,7 @@ public class OAuthServletTest extends JerseyTest {
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
         String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(REDIRECT_URI, externalApp.getRedirectUrl());
-        req.addParameter(CODE, applicationUserSession.getCode());
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE);
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithAuthorizationHeader(req, clientSecret, externalApp.getRedirectUrl(), applicationUserSession.getCode());
 
         try {
             oauthServlet.service(req, res);
@@ -464,8 +432,8 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void getAccessTokenWrongClientIdHeaderTest() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
         ExternalApplication externalApp = new ExternalApplication();
@@ -482,13 +450,7 @@ public class OAuthServletTest extends JerseyTest {
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
         String clientSecret = "fenixedu:fenixedu";
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(REDIRECT_URI, externalApp.getRedirectUrl());
-        req.addParameter(CODE, applicationUserSession.getCode());
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE);
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithAuthorizationHeader(req, clientSecret, externalApp.getRedirectUrl(), applicationUserSession.getCode());
 
         try {
             oauthServlet.service(req, res);
@@ -500,8 +462,8 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void refreshAccessTokenHeaderTest() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
         ExternalApplication externalApp = new ExternalApplication();
@@ -518,13 +480,8 @@ public class OAuthServletTest extends JerseyTest {
 
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
-        String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(REFRESH_TOKEN, applicationUserSession.getRefreshToken());
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_REFRESH_TOKEN);
-        req.setMethod("POST");
-        req.setPathInfo("/refresh_token");
+        mockPostRequestWithTokenRefresh(req, externalApp.getExternalId() + ":" + externalApp.getSecret(),
+                applicationUserSession.getRefreshToken());
 
         try {
             oauthServlet.service(req, res);
@@ -543,8 +500,8 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void refreshAccessTokenWrongClientHeaderRefreshTest() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
         ExternalApplication externalApp = new ExternalApplication();
@@ -561,13 +518,7 @@ public class OAuthServletTest extends JerseyTest {
 
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
-        String clientSecret = "fenixedu:fenixedu";
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(REFRESH_TOKEN, applicationUserSession.getRefreshToken());
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_REFRESH_TOKEN);
-        req.setMethod("POST");
-        req.setPathInfo("/refresh_token");
+        mockPostRequestWithTokenRefresh(req, "fenixedu:fenixedu", applicationUserSession.getRefreshToken());
 
         try {
             oauthServlet.service(req, res);
@@ -579,16 +530,12 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void getServiceAccessTokenHeaderEmptyTest() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
         String clientSecret = "";
 
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_CLIENT_CREDENTIALS);
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithClientCredential(req, clientSecret);
 
         try {
             oauthServlet.service(req, res);
@@ -601,15 +548,11 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void getServiceAccessTokenHeaderTest() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
         String clientSecret = serviceApplication.getExternalId() + ":" + serviceApplication.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_CLIENT_CREDENTIALS);
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithClientCredential(req, clientSecret);
 
         try {
             oauthServlet.service(req, res);
@@ -630,14 +573,11 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void getServiceAccessTokenTest() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
 
-        req.addParameter("client_id", serviceApplication.getExternalId());
-        req.addParameter("client_secret", serviceApplication.getSecret());
-        req.addParameter("grant_type", "client_credentials");
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithGrantType(req, GRANT_TYPE_CLIENT_CREDENTIALS, serviceApplication.getExternalId(),
+                serviceApplication.getSecret());
 
         try {
             oauthServlet.service(req, res);
@@ -669,8 +609,8 @@ public class OAuthServletTest extends JerseyTest {
         try {
             target("bennu-oauth").path("test-scope").request().get();
         } catch (WebApplicationException e) {
-            Assert.assertNotEquals("invocation of oauth endpoint without tokens must fail", Status.OK.getStatusCode(), e
-                    .getResponse().getStatus());
+            Assert.assertNotEquals("invocation of oauth endpoint without tokens must fail", Status.OK.getStatusCode(),
+                    e.getResponse().getStatus());
         }
     }
 
@@ -707,8 +647,8 @@ public class OAuthServletTest extends JerseyTest {
         try {
             target("bennu-oauth").path("test-scope").queryParam("access_token", accessToken).request().get(String.class);
         } catch (WebApplicationException e) {
-            Assert.assertNotEquals("invocation of oauth endpoint with wrong scope must fail", Status.OK.getStatusCode(), e
-                    .getResponse().getStatus());
+            Assert.assertNotEquals("invocation of oauth endpoint with wrong scope must fail", Status.OK.getStatusCode(),
+                    e.getResponse().getStatus());
         } finally {
             testScope.setBennu(null);
         }
@@ -716,14 +656,11 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void testServiceOnlyEndpoint() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
 
-        req.addParameter("client_id", serviceApplication.getExternalId());
-        req.addParameter("client_secret", serviceApplication.getSecret());
-        req.addParameter("grant_type", "client_credentials");
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithGrantType(req, GRANT_TYPE_CLIENT_CREDENTIALS, serviceApplication.getExternalId(),
+                serviceApplication.getSecret());
 
         try {
             oauthServlet.service(req, res);
@@ -738,9 +675,8 @@ public class OAuthServletTest extends JerseyTest {
             Assert.assertTrue("response must be a valid json and have access_token field",
                     token.has(ACCESS_TOKEN) && accessToken.length() > 0);
 
-            String result =
-                    target("bennu-oauth").path("test").path("service-only-without-scope").queryParam(ACCESS_TOKEN, accessToken)
-                            .request().get(String.class);
+            String result = target("bennu-oauth").path("test").path("service-only-without-scope")
+                    .queryParam(ACCESS_TOKEN, accessToken).request().get(String.class);
             Assert.assertEquals("this is an endpoint with serviceOnly", result);
 
         } catch (ServletException | IOException e) {
@@ -750,14 +686,11 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void testServiceOnlyEndpointWithScopeMustFail() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
 
-        req.addParameter("client_id", serviceApplication.getExternalId());
-        req.addParameter("client_secret", serviceApplication.getSecret());
-        req.addParameter("grant_type", "client_credentials");
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithGrantType(req, GRANT_TYPE_CLIENT_CREDENTIALS, serviceApplication.getExternalId(),
+                serviceApplication.getSecret());
 
         try {
             oauthServlet.service(req, res);
@@ -772,9 +705,8 @@ public class OAuthServletTest extends JerseyTest {
             Assert.assertTrue("response must be a valid json and have access_token field",
                     token.has(ACCESS_TOKEN) && accessToken.length() > 0);
 
-            Response result =
-                    target("bennu-oauth").path("test").path("service-only-with-scope").queryParam(ACCESS_TOKEN, accessToken)
-                            .request().get(Response.class);
+            Response result = target("bennu-oauth").path("test").path("service-only-with-scope")
+                    .queryParam(ACCESS_TOKEN, accessToken).request().get(Response.class);
 
             Assert.assertNotEquals("request must fail", 200, result.getStatus());
 
@@ -785,14 +717,11 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void testServiceOnlyWithScopeEndpoint() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
 
-        req.addParameter("client_id", serviceApplicationWithScope.getExternalId());
-        req.addParameter("client_secret", serviceApplicationWithScope.getSecret());
-        req.addParameter("grant_type", "client_credentials");
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithGrantType(req, GRANT_TYPE_CLIENT_CREDENTIALS, serviceApplicationWithScope.getExternalId(),
+                serviceApplicationWithScope.getSecret());
 
         try {
             oauthServlet.service(req, res);
@@ -807,9 +736,8 @@ public class OAuthServletTest extends JerseyTest {
             Assert.assertTrue("response must be a valid json and have access_token field",
                     token.has(ACCESS_TOKEN) && accessToken.length() > 0);
 
-            String result =
-                    target("bennu-oauth").path("test").path("service-only-with-scope").queryParam(ACCESS_TOKEN, accessToken)
-                            .request().get(String.class);
+            String result = target("bennu-oauth").path("test").path("service-only-with-scope")
+                    .queryParam(ACCESS_TOKEN, accessToken).request().get(String.class);
             Assert.assertEquals("this is an endpoint with SERVICE scope, serviceOnly", result);
 
         } catch (ServletException | IOException e) {
@@ -819,14 +747,11 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void getServiceAccessTokenWithWrongGrantTypeTest() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
 
-        req.addParameter("client_id", serviceApplication.getExternalId());
-        req.addParameter("client_secret", serviceApplication.getSecret());
-        req.addParameter("grant_type", "authorization_code");
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithGrantType(req, GRANT_TYPE_AUTHORIZATION_CODE, serviceApplication.getExternalId(),
+                serviceApplication.getSecret());
 
         try {
             oauthServlet.service(req, res);
@@ -840,17 +765,12 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void getServiceAccessTokenWithWrongClientSecretTest() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
 
-        req.addParameter("client_id", serviceApplication.getExternalId());
-        req.addParameter(
-                "client_secret",
-                BaseEncoding.base64().encode(
-                        (serviceApplication.getExternalId() + ":lasdlkasldksladkalskdsal").getBytes(StandardCharsets.UTF_8)));
-        req.addParameter("grant_type", "client_credentials");
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        String clientSecret = serviceApplication.getExternalId() + ":lasdlkasldksladkalskdsal";
+        String encodedClientSecret = Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8));
+        mockPostRequestWithGrantType(req, GRANT_TYPE_CLIENT_CREDENTIALS, serviceApplication.getExternalId(), encodedClientSecret);
 
         try {
             oauthServlet.service(req, res);
@@ -864,13 +784,12 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void testOAuthServletAccessTokenRequestWithLoginExpired() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
-        User user =
-                createUser("testOAuthServletAccessTokenRequestWithLoginExpired", "John", "Doe", "John Doe",
-                        "john.doe@fenixedu.org");
+        User user = createUser("testOAuthServletAccessTokenRequestWithLoginExpired", "John", "Doe", "John Doe",
+                "john.doe@fenixedu.org");
 
         user.closeLoginPeriod();
 
@@ -887,27 +806,21 @@ public class OAuthServletTest extends JerseyTest {
         applicationUserAuthorization.addSession(applicationUserSession);
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
-        String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(REDIRECT_URI, externalApp.getRedirectUrl());
-        req.addParameter(CODE, applicationUserSession.getCode());
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE);
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithAuthorizationHeader(req, externalApp.getExternalId() + ":" + externalApp.getSecret(),
+                externalApp.getRedirectUrl(), applicationUserSession.getCode());
 
         try {
             oauthServlet.service(req, res);
             Assert.assertEquals("must return bad request", Status.BAD_REQUEST.getStatusCode(), res.getStatus());
 
             user.openLoginPeriod();
-            res = new MockHttpServletResponse();
+            res = new TestHttpServletResponse();
             oauthServlet.service(req, res);
 
             final JsonObject token = new JsonParser().parse(res.getContentAsString()).getAsJsonObject();
 
-            Assert.assertTrue("response must be a valid json and have access_token field", token.has("access_token")
-                    && token.get("access_token").getAsString().length() > 0);
+            Assert.assertTrue("response must be a valid json and have access_token field",
+                    token.has("access_token") && token.get("access_token").getAsString().length() > 0);
 
         } catch (ServletException | IOException e) {
             Assert.fail(e.getMessage());
@@ -916,13 +829,12 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void testOAuthServletRefreshTokenRequestWithLoginExpired() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
-        User user =
-                createUser("testOAuthServletRefreshTokenRequestWithLoginExpired", "John", "Doe", "John Doe",
-                        "john.doe@fenixedu.org");
+        User user = createUser("testOAuthServletRefreshTokenRequestWithLoginExpired", "John", "Doe", "John Doe",
+                "john.doe@fenixedu.org");
 
         user.closeLoginPeriod();
 
@@ -940,26 +852,21 @@ public class OAuthServletTest extends JerseyTest {
 
         externalApp.addApplicationUserAuthorization(applicationUserAuthorization);
 
-        String clientSecret = externalApp.getExternalId() + ":" + externalApp.getSecret();
-        req.addHeader(HttpHeaders.AUTHORIZATION,
-                "Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
-        req.addParameter(REFRESH_TOKEN, applicationUserSession.getRefreshToken());
-        req.addParameter(GRANT_TYPE, GRANT_TYPE_REFRESH_TOKEN);
-        req.setMethod("POST");
-        req.setPathInfo("/refresh_token");
+        mockPostRequestWithTokenRefresh(req, externalApp.getExternalId() + ":" + externalApp.getSecret(),
+                applicationUserSession.getRefreshToken());
 
         try {
             oauthServlet.service(req, res);
             Assert.assertEquals("must return bad request", Status.BAD_REQUEST.getStatusCode(), res.getStatus());
 
             user.openLoginPeriod();
-            res = new MockHttpServletResponse();
+            res = new TestHttpServletResponse();
             oauthServlet.service(req, res);
 
             final JsonObject token = new JsonParser().parse(res.getContentAsString()).getAsJsonObject();
 
-            Assert.assertTrue("response must be a valid json and have access_token field", token.has("access_token")
-                    && token.get("access_token").getAsString().length() > 0);
+            Assert.assertTrue("response must be a valid json and have access_token field",
+                    token.has("access_token") && token.get("access_token").getAsString().length() > 0);
 
         } catch (ServletException | IOException e) {
             Assert.fail(e.getMessage());
@@ -993,25 +900,23 @@ public class OAuthServletTest extends JerseyTest {
 
         user.closeLoginPeriod();
 
-        Response responseKO =
-                target("bennu-oauth").path("test").path("test-scope-with-logged-user").queryParam("access_token", accessToken)
-                        .request().get();
+        Response responseKO = target("bennu-oauth").path("test").path("test-scope-with-logged-user")
+                .queryParam("access_token", accessToken).request().get();
 
         Assert.assertEquals(Status.UNAUTHORIZED, responseKO.getStatusInfo());
 
         user.openLoginPeriod();
 
-        String result =
-                target("bennu-oauth").path("test").path("test-scope-with-logged-user").queryParam("access_token", accessToken)
-                        .request().get(String.class);
+        String result = target("bennu-oauth").path("test").path("test-scope-with-logged-user")
+                .queryParam("access_token", accessToken).request().get(String.class);
 
         Assert.assertEquals("this is an endpoint with TEST scope: testEndpointWithAccessTokenLoginExpired", result);
     }
 
     @Test
     public void testServiceApplicationOAuthAccessProvider() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
         User user = createUser("testServiceApplicationOAuthAccessProvider", "John", "Doe", "John Doe", "john.doe@fenixedu.org");
@@ -1021,11 +926,8 @@ public class OAuthServletTest extends JerseyTest {
         serviceApplication.addScopes(serviceApplicationOAuthAccessProvider);
         serviceApplication.addScopes(loggedScope);
 
-        req.addParameter("client_id", serviceApplication.getExternalId());
-        req.addParameter("client_secret", serviceApplication.getSecret());
-        req.addParameter("grant_type", "client_credentials");
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithGrantType(req, GRANT_TYPE_CLIENT_CREDENTIALS, serviceApplication.getExternalId(),
+                serviceApplication.getSecret());
 
         try {
             oauthServlet.service(req, res);
@@ -1037,17 +939,15 @@ public class OAuthServletTest extends JerseyTest {
             final String serviceAccessToken =
                     new JsonParser().parse(tokenJson).getAsJsonObject().get("access_token").getAsString();
 
-            String result =
-                    target("oauth").path("provider").path(serviceApplication.getExternalId()).path(user.getUsername())
-                            .queryParam("access_token", serviceAccessToken).request().post(null, String.class);
+            String result = target("oauth").path("provider").path(serviceApplication.getExternalId()).path(user.getUsername())
+                    .queryParam("access_token", serviceAccessToken).request().post(null, String.class);
 
             Authenticate.unmock();
 
             final String userAccessToken = new JsonParser().parse(result).getAsJsonObject().get("access_token").getAsString();
 
-            result =
-                    target("bennu-oauth").path("test").path("test-scope-with-logged-user")
-                            .queryParam("access_token", userAccessToken).request().get(String.class);
+            result = target("bennu-oauth").path("test").path("test-scope-with-logged-user")
+                    .queryParam("access_token", userAccessToken).request().get(String.class);
 
             Assert.assertEquals("this is an endpoint with TEST scope: testServiceApplicationOAuthAccessProvider", result);
 
@@ -1069,8 +969,8 @@ public class OAuthServletTest extends JerseyTest {
 
     @Test
     public void testServiceApplicationWithUnexistingScope() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        TestHttpServletResponse res = new TestHttpServletResponse();
         Authenticate.unmock();
 
         User user = createUser("testServiceApplicationWithUnexistingScope", "John", "Doe", "John Doe", "john.doe@fenixedu.org");
@@ -1078,11 +978,8 @@ public class OAuthServletTest extends JerseyTest {
         ServiceApplication serviceApplication = new ServiceApplication();
         serviceApplication.setAuthor(user);
 
-        req.addParameter("client_id", serviceApplication.getExternalId());
-        req.addParameter("client_secret", serviceApplication.getSecret());
-        req.addParameter("grant_type", "client_credentials");
-        req.setMethod("POST");
-        req.setPathInfo("/access_token");
+        mockPostRequestWithGrantType(req, GRANT_TYPE_CLIENT_CREDENTIALS, serviceApplication.getExternalId(),
+                serviceApplication.getSecret());
 
         try {
             oauthServlet.service(req, res);
@@ -1094,15 +991,47 @@ public class OAuthServletTest extends JerseyTest {
             final String serviceAccessToken =
                     new JsonParser().parse(tokenJson).getAsJsonObject().get("access_token").getAsString();
 
-            Response response =
-                    target("bennu-oauth").path("test").path("service-only-with-unexisting-scope")
-                            .queryParam("access_token", serviceAccessToken).request().get();
+            Response response = target("bennu-oauth").path("test").path("service-only-with-unexisting-scope")
+                    .queryParam("access_token", serviceAccessToken).request().get();
 
             Assert.assertNotEquals("request must fail since scope does not exist", 200, response.getStatus());
 
         } catch (ServletException | IOException e) {
             Assert.fail(e.getMessage());
         }
+    }
+
+    private static void mockPostRequestWithGrantType(HttpServletRequest req, String grantType, String clientId, String clientSecret) {
+        when(req.getParameter("client_id")).thenReturn(clientId);
+        when(req.getParameter("client_secret")).thenReturn(clientSecret);
+        when(req.getParameter(GRANT_TYPE)).thenReturn(grantType);
+        when(req.getMethod()).thenReturn("POST");
+        when(req.getPathInfo()).thenReturn("/access_token");
+    }
+
+    private static void mockPostRequestWithAuthorizationHeader(HttpServletRequest req, String clientSecret, String redirectUrl, String code) {
+        when(req.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
+        when(req.getParameter(REDIRECT_URI)).thenReturn(redirectUrl);
+        when(req.getParameter(CODE)).thenReturn(code);
+        when(req.getParameter(GRANT_TYPE)).thenReturn(GRANT_TYPE_AUTHORIZATION_CODE);
+        when(req.getMethod()).thenReturn("POST");
+        when(req.getPathInfo()).thenReturn("/access_token");
+    }
+
+    private static void mockPostRequestWithTokenRefresh(HttpServletRequest req, String clientSecret, String token) {
+        when(req.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
+        when(req.getParameter(REFRESH_TOKEN)).thenReturn(token);
+        when(req.getParameter(GRANT_TYPE)).thenReturn(GRANT_TYPE_REFRESH_TOKEN);
+        when(req.getMethod()).thenReturn("POST");
+        when(req.getPathInfo()).thenReturn("/refresh_token");
+    }
+
+    private static void mockPostRequestWithClientCredential(HttpServletRequest req, String clientSecret) {
+        when(req.getHeader(HttpHeaders.AUTHORIZATION))
+                .thenReturn("Basic " + Base64.getEncoder().encodeToString(clientSecret.getBytes(StandardCharsets.UTF_8)));
+        when(req.getParameter(GRANT_TYPE)).thenReturn(GRANT_TYPE_CLIENT_CREDENTIALS);
+        when(req.getMethod()).thenReturn("POST");
+        when(req.getPathInfo()).thenReturn("/access_token");
     }
 
     @Test
