@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.signals.Signal;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -200,7 +201,7 @@ public class UserProfile extends UserProfile_Base {
 
     public String getFullAvatarUrl() {
         String avatarUrl = getAvatarUrl();
-        if (avatarUrl == null) {
+        if (StringUtils.isEmpty(avatarUrl)) {
             return null;
         }
 
