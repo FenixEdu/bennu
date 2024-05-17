@@ -56,7 +56,7 @@
 				  	<div class="collapse navbar-collapse navbar-right">
 						<ul class="nav navbar-nav navbar-right">
 							<li class="dropdown">
-								<a class="dropdown-toggle" data-toggle="dropdown"><img src="{{loggedUser.profile.avatarUrl}}?s=32" style="margin-right: 10px" class="img-circle"/>{{loggedUser.profile.displayName}}<b class="caret"></b></a>
+								<a class="dropdown-toggle" data-toggle="dropdown"><img src="{{loggedUser.profile.fullAvatarUrl}}?s=32" style="margin-right: 10px" class="img-circle"/>{{loggedUser.profile.displayName}}<b class="caret"></b></a>
 								<ul class="dropdown-menu">
 								  	{% for locale in locales %}
 									{% if locale == currentLocale %}

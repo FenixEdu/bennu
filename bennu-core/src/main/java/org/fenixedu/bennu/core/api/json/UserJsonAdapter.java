@@ -35,7 +35,7 @@ public class UserJsonAdapter implements JsonAdapter<User> {
         JsonUtils.put(jsonObject, "email", user.getEmail());
         jsonObject.addProperty("active", !user.isLoginExpired());
         user.getExpiration().ifPresent(e -> jsonObject.addProperty("expiration", ISODateTimeFormat.date().print(e)));
-        JsonUtils.put(jsonObject, "avatar", profile.getAvatarUrl());
+        JsonUtils.put(jsonObject, "avatar", profile.getFullAvatarUrl());
         if (profile.getPreferredLocale() != null) {
             jsonObject.add("preferredLocale", ctx.view(profile.getPreferredLocale()));
         }
