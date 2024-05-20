@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.signals.Signal;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.StringNormalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,6 +197,20 @@ public class UserProfile extends UserProfile_Base {
             return getLocalAvatar().url();
         }
         return Avatar.mysteryManUrl(this.getUser());
+    }
+
+    public String getFullAvatarUrl() {
+        String avatarUrl = getAvatarUrl();
+        if (StringUtils.isEmpty(avatarUrl)) {
+            return null;
+        }
+
+        if (avatarUrl.startsWith("http")) {
+            return avatarUrl;
+        } else {
+            return CoreConfiguration.getConfiguration().applicationUrl() + avatarUrl;
+        }
+
     }
 
     /**
