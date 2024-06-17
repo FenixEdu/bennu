@@ -18,8 +18,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <java.compilation.source.version>11</java.compilation.source.version>
-        <java.compilation.target.version>11</java.compilation.target.version>
+        <java.compilation.source.version>17</java.compilation.source.version>
+        <java.compilation.target.version>17</java.compilation.target.version>
     </properties>
 
     <build>
