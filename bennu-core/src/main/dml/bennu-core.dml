@@ -62,9 +62,9 @@ valueType org.fenixedu.bennu.core.domain.NashornStrategy as NashornStrategy {
 
 valueType org.fenixedu.bennu.core.json.ImmutableJsonElement as ImmutableJsonElement {
     externalizeWith {
-        String toString();
+        JsonElement get();
     }
-    internalizeWith parse();
+    internalizeWith of();
 }
 
 public class Bennu {

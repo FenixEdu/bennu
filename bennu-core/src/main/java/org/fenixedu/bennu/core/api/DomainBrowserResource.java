@@ -222,7 +222,7 @@ public class DomainBrowserResource extends BennuRestResource {
         try {
             Method method =
                     ValueTypeSerializer.class.getDeclaredMethod("serialize$" + vt.getDomainName().replace('.', '$'),
-                            Class.forName(vt.getFullname()));
+                            Class.forName(vt.getBaseType().getFullname()));
             return method.invoke(null, value);
         } catch (Exception e) {
             return null;
