@@ -70,8 +70,12 @@ public class JsonUtils {
 
     public static <T extends DomainObject> T toDomainObject(final JsonObject jo, final String slot) {
         final JsonElement je = jo.get(slot);
-        return je == null || je.isJsonNull() || je.getAsString().isEmpty() ? null :
-                FenixFramework.getDomainObject(je.getAsString());
+        if (je == null || je.isJsonNull() || je.getAsString().isEmpty()) {
+            return null;
+        } else {
+            final DomainObject domainObject = FenixFramework.getDomainObject(je.getAsString());
+            return FenixFramework.isDomainObjectValid(domainObject) ? (T) domainObject : null;
+        }
     }
 
     public static String get(final JsonObject o, final String slot) {
