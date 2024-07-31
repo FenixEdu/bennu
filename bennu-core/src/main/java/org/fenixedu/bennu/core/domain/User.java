@@ -141,7 +141,7 @@ public final class User extends User_Base implements Principal {
         setUsername(username);
         UserProfile profile = getProfile();
         if (profile != null) {
-            String avatarUrl = profile.getFullAvatarUrl();
+            String avatarUrl = profile.getAvatarUrl();
             if (avatarUrl != null && avatarUrl.contains(oldUsername)) {
                 String newAvatarURL = avatarUrl.replace(oldUsername, username);
                 profile.setAvatarUrl(newAvatarURL);
