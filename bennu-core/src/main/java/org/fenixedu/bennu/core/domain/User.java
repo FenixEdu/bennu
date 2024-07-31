@@ -258,6 +258,26 @@ public final class User extends User_Base implements Principal {
     }
 
     /**
+     * Clears local password for this user
+     * 
+     */
+    public void clearPassword() {
+        super.setPassword(null);
+    }
+
+    /**
+     * Aligns user to a new username, also changes the auth manegeable to false
+     * and clears local password
+     * 
+     * @param newUsername: the new username
+     */
+    public void align(String newUsername) {
+        changeUsername(newUsername);
+        setAuthManageable(false);
+        clearPassword();
+    }
+
+    /**
      * Sets the user's password. The password is salted and hashed with a large number of iterations. Fails with {@link Error} if
      * the necessary cryptographic algorithm is not present in the environment.
      *
