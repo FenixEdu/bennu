@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.signals.Signal;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
@@ -281,6 +281,6 @@ public class UserProfile extends UserProfile_Base {
         if (name == null) {
             return null;
         }
-        return Strings.emptyToNull(CharMatcher.WHITESPACE.trimAndCollapseFrom(name, ' '));
+        return Strings.emptyToNull(CharMatcher.whitespace().trimAndCollapseFrom(name, ' '));
     }
 }
