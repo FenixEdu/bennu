@@ -89,8 +89,8 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>17.0</version>
-        </dependency>
+            <version>33.2.1-jre</version>
+    </dependency>
         <dependency>
             <groupId>org.fenixedu</groupId>
             <artifactId>fenixedu-commons</artifactId>
