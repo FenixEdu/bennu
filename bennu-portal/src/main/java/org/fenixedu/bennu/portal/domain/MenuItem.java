@@ -3,6 +3,7 @@ package org.fenixedu.bennu.portal.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.qubit.terra.portal.domain.menus.MenuVisibility;
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
@@ -38,6 +39,7 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
     protected final void init(MenuContainer parent, boolean visible, String accessGroup, LocalizedString title,
             LocalizedString description, String path) {
         setVisible(visible);
+        setVisibility(visible ? MenuVisibility.ALL.name() : MenuVisibility.INVISIBLE.name());
         setAccessGroup(Group.parse(accessGroup));
         setDescription(description);
         setTitle(title);
@@ -50,6 +52,7 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
 
     protected final void init(MenuContainer parent, MenuItem original) {
         setVisible(original.getVisible());
+        setVisibility(original.getVisibility());
         setAccessGroup(original.getAccessGroup());
         setDescription(original.getDescription());
         setTitle(original.getTitle());
@@ -118,17 +121,6 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
         return getGroup().isMember(Authenticate.getUser());
     }
 
-    /**
-     * Returns whether the Item should be visible when rendering a menu.
-     * 
-     * @return
-     *         {@code true} if this item is visible
-     */
-    @Override
-    public boolean isItemVisible() {
-        return isVisible();
-    }
-
     @Deprecated
     public boolean isVisible() {
         return getVisible();
@@ -137,6 +129,18 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
     @Deprecated
     public void setVisible(boolean visible) {
         super.setVisible(visible);
+    }
+
+    @Override
+    public MenuVisibility getItemVisibility() {
+        return getVisibility() == null ? null : MenuVisibility.valueOf(getVisibility());
+    }
+
+    @Override
+    public void setItemVisibility(MenuVisibility visibility) {
+        if (visibility != null) {
+            setVisibility(visibility.name());
+        }
     }
 
     @Override
