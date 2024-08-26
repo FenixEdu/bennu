@@ -14,7 +14,7 @@ import org.fenixedu.bennu.portal.model.Application;
 import org.fenixedu.bennu.portal.model.ApplicationRegistry;
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
-
+import com.qubit.terra.portal.domain.menus.MenuVisibility;
 import pt.ist.fenixframework.Atomic;
 
 /**
@@ -389,6 +389,31 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
             setAvailableApplicationNames(applications.stream().map(app -> app.getKey()).collect(Collectors.joining(",")));
         } else {
             setAvailableApplicationNames(null);
+        }
+    }
+
+    @Atomic(mode = Atomic.TxMode.WRITE)
+    public static void migrateMenus() {
+        /**
+         * This logic can be removed after there is a deploy in all instances and visible field in MenuItem is removed
+         * #qubIT-Omnis-6137
+         *
+         */
+        migrateMenuItemVisibility(PortalConfiguration.getInstance().getMenu());
+    }
+
+    public static void migrateMenuItemVisibility(MenuItem item) {
+        if (item == null) {
+            return;
+        }
+
+        if (item.getItemVisibility() == null) {
+            item.setItemVisibility(item.getVisible() ? MenuVisibility.ALL : MenuVisibility.INVISIBLE);
+        }
+
+        Set<MenuItem> children = item.isMenuContainer() ? item.getAsMenuContainer().getChildSet() : Set.of();
+        for (MenuItem child : children) {
+            migrateMenuItemVisibility(child);
         }
     }
 

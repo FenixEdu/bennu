@@ -2,7 +2,12 @@ package org.fenixedu.bennu.portal.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -10,14 +15,11 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import com.qubit.terra.portal.domain.menus.MenuVisibility;
 import org.fenixedu.bennu.core.servlet.ExceptionHandlerFilter;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
-import org.fenixedu.bennu.portal.domain.MenuItem;
-import org.fenixedu.bennu.portal.domain.PortalConfiguration;
+import org.fenixedu.bennu.portal.domain.MenuContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pt.ist.fenixframework.Atomic;
 
 @WebListener
 public class PortalInitializer implements ServletContextListener {
@@ -55,37 +57,12 @@ public class PortalInitializer implements ServletContextListener {
 
         sce.getServletContext().setAttribute("portal", new PortalBean(sce.getServletContext()));
 
-        migrateMenus();
-    }
-
-    @Atomic(mode = Atomic.TxMode.WRITE)
-    private void migrateMenus() {
-        /**
-         * This logic can be removed after there is a deploy in all instances and visible field in MenuItem is removed
-         * #qubIT-Omnis-6137
-         *
-         */
-        migrateMenuItemVisibility(PortalConfiguration.getInstance().getMenu());
+        MenuContainer.migrateMenus();
     }
 
     private void registerBuiltinPortalBackends() {
         PortalBackendRegistry.registerPortalBackend(new RedirectPortalBackend());
         PortalBackendRegistry.registerPortalBackend(new ForwarderPortalBackend());
-    }
-
-    private void migrateMenuItemVisibility(MenuItem item) {
-        if (item == null) {
-            return;
-        }
-
-        if (item.getItemVisibility() == null) {
-            item.setItemVisibility(item.getVisible() ? MenuVisibility.ALL : MenuVisibility.INVISIBLE);
-        }
-
-        Set<MenuItem> children = item.isMenuContainer() ? item.getAsMenuContainer().getOrderedChild() : Set.of();
-        for (MenuItem child : children) {
-            migrateMenuItemVisibility(child);
-        }
     }
 
     @Override

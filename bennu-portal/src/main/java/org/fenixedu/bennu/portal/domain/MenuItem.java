@@ -2,6 +2,7 @@ package org.fenixedu.bennu.portal.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.qubit.terra.portal.domain.menus.MenuVisibility;
 import org.apache.commons.lang.StringUtils;
