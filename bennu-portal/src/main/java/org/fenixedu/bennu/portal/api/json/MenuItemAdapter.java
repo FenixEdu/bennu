@@ -40,6 +40,11 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
         if (jsonObj.has("visible")) {
             item.setVisible(jsonObj.get("visible").getAsBoolean());
         }
+
+        if (jsonObj.has("visibility")) {
+            item.setVisibility(jsonObj.get("visibility").getAsString());
+        }
+
         if (jsonObj.has("accessExpression")) {
             item.setAccessGroup(Group.parse(jsonObj.get("accessExpression").getAsString()));
         }

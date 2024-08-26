@@ -38,7 +38,9 @@ public class MenuItem {
 	public LocalizedString description (REQUIRED);
 	public String path (REQUIRED);
 	public String fullPath (REQUIRED);
+	// Deprecated
 	public Boolean visible (REQUIRED);
+	public String visibility (REQUIRED);
 	public Boolean restricted;
 	public String layout;
 	public String icon;

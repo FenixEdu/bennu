@@ -17,6 +17,7 @@ import javax.servlet.annotation.WebListener;
 
 import org.fenixedu.bennu.core.servlet.ExceptionHandlerFilter;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.bennu.portal.domain.MenuContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,8 @@ public class PortalInitializer implements ServletContextListener {
         }
 
         sce.getServletContext().setAttribute("portal", new PortalBean(sce.getServletContext()));
+
+        MenuContainer.migrateMenus();
     }
 
     private void registerBuiltinPortalBackends() {
