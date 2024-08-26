@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>default-theme</artifactId>
-    <version>7.4.0-FORK</version>
+    <version>7.5.0-FORK</version>
     <packaging>jar</packaging>
 
     <name>Bennu Default Theme</name>
