@@ -201,6 +201,7 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
             try {
                 write(json, getIndexForIndexer(), INDEX_INDEXER, INDEX_INDEXER);
             } catch (final Exception ex) {
+                ex.printStackTrace();
                 throw new RuntimeException("Error writing to scheduler index", ex);
             }
         }
