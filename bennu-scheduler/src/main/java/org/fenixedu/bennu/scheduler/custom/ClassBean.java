@@ -266,12 +266,12 @@ public class ClassBean implements Serializable {
                 
                 final CompilationTask compilationTask =
                         javaCompiler.getTask(out, standardJavaFileManager, null, options, null, javaFileObjects);
+                System.out.println("    completed compule");
                 if (compilationTask.call() == false) {
                     return false;
                 }
                 return true;
             }
-            System.out.println("    completed compule");
         }
 
         private void runTask() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SecurityException,
@@ -325,6 +325,7 @@ public class ClassBean implements Serializable {
                     } catch (final InstantiationException | IllegalAccessException | IllegalArgumentException
                             | InvocationTargetException | SecurityException | NoSuchMethodException | IOException
                             | URISyntaxException | ClassNotFoundException e) {
+                        e.printStackTrace();
                         throw new Error(e);
                     }
                 } finally {
@@ -383,11 +384,13 @@ public class ClassBean implements Serializable {
 
     public void run() {
         final Executer executer = new Executer();
+        System.out.println("Running executer... " + executer);
         executer.start();
     }
 
     public JsonObject compile() {
         final Executer executer = new Executer();
+        System.out.println("Running compile... " + executer);
         return executer.runCompile();
     }
 

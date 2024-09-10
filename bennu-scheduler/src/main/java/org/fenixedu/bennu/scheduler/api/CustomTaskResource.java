@@ -18,8 +18,11 @@ public class CustomTaskResource extends BennuRestResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addCustomTask(final JsonObject jsonCode) {
+        System.out.println("addCustomTask");
         accessControl(Group.managers());
+        System.out.println("addCustomTask passed acl");
         getClassBean(jsonCode).run();
+        System.out.println("addCustomTask passed run");
         return ok();
     }
 
