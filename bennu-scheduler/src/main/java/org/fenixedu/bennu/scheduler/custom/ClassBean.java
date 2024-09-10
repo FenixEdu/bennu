@@ -228,18 +228,21 @@ public class ClassBean implements Serializable {
 
         private void createDirs() {
             final String filename = getJavaFileName();
+            System.out.println("   dir = " + filename);
             final File file = new File(filename);
             file.getParentFile().mkdirs();
         }
 
         private Boolean compileFile() throws IOException, SecurityException, NoSuchMethodException, IllegalArgumentException,
                 IllegalAccessException, InvocationTargetException, URISyntaxException {
+            System.out.println("   compile files....");
             final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             final Method method = classLoader.getClass().getMethod("getURLs", new Class[0]);
             final URL[] urls = (URL[]) method.invoke(classLoader, new Object[0]);
 
             final List<File> files = new ArrayList<>();
             for (final URL url : urls) {
+                System.out.println("   url = " + url);
                 files.add(new File(url.toURI()));
             }
 
@@ -268,6 +271,7 @@ public class ClassBean implements Serializable {
                 }
                 return true;
             }
+            System.out.println("    completed compule");
         }
 
         private void runTask() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SecurityException,
@@ -312,8 +316,11 @@ public class ClassBean implements Serializable {
             try {
                 try {
                     try {
+                        LOGGER.debug("Compule and Execute task....");
                         createDirs();
+                        LOGGER.debug("Completed create dirs....");
                         compileFile();
+                        LOGGER.debug("Completed create files....");
                         runTask();
                     } catch (final InstantiationException | IllegalAccessException | IllegalArgumentException
                             | InvocationTargetException | SecurityException | NoSuchMethodException | IOException
