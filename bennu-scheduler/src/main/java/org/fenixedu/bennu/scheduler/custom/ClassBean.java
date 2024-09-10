@@ -272,19 +272,34 @@ public class ClassBean implements Serializable {
 
         private void runTask() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SecurityException,
                 IllegalArgumentException, IOException {
+            LOGGER.debug("Running task at path: " + getBaseClassPathDirName());
             final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             final URL[] urls = new URL[] { new File(getBaseClassPathDirName()).toURI().toURL() };
             try (final MyClassLoader urlClassLoader = new MyClassLoader(urls, classLoader)) {
+                LOGGER.debug("Created class loader for: " + getClassName());
 
                 urlClassLoader.loadClass(getClassName());
+
+                LOGGER.debug("Load class sucessfull for: " + getClassName());
 
                 @SuppressWarnings("unchecked")
                 final Class<? extends CustomTask> clazz =
                         (Class<? extends CustomTask>) Class.forName(getClassName(), true, urlClassLoader);
+
+                LOGGER.debug("Lookup class for name from class loader workded: " + clazz.getName());
+
                 setName("CustomTaskRunner-" + clazz.getName() + "-" + uploadTime.getMillis());
                 final CustomTask task = clazz.newInstance();
+
+                LOGGER.debug("Created instance for: " + task);
+
                 task.init(contents, username);
+
+                LOGGER.debug("Completed init for: " + task);
+
                 task.run();
+
+                LOGGER.debug("Completed run for: " + task);
             }
         }
 
