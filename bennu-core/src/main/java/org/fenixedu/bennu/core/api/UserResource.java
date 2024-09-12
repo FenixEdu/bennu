@@ -40,9 +40,10 @@ public class UserResource extends BennuRestResource {
     public JsonElement findUser(@QueryParam("query") String query,
             @QueryParam("includeInactive") @DefaultValue("false") Boolean includeInactive,
             @QueryParam("maxHits") @DefaultValue("20") Integer maxHits) {
-        if (query == null || Authenticate.getUser() == null) {
+        if (query == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
+        accessControl(Group.managers());
         Stream<User> results =
                 Stream.concat(Stream.of(User.findByUsername(query)),
                         UserProfile.searchByName(query, Integer.MAX_VALUE).map(UserProfile::getUser)).filter(Objects::nonNull)
