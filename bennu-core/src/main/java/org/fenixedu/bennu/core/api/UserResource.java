@@ -29,6 +29,7 @@ import org.fenixedu.bennu.core.rest.BennuRestResource;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.fenixedu.bennu.core.security.Authenticate;
 
 @Path("/bennu-core/users")
 public class UserResource extends BennuRestResource {
@@ -39,8 +40,7 @@ public class UserResource extends BennuRestResource {
     public JsonElement findUser(@QueryParam("query") String query,
             @QueryParam("includeInactive") @DefaultValue("false") Boolean includeInactive,
             @QueryParam("maxHits") @DefaultValue("20") Integer maxHits) {
-//        accessControl(Group.managers());
-        if (query == null) {
+        if (query == null || Authenticate.getUser() == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
         Stream<User> results =
