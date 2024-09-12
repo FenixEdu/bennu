@@ -42,10 +42,12 @@ public class UserResource extends BennuRestResource {
         if (query == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
-        Stream<User> results =
-                Stream.concat(Stream.of(User.findByUsername(query)),
-                        UserProfile.searchByName(query, Integer.MAX_VALUE).map(UserProfile::getUser)).filter(Objects::nonNull)
-                        .distinct();
+        accessControl(Group.managers());
+
+        Stream<User> results = Stream
+                .concat(Stream.of(User.findByUsername(query)),
+                        UserProfile.searchByName(query, Integer.MAX_VALUE).map(UserProfile::getUser))
+                .filter(Objects::nonNull).distinct();
         if (!includeInactive) {
             results = results.filter(u -> !u.isLoginExpired());
         }

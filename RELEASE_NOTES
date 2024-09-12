@@ -1,2 +1,4 @@
+- Bug fix: Correcting security issue regarding user search endpoint [#qubIT-Omnis-6849]
+
 7.5.0-FORK (02-09-2024)
 - Improvement: Ensures Release Notes is in the jar [#qubIT-Omnis-6579]
