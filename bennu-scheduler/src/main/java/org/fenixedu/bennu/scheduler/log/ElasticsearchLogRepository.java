@@ -3,7 +3,6 @@ package org.fenixedu.bennu.scheduler.log;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
-import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import co.elastic.clients.elasticsearch.core.search.Hit;
@@ -34,20 +33,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class ElasticsearchLogRepository implements ExecutionLogRepository {
 
-    private static final String INDEX_INDEXER = "indexer";
     private static final String LOG = "task";
     private static final String LOG_OUTPUT = "task-output";
-    private static final JsonParser parser = new JsonParser();
     private String basePathFiles;
     private String indexPrefix;
     private int keepIndexesNumberOfMonths;
@@ -78,10 +71,6 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
 
         final ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
         this.client = new ElasticsearchClient(transport);
-    }
-
-    private String getIndexForIndexer() {
-        return this.indexPrefix + "-" + INDEX_INDEXER;
     }
 
     private String dateString(final DateTime date) {
@@ -118,28 +107,52 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
         try {
             final JsonObject json = log.json();
             previous.ifPresent(prev -> json.addProperty("previous", prev));
-            write(json, getIndexForTask(now()), "task", log.getId());
+            write(json, getIndexForTask(now()), log.getId());
         } catch (Exception ex) {
             throw new RuntimeException("Error storing scheduler log of " + log.getId(), ex);
         }
 
     }
 
-    private void write(final JsonObject json, final String index, final String type, final String id) throws IOException {
+    private void write(final JsonObject json, final String index, final String id) throws IOException {
         final Reader input = new StringReader(json.toString());
         final IndexRequest<JsonData> request = IndexRequest.of(i -> i
                 .index(index)
-                .type(type)
                 .id(id)
-                .withJson(input)
-        );
+                .withJson(input));
         this.client.index(request);
         this.client.indices().refresh();
     }
 
     private JsonObject readIndexJson() {
         try {
-            return readJson(getIndexForIndexer(), INDEX_INDEXER).orElseGet(JsonObject::new);
+            // Do an aggregated search by taskName to get all task types
+            createIndexesIfNecessary(getIndexesForTask());
+            final List<String> indices = List.of(getIndexesForTask().split(","));
+            final String aggName = "aggregateByTaskName";
+            final SearchResponse<ObjectNode> response = client.search(
+                    s -> s.index(indices).aggregations(aggName, a -> a.terms(terms -> terms.field("taskName").size(1000))),
+                    ObjectNode.class);
+            String[] taskNames = response.aggregations().get(aggName).sterms().buckets().array().stream()
+                    .map(i -> i.key()._get().toString()).toArray(String[]::new);
+            JsonObject json = new JsonObject();
+            if (taskNames.length <= 0) {
+                return json;
+            }
+
+            // Someone that knows java can do this for loop in parallel for more speed
+            for (String name : taskNames) {
+                final SearchResponse<ObjectNode> itemResponse = client.search(
+                        s -> s
+                            .index(indices)
+                            .query(q -> q.term(t -> t.field("taskName").value(name)))
+                            .sort(sort -> sort.field(f -> f.field("start").order(SortOrder.Desc)))
+                            .size(1),
+                        ObjectNode.class);
+                json.addProperty(itemResponse.hits().hits().get(0).source().get("taskName").toString(),
+                        itemResponse.hits().hits().get(0).id());
+            }
+            return json;
         } catch (final Exception ex) {
             throw new RuntimeException("Error reading scheduler indexer", ex);
         }
@@ -152,10 +165,9 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
     private Optional<String> read(final String index, final String id, final boolean stopRecovery) {
         try {
             final SearchResponse<ObjectNode> response = this.client.search(g -> g
-                            .index(List.of(index.split(",")))
-                            .query(q -> q.term(t -> t.field("_id").value(id))),
-                    ObjectNode.class
-            );
+                    .index(List.of(index.split(",")))
+                    .query(q -> q.term(t -> t.field("_id").value(id))),
+                    ObjectNode.class);
             if (response.hits().hits().size() > 0) {
                 return Optional.of(response.hits().hits().get(0).source().toString());
             }
@@ -172,7 +184,7 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
     private Optional<JsonObject> readJson(final String index, final String id) throws IOException {
         Optional<String> content = read(index, id);
         if (content.isPresent()) {
-            return Optional.of(parser.parse(content.get()).getAsJsonObject());
+            return Optional.of(JsonParser.parseString(content.get()).getAsJsonObject());
         }
         return Optional.empty();
     }
@@ -196,13 +208,7 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
             final JsonObject json = readIndexJson();
             final Optional<String> previous =
                     Optional.ofNullable(json.getAsJsonPrimitive(log.getTaskName())).map(JsonPrimitive::getAsString);
-            json.addProperty(log.getTaskName(), log.getId());
             store(log, previous);
-            try {
-                write(json, getIndexForIndexer(), INDEX_INDEXER, INDEX_INDEXER);
-            } catch (final Exception ex) {
-                throw new RuntimeException("Error writing to scheduler index", ex);
-            }
         }
     }
 
@@ -219,12 +225,13 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
                             .inline(s -> s
                                     .lang("painless")
                                     .source("ctx._source.output +=params.output;")
-                                    .params("output", JsonData.of("\n" + text)))));
+                                    .params("output", JsonData.of(text)))));
             this.client.update(request, JsonData.class);
-            // We don't refresh the index, because a task may have to many call to appendTaskLog, better to wait for 1s (normal time for elastic to index)
+            // We don't refresh the index, because a task may have to many call to
+            // appendTaskLog, better to wait for 1s (normal time for elastic to index)
         } catch (final ResponseException re) {
             if (re.getResponse().getStatusLine().getStatusCode() == HttpStatus.SC_CONFLICT) {
-                //concurrent writting - try again
+                // concurrent writting - try again
                 appendTaskLog(log, text);
             } else {
                 throw new RuntimeException("Error appending output to scheduler in log" + log.getId(), re);
@@ -259,7 +266,8 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
 
     private String getFilePathForLog(final ExecutionLog log, final String filename) {
         final DateTime dateOfStart = log.getStart();
-        return this.basePathFiles + "/" + dateOfStart.getYear() + "/" + dateOfStart.getMonthOfYear() + "/" + dateOfStart.getDayOfMonth() + "/" + log.getId() + "_" + filename;
+        return this.basePathFiles + "/" + dateOfStart.getYear() + "/" + dateOfStart.getMonthOfYear() + "/"
+                + dateOfStart.getDayOfMonth() + "/" + log.getId() + "_" + filename;
     }
 
     @Override
@@ -284,14 +292,13 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
         try {
             final Set<ExecutionLog> result = new HashSet<>();
             final SearchResponse<ObjectNode> response = this.client.search(g -> g
-                            .index(List.of(getIndexesForTask().split(",")))
-                            .query(q -> q.term(t -> t.field("taskName.keyword").value(taskName)))
-                            .sort(f -> f.field(t -> t.field("start").order(SortOrder.Desc))),
-                    ObjectNode.class
-            );
+                    .index(List.of(getIndexesForTask().split(",")))
+                    .query(q -> q.term(t -> t.field("taskName").value(taskName)))
+                    .sort(f -> f.field(t -> t.field("start").order(SortOrder.Desc))),
+                    ObjectNode.class);
             final List<Hit<ObjectNode>> hits = response.hits().hits();
             for (final Hit<ObjectNode> hit : hits) {
-                final ExecutionLog log = new ExecutionLog(parser.parse(hit.source().toString()).getAsJsonObject());
+                final ExecutionLog log = new ExecutionLog(JsonParser.parseString(hit.source().toString()).getAsJsonObject());
                 result.add(log);
                 if (result.size() >= max) {
                     break;
@@ -336,11 +343,22 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
         try {
             for (final String indexName : index.split(",")) {
                 if (!this.client.indices().exists(e -> e.index(indexName)).value()) {
-                    this.client.indices().create(c -> c.index(indexName));
+                    // The taskName field must be of type keyword to allow aggregations
+                    final JsonObject type = new JsonObject();
+                    type.addProperty("type", "keyword");
+                    final JsonObject taskName = new JsonObject();
+                    taskName.add("taskName", type);
+                    final JsonObject properties = new JsonObject();
+                    properties.add("properties", taskName);
+                    final JsonObject mappings = new JsonObject();
+                    mappings.add("mappings", properties);
+
+                    final Reader input = new StringReader(mappings.toString());
+                    this.client.indices().create(c -> c.index(indexName).withJson(input));
                 }
             }
         } catch (final Exception ex) {
-            throw new RuntimeException("Error checking indexes validaty", ex);
+            throw new RuntimeException("Error checking indexes validity", ex);
         }
     }
 
