@@ -293,7 +293,7 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
             final Set<ExecutionLog> result = new HashSet<>();
             final SearchResponse<ObjectNode> response = this.client.search(g -> g
                     .index(List.of(getIndexesForTask().split(",")))
-                    .query(q -> q.term(t -> t.field("taskName").value(taskName)))
+                    .query(q -> q.matchPhrasePrefix(t -> t.field("taskName").query(taskName)))
                     .sort(f -> f.field(t -> t.field("start").order(SortOrder.Desc))),
                     ObjectNode.class);
             final List<Hit<ObjectNode>> hits = response.hits().hits();
