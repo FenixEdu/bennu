@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>bennu-test</artifactId>
-    <version>7.8.5</version>
+    <version>DEV-SNAPSHOT</version>
     <name>Bennu Tests</name>
 
     <properties>
