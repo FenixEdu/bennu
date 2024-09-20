@@ -618,7 +618,7 @@ app.controller('UserManagementController', [ '$scope', '$http', '$state', '$loca
   $scope.doSearch = function() {
     $scope.currentSearch = $scope.query;
     if($scope.query) {
-      $http.post(contextPath + '/api/bennu-core/users/find?includeInactive=true&query=' + $scope.query).success(function (data) {
+      $http.post(contextPath + '/api/bennu-core/users/findAutoComplete?includeInactive=true&query=' + $scope.query).success(function (data) {
         $scope.users = data.users;
       });   
     } else {

@@ -144,7 +144,7 @@
             },
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
-                url: Bennu.contextPath + "/api/bennu-core/users/find",
+                url: Bennu.contextPath + "/api/bennu-core/users/findAutoComplete",
 
                 replace: function (url, query) {
                     return url + "?query=" + query + "&maxHits=10";
@@ -272,7 +272,7 @@
 
     Bennu.group.userCache = {};
     function prefetch(username) {
-        $.post(Bennu.contextPath + "/api/bennu-core/users/find?query=" + username + "&maxHits=10", {}, function (e) {
+        $.post(Bennu.contextPath + "/api/bennu-core/users/findAutoComplete?query=" + username + "&maxHits=10", {}, function (e) {
             Bennu.group.userCache[username] = e.users[0];
         });
     }

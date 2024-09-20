@@ -1,9 +1,14 @@
 package org.fenixedu.bennu.core.api;
 
-import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
-
-import java.util.Objects;
-import java.util.stream.Stream;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.domain.UserProfile;
+import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.json.JsonUtils;
+import org.fenixedu.bennu.core.rest.BennuRestResource;
+import org.fenixedu.commons.stream.StreamUtils;
 
 import javax.management.ObjectName;
 import javax.servlet.http.HttpServletRequest;
@@ -20,16 +25,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
+import java.util.Objects;
+import java.util.stream.Stream;
 
-import org.fenixedu.bennu.core.domain.Bennu;
-import org.fenixedu.bennu.core.domain.User;
-import org.fenixedu.bennu.core.domain.UserProfile;
-import org.fenixedu.bennu.core.groups.Group;
-import org.fenixedu.bennu.core.rest.BennuRestResource;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import org.fenixedu.bennu.core.security.Authenticate;
+import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 
 @Path("/bennu-core/users")
 public class UserResource extends BennuRestResource {
@@ -38,21 +37,52 @@ public class UserResource extends BennuRestResource {
     @Path("find")
     @Produces(MediaType.APPLICATION_JSON)
     public JsonElement findUser(@QueryParam("query") String query,
-            @QueryParam("includeInactive") @DefaultValue("false") Boolean includeInactive,
-            @QueryParam("maxHits") @DefaultValue("20") Integer maxHits) {
+                                @QueryParam("includeInactive") @DefaultValue("false") Boolean includeInactive,
+                                @QueryParam("maxHits") @DefaultValue("20") Integer maxHits) {
         if (query == null) {
             throw new WebApplicationException(Status.BAD_REQUEST);
         }
         accessControl(Group.managers());
         Stream<User> results =
                 Stream.concat(Stream.of(User.findByUsername(query)),
-                        UserProfile.searchByName(query, Integer.MAX_VALUE).map(UserProfile::getUser)).filter(Objects::nonNull)
+                                UserProfile.searchByName(query, Integer.MAX_VALUE).map(UserProfile::getUser)).filter(Objects::nonNull)
                         .distinct();
         if (!includeInactive) {
             results = results.filter(u -> !u.isLoginExpired());
         }
         results = results.limit(maxHits);
         return view(results, "users");
+    }
+
+    @POST
+    @Path("findAutoComplete")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonElement findAutoComplete(@QueryParam("query") String query,
+                                        @QueryParam("includeInactive") @DefaultValue("false") Boolean includeInactive,
+                                        @QueryParam("maxHits") @DefaultValue("20") Integer maxHits) {
+        if (query == null) {
+            throw new WebApplicationException(Status.BAD_REQUEST);
+        }
+        accessControl(Group.logged());
+        Stream<User> results =
+                Stream.concat(Stream.of(User.findByUsername(query)),
+                                UserProfile.searchByName(query, Integer.MAX_VALUE).map(UserProfile::getUser)).filter(Objects::nonNull)
+                        .distinct();
+        if (!includeInactive) {
+            results = results.filter(u -> !u.isLoginExpired());
+        }
+        final Stream<User> users = results = results.limit(maxHits);
+
+        return JsonUtils.toJson(data -> {
+            data.add("users", users.map(user -> JsonUtils.toJson(json -> {
+                        json.addProperty("id", user.getExternalId());
+                        json.addProperty("username", user.getUsername());
+                        json.addProperty("name", user.getProfile().getFullName());
+                        json.addProperty("displayName", user.getProfile().getDisplayName());
+                        json.addProperty("avatar", user.getProfile().getAvatarUrl());
+                    }))
+                    .collect(StreamUtils.toJsonArray()));
+        });
     }
 
     @GET

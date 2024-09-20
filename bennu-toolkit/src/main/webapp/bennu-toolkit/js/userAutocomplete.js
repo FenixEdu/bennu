@@ -31,7 +31,7 @@
         	    queryTokenizer: Bloodhound.tokenizers.whitespace,
         	    limit:10,
         	    remote: {
-        	        url: Bennu.contextPath + "/api/bennu-core/users/find",
+        	        url: Bennu.contextPath + "/api/bennu-core/users/findAutoComplete",
         	
         	        replace: function (url, query) {
         	            return url + "?query=" + query + "&maxHits=10";
@@ -183,7 +183,7 @@
         
         if (val) {
         	$.ajax({
-        		url: Bennu.contextPath + "/api/bennu-core/users/find?query=" + val + "&maxHits=1",
+        		url: Bennu.contextPath + "/api/bennu-core/users/findAutoComplete?query=" + val + "&maxHits=1",
         		dataType:"json",
         		method:"POST",
         		success: function(data) {
