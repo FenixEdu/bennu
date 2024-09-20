@@ -147,7 +147,7 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
                 final SearchResponse<ObjectNode> itemResponse = client.search(
                         s -> s
                             .index(indices)
-                            .query(q -> q.term(t -> t.field("taskName").value(name)))
+                            .query(q -> q.match(t -> t.field("taskName").query(name)))
                             .sort(sort -> sort.field(f -> f.field("start").order(SortOrder.Desc)))
                             .size(1),
                         ObjectNode.class);
@@ -295,7 +295,7 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
             final Set<ExecutionLog> result = new HashSet<>();
             final SearchResponse<ObjectNode> response = this.client.search(g -> g
                     .index(List.of(getIndexesForTask().split(",")))
-                    .query(q -> q.matchPhrasePrefix(t -> t.field("taskName").query(taskName)))
+                    .query(q -> q.match(t -> t.field("taskName").query(taskName)))
                     .sort(f -> f.field(t -> t.field("start").order(SortOrder.Desc))),
                     ObjectNode.class);
             final List<Hit<ObjectNode>> hits = response.hits().hits();
@@ -346,8 +346,6 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
             for (final String indexName : index.split(",")) {
                 if (!this.client.indices().exists(e -> e.index(indexName)).value()) {
                     // The taskName field must be of type keyword to allow aggregations
-                    // Map<String, Property> fields = Collections.singletonMap("keyword", Property.of(p -> p.keyword(k -> k.ignoreAbove(256))));
-                    // Property text = Property.of(p -> p.keyword(t -> t.fields(fields)));
                     String json = "{\n" + //
                                 "  \"mappings\": {\n" + //
                                 "    \"properties\": {\n" + //
