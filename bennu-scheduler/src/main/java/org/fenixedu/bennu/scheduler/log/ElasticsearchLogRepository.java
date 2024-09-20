@@ -2,6 +2,7 @@ package org.fenixedu.bennu.scheduler.log;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.UpdateRequest;
@@ -344,16 +345,8 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
             for (final String indexName : index.split(",")) {
                 if (!this.client.indices().exists(e -> e.index(indexName)).value()) {
                     // The taskName field must be of type keyword to allow aggregations
-                    final JsonObject type = new JsonObject();
-                    type.addProperty("type", "keyword");
-                    final JsonObject taskName = new JsonObject();
-                    taskName.add("taskName", type);
-                    final JsonObject properties = new JsonObject();
-                    properties.add("properties", taskName);
-                    final JsonObject mappings = new JsonObject();
-                    mappings.add("mappings", properties);
-
-                    final Reader input = new StringReader(mappings.toString());
+                    String json = "{\"mappings\": { \"properties\": { \"taskName\": \"keyword\" } } }";
+                    final Reader input = new StringReader(json);
                     this.client.indices().create(c -> c.index(indexName).withJson(input));
                 }
             }
