@@ -1,9 +1,8 @@
 package org.fenixedu.bennu.scheduler.log;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.SortOrder;
-import co.elastic.clients.elasticsearch._types.mapping.KeywordProperty;
-import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.UpdateRequest;
@@ -127,37 +126,43 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
     }
 
     private JsonObject readIndexJson() {
+        // Do an aggregated search by taskName to get all task types
+        createIndexesIfNecessary(getIndexesForTask());
+        final List<String> indices = List.of(getIndexesForTask().split(","));
+        final String aggName = "aggregateByTaskName";
+        final SearchResponse<ObjectNode> response;
+
         try {
-            // Do an aggregated search by taskName to get all task types
-            createIndexesIfNecessary(getIndexesForTask());
-            final List<String> indices = List.of(getIndexesForTask().split(","));
-            final String aggName = "aggregateByTaskName";
-            final SearchResponse<ObjectNode> response = client.search(
+            response = client.search(
                     s -> s.index(indices).aggregations(aggName, a -> a.terms(terms -> terms.field("taskName").size(1000))),
                     ObjectNode.class);
-            String[] taskNames = response.aggregations().get(aggName).sterms().buckets().array().stream()
-                    .map(i -> i.key()._get().toString()).toArray(String[]::new);
-            JsonObject json = new JsonObject();
-            if (taskNames.length <= 0) {
-                return json;
-            }
-
-            // Someone that knows java can do this for loop in parallel for more speed
-            for (String name : taskNames) {
-                final SearchResponse<ObjectNode> itemResponse = client.search(
-                        s -> s
-                            .index(indices)
-                            .query(q -> q.match(t -> t.field("taskName").query(name)))
-                            .sort(sort -> sort.field(f -> f.field("start").order(SortOrder.Desc)))
-                            .size(1),
-                        ObjectNode.class);
-                json.addProperty(itemResponse.hits().hits().get(0).source().get("taskName").toString(),
-                        itemResponse.hits().hits().get(0).id());
-            }
-            return json;
         } catch (final Exception ex) {
             throw new RuntimeException("Error reading scheduler indexer", ex);
         }
+
+        String[] taskNames = response.aggregations().get(aggName).sterms().buckets().array().stream()
+                .map(i -> i.key()._get().toString()).toArray(String[]::new);
+        JsonObject json = new JsonObject();
+        if (taskNames.length <= 0) {
+            return json;
+        }
+
+        Arrays.stream(taskNames).parallel().forEach(name -> {
+            SearchResponse<ObjectNode> itemResponse;
+            try {
+                itemResponse = client.search(
+                        s -> s
+                            .index(indices)
+                            .query(q -> q.term(t -> t.field("taskName").value(name)))
+                            .sort(sort -> sort.field(f -> f.field("start").order(SortOrder.Desc)))
+                            .size(1),
+                        ObjectNode.class);
+            } catch (ElasticsearchException | IOException e) {
+                throw new RuntimeException("Error reading scheduler indexer", e);
+            }
+            json.addProperty(name, itemResponse.hits().hits().get(0).id());
+        });
+        return json;
     }
 
     private Optional<String> read(final String index, final String id) {
