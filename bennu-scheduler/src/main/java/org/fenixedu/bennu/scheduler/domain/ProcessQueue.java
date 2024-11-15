@@ -26,6 +26,10 @@ class ProcessQueue implements Runnable {
                 }
             } catch (final InterruptedException e) {
                 return;
+            } catch (final Throwable e) {
+                LOG.debug(e.getMessage());
+                e.printStackTrace();
+                // keep going
             }
         } while (true);
     }

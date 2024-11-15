@@ -34,8 +34,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ElasticsearchLogRepository implements ExecutionLogRepository {
@@ -147,7 +153,7 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
             return json;
         }
 
-        Arrays.stream(taskNames).parallel().forEach(name -> {
+        final List<String[]> list = Arrays.stream(taskNames).parallel().map(name -> {
             SearchResponse<ObjectNode> itemResponse;
             try {
                 itemResponse = client.search(
@@ -160,8 +166,9 @@ public class ElasticsearchLogRepository implements ExecutionLogRepository {
             } catch (ElasticsearchException | IOException e) {
                 throw new RuntimeException("Error reading scheduler indexer", e);
             }
-            json.addProperty(name, itemResponse.hits().hits().get(0).id());
-        });
+            return new String[] { name, itemResponse.hits().hits().get(0).id() };
+        }).collect(Collectors.toList());
+        list.forEach(l -> json.addProperty(l[0], l[1]));
         return json;
     }
 

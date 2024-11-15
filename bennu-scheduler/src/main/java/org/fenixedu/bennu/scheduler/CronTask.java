@@ -45,9 +45,9 @@ public abstract class CronTask implements Runnable {
 
     @Override
     public final void run() {
-        log = createExecutionLog();
-        SchedulerSystem.getLogRepository().newExecution(log);
         try {
+            log = createExecutionLog();
+            SchedulerSystem.getLogRepository().newExecution(log);
             innerAtomicRun();
             updateLog(log.withSuccess());
         } catch (final Throwable t) {
