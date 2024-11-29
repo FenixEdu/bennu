@@ -212,6 +212,7 @@ relation GroupConstantRoot {
 }
 
 public class groups.PersistentUserGroup extends groups.PersistentGroup {
+    int memberCountCache;
 }
 
 relation UserGroupMembers {
