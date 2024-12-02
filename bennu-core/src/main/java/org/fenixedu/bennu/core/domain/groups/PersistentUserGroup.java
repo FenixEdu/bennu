@@ -130,6 +130,11 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
                 .filter(group -> group.getMemberCountCache() == users.size())
                 .filter(group -> group.getMemberSet().containsAll(users))
                 .findAny();
+
+        return users.isEmpty() ? Optional.empty() : BennuGroupIndex.getUserGroups(users.iterator().next()).stream()
+                .filter(group -> group.getMemberCountCache() == users.size())
+                .filter(group -> users.stream().allMatch(user -> BennuGroupIndex.getUserGroups(user).contains(group)))
+                .findAny();
  */
     }
 
