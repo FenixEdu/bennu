@@ -69,14 +69,8 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
          * Note that this does not affect the non-persistent version, as it never
          * keeps FF Sets, and thus hopefully have better 'contains' performance.
          */
-        if (getMemberSet().size() > 250) {
-            return BennuGroupIndex.isUserGroupMember(user, this);
-        }
-        return getMemberSet().contains(user);
-/*
         return getMemberCountCache() > 250 ? BennuGroupIndex.isUserGroupMember(user, this)
                 : getMemberSet().contains(user);
- */
     }
 
     @Override
@@ -116,21 +110,11 @@ public final class PersistentUserGroup extends PersistentUserGroup_Base {
     }
 
     private static Optional<PersistentUserGroup> select(final Set<User> users) {
-        Stream<PersistentUserGroup> intersection = null;
-        for (User user : users) {
-            if (intersection == null) {
-                intersection = BennuGroupIndex.getUserGroups(user).stream().filter(g -> g.getMemberSet().size() == users.size());
-            } else {
-                intersection = intersection.filter(g -> g.getMemberSet().contains(user));
-            }
-        }
-        return intersection != null ? intersection.findAny() : Optional.empty();
-/*
         return users.isEmpty() ? Optional.empty() : BennuGroupIndex.getUserGroups(users.iterator().next()).stream()
                 .filter(group -> group.getMemberCountCache() == users.size())
                 .filter(group -> group.getMemberSet().containsAll(users))
                 .findAny();
-
+/*      Alternative implementation:
         return users.isEmpty() ? Optional.empty() : BennuGroupIndex.getUserGroups(users.iterator().next()).stream()
                 .filter(group -> group.getMemberCountCache() == users.size())
                 .filter(group -> users.stream().allMatch(user -> BennuGroupIndex.getUserGroups(user).contains(group)))
