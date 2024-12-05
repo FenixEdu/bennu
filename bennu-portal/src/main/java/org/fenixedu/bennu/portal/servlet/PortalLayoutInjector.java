@@ -25,7 +25,6 @@ import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.BennuPortalConfiguration;
 import org.fenixedu.bennu.portal.domain.MenuFunctionality;
-import org.fenixedu.bennu.portal.domain.MenuItem;
 import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.commons.i18n.I18N;
 import org.slf4j.Logger;
@@ -37,6 +36,7 @@ import com.mitchellbosecke.pebble.error.LoaderException;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
+import com.qubit.terra.portal.domain.menus.MenuItem;
 
 /**
  * Filter that injects layout for {@link MenuFunctionality}s that require it.
@@ -91,12 +91,18 @@ public class PortalLayoutInjector implements Filter {
 			Alert.flush(request, response);
 
 			MenuFunctionality functionality = BennuPortalDispatcher.getSelectedFunctionality(request);
+
 			if (functionality != null && wrapper.hasData() && request.getAttribute(SKIP_LAYOUT_INJECTION) == null) {
 				PortalBackend backend = PortalBackendRegistry.getPortalBackend(functionality.getProvider());
 				if (backend.requiresServerSideLayout()) {
 					String body = wrapper.getContent();
 					try {
 						PortalConfiguration config = PortalConfiguration.getInstance();
+
+						// These attributes may be removed once the legacy layout
+						// has been phased out
+						//
+						// 27 Nov 2024 - Francisco Esteves
 						Map<String, Object> ctx = new HashMap<>();
 						List<MenuItem> path = functionality.getPathFromRoot();
 						ctx.put("loggedUser", Authenticate.getUser());

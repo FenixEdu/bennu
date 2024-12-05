@@ -1,10 +1,7 @@
 package org.fenixedu.bennu.portal.domain;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import com.qubit.terra.portal.domain.menus.MenuVisibility;
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.groups.PersistentGroup;
@@ -12,6 +9,9 @@ import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.commons.i18n.LocalizedString;
+
+import com.qubit.terra.framework.services.context.ApplicationUser;
+import com.qubit.terra.portal.domain.menus.MenuVisibility;
 
 import pt.ist.fenixframework.Atomic;
 
@@ -181,17 +181,17 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
         throw new IllegalStateException("Not a MenuFunctionality");
     }
 
-    public List<MenuItem> getPathFromRoot() {
-        List<MenuItem> result = new ArrayList<MenuItem>();
-        MenuItem current = this;
-        while (current.getParent() != null) {
-            result.add(0, current);
-            current = current.getParent();
-        }
-        return result;
-    }
-
     public abstract MenuItem moveTo(MenuContainer container);
+
+    // This method needs to be overridden so that this class's
+    // metaholder contains a PATH_FROM_ROOT() method, which is
+    // currently being used by other modules, most notably,
+    // fenixedu-fcul-api.
+    //
+    // 19 October 2024 - Francisco Esteves
+    public List<com.qubit.terra.portal.domain.menus.MenuItem> getPathFromRoot() {
+        return com.qubit.terra.portal.domain.menus.MenuItem.super.getPathFromRoot();
+    }
 
     @Override
     public boolean isItemRestricted() {
@@ -234,6 +234,11 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
     }
 
     @Override
+    public String getFullItemPath() {
+        return getFullPath();
+    }
+
+    @Override
     public void setItemPath(String path) {
         setPath(path);
     }
@@ -269,15 +274,15 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
     }
 
     /**
-     * Determines whether this {@link MenuItem} and all its parents are available for the currently logged user.
-     * This method is a shorthand for <code>isAvailable(Authenticate.getUser())</code>.
+     * Determines whether this {@link MenuItem} and all its parents are available for a given user.
+     * This method is a shorthand for <code>isAvailable(User user)</code>.
      * 
      * @return
-     *         Whether the currently logged user can access this item
+     *         Whether the user can access this item
      */
     @Override
-    public boolean isAvailableForCurrentUser() {
-        return isAvailable(Authenticate.getUser());
+    public boolean isAvailableForUser(ApplicationUser appUser) {
+        return isAvailable(getBennuUser(appUser));
     }
 
     @Override
@@ -323,6 +328,10 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
     @Override
     public void setItemRestricted(Boolean restricted) {
         setRestricted(restricted);
+    }
+
+    protected User getBennuUser(ApplicationUser appUser) {
+        return appUser != null ? User.findByUsername(appUser.getUsername()) : null;
     }
 
 }

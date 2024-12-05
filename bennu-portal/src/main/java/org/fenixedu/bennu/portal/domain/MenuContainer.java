@@ -10,11 +10,15 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
+import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.portal.model.Application;
 import org.fenixedu.bennu.portal.model.ApplicationRegistry;
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
+
+import com.qubit.terra.framework.services.context.ApplicationUser;
 import com.qubit.terra.portal.domain.menus.MenuVisibility;
+
 import pt.ist.fenixframework.Atomic;
 
 /**
@@ -160,7 +164,11 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
      *         The User's Menu as a Stream
      */
     public Stream<MenuItem> getUserMenuStream() {
-        return getChildSet().stream().filter((item) -> item.isItemVisible() && item.isItemAvailableForCurrentUser()).sorted();
+        return getUserMenuStream(Authenticate.getUser());
+    }
+
+    public Stream<MenuItem> getUserMenuStream(User user) {
+        return getChildSet().stream().filter((item) -> item.isItemVisible() && item.isAvailable(user)).sorted();
     }
 
     /**
@@ -364,6 +372,11 @@ public class MenuContainer extends MenuContainer_Base implements com.qubit.terra
     @Override
     public List<com.qubit.terra.portal.domain.menus.MenuItem> getChilds() {
         return getOrderedChild().stream().map(t -> (MenuItem) t).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<com.qubit.terra.portal.domain.menus.MenuItem> getAvailableChilds(ApplicationUser appUser) {
+        return getUserMenuStream(getBennuUser(appUser)).collect(Collectors.toList());
     }
 
     @Override
