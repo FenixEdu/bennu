@@ -1,6 +1,7 @@
 package org.fenixedu.bennu.portal.domain;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.User;
@@ -10,8 +11,12 @@ import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.commons.i18n.LocalizedString;
 
+import com.qubit.terra.framework.services.ServiceProvider;
 import com.qubit.terra.framework.services.context.ApplicationUser;
+import com.qubit.terra.portal.domain.layouts.Layout;
+import com.qubit.terra.portal.domain.layouts.LayoutProvider;
 import com.qubit.terra.portal.domain.menus.MenuVisibility;
+import com.qubit.terra.portal.services.layouts.LayoutProviderRegistry;
 
 import pt.ist.fenixframework.Atomic;
 
@@ -332,6 +337,27 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
 
     protected User getBennuUser(ApplicationUser appUser) {
         return appUser != null ? User.findByUsername(appUser.getUsername()) : null;
+    }
+
+    @Override
+    public Layout getLayoutObject() {
+        return Optional
+                .ofNullable(
+                        ServiceProvider.getService(LayoutProviderRegistry.class).getLayoutProviders().values().iterator().next())
+                .map(lp -> lp.getLayout(getLayout())).orElse(null);
+    }
+
+    @Override
+    public void setLayoutObject(Layout layout) {
+        setLayout(layout.getKey());
+    }
+
+    @Override
+    public Layout resolveLayoutObject() {
+        return Optional.ofNullable(com.qubit.terra.portal.domain.menus.MenuItem.super.resolveLayoutObject())
+                .orElse(ServiceProvider.getService(LayoutProviderRegistry.class).getLayoutProviders().values().iterator().next()
+                        .getLayout("default"));
+
     }
 
 }
