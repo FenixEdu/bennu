@@ -30,7 +30,13 @@ public class PortalHandlerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        PortalHandlerMethod handlerMethod = (PortalHandlerMethod) handler;
+        PortalHandlerMethod handlerMethod;
+        try {
+            handlerMethod = (PortalHandlerMethod) handler;
+        } catch (ClassCastException e) {
+            // handler is not PortalHandlerMethod so there is nothing to do, this happens for preflight requests used for checking CORS
+            return true;
+        }
         if (handlerMethod.getFunctionality() == null) {
             // The requested controller does not map to a functionality
             return true;
