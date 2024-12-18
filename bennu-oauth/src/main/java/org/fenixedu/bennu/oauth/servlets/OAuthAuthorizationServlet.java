@@ -148,6 +148,10 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             return;
         }
         String path = trim(request.getPathInfo());
+
+        // Allow OAuth API to be called from anywhere
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Headers", "*");
         switch (path) {
         case OAuthUtils.USER_DIALOG:
         case OAuthUtils.STANDARD_USER_DIALOG:
@@ -162,6 +166,11 @@ public class OAuthAuthorizationServlet extends HttpServlet {
             break;
         case OAuthUtils.ACCESS_TOKEN:
         case OAuthUtils.STANDARD_ACCESS_TOKEN:
+            if("OPTIONS".equals(request.getMethod())) {
+                response.setHeader("Access-Control-Allow-Methods", "POST");
+                return;
+            }
+
             if (!"POST".equals(request.getMethod())) {
                 response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 return;
