@@ -29,6 +29,6 @@ Release:
   script:
     - release.js $CI_PROJECT_ID $CI_COMMIT_TAG $REPO_API_ACCESS_TOKEN
     - mvn --batch-mode deploy  -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
-    - notify-mattermost.js $CI_PROJECT_ID $CI_COMMIT_TAG $REPO_API_ACCESS_TOKEN $CHAT_HOOK
+    - notify-mattermost.js $CI_PROJECT_ID $CI_COMMIT_TAG $REPO_API_ACCESS_TOKEN $BOT_TOKEN $CHANNEL_ID
   only:
     - tags
