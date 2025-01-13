@@ -1,3 +1,5 @@
+- New feature: Adapts MenuItem and MenuFunctionality to new Layout changes [#qubIT-Omnis-7713]
+
 7.7.0-FORK (05-12-2024)
 - Refactor: Adapts MenuItem to new MenuItem inteface in qub-foundation-core-api [#qubIT-Fenix-5888]
 

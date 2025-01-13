@@ -218,11 +218,6 @@ public class MenuFunctionality extends MenuFunctionality_Base implements com.qub
     }
 
     @Override
-    public String getLayoutProvider() {
-        return getMenuLayout();
-    }
-
-    @Override
     public String getFunctionalityProvider() {
         return getProvider();
     }
@@ -240,11 +235,6 @@ public class MenuFunctionality extends MenuFunctionality_Base implements com.qub
     @Override
     public void setFunctionalityProvider(String provider) {
         setProvider(provider);
-    }
-
-    @Override
-    public void setLayoutProvider(String layoutProvider) {
-        setMenuLayout(layoutProvider);
     }
 
 }

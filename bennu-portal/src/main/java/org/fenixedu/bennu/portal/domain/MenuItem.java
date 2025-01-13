@@ -1,6 +1,7 @@
 package org.fenixedu.bennu.portal.domain;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
 import org.fenixedu.bennu.core.domain.User;
@@ -10,8 +11,13 @@ import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.commons.i18n.LocalizedString;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.qubit.terra.framework.services.ServiceProvider;
 import com.qubit.terra.framework.services.context.ApplicationUser;
+import com.qubit.terra.portal.domain.layouts.Layout;
 import com.qubit.terra.portal.domain.menus.MenuVisibility;
+import com.qubit.terra.portal.services.layouts.LayoutProviderRegistry;
 
 import pt.ist.fenixframework.Atomic;
 
@@ -31,6 +37,9 @@ import pt.ist.fenixframework.Atomic;
  * 
  */
 public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.portal.domain.menus.MenuItem {
+
+    private static final Supplier<LayoutProviderRegistry> layoutProviderRegistrySupplier =
+            Suppliers.memoize(() -> ServiceProvider.getService(LayoutProviderRegistry.class));
 
     protected MenuItem() {
         super();
@@ -332,6 +341,31 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
 
     protected User getBennuUser(ApplicationUser appUser) {
         return appUser != null ? User.findByUsername(appUser.getUsername()) : null;
+    }
+
+    @Override
+    public Layout getLayoutObject() {
+        // Since there is currently only one implementation
+        // of the LayoutProvider interface in Fenix, we can
+        // assume that the map returned by LayoutProviderRegistry's
+        // getLayoutProvider method will contain one and only
+        // one LayoutProvider object
+        //
+        // 20.12.2024 - Francisco Esteves
+        return layoutProviderRegistrySupplier.get().getLayoutProviders().values().iterator().next().getLayout(getLayout())
+                .orElse(null);
+    }
+
+    @Override
+    public void setLayoutObject(Layout layout) {
+        setLayout(layout.getKey());
+    }
+
+    @Override
+    public Layout resolveLayoutObject() {
+        return Optional.ofNullable(com.qubit.terra.portal.domain.menus.MenuItem.super.resolveLayoutObject())
+                .orElse(layoutProviderRegistrySupplier.get().getLayoutProviders().values().iterator().next().getLayout("default")
+                        .orElse(null));
     }
 
 }
