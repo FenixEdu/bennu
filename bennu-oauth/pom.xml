@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>bennu</artifactId>
-        <version>7.7.0-FORK</version>
+        <version>7.8.0-FORK</version>
     </parent>
 
     <artifactId>bennu-oauth</artifactId>
