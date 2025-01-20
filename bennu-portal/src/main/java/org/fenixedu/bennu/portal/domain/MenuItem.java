@@ -358,7 +358,8 @@ public abstract class MenuItem extends MenuItem_Base implements com.qubit.terra.
 
     @Override
     public void setLayoutObject(Layout layout) {
-        setLayout(layout.getKey());
+        String layoutKey = layout == null ? null : layout.getKey();
+        setLayout(layoutKey);
     }
 
     @Override
