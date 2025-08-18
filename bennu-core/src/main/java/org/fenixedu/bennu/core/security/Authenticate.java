@@ -25,6 +25,7 @@ import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
 import org.fenixedu.bennu.core.i18n.I18NFilter;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.jwt.Tools;
+import org.fenixedu.jwt.Tools.JwsAlgAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.FenixFramework;
@@ -161,28 +162,28 @@ public class Authenticate {
     }
 
     static void jwtRequest(final HttpServletRequest request) {
-        final String jwtPrivateKeyPath = CoreConfiguration.getConfiguration().jwtPrivateKeyPath();
-        if (jwtPrivateKeyPath.length() > 0) {
+        final String jwtKey = CoreConfiguration.getConfiguration().jwtKey();
+        if (jwtKey.length() > 0) {
             String authHeader = request.getHeader("Authorization");
             if (authHeader != null && authHeader.length() > 7 && authHeader.startsWith("Bearer ")) {
-                processJwtToken(jwtPrivateKeyPath, authHeader);
+                processJwtToken(jwtKey, authHeader);
             } else {
                 authHeader = request.getParameter("Authorization");
                 if (authHeader != null && authHeader.length() > 7 && authHeader.startsWith("Bearer ")) {
-                    processJwtToken(jwtPrivateKeyPath, authHeader);
+                    processJwtToken(jwtKey, authHeader);
                 } else {
                     authHeader = (String) request.getAttribute("Authorization");
                     if (authHeader != null && authHeader.length() > 7 && authHeader.startsWith("Bearer ")) {
-                        processJwtToken(jwtPrivateKeyPath, authHeader);
+                        processJwtToken(jwtKey, authHeader);
                     }
                 }
             }
         }
     }
 
-    private static void processJwtToken(final String jwtPrivateKeyPath, final String authHeader) {
+    private static void processJwtToken(final String jwtKey, final String authHeader) {
         final String jwt = authHeader.substring(7);
-        final JsonObject claim = Tools.verify(SignatureAlgorithm.RS256, jwtPrivateKeyPath, jwt);
+        final JsonObject claim = Tools.verify(JwsAlgAlgorithm.HS256, jwtKey.getBytes(), jwt);
         if (claim != null) {
             final User user = User.findByUsername(claim.get("username").getAsString());
             if (user != null) {

@@ -70,6 +70,11 @@ public class CoreConfiguration {
                 defaultValue = "")
         public String jwtPrivateKeyPath();
 
+        @ConfigurationProperty(key = "jwt.private.key",
+        description = "A shared key to be used to comunicate between systems, its used for symetric signing of JWT.",
+        defaultValue = "")
+        public String jwtKey();
+
         /**
          * Gets the maximum size allowed for multipart/form-data requests.
          * 

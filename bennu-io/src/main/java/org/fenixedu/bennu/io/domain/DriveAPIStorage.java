@@ -3,13 +3,12 @@ package org.fenixedu.bennu.io.domain;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.jsonwebtoken.SignatureAlgorithm;
 import kong.unirest.HttpResponse;
 import kong.unirest.MultipartBody;
 import kong.unirest.Unirest;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.jwt.Tools;
-import org.joda.time.DateTime;
+import org.fenixedu.jwt.Tools.JwsAlgAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
@@ -51,7 +50,7 @@ public class DriveAPIStorage extends DriveAPIStorage_Base {
                 if (accessToken == null || System.currentTimeMillis() >= accessTokenValidUnit) {
                     final JsonObject claim = new JsonObject();
                     claim.addProperty("username", getRemoteUsername());
-                    accessToken = Tools.sign(SignatureAlgorithm.RS256, CoreConfiguration.getConfiguration().jwtPrivateKeyPath(), claim);
+                    accessToken = Tools.sign(JwsAlgAlgorithm.HS256, CoreConfiguration.getConfiguration().jwtKey().getBytes(), claim);
                 }
             }
         }
