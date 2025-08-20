@@ -18,18 +18,15 @@
         <!-- * DEPENDENCIES VERSIONS * -->
         <!-- * Please keep this list sorted alphabetically or you will feel the wrath of a Bennu Developer * -->
         <!-- ************************************************************************************************ -->
-        <version.javax.ws.rs.javax.ws.rs.api>2.0</version.javax.ws.rs.javax.ws.rs.api>
-        <version.joda.time.joda.time>2.9.2</version.joda.time.joda.time>
+        <version.javax.ws.rs.javax.ws.rs.api>2.0.1</version.javax.ws.rs.javax.ws.rs.api>
         <version.net.sf.cron4j.cron4j>2.2.5</version.net.sf.cron4j.cron4j>
-        <version.org.fenixedu.fenixedu.commons>5.0.0</version.org.fenixedu.fenixedu.commons>
+        <version.org.fenixedu.fenixedu.commons>6.5.0</version.org.fenixedu.fenixedu.commons>
         <version.org.fenixedu.jwttools>3.4.0</version.org.fenixedu.jwttools>
         <version.org.jasig.cas.client.core>3.4.1</version.org.jasig.cas.client.core>
-        <version.org.springframework.spring.webmvc>5.3.26</version.org.springframework.spring.webmvc>
-        <version.ch.qos.logback.logback.classic>1.1.3</version.ch.qos.logback.logback.classic>
-        <version.com.google.code.gson.gson>2.10</version.com.google.code.gson.gson>
-        <version.com.google.guava.guava>27.0-jre</version.com.google.guava.guava>
+        <version.org.springframework.spring.webmvc>5.3.39</version.org.springframework.spring.webmvc>
+        <version.ch.qos.logback.logback.classic>1.1.11</version.ch.qos.logback.logback.classic>
         <version.com.mitchellbosecke.pebble>2.6.2</version.com.mitchellbosecke.pebble>
-        <version.org.apache.tika.tika-core>1.20</version.org.apache.tika.tika-core>
+        <version.org.apache.tika.tika-core>1.28.5</version.org.apache.tika.tika-core>
     </properties>
 
     <scm>
@@ -42,16 +39,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${version.com.google.code.gson.gson}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${version.com.google.guava.guava}</version>
-            </dependency>
             <dependency>
                 <groupId>org.fenixedu</groupId>
                 <artifactId>fenixedu-commons</artifactId>
@@ -72,11 +59,6 @@
                         <artifactId>servlet-api</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>${version.joda.time.joda.time}</version>
             </dependency>
             <dependency>
                 <groupId>javax.ws.rs</groupId>
