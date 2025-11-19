@@ -1,156 +1,228 @@
-<style>
-kbd { color: #666; border-radius: 0; box-shadow: none; background-color: initial; padding: 0; }
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" xmlns="">
 
-.loading { position: absolute; left: 10px; bottom: 10px;}
+<style>
+    kbd {
+        color: #666;
+        border-radius: 0;
+        box-shadow: none;
+        background-color: initial;
+        padding: 0;
+    }
+
+    .loading {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+    }
+
+    .copy-cell {
+        position: relative;
+        padding-right: 25px; !important;
+    }
+
+    .copy-icon {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #888;
+        font-size: 14px;
+        display: inline-block;
+    }
+
+    .copy-icon:hover {
+        color: #111;
+    }
+
+    .copy-tooltip {
+        position: absolute;
+        right: 5px;
+        top: 0;
+        transform: translate(40%, -50%);
+        background: #333;
+        color: #fff;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 14px;
+        white-space: nowrap;
+        margin-bottom: 6px;
+        pointer-events: none;
+        z-index: 1000;
+    }
 </style>
 
 <div class="row">
-	<div class="col-sm-10">
-		<h3>{{data.type}} <span class="label label-primary">{{data.oid}}</span>
-		<span class="label" ng-class="{'label-success': mod == 'PUBLIC', 'label-warning': mod == 'PROTECTED'}" ng-repeat="mod in data.modifiers">
+    <div class="col-sm-10">
+        <h3>{{data.type}} <span class="label label-primary">{{data.oid}}</span>
+            <span class="label" ng-class="{'label-success': mod == 'PUBLIC', 'label-warning': mod == 'PROTECTED'}"
+                  ng-repeat="mod in data.modifiers">
 			{{mod | capitalize}}
 		</span>
-		</h3>
-	</div>
-	<div class="col-sm-2" style="margin-top: 20px">
-		<input type="text" class="pull-right form-control text-center input-sm" ng-model="oid" ng-keyup="$event.keyCode == 13 ? reload() : null">
-	</div>
+        </h3>
+    </div>
+    <div class="col-sm-2" style="margin-top: 20px">
+        <label>
+            <input class="pull-right form-control text-center input-sm"
+                   ng-keyup="$event.keyCode == 13 ? reload() : null" ng-model="oid"
+                   type="text">
+        </label>
+    </div>
 
 </div>
 
 <table class="table" ng-if="data">
-	<thead>
-		<tr>
-			<th>Name</th>
-			<th>Value</th>
-			<th>Type</th>
-			<th>Modifiers</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr ng-repeat="slot in data.slots | orderBy:'name'">
-			<td>{{slot.name}}</td>
-			<td>
-				<kbd ng-if="!slot.value" style="color: #999">null</kbd>
-				<span ng-if="slot.value.length > 50">
-					{{slot.value | limitTo: 50}}…
-					<button class="btn btn-default btn-xs" ng-click="slot.open = !slot.open"><small>…</small></button>
-					<div ng-show="slot.open" style="font-family: monospace">{{slot.value}}</div>
-				</span>
-				<span ng-if="slot.value.length <= 50">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Value</th>
+        <th>Type</th>
+        <th>Modifiers</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="slot in data.slots | orderBy:'name'">
+        <td>{{slot.name}}</td>
+        <td class="copy-cell">
+            <kbd ng-if="!slot.value" style="color: #999">null</kbd>
+            <div ng-if="slot.value.length > 50">
+                {{slot.value | limitTo: 50}}…
+                <button class="btn btn-default btn-xs" ng-click="slot.open = !slot.open"><small>…</small></button>
+                <div ng-show="slot.open" style="font-family: monospace">{{slot.value}}</div>
+            </div>
+            <span ng-if="slot.value.length <= 50">
 					{{slot.value}}
-				</span>
-			</td>
-			<td><kbd>{{slot.type}}</kbd></td>
-			<td>
-				<span class="label" ng-class="{'label-success': mod == 'PUBLIC', 'label-warning': mod == 'PROTECTED'}" ng-repeat="mod in slot.modifiers">
+            </span>
+            <i class="fa-regular fa-copy copy-icon"
+               ng-click="copyToClipboard(slot.value, $event)"
+               ng-if="slot.value"
+               title="Copy value"></i>
+        </td>
+        <td><kbd>{{slot.type}}</kbd></td>
+        <td>
+				<span class="label" ng-class="{'label-success': mod == 'PUBLIC', 'label-warning': mod == 'PROTECTED'}"
+                      ng-repeat="mod in slot.modifiers">
 					{{mod}}
 				</span>
-			</td>
-		</tr>
-		<tr ng-repeat="slot in data.relationSlots | orderBy:'name'">
-			<td>{{slot.name}}</td>
-			<td>
-				<kbd ng-if="!slot.value" style="color: #999">null</kbd>
-				<a href="#/domain-browser/{{slot.value}}" ng-if="slot.value">
-					{{slot.value}}
-				</a>
-			</td>
-			<td><kbd>{{slot.type}}</kbd></td>
-			<td>
-				<span class="label" ng-class="{'label-success': mod == 'PUBLIC', 'label-warning': mod == 'PROTECTED'}" ng-repeat="mod in slot.modifiers">
+        </td>
+    </tr>
+    <tr ng-repeat="slot in data.relationSlots | orderBy:'name'">
+        <td>{{slot.name}}</td>
+        <td class="copy-cell">
+            <kbd ng-if="!slot.value" style="color: #999">null</kbd>
+            <a href="#/domain-browser/{{slot.value}}" ng-if="slot.value">
+                {{slot.value}}
+            </a>
+            <i class="fa-regular fa-copy copy-icon"
+               ng-click="copyToClipboard(slot.value, $event)"
+               ng-if="slot.value"
+               title="Copy value"></i>
+        </td>
+        <td><kbd>{{slot.type}}</kbd></td>
+        <td>
+				<span class="label" ng-class="{'label-success': mod == 'PUBLIC', 'label-warning': mod == 'PROTECTED'}"
+                      ng-repeat="mod in slot.modifiers">
 					{{mod}}
 				</span>
-			</td>
-		</tr>
-	</tbody>
+        </td>
+    </tr>
+    </tbody>
 </table>
 
 <div class="col-sm-offset-3 col-sm-6" ng-if="error">
-	<div class="alert alert-danger">
-		<h4>An error ocurred</h4>
-		<p>The server returned an error loading object <kbd>{{id}}</kbd>.</p>
-		<p class="text-right">
-			Status code: {{error}}
-		</p>
-	</div>
+    <div class="alert alert-danger">
+        <h4>An error occurred</h4>
+        <p>The server returned an error loading object <kbd>{{id}}</kbd>.</p>
+        <p class="text-right">
+            Status code: {{error}}
+        </p>
+    </div>
 </div>
 
 <div class="row" ng-if="data.relationSets">
-	<div class="col-lg-6">
-		<table class="table">
-			<thead>
-				<th>Name</th>
-				<th>Type</th>
-				<th>Modifiers</th>
-				<th>Count</th>
-			</thead>
-			<tbody>
-				<tr ng-repeat="role in data.relationSets | orderBy:'name'">
-					<td><a href="" data-toggle="modal" data-target="#relations" ng-click="exploreRelation(role.name)">{{role.name}}</a></td>
-					<td>{{role.type}}</td>
-					<td>
-						<span class="label" ng-class="{'label-success': mod == 'PUBLIC', 'label-warning': mod == 'PROTECTED'}" ng-repeat="mod in role.modifiers">
+    <div class="col-lg-6">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Modifiers</th>
+                <th>Count</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="role in data.relationSets | orderBy:'name'">
+                <td><a data-target="#relations" data-toggle="modal" href="" ng-click="exploreRelation(role.name)">{{role.name}}</a>
+                </td>
+                <td>{{role.type}}</td>
+                <td>
+						<span class="label"
+                              ng-class="{'label-success': mod == 'PUBLIC', 'label-warning': mod == 'PROTECTED'}"
+                              ng-repeat="mod in role.modifiers">
 							{{mod}}
 						</span>
-					</td>
-					<td>
-						<button class="btn btn-xs btn-default" ng-if="relationCounts[role.name] == null"
-								ng-click="loadRelationCount(role.name)" data-count-loader>Load</button>
-						<button class="btn btn-xs btn-default" ng-if="relationCounts[role.name] == -1" disabled>Loading...</button>
-						<code ng-if="relationCounts[role.name] != null && relationCounts[role.name] != -1">
-							{{relationCounts[role.name] | number}}
-						</code>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+                </td>
+                <td>
+                    <button class="btn btn-xs btn-default" data-count-loader
+                            ng-click="loadRelationCount(role.name)" ng-if="relationCounts[role.name] == null">Load
+                    </button>
+                    <button class="btn btn-xs btn-default" disabled ng-if="relationCounts[role.name] == -1">Loading...
+                    </button>
+                    <code ng-if="relationCounts[role.name] != null && relationCounts[role.name] != -1">
+                        {{relationCounts[role.name] | number}}
+                    </code>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="modal fade" id="relations">
-	<div class="modal-dialog" style="width: 900px">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h2 class="modal-title">{{data.oid}}'s {{relation}}</h2>
-			</div>
-			<div class="modal-body">
-				<div ng-if="!relations && !relError">
-					<h5>Please wait while the satellite moves into position...</h5>
-				</div>
-				<div ng-if="relError" class="alert alert-danger">
-					<h4 class="text-center">An error ocurred loading the relation</h4>
-					<p class="text-right">Status code: {{relError}}</p>
-				</div>
-				<table class="table" ng-if="relations != null">
-					<span ng-if="relations != null" class="pull-right">{{totalEntries}} entries</span>
-					<thead>
-						<th>Object</th>
-						<th>Type</th>
-					</thead>
-					<tr ng-repeat="obj in relations[currentPage]">
-						<td><a href="#/domain-browser/{{obj.oid}}">{{obj.oid}}</a></td>
-						<td>{{obj.type}}</td>
-					</tr>
-				</table>
-				<div class="center" ng-if="relations.length > 1">
-					<ul class="pagination">
-						<li ng-click="previousPage()" ng-class="{disabled: currentPage <= 0}">
-							<a href >«</a>
-						</li>
-						<li class="disabled">
-							<a href>{{currentPage + 1}} / {{relations.length}}</a>
-						</li>
-						<li ng-click="nextPage()" ng-class="{disabled: currentPage >= relations.length - 1}">
-							<a href >»</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog" style="width: 900px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+                <h2 class="modal-title">{{data.oid}}'s {{relation}}</h2>
+            </div>
+            <div class="modal-body">
+                <div ng-if="!relations && !relError">
+                    <h5>Please wait while the satellite moves into position...</h5>
+                </div>
+                <div class="alert alert-danger" ng-if="relError">
+                    <h4 class="text-center">An error occurred loading the relation</h4>
+                    <p class="text-right">Status code: {{relError}}</p>
+                </div>
+                <table class="table" ng-if="relations != null">
+                    <caption class="pull-right" ng-if="relations != null">{{totalEntries}} entries</caption>
+                    <thead>
+                    <tr>
+                        <th>Object</th>
+                        <th>Type</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="obj in relations[currentPage]">
+                        <td><a href="#/domain-browser/{{obj.oid}}">{{obj.oid}}</a></td>
+                        <td>{{obj.type}}</td>
+                    </tr>
+                </table>
+                <div class="center" ng-if="relations.length > 1">
+                    <ul class="pagination">
+                        <li ng-class="{disabled: currentPage <= 0}" ng-click="previousPage()">
+                            <a href>«</a>
+                        </li>
+                        <li class="disabled">
+                            <a href>{{currentPage + 1}} / {{relations.length}}</a>
+                        </li>
+                        <li ng-class="{disabled: currentPage >= relations.length - 1}" ng-click="nextPage()">
+                            <a href>»</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
 </div>

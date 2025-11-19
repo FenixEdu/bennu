@@ -1,3 +1,32 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" xmlns="">
+
+<style>
+    .copy-icon {
+        cursor: pointer;
+        color: #888;
+        font-size: 14px;
+        display: inline-block;
+    }
+
+    .copy-icon:hover {
+        color: #111;
+    }
+
+    .copy-tooltip {
+        background: #333;
+        color: #fff;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 14px;
+        white-space: nowrap;
+        margin-bottom: 6px;
+        pointer-events: none;
+        z-index: 1000;
+        width: fit-content;
+    }
+</style>
+
+
 <div class="row">
 	<div class="col-sm-6 lead">
 		Log Details
@@ -5,7 +34,7 @@
 	<div class="col-sm-6">
 		<div class="pull-right btn-group">
 			<a ui-sref="scheduler.logs({type: log.taskName})" class="btn btn-default">« Back</a>
-			<button class="btn btn-default" ng-click="refreshLog()"><i class="glyphicon glyphicon-refresh"/></button>
+			<button class="btn btn-default" ng-click="refreshLog()"><i class="glyphicon glyphicon-refresh"></i></button>
 			<button class="btn btn-default" ng-show="!log.end" ng-click="killTask()">Kill Task</button>
 		</div>
 	</div>
@@ -14,7 +43,7 @@
 <table class="table">
 	<tbody>
 		<tr>
-			<th width="15%">Task</th>
+			<th style="width: 15%;">Task</th>
 			<td>{{log.taskName}} <samp class="small">{{log.id}}</samp></td>
 		</tr>
 		<tr>
@@ -36,11 +65,11 @@
 		<tr>
 			<th>Status</th>
 			<td ng-if="log.end">
-				<i class="glyphicon glyphicon-ok" ng-if="log.state == 'SUCCESS'" />
-				<i class="glyphicon glyphicon-remove" ng-if="log.state == 'FAILURE'" />
+				<i class="glyphicon glyphicon-ok" ng-if="log.state == 'SUCCESS'"></i>
+				<i class="glyphicon glyphicon-remove" ng-if="log.state == 'FAILURE'"></i>
 			</td>
 			<td ng-if="!log.end">
-				<i class="glyphicon glyphicon-play" />
+				<i class="glyphicon glyphicon-play"></i>
 			</td>
 		</tr>
 		<tr ng-if="!log.end">
@@ -51,7 +80,12 @@
 			</td>
 		</tr>
 		<tr ng-show="log.code">
-			<th><a href="" ng-click="showCode = !showCode">Code</a></th>
+			<th>
+                <a href="" ng-click="showCode = !showCode">Code</a>
+                <i class="fa-regular fa-copy copy-icon"
+                   ng-click="copyCode($event)"
+                   title="Copy code"></i>
+            </th>
 			<td>
 				<div class="control-group" ng-show="showCode">
 					<div class="controls">
@@ -72,10 +106,14 @@
 			</td>
 		</tr>
 		<tr ng-if="logs">
-			<th>Log</th>
-			<td>
-				<pre>{{logs}}</pre>
-			</td>
+            <th>Log
+                <i class="fa-regular fa-copy copy-icon"
+                   ng-click="copyLogs($event)"
+                   title="Copy logs"></i>
+            </th>
+            <td>
+                <pre>{{logs}}</pre>
+            </td>
 		</tr>
 		<tr ng-if="log.files">
 			<th>Files</th>
