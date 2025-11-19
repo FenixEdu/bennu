@@ -189,7 +189,11 @@ public class ExternalApplication extends ExternalApplication_Base {
         if (!Strings.isNullOrEmpty(name)) {
             return name;
         } else {
-            return getAuthor().getDisplayName();
+            if(getAuthor() != null){
+                return getAuthor().getDisplayName();
+            } else {
+                return getAuthorName(); 
+            }
         }
     }
 
