@@ -186,8 +186,7 @@ public class ExternalApplicationResource extends BennuRestResource {
 
     @GET
     @Path("/{app}/logo")
-    public Response logo(@PathParam("app") String applicationId, @HeaderParam("If-None-Match") String ifNoneMatch) {
-        ExternalApplication app = getApplicationForClientId(applicationId);
+    public Response logo(@PathParam("app") ExternalApplication app, @HeaderParam("If-None-Match") String ifNoneMatch) {
         if (app != null && app.getLogo() != null) {
             EntityTag etag = buildETag(app);
             if (etag.toString().equals(ifNoneMatch)) {

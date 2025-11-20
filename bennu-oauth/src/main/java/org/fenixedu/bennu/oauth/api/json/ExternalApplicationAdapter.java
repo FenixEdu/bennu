@@ -147,7 +147,7 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
         json.add("scopes", ctx.view(obj.getScopesSet()));
 
         String logoUrl =
-                CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-oauth/applications/" + obj.getClientId()
+                CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-oauth/applications/" + obj.getExternalId()
                         + "/logo";
 
         json.addProperty("logoUrl", logoUrl);
