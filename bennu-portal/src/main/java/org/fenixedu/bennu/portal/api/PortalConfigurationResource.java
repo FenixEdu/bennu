@@ -47,6 +47,22 @@ public class PortalConfigurationResource extends BennuRestResource {
         throw new WebApplicationException(Status.NOT_FOUND);
     }
 
+    @GET
+    @Path("logomark")
+    public Response logomark(@HeaderParam("If-None-Match") String ifNoneMatch) {
+        final PortalConfiguration instance = PortalConfiguration.getInstance();
+        if (instance != null && instance.getLogomark() != null) {
+            EntityTag etag = buildETag(instance);
+            if (etag.toString().equals(ifNoneMatch)) {
+                return Response.notModified(etag).build();
+            }
+            return Response.ok(instance.getLogomark(), instance.getLogomarkType())
+                    .header(HttpHeaders.CACHE_CONTROL, CoreConfiguration.getConfiguration().staticCacheControl()).tag(etag)
+                    .build();
+        }
+        throw new WebApplicationException(Status.NOT_FOUND);
+    }
+
     private EntityTag buildETag(PortalConfiguration instance) {
         return EntityTag.valueOf("W/\"" + instance.getLogo().length + "-" + instance.getExternalId() + "\"");
     }

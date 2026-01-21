@@ -152,6 +152,12 @@ public class ExternalApplicationAdapter implements JsonAdapter<ExternalApplicati
 
         json.addProperty("logoUrl", logoUrl);
 
+        String logomarkUrl =
+                CoreConfiguration.getConfiguration().applicationUrl() + "/api/bennu-oauth/applications/" + obj.getExternalId()
+                        + "/logomark";
+
+        json.addProperty("logomarkUrl", logoUrl);
+
         return json;
     }
 

@@ -611,6 +611,7 @@ app.controller('DomainBrowserController', ['$scope', '$http', '$state',
 app.controller('PortalConfigurationController', ['$scope', '$http', function ($scope, $http) {
     $scope.$root.pageTitle = 'Portal Configuration';
     $scope.logoUrl = contextPath + '/api/bennu-portal/configuration/logo?' + new Date().getTime();
+    $scope.logomarkUrl = contextPath + '/api/bennu-portal/configuration/logomark?' + new Date().getTime();
     $scope.faviconUrl = contextPath + '/api/bennu-portal/configuration/favicon?' + new Date().getTime();
     $http.get(contextPath + '/api/bennu-portal/configuration').success(function (data) {
         $scope.menu = data;
@@ -644,6 +645,13 @@ app.controller('PortalConfigurationController', ['$scope', '$http', function ($s
                             $scope.logoUrl = 'data:' + file.type + ';base64,' + picBase64;
                             $scope.menu.logo = picBase64;
                             $scope.menu.logoType = file.type;
+                        });
+                    }
+                    if (type === "logomark") {
+                        $scope.$apply(function () {
+                            $scope.logomarkUrl = 'data:' + file.type + ';base64,' + picBase64;
+                            $scope.menu.logomark = picBase64;
+                            $scope.menu.logomarkType = file.type;
                         });
                     }
                     if (type === "favicon") {

@@ -66,6 +66,13 @@
                 <input type="text" id="documentationUrl" name="documentationUrl" ng-model="menu.defaultDocumentationBaseUrl" placeholder="Documentation Url" class="form-control">
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="logomark">Logomark</label>
+            <div class="col-sm-4">
+                <img ng-src="{{logomarkUrl}}"></img>
+                <input type="file" name="logomark" onchange="angular.element(this).scope().fileNameChanged(this,'logomark')" />
+            </div>
+        </div>
         <div class="col-sm-offset-2">
             <button type="submit" class="btn btn-primary">Save</button>
             <a ui-sref="portal-menu({id: menu.menu.id})" class="btn btn-default">Manage Menu</a>

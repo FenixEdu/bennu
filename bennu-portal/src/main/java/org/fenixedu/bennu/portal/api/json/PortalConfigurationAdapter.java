@@ -79,8 +79,11 @@ public class PortalConfigurationAdapter implements JsonViewer<PortalConfiguratio
         if (object.has("logo")) {
             configuration.setLogo(BaseEncoding.base64().decode(object.get("logo").getAsString()));
         }
-        if (object.has("logoType")) {
-            configuration.setLogoType(object.get("logoType").getAsString());
+        if (object.has("logomark")) {
+            configuration.setLogomark(BaseEncoding.base64().decode(object.get("logomark").getAsString()));
+        }
+        if (object.has("logomarkType")) {
+            configuration.setLogomarkType(object.get("logomarkType").getAsString());
         }
         if (object.has("logoLinkUrl")) {
             configuration.setLogoLinkUrl(object.get("logoLinkUrl").getAsString());

@@ -51,6 +51,17 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
             logger.error("Default logo could not be read from: img/logo_bennu.svg");
         }
         try (InputStream stream =
+                     PortalConfiguration.class.getClassLoader().getResourceAsStream("META-INF/resources/img/logomark_bennu.svg")) {
+            if (stream == null) {
+                logger.error("Default logo not found in: img/logomark_bennu.svg");
+            } else {
+                setLogomark(ByteStreams.toByteArray(stream));
+                setLogomarkType("image/svg+xml");
+            }
+        } catch (IOException e) {
+            logger.error("Default logo could not be read from: img/logo_bennu.svg");
+        }
+        try (InputStream stream =
                 PortalConfiguration.class.getClassLoader().getResourceAsStream("META-INF/resources/img/favicon_bennu.png")) {
             if (stream == null) {
                 logger.error("Default favicon not found in: img/favicon_bennu.png");
