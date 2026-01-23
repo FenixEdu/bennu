@@ -16,6 +16,7 @@
  */
 package org.fenixedu.bennu.core.security;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.fenixedu.bennu.core.domain.AuthenticationContext;
@@ -185,10 +186,13 @@ public class Authenticate {
         final String jwt = authHeader.substring(7);
         final JsonObject claim = Tools.verify(JwsAlgAlgorithm.HS256, jwtKey.getBytes(), jwt);
         if (claim != null) {
-            final User user = User.findByUsername(claim.get("username").getAsString());
-            if (user != null) {
-                final AuthenticationContext authenticationContext = new AuthenticationContext(user, "JWT Token");
-                loggedUserContext.set(authenticationContext);
+            final JsonElement username = claim.get("username");
+            if (username != null && !username.isJsonNull()) {
+                final User user = User.findByUsername(username.getAsString());
+                if (user != null) {
+                    final AuthenticationContext authenticationContext = new AuthenticationContext(user, "JWT Token");
+                    loggedUserContext.set(authenticationContext);
+                }
             }
         }
     }
