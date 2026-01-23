@@ -43,6 +43,9 @@ public class JsonUtils {
             return null;
         }
         final JsonElement value = json.get(property);
+        if (value == null || value.isJsonNull()) {
+            return null;
+        }
         if (!value.isJsonPrimitive()) {
             throw BennuCoreDomainException.wrongJsonFormat(value, "primitive");
         }
