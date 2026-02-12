@@ -47,6 +47,8 @@ public class PortalInitializer implements ServletContextListener {
         // Install Bennu Portal Dispatcher. It must be programmatically registered, so that is runs after EVERY other filter
         FilterRegistration registration = sce.getServletContext().addFilter("BennuPortalDispatcher", BennuPortalDispatcher.class);
         registration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
+        FilterRegistration themeRegistration = sce.getServletContext().addFilter("BennuPortalThemeDispatcher", BennuPortalThemeDispatcher.class);
+        themeRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/api/theme/*");
 
         if (CoreConfiguration.getConfiguration().developmentMode()) {
             ExceptionHandlerFilter.setExceptionHandler(new PortalDevModeExceptionHandler(sce.getServletContext()));
