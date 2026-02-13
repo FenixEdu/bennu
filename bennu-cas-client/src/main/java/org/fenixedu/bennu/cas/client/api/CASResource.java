@@ -91,8 +91,8 @@ public class CASResource {
             logger.debug(e.getMessage(), e);
             // Append the login_failed parameter to the callback
             actualCallback = actualCallback + (actualCallback.contains("?") ? "&" : "?") + "login_failed=true";
-            actualCallback = URLDecoder.decode(actualCallback, "UTF-8");
         }
+        actualCallback = URLDecoder.decode(actualCallback, "UTF-8");
         return Response.status(Status.FOUND).location(new URI(actualCallback)).build();
     }
 
