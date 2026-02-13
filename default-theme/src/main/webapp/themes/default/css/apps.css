@@ -1,0 +1,11 @@
+:root {
+  --brand: #337ab7;
+  --brand-ui: var(--brand);
+  --surface: #fff;
+  --surface-variant: #f1f1f1;
+  --primary: var(--brand-ui);
+  --primary-dark: #286090;
+  --primary-darker: #204d74;
+  --on-primary: #fff;
+  --link: var(--brand-ui);
+}
