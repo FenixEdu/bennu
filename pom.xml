@@ -10,7 +10,7 @@
 
     <artifactId>bennu</artifactId>
     <name>Bennu Framework</name>
-    <version>9.9.0</version>
+    <version>DEV-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -33,7 +33,7 @@
         <connection>scm:git:git@repo.dsi.tecnico.ulisboa.pt:bennu/application/bennu.git</connection>
         <developerConnection>scm:git:git@repo.dsi.tecnico.ulisboa.pt:bennu/application/bennu</developerConnection>
         <url>https://repo.dsi.tecnico.ulisboa.pt/bennu/application/bennu</url>
-        <tag>v9.9.0</tag>
+        <tag>vDEV-SNAPSHOT</tag>
     </scm>
 
 
