@@ -42,6 +42,9 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
         if (jsonObj.has("visible")) {
             item.setVisible(jsonObj.get("visible").getAsBoolean());
         }
+        if (item.isMenuFunctionality() && jsonObj.has("isEntryPoint")) {
+            item.getAsMenuFunctionality().setIsEntryPoint(jsonObj.get("isEntryPoint").getAsBoolean());
+        }
         if (jsonObj.has("accessExpression")) {
             item.setAccessGroup(Group.parse(jsonObj.get("accessExpression").getAsString()));
         }
@@ -91,6 +94,7 @@ public class MenuItemAdapter implements JsonViewer<MenuItem>, JsonUpdater<MenuIt
             json.addProperty("subRoot", container.isSubRoot());
         } else {
             final MenuFunctionality functionality = obj.getAsMenuFunctionality();
+            json.addProperty("isEntryPoint", functionality.getIsEntryPoint());
             json.addProperty("key", functionality.getItemKey());
             json.addProperty("provider", functionality.getProvider());
             json.addProperty("documentationUrl", functionality.getDocumentationUrl());

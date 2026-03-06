@@ -1,6 +1,7 @@
 package org.fenixedu.bennu.portal.api;
 
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.ws.rs.Consumes;
@@ -16,8 +17,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
+import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.portal.api.json.EntrypointViewer;
 import org.fenixedu.bennu.portal.api.json.MenuItemAdapter;
 import org.fenixedu.bennu.portal.api.json.SupportConfigurationAdapter;
 import org.fenixedu.bennu.portal.domain.MenuContainer;
@@ -32,6 +36,7 @@ import org.fenixedu.commons.i18n.LocalizedString;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.fenixedu.commons.stream.StreamUtils;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
@@ -187,5 +192,20 @@ public class MenuResource extends BennuRestResource {
 
     private MenuItem getMenuItem(String oid) {
         return readDomainObject(oid);
+    }
+
+    @GET
+    @Path("/entrypoints")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonElement listEntrypoints() {
+        final User user = Authenticate.getUser();
+        return ApplicationRegistry.availableApplications().stream()
+            .flatMap(app -> app.getFunctionalities().stream())
+            .map(f -> MenuFunctionality.findFunctionality(f.getProvider(), f.getKey()))
+            .filter(Objects::nonNull)
+            .filter(f -> f.getIsEntryPoint() == Boolean.TRUE)
+            .filter(f -> f.getAccessGroup().isMember(user))
+            .map(f -> view(f, EntrypointViewer.class))
+            .collect(StreamUtils.toJsonArray());
     }
 }

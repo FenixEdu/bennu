@@ -39,13 +39,20 @@ public final class Functionality implements Comparable<Functionality> {
 
     private final boolean visible;
 
+    private final boolean isEntryPoint;
+
     public Functionality(String provider, String key, String path, String accessGroup, LocalizedString title,
-            LocalizedString description) {
-        this(provider, key, path, accessGroup, title, description, true);
+                         LocalizedString description) {
+        this(provider, key, path, accessGroup, title, description, true, false);
     }
 
     public Functionality(String provider, String key, String path, String accessGroup, LocalizedString title,
             LocalizedString description, boolean visible) {
+        this(provider, key, path, accessGroup, title, description, visible, false);
+    }
+
+    public Functionality(String provider, String key, String path, String accessGroup, LocalizedString title,
+            LocalizedString description, boolean visible, boolean isEntryPoint) {
         this.provider = provider;
         this.key = key;
         this.path = path;
@@ -53,6 +60,7 @@ public final class Functionality implements Comparable<Functionality> {
         this.title = title;
         this.description = description;
         this.visible = visible;
+        this.isEntryPoint = isEntryPoint;
     }
 
     /**
@@ -93,6 +101,10 @@ public final class Functionality implements Comparable<Functionality> {
 
     public boolean isVisible() {
         return visible;
+    }
+
+    public boolean isEntryPoint() {
+        return isEntryPoint;
     }
 
     public JsonObject json() {

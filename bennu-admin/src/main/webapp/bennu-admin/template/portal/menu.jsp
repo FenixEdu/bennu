@@ -79,6 +79,12 @@
 			<input type="checkbox" name="visible" ng-model="selected.visible" readonly="true">
 		</div>
 	</div>
+    <div class="form-group" ng-if="selected.functionality">
+        <label class="col-sm-2 control-label" for="isEntryPoint">Entry point</label>
+        <div class="col-sm-10">
+            <input type="checkbox" name="isEntryPoint" ng-model="selected.isEntryPoint" readonly="true">
+        </div>
+    </div>
 	<div class="form-group">
         <label class="col-sm-2 control-label" for="Support">Support</label>
         <div class="col-sm-10">
