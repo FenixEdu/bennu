@@ -38,6 +38,7 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
         setDocumentationUrl("{base}");
         setItemKey(functionality.getKey());
         setProvider(functionality.getProvider());
+        setIsEntryPoint(functionality.isEntryPoint());
     }
 
     /**
@@ -63,14 +64,14 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
      * @throws IllegalArgumentException
      *             If {@code parent} is null.
      */
-    public MenuFunctionality(MenuContainer parent, boolean visible, String key, String provider, String accessGroup,
+    public MenuFunctionality(MenuContainer parent, boolean visible, boolean isEntryPoint, String key, String provider, String accessGroup,
             LocalizedString description, LocalizedString title, String path) {
-        this(parent, visible, key, provider, accessGroup, description, title, path, "", "_self");
+        this(parent, visible, isEntryPoint, key, provider, accessGroup, description, title, path, "", "_self");
     }
 
-    public MenuFunctionality(MenuContainer parent, boolean visible, String key, String provider, String accessGroup,
+    public MenuFunctionality(MenuContainer parent, boolean visible, boolean isEntryPoint, String key, String provider, String accessGroup,
                              LocalizedString description, LocalizedString title, String path, String target) {
-        this(parent, visible, key, provider, accessGroup, description, title, path, "", target);
+        this(parent, visible, isEntryPoint, key, provider, accessGroup, description, title, path, "", target);
     }
 
     /**
@@ -80,6 +81,8 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
      *            The parent container for the new item
      * @param visible
      *            Whether this functionality is to be visible when rendering the menu
+     * @param isEntryPoint
+     *            Whether this functionality is to be visible when listing entry points
      * @param key
      *            The unique key that represents this functionality
      * @param provider
@@ -99,13 +102,14 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
      * @throws IllegalArgumentException
      *             If {@code parent} is null.
      */
-    public MenuFunctionality(MenuContainer parent, boolean visible, String key, String provider, String accessGroup,
+    public MenuFunctionality(MenuContainer parent, boolean visible, boolean isEntryPoint, String key, String provider, String accessGroup,
             LocalizedString description, LocalizedString title, String path, String documentationUrl, String target) {
         super();
         if (parent == null) {
             throw new IllegalArgumentException("MenuFunctionality cannot be created without a parent!");
         }
         init(parent, visible, accessGroup, title, description, path);
+        setIsEntryPoint(isEntryPoint);
         setDocumentationUrl(documentationUrl);
         setItemKey(key);
         setProvider(provider);

@@ -101,7 +101,7 @@ public class PortalHandlerMapping extends RequestMappingHandlerMapping {
             Functionality functionality =
                     new Functionality(SpringPortalBackend.BACKEND_KEY, "/" + path, path.replace('/', '-'), model.accessGroup()
                             .equals(DELEGATE) ? app.getAccessGroup() : model.accessGroup(), title, model.description().equals(
-                            DELEGATE) ? title : getLocalized(model.description()));
+                            DELEGATE) ? title : getLocalized(model.description()), false);
             app.addFunctionality(functionality);
             functionalities.put(type, functionality);
         }
