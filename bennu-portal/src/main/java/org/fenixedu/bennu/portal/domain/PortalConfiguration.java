@@ -1,11 +1,7 @@
 package org.fenixedu.bennu.portal.domain;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
-
+import com.google.common.hash.Hashing;
+import com.google.common.io.ByteStreams;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.portal.servlet.PortalInitializer;
@@ -13,12 +9,14 @@ import org.fenixedu.commons.i18n.I18N;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 
-import com.google.common.hash.Hashing;
-import com.google.common.io.ByteStreams;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * A {@link PortalConfiguration} contains the configuration for the installed application, as well as the entry point for the
@@ -146,4 +144,12 @@ public final class PortalConfiguration extends PortalConfiguration_Base {
         super.setLogo(logo);
         setLogoChecksum(logo == null ? null : Hashing.sha1().hashBytes(logo).toString().substring(0, 12));
     }
+
+    public static MenuFunctionality findInstalledFunctionality(final String itemKey, final boolean isEntryPoint) {
+        return getInstance().getMenu().functionalityStream()
+                .filter(menuFunctionality -> !isEntryPoint || menuFunctionality.getIsEntryPoint())
+                .filter(menuFunctionality -> menuFunctionality.getItemKey().equals(itemKey))
+                .findAny().orElse(null);
+    }
+
 }

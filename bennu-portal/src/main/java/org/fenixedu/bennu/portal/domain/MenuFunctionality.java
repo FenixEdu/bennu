@@ -1,12 +1,12 @@
 package org.fenixedu.bennu.portal.domain;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
-
 import pt.ist.fenixframework.FenixFramework;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Stream;
 
 /**
  * {@link MenuFunctionality}s are the leafs of the functionality tree. They represent a concrete functionality installed in the
@@ -222,6 +222,11 @@ public final class MenuFunctionality extends MenuFunctionality_Base {
             }
         }
         return null;
+    }
+
+    @Override
+    public Stream<MenuFunctionality> functionalityStream() {
+        return Stream.of(this);
     }
 
 }
