@@ -2,6 +2,7 @@ package org.fenixedu.bennu.portal.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
@@ -228,4 +229,7 @@ public abstract class MenuItem extends MenuItem_Base implements Comparable<MenuI
             super.setFaqUrl(trimmed);
         }
     }
+
+    public abstract Stream<MenuFunctionality> functionalityStream();
+
 }

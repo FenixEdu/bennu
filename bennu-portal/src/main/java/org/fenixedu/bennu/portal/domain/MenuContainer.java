@@ -1,17 +1,16 @@
 package org.fenixedu.bennu.portal.domain;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Stream;
-
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.portal.model.Application;
 import org.fenixedu.bennu.portal.model.Functionality;
 import org.fenixedu.commons.i18n.LocalizedString;
-
 import pt.ist.fenixframework.Atomic;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Stream;
 
 /**
  * A {@link MenuContainer} represents an inner node in the functionality tree. It may hold {@link MenuFunctionality}s or other
@@ -334,4 +333,10 @@ public final class MenuContainer extends MenuContainer_Base {
         PortalConfiguration.getInstance().addSubRoot(container);
         return container;
     }
+
+    @Override
+    public Stream<MenuFunctionality> functionalityStream() {
+        return getChildSet().stream().flatMap(MenuItem::functionalityStream);
+    }
+
 }

@@ -26,7 +26,9 @@ import org.fenixedu.bennu.portal.api.json.MenuItemAdapter;
 import org.fenixedu.bennu.portal.api.json.SupportConfigurationAdapter;
 import org.fenixedu.bennu.portal.domain.MenuContainer;
 import org.fenixedu.bennu.portal.domain.MenuFunctionality;
+import org.fenixedu.bennu.portal.domain.MenuFunctionality_Base;
 import org.fenixedu.bennu.portal.domain.MenuItem;
+import org.fenixedu.bennu.portal.domain.PortalConfiguration;
 import org.fenixedu.bennu.portal.domain.SupportConfiguration;
 import org.fenixedu.bennu.portal.model.Application;
 import org.fenixedu.bennu.portal.model.ApplicationRegistry;
@@ -197,13 +199,10 @@ public class MenuResource extends BennuRestResource {
     @GET
     @Path("/entrypoints")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonElement listEntrypoints() {
+    public JsonElement listEntryPoints() {
         final User user = Authenticate.getUser();
-        return ApplicationRegistry.availableApplications().stream()
-            .flatMap(app -> app.getFunctionalities().stream())
-            .map(f -> MenuFunctionality.findFunctionality(f.getProvider(), f.getKey()))
-            .filter(Objects::nonNull)
-            .filter(f -> f.getIsEntryPoint() == Boolean.TRUE)
+        return PortalConfiguration.getInstance().getMenu().functionalityStream()
+            .filter(MenuFunctionality::getIsEntryPoint)
             .filter(f -> f.getAccessGroup().isMember(user))
             .map(f -> view(f, EntrypointViewer.class))
             .collect(StreamUtils.toJsonArray());

@@ -50,7 +50,7 @@ public class MenuFunctionality extends MenuItem {
     protected String itemKey;
     protected String provider;
     public String documentationUrl;
-    public Boolean isEntryPoint (REQUIRED);
+    public boolean isEntryPoint;
     public String target;
 }
 
