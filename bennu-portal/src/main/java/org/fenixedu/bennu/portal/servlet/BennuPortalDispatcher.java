@@ -64,15 +64,13 @@ public class BennuPortalDispatcher implements Filter {
     }
 
     private MenuFunctionality selectFunctionality(String path) {
-        String[] parts = path.split("/");
         MenuContainer root = PortalConfiguration.getInstance().getMenu();
-        return root.findFunctionalityWithPath(parts);
+        return root.findFunctionalityWithPath(path);
     }
 
     private MenuFunctionality findFunctionality(String path) {
-        String[] parts = path.split("/");
         MenuContainer root = PortalConfiguration.getInstance().getMenu();
-        return root.findFunctionalityWithPathWithoutAccessControl(parts);
+        return root.findFunctionalityWithPathWithoutAccessControl(path);
     }
 
     /**

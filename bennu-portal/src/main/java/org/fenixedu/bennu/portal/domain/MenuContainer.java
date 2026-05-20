@@ -198,28 +198,53 @@ public final class MenuContainer extends MenuContainer_Base {
 
     @Override
     public boolean isAvailable(User user) {
-        return isRoot() ? true : super.isAvailable(user);
+        return isRoot() || super.isAvailable(user);
+    }
+
+    @Deprecated
+    public final MenuFunctionality findFunctionalityWithPath(String[] parts) {
+        final String path = String.join("/", parts);
+        return findFunctionalityWithPath(path);
     }
 
     /**
      * Traverses the functionality tree looking for the branch that matches the given path.
      * Lookup starts with the children of the current Container.
-     * 
+     *
      * Note that this method is aware of the availability of tree branches, meaning that if
      * the current user doesn't have access to the selected functionality, this method will return null.
-     * 
-     * @param parts
+     *
+     * @param path
      *            The path to be looked up
      * @return
      *         The {@link MenuFunctionality} matching the given path, or null if no functionality matches or the user has no
      *         access.
      */
-    public final MenuFunctionality findFunctionalityWithPath(String[] parts) {
-        return findFunctionalityWithPath(parts, 0, true);
+    public final MenuFunctionality findFunctionalityWithPath(String path) {
+        return findFunctionalityWithPath(path, true);
     }
 
+    @Deprecated
     public final MenuFunctionality findFunctionalityWithPathWithoutAccessControl(String[] parts) {
-        return findFunctionalityWithPath(parts, 0, false);
+        final String path = String.join("/", parts);
+        return findFunctionalityWithPathWithoutAccessControl(path);
+    }
+
+    public final MenuFunctionality findFunctionalityWithPathWithoutAccessControl(String path) {
+        return findFunctionalityWithPath(path, false);
+    }
+
+
+     private final MenuFunctionality findFunctionalityWithPath(String path, boolean checkAccessControl) {
+        // Try to match against the direct children's path before traversing the functionality tree using the path's parts
+        return getChildSet().stream()
+            .filter(child -> child.getPath().equals(path) && child.isMenuFunctionality())
+            .map(MenuItem::getAsMenuFunctionality)
+            .findAny()
+            .orElseGet(() -> {
+                final String[] parts = path.split("/");
+                return findFunctionalityWithPath(parts, 0, checkAccessControl);
+            });
     }
 
     /**
