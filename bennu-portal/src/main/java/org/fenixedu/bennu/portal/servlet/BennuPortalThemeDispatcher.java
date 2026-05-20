@@ -59,18 +59,6 @@ public class BennuPortalThemeDispatcher implements Filter {
         }
     }
 
-    private MenuFunctionality selectFunctionality(String path) {
-        String[] parts = path.split("/");
-        MenuContainer root = PortalConfiguration.getInstance().getMenu();
-        return root.findFunctionalityWithPath(parts);
-    }
-
-    private MenuFunctionality findFunctionality(String path) {
-        String[] parts = path.split("/");
-        MenuContainer root = PortalConfiguration.getInstance().getMenu();
-        return root.findFunctionalityWithPathWithoutAccessControl(parts);
-    }
-
     /**
      * Returns the selected {@link MenuFunctionality} from the given request, or null if no functionality is selected.
      * 
