@@ -8,6 +8,7 @@ import org.fenixedu.commons.i18n.LocalizedString;
 import pt.ist.fenixframework.Atomic;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
@@ -238,13 +239,27 @@ public final class MenuContainer extends MenuContainer_Base {
      private final MenuFunctionality findFunctionalityWithPath(String path, boolean checkAccessControl) {
         // Try to match against the direct children's path before traversing the functionality tree using the path's parts
         return getChildSet().stream()
-            .filter(child -> child.getPath().equals(path) && child.isMenuFunctionality())
+            // compare paths with more parts first
+            .sorted(Comparator.comparingInt(menuItem -> ((MenuItem) menuItem).getPath().split("/").length).reversed())
+            .filter(child -> matchPath(child, path) && child.isMenuFunctionality())
             .map(MenuItem::getAsMenuFunctionality)
             .findAny()
             .orElseGet(() -> {
                 final String[] parts = path.split("/");
                 return findFunctionalityWithPath(parts, 0, checkAccessControl);
             });
+    }
+
+    private boolean matchPath(MenuItem menuItem, String path) {
+        if (menuItem.getPath().equals(path)) {
+            return true;
+        }
+        final int indexOf = path.lastIndexOf("/");
+        if (indexOf < 0) {
+            return false;
+        }
+        final String subpath = path.substring(0, indexOf);
+        return menuItem.getPath().equals(subpath) || matchPath(menuItem, subpath);
     }
 
     /**
