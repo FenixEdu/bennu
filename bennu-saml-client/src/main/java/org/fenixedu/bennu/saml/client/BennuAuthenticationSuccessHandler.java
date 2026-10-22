@@ -21,6 +21,9 @@ import org.springframework.security.saml2.provider.service.authentication.Saml2A
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticatedPrincipal;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+
 /**
  * Logs the authenticated user into Bennu and redirects to the requested callback.
  *
@@ -55,11 +58,12 @@ public class BennuAuthenticationSuccessHandler implements AuthenticationSuccessH
         }
 
         try {
-            User user = findOrCreateUser(username, config);
-            Authenticate.login(request, response, user, "SAML Authentication");
+            loginUser(username, config, request, response);
         } catch (Exception e) {
-            logger.warn("SAML authentication failed for user {}: {}", username, e.getMessage());
-            logger.debug(e.getMessage(), e);
+            // e.getMessage() alone can be null (and JIT fast-throw erodes the message of
+            // exceptions thrown repeatedly): log the exception class and full stack trace so
+            // production failures are diagnosable
+            logger.warn("SAML authentication failed for user {}: {}", username, e.toString(), e);
             response.sendRedirect(request.getContextPath() + config.loginFailedUrl());
             return;
         }
@@ -89,6 +93,18 @@ public class BennuAuthenticationSuccessHandler implements AuthenticationSuccessH
             }
         }
         return username == null || username.trim().isEmpty() ? null : username.trim();
+    }
+
+    /**
+     * Provision and log the user in, inside an explicit Fenix transaction. The SAML endpoints are
+     * served by this module's filter chain, which deployments may order outside bennu-core's
+     * {@code CloseTransactionFilter} — domain access without an open transaction throws.
+     */
+    @Atomic(mode = TxMode.WRITE)
+    private void loginUser(String username, SAMLClientConfiguration.ConfigurationProperties config,
+            HttpServletRequest request, HttpServletResponse response) {
+        User user = findOrCreateUser(username, config);
+        Authenticate.login(request, response, user, "SAML Authentication");
     }
 
     private User findOrCreateUser(String username, SAMLClientConfiguration.ConfigurationProperties config) {

@@ -77,7 +77,7 @@ public class Authenticate {
             }
 
             fireLoginListeners(request, response, authenticationContext);
-            logger.debug("Logged in user: " + user.getUsername());
+            logger.info("Logged in user: " + user.getUsername());
         } else if (authenticationContext.getUser() != user) {
             throw AuthorizationException.authenticationFailed();
         } else {

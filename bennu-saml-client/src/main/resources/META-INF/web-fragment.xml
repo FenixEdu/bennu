@@ -7,6 +7,9 @@
 
   <ordering>
     <after>
+      <!-- The SAML endpoints perform domain access (user provisioning and login, logout
+           listeners): run this fragment's filters inside bennu-core's request transaction -->
+      <name>bennu-core</name>
     </after>
     <before>
       <others />
