@@ -90,4 +90,27 @@ public interface LoginProvider {
         return true;
     }
 
+    /**
+     * Best-effort provider-specific logout action, invoked by the portal's /logout endpoint
+     * before the caller terminates the local session. Gives providers the chance to terminate
+     * their own sessions (e.g. redirect the user agent to the Identity Provider's Single Logout
+     * endpoint).
+     *
+     * Implementations must never throw: failures are logged and ignored by the caller, which
+     * always terminates the local session afterwards. If this method writes a response (e.g. a
+     * redirect), it must return {@code true} so the caller does not send its own response; in
+     * that case the caller still terminates the local session.
+     *
+     * @param request
+     *            The logout request
+     * @param response
+     *            The response associated with the logout request
+     * @return Whether this provider handled the response (the caller will then skip its own
+     *         redirect; the local session is always terminated)
+     */
+    public default boolean logout(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        return false;
+    }
+
 }

@@ -12,8 +12,33 @@
     <name>Bennu SAML Client</name>
 
     <properties>
-        <com.onelogin.java-saml.version>2.9.0</com.onelogin.java-saml.version>
+        <opensaml.version>4.3.2</opensaml.version>
     </properties>
+
+    <!--
+      Spring Security 5.8.x declares OpenSAML 3.4.6 by default but supports OpenSAML 4 as well
+      (its SAML configurers dispatch on the OpenSAML version at runtime). Pin the 4.x line, which
+      is the java.time based one and the intended target for JDK 11+ deployments.
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml-core</artifactId>
+                <version>${opensaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml-saml-api</artifactId>
+                <version>${opensaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml-saml-impl</artifactId>
+                <version>${opensaml.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -41,11 +66,92 @@
             <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.onelogin</groupId>
-            <artifactId>java-saml</artifactId>
-            <version>${com.onelogin.java-saml.version}</version>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-saml2-service-provider</artifactId>
+        </dependency>
+        <!--
+          Declared as direct dependencies (not only managed) so that applications depending on
+          this module resolve OpenSAML 4.3.2 instead of the OpenSAML 3.4.6 that
+          spring-security-saml2-service-provider pulls transitively by default. The SAML
+          configurers dispatch on the OpenSAML version at runtime; with 4.x on the classpath the
+          OpenSaml4 engine paths (java.time based) are used.
+        -->
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml-saml-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml-saml-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- keep any system properties configured by the parent build -->
+                    <systemPropertyVariables combine.children="append">
+                        <CONFIGURATION_PROPERTIES>/configuration.properties</CONFIGURATION_PROPERTIES>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <!-- Default run: enabled configuration (saml.enabled=true, SLO on, full enrichment) -->
+                    <execution>
+                        <id>default-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/variant/*.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <!-- Variant run: saml.enabled=false, SLO off, no SP credentials, no enrichment -->
+                    <execution>
+                        <id>variant-configuration-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <systemPropertyVariables combine.children="append">
+                                <CONFIGURATION_PROPERTIES>/configuration-variant.properties</CONFIGURATION_PROPERTIES>
+                            </systemPropertyVariables>
+                            <includes>
+                                <include>**/variant/*.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
     <repositories>
         <repository>
             <id>fenixedu-maven-repository</id>

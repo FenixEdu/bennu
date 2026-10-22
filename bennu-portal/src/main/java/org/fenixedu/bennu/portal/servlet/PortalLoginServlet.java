@@ -182,7 +182,7 @@ public class PortalLoginServlet extends HttpServlet {
         providers.put(provider.getKey(), provider);
     }
 
-    private static Collection<LoginProvider> providers() {
+    static Collection<LoginProvider> providers() {
         return providers.values().stream().filter(LoginProvider::isEnabled).collect(Collectors.toList());
     }
 

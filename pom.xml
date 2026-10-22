@@ -24,6 +24,7 @@
         <version.org.fenixedu.jwttools>3.8.1</version.org.fenixedu.jwttools>
         <version.org.jasig.cas.client.core>3.4.1</version.org.jasig.cas.client.core>
         <version.org.springframework.spring.webmvc>5.3.39</version.org.springframework.spring.webmvc>
+        <version.org.springframework.security>5.8.16</version.org.springframework.security>
         <version.ch.qos.logback.logback.classic>1.1.11</version.ch.qos.logback.logback.classic>
         <version.com.mitchellbosecke.pebble>2.6.2</version.com.mitchellbosecke.pebble>
         <version.org.apache.tika.tika-core>1.28.5</version.org.apache.tika.tika-core>
@@ -91,6 +92,13 @@
                 <version>${version.org.springframework.spring.webmvc}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-bom</artifactId>
+                <version>${version.org.springframework.security}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${version.org.springframework.spring.webmvc}</version>
@@ -117,6 +125,11 @@
         <repository>
             <id>dsi-maven-artifacts</id>
             <url>https://fenix-ashes.ist.utl.pt/nexus/repository/dsi-private-repo</url>
+        </repository>
+        <!-- OpenSAML (required by spring-security-saml2-service-provider) is only distributed through the Shibboleth repository -->
+        <repository>
+            <id>shibboleth-releases</id>
+            <url>https://build.shibboleth.net/maven/releases/</url>
         </repository>
     </repositories>
 

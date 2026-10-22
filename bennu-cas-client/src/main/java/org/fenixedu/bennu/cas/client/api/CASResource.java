@@ -3,6 +3,7 @@ package org.fenixedu.bennu.cas.client.api;
 
 import com.google.common.base.Strings;
 import org.fenixedu.bennu.cas.client.CASClientConfiguration;
+import org.fenixedu.bennu.cas.client.CASLoginProvider;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.domain.UserProfile;
 import org.fenixedu.bennu.core.domain.exceptions.AuthorizationException;
@@ -86,6 +87,9 @@ public class CASResource {
             String username = validator.validate(ticket, requestURL).getPrincipal().getName();
             User user = getUser(username);
             Authenticate.login(request, response, user, "CAS Authentication");
+            // Mark the session as CAS-owned, so the provider's logout hook knows it should
+            // terminate the CAS SSO session for it
+            request.getSession().setAttribute(CASLoginProvider.CAS_SESSION_ATTRIBUTE, Boolean.TRUE);
             logger.trace("Logged in user {}, redirecting to {}", username, actualCallback);
         } catch (TicketValidationException | AuthorizationException e) {
             logger.debug(e.getMessage(), e);
