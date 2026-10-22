@@ -13,7 +13,12 @@
     </before>
   </ordering>
 
-
+  <!--
+    Insurance against application filters that break request parameters before they reach the SAML
+    endpoints. Forces the servlet container to parse the POST parameters up front, while the request
+    is still untouched. It can be removed once all deployments are verified on the Spring Security
+    based engine.
+  -->
   <filter>
     <filter-name>fixRequestArgumentsForSAMLFilter</filter-name>
     <filter-class>org.fenixedu.bennu.saml.client.servlet.FixRequestArgumentsForSAMLFilter</filter-class>
@@ -24,5 +29,27 @@
     <url-pattern>/api/saml-client/returnFromSAML</url-pattern>
   </filter-mapping>
 
+  <!--
+    Spring Security is used strictly as a SAML protocol engine: this proxy is mapped only to the
+    SAML endpoints and delegates to the springSecurityFilterChain bean owned by this module (see
+    SAMLClientInitializer and SAML2SecurityConfiguration). The contextAttribute is module-owned so
+    that the filter never conflicts with an application-provided root WebApplicationContext.
+  -->
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <init-param>
+      <param-name>contextAttribute</param-name>
+      <param-value>org.fenixedu.bennu.saml.client.WEB_APPLICATION_CONTEXT_ATTRIBUTE</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/api/saml-client/returnFromSAML</url-pattern>
+    <url-pattern>/api/saml-client/metadata</url-pattern>
+    <url-pattern>/api/saml-client/logout</url-pattern>
+    <url-pattern>/saml2/*</url-pattern>
+  </filter-mapping>
 
 </web-fragment>

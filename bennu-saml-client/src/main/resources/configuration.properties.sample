@@ -1,5 +1,58 @@
-local.login = false
-saml.enabled = true
-cas.enabled = false
+# Bennu SAML Client configuration sample.
+# All properties go into the application's configuration.properties file.
 
-saml.serviceProviderFinalMetadataLocation = /somewhere/final-sp-metadata.xml
+# Whether the SAML client is enabled
+saml.enabled = true
+
+# The SAML assertion attribute that holds the Bennu username
+saml.username.attribute = eduPersonPrincipalName
+
+# Whether to strip the @domain part from the username attribute value
+saml.username.stripDomain = true
+
+# The IdP metadata location (http(s)://, classpath: or file: URL)
+saml.idp.metadata = https://idp.example.edu/metadata
+
+# SP credentials, inline (base64 or PEM, key in PKCS#8).
+# Generate a pair with:
+#   openssl req -x509 -newkey rsa:2048 -keyout sp-key.pem -out sp-cert.pem -days 3650 -nodes
+#   openssl pkcs8 -topk8 -nocrypt -in sp-key.pem -out sp-key.pkcs8.pem
+# saml.sp.certificate = MIIC...
+# saml.sp.private-key = MIIE...
+
+# The SP entity ID. Defaults to the application URL. Set this to the entity ID already
+# registered at your IdP when migrating from a previous release.
+# saml.sp.entityId = https://myapp.example.edu
+
+# Only required for encrypted PKCS#8 private keys
+# saml.sp.private-key.password =
+
+# ---- SP metadata enrichment (optional, emitted into the generated metadata) ----
+# saml.organization.name = My Institution
+# saml.organization.displayName = My Institution
+# saml.organization.url = https://www.example.edu
+# saml.organization.lang = en
+# saml.service.name = My Application
+# saml.contact.type = technical
+# saml.contact.givenName = Jane
+# saml.contact.surname = Doe
+# saml.contact.email = saml-admin@example.edu
+
+# ---- Behavior ----
+# Create a Bennu user automatically when the authenticated user does not exist
+saml.autoCreateUsers = true
+
+# SP-initiated Single Logout at POST /api/saml-client/logout (requires an IdP SLO endpoint)
+saml.slo.enabled = false
+
+# Whether SLO messages (LogoutRequest/LogoutResponse) must be signed. The default (true) enforces
+# signatures, as recommended in production. SimpleSAMLphp does not sign logout messages by
+# default, so SimpleSAMLphp-based test environments need to set this to false (or enable
+# 'redirect.sign' => true in the IdP's saml20-idp-hosted.php).
+saml.slo.requireSignedMessages = false
+
+# Where to redirect the user after the Single Logout completes (context-relative by default)
+# saml.logoutSuccessUrl = /login?logout
+
+# Where to redirect when the SAML authentication fails
+saml.loginFailedUrl = /login?login_failed=true

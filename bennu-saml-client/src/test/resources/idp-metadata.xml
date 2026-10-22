@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Throwaway test fixture: metadata for a fictitious IdP used only by the bennu-saml-client
+  test suite. The embedded certificate matches keys/idp-key-pkcs8. DO NOT use in production.
+
+  Endpoint order matters to the test suite: the first SingleSignOnService (Redirect) and the
+  first SingleLogoutService (Redirect) are the ones Spring Security resolves from this metadata,
+  and WantAuthnRequestsSigned makes the engine sign the redirect-bound AuthnRequest.
+-->
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+                  entityID="https://idp.test.example/metadata">
+  <IDPSSODescriptor WantAuthnRequestsSigned="true"
+                    protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <KeyDescriptor use="signing">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIDHzCCAgegAwIBAgIUXvSSOUurzjDmteC835nLpTi1fQcwDQYJKoZIhvcNAQELBQAwHzEdMBsGA1UEAwwUc2FtbC1jbGllbnQtdGVzdC1pZHAwHhcNMjYxMDIxMTAyNjA4WhcNNDYxMDE2MTAyNjA4WjAfMR0wGwYDVQQDDBRzYW1sLWNsaWVudC10ZXN0LWlkcDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMEX9XWBbM2bDj/DgZUxUAQBSGV2s5Vfc9v+okJGMj+uxZwF/grbAqueSoGYABgNAC5aUB7Xb37itFIaD/TBE2d1mHA5fkZFdCtbIDzTIYTXj/OF7AwJLAVQvdNGwUg2Ngq+1cCfhytPu5ovzMkibMLEtzb7BiYyCA3hxiobp77flSuNWl2gp9m5e9aW0iRDN6q7HUsKQF9k5I9d1sqSBMnX/CHVNcCgkrk6gXcLmDFLkdcGI4yOihkWZcr4bQwIvdLZNdSEWDsO4jXduU5Miq4thtZTlGtnQ868qEWL7xchZqarxdrtWqbbTOuC6gmx7WBzNjvnWqeVeixR3t0qQr8CAwEAAaNTMFEwHQYDVR0OBBYEFBMu0reQiQbpsu2W+CbE9oYBG8AqMB8GA1UdIwQYMBaAFBMu0reQiQbpsu2W+CbE9oYBG8AqMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEBAAAbHBLA/117lWs0fbKM+OxNNnWwOFkhQFZmvWvm9+76scu6wrgpdGx6s9t8mO8v/Ax8jCvCpZ2365gVlzTe/Vo8MSPCLGf/IDK96VzvYCdabP03baxTbKTjezkAumMc087AlD6xoBw7YR4D3Z/9coWNvCCFlu4FasbL88EhkZa4/wGut2E3fHPF+cld0xkUzbmLlu0oQE++UIYM/csqBfaLXm6hOzNvcMgy083abMXq8EbVNELHJeyGkxvBCJTUSygjdKQtxclVgGAs5Z/wo4WxHK+oLGpEvjVhBGC46RkQzXIYWLANTZ5MXgYE+rlQv0YRX7FIpKYg4RhRQoNGn7I=</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                         Location="https://idp.test.example/sso/redirect"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                         Location="https://idp.test.example/sso/post"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                         Location="https://idp.test.example/slo/redirect"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                         Location="https://idp.test.example/slo/post"/>
+  </IDPSSODescriptor>
+</EntityDescriptor>
