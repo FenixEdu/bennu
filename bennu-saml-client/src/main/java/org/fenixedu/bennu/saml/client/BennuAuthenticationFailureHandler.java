@@ -22,6 +22,7 @@ public class BennuAuthenticationFailureHandler implements AuthenticationFailureH
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {
+        exception.printStackTrace();
         logger.warn("SAML authentication failed: {}", exception.getMessage());
         logger.debug("SAML authentication failure details", exception);
         String failureUrl = SAMLClientConfiguration.getConfiguration().loginFailedUrl();
