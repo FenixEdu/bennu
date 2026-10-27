@@ -13,6 +13,7 @@ import org.fenixedu.bennu.saml.client.SAMLLoginProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.security.saml2.core.OpenSamlInitializationService;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -57,7 +58,7 @@ public class SAMLClientInitializer implements ServletContextListener {
         context.register(enabled ? SAML2SecurityConfiguration.class : SAMLDisabledConfiguration.class);
         servletContext.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, context);
         context.refresh();
-
+        OpenSamlInitializationService.initialize();
         logger.info("SAML client initialized ({})", enabled ? "enabled" : "disabled");
     }
 
