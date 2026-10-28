@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,12 @@ public class BennuAuthenticationFailureHandler implements AuthenticationFailureH
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {
-        exception.printStackTrace();
+        // the login flow ends here: drop its callback so it cannot redirect a later
+        // IdP-initiated login
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE);
+        }
         logger.warn("SAML authentication failed: {}", exception.getMessage());
         logger.debug("SAML authentication failure details", exception);
         String failureUrl = SAMLClientConfiguration.getConfiguration().loginFailedUrl();

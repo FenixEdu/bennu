@@ -12,13 +12,22 @@
     <name>Bennu SAML Client</name>
 
     <properties>
-        <opensaml.version>4.3.2</opensaml.version>
+        <opensaml.version>3.4.6</opensaml.version>
+        <xmlsec.version>2.2.6</xmlsec.version>
+        <joda-time.version>2.14.0</joda-time.version>
     </properties>
 
     <!--
-      Spring Security 5.8.x declares OpenSAML 3.4.6 by default but supports OpenSAML 4 as well
-      (its SAML configurers dispatch on the OpenSAML version at runtime). Pin the 4.x line, which
-      is the java.time based one and the intended target for JDK 11+ deployments.
+      Unify the XML-security stack on OpenSAML 3.4.x, the generation the SAP integration
+      (sap-sdk-java -> wss4j 2.3.0 / cxf 3.4.0) is compiled against. Spring Security 5.8 ships
+      both generations and its SAML configurers dispatch on the OpenSAML version at runtime, so
+      with 3.x on the classpath the OpenSaml3 engine paths (joda-time based) are used and both
+      SAML consumers share a single OpenSAML registry.
+
+      xmlsec is pinned to 2.2.6: the 2.2.x release with CVE-2021-40690 and CVE-2023-44483
+      fixed, still compatible with the Santuario API wss4j 2.3.0 is compiled against (2.2.0);
+      it is also declared as a direct dependency below so that it wins over OpenSAML's own
+      older transitive (2.0.10) in consuming applications.
     -->
     <dependencyManagement>
         <dependencies>
@@ -36,6 +45,16 @@
                 <groupId>org.opensaml</groupId>
                 <artifactId>opensaml-saml-impl</artifactId>
                 <version>${opensaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.santuario</groupId>
+                <artifactId>xmlsec</artifactId>
+                <version>${xmlsec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -79,10 +98,12 @@
         </dependency>
         <!--
           Declared as direct dependencies (not only managed) so that applications depending on
-          this module resolve OpenSAML 4.3.2 instead of the OpenSAML 3.4.6 that
-          spring-security-saml2-service-provider pulls transitively by default. The SAML
-          configurers dispatch on the OpenSAML version at runtime; with 4.x on the classpath the
-          OpenSaml4 engine paths (java.time based) are used.
+          this module get the OpenSAML 3.4.6 that spring-security-saml2-service-provider
+          resolves by default, and so that xmlsec 2.2.6 (the 2.2.x line that fixes
+          CVE-2021-40690 and CVE-2023-44483 while staying compatible with wss4j 2.3.0) wins
+          over OpenSAML's own older transitive. The SAML configurers dispatch on the OpenSAML
+          version at runtime; with 3.x on the classpath the OpenSaml3 engine paths (joda-time
+          based) are used.
         -->
         <dependency>
             <groupId>org.opensaml</groupId>
@@ -95,6 +116,33 @@
         <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml-saml-impl</artifactId>
+            <exclusions>
+                <!--
+                  velocity 1.7 (and the commons-collections 3.2.1 under it) are not used by this
+                  module: OpenSAML only needs them for the HTTP-POST binding encoders, which the
+                  Spring Security SAML engine does not use (it renders the POST-binding page
+                  itself). wss4j excludes the same transitive, keeping the vulnerable pair out of
+                  WEB-INF/lib.
+                -->
+                <exclusion>
+                    <groupId>org.apache.velocity</groupId>
+                    <artifactId>velocity</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+        </dependency>
+        <!--
+          Declared as a direct dependency because OpenSAML 3's API uses org.joda.time.DateTime
+          directly (e.g. the assertion IssueInstant freshness check in the Bennu provider) and the
+          test IdP uses it too. It must stay at compile scope: OpenSAML 3 needs joda-time at
+          runtime, and a direct declaration overrides the transitive scope.
+        -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

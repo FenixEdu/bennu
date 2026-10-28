@@ -9,19 +9,19 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.time.Instant;
 import java.util.Base64;
 import java.util.regex.Pattern;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterOutputStream;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.joda.time.DateTime;
 import org.opensaml.core.xml.XMLObject;
+import org.opensaml.core.xml.schema.XSString;
+import org.opensaml.core.xml.schema.impl.XSStringBuilder;
 import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
 import org.opensaml.core.xml.io.Marshaller;
 import org.opensaml.saml.saml2.core.Assertion;
@@ -39,6 +39,7 @@ import org.opensaml.saml.saml2.core.Issuer;
 import org.opensaml.saml.saml2.core.LogoutRequest;
 import org.opensaml.saml.saml2.core.LogoutResponse;
 import org.opensaml.saml.saml2.core.NameID;
+import org.opensaml.saml.saml2.core.ProxyRestriction;
 import org.opensaml.saml.saml2.core.Response;
 import org.opensaml.saml.saml2.core.Status;
 import org.opensaml.saml.saml2.core.StatusCode;
@@ -193,24 +194,9 @@ public final class TestSaml {
     }
 
     public static String inflateAndBase64Decode(String encoded) {
-        try {
-            byte[] deflated = Base64.getMimeDecoder().decode(encoded);
-            Inflater inflater = new Inflater(true);
-            inflater.setInput(deflated);
-            java.io.ByteArrayOutputStream bytes = new java.io.ByteArrayOutputStream();
-            byte[] buffer = new byte[4096];
-            while (!inflater.finished()) {
-                int read = inflater.inflate(buffer);
-                if (read == 0 && inflater.needsInput()) {
-                    break;
-                }
-                bytes.write(buffer, 0, read);
-            }
-            inflater.end();
-            return new String(bytes.toByteArray(), StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not inflate SAML message", e);
-        }
+        // delegates to the production inflater so the test exercises the code that runs
+        return new String(BennuOpenSamlAuthenticationProvider.inflate(Base64.getMimeDecoder().decode(encoded)),
+                StandardCharsets.UTF_8);
     }
 
     /**
@@ -219,7 +205,7 @@ public final class TestSaml {
     public static String authnRequestXml(String id) {
         AuthnRequest request = build(AuthnRequest.DEFAULT_ELEMENT_NAME);
         request.setID(id);
-        request.setIssueInstant(Instant.now());
+        request.setIssueInstant(DateTime.now());
         request.setIssuer(issuer(SP_ENTITY_ID));
         return serialize(request);
     }
@@ -230,9 +216,120 @@ public final class TestSaml {
      * confirmation data; otherwise the response is unsolicited.
      */
     public static String samlResponseXml(String id, String inResponseTo) {
+        return samlResponseXml(id, inResponseTo, null);
+    }
+
+    /**
+     * Same as {@link #samlResponseXml(String, String)}, additionally setting the
+     * {@code InResponseTo} attribute on the {@code <Response>} element itself, which some IdPs
+     * do (and which the engine validates independently of the subject confirmation data).
+     */
+    public static String samlResponseXml(String id, String inResponseTo, String responseInResponseTo) {
+        return samlResponseXml(id, inResponseTo, responseInResponseTo, IDP_ENTITY_ID);
+    }
+
+    /**
+     * Same as {@link #samlResponseXml(String, String, String)}, additionally overriding the
+     * assertion's {@code Issuer}, to model a validly signed response whose assertion names a
+     * different issuer (what the assertion-level issuer check guards against).
+     */
+    public static String samlResponseXml(String id, String inResponseTo, String responseInResponseTo,
+            String assertionIssuer) {
+        return serializeSigned(buildSamlResponse(id, inResponseTo, responseInResponseTo, assertionIssuer, true));
+    }
+
+    /**
+     * A signed Response like {@link #samlResponseXml(String, String)}, but whose assertion carries
+     * no username attribute, modelling an assertion the module cannot map to a Bennu user (the
+     * success handler exits before the Bennu login).
+     */
+    public static String samlResponseXmlWithoutUsernameAttribute(String id, String inResponseTo) {
+        return serializeSigned(buildSamlResponse(id, inResponseTo, null, IDP_ENTITY_ID, false));
+    }
+
+    /**
+     * A signed Response whose assertion IssueInstant is shifted by the given number of minutes
+     * (positive into the future), to exercise the IssueInstant freshness check.
+     */
+    public static String samlResponseXmlWithAssertionIssueInstantOffset(String id, String inResponseTo, int minutes) {
+        Response response = buildSamlResponse(id, inResponseTo, null, IDP_ENTITY_ID, true);
+        response.getAssertions().get(0).setIssueInstant(DateTime.now().plusMinutes(minutes));
+        return serializeSigned(response);
+    }
+
+    /**
+     * A signed Response with two Bearer confirmations: the built-in one answers the stored request
+     * but carries a wrong recipient, a second valid one answers a different request — a mixed
+     * failure (one confirmation fails on the recipient, the other on InResponseTo).
+     */
+    public static String samlResponseXmlWithWrongRecipientAndForeignInResponseTo(String id, String matchingInResponseTo,
+            String foreignInResponseTo) {
+        Response response = buildSamlResponse(id, matchingInResponseTo, null, IDP_ENTITY_ID, true);
+        Subject subject = response.getAssertions().get(0).getSubject();
+        subject.getSubjectConfirmations().get(0).getSubjectConfirmationData().setRecipient("https://evil.example/acs");
+        subject.getSubjectConfirmations()
+                .add(subjectConfirmation(SubjectConfirmation.METHOD_BEARER, foreignInResponseTo));
+        return serializeSigned(response);
+    }
+
+    /**
+     * A signed Response with two Bearer confirmations: the built-in one answers the stored request
+     * but is already expired, a second valid one answers a different request — the split the
+     * same-confirmation rule rejects (neither confirmation both answers and is valid).
+     */
+    public static String samlResponseXmlWithSplitBearerConfirmations(String id, String matchingInResponseTo,
+            String foreignInResponseTo) {
+        Response response = buildSamlResponse(id, matchingInResponseTo, null, IDP_ENTITY_ID, true);
+        Subject subject = response.getAssertions().get(0).getSubject();
+        // expire well beyond the validator's 5-minute clock skew, so the expiry itself is the
+        // reason this confirmation fails
+        subject.getSubjectConfirmations().get(0).getSubjectConfirmationData()
+                .setNotOnOrAfter(DateTime.now().minusMinutes(10));
+        subject.getSubjectConfirmations()
+                .add(subjectConfirmation(SubjectConfirmation.METHOD_BEARER, foreignInResponseTo));
+        return serializeSigned(response);
+    }
+
+    /**
+     * A signed Response whose assertion carries a {@code <ProxyRestriction>} condition before the
+     * audience restriction — OpenSAML 3.4.6 bails on it as an unknown condition, skipping the
+     * conditions after it. The optional audience overrides the assertion's audience restriction.
+     */
+    public static String samlResponseXmlWithProxyRestriction(String id, String inResponseTo, String audienceUri) {
+        Response response = buildSamlResponse(id, inResponseTo, null, IDP_ENTITY_ID, true);
+        ProxyRestriction proxyRestriction = build(ProxyRestriction.DEFAULT_ELEMENT_NAME);
+        response.getAssertions().get(0).getConditions().getConditions().add(0, proxyRestriction);
+        if (audienceUri != null) {
+            // point the audience restriction at a foreign entity, to prove the audience check
+            // still runs behind the ProxyRestriction condition
+            AudienceRestriction restriction = response.getAssertions().get(0).getConditions()
+                    .getAudienceRestrictions().get(0);
+            restriction.getAudiences().get(0).setAudienceURI(audienceUri);
+        }
+        return serializeSigned(response);
+    }
+
+    /**
+     * A signed Response like {@link #samlResponseXml(String, String)}, with an additional subject
+     * confirmation of the given method carrying its own InResponseTo, modelling IdPs that add
+     * further confirmations to a bearer assertion.
+     */
+    public static String samlResponseXmlWithExtraConfirmation(String id, String inResponseTo, String method,
+            String extraInResponseTo) {
+        Response response = buildSamlResponse(id, inResponseTo, null, IDP_ENTITY_ID, true);
+        response.getAssertions().get(0).getSubject().getSubjectConfirmations()
+                .add(subjectConfirmation(method, extraInResponseTo));
+        return serializeSigned(response);
+    }
+
+    private static Response buildSamlResponse(String id, String inResponseTo, String responseInResponseTo,
+            String assertionIssuer, boolean includeUsernameAttribute) {
         Response response = build(Response.DEFAULT_ELEMENT_NAME);
         response.setID(id);
-        response.setIssueInstant(Instant.now());
+        response.setIssueInstant(DateTime.now());
+        if (responseInResponseTo != null) {
+            response.setInResponseTo(responseInResponseTo);
+        }
         response.setDestination(SP_ACS_URL);
         response.setIssuer(issuer(IDP_ENTITY_ID));
 
@@ -244,8 +341,8 @@ public final class TestSaml {
 
         Assertion assertion = build(Assertion.DEFAULT_ELEMENT_NAME);
         assertion.setID("_assertion" + id);
-        assertion.setIssueInstant(Instant.now());
-        assertion.setIssuer(issuer(IDP_ENTITY_ID));
+        assertion.setIssueInstant(DateTime.now());
+        assertion.setIssuer(issuer(assertionIssuer));
 
         Subject subject = build(Subject.DEFAULT_ELEMENT_NAME);
         NameID nameId = build(NameID.DEFAULT_ELEMENT_NAME);
@@ -253,30 +350,21 @@ public final class TestSaml {
         nameId.setFormat(NameID.PERSISTENT);
         subject.setNameID(nameId);
 
-        SubjectConfirmation confirmation = build(SubjectConfirmation.DEFAULT_ELEMENT_NAME);
-        confirmation.setMethod(SubjectConfirmation.METHOD_BEARER);
-        SubjectConfirmationData confirmationData = build(SubjectConfirmationData.DEFAULT_ELEMENT_NAME);
-        confirmationData.setRecipient(SP_ACS_URL);
-        confirmationData.setNotOnOrAfter(Instant.now().plusSeconds(300));
-        if (inResponseTo != null) {
-            confirmationData.setInResponseTo(inResponseTo);
-        }
-        confirmation.setSubjectConfirmationData(confirmationData);
-        subject.getSubjectConfirmations().add(confirmation);
+        subject.getSubjectConfirmations().add(subjectConfirmation(SubjectConfirmation.METHOD_BEARER, inResponseTo));
         assertion.setSubject(subject);
 
         Conditions conditions = build(Conditions.DEFAULT_ELEMENT_NAME);
-        conditions.setNotBefore(Instant.now().minusSeconds(300));
-        conditions.setNotOnOrAfter(Instant.now().plusSeconds(300));
+        conditions.setNotBefore(DateTime.now().minusSeconds(300));
+        conditions.setNotOnOrAfter(DateTime.now().plusSeconds(300));
         AudienceRestriction restriction = build(AudienceRestriction.DEFAULT_ELEMENT_NAME);
         Audience audience = build(Audience.DEFAULT_ELEMENT_NAME);
-        audience.setURI(SP_ENTITY_ID);
+        audience.setAudienceURI(SP_ENTITY_ID);
         restriction.getAudiences().add(audience);
         conditions.getAudienceRestrictions().add(restriction);
         assertion.setConditions(conditions);
 
         AuthnStatement authnStatement = build(AuthnStatement.DEFAULT_ELEMENT_NAME);
-        authnStatement.setAuthnInstant(Instant.now());
+        authnStatement.setAuthnInstant(DateTime.now());
         authnStatement.setSessionIndex(SESSION_INDEX);
         AuthnContext authnContext = build(AuthnContext.DEFAULT_ELEMENT_NAME);
         AuthnContextClassRef authnContextClassRef = build(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
@@ -286,12 +374,27 @@ public final class TestSaml {
         assertion.getAuthnStatements().add(authnStatement);
 
         AttributeStatement attributeStatement = build(AttributeStatement.DEFAULT_ELEMENT_NAME);
-        attributeStatement.getAttributes().add(attribute(USERNAME_ATTRIBUTE, USERNAME_VALUE));
+        if (includeUsernameAttribute) {
+            attributeStatement.getAttributes().add(attribute(USERNAME_ATTRIBUTE, USERNAME_VALUE));
+        }
         attributeStatement.getAttributes().add(attribute("mail", "user@test.example"));
         assertion.getAttributeStatements().add(attributeStatement);
 
         response.getAssertions().add(assertion);
-        return serializeSigned(response);
+        return response;
+    }
+
+    private static SubjectConfirmation subjectConfirmation(String method, String inResponseTo) {
+        SubjectConfirmation confirmation = build(SubjectConfirmation.DEFAULT_ELEMENT_NAME);
+        confirmation.setMethod(method);
+        SubjectConfirmationData confirmationData = build(SubjectConfirmationData.DEFAULT_ELEMENT_NAME);
+        confirmationData.setRecipient(SP_ACS_URL);
+        confirmationData.setNotOnOrAfter(DateTime.now().plusSeconds(300));
+        if (inResponseTo != null) {
+            confirmationData.setInResponseTo(inResponseTo);
+        }
+        confirmation.setSubjectConfirmationData(confirmationData);
+        return confirmation;
     }
 
     /**
@@ -311,7 +414,7 @@ public final class TestSaml {
     private static LogoutRequest logoutRequest(String id, String nameIdValue) {
         LogoutRequest request = build(LogoutRequest.DEFAULT_ELEMENT_NAME);
         request.setID(id);
-        request.setIssueInstant(Instant.now());
+        request.setIssueInstant(DateTime.now());
         request.setDestination(SP_SLO_URL);
         request.setIssuer(issuer(IDP_ENTITY_ID));
         NameID nameId = build(NameID.DEFAULT_ELEMENT_NAME);
@@ -339,7 +442,7 @@ public final class TestSaml {
     private static LogoutResponse logoutResponse(String id, String inResponseTo) {
         LogoutResponse response = build(LogoutResponse.DEFAULT_ELEMENT_NAME);
         response.setID(id);
-        response.setIssueInstant(Instant.now());
+        response.setIssueInstant(DateTime.now());
         response.setDestination(SP_SLO_URL);
         response.setInResponseTo(inResponseTo);
         response.setIssuer(issuer(IDP_ENTITY_ID));
@@ -375,8 +478,10 @@ public final class TestSaml {
         Attribute attribute = build(Attribute.DEFAULT_ELEMENT_NAME);
         attribute.setName(name);
         attribute.setNameFormat(Attribute.BASIC);
-        AttributeValue attributeValue = build(AttributeValue.DEFAULT_ELEMENT_NAME);
-        attributeValue.setTextContent(value);
+        // OpenSAML 3 has no XSAny-typed AttributeValue: build an xs:string value instead
+        XSString attributeValue = new XSStringBuilder().buildObject(AttributeValue.DEFAULT_ELEMENT_NAME,
+                XSString.TYPE_NAME);
+        attributeValue.setValue(value);
         attribute.getAttributeValues().add(attributeValue);
         return attribute;
     }

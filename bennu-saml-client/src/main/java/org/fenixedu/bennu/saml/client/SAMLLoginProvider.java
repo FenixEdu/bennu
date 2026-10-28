@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.security.saml2.provider.service.web.DefaultRelyingPartyRegistrationResolver;
-import org.springframework.security.saml2.provider.service.web.authentication.logout.OpenSaml4LogoutRequestResolver;
+import org.springframework.security.saml2.provider.service.web.authentication.logout.OpenSaml3LogoutRequestResolver;
 import org.springframework.security.saml2.provider.service.web.authentication.logout.Saml2RelyingPartyInitiatedLogoutSuccessHandler;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -25,8 +25,9 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * Initiates the SAML login by redirecting the user to the Spring Security authentication request
  * endpoint ({@code /saml2/authenticate/{registrationId}}), which forwards the user to the IdP.
  *
- * The PortalLoginServlet callback is carried through the IdP round trip via RelayState, with a
- * session-based fallback for IdPs that do not echo the RelayState back.
+ * The PortalLoginServlet callback is passed to the authenticate endpoint as {@code ?callback=},
+ * where the authentication-request customizer keeps it in the session for the login success
+ * handler; RelayState stays at Spring's stock default (a random opaque value).
  */
 public class SAMLLoginProvider implements LoginProvider {
 
@@ -37,13 +38,8 @@ public class SAMLLoginProvider implements LoginProvider {
             throws IOException, ServletException {
         Authenticate.logout(request, response);
 
-        boolean hasCallback = callback != null && !callback.trim().isEmpty();
-        if (hasCallback) {
-            request.getSession(true).setAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE, callback);
-        }
-
         String authenticationUrl = request.getContextPath() + SAML2SecurityConfiguration.AUTHENTICATION_REQUEST_URL;
-        if (hasCallback) {
+        if (callback != null && !callback.trim().isEmpty()) {
             authenticationUrl += "?callback=" + URLEncoder.encode(callback, StandardCharsets.UTF_8.name());
         }
         logger.debug("Redirecting to SAML IdP via {}", authenticationUrl);
@@ -88,7 +84,7 @@ public class SAMLLoginProvider implements LoginProvider {
         // Resolve, store (cookie) and redirect: the IdP Single Logout round trip. The caller
         // terminates the local session right after — the pending request survives in the cookie.
         Saml2RelyingPartyInitiatedLogoutSuccessHandler logoutHandler = new Saml2RelyingPartyInitiatedLogoutSuccessHandler(
-                new OpenSaml4LogoutRequestResolver(new DefaultRelyingPartyRegistrationResolver(repository)));
+                new OpenSaml3LogoutRequestResolver(new DefaultRelyingPartyRegistrationResolver(repository)));
         logoutHandler.setLogoutRequestRepository(new CookieSaml2LogoutRequestRepository(repository));
         logoutHandler.onLogoutSuccess(request, response,
                 BennuSecurityContextRepository.reconstruct(identity));

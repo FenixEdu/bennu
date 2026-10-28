@@ -1,18 +1,27 @@
 package org.fenixedu.bennu.saml.client;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.saml2.provider.service.authentication.OpenSamlAuthenticationProvider;
 import org.springframework.security.saml2.provider.service.metadata.OpenSamlMetadataResolver;
 import org.springframework.security.saml2.provider.service.web.DefaultRelyingPartyRegistrationResolver;
 import org.springframework.security.saml2.provider.service.web.RelyingPartyRegistrationResolver;
 import org.springframework.security.saml2.provider.service.web.Saml2MetadataFilter;
 import org.springframework.security.saml2.provider.service.web.Saml2WebSsoAuthenticationRequestFilter;
-import org.springframework.security.saml2.provider.service.web.authentication.OpenSaml4AuthenticationRequestResolver;
+import org.springframework.security.saml2.provider.service.web.authentication.OpenSaml3AuthenticationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Owns the Spring Security {@link SecurityFilterChain} that acts as the SAML 2.0 protocol engine
@@ -42,24 +51,65 @@ public class SAML2SecurityConfiguration {
     @Bean
     public SecurityFilterChain samlFilterChain(HttpSecurity http, BennuRelyingPartyRegistrationRepository repository)
             throws Exception {
-        // Spring Security 5.8 defaults to a random RelayState. Bennu uses it to carry the
-        // PortalLoginServlet callback through the IdP round trip.
-        OpenSaml4AuthenticationRequestResolver authenticationRequestResolver = new OpenSaml4AuthenticationRequestResolver(
-                new DefaultRelyingPartyRegistrationResolver(repository));
-        authenticationRequestResolver.setRelayStateResolver(request -> request.getParameter("callback"));
+        // The portal callback travels in the session (see SAMLLoginProvider and
+        // BennuAuthenticationSuccessHandler#resolveCallback); RelayState stays at Spring's stock
+        // default, a random opaque value. The resolver is Spring's public OpenSAML 3 flavour —
+        // with OpenSAML 3 on the classpath the whole engine runs on the 3.x paths, matching the
+        // generation the SAP integration (wss4j) uses.
+        OpenSaml3AuthenticationRequestResolver authenticationRequestResolver =
+                new OpenSaml3AuthenticationRequestResolver(new DefaultRelyingPartyRegistrationResolver(repository));
+        authenticationRequestResolver.setAuthnRequestCustomizer(context -> {
+            // the portal callback travels in the session: ?callback= on the authentication-request
+            // endpoint is kept there for the success handler (also covers callers that skip
+            // SAMLLoginProvider); a request without it clears a stale callback from an earlier
+            // attempt, so every new SP-initiated login starts clean
+            HttpServletRequest request = context.getRequest();
+            String callback = request.getParameter("callback");
+            if (StringUtils.hasText(callback)) {
+                request.getSession(true).setAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE,
+                        callback);
+            } else {
+                HttpSession session = request.getSession(false);
+                if (session != null) {
+                    session.removeAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE);
+                }
+            }
+        });
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
         http.sessionManagement(session -> session.sessionFixation().none());
         http.securityContext(securityContext -> securityContext.securityContextRepository(new BennuSecurityContextRepository()));
 
-        http.saml2Login(login -> login
-                .relyingPartyRegistrationRepository(repository)
-                .loginProcessingUrl(ASSERTION_CONSUMER_SERVICE_URL)
-                .authenticationConverter(new BennuSaml2AuthenticationConverter(repository))
-                .authenticationRequestResolver(authenticationRequestResolver)
-                .successHandler(new BennuAuthenticationSuccessHandler())
-                .failureHandler(new BennuAuthenticationFailureHandler()));
+        AtomicBoolean providerSwappedIn = new AtomicBoolean();
+        http.saml2Login(login -> {
+            // The Bennu provider is swapped in for the stock one the DSL registers (it restores
+            // the SessionIndex extraction, the assertion Issuer check and the InResponseTo
+            // binding that the OpenSAML 3 defaults lack — see
+            // BennuOpenSamlAuthenticationProvider). The authentication manager, its parent and
+            // the AuthenticationEventPublisher are built by the framework's
+            // HttpSecurityConfiguration, exactly as for the stock provider: an app's own
+            // publisher bean wins. ProviderManager still tries its parent after a rejection —
+            // with the DSL default that parent is the global authentication manager, as in stock
+            // Spring; this module registers no second SAML provider, so the Bennu wrapper is the
+            // only SAML provider in the chain and its InResponseTo binding always applies.
+            login.addObjectPostProcessor(new ObjectPostProcessor<Object>() {
+                @Override
+                public <O> O postProcess(O object) {
+                    if (object instanceof OpenSamlAuthenticationProvider) {
+                        providerSwappedIn.set(true);
+                        return (O) new BennuOpenSamlAuthenticationProvider();
+                    }
+                    return object;
+                }
+            });
+            login.relyingPartyRegistrationRepository(repository);
+            login.loginProcessingUrl(ASSERTION_CONSUMER_SERVICE_URL);
+            login.authenticationConverter(new BennuSaml2AuthenticationConverter(repository));
+            login.authenticationRequestResolver(authenticationRequestResolver);
+            login.successHandler(new BennuAuthenticationSuccessHandler());
+            login.failureHandler(new BennuAuthenticationFailureHandler());
+        });
 
         http.addFilterBefore(metadataFilter(repository), Saml2WebSsoAuthenticationRequestFilter.class);
 
@@ -67,7 +117,14 @@ public class SAML2SecurityConfiguration {
             configureLogout(http, repository);
         }
 
-        return http.build();
+        SecurityFilterChain chain = http.build();
+        // fail fast if the hook never fired (e.g. the classpath switched to OpenSAML 4 and the
+        // DSL creates the 4-based provider this post-processor does not match): the Bennu
+        // customizations would otherwise be silently missing
+        Assert.state(providerSwappedIn.get(),
+                "The SAML login DSL did not register an OpenSamlAuthenticationProvider; the Bennu"
+                        + " customizations (SessionIndex, Issuer check, InResponseTo binding) would be missing");
+        return chain;
     }
 
     private void configureLogout(HttpSecurity http, BennuRelyingPartyRegistrationRepository repository) throws Exception {

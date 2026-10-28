@@ -39,8 +39,10 @@ public class BennuSecurityContextRepository implements SecurityContextRepository
             BennuSecurityContextRepository.class.getName() + ".SAML_IDENTITY";
 
     /**
-     * Session attribute holding the callback requested at {@code /login}, used as a fallback when
-     * the IdP does not echo the RelayState back with the SAML response.
+     * Session attribute holding the callback requested at {@code /login}: the primary channel for
+     * the login callback, written by the authentication-request customizer from the
+     * {@code ?callback=} parameter. An IdP-initiated target-shaped RelayState wins over it (see
+     * {@link BennuAuthenticationSuccessHandler#resolveCallback}).
      */
     public static final String CALLBACK_SESSION_ATTRIBUTE =
             BennuSecurityContextRepository.class.getName() + ".CALLBACK";

@@ -59,6 +59,64 @@ public class BennuAuthenticationSuccessHandlerTest {
     }
 
     @Test
+    public void aTargetShapedRelayStateBeatsTheSessionCallback() {
+        // a shaped RelayState can only come from the IdP (SP-initiated logins carry a random UUID)
+        org.springframework.mock.web.MockHttpSession session = new org.springframework.mock.web.MockHttpSession();
+        session.setAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE, "/from-session");
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(session);
+        request.setParameter("RelayState", "https://idp.example/target");
+
+        assertEquals("https://idp.example/target", handler.resolveCallback(request));
+        assertNull("The session callback is consumed", session
+                .getAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE));
+    }
+
+    @Test
+    public void aUuidRelayStateLosesToTheSessionCallback() {
+        // Spring's stock resolver sends a random UUID: it is not a target, so the session callback
+        // (an SP-initiated login) wins
+        org.springframework.mock.web.MockHttpSession session = new org.springframework.mock.web.MockHttpSession();
+        session.setAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE, "/from-session");
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(session);
+        request.setParameter("RelayState", "7e2f9a6c-0b1d-4c3e-8f2a-9b8c7d6e5f4a");
+
+        assertEquals("/from-session", handler.resolveCallback(request));
+    }
+
+    @Test
+    public void returnsNullForAUuidRelayStateWithoutSessionCallback() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("RelayState", "7e2f9a6c-0b1d-4c3e-8f2a-9b8c7d6e5f4a");
+
+        assertNull(handler.resolveCallback(request));
+    }
+
+    @Test
+    public void consumesTheSessionCallbackWhenTheLoginFailsEarly() throws Exception {
+        // no username attribute: the handler redirects to the failure URL before logging in
+        org.springframework.mock.web.MockHttpSession session = new org.springframework.mock.web.MockHttpSession();
+        session.setAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE, "/from-session");
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(session);
+        org.springframework.security.saml2.provider.service.authentication.Saml2Authentication authentication =
+                new org.springframework.security.saml2.provider.service.authentication.Saml2Authentication(
+                        principal(Collections.emptyMap()), "<Response/>", Collections.emptyList());
+
+        handler.onAuthenticationSuccess(request, new org.springframework.mock.web.MockHttpServletResponse(),
+                authentication);
+
+        assertNull("A failed login must not leave its callback behind",
+                session.getAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE));
+    }
+
+    @Test
+    public void returnsNullWithoutSessionCallbackOrRelayState() {
+        assertNull(handler.resolveCallback(new MockHttpServletRequest()));
+    }
+
+    @Test
     public void keepsTheDomainWhenStripDomainIsDisabled() {
         Saml2AuthenticatedPrincipal principal = principal(Collections.singletonMap(TestSaml.USERNAME_ATTRIBUTE,
                 TestSaml.USERNAME_VALUE));

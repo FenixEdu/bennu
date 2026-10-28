@@ -60,7 +60,7 @@ public class BennuSaml2MetadataPostProcessor implements Consumer<OpenSamlMetadat
         }
         if (!isBlank(url)) {
             OrganizationURL localizedUrl = build(OrganizationURL.DEFAULT_ELEMENT_NAME);
-            localizedUrl.setURI(url);
+            localizedUrl.setValue(url);
             localizedUrl.setXMLLang(lang);
             organization.getURLs().add(localizedUrl);
         }
@@ -77,17 +77,17 @@ public class BennuSaml2MetadataPostProcessor implements Consumer<OpenSamlMetadat
         contact.setType(contactType(config.contactType()));
         if (!isBlank(config.contactGivenName())) {
             GivenName givenName = build(GivenName.DEFAULT_ELEMENT_NAME);
-            givenName.setValue(config.contactGivenName());
+            givenName.setName(config.contactGivenName());
             contact.setGivenName(givenName);
         }
         if (!isBlank(config.contactSurname())) {
             SurName surName = build(SurName.DEFAULT_ELEMENT_NAME);
-            surName.setValue(config.contactSurname());
+            surName.setName(config.contactSurname());
             contact.setSurName(surName);
         }
         if (!isBlank(email)) {
             EmailAddress emailAddress = build(EmailAddress.DEFAULT_ELEMENT_NAME);
-            emailAddress.setURI(email);
+            emailAddress.setAddress(email);
             contact.getEmailAddresses().add(emailAddress);
         }
         spDescriptor.getContactPersons().add(contact);
@@ -107,7 +107,7 @@ public class BennuSaml2MetadataPostProcessor implements Consumer<OpenSamlMetadat
         service.getNames().add(localized(ServiceName.DEFAULT_ELEMENT_NAME, serviceName, lang));
         RequestedAttribute requestedAttribute = build(RequestedAttribute.DEFAULT_ELEMENT_NAME);
         requestedAttribute.setName(usernameAttribute);
-        service.getRequestedAttributes().add(requestedAttribute);
+        service.getRequestAttributes().add(requestedAttribute);
         spDescriptor.getAttributeConsumingServices().add(service);
     }
 

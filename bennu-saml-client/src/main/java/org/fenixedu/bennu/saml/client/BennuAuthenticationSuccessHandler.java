@@ -34,8 +34,9 @@ import pt.ist.fenixframework.Atomic.TxMode;
  * <li>Authenticates the user through Bennu's {@link Authenticate#login}.</li>
  * <li>Stores the SAML identity (NameID + session indexes) in the session for the Single Logout
  * flow.</li>
- * <li>Redirects to the callback, received via RelayState (or the session fallback) and validated
- * by {@link PortalLoginServlet#validateCallback}.</li>
+ * <li>Redirects to the callback: the one stored in the session at login (an IdP-initiated
+ * target-shaped RelayState wins over it), validated by {@link PortalLoginServlet#validateCallback}.
+ * </li>
  * </ul>
  */
 public class BennuAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -47,6 +48,10 @@ public class BennuAuthenticationSuccessHandler implements AuthenticationSuccessH
             Authentication authentication) throws IOException, ServletException {
         Saml2Authentication samlAuthentication = (Saml2Authentication) authentication;
         Saml2AuthenticatedPrincipal principal = (Saml2AuthenticatedPrincipal) samlAuthentication.getPrincipal();
+
+        // resolved (and the session callback consumed) before any early return, so a failed login
+        // never leaves a stale callback behind for a later IdP-initiated login
+        String callback = resolveCallback(request);
 
         SAMLClientConfiguration.ConfigurationProperties config = SAMLClientConfiguration.getConfiguration();
         String username = extractUsername(principal, config);
@@ -70,7 +75,6 @@ public class BennuAuthenticationSuccessHandler implements AuthenticationSuccessH
 
         storeSamlIdentity(request, principal, samlAuthentication.getName());
 
-        String callback = resolveCallback(request);
         String target = redirectTarget(request, callback);
         logger.debug("Logged in user {} via SAML, redirecting to {}", username, target);
         response.sendRedirect(target);
@@ -123,16 +127,25 @@ public class BennuAuthenticationSuccessHandler implements AuthenticationSuccessH
                 new BennuSecurityContextRepository.StoredSamlIdentity(nameId, principal.getSessionIndexes()));
     }
 
-    private String resolveCallback(HttpServletRequest request) {
-        String callback = request.getParameter("RelayState");
-        if (callback == null || callback.trim().isEmpty()) {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                callback = (String) session.getAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE);
-                session.removeAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE);
-            }
+    String resolveCallback(HttpServletRequest request) {
+        // A target-shaped RelayState (starts with / or contains ://) can only come from the IdP
+        // itself — SP-initiated logins always carry Spring's random UUID — so it wins over the
+        // session callback, which is always consumed. Remaining case: an IdP-initiated login
+        // without a shaped RelayState after an abandoned SP-initiated login still uses the stale
+        // session callback; it is validated by redirectTarget, and the authentication-request
+        // customizer clears it at the start of every new SP-initiated login.
+        String callback = null;
+        String relayState = request.getParameter("RelayState");
+        if (relayState != null && (relayState.startsWith("/") || relayState.contains("://"))) {
+            callback = relayState;
         }
-        return callback;
+        HttpSession session = request.getSession(false);
+        String sessionCallback = null;
+        if (session != null) {
+            sessionCallback = (String) session.getAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE);
+            session.removeAttribute(BennuSecurityContextRepository.CALLBACK_SESSION_ATTRIBUTE);
+        }
+        return callback != null ? callback : sessionCallback;
     }
 
     String redirectTarget(HttpServletRequest request, String callback) {
