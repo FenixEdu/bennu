@@ -178,6 +178,8 @@
                         <configuration>
                             <excludes>
                                 <exclude>**/variant/*.java</exclude>
+                                <exclude>**/unconfigured/*.java</exclude>
+                                <exclude>**/broken/*.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -193,6 +195,38 @@
                             </systemPropertyVariables>
                             <includes>
                                 <include>**/variant/*.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <!-- Unconfigured run: saml.enabled=true but no other saml.* key; the initializer
+                         must fail the deployment with a clear error about the missing metadata -->
+                    <execution>
+                        <id>unconfigured-configuration-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <systemPropertyVariables combine.children="append">
+                                <CONFIGURATION_PROPERTIES>/configuration-unconfigured.properties</CONFIGURATION_PROPERTIES>
+                            </systemPropertyVariables>
+                            <includes>
+                                <include>**/unconfigured/*.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <!-- Broken run: saml.enabled=true with an invalid SP private key; the engine boot
+                         fails and the initializer must fail the deployment -->
+                    <execution>
+                        <id>broken-configuration-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <systemPropertyVariables combine.children="append">
+                                <CONFIGURATION_PROPERTIES>/configuration-broken.properties</CONFIGURATION_PROPERTIES>
+                            </systemPropertyVariables>
+                            <includes>
+                                <include>**/broken/*.java</include>
                             </includes>
                         </configuration>
                     </execution>

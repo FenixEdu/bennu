@@ -40,7 +40,8 @@ public class SAMLClientConfiguration {
         public String spPrivateKeyPassword();
 
         @ConfigurationProperty(key = "saml.idp.metadata",
-                description = "The IdP metadata location. Supports http(s)://, classpath: and file: URLs")
+                description = "The IdP metadata location. Supports http(s)://, classpath: and file: URLs. "
+                        + "Required when saml.enabled = true: without it the webapp fails to start")
         public String idpMetadata();
 
         @ConfigurationProperty(key = "saml.organization.name",

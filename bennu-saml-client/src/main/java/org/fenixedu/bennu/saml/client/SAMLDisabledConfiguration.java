@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -20,8 +21,14 @@ import org.springframework.context.annotation.Configuration;
  * disabled, this configuration provides a pass-through filter so that requests reaching the SAML
  * endpoints continue down the filter chain and land on the disabled-404 guard in
  * {@link org.fenixedu.bennu.saml.client.api.SAMLResource}, exactly as in previous releases.
+ *
+ * Like {@code SAML2SecurityConfiguration}, this class is gated by
+ * {@code @Conditional(SamlModuleOwnedContextCondition.class)} so that application component scans
+ * (bennu-spring scans {@code org.fenixedu.bennu}) never pull it — and its
+ * {@code springSecurityFilterChain} bean — into the application's own Spring contexts.
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
+@Conditional(SamlModuleOwnedContextCondition.class)
 public class SAMLDisabledConfiguration {
 
     @Bean(name = "springSecurityFilterChain")

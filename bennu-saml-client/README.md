@@ -111,8 +111,22 @@ default, so SimpleSAMLphp-based environments need one of:
 - The engine lives in a module-owned Spring context (published under
   `org.fenixedu.bennu.saml.client.WEB_APPLICATION_CONTEXT_ATTRIBUTE`), created by
   `SAMLClientInitializer`; it does not interfere with any application-provided Spring context.
-- When `saml.enabled = false`, the module registers only a pass-through filter and the SAML
-  endpoints respond with 404, as in previous releases.
+- When SAML is disabled (`saml.enabled = false`), the module registers only a pass-through filter
+  and the SAML endpoints respond with 404, as in previous releases; the SAML login option is hidden
+  from the portal.
+- When SAML is enabled (`saml.enabled = true`), the configuration must be complete and valid: a
+  missing `saml.idp.metadata`, an unreachable IdP metadata location or invalid SP credentials fail
+  the webapp startup — the deployment fails visibly instead of coming up with a SAML login option
+  that cannot work.
+- The module's Spring configurations are gated by
+  `@Conditional(SamlModuleOwnedContextCondition.class)`: they are only processed inside the
+  module-owned Spring context that `SAMLClientInitializer` publishes. The gate is required because
+  the engine class carries `@EnableWebSecurity`, whose meta-annotation chain
+  (`@EnableGlobalAuthentication` → `@Configuration` → `@Component`) makes any annotated class a
+  component-scan candidate and a full configuration class — without the gate, every Bennu Spring
+  application's own component scan (bennu-spring scans `org.fenixedu.bennu`) would pull the SAML
+  engine into the application's context and fail the webapp when the SAML configuration is absent
+  or broken.
 - Spring Security 5.8.x is the last release for the javax.servlet stack and is OSS-EOL; this is an
   accepted trade-off until Bennu migrates to jakarta, at which point this module should move to a
   current Spring Security release.

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,9 +32,20 @@ import org.springframework.util.StringUtils;
  * authority (sessions, CSRF, user provisioning), and this chain only serves the SAML endpoints.
  * Every request that reaches it is permitted, and nothing from Spring Security is ever written to
  * the HTTP session (see {@link BennuSecurityContextRepository}).
+ *
+ * The class carries {@code @EnableWebSecurity}, which makes <em>any</em> class annotated with it
+ * scan-magnetic and a <em>full</em> configuration class in Spring's eyes: {@code @EnableWebSecurity}
+ * is meta-annotated (via {@code @EnableGlobalAuthentication}) with {@code @Configuration}, which is
+ * itself meta-annotated with {@code @Component}. Because of that hidden chain, this class is
+ * additionally gated by {@code @Conditional(SamlModuleOwnedContextCondition.class)}: without it,
+ * every Bennu Spring application's own component scan (bennu-spring scans
+ * {@code org.fenixedu.bennu}) would pull it into the application's own contexts, where the SAML
+ * engine would be built regardless of {@code saml.enabled} and an absent or broken SAML
+ * configuration would fail the whole webapp.
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
+@Conditional(SamlModuleOwnedContextCondition.class)
 public class SAML2SecurityConfiguration {
 
     public static final String REGISTRATION_ID = "bennu";
