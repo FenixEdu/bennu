@@ -30,6 +30,7 @@ public class SAMLDisabledConfigurationTest {
     @Test
     public void passThroughFilterContinuesTheChain() throws Exception {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        context.getEnvironment().setActiveProfiles(SAMLClientInitializer.MODULE_OWNED_CONTEXT_PROFILE);
         context.register(SAMLDisabledConfiguration.class);
         context.refresh();
 

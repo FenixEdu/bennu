@@ -58,7 +58,10 @@ public class SAMLLoginProvider implements LoginProvider {
 
     @Override
     public boolean isEnabled() {
-        return SAMLClientConfiguration.getConfiguration().samlEnabled();
+        // the engine flag (see SAMLClientInitializer) is only true when SAML is enabled with a
+        // valid configuration and the engine actually booted
+        return Boolean.TRUE.equals(SAMLClientConfiguration.getConfiguration().samlEnabled())
+                && SAMLClientInitializer.samlEngineAvailable();
     }
 
     @Override

@@ -29,6 +29,7 @@ public class SAMLLoginProviderLogoutVariantTest {
         MockServletContext servletContext = new MockServletContext();
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.setServletContext(servletContext);
+        context.getEnvironment().setActiveProfiles(SAMLClientInitializer.MODULE_OWNED_CONTEXT_PROFILE);
         context.register(SAMLDisabledConfiguration.class);
         servletContext.setAttribute(SAMLClientInitializer.WEB_APPLICATION_CONTEXT_ATTRIBUTE, context);
         context.refresh();
