@@ -1,20 +1,19 @@
 package org.fenixedu.bennu.core.domain;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Stream;
-
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import org.fenixedu.bennu.core.domain.exceptions.BennuCoreDomainException;
 import org.fenixedu.bennu.core.signals.Signal;
 import org.fenixedu.commons.StringNormalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Objects;
-import com.google.common.base.Strings;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Stream;
 
 /**
  * User account profile information. This information includes names, email, avatar and preferred locale.
@@ -142,6 +141,9 @@ public class UserProfile extends UserProfile_Base {
      */
     @Override
     public void setEmail(String email) {
+        if (getEmail() != null && email != null && !getEmail().equals(email)) {
+            Signal.emit("Change User Email", new String[] { getEmail(), email });
+        }
         super.setEmail(email);
     }
 
